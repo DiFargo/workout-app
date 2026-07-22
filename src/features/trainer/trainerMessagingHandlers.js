@@ -15,6 +15,9 @@ const STATUS_TELEGRAM_BACKEND_FAILED = "Backend Telegram \u0435\u0449\u0451 \u04
 const STATUS_INTERNAL_SAVING = "\u0421\u043e\u0445\u0440\u0430\u043d\u044f\u044e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435...";
 const STATUS_INTERNAL_SAVED = "Telegram \u043d\u0435 \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d. \u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e \u0432\u043e \u0432\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u0435\u0439 \u0438\u0441\u0442\u043e\u0440\u0438\u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 const STATUS_INTERNAL_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0441\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u0443.";
+const STATUS_BELL_SAVING = "Отправляю уведомление в приложение...";
+const STATUS_BELL_SENT = "Уведомление появится у клиента в колокольчике.";
+const STATUS_BELL_FAILED = "Не получилось отправить уведомление клиенту.";
 const STATUS_NO_USERNAME = "\u0423 \u043a\u043b\u0438\u0435\u043d\u0442\u0430 \u043d\u0435 \u0443\u043a\u0430\u0437\u0430\u043d Telegram username.";
 const STATUS_NOTIFICATIONS_SAVING = "\u0421\u043e\u0445\u0440\u0430\u043d\u044f\u044e Telegram-\u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f...";
 const STATUS_NOTIFICATIONS_ON = "Telegram-\u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u044b.";
@@ -31,6 +34,7 @@ export function createTrainerMessagingHandlers({
   setAdminTelegramSending,
   setAdminClientStatus,
   setAdminSelectedClient,
+  setAdminClientTasks,
   setUsersList,
   recordTrainerEvent
 }) {
@@ -83,11 +87,44 @@ export function createTrainerMessagingHandlers({
     }
   }
 
-  async function sendTrainerClientMessage(text, client = adminSelectedClient, replyContext = null) {
+  async function sendClientBellNotification(message, client) {
+    const sentAt = new Date().toISOString();
+    const notification = {
+      type: "trainer_message",
+      notificationType: "message",
+      title: "Сообщение от тренера",
+      message,
+      status: "progress",
+      completedAt: "",
+      createdAt: sentAt,
+      updatedAt: sentAt,
+      createdByUid: auth.currentUser?.uid || "",
+      createdByEmail: auth.currentUser?.email || user?.email || ""
+    };
+
+    setAdminClientStatus(STATUS_BELL_SAVING);
+    try {
+      const notificationRef = await addDoc(collection(db, "users", client.id, "trainerTasks"), notification);
+      setAdminClientTasks?.((current) => [{ id: notificationRef.id, ...notification }, ...current]);
+      recordTrainerEvent(client.id, "notification", "Уведомление тренера", message.slice(0, 160));
+      setAdminClientStatus(STATUS_BELL_SENT);
+      return true;
+    } catch (error) {
+      console.error("Client bell notification failed:", error);
+      setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_BELL_FAILED));
+      return false;
+    }
+  }
+
+  async function sendTrainerClientMessage(text, client = adminSelectedClient, replyContext = null, deliveryChannel = "telegram") {
     const message = String(text || "").trim();
     if (!client?.id || !message) {
       setAdminClientStatus(STATUS_SELECT_CLIENT_AND_MESSAGE);
       return false;
+    }
+
+    if (deliveryChannel === "notification") {
+      return sendClientBellNotification(message, client);
     }
 
     const telegram = getClientTelegramProfile(client);

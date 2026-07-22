@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfilePasswordModal.module.css";
 
@@ -92,11 +93,21 @@ export default function ProfilePasswordModal({
         aria-labelledby="profilePasswordManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <ProfileModalCloseButton
-          className={styles.closeButton}
-          testId="profile-password-close"
-          ariaLabel="Закрыть пароль"
-          onClick={onClose}
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          className={styles.header}
+          title={canSetPasswordViaGoogle ? "Задать пароль" : "Изменить пароль"}
+          titleId="profilePasswordManageTitle"
+          scope="profile-password-header"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-password-close"
+              ariaLabel="Закрыть пароль"
+              onClick={onClose}
+            />
+          )}
         />
 
         <div className={styles.head}>
@@ -104,8 +115,6 @@ export default function ProfilePasswordModal({
             <LockKeyhole size={28} strokeWidth={2.3} />
           </div>
           <div>
-            <span className={styles.eyebrow}>БЕЗОПАСНОСТЬ</span>
-            <h3 className={styles.heading} id="profilePasswordManageTitle">{canSetPasswordViaGoogle ? "Задать пароль" : "Изменить пароль"}</h3>
             <p className={styles.intro}>
               {canSetPasswordViaGoogle
                 ? "Аккаунт подключён через Google. Подтверди вход Google и задай пароль для входа через логин."

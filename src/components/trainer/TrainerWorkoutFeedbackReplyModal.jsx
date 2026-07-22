@@ -28,6 +28,7 @@ export default function TrainerWorkoutFeedbackReplyModal({
   processed = false,
   status,
   messages = [],
+  deliveryChannel = "telegram",
   onChange,
   onSubmit,
   onMarkProcessed,
@@ -36,6 +37,7 @@ export default function TrainerWorkoutFeedbackReplyModal({
 }) {
   const textareaRef = useRef(null);
   const isReply = Boolean(sourceNote);
+  const sendsBellNotification = deliveryChannel === "notification";
   const canSend = value.trim().length >= 3 && !sending && !resolving;
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export default function TrainerWorkoutFeedbackReplyModal({
       <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-feedback-reply-title">
         <header className={styles.header}>
           <div>
-            <span>{isReply ? "ОТВЕТ НА КОММЕНТАРИЙ" : "СООБЩЕНИЕ КЛИЕНТУ"}</span>
+            <span>{isReply ? "ОТВЕТ НА КОММЕНТАРИЙ" : sendsBellNotification ? "УВЕДОМЛЕНИЕ В ПРИЛОЖЕНИИ" : "СООБЩЕНИЕ КЛИЕНТУ"}</span>
             <h2 id="trainer-feedback-reply-title">{isReply ? "Ответ клиенту" : clientName}</h2>
             {isReply ? <p><strong>{clientName}</strong><small>{sourceNote.workoutName || sourceNote.title} · {formatContextDate(sourceNote.date)}</small></p> : null}
           </div>
@@ -117,6 +119,9 @@ export default function TrainerWorkoutFeedbackReplyModal({
           />
           <small>Ctrl + Enter — отправить · Enter — новая строка</small>
         </label>
+        {!isReply && sendsBellNotification ? (
+          <p className={styles.deliveryHint}>Клиент увидит это сообщение в колокольчике приложения.</p>
+        ) : null}
 
         {status ? (
           <p className={`${styles.status} ${styles[status] || ""}`} role="status">
@@ -161,7 +166,7 @@ export default function TrainerWorkoutFeedbackReplyModal({
           ) : null}
           <button className={styles.sendButton} type="button" disabled={!canSend} onClick={onSubmit}>
             {sending ? <LoaderCircle className={styles.spinner} size={16} /> : <Mail size={16} />}
-            {sending ? "Отправляется…" : "Отправить"}
+            {sending ? "Отправляется…" : sendsBellNotification ? "Отправить уведомление" : "Отправить"}
           </button>
         </footer>
       </section>

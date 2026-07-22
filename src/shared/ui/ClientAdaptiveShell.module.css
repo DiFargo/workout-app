@@ -48,9 +48,9 @@
 :global(:root[data-app-theme="warm-light"]) .shell.shell {
   width: min(402px, 100vw) !important;
   max-width: 402px !important;
-  height: min(874px, 100dvh) !important;
-  min-height: min(874px, 100dvh) !important;
-  max-height: min(874px, 100dvh) !important;
+  height: var(--client-shell-height, min(874px, 100dvh)) !important;
+  min-height: var(--client-shell-min-height, min(874px, 100dvh)) !important;
+  max-height: var(--client-shell-max-height, min(874px, 100dvh)) !important;
   margin: 0 auto;
   border-radius: 54px;
 }

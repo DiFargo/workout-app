@@ -404,7 +404,8 @@ export function getTrainerClientEmptySummary(client = {}) {
     subscriptionStatus: getSubscriptionStatus(client.subscription || {}),
     subscriptionAttentionLabel: client.subscription ? getSubscriptionAttentionLabel(client.subscription) : "",
     recentEvents: [],
-    programCompletionPercent: null
+    programCompletionPercent: null,
+    weeklyProgressScore: null
   };
 }
 
@@ -438,6 +439,7 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
     Number(previousSummary.assignedWorkoutCount) || 0
   );
   const explicitCompletion = Number(client.programCompletionPercent ?? previousSummary.programCompletionPercent);
+  const savedWeeklyProgressScore = Number(client.weeklyProgressScore ?? previousSummary.weeklyProgressScore);
   const programEndingAttention = client.programEndingAttention ||
     previousSummary.programEndingAttention ||
     getTrainerProgramEndingAttention(assignedWorkoutCount, completedWorkoutCount);
@@ -493,6 +495,9 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
       ? getSubscriptionAttentionLabel(client.subscription)
       : previousSummary.subscriptionAttentionLabel || "",
     recentEvents: previousSummary.recentEvents || [],
+    weeklyProgressScore: Number.isFinite(savedWeeklyProgressScore)
+      ? Math.max(0, Math.min(100, Math.round(savedWeeklyProgressScore)))
+      : null,
     programCompletionPercent: Number.isFinite(explicitCompletion)
       ? Math.round(explicitCompletion)
       : getTrainerProgramCompletionPercent(assignedWorkoutCount, completedWorkoutCount)

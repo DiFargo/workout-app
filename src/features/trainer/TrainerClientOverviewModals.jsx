@@ -1,3 +1,6 @@
+import { createPortal } from "react-dom";
+import styles from "./TrainerClientOverviewModals.module.css";
+
 export default function TrainerClientOverviewModals({
   adminClientProgressPhotos,
   adminNewTaskDueDate,
@@ -26,29 +29,29 @@ export default function TrainerClientOverviewModals({
     { label: "Тренировка", title: "Выполнить ближайшую тренировку" }
   ];
 
-  return (
+  const modals = (
     <>
       {adminTaskComposerOpen && (
         <div
-          className="trainerClientDashboardModalOverlay"
+          className={styles.overlay}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setAdminTaskComposerOpen(false);
           }}
         >
-          <section className="trainerClientDashboardModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerTaskModalTitle">
-            <header>
+          <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerTaskModalTitle">
+            <header className={styles.header}>
               <div>
                 <span>ЗАДАЧА КЛИЕНТУ</span>
                 <h3 id="trainerTaskModalTitle">Назначить новую задачу</h3>
               </div>
               <button type="button" onClick={() => setAdminTaskComposerOpen(false)} aria-label="Закрыть">×</button>
             </header>
-            <div className="trainerClientDashboardModalBody trainerTaskCreate">
+            <div className={`${styles.body} ${styles.taskCreate}`}>
               <label>
                 <span>Что нужно сделать</span>
                 <input value={adminNewTaskTitle} onChange={(event) => setAdminNewTaskTitle(event.target.value)} placeholder="Например: сделать контрольный замер" autoFocus />
               </label>
-              <div className="trainerTaskTemplateRow" role="group" aria-label="Быстрые шаблоны задач">
+              <div className={styles.templateRow} role="group" aria-label="Быстрые шаблоны задач">
                 {taskTemplates.map((template) => (
                   <button
                     type="button"
@@ -80,21 +83,21 @@ export default function TrainerClientOverviewModals({
 
       {adminPhotoCompareOpen && (
         <div
-          className="trainerClientDashboardModalOverlay"
+          className={styles.overlay}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setAdminPhotoCompareOpen(false);
           }}
         >
-          <section className="trainerClientDashboardModal trainerClientPhotoCompareModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerPhotoCompareTitle">
-            <header>
+          <section className={`${styles.modal} ${styles.photoCompareModal}`} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerPhotoCompareTitle">
+            <header className={styles.header}>
               <div>
                 <span>ФОТО ПРОГРЕССА</span>
                 <h3 id="trainerPhotoCompareTitle">Сравнить фотосессии</h3>
               </div>
               <button type="button" onClick={() => setAdminPhotoCompareOpen(false)} aria-label="Закрыть">×</button>
             </header>
-            <div className="trainerClientDashboardModalBody">
-              <div className="trainerPhotoCompareControls">
+            <div className={styles.body}>
+              <div className={styles.photoCompareControls}>
                 {[0, 1].map((slot) => (
                   <label key={slot}>
                     <span>{slot === 0 ? "Предыдущая фотосессия" : "Новая фотосессия"}</span>
@@ -117,7 +120,7 @@ export default function TrainerClientOverviewModals({
                   </label>
                 ))}
               </div>
-              <div className="trainerPhotoCompare">
+              <div className={styles.photoCompare}>
                 {selectedPhotoCompare.map((photo, slot) => (
                   <div key={slot}>
                     {photo ? (
@@ -141,25 +144,25 @@ export default function TrainerClientOverviewModals({
 
       {adminProgramControlOpen && (
         <div
-          className="trainerClientDashboardModalOverlay"
+          className={styles.overlay}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setAdminProgramControlOpen(false);
           }}
         >
-          <section className="trainerClientDashboardModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerProgramControlTitle">
-            <header>
+          <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainerProgramControlTitle">
+            <header className={styles.header}>
               <div>
                 <span>КОНТРОЛЬ ПРОГРАММЫ</span>
                 <h3 id="trainerProgramControlTitle">Изменить сопровождение</h3>
               </div>
               <button type="button" onClick={() => setAdminProgramControlOpen(false)} aria-label="Закрыть">×</button>
             </header>
-            <div className="trainerClientDashboardModalBody trainerPaymentGrid">
+            <div className={`${styles.body} ${styles.paymentGrid}`}>
               <label><span>Назначена от</span><input type="date" value={adminPaymentDraft.assignedFrom} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, assignedFrom: event.target.value }))} /></label>
               <label><span>Контроль до</span><input type="date" value={adminPaymentDraft.controlUntil} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, controlUntil: event.target.value }))} /></label>
               <label><span>Формат</span><input value={adminPaymentDraft.format} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, format: event.target.value }))} placeholder="Например: персональная · 4 недели" /></label>
               <label><span>Состояние</span><select aria-label="Состояние контроля программы" value={adminPaymentDraft.status} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, status: event.target.value }))}><option value="active">Активна</option><option value="review">Требует проверки</option><option value="paused">Приостановлена</option></select></label>
-              <label className="wide"><span>Комментарий</span><input value={adminPaymentDraft.note} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, note: event.target.value }))} placeholder="Этап, ограничения или следующий контроль" /></label>
+              <label className={styles.wide}><span>Комментарий</span><input value={adminPaymentDraft.note} onChange={(event) => setAdminPaymentDraft((current) => ({ ...current, note: event.target.value }))} placeholder="Этап, ограничения или следующий контроль" /></label>
               <button
                 type="button"
                 onClick={async () => {
@@ -175,4 +178,7 @@ export default function TrainerClientOverviewModals({
       )}
     </>
   );
+
+  if (typeof document === "undefined") return modals;
+  return createPortal(modals, document.body);
 }

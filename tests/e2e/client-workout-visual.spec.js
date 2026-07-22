@@ -180,6 +180,9 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
     const panel = document.querySelector(
       '[data-css-module-scope="workout-stage-action-panel"], [data-css-module-scope="workout-finish-stage"]:has(button)'
     );
+    const exerciseProgress = document.querySelector('[data-testid="workout-exercise-progress"]');
+    const exerciseProgressText = exerciseProgress?.querySelector("span");
+    const stageHeading = document.querySelector('[data-css-module-scope="workout-stage-heading"]');
     const buttons = [...(panel?.querySelectorAll("button") || [])].map(rectOf);
 
     return {
@@ -191,6 +194,10 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
       card: rectOf(card),
       panel: rectOf(panel),
       buttons,
+      exerciseProgress: rectOf(exerciseProgress),
+      exerciseProgressText: rectOf(exerciseProgressText),
+      stageHeading: rectOf(stageHeading),
+      restStart: rectOf(document.querySelector('[data-testid="workout-rest-timer-start"]')),
       deckOverflowX: deck ? getComputedStyle(deck).overflowX : "",
       deckOverflowY: deck ? getComputedStyle(deck).overflowY : "",
       panelPosition: panel ? getComputedStyle(panel).position : ""
@@ -202,11 +209,11 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
   expect(metrics.deck, layoutSummary).not.toBeNull();
   expect(metrics.card, layoutSummary).not.toBeNull();
   expect(metrics.panel, layoutSummary).not.toBeNull();
-  const shortCalmExercise = metrics.theme === "warm-light"
+  const calmExerciseScrollFallback = metrics.theme === "warm-light"
     && expectedStage === "exercise"
-    && metrics.viewportHeight <= 860;
+    && metrics.viewportHeight <= 719;
   expect(metrics.deckOverflowX, layoutSummary).toBe("hidden");
-  expect(metrics.deckOverflowY, layoutSummary).toBe(shortCalmExercise ? "auto" : "hidden");
+  expect(metrics.deckOverflowY, layoutSummary).toBe(calmExerciseScrollFallback ? "auto" : "hidden");
   expect(metrics.panelPosition, layoutSummary).toBe("fixed");
   expect(metrics.deck.left, layoutSummary).toBeGreaterThanOrEqual(0);
   expect(metrics.deck.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);
@@ -214,8 +221,38 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
   expect(metrics.card.left, layoutSummary).toBeGreaterThanOrEqual(metrics.deck.left);
   expect(metrics.card.right, layoutSummary).toBeLessThanOrEqual(metrics.deck.right + 1);
   expect(metrics.card.top, layoutSummary).toBeGreaterThanOrEqual(metrics.deck.top);
-  if (!shortCalmExercise) {
+  if (!calmExerciseScrollFallback) {
     expect(metrics.card.bottom, layoutSummary).toBeLessThanOrEqual(metrics.deck.bottom + 1);
+  }
+  if (expectedStage === "exercise") {
+    expect(metrics.restStart, layoutSummary).not.toBeNull();
+    expect(metrics.restStart.height, layoutSummary).toBeGreaterThanOrEqual(30);
+    if (metrics.theme === "warm-light") {
+      expect(metrics.exerciseProgress, layoutSummary).not.toBeNull();
+      expect(metrics.exerciseProgressText, layoutSummary).not.toBeNull();
+      expect(metrics.stageHeading, layoutSummary).not.toBeNull();
+      expect(
+        Math.abs(
+          (metrics.exerciseProgress.top - metrics.stageHeading.bottom)
+          - (metrics.card.top - metrics.exerciseProgress.bottom)
+        ),
+        layoutSummary
+      ).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs(
+          (metrics.exerciseProgress.left + metrics.exerciseProgress.width / 2)
+          - (metrics.deck.left + metrics.deck.width / 2)
+        ),
+        layoutSummary
+      ).toBeLessThanOrEqual(1);
+      expect(
+        Math.abs(
+          (metrics.exerciseProgressText.left + metrics.exerciseProgressText.width / 2)
+          - (metrics.exerciseProgress.left + metrics.exerciseProgress.width / 2)
+        ),
+        layoutSummary
+      ).toBeLessThanOrEqual(1);
+    }
   }
   expect(metrics.panel.left, layoutSummary).toBeGreaterThanOrEqual(0);
   expect(metrics.panel.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);
@@ -240,23 +277,48 @@ async function expectWorkoutCardSpacing(page) {
     const deck = document.querySelector('[data-testid="workout-list-deck"]');
 
     return {
+      hint: rectOf(document.querySelector('[data-testid="workout-list-swipe-hint"]')),
       card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
       progress: rectOf(document.querySelector('[data-testid="workout-list-progress"]')),
+      stats: rectOf(document.querySelector('[data-testid="workout-card-stats"]')),
       startButton: rectOf(document.querySelector('[data-testid="workout-start-button"]')),
       bottomNav: rectOf(document.querySelector('[data-testid="client-bottom-nav"]')),
-      deckOverflow: deck ? getComputedStyle(deck).overflow : ""
+      deckOverflow: deck ? getComputedStyle(deck).overflow : "",
+      progressPosition: getComputedStyle(document.querySelector('[data-testid="workout-list-progress"]')).position
     };
   });
 
   expect(metrics.deckOverflow).toBe("visible");
   expect(metrics.card).not.toBeNull();
   expect(metrics.progress).not.toBeNull();
+  expect(metrics.stats).not.toBeNull();
   expect(metrics.startButton).not.toBeNull();
   expect(metrics.bottomNav).not.toBeNull();
+  expect(metrics.hint).not.toBeNull();
   const layoutSummary = JSON.stringify(metrics);
+  expect(metrics.card.y, layoutSummary).toBeLessThan(metrics.progress.y);
+  expect(metrics.progress.bottom, layoutSummary).toBeLessThanOrEqual(metrics.stats.y);
+  expect(metrics.stats.bottom, layoutSummary).toBeLessThanOrEqual(metrics.startButton.y);
   expect(metrics.startButton.bottom, layoutSummary).toBeLessThanOrEqual(metrics.card.bottom);
-  expect(metrics.card.bottom, layoutSummary).toBeLessThan(metrics.progress.y);
-  expect(metrics.progress.bottom, layoutSummary).toBeLessThanOrEqual(metrics.bottomNav.y);
+  expect(metrics.card.bottom, layoutSummary).toBeLessThanOrEqual(metrics.bottomNav.y);
+}
+
+async function expectCompletedWorkoutCardState(page) {
+  const status = page.getByTestId("workout-card-status");
+  const startButton = page.getByTestId("workout-start-button");
+  const image = page.getByTestId("workout-card-body").locator("img");
+
+  await expect(status).toHaveText("Выполнена");
+  await expect(startButton).toHaveText("Повторить тренировку");
+  await expect(startButton).toHaveCSS("background-color", "rgb(168, 165, 173)");
+
+  const metrics = await status.evaluate((node) => ({
+    position: getComputedStyle(node).position,
+    transform: getComputedStyle(node).transform
+  }));
+  expect(metrics.position).toBe("absolute");
+  expect(metrics.transform).not.toBe("none");
+  await expect(image).toHaveCSS("filter", /blur\(/);
 }
 
 async function expectWorkoutPlanSpacing(page, { empty = false } = {}) {
@@ -472,11 +534,11 @@ test("client workout visual audit covers plan cards and workout modals", async (
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
   await expect(page.locator('[data-css-module-scope="workout-list"]')).toBeVisible();
   await expect(page.getByTestId("workout-list-card")).toBeVisible();
+  await expect(page.getByTestId("workout-list-swipe-hint")).toHaveText("‹ Свайпни влево или вправо ›");
   await expectTapTargets(page, [
     '[data-testid="workout-mode-button"]',
     '[data-testid="workout-history-button"]',
     '[data-testid="workout-start-button"]',
-    '[data-testid="workout-list-nav"] button',
     '[data-testid="client-bottom-nav"] button'
   ]);
   await expectWorkoutCardSpacing(page);
@@ -498,6 +560,13 @@ test("client workout visual audit covers plan cards and workout modals", async (
   await expectWorkoutCardSpacing(page);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-workout-next-card.png");
+
+  await page.goto("/?clientHarness=1&clientWorkoutState=completed");
+  await page.getByTestId("client-nav-workouts").click();
+  await expectCompletedWorkoutCardState(page);
+  await expectWorkoutCardSpacing(page);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "client-workout-completed-card.png");
 
   await page.getByTestId("workout-mode-button").click();
   await expect(page.getByTestId("workout-mode-dialog")).toBeVisible();
@@ -593,6 +662,7 @@ test("CSS V2 workout list stays separated and overflow-free at target viewports"
     { width: 360, height: 800 },
     { width: 390, height: 844 },
     { width: 430, height: 932 },
+    { width: 591, height: 1280 },
     { width: 768, height: 1024 },
     { width: 1440, height: 900 }
   ];
@@ -1113,6 +1183,13 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
   await expect(warmupPreset).toHaveAttribute("aria-pressed", "true");
   await page.locator('[data-css-module-scope="workout-stage-action-panel"] button').nth(1).click();
   await expect(page.getByTestId("workout-run-stage")).toHaveAttribute("data-workout-stage", "exercise");
+
+  const restTimerStart = page.getByTestId("workout-rest-timer-start");
+  await expect(restTimerStart).toHaveText("Стоп");
+  await restTimerStart.click();
+  await expect(restTimerStart).toHaveText("Продолжить");
+  await restTimerStart.click();
+  await expect(restTimerStart).toHaveText("Стоп");
 
   await page.getByTestId("workout-exercise-support").locator("button").nth(1).click();
   const noteModal = page.getByTestId("workout-exercise-note-modal");

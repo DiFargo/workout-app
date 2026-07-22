@@ -18,10 +18,10 @@
   width: min(390px, 100%);
   height: min(820px, calc(100dvh - 24px));
   max-height: min(820px, calc(100dvh - 24px));
-  padding: 0;
+  padding: 15px;
   display: grid;
   grid-template-rows: auto 48px minmax(0, 1fr);
-  gap: 8px;
+  gap: 12px;
   overflow: hidden;
   border: 1px solid var(--color-profile-modal-border);
   border-radius: 32px;
@@ -38,7 +38,7 @@
 
 .tabs {
   box-sizing: border-box;
-  margin: 0 16px;
+  margin: 0;
   padding: 3px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -69,7 +69,7 @@
 
 .body {
   min-height: 0;
-  padding: 2px 16px 24px;
+  padding: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -99,8 +99,8 @@
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 0;
+    padding: 12px;
     grid-template-rows: auto 46px minmax(0, 1fr);
-    gap: 6px;
+    gap: 9px;
   }
 }

@@ -1,4 +1,5 @@
 import { Send } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileTelegramModal.module.css";
 
@@ -31,11 +32,21 @@ export default function ProfileTelegramModal({
         aria-labelledby="profileTelegramManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <ProfileModalCloseButton
-          className={styles.closeButton}
-          testId="profile-telegram-close"
-          ariaLabel="Закрыть Telegram"
-          onClick={onClose}
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          className={styles.header}
+          title={telegramProfile.connected ? "Telegram подключён" : "Привязать Telegram"}
+          titleId="profileTelegramManageTitle"
+          scope="profile-telegram-header"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-telegram-close"
+              ariaLabel="Закрыть Telegram"
+              onClick={onClose}
+            />
+          )}
         />
 
         <div className={styles.head}>
@@ -43,8 +54,6 @@ export default function ProfileTelegramModal({
             {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" onError={onAvatarError} /> : <span className={styles.avatarFallback}><Send size={25} strokeWidth={1.9} /></span>}
           </div>
           <div>
-            <span className={styles.eyebrow}>TELEGRAM</span>
-            <h3 className={styles.heading} id="profileTelegramManageTitle">{telegramProfile.connected ? "Telegram подключён" : "Привязать Telegram"}</h3>
             <p className={styles.intro}>
               {telegramProfile.connected
                 ? `${telegramProfile.displayName || `@${telegramProfile.username || "telegram"}`} ${telegramProfile.username ? `· @${telegramProfile.username}` : ""}`

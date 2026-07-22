@@ -6,10 +6,12 @@
   min-height: 100dvh;
   max-height: 100dvh;
   margin: 0 auto;
+  /* Kept inside the viewport-sized shell: this becomes usable end space only
+     when the page itself is taller than the screen. */
   padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px));
   position: relative;
   overflow: hidden auto;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   color: #28262e;
@@ -31,5 +33,17 @@
     max-height: min(874px, 100dvh);
     border-radius: 54px;
     box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
+  }
+}
+
+@media (display-mode: standalone) {
+  .root.root {
+    --client-shell-height: auto;
+    --client-shell-min-height: 100svh;
+    --client-shell-max-height: none;
+    height: auto;
+    min-height: 100svh;
+    max-height: none;
+    overflow: visible;
   }
 }

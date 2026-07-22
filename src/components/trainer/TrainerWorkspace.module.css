@@ -3760,7 +3760,7 @@
   }
 
   :global(.trainerNextClientTable > button > .trainerNextClientActivity) {
-    display: none !important;
+    display: none;
   }
 
   :global(.trainerNextClientIdentity small) {

@@ -26,7 +26,8 @@
 }
 
 .item,
-.themeButton {
+.themeButton,
+.notificationButton {
   width: 100%;
   min-height: 68px;
   margin: 0;
@@ -50,13 +51,60 @@
   background: var(--background-profile-app-item-connected);
 }
 
+.notificationButton {
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 46px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--color-profile-app-item-border);
+  background: var(--background-profile-app-item);
+  text-align: left;
+}
+
+.notificationIcon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--color-profile-app-email-avatar-border);
+  border-radius: 16px;
+  background: var(--background-profile-app-email-avatar);
+  color: var(--color-profile-app-email-avatar);
+}
+
+.notificationText {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.notificationText strong {
+  color: var(--color-profile-app-item-text);
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.notificationText small {
+  overflow: hidden;
+  color: var(--color-profile-app-item-muted);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.18;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .item:focus,
-.themeButton:focus {
+.themeButton:focus,
+.notificationButton:focus {
   outline: none;
 }
 
 .item:focus-visible,
-.themeButton:focus-visible {
+.themeButton:focus-visible,
+.notificationButton:focus-visible {
   outline: 2px solid var(--color-profile-app-focus);
   outline-offset: 2px;
 }
@@ -193,6 +241,21 @@
 .themeButton[aria-pressed="true"] .toggle {
   justify-content: flex-end;
   background: var(--background-profile-app-toggle-active);
+}
+
+.notificationButton[aria-pressed="true"] .toggle {
+  justify-content: flex-end;
+  background: var(--background-profile-app-toggle-active);
+}
+
+.notificationButton:active {
+  background: var(--background-profile-app-item-connected);
+  transform: scale(0.99);
+}
+
+.notificationButton:disabled {
+  cursor: default;
+  opacity: 0.62;
 }
 
 :global(:root[data-app-theme="warm-light"]) .modal .themeButton {

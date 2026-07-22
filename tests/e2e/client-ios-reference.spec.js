@@ -27,6 +27,38 @@ async function expectStickyHeaderWhileScrolling(header) {
     const result = {
       initialY,
       scrolledY: node.getBoundingClientRect().y,
+      scrollTop: shell.scrollTop,
+      scrollHeight: shell.scrollHeight,
+      clientHeight: shell.clientHeight
+    };
+    shell.scrollTo({ top: 0 });
+    return result;
+  });
+
+  expect(metrics).not.toBeNull();
+  if (metrics.scrollHeight > metrics.clientHeight) {
+    expect(metrics.scrollTop).toBeGreaterThan(0);
+    expect(Math.round(metrics.scrolledY)).toBe(Math.round(metrics.initialY));
+  }
+}
+
+async function expectCabinetLogoutReachable(page) {
+  const metrics = await page.evaluate(async () => {
+    const shell = document.querySelector('[data-css-module-scope="profile-dashboard-shell"]');
+    const logout = document.querySelector('[data-testid="profile-cabinet-logout"]');
+    const bottomNav = document.querySelector('[data-testid="client-bottom-nav"]');
+    if (!shell || !logout || !bottomNav) return null;
+
+    shell.scrollTo({ top: shell.scrollHeight });
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    const logoutRect = logout.getBoundingClientRect();
+    const navRect = bottomNav.getBoundingClientRect();
+    const result = {
+      clientHeight: shell.clientHeight,
+      logoutBottom: logoutRect.bottom,
+      navTop: navRect.top,
+      scrollHeight: shell.scrollHeight,
       scrollTop: shell.scrollTop
     };
     shell.scrollTo({ top: 0 });
@@ -34,8 +66,9 @@ async function expectStickyHeaderWhileScrolling(header) {
   });
 
   expect(metrics).not.toBeNull();
+  expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight);
   expect(metrics.scrollTop).toBeGreaterThan(0);
-  expect(Math.round(metrics.scrolledY)).toBe(Math.round(metrics.initialY));
+  expect(metrics.logoutBottom).toBeLessThanOrEqual(metrics.navTop - 8);
 }
 
 async function expectAlignedLeft(...locators) {
@@ -79,24 +112,21 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.locator("html")).toHaveCSS("overscroll-behavior-y", "none");
   await expect(page.locator("body")).toHaveCSS("overscroll-behavior-y", "none");
   await expect(page.getByTestId("client-harness-main")).toHaveCSS("overscroll-behavior-y", "none");
-  await expectRect(page.getByTestId("profile-main-title"), { x: 169, y: 19, width: 63, height: 22 });
+  await expectRect(page.getByTestId("profile-main-title"), { x: 20, y: 16, width: 79, height: 28 });
+  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "20px");
   await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 8, width: 44, height: 44 });
-  await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 72, width: 370, height: 96 });
-  await expectRect(page.getByTestId("profile-main-next-workout"), { x: 16, y: 182, width: 370, height: 128 });
-  await expectRect(page.getByTestId("profile-progress-card"), { x: 16, y: 324, width: 370, height: 136 });
-  await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 474, width: 370, height: 174 });
-  await expectRect(page.getByTestId("profile-main-last-workout"), { x: 16, y: 662, width: 370, height: 50 });
+  await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 72, width: 370, height: 142 });
+  await expectRect(page.getByTestId("profile-main-next-workout"), { x: 16, y: 228, width: 370, height: 142 });
+  await expectRect(page.getByTestId("profile-progress-card"), { x: 16, y: 384, width: 370, height: 142 });
+  await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 540, width: 370, height: 142 });
+  await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
   await expectAlignedLeft(
     page.getByTestId("profile-main-hero-greeting"),
-    page.getByTestId("profile-main-hero-title"),
-    page.getByTestId("profile-main-hero-workouts")
+    page.getByTestId("profile-main-hero-title")
   );
-  await expectHorizontalGap(
-    page.getByTestId("profile-main-hero-title"),
-    page.getByTestId("profile-main-hero-goal"),
-    8
-  );
+  await expect(page.getByTestId("profile-main-hero-greeting")).not.toContainText(",");
+  await expect(page.getByTestId("profile-main-hero-goal")).toHaveCount(0);
   await expectAlignedLeft(
     page.getByTestId("profile-main-next-eyebrow"),
     page.getByTestId("profile-main-next-title"),
@@ -107,6 +137,14 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
     page.getByTestId("profile-main-next-open"),
     14
   );
+  await expect(page.getByTestId("profile-main-next-open")).toHaveCSS("width", "120px");
+  await expect(page.getByTestId("profile-main-next-open")).toHaveCSS("height", "54px");
+  await expect(page.getByTestId("profile-main-next-open")).toHaveCSS("white-space", "normal");
+  await expect(page.getByTestId("profile-main-next-workout").locator("h2")).toHaveCSS("font-size", "21px");
+  await expectVerticallyCentered(
+    page.getByTestId("profile-main-next-workout").locator("h2"),
+    page.getByTestId("profile-main-next-workout")
+  );
   await expectVerticallyCentered(
     page.getByTestId("profile-main-next-open"),
     page.getByTestId("profile-main-next-workout")
@@ -116,17 +154,20 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
 
   await page.getByTestId("client-nav-cabinet").click();
   await expect(page.getByTestId("profile-cabinet-title")).toHaveText("Кабинет");
+  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "20px");
   await expectRect(page.getByTestId("profile-cabinet-title-row"), { x: 20, y: 8, width: 362, height: 44 });
-  await expectRect(page.getByTestId("profile-cabinet-action-account"), { x: 16, y: 72, width: 370, height: 100 });
-  await expectRect(page.getByTestId("profile-cabinet-action-body-control"), { x: 17, y: 223, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 17, y: 363, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 17, y: 485, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 17, y: 625, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-account"), { x: 16, y: 96, width: 370, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-body-control"), { x: 17, y: 217, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 17, y: 357, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 17, y: 427, width: 368, height: 70 });
+  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 17, y: 619, width: 368, height: 70 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
   await expectStickyHeaderWhileScrolling(page.locator('[data-css-module-scope="profile-cabinet-title-row"]'));
+  await expectCabinetLogoutReachable(page);
 
   await page.getByTestId("client-nav-nutrition").click();
   await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveText("Питание");
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "20px");
   await expectRect(page.locator('[data-nutrition-header-part="title-row"]'), { x: 20, y: 8, width: 362, height: 44 });
   await expectRect(page.getByTestId("nutrition-header-search"), { x: 286, y: 8, width: 44, height: 44 });
   await expectRect(page.getByTestId("nutrition-header-calendar"), { x: 338, y: 8, width: 44, height: 44 });
@@ -136,6 +177,9 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.getByTestId("nutrition-diary-list"), { x: 16, y: 457, width: 370, height: 150 });
   await expectRect(page.getByTestId("nutrition-summary"), { x: 16, y: 623, width: 370, height: 72 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
+
+  await page.getByTestId("client-nav-workouts").click();
+  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "20px");
 
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=exercise&clientHarnessTheme=warm-light");
   await expectRect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" }), { x: 16, y: 8, width: 44, height: 44 });
@@ -150,4 +194,15 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 797, width: 402, height: 77 });
 
   assertNoRuntimeErrors();
+});
+
+test("cabinet scroll keeps logout reachable above the iOS dock", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile-chromium", "The cabinet interaction is mobile-specific.");
+
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
+  await page.getByTestId("client-nav-cabinet").click();
+
+  await expect(page.getByTestId("profile-cabinet-logout")).toBeVisible();
+  await expectCabinetLogoutReachable(page);
 });

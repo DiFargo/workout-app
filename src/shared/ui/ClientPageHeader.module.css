@@ -72,17 +72,34 @@
   clip-path: inset(50%);
 }
 
-.title {
+.root .title {
   margin: 0;
   overflow: hidden;
   color: #28262e;
-  font-size: 16px !important;
-  font-weight: 650 !important;
-  letter-spacing: -0.25px !important;
-  line-height: 22px !important;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.25px;
+  line-height: 22px;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.root.primary .title {
+  font-size: 20px;
+  letter-spacing: -0.32px;
+  line-height: 28px;
+}
+
+.startTitle .heading {
+  right: 54px;
+  left: 0;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.startTitle .title {
+  text-align: left;
 }
 
 .actions {

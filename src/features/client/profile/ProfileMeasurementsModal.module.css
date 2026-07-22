@@ -15,11 +15,11 @@
   box-sizing: border-box;
   width: min(100%, 390px);
   max-height: calc(100dvh - 32px);
-  padding: 18px;
+  padding: 15px;
   overflow-y: auto;
   overscroll-behavior: contain;
   border: 1px solid var(--color-profile-measurements-dialog-border);
-  border-radius: 30px;
+  border-radius: 32px;
   background: var(--background-profile-measurements-dialog);
   box-shadow: var(--shadow-profile-measurements-dialog);
   color: var(--color-profile-measurements-text);
@@ -301,7 +301,7 @@
 
 @media (max-height: 720px) {
   .dialog:not(.bodyControlDialog) {
-    padding: 14px;
+    padding: 12px;
   }
 
   .summary {

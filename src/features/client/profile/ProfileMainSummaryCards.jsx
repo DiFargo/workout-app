@@ -16,7 +16,7 @@ export function ProfileNextWorkoutCard({
         <CalendarDays aria-hidden="true" />
         <span data-testid="profile-main-next-meta-text">{dateText}{exerciseCount ? `  •  ${exerciseCount} упражнений` : ""}</span>
       </div>
-      <button type="button" data-testid="profile-main-next-open" onClick={onOpen}>Открыть план</button>
+      <button type="button" data-testid="profile-main-next-open" onClick={onOpen}>Начать тренировку</button>
     </article>
   );
 }

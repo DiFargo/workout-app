@@ -257,7 +257,7 @@ export function createProfileTelegramHandlers({
       displayName: "",
       avatarUrl: "",
       chatId: "",
-      notificationsEnabled: true
+      notificationsEnabled: telegramDraft.notificationsEnabled !== false
     };
 
     setTelegramProfile(nextTelegramProfile);
@@ -284,6 +284,58 @@ export function createProfileTelegramHandlers({
     }
   }
 
+  async function toggleTelegramNotifications(enabled) {
+    const notificationsEnabled = enabled !== false;
+    const previousNotificationsEnabled = telegramDraft.notificationsEnabled !== false;
+    const nextTelegramProfile = {
+      ...telegramDraft,
+      notificationsEnabled
+    };
+
+    setTelegramProfile((current) => {
+      const nextTelegram = {
+        ...current,
+        notificationsEnabled
+      };
+
+      try {
+        safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegram);
+      } catch {
+        // ignore localStorage errors
+      }
+
+      return nextTelegram;
+    });
+    setTelegramDraft((current) => ({ ...current, notificationsEnabled }));
+
+    if (!auth.currentUser?.uid) return;
+
+    try {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        telegram: nextTelegramProfile,
+        telegramNotificationsEnabled: notificationsEnabled
+      }, { merge: true });
+    } catch (error) {
+      console.error("Telegram notifications update failed:", error);
+      setTelegramProfile((current) => {
+        const previousTelegram = {
+          ...current,
+          notificationsEnabled: previousNotificationsEnabled
+        };
+
+        try {
+          safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, previousTelegram);
+        } catch {
+          // ignore localStorage errors
+        }
+
+        return previousTelegram;
+      });
+      setTelegramDraft((current) => ({ ...current, notificationsEnabled: previousNotificationsEnabled }));
+      setTelegramStatus("Не получилось сохранить настройку уведомлений.");
+    }
+  }
+
   return {
     handleTelegramLoginAuth,
     refreshTelegramAvatar,
@@ -292,6 +344,7 @@ export function createProfileTelegramHandlers({
     checkTelegramLoginResult,
     refreshTelegramConnection,
     saveTelegramConnection,
-    disconnectTelegram
+    disconnectTelegram,
+    toggleTelegramNotifications
   };
 }

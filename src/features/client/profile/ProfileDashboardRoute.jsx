@@ -12,7 +12,7 @@ import ProfileCabinetTitleRow from "./ProfileCabinetTitleRow";
 import ProfileHeroCard from "./ProfileHeroCard";
 import ProfileMainMeasurementSnapshot from "./ProfileMainMeasurementSnapshot";
 import ProfileMainRoleActions from "./ProfileMainRoleActions";
-import { ProfileLastWorkoutCard, ProfileNextWorkoutCard } from "./ProfileMainSummaryCards";
+import { ProfileNextWorkoutCard } from "./ProfileMainSummaryCards";
 import ProfileMeasurementWizardPanel from "./ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "./ProfileMeasurementsModal";
 import ProfileNutritionModal from "./ProfileNutritionModal";
@@ -26,7 +26,7 @@ import {
 import ProfilePasswordModal from "./ProfilePasswordModal";
 import ProfileProgressInsightCard from "./ProfileProgressInsightCard";
 import ProfileProgressPhotosModal from "./ProfileProgressPhotosModal";
-import ProfileSettingsModal, { ProfileSettingsLogoutButton } from "./ProfileSettingsModal";
+import ProfileSettingsModal from "./ProfileSettingsModal";
 import ProfileSettingsTab from "./ProfileSettingsTab";
 import ProfileTelegramModal from "./ProfileTelegramModal";
 import ProfileTrainerNotificationsModal from "./ProfileTrainerNotificationsModal";
@@ -219,6 +219,7 @@ export default function ProfileDashboardRoute(ctx) {
     telegramLinking,
     telegramProfile,
     telegramStatus,
+    toggleTelegramNotifications,
     todayNutritionKey,
     toggleAppTheme,
     toggleCabinetWorkoutHistory,
@@ -262,15 +263,13 @@ export default function ProfileDashboardRoute(ctx) {
     profileNutritionWeekDays,
     profileNutritionWeekLabel,
     profileNutritionSelectedTotals,
-    lastWorkoutDate,
     nextTrainingText,
     greetingName,
     profileAvatarUrl,
     mainMeasurementSeries,
     mainLatestWeight,
     mainWeightChange,
-    progressInsight,
-    aiCoachStatuses
+    progressInsight
   } = buildProfileDashboardModel({
     AI_NUTRITION_WEEK_DAYS,
     APP_PAGES,
@@ -476,6 +475,9 @@ export default function ProfileDashboardRoute(ctx) {
               greetingName={greetingName}
               activeGoalLabel={activeGoalLabel}
               totalWorkouts={totalWorkouts}
+              targetWeight={activeProfile?.targetWeight}
+              currentWeight={activeProfile?.weight}
+              goalId={activeProfile?.goal}
             />
           </ProfileMainHeroStatsShell>
         )}
@@ -483,9 +485,6 @@ export default function ProfileDashboardRoute(ctx) {
         {!isMainDashboard && visibleProfileTab === "cabinet" && (
           <ProfileCabinetActionGrid
             showClientOnlyActions={!canUseTrainerFeatures()}
-            accountName={greetingName}
-            accountRole={canUseTrainerFeatures() ? "Тренер" : "Участник"}
-            accountAvatarUrl={profileAvatarUrl}
             latestPhotoText={latestClientProgressPhoto
               ? `Последние: ${new Date(`${latestClientProgressPhoto.date || latestClientProgressPhoto.createdAt?.slice(0, 10)}T12:00:00`).toLocaleDateString("ru-RU")}`
               : "Добавь первые фото"}
@@ -506,10 +505,11 @@ export default function ProfileDashboardRoute(ctx) {
               setProfileSettingsModalOpen(true);
             }}
             onOpenNotifications={() => {
-              setProfileSettingsModalSection("app");
+              setProfileSettingsModalSection("settings");
               setProfileSettingsModalOpen(true);
             }}
             onOpenFeedback={() => setProfileFeedbackModalOpen(true)}
+            onLogout={logout}
           />
         )}
 
@@ -525,23 +525,14 @@ export default function ProfileDashboardRoute(ctx) {
         {isMainDashboard && (
           <ProfileProgressInsightCard
             progressInsight={progressInsight}
-            statuses={aiCoachStatuses}
           />
         )}
 
         {isMainDashboard && (
           <ProfileMainMeasurementSnapshot
             measurementSeries={mainMeasurementSeries}
-            latestMeasurement={latestProfileMeasurement}
             latestWeight={mainLatestWeight}
             weightChange={mainWeightChange}
-          />
-        )}
-
-        {isMainDashboard && (
-          <ProfileLastWorkoutCard
-            dateText={lastWorkoutDate}
-            onOpen={() => setPage(APP_PAGES.HISTORY)}
           />
         )}
 
@@ -695,20 +686,10 @@ export default function ProfileDashboardRoute(ctx) {
             <ProfileAppSettingsSection
               variant="account"
               isWarmLightTheme={appTheme === APP_THEMES.WARM_LIGHT}
-              email={profileAccount?.email || user?.email || ""}
-              telegramProfile={telegramProfile}
               onToggleTheme={toggleAppTheme}
-              onOpenEmail={() => {
-                setProfileAccountStatus("");
-                setProfileEmailConnectOpen(true);
-              }}
-              onOpenTelegram={() => {
-                setTelegramStatus("");
-                setTelegramConnectOpen(true);
-              }}
-              onTelegramAvatarError={handleTelegramAvatarError}
+              showEmail={false}
+              showTelegram={false}
             />
-            <ProfileSettingsLogoutButton onClick={logout} />
           </>
         )}
 
@@ -730,13 +711,22 @@ export default function ProfileDashboardRoute(ctx) {
           <ProfileAppSettingsSection
             variant="modal"
             isWarmLightTheme={appTheme === APP_THEMES.WARM_LIGHT}
+            email={profileAccount?.email || user?.email || ""}
             telegramProfile={telegramProfile}
             onToggleTheme={toggleAppTheme}
+            onOpenEmail={() => {
+              setProfileAccountStatus("");
+              setProfileEmailConnectOpen(true);
+            }}
             onOpenTelegram={() => {
               setTelegramStatus("");
               setTelegramConnectOpen(true);
             }}
             onTelegramAvatarError={handleTelegramAvatarError}
+            showTheme={false}
+            showNotifications
+            notificationsEnabled={telegramProfile.notificationsEnabled !== false}
+            onToggleNotifications={toggleTelegramNotifications}
           />
         )}
       </ProfileSettingsModal>

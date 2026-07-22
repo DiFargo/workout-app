@@ -58,6 +58,8 @@
 .replyField textarea:focus { border-color: #7853ed; box-shadow: 0 0 0 3px rgba(104, 64, 237, .1); }
 .replyField > small { color: #9295a1; font-size: 8px; text-align: right; }
 
+.deliveryHint { margin: 9px 18px 0; color: #7b7682; font-size: 10px; line-height: 1.4; }
+
 .status { display: flex; align-items: center; gap: 7px; margin: 11px 18px 0; padding: 9px 10px; border-radius: 8px; font-size: 10px; }
 .status.sending { background: #f4f1ff; color: #6240d8; }
 .status.resolving { background: #f4f1ff; color: #6240d8; }

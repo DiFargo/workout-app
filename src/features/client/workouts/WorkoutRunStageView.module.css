@@ -17,7 +17,7 @@
   min-height: 0;
   max-height: none;
   margin: 0;
-  padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px 87px;
+  padding: max(52px, calc(env(safe-area-inset-top, 0px) + 44px)) 16px 87px;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -28,9 +28,9 @@
   box-sizing: border-box;
   width: 100%;
   max-width: none;
-  height: 680px;
-  min-height: 680px;
-  max-height: 680px;
+  height: 655px;
+  min-height: 655px;
+  max-height: 655px;
   margin: 0;
   padding: 0;
   display: flex;
@@ -47,9 +47,11 @@
   width: 82px;
   height: 25px;
   min-height: 25px;
-  margin: 0 auto -1px;
-  display: grid;
-  place-items: center;
+  margin: 0 auto;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 13px;
   background: #f0ebfa;
   color: #8f7ac8;
@@ -58,7 +60,35 @@
   line-height: 1;
   text-transform: none;
 }
+:global(:root[data-app-theme="warm-light"]) .exerciseProgressSlot {
+  box-sizing: border-box;
+  width: 100%;
+  height: 41px;
+  min-height: 41px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 :global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta > span { color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta > span {
+  width: 100%;
+  display: block;
+  line-height: 25px;
+  text-align: center;
+}
+:global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta > .exerciseProgressText {
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+}
 :global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta b { display: none; }
 
 .planSection {
@@ -94,10 +124,51 @@
   flex: 0 0 54px;
 }
 
-@media (max-height: 860px) {
+/* Preserve the full exercise flow on phones with a short effective viewport.
+   The deck scrolls only after the compact video and set layout can no longer fit. */
+@media (max-height: 824px) {
+  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
+    padding-bottom: 77px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard {
+    height: min(655px, calc(100dvh - 170px));
+    min-height: min(655px, calc(100dvh - 170px));
+    max-height: min(655px, calc(100dvh - 170px));
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard .planSection {
+    height: clamp(259px, calc(100dvh - 530px), 295px);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard .planCard {
+    height: calc(100% - 37px);
+  }
+}
+
+@media (max-height: 824px) {
+  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck [data-testid="workout-exercise-video-frame"] {
+    height: clamp(210px, calc(100dvh - 545px), 280px);
+    min-height: clamp(210px, calc(100dvh - 545px), 280px);
+    max-height: clamp(210px, calc(100dvh - 545px), 280px);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck [data-testid="workout-exercise-video-frame"] > video,
+  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck [data-testid="workout-exercise-video-frame"] > [data-css-module-scope="workout-exercise-video-fallback"] {
+    height: calc(100% - 30px);
+  }
+}
+
+@media (max-height: 719px) {
   :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
     overflow-y: auto;
     scrollbar-width: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard {
+    height: 549px;
+    min-height: 549px;
+    max-height: 549px;
   }
 }
 

@@ -113,6 +113,13 @@
   text-align: center;
 }
 
+.exitHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
 .exitIcon {
   width: 44px;
   height: 44px;
@@ -123,6 +130,28 @@
   background: var(--background-workout-dialog-icon);
   color: var(--color-workout-dialog-icon);
   font-size: 22px;
+}
+
+.exitHeader .exitIcon {
+  margin: 0;
+}
+
+.exitCloseButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: var(--background-workout-dialog-icon);
+}
+
+.exitCloseButton:active {
+  transform: scale(0.96);
 }
 
 .exitCard h2 {
@@ -472,7 +501,6 @@
 /* Calm iOS workout dialogs. These overrides are limited to the light client
    theme so the existing dark experience remains available. */
 :global(:root[data-app-theme="warm-light"]) .draftOverlay.draftOverlay,
-:global(:root[data-app-theme="warm-light"]) .exitOverlay.exitOverlay,
 :global(:root[data-app-theme="warm-light"]) .postOverlay.postOverlay {
   padding: max(12px, env(safe-area-inset-top, 0px)) 16px max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
   align-items: flex-end;
@@ -482,7 +510,6 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .draftCard.draftCard,
-:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard,
 :global(:root[data-app-theme="warm-light"]) .postCard.postCard {
   box-sizing: border-box;
   width: min(370px, 100%);
@@ -494,8 +521,7 @@
   box-shadow: 0 18px 52px rgba(32, 35, 38, 0.18);
 }
 
-:global(:root[data-app-theme="warm-light"]) .draftIcon.draftIcon,
-:global(:root[data-app-theme="warm-light"]) .exitIcon.exitIcon {
+:global(:root[data-app-theme="warm-light"]) .draftIcon.draftIcon {
   width: 50px;
   height: 50px;
   margin-bottom: 12px;
@@ -506,7 +532,6 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .draftCard.draftCard h2,
-:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard h2,
 :global(:root[data-app-theme="warm-light"]) .postCard.postCard h2 {
   color: #202326;
   font-size: 20px;
@@ -516,7 +541,6 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .draftCard.draftCard p,
-:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard p,
 :global(:root[data-app-theme="warm-light"]) .postCard.postCard > p {
   margin: 8px auto 18px;
   color: #74797f;
@@ -525,13 +549,11 @@
   line-height: 17px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .draftActions.draftActions,
-:global(:root[data-app-theme="warm-light"]) .exitActions.exitActions {
+:global(:root[data-app-theme="warm-light"]) .draftActions.draftActions {
   gap: 8px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .draftActions.draftActions > button,
-:global(:root[data-app-theme="warm-light"]) .exitActions.exitActions > button {
+:global(:root[data-app-theme="warm-light"]) .draftActions.draftActions > button {
   min-height: 48px;
   padding: 0 10px;
   color: #202326;
@@ -543,10 +565,121 @@
   font-weight: 700;
 }
 
-:global(:root[data-app-theme="warm-light"]) .restoreButton.restoreButton,
-:global(:root[data-app-theme="warm-light"]) .exitActions.exitActions > button:last-child {
+:global(:root[data-app-theme="warm-light"]) .restoreButton.restoreButton {
   color: #ffffff;
   background: #627588;
+}
+
+/* Exit and partial-save use the current light lavender iOS sheet. */
+:global(:root[data-app-theme="warm-light"]) .exitOverlay.exitOverlay {
+  box-sizing: border-box;
+  padding:
+    max(16px, env(safe-area-inset-top, 0px))
+    16px
+    max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
+  align-items: flex-end;
+  background: rgba(40, 38, 46, 0.3);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard {
+  box-sizing: border-box;
+  width: min(100%, 384px);
+  padding: 16px;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #efebf3;
+  border-radius: 26px;
+  box-shadow: 0 18px 48px rgba(40, 38, 46, 0.18);
+  text-align: left;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitHeader.exitHeader {
+  margin-bottom: 14px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitIcon.exitIcon,
+:global(:root[data-app-theme="warm-light"]) .exitCloseButton.exitCloseButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  color: #8f7ac8;
+  background: #f5f2f7;
+  border: 1px solid #efebf3;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitIcon.exitIcon {
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitCloseButton.exitCloseButton {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard h2 {
+  margin: 0;
+  color: #28262e;
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -0.25px;
+  text-align: left;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard p {
+  margin: 8px 0 18px;
+  color: #7b7682;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.42;
+  text-align: left;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitActions.exitActions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitCardIncomplete .exitActions.exitActions {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitActions.exitActions > button {
+  min-height: 50px;
+  padding: 0 12px;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
+  background: #f5f2f7;
+  box-shadow: none;
+  color: #28262e;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitCardExit .exitActions.exitActions > button:first-child,
+:global(:root[data-app-theme="warm-light"]) .exitCardIncomplete .exitActions.exitActions > button:last-child {
+  color: #ffffff;
+  background: #8f7ac8;
+  border-color: #8f7ac8;
+  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.24);
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitCardExit .exitActions.exitActions > button:last-child {
+  color: #7b7682;
+  background: #ffffff;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exitActions.exitActions > button:active,
+:global(:root[data-app-theme="warm-light"]) .exitCloseButton.exitCloseButton:active {
+  transform: scale(0.97);
 }
 
 :global(:root[data-app-theme="warm-light"]) .postCard.postCard {
@@ -601,8 +734,8 @@
 :global(:root[data-app-theme="warm-light"]) .readinessOverlay.readinessOverlay {
   padding: 0;
   align-items: stretch;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f6f8;
+  color: #28262e;
   backdrop-filter: none;
 }
 
@@ -626,7 +759,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > span {
-  color: #202326;
+  color: #28262e;
   font-size: 24px;
   font-weight: 750;
   letter-spacing: -0.55px;
@@ -635,7 +768,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > small {
   margin-top: 1px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 10px;
   font-weight: 500;
 }
@@ -648,11 +781,11 @@
   flex-direction: column;
   gap: 10px;
   overflow: hidden auto;
-  color: #202326;
+  color: #28262e;
   background: #ffffff;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #efebf3;
   border-radius: 24px;
-  box-shadow: 0 3px 10px rgba(57, 67, 75, 0.08);
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
   scrollbar-width: none;
 }
 
@@ -663,26 +796,26 @@
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro {
   min-height: 64px;
   padding: 10px 11px;
-  color: #202326;
-  background: #edf1f3;
+  color: #28262e;
+  background: #f5f2f7;
   border-radius: 17px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro > span {
-  color: #627588;
-  background: #ffffff;
+  color: #8f7ac8;
+  background: #f0ebfa;
   border: 0;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro strong {
-  color: #202326;
+  color: #28262e;
   font-size: 13px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro p {
   margin: 2px 0 0;
-  color: #74797f;
+  color: #7b7682;
   font-size: 10px;
   font-weight: 500;
 }
@@ -700,18 +833,18 @@
   grid-template-columns: 38px minmax(0, 1fr);
   align-items: center;
   gap: 10px;
-  color: #202326;
-  background: #f7f8f8;
-  border: 1px solid transparent;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #efebf3;
   border-radius: 17px;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption.active {
-  color: #202326;
-  background: #edf1f3;
-  border-color: #cfd6da;
-  box-shadow: none;
+  color: #28262e;
+  background: #f0ebfa;
+  border-color: #b9a9e5;
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.08);
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption > span:first-child {
@@ -720,14 +853,14 @@
 
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption strong {
   margin: 0;
-  color: #202326;
+  color: #28262e;
   font-size: 13px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption small {
   margin-top: 2px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 9px;
   font-weight: 500;
 }
@@ -736,8 +869,8 @@
   min-height: 30px;
   margin: 0;
   padding: 7px 9px;
-  color: #627588;
-  background: #edf1f3;
+  color: #806bb6;
+  background: #f0ebfa;
   border-radius: 12px;
   font-size: 10px;
   font-weight: 600;
@@ -762,7 +895,7 @@
   gap: 10px;
   background: rgba(255, 255, 255, 0.98);
   border: 0;
-  border-top: 1px solid #e1e4e5;
+  border-top: 1px solid #efebf3;
   border-radius: 0;
   box-shadow: none;
   transform: translateX(-50%);
@@ -781,14 +914,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions > button:first-child {
-  color: #202326;
-  background: #f2f2f7;
+  color: #28262e;
+  background: #f5f2f7;
   border-radius: 24px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions > button:last-child {
   color: #ffffff;
-  background: #627588;
+  background: #8f7ac8;
 }
 
 @media (min-width: 641px) {

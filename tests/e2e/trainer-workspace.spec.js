@@ -142,6 +142,9 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
   assertNoRuntimeErrors();
 
   if (await clickIfVisible(page.locator(".trainerNextClientBackRow .trainerNextPrimary"))) {
+    const contactDialog = page.getByTestId("trainer-client-contact-dialog");
+    await expect(contactDialog).toBeVisible();
+    await contactDialog.getByTestId("trainer-client-contact-notification").click();
     const replyDialog = page.getByRole("dialog", { name: "Germes" });
     await expect(replyDialog).toBeVisible();
     await replyDialog.locator("textarea").fill("Smoke message to client");

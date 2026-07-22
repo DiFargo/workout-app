@@ -1,11 +1,14 @@
 .root {
   box-sizing: border-box;
   width: min(402px, 100vw);
-  min-height: 100dvh;
+  height: min(874px, 100dvh);
+  min-height: min(874px, 100dvh);
+  max-height: min(874px, 100dvh);
   margin: 0 auto;
   position: relative;
-  overflow: hidden auto;
-  overscroll-behavior-y: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   color: #28262e;
@@ -20,7 +23,11 @@
 .cabinet {
   display: flex;
   flex-direction: column;
-  padding: 0 0 calc(188px + env(safe-area-inset-bottom, 0px));
+  min-height: max-content;
+  /* This padding is inside the fixed-height shell: it reserves space for the
+     dock only after the content genuinely overflows, so short pages do not
+     gain an empty scroll range. */
+  padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px));
 }
 
 .measurements,
@@ -64,12 +71,16 @@
 .heroStats { width: 100%; }
 
 .version {
-  width: 1px;
-  height: 1px;
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
+  width: 100%;
+  margin: -0.25rem 0 0;
+  color: #aaa5b2;
+  font-family: var(--font-family-compact-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+  text-align: center;
 }
 
 .harnessTitle {
@@ -79,9 +90,20 @@
 
 @media (min-width: 403px) {
   .root {
-    min-height: min(874px, 100dvh);
-    max-height: min(874px, 100dvh);
     border-radius: 54px;
     box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
+  }
+}
+
+/* iOS standalone mode does not reliably scroll a fixed-height nested shell.
+   Let the document own the cabinet scroll while the fixed dock stays in place. */
+@media (display-mode: standalone) {
+  .root.main,
+  .root.cabinet {
+    --client-shell-height: auto;
+    --client-shell-min-height: 100svh;
+    --client-shell-max-height: none;
+    max-height: none;
+    overflow: visible;
   }
 }

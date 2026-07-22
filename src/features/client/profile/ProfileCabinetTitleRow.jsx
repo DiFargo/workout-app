@@ -8,6 +8,8 @@ export default function ProfileCabinetTitleRow({
   return (
     <ClientPageHeader
       title="Кабинет"
+      titleAlign="start"
+      primary
       titleTestId="profile-cabinet-title"
       className={styles.root}
       scope="profile-cabinet-title-row"

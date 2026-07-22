@@ -75,6 +75,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     "client-harness-main",
     '[data-testid="profile-main-title"]'
   );
+  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "20px");
 
   if (main.viewportWidth > 640) {
     assertNoRuntimeErrors();
@@ -87,18 +88,21 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     "client-harness-workouts",
     '[data-testid="workout-list-title"]'
   );
+  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "20px");
   const nutrition = await collectPrimaryLayoutMetric(
     page,
     "client-nav-nutrition",
     "client-harness-nutrition",
     '[data-nutrition-header-part="title"]'
   );
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "20px");
   const cabinet = await collectPrimaryLayoutMetric(
     page,
     "client-nav-cabinet",
     "client-harness-cabinet",
     '[data-testid="profile-cabinet-title"]'
   );
+  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "20px");
 
   for (const metric of [workouts, nutrition, cabinet]) {
     // Stable primary screens keep page-specific top insets within the shared 36px rhythm.
@@ -146,10 +150,11 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
       cardBody: rectOf(document.querySelector('[data-testid="workout-card-body"]')),
       cardInfo: rectOf(document.querySelector('[data-testid="workout-card-info"]')),
       startButton: rectOf(document.querySelector('[data-testid="workout-start-button"]')),
-      swipe: rectOf(document.querySelector('[data-testid="workout-swipe-affordance"]')),
+      swipeHint: rectOf(document.querySelector('[data-testid="workout-list-swipe-hint"]')),
       progress: rectOf(document.querySelector('[data-testid="workout-list-progress"]')),
       bottomNav: rectOf(document.querySelector('[data-testid="client-bottom-nav"]')),
-      deckOverflow: deckStyle?.overflow || ""
+      deckOverflow: deckStyle?.overflow || "",
+      progressPosition: getComputedStyle(document.querySelector('[data-testid="workout-list-progress"]')).position
     };
   });
 
@@ -163,11 +168,8 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   expect(workoutCardMetric.cardInfo.y).toBeGreaterThan(workoutCardMetric.cardTop.bottom);
   expect(workoutCardMetric.cardInfo.bottom).toBeLessThan(workoutCardMetric.startButton.y);
   expect(workoutCardMetric.startButton.bottom).toBeLessThanOrEqual(workoutCardMetric.card.bottom);
-  expect(workoutCardMetric.card.bottom).toBeLessThan(workoutCardMetric.swipe.y);
-  expect(workoutCardMetric.swipe.bottom).toBeLessThanOrEqual(workoutCardMetric.progress.y);
-  expect(Math.abs(
-    workoutCardMetric.swipe.x + workoutCardMetric.swipe.width / 2 - workoutCardMetric.viewportWidth / 2
-  )).toBeLessThanOrEqual(1);
+  expect(workoutCardMetric.swipeHint.bottom).toBeLessThanOrEqual(workoutCardMetric.card.y);
+  expect(workoutCardMetric.progressPosition).toBe("fixed");
   expect(workoutCardMetric.progress.bottom).toBeLessThanOrEqual(workoutCardMetric.bottomNav.y);
   expect(workoutCardMetric.bottomNav.y - workoutCardMetric.progress.bottom).toBeLessThanOrEqual(16);
   await expectNoHorizontalOverflow(page);
@@ -179,7 +181,26 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await page.goto("/?clientHarness=1");
 
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
-  await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(1);
+  const version = page.getByTestId("profile-dashboard-version");
+  await expect(version).toBeVisible();
+  await expect(version).toHaveText(/^v\.?3\.0\.\d+$/);
+  await expect(version).toHaveCSS("position", "static");
+  const versionPlacement = await page.evaluate(() => {
+    const versionNode = document.querySelector('[data-testid="profile-dashboard-version"]');
+    const weightNode = document.querySelector('[data-testid="profile-measurement-snapshot"]');
+    const versionRect = versionNode?.getBoundingClientRect();
+    const weightRect = weightNode?.getBoundingClientRect();
+
+    return versionRect && weightRect
+      ? {
+          versionTop: Math.round(versionRect.top),
+          weightBottom: Math.round(weightRect.bottom)
+        }
+      : null;
+  });
+  expect(versionPlacement).not.toBeNull();
+  expect(versionPlacement.versionTop).toBeGreaterThanOrEqual(versionPlacement.weightBottom);
+  expect(versionPlacement.versionTop - versionPlacement.weightBottom).toBeLessThanOrEqual(14);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 

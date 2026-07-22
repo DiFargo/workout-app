@@ -18,10 +18,10 @@
   width: min(390px, 100%);
   height: min(820px, calc(100dvh - 24px));
   max-height: min(820px, calc(100dvh - 24px));
-  padding: 0 16px max(18px, env(safe-area-inset-bottom, 0px));
+  padding: 15px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) 54px;
-  gap: 10px;
+  gap: 12px;
   overflow: hidden;
   border: 1px solid var(--color-profile-modal-border);
   border-radius: 32px;
@@ -34,20 +34,19 @@
 .header {
   position: relative;
   z-index: 4;
-  width: calc(100% + 32px);
-  margin-left: -16px;
+  width: 100%;
+  margin: 0;
 }
 
 .headerFrame {
-  width: calc(100% + 32px);
-  max-width: none;
-  margin-right: -16px;
-  margin-left: -16px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
 }
 
 .body {
   min-height: 0;
-  padding: 2px;
+  padding: 0;
   display: grid;
   gap: 10px;
   overflow-y: auto;
@@ -274,10 +273,10 @@
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 0 12px max(12px, env(safe-area-inset-bottom, 0px));
+    padding: 12px;
     grid-template-rows: auto minmax(0, 1fr) 50px;
-    gap: 6px;
+    gap: 9px;
   }
 
-  .header { width: calc(100% + 24px); margin-left: -12px; }
+  .header { width: 100%; margin: 0; }
 }

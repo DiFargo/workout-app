@@ -14,7 +14,6 @@ function formatSnapshotWeight(value) {
 
 export default function ProfileMainMeasurementSnapshot({
   measurementSeries,
-  latestMeasurement,
   latestWeight,
   weightChange
 }) {
@@ -59,7 +58,7 @@ export default function ProfileMainMeasurementSnapshot({
           {weightChange !== 0 && (
             <em>{weightChange > 0 ? "+" : ""}{weightChange.toFixed(1)} кг</em>
           )}
-          <small>{latestMeasurement ? "последний замер" : "добавь первый замер"}</small>
+          <small>{weightChange ? `${weightChange > 0 ? "+" : ""}${weightChange.toFixed(1)} кг за неделю` : "0 кг за неделю"}</small>
         </div>
         <div className={styles.chart} data-testid="profile-measurement-snapshot-chart">
           {chartPoints.length >= 2 ? (

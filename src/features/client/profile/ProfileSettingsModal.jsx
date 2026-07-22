@@ -4,27 +4,18 @@ import styles from "./ProfileSettingsModal.module.css";
 
 function getProfileSettingsModalTitle(section) {
   if (section === "account") return "Профиль и настройки";
+  if (section === "connections") return "Подключения";
   if (section === "profile") return "Анкета";
+  if (section === "settings") return "Уведомления";
   return "Настройки";
 }
 
 function getProfileSettingsCloseLabel(section) {
   if (section === "account") return "аккаунт";
+  if (section === "connections") return "подключения";
   if (section === "profile") return "профиль";
+  if (section === "settings") return "уведомления";
   return "настройки";
-}
-
-export function ProfileSettingsLogoutButton({ onClick }) {
-  return (
-    <button
-      className={styles.logoutButton}
-      data-testid="profile-settings-logout"
-      type="button"
-      onClick={onClick}
-    >
-      Выйти из аккаунта
-    </button>
-  );
 }
 
 export default function ProfileSettingsModal({

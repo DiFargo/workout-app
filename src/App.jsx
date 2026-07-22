@@ -7,7 +7,7 @@ function AppModuleSurface() {
   return (
     <div
       aria-hidden="true"
-      style={{ minHeight: "100dvh", background: "#f3f4f3" }}
+      style={{ minHeight: "100dvh", background: "#f7f6f8" }}
     />
   );
 }

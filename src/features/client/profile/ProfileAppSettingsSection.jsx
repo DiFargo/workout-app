@@ -1,4 +1,4 @@
-import { Mail, Moon, Sun } from "lucide-react";
+import { Bell, Mail, Moon, Sun } from "lucide-react";
 import styles from "./ProfileAppSettingsSection.module.css";
 
 export default function ProfileAppSettingsSection({
@@ -9,6 +9,12 @@ export default function ProfileAppSettingsSection({
   onOpenEmail,
   onOpenTelegram,
   onTelegramAvatarError,
+  showEmail = true,
+  showTelegram = true,
+  showTheme = true,
+  showNotifications = false,
+  notificationsEnabled = true,
+  onToggleNotifications,
   heading,
   variant = "modal",
   darkThemeLabel = "тёмный стиль",
@@ -29,7 +35,30 @@ export default function ProfileAppSettingsSection({
     >
       {heading && <p className={styles.panelTitle}>{heading}</p>}
       <div className={styles.actions}>
-        {onOpenEmail && (
+        {showNotifications && (
+          <button
+            type="button"
+            className={styles.notificationButton}
+            data-testid="profile-settings-notifications-toggle"
+            aria-label={notificationsEnabled ? "Отключить напоминания" : "Включить напоминания"}
+            aria-pressed={notificationsEnabled}
+            onClick={() => onToggleNotifications?.(!notificationsEnabled)}
+            disabled={!onToggleNotifications}
+          >
+            <span className={styles.notificationIcon} aria-hidden="true">
+              <Bell size={18} strokeWidth={2.2} />
+            </span>
+            <span className={styles.notificationText}>
+              <strong>Напоминания</strong>
+              <small>{notificationsEnabled ? "О тренировках и прогрессе" : "Напоминания отключены"}</small>
+            </span>
+            <span className={styles.toggle} aria-hidden="true">
+              <span className={styles.toggleKnob} />
+            </span>
+          </button>
+        )}
+
+        {showEmail && onOpenEmail && (
           <button
             type="button"
             className={`${styles.item} ${styles.emailItem}${email ? ` ${styles.connected}` : ""}`}
@@ -49,7 +78,7 @@ export default function ProfileAppSettingsSection({
           </button>
         )}
 
-        <button
+        {showTelegram && <button
           type="button"
           className={`${styles.item}${telegramProfile.connected ? ` ${styles.connected}` : ""}`}
           data-testid="profile-settings-telegram"
@@ -69,9 +98,9 @@ export default function ProfileAppSettingsSection({
           </span>
           <em className={styles.badge}>{telegramProfile.connected ? connectedBadge : "Подключить"}</em>
           <i className={styles.arrow}>›</i>
-        </button>
+        </button>}
 
-        <button
+        {showTheme && <button
           type="button"
           className={styles.themeButton}
           data-testid="profile-settings-theme"
@@ -89,7 +118,7 @@ export default function ProfileAppSettingsSection({
           <span className={styles.toggle} aria-hidden="true">
             <span className={styles.toggleKnob} />
           </span>
-        </button>
+        </button>}
       </div>
     </section>
   );

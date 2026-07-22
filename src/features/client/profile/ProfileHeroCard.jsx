@@ -1,4 +1,4 @@
-import { Dumbbell } from "lucide-react";
+import { Dumbbell, Scale, Target } from "lucide-react";
 import styles from "./ProfileHeroCard.module.css";
 
 function getTimeOfDayGreeting() {
@@ -10,12 +10,41 @@ function getTimeOfDayGreeting() {
   return "Доброй ночи";
 }
 
+function getDisplayTargetWeight(targetWeight, currentWeight, goalId) {
+  const explicitTarget = Number(String(targetWeight ?? "").replace(",", "."));
+  if (Number.isFinite(explicitTarget) && explicitTarget > 0) {
+    return explicitTarget;
+  }
+
+  const numericWeight = Number(String(currentWeight ?? "").replace(",", "."));
+  if (!Number.isFinite(numericWeight) || numericWeight <= 0) {
+    return null;
+  }
+
+  if (goalId === "mass") return Math.round(numericWeight * 1.08 * 10) / 10;
+  if (goalId === "cut") return Math.round(numericWeight * 0.9 * 10) / 10;
+  return numericWeight;
+}
+
+function formatTargetWeight(targetWeight, currentWeight, goalId) {
+  const numericValue = getDisplayTargetWeight(targetWeight, currentWeight, goalId);
+
+  if (numericValue === null) {
+    return "—";
+  }
+
+  return `${Number.isInteger(numericValue) ? numericValue : numericValue.toFixed(1)} кг`;
+}
+
 export default function ProfileHeroCard({
   telegramProfile,
   avatarUrl,
   greetingName,
   activeGoalLabel,
-  totalWorkouts = 0
+  totalWorkouts = 0,
+  targetWeight,
+  currentWeight,
+  goalId
 }) {
   const greeting = getTimeOfDayGreeting();
   const fallbackLetter = String(greetingName || "А").trim().charAt(0).toUpperCase() || "А";
@@ -42,12 +71,37 @@ export default function ProfileHeroCard({
       </div>
 
       <div className={styles.text} data-testid="profile-main-hero-text">
-        <span className={styles.greeting} data-testid="profile-main-hero-greeting">{greeting},</span>
-        <h2 className={styles.title} data-testid="profile-main-hero-title">{greetingName}</h2>
-        <span className={styles.workouts} data-testid="profile-main-hero-workouts"><Dumbbell aria-hidden="true" />{totalWorkouts} {totalWorkouts === 1 ? "тренировка" : "тренировки"}</span>
+        <div className={styles.identity}>
+          <span className={styles.greeting} data-testid="profile-main-hero-greeting">{greeting}</span>
+          <h2 className={styles.title} data-testid="profile-main-hero-title">{greetingName}</h2>
+        </div>
       </div>
 
-      <span className={styles.goal} data-testid="profile-main-hero-goal">{activeGoalLabel}</span>
+      <div className={styles.stats} data-testid="profile-main-hero-stats">
+        <span className={styles.stat}>
+          <span className={styles.statLabel}>
+            <Target aria-hidden="true" />
+            <small>Цель</small>
+          </span>
+          <strong>{activeGoalLabel}</strong>
+        </span>
+        <span className={styles.stat}>
+          <span className={styles.statLabel}>
+            <Scale aria-hidden="true" />
+            <small>Целевой вес</small>
+          </span>
+          <strong data-testid="profile-main-hero-target-weight">
+            {formatTargetWeight(targetWeight, currentWeight, goalId)}
+          </strong>
+        </span>
+        <span className={styles.stat}>
+          <span className={styles.statLabel}>
+            <Dumbbell aria-hidden="true" />
+            <small>Тренировок</small>
+          </span>
+          <strong data-testid="profile-main-hero-workouts">{totalWorkouts}</strong>
+        </span>
+      </div>
     </div>
   );
 }

@@ -379,9 +379,6 @@ export function buildProfileDashboardModel(ctx) {
       scheduledDates: dashboardScheduledDates,
       goal: currentGoalId
     });
-    const aiCoachStatuses = progressInsight.statuses;
-
-
   return {
     isMainDashboard,
     visibleProfileTab,
@@ -459,7 +456,6 @@ export function buildProfileDashboardModel(ctx) {
     mainLatestWeight,
     mainPreviousWeight,
     mainWeightChange,
-    progressInsight,
-    aiCoachStatuses
+    progressInsight
   };
 }

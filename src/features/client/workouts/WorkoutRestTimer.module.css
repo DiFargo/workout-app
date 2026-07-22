@@ -4,7 +4,7 @@
   height: 54px;
   padding: 7px 11px 7px 12px;
   display: grid;
-  grid-template-columns: 20px 1fr auto;
+  grid-template-columns: 20px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 6px;
   border: 1px solid #ebe6ef;
@@ -17,6 +17,26 @@
 .timer { padding: 0; display: flex; flex-direction: column; align-items: flex-start; border: 0; background: transparent; color: #28262e; font: inherit; }
 .timer small { color: #7b7682; font-size: 10px; font-weight: 600; line-height: 14px; }
 .timer strong { font-size: 19px; font-weight: 700; line-height: 22px; }
-.controls { display: flex; gap: 8px; }
+.startButton {
+  min-width: 59px;
+  height: 30px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  border-radius: 15px;
+  background: #8f7ac8;
+  color: #fff;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 4px 10px rgba(128, 107, 182, 0.2);
+}
+.startButton svg { width: 11px; height: 11px; fill: currentColor; stroke-width: 2.6; }
+.startButton.running { background: #806bb6; }
+.controls { display: flex; gap: 5px; }
 .controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: #f4f4f8; color: #28262e; font: inherit; font-size: 10px; font-weight: 700; }
 .controls .add { background: #f0ebfa; color: #8f7ac8; }

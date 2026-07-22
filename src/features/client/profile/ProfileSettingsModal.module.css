@@ -18,10 +18,10 @@
   width: min(390px, 100%);
   height: auto;
   max-height: min(820px, calc(100dvh - 24px));
-  padding: 0;
+  padding: 15px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 0;
+  gap: 12px;
   overflow: hidden;
   border: 1px solid var(--color-profile-modal-border);
   border-radius: 32px;
@@ -38,17 +38,17 @@
 .accountCompact {
   height: auto;
   max-height: min(820px, calc(100dvh - 24px));
-  padding: 0;
+  padding: 15px;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 0;
+  gap: 12px;
 }
 
 .profileCompact {
   height: auto;
   max-height: min(820px, calc(100dvh - 24px));
-  padding: 0;
+  padding: 15px;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 0;
+  gap: 12px;
   border-radius: 32px;
 }
 
@@ -59,7 +59,7 @@
 
 .body {
   min-height: 0;
-  padding: 4px 16px 24px;
+  padding: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -70,41 +70,27 @@
 }
 
 .accountCompact .body {
-  padding: 4px 16px 24px;
+  padding: 0;
 }
 
 .profileCompact .body {
-  padding: 4px 16px 24px;
-}
-
-.logoutButton {
-  width: 100%;
-  min-height: 44px;
-  margin: 0;
-  border: 1px solid var(--color-profile-account-logout-border);
-  border-radius: 15px;
-  background: var(--background-profile-account-logout);
-  box-shadow: none;
-  color: var(--color-profile-account-logout);
-  font-size: 13px;
-  font-weight: 950;
-  cursor: pointer;
-}
-
-.logoutButton:focus-visible {
-  outline: 2px solid var(--color-profile-settings-focus);
-  outline-offset: 2px;
+  padding: 0;
 }
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 0;
+    padding: 12px;
     grid-template-rows: auto minmax(0, 1fr);
-    gap: 0;
+    gap: 9px;
   }
 
   .profileCompact {
-    padding: 0;
+    padding: 12px;
+  }
+
+  .accountCompact {
+    padding: 12px;
+    gap: 9px;
   }
 
 }

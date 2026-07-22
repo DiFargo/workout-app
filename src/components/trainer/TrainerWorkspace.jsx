@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import workspaceStyles from "./TrainerWorkspace.module.css";
+import workspaceStyles from "./TrainerWorkspaceCalm.module.css";
 import adaptiveStyles from "./TrainerWorkspaceAdaptive.module.css";
 import trainerProgramConstructorStyles from "./TrainerProgramConstructor.module.css";
 import TrainerWorkoutFeedbackReplyModal from "./TrainerWorkoutFeedbackReplyModal";
 import trainerWorkoutFeedbackReplyStyles from "./TrainerWorkoutFeedbackReplyModal.module.css";
+import TrainerClientContactModal from "./TrainerClientContactModal";
 import TrainerClientTasks from "./TrainerClientTasks";
 import TrainerExerciseLoadReviewModal from "./TrainerExerciseLoadReviewModal";
 import trainerExerciseLoadReviewStyles from "./TrainerExerciseLoadReviewModal.module.css";
@@ -27,6 +28,7 @@ import {
 } from "../../utils/trainerWorkoutReviewDecision.js";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings.js";
 import { getTrainerClientMessageResolvedIds } from "../../utils/trainerClientMessageResolution.js";
+import { getClientTelegramProfile } from "../../utils/clientTelegramProfile.js";
 import {
   getSubscriptionAttentionLabel,
   getSubscriptionStatus
@@ -67,7 +69,6 @@ import {
   History,
   Mail,
   MessageSquare,
-  MoreHorizontal,
   Plus,
   RefreshCw,
   Repeat2,
@@ -91,32 +92,21 @@ const NAV_ITEMS = [
   { id: "clients", label: "Клиенты", icon: Users },
   { id: "nutrition", label: "Питание", icon: Utensils },
   { id: "workouts", label: "Программы", icon: Dumbbell },
-  { id: "analytics", label: "Аналитика", icon: BarChart3 },
-  { id: "notifications", label: "Уведомления", icon: Bell },
-  { id: "more", label: "Ещё", mobileLabel: "Ещё", icon: MoreHorizontal }
+  { id: "more", label: "Кабинет", mobileLabel: "Кабинет", icon: User }
 ];
 
 export function TrainerProgramConstructorStyleScope({ children }) {
   return <>{children(trainerProgramConstructorStyles)}</>;
 }
 
-const MOBILE_OVERFLOW_ITEMS = [
-  { id: "workouts", label: "Программы", icon: Dumbbell },
-  { id: "analytics", label: "Аналитика", icon: BarChart3 },
-  { id: "notifications", label: "Уведомления", icon: Bell },
-  { id: "more", label: "Кабинет", icon: User }
-];
-
 const DESKTOP_NAV_ITEMS = [
   { id: "dashboard", label: "Обзор", icon: Home },
   { id: "clients", label: "Клиенты", icon: Users },
   { id: "workouts", label: "Программы", icon: Dumbbell },
-  { id: "analytics", label: "Аналитика", icon: BarChart3 },
-  { id: "notifications", label: "Уведомления", icon: Bell },
   { id: "more", label: "Кабинет", icon: User }
 ];
 
-const MOBILE_OVERFLOW_IDS = new Set(MOBILE_OVERFLOW_ITEMS.map((item) => item.id));
+const CABINET_SECTION_IDS = new Set(["more", "analytics", "notifications"]);
 
 const NUTRITION_PLAN_PRESETS = {
   maintain: {
@@ -179,6 +169,13 @@ const CLIENT_TABS = [
   { id: "messages", label: "Сообщения" },
   { id: "notifications", label: "Уведомления" }
 ];
+
+const CLIENT_TAB_ICONS = {
+  overview: Home,
+  exercises: Dumbbell,
+  nutrition: Utensils,
+  bodyProgress: Camera
+};
 
 const WORKOUT_STATUS_OPTIONS = [
   { id: "planned", label: "Запланирована", icon: "📅" },
@@ -543,13 +540,12 @@ function ClientStatus({ status = {} }) {
 }
 
 function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion }) {
-  const [overflowOpen, setOverflowOpen] = useState(false);
   const desktopItems = DESKTOP_NAV_ITEMS;
-  const mobileItems = NAV_ITEMS.filter((item) => ["dashboard", "clients", "more"].includes(item.id));
+  const mobileItems = NAV_ITEMS.filter((item) => ["dashboard", "clients", "workouts", "more"].includes(item.id));
 
   const renderButton = (item, mobile = false) => {
     const Icon = item.icon;
-    const active = activeSection === item.id || (mobile && item.id === "more" && MOBILE_OVERFLOW_IDS.has(activeSection));
+    const active = activeSection === item.id || (item.id === "more" && CABINET_SECTION_IDS.has(activeSection));
     return (
       <button
         type="button"
@@ -557,13 +553,7 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
         data-section={item.id}
         data-testid={mobile ? `trainer-nav-${item.id}` : `trainer-desktop-nav-${item.id}`}
         className={active ? "active" : ""}
-        onClick={() => {
-          if (mobile && item.id === "more") {
-            setOverflowOpen(true);
-            return;
-          }
-          onNavigate(item.id);
-        }}
+        onClick={() => onNavigate(item.id)}
         aria-current={active ? "page" : undefined}
       >
         <span className="trainerNextNavIcon">
@@ -591,44 +581,6 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
       <nav className="trainerNextMobileNav" aria-label="Разделы тренера">
         {mobileItems.map((item) => renderButton(item, true))}
       </nav>
-
-      {overflowOpen ? (
-        <div className="trainerNextMoreBackdrop" role="presentation" onClick={() => setOverflowOpen(false)}>
-          <aside className="trainerNextMoreDrawer" role="dialog" aria-modal="true" aria-label="Дополнительные разделы" onClick={(event) => event.stopPropagation()}>
-            <header>
-              <div>
-                <span>МЕНЮ</span>
-                <h2>Ещё</h2>
-              </div>
-              <button type="button" onClick={() => setOverflowOpen(false)} aria-label="Закрыть"><X size={18} /></button>
-            </header>
-            <nav>
-              {MOBILE_OVERFLOW_ITEMS.map((item) => {
-                const Icon = item.icon;
-                const active = activeSection === item.id;
-                return (
-                  <button
-                    type="button"
-                    key={item.id}
-                    data-section={item.id}
-                    data-testid={`trainer-more-${item.id}`}
-                    className={active ? "active" : ""}
-                    aria-current={active ? "page" : undefined}
-                    onClick={() => {
-                      setOverflowOpen(false);
-                      onNavigate(item.id);
-                    }}
-                  >
-                    <span><Icon size={20} />{item.badge ? <i>{item.badge}</i> : null}</span>
-                    <strong>{item.label}</strong>
-                    <ChevronRight size={17} />
-                  </button>
-                );
-              })}
-            </nav>
-          </aside>
-        </div>
-      ) : null}
     </>
   );
 }
@@ -648,9 +600,14 @@ export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAv
   );
 }
 
-function DashboardMetric({ label, value, detail, tone, icon: Icon, values }) {
+function DashboardMetric({ label, value, detail, tone, icon: Icon, values, onClick }) {
   return (
-    <article className="trainerNextMetric">
+    <button
+      className="trainerNextMetric trainerNextMetricAction"
+      type="button"
+      onClick={onClick}
+      aria-label={`Открыть: ${label}`}
+    >
       <div className="trainerNextMetricHead">
         <span>{label}</span>
         {Icon ? <Icon size={17} strokeWidth={1.7} /> : null}
@@ -660,7 +617,7 @@ function DashboardMetric({ label, value, detail, tone, icon: Icon, values }) {
         <small>{detail}</small>
         {values ? <Sparkline tone={tone} values={values} /> : null}
       </div>
-    </article>
+    </button>
   );
 }
 
@@ -674,8 +631,16 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
       </div>
       {filteredClients.map((item) => {
         const { client, summary, status } = item;
-        const progress = Number(summary.programCompletionPercent);
-        const progressValue = Number.isFinite(progress) ? progress : 0;
+        const assignedWorkoutCount = Math.max(0, Number(summary.assignedWorkoutCount) || 0);
+        const completedWorkoutCount = Math.min(
+          assignedWorkoutCount,
+          Math.max(0, Number(summary.completedWorkoutCount) || 0)
+        );
+        const weeklyProgressScore = Number(summary.weeklyProgressScore);
+        const hasWeeklyProgressScore = Number.isFinite(weeklyProgressScore);
+        const progressScore = hasWeeklyProgressScore
+          ? Math.max(0, Math.min(100, Math.round(weeklyProgressScore)))
+          : null;
         return (
           <button type="button" key={client.id} onClick={() => onOpenClient(client)}>
             <span className="trainerNextClientIdentity">
@@ -685,12 +650,12 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
                 <small>{client.subscription ? getSubscriptionAttentionLabel(client.subscription) : (client.goalDescription || client.goal || getAttentionReason(client, summary))}</small>
               </span>
             </span>
-            <span className={progressValue < 0 ? "negative" : "positive"}>
-              {progressValue > 0 ? "+" : ""}{progressValue}%
-              <Sparkline tone={progressValue < 0 ? "red" : "green"} values={[2, 3, 2.8, 4.2, 3.8, 5.4]} />
+            <span className="positive" aria-label={progressScore === null ? "Недостаточно данных для недельной оценки прогресса" : `Недельный прогресс: ${progressScore} /100`}>
+              <b>{progressScore === null ? "—" : `${progressScore} /100`}</b>
+              <small className="trainerNextClientMetricLabel">Прогресс</small>
             </span>
-            <span><b>{summary.workouts7 || 0} / 5</b><small>тренировки</small></span>
-            <span><b>{summary.nutritionDays7 || 0} / 7</b><small>питание</small></span>
+            <span className="trainerNextClientMetric"><b>{assignedWorkoutCount ? `${completedWorkoutCount} / ${assignedWorkoutCount}` : "—"}</b><small>тренировки</small></span>
+            <span className="trainerNextClientMetric"><b>{summary.nutritionDays7 || 0} / 7</b><small>питание</small></span>
             <span className="trainerNextClientActivity"><b>{formatCompactDate(summary.lastWorkoutAt || summary.lastNutritionAt)}</b><small>последнее</small></span>
             <ClientStatus status={status} />
           </button>
@@ -825,7 +790,7 @@ function DashboardActionCenter({ actionCenter, onOpenClient }) {
     ? actionCenter.priorityItems
     : (actionCenter?.attentionItems || []);
   const totalCount = priorityItems.length;
-  const [activeGroupId, setActiveGroupId] = useState("");
+  const [activeGroupId, setActiveGroupId] = useState("todayWorkouts");
   const activeGroup = groups.find((group) => group.id === activeGroupId) || null;
   const visibleItems = (activeGroup ? activeGroup.items : priorityItems).slice(0, 6);
 
@@ -885,8 +850,8 @@ function TrainerDashboard({
   clientSummaries,
   actionCenter,
   onOpenClient,
-  onRefresh,
-  onNotifications,
+  onOpenClients,
+  onOpenPrograms,
   loading = false
 }) {
   const completed = clients.reduce((sum, client) => sum + (Number(clientSummaries[client.id]?.workouts7) || 0), 0);
@@ -908,8 +873,8 @@ function TrainerDashboard({
     return summary.lastWorkoutAt || summary.lastNutritionAt || summary.lastMeasurementAt;
   }).length;
   const completedDetail = completed
-    ? `за 7 дней у ${clientsWithRecentData || clientCount} ${pluralize(clientsWithRecentData || clientCount, "клиента", "клиентов", "клиентов")}`
-    : "нет завершённых за 7 дней";
+    ? `за 7 дней · ${clientsWithRecentData || clientCount} кл.`
+    : "нет за 7 дней";
   const progressValue = progressValues.length ? `${averageProgress > 0 ? "+" : ""}${averageProgress}%` : "—";
   const progressDetail = progressValues.length ? "по назначенным программам" : "нет данных по программам";
 
@@ -918,10 +883,7 @@ function TrainerDashboard({
       <header className="trainerNextMobileHeader">
         <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
         <div className="trainerNextMobileTitle">Дашборд</div>
-        <div className="trainerNextMobileHeaderActions">
-          <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
-          <button type="button" onClick={onNotifications} aria-label="Уведомления"><Bell size={22} />{attentionCount > 0 ? <i>{attentionCount}</i> : null}</button>
-        </div>
+        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
       </header>
 
       <div className="trainerNextDesktopPageHead">
@@ -939,14 +901,14 @@ function TrainerDashboard({
         </div>
       ) : null}
 
-      <section className="trainerNextMetrics">
-        <DashboardMetric label="Всего клиентов" value={clientCount} detail={clientCount ? `${activeCount} активных` : "клиенты не загружены"} icon={Users} />
-        <DashboardMetric label="Активных" value={activeCount} detail={`${activePercent}% от базы`} tone="green" icon={Activity} values={[2, 3, 4, 5, 4, 4.5, 8]} />
-        <DashboardMetric label="Тренировок завершено" value={completed} detail={completedDetail} tone="purple" icon={Dumbbell} values={[1, 2, 2, 3, 2.5, 5, 4, 8]} />
-        <DashboardMetric label="Средний прогресс" value={progressValue} detail={progressDetail} tone="green" icon={TrendingUp} values={[2, 2, 3.5, 3, 5, 4.3, 7]} />
-      </section>
-
       <DashboardActionCenter actionCenter={actionCenter} onOpenClient={onOpenClient} />
+
+      <section className="trainerNextMetrics">
+        <DashboardMetric label="Клиенты" value={clientCount} detail={clientCount ? `${activeCount} активных` : "клиенты не загружены"} icon={Users} onClick={onOpenClients} />
+        <DashboardMetric label="Активные" value={activeCount} detail={`${activePercent}% базы`} tone="green" icon={Activity} values={[2, 3, 4, 5, 4, 4.5, 8]} onClick={onOpenClients} />
+        <DashboardMetric label="Завершено" value={completed} detail={completedDetail} tone="purple" icon={Dumbbell} values={[1, 2, 2, 3, 2.5, 5, 4, 8]} onClick={onOpenPrograms} />
+        <DashboardMetric label="Прогресс" value={progressValue} detail={progressDetail} tone="green" icon={TrendingUp} values={[2, 2, 3.5, 3, 5, 4.3, 7]} onClick={onOpenClients} />
+      </section>
     </div>
   );
 }
@@ -3280,6 +3242,7 @@ function TrainerClientDetail({
   onSaveNotifications,
   onTestNotification,
   onConnectTelegram,
+  onOpenTelegramChat,
   onSendMessage,
   onCreateTask,
   messages = [],
@@ -3291,6 +3254,8 @@ function TrainerClientDetail({
   const exercisesOpen = ["exercises", "workouts", "exerciseProgress", "training"].includes(activeTab);
   const exerciseSubview = activeTab === "exerciseProgress" ? "progress" : "plan";
   const messagesOpen = ["messages", "notes"].includes(activeTab);
+  const clientTelegram = getClientTelegramProfile(client);
+  const telegramAvailable = Boolean(clientTelegram.connected && clientTelegram.username && onOpenTelegramChat);
   const clientSubscriptionStatus = client.subscription ? getSubscriptionStatus(client.subscription) : null;
   const profileFacts = [
     profile?.age ? `${profile.age} лет` : "",
@@ -3307,6 +3272,8 @@ function TrainerClientDetail({
   const [messageSourceNote, setMessageSourceNote] = useState(null);
   const [messageStatus, setMessageStatus] = useState("");
   const [messageAttemptId, setMessageAttemptId] = useState("");
+  const [messageChannel, setMessageChannel] = useState("telegram");
+  const [contactOpen, setContactOpen] = useState(false);
   const [adjustmentRequest, setAdjustmentRequest] = useState(null);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [messageResolvingKey, setMessageResolvingKey] = useState("");
@@ -3362,7 +3329,7 @@ function TrainerClientDetail({
     } : null;
 
     try {
-      const sent = await onSendMessage?.(text, client, replyContext);
+      const sent = await onSendMessage?.(text, client, replyContext, messageChannel);
       if (sent === false) {
         setMessageStatus("error");
         return;
@@ -3380,14 +3347,16 @@ function TrainerClientDetail({
 
   function openMessageFromNote(noteItem) {
     setMessageSourceNote(noteItem || null);
+    setMessageChannel("telegram");
     setMessageText("");
     setMessageStatus("");
     setMessageAttemptId(`feedback_reply_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
     setMessageOpen(true);
   }
 
-  function openNewMessage() {
+  function openNewMessage(channel = "telegram") {
     setMessageSourceNote(null);
+    setMessageChannel(channel);
     setMessageText("");
     setMessageStatus("");
     setMessageAttemptId("");
@@ -3400,6 +3369,7 @@ function TrainerClientDetail({
     setMessageOpen(false);
     setMessageText("");
     setMessageStatus("");
+    setMessageChannel("telegram");
   }
 
   async function resolveMessagesWithoutReply(noteItems, { bulk = false, closeModal = false } = {}) {
@@ -3461,14 +3431,29 @@ function TrainerClientDetail({
     setActionsOpen(false);
     await onClientAction?.(actionId, client);
   }
+
+  const isClientTabActive = (tab) => (
+    (tab.id === "exercises" && exercisesOpen)
+    || (tab.id === "messages" && messagesOpen)
+    || activeTab === tab.id
+    || (tab.id === "bodyProgress" && ["measurements", "photos"].includes(activeTab))
+  );
+
   return (
     <div className="trainerNextPage trainerNextClientPage">
       <div className="trainerNextClientBackRow">
-        <button type="button" onClick={onBack}><ArrowLeft size={20} /><span>Назад к списку</span></button>
+        <button className="trainerNextClientBackButton" type="button" onClick={onBack} aria-label="Назад к списку клиентов">
+          <ArrowLeft size={20} />
+          <span className="trainerNextClientBackDesktop">Назад к списку</span>
+          <span className="trainerNextClientBackMobile">Клиенты</span>
+        </button>
         <div>
-          <button className="trainerNextPrimary" type="button" onClick={openNewMessage}><Mail size={16} />Написать</button>
-          {onCreateTask ? <button type="button" onClick={onCreateTask}><ClipboardList size={16} />Задача</button> : null}
-          <button type="button" onClick={() => setActionsOpen(true)}>Действия <ChevronDown size={16} /></button>
+          <button className="trainerNextPrimary" type="button" onClick={() => onTabChange("messages")}><MessageSquare size={16} />Сообщения</button>
+          <button type="button" onClick={() => onTabChange("notifications")}><Bell size={16} />Уведомления</button>
+          <button className="trainerNextClientActionsButton" type="button" onClick={() => setActionsOpen(true)} aria-label="Действия">
+            <EllipsisVertical size={18} />
+            <span>Действия</span>
+          </button>
         </div>
       </div>
 
@@ -3479,16 +3464,30 @@ function TrainerClientDetail({
           <p>{profileMetaText}</p>
           <strong>Цель: {client.goalDescription || profile?.goalLabel || "Персональный результат"}</strong>
         </div>
-        <button className="trainerNextMobileMore" type="button" aria-label="Действия" onClick={() => setActionsOpen(true)}><MoreHorizontal size={22} /></button>
       </header>
 
       <nav className="trainerNextClientTabs">
         {CLIENT_TABS.map((tab) => {
-          const active = (tab.id === "exercises" && exercisesOpen)
-            || (tab.id === "messages" && messagesOpen)
-            || activeTab === tab.id
-            || (tab.id === "bodyProgress" && ["measurements", "photos"].includes(activeTab));
+          const active = isClientTabActive(tab);
           return <button type="button" key={tab.id} className={active ? "active" : ""} aria-pressed={active} onClick={() => onTabChange(tab.target || tab.id)}>{tab.label}</button>;
+        })}
+      </nav>
+
+      <nav className="trainerNextClientMobileNav" aria-label="Разделы клиента">
+        {CLIENT_TABS.slice(0, 4).map((tab) => {
+          const Icon = CLIENT_TAB_ICONS[tab.id];
+          const active = isClientTabActive(tab);
+          return (
+            <button
+              type="button"
+              key={tab.id}
+              aria-current={active ? "page" : undefined}
+              onClick={() => onTabChange(tab.target || tab.id)}
+            >
+              <Icon size={21} />
+              <span>{tab.label}</span>
+            </button>
+          );
         })}
       </nav>
 
@@ -3588,6 +3587,22 @@ function TrainerClientDetail({
         />
       ) : null}
 
+      {contactOpen ? (
+        <TrainerClientContactModal
+          clientName={name}
+          telegramAvailable={telegramAvailable}
+          onOpenTelegram={() => {
+            onOpenTelegramChat?.(clientTelegram.username);
+            setContactOpen(false);
+          }}
+          onOpenNotification={() => {
+            setContactOpen(false);
+            openNewMessage("notification");
+          }}
+          onRequestClose={() => setContactOpen(false)}
+        />
+      ) : null}
+
       {messageOpen ? (
         <TrainerWorkoutFeedbackReplyModal
           styles={trainerWorkoutFeedbackReplyStyles}
@@ -3599,6 +3614,7 @@ function TrainerClientDetail({
           processed={messageSourceNote ? processedNoteIds.has(messageSourceNote.id) : false}
           status={messageStatus}
           messages={messages}
+          deliveryChannel={messageChannel}
           onChange={(value) => {
             setMessageText(value);
             if (messageStatus === "error" || messageStatus === "sent") setMessageStatus("");
@@ -3659,7 +3675,14 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
         <div><h1>Клиенты</h1><p>{clients.length} {pluralize(clients.length, "клиент", "клиента", "клиентов")} в работе</p></div>
         <button className="trainerNextPrimary" type="button" onClick={onCreateClient}><Plus size={18} />Добавить клиента</button>
       </div>
-      <header className="trainerNextMobileHeader"><span className="trainerNextMobileHeaderSpacer" aria-hidden="true" /><div className="trainerNextMobileTitle">Клиенты</div><button type="button" onClick={onCreateClient}><Plus size={22} /></button></header>
+      <header className="trainerNextMobileHeader">
+        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
+        <div className="trainerNextMobileTitle">Клиенты</div>
+        <button className="trainerNextMobileAddClient" type="button" onClick={onCreateClient} aria-label="Добавить клиента">
+          <Plus size={18} />
+          <span>Добавить</span>
+        </button>
+      </header>
       <div className="trainerNextClientsStandalone">
         <label className="trainerNextSearch open"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Поиск клиента..." /></label>
         <div className="trainerMessageFilters trainerClientFilters" role="group" aria-label="Фильтр клиентов">
@@ -4592,47 +4615,156 @@ function CreateClientModal({ state }) {
   );
 }
 
-function TrainerCabinetPage({ trainerName, trainerAvatar, clients = [], counts = {}, onNavigate, onRefresh, onLogout }) {
-  const activeCount = counts.active ?? clients.filter((client) => client.status !== "archived").length;
-  const attentionCount = counts.attention ?? 0;
+function TrainerCabinetUtilitySheet({
+  section,
+  clients,
+  clientSummaries,
+  trainerSubscriptionNotificationSettings,
+  onLoadTrainerSubscriptionNotifications,
+  onSaveTrainerSubscriptionNotifications,
+  onNavigate,
+  onRefresh,
+  onSendMessage,
+  onClose
+}) {
+  if (!section) return null;
+
+  const isAnalytics = section === "analytics";
+  const title = isAnalytics ? "Аналитика" : "Уведомления";
+  const Icon = isAnalytics ? BarChart3 : Bell;
 
   return (
-    <div className="trainerNextPage trainerNextCabinetPage">
-      <header className="trainerNextMobileHeader">
-        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <div className="trainerNextMobileTitle">Кабинет</div>
-        <div className="trainerNextMobileHeaderActions">
-          <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
-          <button type="button" onClick={() => onNavigate("notifications")} aria-label="Уведомления">
-            <Bell size={21} strokeWidth={1.8} />
+    <div
+      className="trainerNextModalBackdrop"
+      role="presentation"
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
+      <section
+        className="trainerNextModal trainerCabinetUtilitySheet"
+        role="dialog"
+        aria-modal="true"
+        data-modal-surface="true"
+        aria-labelledby={`trainer-cabinet-${section}-title`}
+      >
+        <header>
+          <div className="trainerCabinetUtilitySheetTitle">
+            <span><Icon size={19} /></span>
+            <h2 id={`trainer-cabinet-${section}-title`}>{title}</h2>
+          </div>
+          <button className="trainerNextModalClose" type="button" onClick={onClose} aria-label={`Закрыть раздел «${title}»`}>
+            <X size={20} />
           </button>
-        </div>
-      </header>
+        </header>
+        <TrainerUtilityPage
+          embedded
+          section={section}
+          clients={clients}
+          clientSummaries={clientSummaries}
+          trainerSubscriptionNotificationSettings={trainerSubscriptionNotificationSettings}
+          onLoadTrainerSubscriptionNotifications={onLoadTrainerSubscriptionNotifications}
+          onSaveTrainerSubscriptionNotifications={onSaveTrainerSubscriptionNotifications}
+          onNavigate={onNavigate}
+          onRefresh={onRefresh}
+          onSendMessage={onSendMessage}
+        />
+      </section>
+    </div>
+  );
+}
 
-      <div className="trainerNextDesktopPageHead">
-        <div>
-          <h1>Кабинет тренера</h1>
-          <p>Профиль, быстрые действия и рабочие разделы в едином стиле тренерской панели.</p>
+function TrainerCabinetPage({
+  trainerName,
+  trainerAvatar,
+  clients = [],
+  clientSummaries = {},
+  counts = {},
+  trainerSubscriptionNotificationSettings,
+  onLoadTrainerSubscriptionNotifications,
+  onSaveTrainerSubscriptionNotifications,
+  onNavigate,
+  onRefresh,
+  onSendMessage,
+  onOpenTrainerProfile,
+  onOpenTrainerConnections,
+  onLogout
+}) {
+  const activeCount = counts.active ?? clients.filter((client) => client.status !== "archived").length;
+  const attentionCount = counts.attention ?? 0;
+  const [openSheet, setOpenSheet] = useState("");
+
+  function navigateFromSheet(nextSection) {
+    setOpenSheet("");
+    onNavigate?.(nextSection);
+  }
+
+  return (
+    <>
+      <div className="trainerNextPage trainerNextCabinetPage">
+        <header className="trainerNextMobileHeader">
+          <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
+          <div className="trainerNextMobileTitle">Кабинет</div>
+          <div className="trainerNextMobileHeaderActions">
+            <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
+          </div>
+        </header>
+
+        <div className="trainerNextDesktopPageHead">
+          <div>
+            <h1>Кабинет тренера</h1>
+            <p>Профиль, быстрые действия и рабочие разделы в едином стиле тренерской панели.</p>
+          </div>
         </div>
+
+        <button className="trainerCabinetHero trainerCabinetProfileButton" type="button" onClick={onOpenTrainerProfile}>
+          <TrainerAvatar client={{ name: trainerName, avatarUrl: trainerAvatar }} size="large" />
+          <div>
+            <span>Тренер</span>
+            <h2>{trainerName || "Тренер"}</h2>
+            <p>Профиль и настройки</p>
+          </div>
+          <ChevronRight className="trainerCabinetHeroChevron" size={21} aria-hidden="true" />
+        </button>
+
+        <section className="trainerCabinetStats" aria-label="Сводка тренера">
+          <article><span>Всего клиентов</span><strong>{clients.length}</strong></article>
+          <article><span>Активных</span><strong>{activeCount}</strong></article>
+          <article><span>Требуют внимания</span><strong>{attentionCount}</strong></article>
+        </section>
+
+        <section className="trainerCabinetWorkspaceLinks" aria-label="Рабочие разделы кабинета">
+          <button type="button" onClick={() => setOpenSheet("analytics")}>
+            <span><BarChart3 size={19} /></span>
+            <div><strong>Аналитика</strong><small>Сводка по активности и рискам клиентов</small></div>
+            <ChevronRight size={18} />
+          </button>
+          <button type="button" onClick={() => setOpenSheet("notifications")}>
+            <span><Bell size={19} /></span>
+            <div><strong>Уведомления</strong><small>События и настройки напоминаний</small></div>
+            <ChevronRight size={18} />
+          </button>
+          <button type="button" onClick={onOpenTrainerConnections}>
+            <span><Mail size={19} /></span>
+            <div><strong>Подключения</strong><small>Почта и Telegram для доступа и связи</small></div>
+            <ChevronRight size={18} />
+          </button>
+        </section>
+
+        {onLogout ? <button className="trainerCabinetLogout" type="button" onClick={onLogout}><X size={20} />Выйти из аккаунта</button> : null}
       </div>
 
-      <section className="trainerCabinetHero">
-        <TrainerAvatar client={{ name: trainerName, avatarUrl: trainerAvatar }} size="large" />
-        <div>
-          <span>Тренер</span>
-          <h2>{trainerName || "Тренер"}</h2>
-          <p>Рабочий профиль подключен к панели клиентов, программ и питания.</p>
-        </div>
-      </section>
-
-      <section className="trainerCabinetStats" aria-label="Сводка тренера">
-        <article><span>Всего клиентов</span><strong>{clients.length}</strong></article>
-        <article><span>Активных</span><strong>{activeCount}</strong></article>
-        <article><span>Требуют внимания</span><strong>{attentionCount}</strong></article>
-      </section>
-
-      {onLogout ? <button className="trainerCabinetLogout" type="button" onClick={onLogout}><X size={20} />Выйти из аккаунта</button> : null}
-    </div>
+      <TrainerCabinetUtilitySheet
+        section={openSheet}
+        clients={clients}
+        clientSummaries={clientSummaries}
+        trainerSubscriptionNotificationSettings={trainerSubscriptionNotificationSettings}
+        onLoadTrainerSubscriptionNotifications={onLoadTrainerSubscriptionNotifications}
+        onSaveTrainerSubscriptionNotifications={onSaveTrainerSubscriptionNotifications}
+        onNavigate={navigateFromSheet}
+        onRefresh={onRefresh}
+        onSendMessage={onSendMessage}
+        onClose={() => setOpenSheet("")}
+      />
+    </>
   );
 }
 
@@ -4712,6 +4844,7 @@ function TrainerGlobalSubscriptionNotifications({ settings, onLoad, onSave }) {
 
 function TrainerUtilityPage({
   section,
+  embedded = false,
   clients = [],
   clientSummaries = {},
   trainerSubscriptionNotificationSettings,
@@ -5137,28 +5270,32 @@ function TrainerUtilityPage({
 
   return (
     <div className="trainerNextPage trainerUtilityPage">
-      <header className="trainerNextMobileHeader">
-        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-        <div className="trainerNextMobileTitle">{config.title}</div>
-        <div className="trainerNextMobileHeaderActions">
-          <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
-          <button type="button" onClick={() => onNavigate("notifications")} aria-label="Уведомления"><Bell size={21} /></button>
-        </div>
-      </header>
+      {!embedded ? (
+        <>
+          <header className="trainerNextMobileHeader">
+            <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
+            <div className="trainerNextMobileTitle">{config.title}</div>
+            <div className="trainerNextMobileHeaderActions">
+              <button type="button" onClick={onRefresh} aria-label="Обновить страницу"><RefreshCw size={20} /></button>
+              <button type="button" onClick={() => onNavigate("notifications")} aria-label="Уведомления"><Bell size={21} /></button>
+            </div>
+          </header>
 
-      <div className="trainerNextDesktopPageHead">
-        <div><h1>{config.title}</h1><p>{config.text}</p></div>
-      </div>
+          <div className="trainerNextDesktopPageHead">
+            <div><h1>{config.title}</h1><p>{config.text}</p></div>
+          </div>
 
-      <section className="trainerUtilityCard">
-        <div className="trainerUtilityIcon"><Icon size={30} /></div>
-        <div>
-          <span>{config.eyebrow}</span>
-          <h2>{config.title}</h2>
-          <p>{config.text}</p>
-        </div>
-        <strong>{config.stat}<small>{config.statLabel}</small></strong>
-      </section>
+          <section className="trainerUtilityCard">
+            <div className="trainerUtilityIcon"><Icon size={30} /></div>
+            <div>
+              <span>{config.eyebrow}</span>
+              <h2>{config.title}</h2>
+              <p>{config.text}</p>
+            </div>
+            <strong>{config.stat}<small>{config.statLabel}</small></strong>
+          </section>
+        </>
+      ) : null}
 
       {config.body ? <section className="trainerUtilityBody">{config.body}</section> : null}
 
@@ -5233,8 +5370,11 @@ export default function TrainerWorkspace({
   onSaveTrainerSubscriptionNotifications,
   onTestNotification,
   onConnectTelegram,
+  onOpenTelegramChat,
   onSendMessage,
   telegramMessages = [],
+  onOpenTrainerProfile,
+  onOpenTrainerConnections,
   onCreateTask,
   onClientAction,
   canDeleteClients = false,
@@ -5267,9 +5407,8 @@ export default function TrainerWorkspace({
         counts={counts}
         onOpenClient={onOpenClient}
         onOpenClients={() => onNavigate("clients")}
+        onOpenPrograms={() => onNavigate("workouts")}
         onCreateClient={onCreateClient}
-        onRefresh={onRefresh}
-        onNotifications={() => onNavigate("notifications")}
         loading={summariesLoading}
       />
     );
@@ -5323,6 +5462,7 @@ export default function TrainerWorkspace({
         onSaveNotifications={onSaveNotifications}
         onTestNotification={onTestNotification}
         onConnectTelegram={onConnectTelegram}
+        onOpenTelegramChat={onOpenTelegramChat}
         onSendMessage={onSendMessage}
         messages={telegramMessages}
         onCreateTask={onCreateTask}
@@ -5383,9 +5523,16 @@ export default function TrainerWorkspace({
         trainerName={trainerName}
         trainerAvatar={trainerAvatar}
         clients={clients}
+        clientSummaries={clientSummaries}
         counts={counts}
+        trainerSubscriptionNotificationSettings={trainerSubscriptionNotificationSettings}
+        onLoadTrainerSubscriptionNotifications={onLoadTrainerSubscriptionNotifications}
+        onSaveTrainerSubscriptionNotifications={onSaveTrainerSubscriptionNotifications}
         onNavigate={onNavigate}
         onRefresh={onRefresh}
+        onSendMessage={onSendMessage}
+        onOpenTrainerProfile={onOpenTrainerProfile}
+        onOpenTrainerConnections={onOpenTrainerConnections}
         onLogout={onLogout}
       />
     );

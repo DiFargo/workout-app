@@ -1035,7 +1035,6 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
   color: #747d93;
 }
 
-
 @media (max-width: 1100px) {
   .trainerClientHero {
     grid-template-columns: 1fr !important;

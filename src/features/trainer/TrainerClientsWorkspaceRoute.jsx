@@ -30,6 +30,7 @@ export default function TrainerClientsWorkspaceRoute({
   logout,
   navigateTrainerNext,
   openClientTelegramConnection,
+  openTelegramChat,
   openTrainerNextClient,
   plan,
   refreshPage,
@@ -128,6 +129,7 @@ export default function TrainerClientsWorkspaceRoute({
       onSaveTrainerSubscriptionNotifications={saveTrainerSubscriptionNotificationSettings}
       onTestNotification={() => sendAdminTestWorkoutReminder(selectedClient)}
       onConnectTelegram={openClientTelegramConnection}
+      onOpenTelegramChat={openTelegramChat}
       onSendMessage={sendTrainerClientMessage}
       telegramMessages={adminClientTelegramMessages}
       onCreateTask={() => setAdminTaskComposerOpen(true)}

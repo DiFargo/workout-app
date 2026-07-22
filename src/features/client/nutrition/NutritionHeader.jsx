@@ -15,6 +15,8 @@ export default function NutritionHeader({
     <>
       <ClientPageHeader
         title="Питание"
+        titleAlign="start"
+        primary
         titlePart="title"
         titleTestId="nutrition-header-title"
         className={styles.root}

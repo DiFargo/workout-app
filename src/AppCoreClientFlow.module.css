@@ -84,19 +84,19 @@ html,
 body,
 #root {
   min-height: 100%;
-  background: #f3f4f3;
+  background: #f7f6f8;
 }
 
 #root:empty {
   min-height: 100dvh;
-  background: #f3f4f3;
+  background: #f7f6f8;
 }
 
 .clientRouteFallback {
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  background: #f3f4f3;
+  background: #f7f6f8;
 }
 
 .clientRouteFallbackPanel,
@@ -141,19 +141,19 @@ html:root[data-app-theme="warm-light"],
 html:root[data-app-theme="warm-light"] body,
 html:root[data-app-theme="warm-light"] body #root {
   min-height: 100%;
-  background: #f3f4f3 !important;
+  background: #f7f6f8 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root:empty {
   min-height: 100dvh;
-  background: #f3f4f3 !important;
+  background: #f7f6f8 !important;
 }
 
 html:root[data-app-theme="warm-light"] body #root .clientRouteFallback {
   min-height: 100dvh !important;
   display: grid !important;
   place-items: center !important;
-  background: #f3f4f3 !important;
+  background: #f7f6f8 !important;
 }
 
 @keyframes clientRouteFallbackSpin {
@@ -833,7 +833,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCo
 /* v.1.963: shared page contract shell and version badge. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root {
-    background: #f3f4f3 !important;
+    background: #f7f6f8 !important;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,

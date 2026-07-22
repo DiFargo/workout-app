@@ -1,7 +1,7 @@
 .root {
   box-sizing: border-box;
   width: 100%;
-  height: 174px;
+  height: 142px;
   padding: 16px 15px 8px;
   position: relative;
   overflow: hidden;
@@ -11,29 +11,40 @@
   color: #28262e;
 }
 
-.header { position: relative; z-index: 2; }
-.header span { font-size: 16px; font-weight: 700; line-height: 20px; }
+.root::before {
+  content: "";
+  width: 110px;
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 15px;
+  border-radius: 16px;
+  background: #f5f2f7;
+}
+
+.header { position: absolute; top: 25px; left: 27px; z-index: 2; }
+.header span { font-size: 12px; font-weight: 600; line-height: 16px; }
 .body { position: absolute; inset: 0; }
 
 .weight {
   position: absolute;
-  top: 56px;
-  left: 15px;
+  top: 50px;
+  left: 27px;
   z-index: 2;
   display: flex;
   flex-direction: column;
 }
 
-.weight strong { font-size: 28px; font-weight: 700; line-height: 32px; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
+.weight strong { font-size: 27px; font-weight: 700; line-height: 31px; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
 .weight em { display: none; }
-.weight small { color: #7b7682; font-size: 10px; font-weight: 500; line-height: 18px; }
+.weight small { color: #7b7682; font-size: 9px; font-weight: 500; line-height: 15px; white-space: nowrap; }
 
 .chart {
   width: 254px;
-  height: 120px;
+  height: 108px;
   position: absolute;
   right: 4px;
-  bottom: -1px;
+  bottom: -2px;
 }
 
 .trend { width: 100%; height: 100%; overflow: visible; }

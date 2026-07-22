@@ -61,7 +61,10 @@ export default function ProfileTrainerNotificationsModal({
             <div className={styles.list} data-testid="profile-trainer-notifications-list">
               {tasks.map((task) => {
                 const taskStatus = getTrainerTaskStatus(task);
-                const taskDestination = getTaskDestination(task);
+                const isMessageNotification = task.notificationType === "message";
+                const taskDestination = isMessageNotification ? "" : getTaskDestination(task);
+                const messageRead = isMessageNotification && taskStatus.id === "completed";
+                const messageText = String(task.message || task.description || "").trim();
                 const taskDueText = task.dueDate
                   ? `До ${new Date(`${task.dueDate}T12:00:00`).toLocaleDateString("ru-RU")}`
                   : "Без срока";
@@ -71,25 +74,27 @@ export default function ProfileTrainerNotificationsModal({
                     className={`${styles.item} ${styles[taskStatus.id] || ""}${taskDestination ? ` ${styles.actionable}` : ""}`}
                     data-task-status={taskStatus.id}
                     data-testid="profile-trainer-notification-item"
-                    aria-label={`Задача тренера: ${task.title}. ${taskStatus.label}. ${taskDueText}`}
+                    aria-label={isMessageNotification
+                      ? `Сообщение от тренера: ${messageText || task.title}. ${messageRead ? "Прочитано" : "Новое"}`
+                      : `Задача тренера: ${task.title}. ${taskStatus.label}. ${taskDueText}`}
                   >
                     <i className={styles.itemIcon} aria-hidden="true">
-                      {taskStatus.id === "completed"
+                      {messageRead || taskStatus.id === "completed"
                         ? <CircleCheck size={17} strokeWidth={2.1} />
                         : <AlertCircle size={17} strokeWidth={2.1} />}
                     </i>
                     <span className={styles.itemText}>
-                      <strong className={styles.itemTitle}>{task.title}</strong>
-                      <small className={styles.itemMeta}>{taskDueText}</small>
+                      <strong className={styles.itemTitle}>{isMessageNotification ? "Сообщение от тренера" : task.title}</strong>
+                      <small className={styles.itemMeta}>{isMessageNotification ? messageText : taskDueText}</small>
                     </span>
-                    <em className={styles.itemStatus}>{taskStatus.label}</em>
+                    <em className={styles.itemStatus}>{isMessageNotification ? messageRead ? "Прочитано" : "Новое" : taskStatus.label}</em>
                     <div className={styles.actions} data-testid="profile-trainer-notification-actions">
                       {taskDestination ? (
                         <button
                           className={styles.actionButton}
                           data-testid="profile-trainer-notification-open"
                           type="button"
-                          onClick={() => onOpenTask(task)}
+                          onClick={() => onOpenTask(task, taskDestination)}
                         >
                           Открыть
                         </button>
@@ -99,9 +104,11 @@ export default function ProfileTrainerNotificationsModal({
                           className={styles.actionButton}
                           data-testid="profile-trainer-notification-toggle"
                           type="button"
-                          onClick={() => onUpdateTask(task, taskStatus.id !== "completed")}
+                          onClick={() => onUpdateTask(task, isMessageNotification ? !messageRead : taskStatus.id !== "completed")}
                         >
-                          {taskStatus.id === "completed" ? "Вернуть" : "Готово"}
+                          {isMessageNotification
+                            ? messageRead ? "Вернуть" : "Прочитано"
+                            : taskStatus.id === "completed" ? "Вернуть" : "Готово"}
                         </button>
                       ) : null}
                     </div>

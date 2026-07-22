@@ -23,8 +23,8 @@
   top: 0;
   left: 50%;
   z-index: 90;
-  border-bottom: 1px solid rgba(40, 38, 46, 0.06);
-  background: rgba(243, 244, 243, 0.88);
+  border-bottom: 0;
+  background: rgba(247, 246, 248, 0.9);
   transform: translateX(-50%);
   backdrop-filter: saturate(170%) blur(22px);
   -webkit-backdrop-filter: saturate(170%) blur(22px);

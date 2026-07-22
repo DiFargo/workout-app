@@ -5,8 +5,14 @@
     width: 100%;
     min-height: 100dvh;
     flex-direction: column;
+    /* The fixed shell absorbs this reserve on compact pages. It creates
+       additional scroll room only when workout content is actually longer. */
     padding: var(--page-block-padding) var(--page-inline-padding) calc(var(--bottom-navigation-height) + var(--safe-area-bottom) + var(--space-6));
     overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
     color: var(--color-text);
     font-family: var(--font-family-sans);
     background: var(--color-background);
@@ -332,6 +338,25 @@
     background: color-mix(in srgb, var(--color-success) 88%, transparent);
   }
 
+  .completedRibbon {
+    position: absolute;
+    z-index: 4;
+    top: 1.75rem;
+    left: -3.25rem;
+    width: 10.5rem;
+    height: 1.8rem;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    background: color-mix(in srgb, var(--color-success) 88%, transparent);
+    box-shadow: 0 0.3rem 0.75rem rgba(47, 83, 56, 0.16);
+    font-size: 0.68rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    transform: rotate(-35deg);
+  }
+
   .progressBadge,
   .nextBadge {
     color: var(--color-accent-strong);
@@ -444,6 +469,11 @@
     object-position: center 22%;
   }
 
+  .completed .workoutImage img {
+    filter: blur(1.35px) saturate(0.64) brightness(1.06);
+    transform: scale(1.025);
+  }
+
   .imageFallback {
     display: flex;
     width: 100%;
@@ -479,6 +509,12 @@
     background: linear-gradient(110deg, #927ac6, #806bb6);
     border-radius: 1.15rem;
     box-shadow: 0 0.55rem 1.5rem rgba(143, 122, 200, 0.25);
+  }
+
+  .completedStartButton {
+    color: #ffffff;
+    background: #a8a5ad;
+    box-shadow: none;
   }
 
   .coverPreload {
@@ -2149,6 +2185,22 @@
   background: #708d79;
 }
 
+:global(:root[data-app-theme="warm-light"]) .completedRibbon.completedRibbon {
+  z-index: 5;
+  top: 28px;
+  left: -52px;
+  width: 172px;
+  height: 28px;
+  color: #ffffff;
+  background: rgba(106, 132, 113, 0.92);
+  box-shadow: 0 5px 12px rgba(57, 78, 62, 0.16);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+  transform: rotate(-35deg);
+}
+
 :global(:root[data-app-theme="warm-light"]) .syncBadge.syncBadge {
   color: #ffffff;
   background: #b9a9e5;
@@ -2171,6 +2223,11 @@
   object-position: center 28%;
   opacity: 1;
   filter: saturate(0.72) brightness(1.03) contrast(0.94);
+}
+
+:global(:root[data-app-theme="warm-light"]) .completed .workoutImage.workoutImage img {
+  filter: blur(1.35px) saturate(0.52) brightness(1.07) contrast(0.9);
+  transform: scale(1.025);
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback {
@@ -2274,6 +2331,12 @@
   line-height: normal;
   text-align: center;
   transform: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completedStartButton.completedStartButton {
+  color: #ffffff;
+  background: #a8a5ad;
+  box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .startButton.startButton::before,
@@ -2427,23 +2490,23 @@
   }
 }
 
-/* Keep every deck workout picker in four viewport-filling zones: header, card,
-   swipe hint and progress. The bottom navigation stays fixed outside them. */
+/* Keep every deck workout picker in three viewport-filling zones: header,
+   swipe hint and card. Progress is part of the card; the bottom navigation
+   stays fixed outside them. */
 :global(:root[data-app-theme="warm-light"]) .page.page.deckMode {
   width: min(402px, 100vw);
   height: 100dvh;
   min-height: 100dvh;
   max-height: 100dvh;
-  padding: 0 16px calc(96px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px 96px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows:
     auto
-    minmax(372px, 1fr)
-    36px
-    48px;
+    auto
+    minmax(320px, 1fr);
   align-content: stretch;
-  row-gap: 10px;
+  row-gap: 6px;
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -2459,8 +2522,19 @@
   margin: 0;
 }
 
-:global(:root[data-app-theme="warm-light"]) .deckMode .workoutDeck.workoutDeck {
+:global(:root[data-app-theme="warm-light"]) .deckMode .heroSubtitle.heroSubtitle {
   grid-row: 2;
+  width: 100%;
+  min-height: 17px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+:global(:root[data-app-theme="warm-light"]) .deckMode .workoutDeck.workoutDeck {
+  grid-row: 3;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -2485,28 +2559,80 @@
   width: 100%;
   height: 100%;
   min-height: 0;
+  border-top: 1px solid #ebe6ef;
+  border-radius: 24px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .deckMode .workoutNav.workoutNav {
-  grid-row: 3;
-  height: 36px;
-  min-height: 36px;
-  max-height: 36px;
+:global(:root[data-app-theme="warm-light"]) .deckMode .cardProgress.cardProgress {
+  position: relative;
+  width: 100%;
+  min-height: 46px;
   margin: 0;
+  padding: 7px 10px 11px 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "title position";
+  align-items: center;
+  gap: 10px;
+  color: #7b7682;
+  background: #f7f5fa;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .deckMode .swipeHint.swipeHint {
-  display: none;
+:global(:root[data-app-theme="warm-light"]) .deckMode .cardProgress::after {
+  position: absolute;
+  right: 12px;
+  bottom: 7px;
+  left: 12px;
+  height: 3px;
+  content: "";
+  background: linear-gradient(
+    90deg,
+    #8f7ac8 var(--completed-workouts-progress, 0%),
+    #dce3e7 var(--completed-workouts-progress, 0%)
+  );
+  border-radius: 2px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .deckMode .bottomPanel.bottomPanel {
-  display: contents;
+:global(:root[data-app-theme="warm-light"]) .deckMode .cardProgressPosition {
+  min-width: 0;
+  color: #806bb6;
+  background: #ece6f8;
+  border-radius: 11px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 22px;
+  white-space: nowrap;
 }
 
-:global(:root[data-app-theme="warm-light"]) .deckMode .bottomProgress.bottomProgress {
-  grid-row: 4;
-  height: 48px;
-  min-height: 48px;
-  max-height: 48px;
-  margin: 0;
+:global(:root[data-app-theme="warm-light"]) .deckMode .cardProgressPosition {
+  grid-area: position;
+  padding: 0 8px;
+  text-align: left;
+}
+
+:global(:root[data-app-theme="warm-light"]) .deckMode .cardProgress .workoutTitle.workoutTitle {
+  grid-area: title;
+  justify-self: start;
+  max-width: none;
+  color: #28262e;
+  font-size: clamp(18px, 5.6vw, 20px);
+  font-weight: 750;
+  letter-spacing: -0.3px;
+  line-height: 24px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+@media (display-mode: standalone) {
+  .page.basicMode {
+    --client-shell-height: auto;
+    --client-shell-min-height: 100svh;
+    --client-shell-max-height: none;
+    height: auto;
+    min-height: 100svh;
+    max-height: none;
+    overflow: visible;
+  }
 }

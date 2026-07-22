@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Mail } from "lucide-react";
+import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileEmailModal.module.css";
 
@@ -44,11 +45,21 @@ export default function ProfileEmailModal({
         aria-labelledby="profileEmailManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
-        <ProfileModalCloseButton
-          className={styles.closeButton}
-          testId="profile-email-close"
-          ariaLabel="Закрыть почту"
-          onClick={onClose}
+        <ClientPageHeader
+          compact
+          embedded
+          controlsVariant="workout"
+          className={styles.header}
+          title="Привязка почты"
+          titleId="profileEmailManageTitle"
+          scope="profile-email-header"
+          actions={(
+            <ProfileModalCloseButton
+              testId="profile-email-close"
+              ariaLabel="Закрыть почту"
+              onClick={onClose}
+            />
+          )}
         />
 
         <div className={styles.head}>
@@ -56,8 +67,6 @@ export default function ProfileEmailModal({
             <Mail size={28} strokeWidth={2.3} />
           </div>
           <div>
-            <span className={styles.eyebrow}>ПОЧТА</span>
-            <h3 className={styles.heading} id="profileEmailManageTitle">Привязка почты</h3>
             <p className={styles.intro}>
               {currentEmail
                 ? `${currentEmail} · используется для входа и восстановления доступа.`

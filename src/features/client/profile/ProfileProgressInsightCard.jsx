@@ -22,7 +22,7 @@ function getProgressGaugeTone(score) {
   };
 }
 
-export default function ProfileProgressInsightCard({ progressInsight, statuses }) {
+export default function ProfileProgressInsightCard({ progressInsight }) {
   const gaugeScore = typeof progressInsight.score === "number"
     ? Math.max(0, Math.min(100, progressInsight.score))
     : null;
@@ -63,15 +63,6 @@ export default function ProfileProgressInsightCard({ progressInsight, statuses }
             <p className={styles.copy} data-testid="profile-progress-copy">{progressInsight.scoreSummary}</p>
           </div>
         </div>
-      </div>
-
-      <div className={styles.badges} data-testid="profile-progress-badges">
-        {statuses.map((status) => (
-          <span key={status.title} className={styles.badge} data-testid="profile-progress-badge">
-            <b>{status.icon} {status.title}</b>
-            <small>{status.text}</small>
-          </span>
-        ))}
       </div>
     </section>
   );

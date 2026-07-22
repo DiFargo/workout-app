@@ -79,30 +79,41 @@ export default function ProfileBodyMetricsSettingsSection({
   variant = "modal"
 }) {
   const variantClass = variant === "tab" ? styles.tab : styles.modal;
+  const isCollapsible = variant === "tab";
+  const expanded = isCollapsible ? open : true;
+  const heading = (
+    <div className={styles.headText}>
+      <span className={styles.eyebrow}>ПРОФИЛЬ</span>
+      <strong className={styles.title}>Параметры тела</strong>
+      <small className={styles.description}>{description}</small>
+    </div>
+  );
 
   return (
     <section
       className={`${styles.section} ${variantClass}`}
       data-testid="profile-body-metrics-section"
       data-profile-body-metrics-variant={variant}
-      data-open={open ? "true" : "false"}
+      data-open={expanded ? "true" : "false"}
     >
-      <button
-        type="button"
-        className={styles.head}
-        data-testid="profile-body-metrics-toggle"
-        aria-expanded={open}
-        onClick={onToggle}
-      >
-        <div className={styles.headText}>
-          <span className={styles.eyebrow}>ПРОФИЛЬ</span>
-          <strong className={styles.title}>Параметры тела</strong>
-          <small className={styles.description}>{description}</small>
+      {isCollapsible ? (
+        <button
+          type="button"
+          className={styles.head}
+          data-testid="profile-body-metrics-toggle"
+          aria-expanded={expanded}
+          onClick={onToggle}
+        >
+          {heading}
+          <em className={styles.expandIcon}>{expanded ? "−" : "+"}</em>
+        </button>
+      ) : (
+        <div className={styles.head}>
+          {heading}
         </div>
-        <em className={styles.expandIcon}>{open ? "−" : "+"}</em>
-      </button>
+      )}
 
-      {open && (
+      {expanded && (
         <div className={styles.accordion}>
           <div className={`${styles.grid} ${styles.gridTwo}`}>
             <ProfileMetricField

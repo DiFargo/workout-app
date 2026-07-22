@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { Check } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./NutritionCalendarModal.module.css";
 
@@ -16,8 +17,23 @@ export default function NutritionCalendarModal({
 }) {
   const swipeGestureRef = useRef(null);
   const suppressDayClickRef = useRef(false);
+  const todayConfirmTimerRef = useRef(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
+  const [isTodayConfirming, setIsTodayConfirming] = useState(false);
+
+  useEffect(() => () => {
+    window.clearTimeout(todayConfirmTimerRef.current);
+  }, []);
+
+  const handleSelectToday = () => {
+    if (isTodayConfirming) return;
+
+    setIsTodayConfirming(true);
+    todayConfirmTimerRef.current = window.setTimeout(() => {
+      onSelectToday();
+    }, 280);
+  };
 
   const handleSwipePointerDown = (event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -188,6 +204,7 @@ export default function NutritionCalendarModal({
                   styles.day,
                   day.isCurrentMonth ? "" : styles.muted,
                   day.isToday ? styles.today : "",
+                  day.isToday && isTodayConfirming ? styles.todayConfirming : "",
                   day.isSelected ? styles.selected : "",
                   day.hasFood ? styles.hasFood : "",
                   day.isOverGoal ? styles.overGoal : ""
@@ -212,11 +229,13 @@ export default function NutritionCalendarModal({
         <div className={styles.footer} data-testid="nutrition-calendar-footer">
           <button
             type="button"
-            className={styles.footerAction}
-            onClick={onSelectToday}
+            className={`${styles.footerAction}${isTodayConfirming ? ` ${styles.confirmed}` : ""}`}
+            onClick={handleSelectToday}
+            disabled={isTodayConfirming}
             data-nutrition-calendar-action="today"
+            data-nutrition-calendar-today-state={isTodayConfirming ? "confirmed" : "idle"}
           >
-            Сегодня
+            {isTodayConfirming ? <><Check size={18} strokeWidth={2.6} aria-hidden="true" />Готово</> : "Сегодня"}
           </button>
         </div>
       </div>

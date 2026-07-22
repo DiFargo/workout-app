@@ -1,4 +1,5 @@
 import { WORKOUT_READINESS_OPTIONS } from "../../domain/workoutPresentation";
+import { AlertCircle, LogOut, X } from "lucide-react";
 import styles from "./WorkoutDialogs.module.css";
 
 export function WorkoutExitDialog({ open, onStay, onLeave }) {
@@ -10,8 +11,13 @@ export function WorkoutExitDialog({ open, onStay, onLeave }) {
       data-testid="workout-exit-dialog"
       data-css-module-scope="workout-dialogs"
     >
-      <div className={styles.exitCard} role="dialog" aria-modal="true" data-modal-surface="true" aria-label="Выход из тренировки">
-        <span className={styles.exitIcon} aria-hidden="true">↩</span>
+      <div className={`${styles.exitCard} ${styles.exitCardExit}`} role="dialog" aria-modal="true" data-modal-surface="true" aria-label="Выход из тренировки">
+        <div className={styles.exitHeader}>
+          <span className={styles.exitIcon} aria-hidden="true"><LogOut size={21} strokeWidth={2.25} /></span>
+          <button type="button" className={styles.exitCloseButton} onClick={onStay} aria-label="Остаться в тренировке">
+            <X size={21} strokeWidth={2.5} />
+          </button>
+        </div>
         <h2>Выйти из тренировки?</h2>
         <p>Введённые данные сохранены в черновике. Ты сможешь продолжить позже.</p>
         <div className={styles.exitActions}>
@@ -32,8 +38,13 @@ export function WorkoutIncompleteDialog({ open, completion, onContinue, onSave }
       data-testid="workout-incomplete-dialog"
       data-css-module-scope="workout-dialogs"
     >
-      <div className={styles.exitCard} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="workout-incomplete-title">
-        <span className={styles.exitIcon} aria-hidden="true">!</span>
+      <div className={`${styles.exitCard} ${styles.exitCardIncomplete}`} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="workout-incomplete-title">
+        <div className={styles.exitHeader}>
+          <span className={styles.exitIcon} aria-hidden="true"><AlertCircle size={22} strokeWidth={2.2} /></span>
+          <button type="button" className={styles.exitCloseButton} onClick={onContinue} aria-label="Продолжить тренировку">
+            <X size={21} strokeWidth={2.5} />
+          </button>
+        </div>
         <h2 id="workout-incomplete-title">Сохранить неполную тренировку?</h2>
         <p>
           Выполнено подходов: {completion.completedSets} из {completion.totalSets}.

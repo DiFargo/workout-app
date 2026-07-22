@@ -102,11 +102,12 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
   if (mode === "main") {
     await expect(title).toHaveText("Главная");
     await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
-    await expect(page.getByTestId("profile-main-last-workout")).toBeVisible();
+    await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
     const version = page.getByTestId("profile-dashboard-version");
-    await expect(version).toHaveCSS("clip-path", "inset(50%)");
-    await expect(version).toHaveCSS("width", "1px");
-    await expect(version).toHaveCSS("height", "1px");
+    await expect(version).toBeVisible();
+    await expect(version).toHaveText(/^v\.?3\.0\.\d+$/);
+    await expect(version).toHaveCSS("position", "static");
+    await expect(version).toHaveCSS("pointer-events", "none");
   } else {
     await expect(title).toHaveText("Кабинет");
     await expect(page.getByTestId("profile-cabinet-refresh")).toBeVisible();
@@ -124,7 +125,7 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
 async function expectMainDashboardContent(page) {
   await expect(page.getByTestId("profile-main-hero")).toBeVisible();
   await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
-  await expect(page.getByTestId("profile-main-last-workout")).toBeVisible();
+  await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
   await expect(page.getByTestId("profile-progress-card")).toBeVisible();
   await expect(page.getByTestId("profile-progress-gauge")).toHaveAttribute("aria-label", /90.*100/);
   await expect(page.getByTestId("profile-progress-badge")).toHaveCount(3);
@@ -251,6 +252,7 @@ async function expectCabinetContent(page) {
   await expect(page.getByTestId("profile-cabinet-action-grid")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account-icon")).toBeVisible();
+  await expect(page.getByTestId("profile-cabinet-logout")).toBeVisible();
   await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(7);
 }
 
@@ -579,14 +581,14 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.getByTestId("profile-settings-email")).toBeVisible();
   await expect(page.getByTestId("profile-settings-theme")).toHaveAttribute("aria-pressed", /^(true|false)$/);
   await expect(page.getByTestId("profile-settings-telegram")).toHaveAttribute("aria-label", /Telegram/);
+  await expect(page.getByTestId("profile-settings-logout")).toHaveCount(0);
   await expectTapTargets(page, [
     '[data-testid="profile-settings-close"]',
     '[data-testid="profile-account-avatar"]',
     '[data-testid="profile-account-password"]',
     '[data-testid="profile-settings-email"]',
     '[data-testid="profile-settings-theme"]',
-    '[data-testid="profile-settings-telegram"]',
-    '[data-testid="profile-settings-logout"]'
+    '[data-testid="profile-settings-telegram"]'
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-cabinet-settings-modal.png");

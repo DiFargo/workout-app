@@ -5,7 +5,7 @@
   box-sizing: border-box;
   display: grid;
   place-items: center;
-  padding: max(16px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom));
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
   background: var(--background-profile-trainer-notifications-overlay);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -20,13 +20,13 @@
   box-sizing: border-box;
   width: min(100%, 420px);
   max-height: min(650px, calc(100dvh - 32px));
-  padding: 18px;
+  padding: 15px;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   overflow: hidden;
   border: 1px solid var(--color-profile-trainer-notifications-dialog-border);
-  border-radius: 30px;
+  border-radius: 32px;
   background: var(--background-profile-trainer-notifications-dialog);
   box-shadow: var(--shadow-profile-trainer-notifications-dialog);
   color: var(--color-profile-trainer-notifications-text);
@@ -147,6 +147,12 @@
   color: var(--color-profile-trainer-notifications-muted);
   font-size: 10px;
   font-style: normal;
+}
+
+.itemMeta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .overdue .itemIcon {

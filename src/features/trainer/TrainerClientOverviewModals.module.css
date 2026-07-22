@@ -1,0 +1,221 @@
+.overlay {
+  position: fixed;
+  z-index: 20000;
+  inset: 0;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  background: rgba(40, 38, 46, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal {
+  box-sizing: border-box;
+  width: min(560px, 100%);
+  max-height: min(760px, calc(100dvh - 48px));
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid #efebf3;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 24px 64px rgba(40, 38, 46, 0.2);
+}
+
+.photoCompareModal {
+  width: min(920px, 100%);
+}
+
+.header {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header > div,
+.body,
+.body label,
+.photoCompareControls,
+.photoCompare {
+  min-width: 0;
+  display: grid;
+}
+
+.header > div {
+  gap: 5px;
+}
+
+.header span {
+  color: #8f7ac8;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.header h3 {
+  margin: 0;
+  color: #28262e;
+  font-size: 22px;
+  line-height: 1.16;
+}
+
+.header > button {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #f5f2f7;
+  color: #28262e;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.body {
+  gap: 12px;
+}
+
+.body label {
+  gap: 6px;
+}
+
+.body label > span {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.body input,
+.body select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 13px;
+  border: 1px solid #efebf3;
+  border-radius: 13px;
+  outline: none;
+  background: #f5f2f7;
+  color: #28262e;
+  font: inherit;
+}
+
+.body input:focus,
+.body select:focus {
+  border-color: #8f7ac8;
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.16);
+}
+
+.taskCreate > button,
+.paymentGrid > button {
+  min-height: 46px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 14px;
+  background: #8f7ac8;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.templateRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.templateRow button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid #efebf3;
+  border-radius: 999px;
+  background: #f5f2f7;
+  color: #806bb6;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.photoCompareControls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.photoCompare {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.photoCompare > div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
+  background: #f7f6f8;
+}
+
+.photoCompare > div > div {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.photoCompare img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.photoCompare strong {
+  color: #28262e;
+  font-size: 13px;
+}
+
+.photoCompare small,
+.photoCompare > div > span {
+  color: #7b7682;
+  font-size: 12px;
+}
+
+.paymentGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.paymentGrid > button,
+.wide {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 700px) {
+  .overlay {
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+    place-items: end center;
+  }
+
+  .modal {
+    max-height: calc(100dvh - 24px);
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .header h3 {
+    font-size: 20px;
+  }
+
+  .photoCompareControls,
+  .photoCompare,
+  .paymentGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -130,6 +130,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedWorkoutCount: 4,
       completedWorkoutCount: 1,
       programCompletionPercent: 25,
+      weeklyProgressScore: 82,
       workouts7: 1,
       nutritionDays7: 2,
       lastWorkoutAt: "2026-06-15T18:00:00.000Z",
@@ -264,8 +265,9 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         setActiveClientTab(tab);
         setMode("client");
       }}
-      onOpenClient={(client) => {
+      onOpenClient={(client, targetTab = "overview") => {
         setSelectedClient(client);
+        setActiveClientTab(targetTab || "overview");
         setMode("client");
         setActiveSection("clients");
       }}
@@ -331,6 +333,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }}
       onTestNotification={() => true}
       onConnectTelegram={() => {}}
+      onOpenTelegramChat={() => {}}
       onSendMessage={(text, _client, replyContext) => {
         if (replyContext?.sourceCommentId) {
           setTelegramMessages((current) => [...current, {

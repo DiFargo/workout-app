@@ -1829,6 +1829,7 @@ function AppRuntime() {
     setAdminTelegramSending,
     setAdminClientStatus,
     setAdminSelectedClient,
+    setAdminClientTasks,
     setUsersList,
     recordTrainerEvent
   });
@@ -2003,6 +2004,7 @@ function AppRuntime() {
     setProfileProgressPhotoStatus,
     setProfileProgressPhotosModalOpen,
     setProfileMeasurementsModalOpen,
+    setProfileActiveTab,
     setPage,
     openTrainingEntry,
     setProfileBodyMetricsOpen,
@@ -2309,7 +2311,8 @@ function AppRuntime() {
     handleTelegramAvatarError,
     checkTelegramLoginResult,
     refreshTelegramConnection,
-    disconnectTelegram
+    disconnectTelegram,
+    toggleTelegramNotifications
   } = createProfileTelegramHandlers({
     auth,
     db,
@@ -2762,6 +2765,7 @@ function AppRuntime() {
     deleteClientEverywhereFromAdminPanel,
     deleteSelectedAdminClientHistory,
     disconnectTelegram,
+    toggleTelegramNotifications,
     doc,
     endPerformanceCheck,
     endProfileAvatarCropDrag,

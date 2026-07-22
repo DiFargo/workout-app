@@ -499,7 +499,7 @@
 /* Compact iPhone 17 Pro reference surface for the warm theme. */
 :global(:root[data-app-theme="warm-light"]) .page {
   max-width: 402px;
-  padding: 0 12px calc(104px + env(safe-area-inset-bottom));
+  padding: 0 12px calc(87px + env(safe-area-inset-bottom));
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {
@@ -591,16 +591,50 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation {
-  bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px));
-  width: min(calc(100vw - 24px), 378px);
-  padding: 8px;
-  gap: 8px;
-  border-radius: 22px;
+  right: auto;
+  bottom: 0;
+  left: 50%;
+  z-index: 9800;
+  width: min(402px, 100vw);
+  max-width: 402px;
+  height: 77px;
+  min-height: 77px;
+  max-height: 77px;
+  margin: 0;
+  padding: 12px 16px 17px;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+  border: 0;
+  border-top: 1px solid #efebf3;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: none;
+  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation button {
-  min-height: 56px;
-  border-radius: 16px;
-  font-size: 16px;
+  min-height: 48px;
+  height: 48px;
+  max-height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 14px;
   font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .navigation button:first-child {
+  border-radius: 24px;
+  background: #f5f2f7;
+  color: #28262e;
+}
+
+:global(:root[data-app-theme="warm-light"]) .navigation .next {
+  border-radius: 17px;
+  background: #8f7ac8;
+  color: #ffffff;
+  box-shadow: none;
 }

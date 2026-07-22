@@ -4,30 +4,30 @@
     --font-family-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     --font-family-compact-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
 
-    --bg: #f3f4f3 !important;
+    --bg: #f7f6f8 !important;
     --card: #ffffff !important;
-    --card-2: #edf1f3 !important;
-    --line: #e1e4e5 !important;
-    --text: #202326 !important;
-    --muted: #74797f !important;
-    --accent: #627588 !important;
-    --accent-2: #8296a5 !important;
+    --card-2: #f5f2f7 !important;
+    --line: #efebf3 !important;
+    --text: #28262e !important;
+    --muted: #7b7682 !important;
+    --accent: #8f7ac8 !important;
+    --accent-2: #806bb6 !important;
 
-    --color-background: #f3f4f3;
+    --color-background: #f7f6f8;
     --color-surface: #ffffff;
     --color-surface-raised: #ffffff;
-    --color-surface-muted: #edf1f3;
-    --color-text: #202326;
-    --color-text-primary: #202326;
-    --color-text-muted: #74797f;
-    --color-heading: #202326;
-    --color-border: #e1e4e5;
-    --color-accent: #627588;
-    --color-accent-strong: #526779;
+    --color-surface-muted: #f5f2f7;
+    --color-text: #28262e;
+    --color-text-primary: #28262e;
+    --color-text-muted: #7b7682;
+    --color-heading: #28262e;
+    --color-border: #efebf3;
+    --color-accent: #8f7ac8;
+    --color-accent-strong: #806bb6;
     --color-accent-contrast: #ffffff;
     --color-danger: #b36e72;
-    --gradient-primary: #627588;
-    --focus-ring: 0 0 0 3px rgba(98, 117, 136, 0.22);
+    --gradient-primary: #8f7ac8;
+    --focus-ring: 0 0 0 3px rgba(143, 122, 200, 0.22);
     --shadow-card: none;
 
     /*
@@ -35,20 +35,20 @@
      * continue to own layout; these aliases keep nested and transient states
      * from falling back to the legacy purple/green visual language.
      */
-    --ios-canvas: #f3f4f3;
+    --ios-canvas: #f7f6f8;
     --ios-surface: #ffffff;
-    --ios-surface-muted: #edf1f3;
-    --ios-text: #202326;
-    --ios-muted: #74797f;
-    --ios-line: #e1e4e5;
-    --ios-accent: #627588;
-    --ios-accent-strong: #526779;
-    --ios-accent-soft: #edf1f3;
+    --ios-surface-muted: #f5f2f7;
+    --ios-text: #28262e;
+    --ios-muted: #7b7682;
+    --ios-line: #efebf3;
+    --ios-accent: #8f7ac8;
+    --ios-accent-strong: #806bb6;
+    --ios-accent-soft: #f0ebfa;
     --ios-danger: #b36e72;
     --ios-success: #718879;
     --ios-warning: #9b8662;
-    --ios-backdrop: rgba(32, 35, 38, 0.26);
-    --ios-shadow-float: 0 18px 48px rgba(57, 67, 75, 0.16);
+    --ios-backdrop: rgba(40, 38, 46, 0.26);
+    --ios-shadow-float: 0 18px 48px rgba(72, 63, 87, 0.16);
 
     --color-app-error-canvas: #f3f4f3;
     --color-app-error-text: #202326;
@@ -391,13 +391,13 @@
     --background-post-workout-badge-mobile: #edf1f3;
     --color-post-workout-badge-mobile: #627588;
     --color-post-workout-option: #202326;
-    --color-workout-readiness-mobile-actions-border: #e1e4e5;
-    --background-workout-readiness-mobile-actions: rgba(255, 255, 255, 0.98);
-    --shadow-workout-readiness-mobile-actions: 0 8px 30px rgba(57, 67, 75, 0.1);
-    --color-workout-readiness-mobile-back-border: transparent;
-    --background-workout-readiness-mobile-back: #edf1f3;
-    --color-workout-readiness-mobile-back: #202326;
-    --background-workout-readiness-primary: #627588;
+    --color-workout-readiness-mobile-actions-border: #efebf3;
+    --background-workout-readiness-mobile-actions: rgba(255, 255, 255, 0.96);
+    --shadow-workout-readiness-mobile-actions: 0 8px 30px rgba(72, 63, 87, 0.1);
+    --color-workout-readiness-mobile-back-border: #efebf3;
+    --background-workout-readiness-mobile-back: #f5f2f7;
+    --color-workout-readiness-mobile-back: #28262e;
+    --background-workout-readiness-primary: #8f7ac8;
     --shadow-workout-readiness-mobile-primary: none;
     --color-workout-readiness-primary: #ffffff;
 
@@ -407,14 +407,14 @@
     --shadow-workout-dialog-primary: none;
     --background-post-workout-badge: #edf1f3;
     --color-post-workout-badge: #627588;
-    --background-workout-readiness-overlay: #f3f4f3;
-    --color-workout-readiness-icon-border: #cfd6da;
-    --background-workout-readiness-icon: #edf1f3;
-    --color-workout-readiness-icon: #627588;
-    --color-workout-readiness-active-border: #cfd6da;
-    --background-workout-readiness-active: #edf1f3;
-    --shadow-workout-readiness-active: none;
-    --color-workout-readiness-confirmation: #627588;
+    --background-workout-readiness-overlay: #f7f6f8;
+    --color-workout-readiness-icon-border: #efebf3;
+    --background-workout-readiness-icon: #f0ebfa;
+    --color-workout-readiness-icon: #8f7ac8;
+    --color-workout-readiness-active-border: #b9a9e5;
+    --background-workout-readiness-active: #f0ebfa;
+    --shadow-workout-readiness-active: 0 0 0 3px rgba(143, 122, 200, 0.08);
+    --color-workout-readiness-confirmation: #806bb6;
 
     --color-workout-warmup-badge-surface: #edf1f3;
     --color-workout-warmup-badge-text: #627588;
@@ -603,51 +603,51 @@
     --shadow-profile-avatar-crop-mask: 0 0 0 999px rgba(40, 38, 46, 0.54);
 
     /* Measurement wizard and body-control flows. */
-    --background-measurement-wizard-page: #f3f4f3;
-    --color-measurement-wizard-text: #202326;
-    --color-measurement-wizard-muted: #74797f;
-    --color-measurement-wizard-heading: #202326;
-    --color-measurement-wizard-surface: #202326;
-    --color-measurement-wizard-surface-border: transparent;
-    --background-measurement-wizard-surface: #f3f4f3;
-    --color-measurement-wizard-close: #202326;
-    --color-measurement-wizard-close-border: #e1e4e5;
-    --background-measurement-wizard-close: #ffffff;
-    --color-measurement-wizard-back: #202326;
-    --color-measurement-wizard-back-border: #e1e4e5;
-    --background-measurement-wizard-back: #edf1f3;
-    --color-measurement-wizard-card-border: #e1e4e5;
+    --background-measurement-wizard-page: #f7f6f8;
+    --color-measurement-wizard-text: #28262e;
+    --color-measurement-wizard-muted: #7b7682;
+    --color-measurement-wizard-heading: #28262e;
+    --color-measurement-wizard-surface: #28262e;
+    --color-measurement-wizard-surface-border: #efebf3;
+    --background-measurement-wizard-surface: #f5f2f7;
+    --color-measurement-wizard-close: #28262e;
+    --color-measurement-wizard-close-border: #efebf3;
+    --background-measurement-wizard-close: #f5f2f7;
+    --color-measurement-wizard-back: #28262e;
+    --color-measurement-wizard-back-border: #efebf3;
+    --background-measurement-wizard-back: #f5f2f7;
+    --color-measurement-wizard-card-border: #efebf3;
     --background-measurement-wizard-card: #ffffff;
-    --color-measurement-wizard-intro-border: #e1e4e5;
+    --color-measurement-wizard-intro-border: #efebf3;
     --background-measurement-wizard-intro: #ffffff;
-    --color-measurement-wizard-progress: #627588;
-    --background-measurement-wizard-progress-track: #dce3e7;
-    --background-measurement-wizard-progress-fill: #627588;
-    --color-measurement-wizard-input: #202326;
+    --color-measurement-wizard-progress: #8f7ac8;
+    --background-measurement-wizard-progress-track: #efebf3;
+    --background-measurement-wizard-progress-fill: #8f7ac8;
+    --color-measurement-wizard-input: #28262e;
     --background-measurement-wizard-input: #ffffff;
-    --color-measurement-wizard-input-wrap-border: #e1e4e5;
+    --color-measurement-wizard-input-wrap-border: #efebf3;
     --background-measurement-wizard-input-wrap: #ffffff;
-    --color-measurement-wizard-unit: #627588;
-    --background-measurement-wizard-unit: #edf1f3;
-    --color-measurement-wizard-tip: #74797f;
-    --background-measurement-wizard-tip: #edf1f3;
-    --color-measurement-wizard-note-border: #e1e4e5;
-    --color-measurement-wizard-note-label: #627588;
+    --color-measurement-wizard-unit: #806bb6;
+    --background-measurement-wizard-unit: #f5f2f7;
+    --color-measurement-wizard-tip: #7b7682;
+    --background-measurement-wizard-tip: #f5f2f7;
+    --color-measurement-wizard-note-border: #efebf3;
+    --color-measurement-wizard-note-label: #806bb6;
     --background-measurement-wizard-note: #ffffff;
-    --color-measurement-wizard-review-border: #e1e4e5;
-    --color-measurement-wizard-review-label: #74797f;
-    --color-measurement-wizard-review-value: #202326;
+    --color-measurement-wizard-review-border: #efebf3;
+    --color-measurement-wizard-review-label: #7b7682;
+    --color-measurement-wizard-review-value: #28262e;
     --background-measurement-wizard-review: #ffffff;
-    --color-measurement-wizard-nav-border: #e1e4e5;
-    --background-measurement-wizard-nav: rgba(255, 255, 255, 0.98);
+    --color-measurement-wizard-nav-border: #efebf3;
+    --background-measurement-wizard-nav: rgba(255, 255, 255, 0.96);
     --color-measurement-wizard-next: #ffffff;
     --color-measurement-wizard-next-border: transparent;
-    --background-measurement-wizard-next: #627588;
-    --color-measurement-wizard-focus: #627588;
-    --shadow-measurement-wizard-card: none;
+    --background-measurement-wizard-next: #8f7ac8;
+    --color-measurement-wizard-focus: #8f7ac8;
+    --shadow-measurement-wizard-card: 0 12px 32px rgba(40, 38, 46, 0.08);
     --shadow-measurement-wizard-close: none;
-    --shadow-measurement-wizard-nav: none;
-    --shadow-measurement-wizard-next: none;
+    --shadow-measurement-wizard-nav: 0 16px 36px rgba(40, 38, 46, 0.12);
+    --shadow-measurement-wizard-next: 0 8px 18px rgba(143, 122, 200, 0.24);
 
     /* AI coach adopts the same calm light surfaces instead of a dark island. */
     --background-ai-coach-page: #f3f4f3;
@@ -951,8 +951,8 @@
 :global(html:root[data-app-theme="warm-light"]) body,
 :global(html:root[data-app-theme="warm-light"]) body :global(#root) {
   min-height: 100%;
-  background: #f3f4f3 !important;
-  color: #202326 !important;
+  background: #f7f6f8 !important;
+  color: #28262e !important;
   font-family: var(--font-family-sans) !important;
 }
 

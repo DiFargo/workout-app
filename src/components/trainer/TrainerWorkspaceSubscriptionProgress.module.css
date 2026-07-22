@@ -99,69 +99,112 @@
 
 .globalNotificationStack {
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 .globalSubscriptionSettings {
   display: grid;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid #e2e5ef;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(35, 38, 52, 0.05);
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--tn-line, #efebf3);
+  border-radius: 22px;
+  background: var(--tn-surface, #fff);
+  box-shadow: var(--tn-shadow, 0 12px 30px rgba(40, 38, 46, 0.08));
 }
 
 .globalSubscriptionHeader {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .globalSubscriptionHeader > span {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  border-radius: 11px;
-  background: #f2edff;
-  color: #6540e9;
+  border-radius: 14px;
+  background: var(--tn-purple-soft, #efeaf9);
+  color: var(--tn-purple-strong, #806bb6);
 }
 
-.globalSubscriptionHeader > div { display: grid; gap: 3px; }
-.globalSubscriptionHeader h3 { margin: 0; font-size: 14px; }
-.globalSubscriptionHeader p { margin: 0; color: #858999; font-size: 10px; line-height: 1.4; }
+.globalSubscriptionHeader > div { display: grid; gap: 4px; }
+.globalSubscriptionHeader h3 { margin: 0; color: var(--tn-text, #28262e); font-size: 17px; font-weight: 740; letter-spacing: -0.25px; }
+.globalSubscriptionHeader p { margin: 0; color: var(--tn-muted, #7b7682); font-size: 12px; line-height: 1.42; }
 
 .globalSubscriptionSettings .subscriptionReminderBar {
   order: 0;
-  padding: 12px;
-  background: #fbfbfd;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border-color: var(--tn-line, #efebf3);
+  border-radius: 16px;
+  background: var(--tn-surface-soft, #f5f2f7);
+}
+
+.globalSubscriptionSettings .subscriptionReminderBar > div { grid-column: span 2; }
+.globalSubscriptionSettings .subscriptionReminderBar label:has(input[type="checkbox"]) { grid-column: span 1; }
+
+.globalSubscriptionSettings .subscriptionReminderBar > div strong {
+  color: var(--tn-text, #28262e);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.globalSubscriptionSettings .subscriptionReminderBar > div small,
+.globalSubscriptionSettings .subscriptionReminderBar label small {
+  color: var(--tn-muted, #7b7682);
+  font-size: 11px;
+}
+
+.globalSubscriptionSettings .subscriptionReminderBar label {
+  color: var(--tn-text, #28262e);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.globalSubscriptionSettings .subscriptionReminderBar input:not([type="checkbox"]),
+.globalSubscriptionSettings .subscriptionReminderBar select {
+  min-height: 38px;
+  padding: 7px 10px;
+  border-color: var(--tn-line, #efebf3);
+  border-radius: 11px;
+  background: var(--tn-surface, #fff);
+  color: var(--tn-text, #28262e);
+  font-size: 13px;
+}
+
+.globalSubscriptionSettings .subscriptionReminderBar input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--tn-purple-strong, #806bb6);
 }
 
 .globalSubscriptionActions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .globalSubscriptionActions > small {
   margin-right: auto;
-  color: #858999;
-  font-size: 9px;
-  line-height: 1.35;
+  color: var(--tn-muted, #7b7682);
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .globalSubscriptionActions button {
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid #6540e9;
-  border-radius: 9px;
-  background: #6540e9;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--tn-purple-strong, #806bb6);
+  border-radius: 13px;
+  background: var(--tn-purple, #8f7ac8);
   color: #fff;
   font: inherit;
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 720;
   cursor: pointer;
 }
 
@@ -270,9 +313,101 @@
 @media (max-width: 520px) {
   .subscriptionReminderBar,
   .subscriptionModalGrid { grid-template-columns: 1fr; }
+  .globalSubscriptionSettings .subscriptionReminderBar > div,
+  .globalSubscriptionSettings .subscriptionReminderBar label:has(input[type="checkbox"]) { grid-column: 1 / -1; }
   .overviewSubscriptionMetrics { grid-template-columns: 1fr; }
   .subscriptionModalSummary { align-items: flex-start; flex-direction: column; }
   .subscriptionModal footer { flex-wrap: wrap; }
   .globalSubscriptionActions { align-items: stretch; flex-direction: column; }
   .globalSubscriptionActions > small { margin-right: 0; }
+}
+
+/* Client notification settings follow the shared calm trainer surface. */
+.notificationPanel {
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--tn-line, #efebf3);
+  border-radius: 22px;
+  background: var(--tn-surface, #fff);
+  box-shadow: var(--tn-shadow, 0 12px 30px rgba(40, 38, 46, 0.08));
+}
+
+.notificationPanel > header,
+.notificationCalendar,
+.subscriptionReminderBar,
+.notificationActions,
+.notificationPanel > :global(.trainerNotificationHint),
+.notificationPanel > :global(.trainerNextProgramStatus) {
+  grid-column: auto;
+  order: initial;
+}
+
+.reminderCard {
+  order: initial;
+  margin: 0;
+  padding: 15px;
+  border: 1px solid var(--tn-line, #efebf3);
+  border-radius: 17px;
+  background: var(--tn-surface-soft, #f5f2f7);
+}
+
+.reminderCard :global(.trainerReminderCardHead) {
+  min-height: 42px;
+  padding-bottom: 0;
+}
+
+.reminderCard :global(.trainerReminderIcon) {
+  width: 42px;
+  height: 42px;
+  flex-basis: 42px;
+}
+
+.reminderCard :global(.trainerReminderCardHead strong) {
+  color: var(--tn-text, #28262e);
+  font-size: 14px;
+}
+
+.reminderCard :global(.trainerReminderCardHead p) {
+  color: var(--tn-muted, #7b7682);
+  font-size: 12px;
+  line-height: 1.42;
+}
+
+.reminderCard :global(.trainerNotificationOffsets),
+.reminderCard :global(.trainerReminderPeriod) {
+  padding-top: 0;
+}
+
+.reminderCard :global(.trainerNotificationOffsets > div),
+.reminderCard :global(.trainerReminderPeriod > div) {
+  display: flex;
+  gap: 8px;
+}
+
+.reminderCard :global(.trainerNotificationOffsets label),
+.reminderCard :global(.trainerReminderPeriod button) {
+  min-height: 34px;
+  padding: 0 10px;
+  border-color: var(--tn-line, #efebf3);
+  color: var(--tn-muted, #7b7682);
+  background: var(--tn-surface, #fff);
+  font-size: 12px;
+}
+
+.notificationCalendar {
+  order: initial;
+  margin: 0;
+  padding: 16px;
+  border-color: var(--tn-line, #efebf3);
+  border-radius: 18px;
+  background: var(--tn-surface-soft, #f5f2f7);
+}
+
+.notificationCalendar :global(header) { padding-bottom: 0; }
+.notificationCalendar :global(.trainerNotificationSchedule) { margin: 14px 0 0; }
+.notificationActions { order: initial; margin-top: 0; }
+
+@media (max-width: 520px) {
+  .notificationPanel { padding: 16px; border-radius: 19px; }
 }

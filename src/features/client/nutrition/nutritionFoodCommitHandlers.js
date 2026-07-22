@@ -122,6 +122,7 @@ export function createNutritionFoodCommitHandlers({
               foodId: sourceFood.id,
               fatSecretId: sourceFood.fatSecretId || item.fatSecretId || "",
               name: sourceFood.name,
+              mealId: nutritionMeal || item.mealId,
               amount: numericAmount,
               amountMode: nutritionAmountMode,
               portion: sourceFood.portion,

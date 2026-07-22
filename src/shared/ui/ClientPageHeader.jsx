@@ -27,7 +27,9 @@ export default function ClientPageHeader({
   frameClassName = "",
   rootProps,
   scope,
-  testId
+  testId,
+  titleAlign = "center",
+  primary = false
 }) {
   const frameRef = useRef(null);
   const headerRef = useRef(null);
@@ -79,7 +81,7 @@ export default function ClientPageHeader({
       data-client-page-header-frame="true"
     >
       <header
-        className={`${styles.root} ${compact ? styles.compact : styles.large} ${controlsVariant === "workout" ? styles.workoutControls : ""} ${embedded ? styles.embedded : ""} ${className}`.trim()}
+        className={`${styles.root} ${compact ? styles.compact : styles.large} ${controlsVariant === "workout" ? styles.workoutControls : ""} ${titleAlign === "start" ? styles.startTitle : ""} ${primary ? styles.primary : ""} ${embedded ? styles.embedded : ""} ${className}`.trim()}
         data-client-page-header="true"
         data-client-page-header-controls={controlsVariant}
         data-client-page-header-layout={embedded ? "embedded" : "screen"}

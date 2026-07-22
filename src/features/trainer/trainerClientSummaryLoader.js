@@ -24,7 +24,27 @@ import {
   getTrainerWorkoutFeedbackAttention,
   getTrainerWorkoutActivitySummary
 } from "../../utils/trainerClientSummary";
+import { getClientEffectiveNutritionGoals } from "../../utils/clientNutritionPlan";
+import { buildProgressInsight } from "../../utils/progressInsight";
 import { getTrainerSummaryPeriodBounds } from "../../utils/trainerSummaryDates";
+
+function getTrainerClientScheduledDates(client = {}, workouts = []) {
+  const calendar = client?.workoutCalendar || {};
+  const calendarDates = Array.isArray(calendar.scheduledDates)
+    ? calendar.scheduledDates
+    : Array.isArray(calendar.monthlyTrainingDates)
+      ? calendar.monthlyTrainingDates
+      : [];
+  const workoutDates = (Array.isArray(workouts) ? workouts : [])
+    .map((workout) => workout?.scheduledDate || workout?.plannedDate)
+    .filter(Boolean);
+  // Keep the trainer score in lockstep with the client's dashboard: it uses
+  // the saved calendar dates first, falling back to workout dates only when
+  // there is no saved schedule yet.
+  const source = calendarDates.length ? calendarDates : workoutDates;
+
+  return [...new Set(source.filter((date) => typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)))].sort();
+}
 
 export function createTrainerClientSummaryLoader({
   db,
@@ -97,6 +117,20 @@ export function createTrainerClientSummaryLoader({
       );
       const assignedWorkoutCount = getTrainerAssignedWorkoutCount(client, clientWorkouts);
       const payment = getTrainerSettledDocumentData(paymentResult);
+      const weeklyProgressGoals = getClientEffectiveNutritionGoals(
+        client,
+        nutritionState,
+        client.nutritionGoals || nutritionState?.goals || {}
+      );
+      const weeklyProgress = buildProgressInsight({
+        history: clientHistory,
+        measurements: clientMeasurements,
+        nutrition: nutritionState || {},
+        calorieGoal: Number(weeklyProgressGoals.calories),
+        proteinGoal: Number(weeklyProgressGoals.protein),
+        scheduledDates: getTrainerClientScheduledDates(client, clientWorkouts),
+        goal: client.aiNutritionProfile?.goal || client.profile?.goal || "recomp"
+      });
       const workoutActivitySummary = getTrainerWorkoutActivitySummary(clientHistory, {
         weekStart,
         sevenDayStart,
@@ -112,6 +146,7 @@ export function createTrainerClientSummaryLoader({
         assignedProgramUpdatedAt,
         assignedWorkoutCount,
         completedWorkoutCount,
+        weeklyProgressScore: weeklyProgress.score,
         plateau: getClientPlateauInfo(clientMeasurements),
         payment,
         paymentAttention: getClientPaymentAttention(payment),

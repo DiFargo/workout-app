@@ -235,6 +235,14 @@ export default function WorkoutRunStageView({
         />
       ) : (
         <>
+          {!isWarmup && (
+            <div className={styles.exerciseProgressSlot}>
+              <div className={styles.exerciseMeta} data-testid="workout-exercise-progress">
+                <span className={styles.exerciseProgressText}>{currentExerciseIndex} из {workout.exercises.length}</span>
+              </div>
+            </div>
+          )}
+
           <div
             key={exercise.id}
             className={`${styles.card} ${
@@ -263,73 +271,67 @@ export default function WorkoutRunStageView({
                 stepCount={warmupSteps.length}
               />
             ) : (
-              <>
-                <div className={styles.exerciseMeta} data-testid="workout-exercise-progress">
-                  <span>{currentExerciseIndex} из {workout.exercises.length}</span>
-                </div>
-
-                <WorkoutExerciseVideoFrame
-                  exercise={exercise}
-                  exerciseVideoFailed={exerciseVideoFailed}
-                  fallbackHint={getExerciseTechniqueHint(exercise.name)}
-                  inlinePlayingVideoId={inlinePlayingVideoId}
-                  inlineVideoControlsVisible={inlineVideoControlsVisible}
-                  onFullscreenVideo={setFullscreenVideo}
-                  onInlineVideoPlayFailed={() => {
-                    showAppError("load", "Не получилось запустить видео упражнения.");
-                  }}
-                  onOpenTechnique={(event) => openWorkoutExerciseModal(
-                    setExerciseTechniqueOpenId,
-                    exercise.id,
-                    event.currentTarget
-                  )}
-                  onRetryVideo={() => {
-                    setOpenVideoId(null);
-                    setVideoRetryToken((current) => current + 1);
-                  }}
-                  onVideoCanPlay={() => setVideoLoadingId("")}
-                  onVideoEnded={() => {
-                    if (inlineVideoControlsTimerRef.current) {
-                      window.clearTimeout(inlineVideoControlsTimerRef.current);
-                      inlineVideoControlsTimerRef.current = null;
-                    }
-                    setInlinePlayingVideoId("");
-                    setInlineVideoControlsVisible(true);
-                  }}
-                  onVideoError={() => {
-                    endPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video, error: true });
-                    if (inlineVideoControlsTimerRef.current) {
-                      window.clearTimeout(inlineVideoControlsTimerRef.current);
-                      inlineVideoControlsTimerRef.current = null;
-                    }
-                    setInlinePlayingVideoId("");
-                    setInlineVideoControlsVisible(true);
-                    setVideoLoadingId("");
-                    setOpenVideoId(`error:${exercise.id}`);
-                  }}
-                  onVideoLoadedMetadata={(event) => {
-                    setVideoLoadingId("");
-                    endPerformanceCheck(`Video · ${exercise.name}`, {
-                      src: exercise.video,
-                      duration: Math.round(Number(event.currentTarget.duration) || 0)
-                    });
-                  }}
-                  onVideoLoadStart={() => {
-                    setVideoLoadingId(exercise.id);
-                    startPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video });
-                  }}
-                  onVideoPause={() => {
-                    setInlinePlayingVideoId("");
-                    showInlineVideoControlsTemporarily();
-                  }}
-                  onVideoPlay={() => {
-                    setInlinePlayingVideoId(exercise.id);
-                    showInlineVideoControlsTemporarily();
-                  }}
-                  videoLoadingId={videoLoadingId}
-                  videoRetryToken={videoRetryToken}
-                />
-              </>
+              <WorkoutExerciseVideoFrame
+                exercise={exercise}
+                exerciseVideoFailed={exerciseVideoFailed}
+                fallbackHint={getExerciseTechniqueHint(exercise.name)}
+                inlinePlayingVideoId={inlinePlayingVideoId}
+                inlineVideoControlsVisible={inlineVideoControlsVisible}
+                onFullscreenVideo={setFullscreenVideo}
+                onInlineVideoPlayFailed={() => {
+                  showAppError("load", "Не получилось запустить видео упражнения.");
+                }}
+                onOpenTechnique={(event) => openWorkoutExerciseModal(
+                  setExerciseTechniqueOpenId,
+                  exercise.id,
+                  event.currentTarget
+                )}
+                onRetryVideo={() => {
+                  setOpenVideoId(null);
+                  setVideoRetryToken((current) => current + 1);
+                }}
+                onVideoCanPlay={() => setVideoLoadingId("")}
+                onVideoEnded={() => {
+                  if (inlineVideoControlsTimerRef.current) {
+                    window.clearTimeout(inlineVideoControlsTimerRef.current);
+                    inlineVideoControlsTimerRef.current = null;
+                  }
+                  setInlinePlayingVideoId("");
+                  setInlineVideoControlsVisible(true);
+                }}
+                onVideoError={() => {
+                  endPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video, error: true });
+                  if (inlineVideoControlsTimerRef.current) {
+                    window.clearTimeout(inlineVideoControlsTimerRef.current);
+                    inlineVideoControlsTimerRef.current = null;
+                  }
+                  setInlinePlayingVideoId("");
+                  setInlineVideoControlsVisible(true);
+                  setVideoLoadingId("");
+                  setOpenVideoId(`error:${exercise.id}`);
+                }}
+                onVideoLoadedMetadata={(event) => {
+                  setVideoLoadingId("");
+                  endPerformanceCheck(`Video · ${exercise.name}`, {
+                    src: exercise.video,
+                    duration: Math.round(Number(event.currentTarget.duration) || 0)
+                  });
+                }}
+                onVideoLoadStart={() => {
+                  setVideoLoadingId(exercise.id);
+                  startPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video });
+                }}
+                onVideoPause={() => {
+                  setInlinePlayingVideoId("");
+                  showInlineVideoControlsTemporarily();
+                }}
+                onVideoPlay={() => {
+                  setInlinePlayingVideoId(exercise.id);
+                  showInlineVideoControlsTemporarily();
+                }}
+                videoLoadingId={videoLoadingId}
+                videoRetryToken={videoRetryToken}
+              />
             )}
 
             {isWarmup ? (

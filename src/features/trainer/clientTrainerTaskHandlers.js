@@ -29,6 +29,7 @@ export function createClientTrainerTaskHandlers({
   setProfileProgressPhotoStatus,
   setProfileProgressPhotosModalOpen,
   setProfileMeasurementsModalOpen,
+  setProfileActiveTab,
   setPage,
   openTrainingEntry,
   setProfileBodyMetricsOpen,
@@ -95,19 +96,26 @@ export function createClientTrainerTaskHandlers({
     }
   }
 
-  function openClientTrainerTask(task) {
-    const destination = getClientTrainerTaskDestination(task);
+  function openClientTrainerTask(task, destinationOverride = "") {
+    const destination = destinationOverride || getClientTrainerTaskDestination(task);
     if (!destination) return;
 
     setProfileTrainerNotificationsOpen(false);
 
+    const openCabinet = () => {
+      setProfileActiveTab("cabinet");
+      setPage(APP_PAGES.PROFILE);
+    };
+
     if (destination === "progressPhotos") {
+      openCabinet();
       setProfileProgressPhotoStatus("");
       setProfileProgressPhotosModalOpen(true);
       return;
     }
 
     if (destination === "measurements") {
+      openCabinet();
       setProfileMeasurementsModalOpen(true);
       return;
     }
@@ -123,6 +131,7 @@ export function createClientTrainerTaskHandlers({
     }
 
     if (destination === "profile") {
+      openCabinet();
       setProfileBodyMetricsOpen(true);
       setProfileSettingsModalSection("profile");
       setProfileSettingsModalOpen(true);
@@ -130,6 +139,7 @@ export function createClientTrainerTaskHandlers({
     }
 
     if (destination === "progress") {
+      openCabinet();
       setProfileProgressModalOpen(true);
     }
   }

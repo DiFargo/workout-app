@@ -106,6 +106,23 @@
 }
 :global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { border-color: #8f7ac8; background: #8f7ac8; color: #fff; }
 
+@media (max-height: 824px) {
+  :global(html[data-app-theme="warm-light"]) .root.root,
+  :global(html[data-app-theme="warm-light"]) .list.list {
+    height: 174px;
+    max-height: 174px;
+  }
+
+  :global(html[data-app-theme="warm-light"]) .row.row {
+    height: 58px;
+    min-height: 58px;
+  }
+
+  :global(html[data-app-theme="warm-light"]) .number.number { top: 10px; }
+  :global(html[data-app-theme="warm-light"]) .root.root .editButton.editButton { top: 17px; }
+  :global(html[data-app-theme="warm-light"]) .completeButton.completeButton { top: 11px; }
+}
+
 .row {
   box-sizing: border-box;
   min-height: 52px;

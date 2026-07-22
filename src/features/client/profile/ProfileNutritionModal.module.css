@@ -17,10 +17,10 @@
   width: min(390px, 100%);
   height: min(820px, calc(100dvh - 24px));
   max-height: min(820px, calc(100dvh - 24px));
-  padding: 0;
+  padding: 15px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 0;
+  gap: 12px;
   overflow: hidden;
   border: 1px solid var(--color-profile-nutrition-modal-border);
   border-radius: 32px;
@@ -42,7 +42,7 @@
   height: auto;
   max-height: none;
   margin: 0;
-  padding: 4px 16px 24px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -416,9 +416,9 @@
 
 @media (max-height: 720px) {
   .dialog {
-    padding: 0;
+    padding: 12px;
     grid-template-rows: auto minmax(0, 1fr);
-    gap: 0;
+    gap: 9px;
   }
 
   .content {

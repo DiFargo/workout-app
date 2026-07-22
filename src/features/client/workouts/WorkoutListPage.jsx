@@ -13,9 +13,8 @@ import {
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
 } from "../../../utils/workoutCompletion";
-import { safeReadJsonStorage, safeWriteJsonStorage } from "../../../utils/storageSafety";
+import { safeReadJsonStorage } from "../../../utils/storageSafety";
 import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
-import { INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY } from "../../../constants/appConfig";
 import { WorkoutDraftRestoreDialog } from "../../../components/workout/WorkoutDialogs";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
@@ -69,9 +68,6 @@ export default function WorkoutListPage({
   openCabinetWorkoutHistory,
   handleWorkoutDraftChoice
 }) {
-  const [swipeHintVisible, setSwipeHintVisible] = useState(
-    () => safeReadJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, true) !== false
-  );
   const [swipeMotion, setSwipeMotion] = useState({ offset: 0, phase: "idle" });
   const basicQuizRedirectedRef = useRef(false);
   const swipeStartRef = useRef(null);
@@ -156,10 +152,10 @@ export default function WorkoutListPage({
     workoutIds: sortedWorkouts.map((workoutItem) => workoutItem.id)
   };
   const individualWorkoutHistoryItems = getProgramHistoryItems(history, individualWorkoutProgramScope).slice(0, 12);
-  const activeWorkoutActionLabel = hasActiveWorkoutDraft
-    ? "Продолжить тренировку"
-    : activeIndividualWorkoutCompleted
-      ? "Повторить тренировку"
+  const activeWorkoutActionLabel = activeIndividualWorkoutCompleted
+    ? "Повторить тренировку"
+    : hasActiveWorkoutDraft
+      ? "Продолжить тренировку"
       : "Начать тренировку";
   const activeWorkoutPendingSync = history.some((item) => (
     item?.pendingSync &&
@@ -221,12 +217,6 @@ export default function WorkoutListPage({
     }, 190);
   }
 
-  function dismissIndividualWorkoutSwipeHint() {
-    if (!swipeHintVisible) return;
-    setSwipeHintVisible(false);
-    safeWriteJsonStorage(INDIVIDUAL_WORKOUT_SWIPE_HINT_KEY, false);
-  }
-
   function handleIndividualWorkoutSwipeStart(event) {
     if (
       sortedWorkouts.length < 2 ||
@@ -283,7 +273,6 @@ export default function WorkoutListPage({
       return;
     }
 
-    dismissIndividualWorkoutSwipeHint();
     animateIndividualWorkout(deltaX < 0 ? "next" : "previous");
   }
 
@@ -301,6 +290,8 @@ export default function WorkoutListPage({
         className={styles.hero}
         frameClassName={styles.headerFrame}
         title={isIndividualWorkoutMode ? "Мой план" : "Тренировки"}
+        titleAlign="start"
+        primary
         titleTestId="workout-list-title"
         testId="workout-list-header"
         scope="workout-list-header"
@@ -342,12 +333,13 @@ export default function WorkoutListPage({
           </div>
         )}
       >
-        {!isIndividualWorkoutMode && (
-          <p className={styles.heroSubtitle}>
-            Выбери тренировку из подобранного плана
-          </p>
-        )}
       </ClientPageHeader>
+
+      {isDeckWorkoutMode && (
+        <p className={styles.heroSubtitle} data-testid="workout-list-swipe-hint">
+          ‹ Свайпни влево или вправо ›
+        </p>
+      )}
 
       <div
         className={`${styles.workoutList} ${isDeckWorkoutMode ? styles.workoutDeck : ""}`}
@@ -408,13 +400,13 @@ export default function WorkoutListPage({
                 >
                   <span className={styles.cardTop} data-testid="workout-card-top">
                     <span className={styles.badges} data-testid="workout-card-badges">
-                      {completed ? (
-                        <span className={`${styles.badge} ${styles.completedBadge}`} data-testid="workout-card-status">✓ Выполнена</span>
-                      ) : hasActiveWorkoutDraft ? (
-                        <span className={`${styles.badge} ${styles.progressBadge}`} data-testid="workout-card-status">В процессе</span>
-                      ) : activeNext ? (
-                        <span className={`${styles.badge} ${styles.nextBadge}`} data-testid="workout-card-status">Следующая</span>
-                      ) : null}
+                      {!completed && (
+                        hasActiveWorkoutDraft ? (
+                          <span className={`${styles.badge} ${styles.progressBadge}`} data-testid="workout-card-status">В процессе</span>
+                        ) : activeNext ? (
+                          <span className={`${styles.badge} ${styles.nextBadge}`} data-testid="workout-card-status">Следующая</span>
+                        ) : null
+                      )}
                       {activeWorkoutPendingSync && (
                         <span className={`${styles.badge} ${styles.syncBadge}`}>Ожидает синхронизации</span>
                       )}
@@ -423,9 +415,18 @@ export default function WorkoutListPage({
                   </span>
 
                   <span className={styles.cardBody} data-testid="workout-card-body">
-                    <span className={styles.cardInfo} data-testid="workout-card-info">
-                      <span className={styles.workoutTitle} data-testid="workout-card-title">{item.title}</span>
-                      <span className={styles.accentLine} />
+                    {completed && (
+                      <span className={styles.completedRibbon} data-testid="workout-card-status">Выполнена</span>
+                  )}
+                  <span className={styles.cardInfo} data-testid="workout-card-info">
+                      <span
+                        className={styles.cardProgress}
+                        data-testid="workout-list-progress"
+                        style={{ "--completed-workouts-progress": `${completedWorkoutProgressPercent}%` }}
+                      >
+                        <span className={styles.workoutTitle} data-testid="workout-card-title">{item.title}</span>
+                        <span className={styles.cardProgressPosition}>{activeWorkoutIndex + 1} из {sortedWorkouts.length}</span>
+                      </span>
 
                       <span className={styles.workoutStats} data-testid="workout-card-stats">
                         <span><b>🏋️</b>{item.exerciseCount} упражнений</span>
@@ -460,7 +461,7 @@ export default function WorkoutListPage({
 
                     <button
                       type="button"
-                      className={styles.startButton}
+                      className={`${styles.startButton} ${completed ? styles.completedStartButton : ""}`}
                       data-testid="workout-start-button"
                       onClick={(event) => {
                         if (swipeSuppressClickRef.current) {
@@ -535,54 +536,7 @@ export default function WorkoutListPage({
         )}
       </div>
 
-      {isDeckWorkoutMode && sortedWorkouts.length > 1 && (
-        <div className={styles.workoutNav} data-testid="workout-list-nav">
-          <button
-            type="button"
-            aria-label="Предыдущая тренировка"
-            onClick={() => {
-              dismissIndividualWorkoutSwipeHint();
-              animateIndividualWorkout("previous");
-            }}
-          >
-            ←
-          </button>
-
-          <div className={styles.centerNav}>
-            {swipeHintVisible && (
-              <small className={styles.swipeHint}>
-                Свайпни, чтобы выбрать тренировку
-              </small>
-            )}
-            <span className={styles.swipeAffordance} data-testid="workout-swipe-affordance" aria-hidden="true">
-              ‹ Свайпни влево или вправо ›
-            </span>
-          </div>
-
-          <button
-            type="button"
-            aria-label="Следующая тренировка"
-            onClick={() => {
-              dismissIndividualWorkoutSwipeHint();
-              animateIndividualWorkout("next");
-            }}
-          >
-            →
-          </button>
-        </div>
-      )}
-
       <div className={styles.bottomPanel}>
-        {isDeckWorkoutMode && sortedWorkouts.length > 0 && (
-          <div
-            className={styles.bottomProgress}
-            data-testid="workout-list-progress"
-            style={{ "--completed-workouts-progress": `${completedWorkoutProgressPercent}%` }}
-          >
-            <span>{activeWorkoutIndex + 1} из {sortedWorkouts.length}</span>
-            <span>Выполнено {completedWorkoutCount} из {sortedWorkouts.length}</span>
-          </div>
-        )}
         {(renderClientMainBottomBar || (() => null))({
           activeTab: "workouts",
           className: styles.menuBar,

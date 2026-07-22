@@ -14,33 +14,32 @@
 }
 
 .account {
-  height: 100px;
-  padding: 15px 15px 15px 5px;
+  height: 70px;
+  padding: 13px 14px 13px 12px;
   display: grid;
-  grid-template-columns: 58px 1fr 20px;
+  grid-template-columns: 42px 1fr 20px;
   align-items: center;
-  gap: 15px;
+  gap: 13px;
   border: 1px solid #ebe6ef;
   border-radius: 22px;
 }
 
-.avatar {
-  width: 58px;
-  height: 58px;
+.profileSection { margin: 0; }
+.profileSection h2 { height: 24px; margin: 0 0 0 4px; color: #7b7682; font-size: 10px; font-weight: 700; line-height: 12px; letter-spacing: 0.8px; }
+
+.profileIcon {
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
-  overflow: hidden;
-  border-radius: 50%;
-  background: #8f7ac8;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 700;
+  border-radius: 13px;
+  background: #f0ebfa;
+  color: #8f7ac8;
 }
-.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profileIcon svg { width: 21px; height: 21px; stroke-width: 2.1; }
 .accountText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
-.accountText strong { max-width: 100%; overflow: hidden; font-size: 19px; line-height: 23px; text-overflow: ellipsis; white-space: nowrap; }
-.accountText small { margin-top: 2px; color: #7b7682; font-size: 12px; font-weight: 600; line-height: 17px; }
-.accountText em { height: 23px; margin-top: 4px; padding: 0 11px; display: grid; place-items: center; border-radius: 12px; background: #f0ebfa; color: #8f7ac8; font-size: 9.5px; font-style: normal; font-weight: 700; }
+.accountText strong { max-width: 100%; overflow: hidden; font-size: 13px; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
+.accountText small { margin-top: 2px; color: #7b7682; font-size: 11px; font-weight: 500; line-height: 16px; }
 .chevron { width: 20px; height: 20px; color: #a9aeb2; stroke-width: 2; }
 
 .groupSection { margin: 0; }
@@ -75,5 +74,29 @@
 .text small { overflow: hidden; color: #7b7682; font-size: 10px; font-weight: 500; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
 .row:active, .account:active { background: #fbfafc; }
 
+.logoutButton {
+  width: 100%;
+  min-height: 48px;
+  margin: 10px 0 0;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #efdde1;
+  border-radius: 16px;
+  background: #fffafa;
+  color: #a45860;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logoutButton svg { width: 18px; height: 18px; stroke-width: 2.1; }
+.logoutButton:active { background: #fff3f4; }
+.logoutButton:focus-visible { outline: 2px solid #d8979e; outline-offset: 2px; }
+
 .trainer { gap: 20px; }
-.trainer .groupSection h2 { display: none; }
+.trainer .groupSection h2,
+.trainer .profileSection h2 { display: none; }

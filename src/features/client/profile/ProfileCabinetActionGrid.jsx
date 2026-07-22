@@ -4,7 +4,9 @@ import {
   Camera,
   ChevronRight,
   ClipboardList,
+  LogOut,
   MessageCircle,
+  UserRound,
   Utensils
 } from "lucide-react";
 import styles from "./ProfileCabinetActionGrid.module.css";
@@ -42,11 +44,8 @@ export default function ProfileCabinetActionGrid({
   onOpenQuestionnaire,
   onOpenNotifications,
   onOpenFeedback,
-  accountAvatarUrl,
-  accountName = "Спортсмен",
-  accountRole = "Участник"
+  onLogout
 }) {
-  const fallbackLetter = String(accountName).trim().charAt(0).toUpperCase() || "А";
   const bodyControlNote = latestMeasurementText && latestMeasurementText !== "Замеров пока нет"
     ? `Последний замер ${latestMeasurementText}`
     : latestPhotoText;
@@ -57,17 +56,19 @@ export default function ProfileCabinetActionGrid({
       data-css-module-scope="profile-cabinet-action-grid"
       data-testid="profile-cabinet-action-grid"
     >
-      <button type="button" className={styles.account} data-testid="profile-cabinet-action-account" onClick={onOpenAccount}>
-        <span className={styles.avatar} data-testid="profile-cabinet-action-account-icon">
-          {accountAvatarUrl ? <img src={accountAvatarUrl} alt="" /> : fallbackLetter}
-        </span>
-        <span className={styles.accountText}>
-          <strong data-testid="profile-cabinet-action-account-title">{accountName}</strong>
-          <small>Профиль и настройки</small>
-          <em>{accountRole}</em>
-        </span>
-        <ChevronRight className={styles.chevron} aria-hidden="true" />
-      </button>
+      <section className={styles.profileSection} aria-label="Профиль">
+        <h2>ПРОФИЛЬ</h2>
+        <button type="button" className={styles.account} data-testid="profile-cabinet-action-account" onClick={onOpenAccount}>
+          <span className={styles.profileIcon} data-testid="profile-cabinet-action-account-icon" aria-hidden="true">
+            <UserRound />
+          </span>
+          <span className={styles.accountText}>
+            <strong data-testid="profile-cabinet-action-account-title">Профиль и настройки</strong>
+            <small>Логин и пароль</small>
+          </span>
+          <ChevronRight className={styles.chevron} aria-hidden="true" />
+        </button>
+      </section>
 
       {showClientOnlyActions && (
         <section className={styles.groupSection} aria-label="Здоровье и план">
@@ -76,6 +77,7 @@ export default function ProfileCabinetActionGrid({
             <ActionRow kind="body-control" icon={Camera} title="Фото и замеры" note={bodyControlNote} onClick={onOpenBodyControl} />
             <ActionRow kind="nutrition" icon={Utensils} title="КБЖУ" note={nutritionText} onClick={onOpenNutrition} />
             <ActionRow kind="workout-journal" icon={CalendarDays} title="Календарь и история" note={historyText} onClick={onOpenCalendar} />
+            <ActionRow kind="questionnaire" icon={ClipboardList} title="Анкета" note="Цель, возраст и активность" onClick={onOpenQuestionnaire} />
           </div>
         </section>
       )}
@@ -83,10 +85,20 @@ export default function ProfileCabinetActionGrid({
       <section className={styles.groupSection} aria-label="Приложение">
         <h2>ПРИЛОЖЕНИЕ</h2>
         <div className={styles.group}>
-          {showClientOnlyActions && <ActionRow kind="questionnaire" icon={ClipboardList} title="Анкета" note="Цель, возраст и активность" onClick={onOpenQuestionnaire} />}
           {showClientOnlyActions && <ActionRow kind="notifications" icon={Bell} title="Уведомления" note="Тренировки и напоминания" onClick={onOpenNotifications} />}
           <ActionRow kind="feedback" icon={MessageCircle} title="Ошибка или идея" note="Отзыв и предложение" onClick={onOpenFeedback} warm />
         </div>
+        {onLogout && (
+          <button
+            type="button"
+            className={styles.logoutButton}
+            data-testid="profile-cabinet-logout"
+            onClick={onLogout}
+          >
+            <LogOut aria-hidden="true" />
+            Выйти из аккаунта
+          </button>
+        )}
       </section>
     </div>
   );

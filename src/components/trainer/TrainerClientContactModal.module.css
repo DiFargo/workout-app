@@ -1,0 +1,162 @@
+.backdrop {
+  position: fixed;
+  z-index: 1250;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(40, 38, 46, 0.34);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal {
+  box-sizing: border-box;
+  width: min(420px, 100%);
+  border: 1px solid #efebf3;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 24px 56px rgba(40, 38, 46, 0.18);
+  color: #28262e;
+}
+
+.modal *,
+.modal *::before,
+.modal *::after {
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 22px 14px;
+}
+
+.header > div {
+  min-width: 0;
+}
+
+.header span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8f7ac8;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.header h2 {
+  margin: 0;
+  color: #28262e;
+  font-size: 21px;
+  line-height: 1.12;
+}
+
+.header p {
+  margin: 7px 0 0;
+  color: #7b7682;
+  font-size: 13px;
+  line-height: 1.42;
+}
+
+.header > button {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #f5f2f7;
+  color: #28262e;
+  cursor: pointer;
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+  padding: 2px 22px 22px;
+}
+
+.option {
+  width: 100%;
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 13px;
+  padding: 12px;
+  border: 1px solid #efebf3;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #28262e;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.option:hover:not(:disabled),
+.option:focus-visible {
+  border-color: rgba(143, 122, 200, 0.5);
+  background: #f7f4fb;
+}
+
+.option:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.option:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+}
+
+.option i {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-style: normal;
+}
+
+.telegramIcon {
+  background: #eaf6fb;
+  color: #4a9ec6;
+}
+
+.notificationIcon {
+  background: #f0eafa;
+  color: #8f7ac8;
+}
+
+.option span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.option strong {
+  color: #28262e;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.option small {
+  color: #7b7682;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+@media (max-width: 560px) {
+  .backdrop {
+    align-items: end;
+    padding: 0;
+  }
+
+  .modal {
+    border-radius: 24px 24px 0 0;
+  }
+}

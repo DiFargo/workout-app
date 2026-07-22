@@ -18,6 +18,8 @@ export default function ProfilePageChrome({
         <ClientPageHeader
           className={styles.header}
           title="Главная"
+          titleAlign="start"
+          primary
           titleTestId="profile-main-title"
           testId="profile-main-header"
           scope="profile-page-chrome"

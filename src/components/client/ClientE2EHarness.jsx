@@ -38,7 +38,7 @@ import ProfileEmailModal from "../../features/client/profile/ProfileEmailModal";
 import ProfileHeroCard from "../../features/client/profile/ProfileHeroCard";
 import ProfileMainMeasurementSnapshot from "../../features/client/profile/ProfileMainMeasurementSnapshot";
 import ProfileMainRoleActions from "../../features/client/profile/ProfileMainRoleActions";
-import { ProfileLastWorkoutCard, ProfileNextWorkoutCard } from "../../features/client/profile/ProfileMainSummaryCards";
+import { ProfileNextWorkoutCard } from "../../features/client/profile/ProfileMainSummaryCards";
 import ProfileMeasurementWizardPanel from "../../features/client/profile/ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
@@ -53,7 +53,7 @@ import {
 } from "../../features/client/profile/ProfileDashboardShell";
 import ProfileProgressInsightCard from "../../features/client/profile/ProfileProgressInsightCard";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
-import ProfileSettingsModal, { ProfileSettingsLogoutButton } from "../../features/client/profile/ProfileSettingsModal";
+import ProfileSettingsModal from "../../features/client/profile/ProfileSettingsModal";
 import ProfileSettingsTab from "../../features/client/profile/ProfileSettingsTab";
 import ProfileTelegramModal from "../../features/client/profile/ProfileTelegramModal";
 import ProfileTrainerNotificationsModal from "../../features/client/profile/ProfileTrainerNotificationsModal";
@@ -320,17 +320,17 @@ const harnessProgressPhotos = [
 const harnessTrainerTasks = [
   {
     id: "client_harness_task_1",
-    title: "Update measurements",
+    title: "Загрузить фото прогресса",
     dueDate: "2026-06-30",
-    target: "measurements",
+    target: "progressPhotos",
     status: "progress"
   },
   {
     id: "client_harness_task_2",
-    title: "Add progress photos",
-    dueDate: "2026-07-02",
-    target: "progressPhotos",
-    status: "completed"
+    title: "Выполнить ближайшую тренировку",
+    dueDate: "",
+    target: "workouts",
+    status: "progress"
   }
 ];
 
@@ -424,9 +424,7 @@ function HarnessCabinetActions({
       onOpenQuestionnaire={() => {}}
       onOpenNotifications={() => {}}
       onOpenFeedback={() => {}}
-      accountAvatarUrl=""
-      accountName="ILYA"
-      accountRole="Участник"
+      onLogout={() => {}}
     />
   );
 }
@@ -464,6 +462,12 @@ export default function ClientE2EHarness() {
   const measurementSnapshotState = harnessParams?.get("clientMeasurementSnapshotState") || "trend";
   const measurementWizardState = harnessParams?.get("clientMeasurementStep") || "intro";
   const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
+  const visibleHarnessWorkoutHistory = workoutHarnessState === "completed"
+    ? harnessHistory.map((item) => ({
+        ...item,
+        assignedProgramUpdatedAt: "2026-06-18T10:00:00.000Z"
+      }))
+    : harnessHistory;
   const visibleHarnessTrainerTasks = harnessParams?.get("clientNotificationState") === "empty"
     ? []
     : harnessTrainerTasks;
@@ -659,7 +663,9 @@ export default function ClientE2EHarness() {
   const [nutritionPhotoNotFoundOpen, setNutritionPhotoNotFoundOpen] = useState(nutritionPhotoNotFoundParam);
   const [nutritionEditNote, setNutritionEditNote] = useState("");
   const [individualWorkoutIndex, setIndividualWorkoutIndex] = useState(0);
-  const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(false);
+  const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(
+    () => workoutHarnessState === "completed"
+  );
   const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
   const [workoutReadinessPending, setWorkoutReadinessPending] = useState(null);
@@ -833,11 +839,11 @@ export default function ClientE2EHarness() {
         ) : null}
         <ProfileDashboardContent mode={activeTab}>
           {children}
+          {activeTab === "main" && APP_VERSION ? (
+            <ProfileDashboardVersion>{APP_VERSION}</ProfileDashboardVersion>
+          ) : null}
         </ProfileDashboardContent>
         {afterSection}
-        {activeTab === "main" && APP_VERSION ? (
-          <ProfileDashboardVersion>{APP_VERSION}</ProfileDashboardVersion>
-        ) : null}
         {activeTab !== "main" && activeTab !== "cabinet"
           ? renderBottomBar(activeTab)
           : null}
@@ -1087,7 +1093,7 @@ export default function ClientE2EHarness() {
             assignedProgramName: "Тестовая программа",
             assignedProgramUpdatedAt: "2026-06-18T10:00:00.000Z"
           }}
-          history={harnessHistory}
+          history={visibleHarnessWorkoutHistory}
           user={{ assignedProgramName: "Тестовая программа" }}
           onGoBackToMain={() => setPage("main")}
           onOpenWorkoutIndex={() => setPage("workouts")}
@@ -1478,7 +1484,7 @@ export default function ClientE2EHarness() {
             assignedProgramName: "Тестовая программа",
             assignedProgramUpdatedAt: "2026-06-18T10:00:00.000Z"
           }}
-          history={harnessHistory}
+          history={visibleHarnessWorkoutHistory}
           currentUserId="client_harness"
           workoutModePreference={{ mode: "individual" }}
           individualWorkoutIndex={individualWorkoutIndex}
@@ -1881,7 +1887,6 @@ export default function ClientE2EHarness() {
             onOpenTelegram={() => setTelegramModalOpen(true)}
             onTelegramAvatarError={() => {}}
           />
-          <ProfileSettingsLogoutButton onClick={() => {}} />
         </ProfileSettingsModal>
         <ProfilePasswordModal
           open={profilePasswordModalOpen}
@@ -1907,7 +1912,30 @@ export default function ClientE2EHarness() {
           activeCount={visibleHarnessTrainerTasks.length > 0 ? 1 : 0}
           getTaskDestination={(task) => task.target || ""}
           onClose={() => setTrainerNotificationsOpen(false)}
-          onOpenTask={() => {}}
+          onOpenTask={(_, destination) => {
+            setTrainerNotificationsOpen(false);
+
+            if (destination === "progressPhotos") {
+              setPage("cabinet");
+              setCabinetPhotosOpen(true);
+              return;
+            }
+
+            if (destination === "measurements") {
+              setPage("cabinet");
+              setCabinetMeasurementsOpen(true);
+              return;
+            }
+
+            if (destination === "nutrition") {
+              setPage("nutrition");
+              return;
+            }
+
+            if (destination === "workouts") {
+              setPage("workouts");
+            }
+          }}
         />
         <ProfileTelegramModal
           open={telegramModalOpen}
@@ -1941,6 +1969,9 @@ export default function ClientE2EHarness() {
           greetingName="ILYA"
           activeGoalLabel="Сушка"
           totalWorkouts={12}
+          targetWeight="78"
+          currentWeight="88"
+          goalId="cut"
         />
       </ProfileMainHeroStatsShell>
 
@@ -1958,11 +1989,6 @@ export default function ClientE2EHarness() {
           scoreLabel: "Отличный темп",
           scoreSummary: "Регулярность: данные ведутся стабильно. Продолжай в том же ритме."
         }}
-        statuses={[
-          { icon: "⚡", title: "Тренировка", text: "Сегодня" },
-          { icon: "📏", title: "Замер", text: "Пора обновить" },
-          { icon: "🍽", title: "Питание", text: "По плану" }
-        ]}
       />
 
       <ProfileMainMeasurementSnapshot
@@ -1976,14 +2002,10 @@ export default function ClientE2EHarness() {
                 { dateLabel: "10.06", weight: 89.5 },
                 { dateLabel: "16.06", weight: 89 }
               ]}
-        latestMeasurement={measurementSnapshotState === "empty"
-          ? null
-          : { date: "2026-06-16T12:00:00.000Z", weight: 89 }}
         latestWeight={measurementSnapshotState === "empty" ? 0 : 89}
         weightChange={measurementSnapshotState === "trend" ? -0.5 : 0}
       />
 
-      <ProfileLastWorkoutCard dateText="27 июня" onOpen={() => setPage("workoutHistory")} />
     </>
   ));
 }
