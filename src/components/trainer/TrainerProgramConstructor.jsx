@@ -15,7 +15,8 @@ import {
   Save,
   Settings2,
   StickyNote,
-  Trash2
+  Trash2,
+  X
 } from "lucide-react";
 import {
   createWorkoutTaskBlock,
@@ -86,6 +87,7 @@ export default function TrainerProgramConstructor({
   const [expandedExerciseId, setExpandedExerciseId] = useState("");
   const [exerciseSearchId, setExerciseSearchId] = useState("");
   const [dayMenuId, setDayMenuId] = useState("");
+  const [isDayEditorOpen, setIsDayEditorOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   const workoutContexts = useMemo(() => months.flatMap((month, monthIndex) =>
@@ -121,7 +123,9 @@ export default function TrainerProgramConstructor({
   function selectWorkout(context) {
     setSelectedExerciseId("");
     setExpandedExerciseId("");
+    setActiveTab("exercises");
     onSelectWorkout(context.workout.id);
+    setIsDayEditorOpen(true);
   }
 
   function addDay() {
@@ -292,7 +296,7 @@ export default function TrainerProgramConstructor({
         </div>
       </header>
 
-      <div className={styles.editorGrid}>
+      <div className={`${styles.editorGrid}${isDayEditorOpen ? "" : ` ${styles.editorGridPicker}`}`}>
         <aside className={styles.daysPanel}>
           <h2>Дни программы</h2>
           <div className={styles.daysList}>
@@ -302,9 +306,18 @@ export default function TrainerProgramConstructor({
           <button className={styles.addDayButton} type="button" onClick={addDay} disabled={!activeContext}><Plus size={17} />Добавить день</button>
         </aside>
 
-        <main className={styles.dayEditor}>
+        <main
+          className={`${styles.dayEditor}${isDayEditorOpen ? ` ${styles.dayEditorModal}` : ""}`}
+          role={isDayEditorOpen ? "dialog" : undefined}
+          aria-modal={isDayEditorOpen || undefined}
+          aria-labelledby="trainer-program-day-editor-title"
+        >
           {activeContext ? (
             <>
+              <header className={styles.dayEditorModalHeader}>
+                <strong id="trainer-program-day-editor-title">Редактор тренировочного дня</strong>
+                <button type="button" onClick={() => setIsDayEditorOpen(false)} aria-label="Закрыть редактор дня"><X size={20} /></button>
+              </header>
               <div className={styles.breadcrumbs}><span>Программа</span><b>›</b><strong>День {workoutContexts.indexOf(activeContext) + 1}</strong></div>
               <header className={styles.dayHeader}>
                 <label>
@@ -391,10 +404,12 @@ export default function TrainerProgramConstructor({
                               <strong>{exercise.name || "Упражнение"}</strong>
                               <small className={video ? styles.videoReady : ""}>{video ? "◉ Видео добавлено" : "Без видео"}</small>
                             </button>
-                            <input className={styles.metricInput} type="number" min="1" max="12" value={Math.max(1, exercise.sets?.length || 0)} onChange={(event) => changeSetCount(exercise, event.target.value)} aria-label={`Подходы: ${exercise.name || "упражнение"}`} />
-                            <input className={styles.metricInput} value={getSetValue(sets, "reps", "")} onChange={(event) => updateAllSets(exercise, "reps", event.target.value)} aria-label={`Повторения: ${exercise.name || "упражнение"}`} />
-                            <span className={styles.metricWithSuffix}><input className={styles.metricInput} disabled={!usesWeight} value={usesWeight ? getSetValue(sets, "weight", "") : "—"} onChange={(event) => updateAllSets(exercise, "weight", event.target.value)} aria-label={`Вес: ${exercise.name || "упражнение"}`} />{usesWeight ? <small>кг</small> : null}</span>
-                            <input className={styles.metricInput} value={exercise.rest || "90 сек"} onChange={(event) => updateExercise(exercise.id, { rest: event.target.value })} aria-label={`Отдых: ${exercise.name || "упражнение"}`} />
+                            <div className={styles.exerciseMetrics}>
+                              <label className={styles.metricField}><span className={styles.metricLabel}>Подходы</span><input className={styles.metricInput} type="number" min="1" max="12" value={Math.max(1, exercise.sets?.length || 0)} onChange={(event) => changeSetCount(exercise, event.target.value)} aria-label={`Подходы: ${exercise.name || "упражнение"}`} /></label>
+                              <label className={styles.metricField}><span className={styles.metricLabel}>Повторы</span><input className={styles.metricInput} value={getSetValue(sets, "reps", "")} onChange={(event) => updateAllSets(exercise, "reps", event.target.value)} aria-label={`Повторения: ${exercise.name || "упражнение"}`} /></label>
+                              <label className={styles.metricField}><span className={styles.metricLabel}>Вес</span><span className={styles.metricWithSuffix}><input className={styles.metricInput} disabled={!usesWeight} value={usesWeight ? getSetValue(sets, "weight", "") : "—"} onChange={(event) => updateAllSets(exercise, "weight", event.target.value)} aria-label={`Вес: ${exercise.name || "упражнение"}`} />{usesWeight ? <small>кг</small> : null}</span></label>
+                              <label className={styles.metricField}><span className={styles.metricLabel}>Отдых</span><input className={styles.metricInput} value={exercise.rest || "90 сек"} onChange={(event) => updateExercise(exercise.id, { rest: event.target.value })} aria-label={`Отдых: ${exercise.name || "упражнение"}`} /></label>
+                            </div>
                             <div className={styles.exerciseActions}>
                               <button type="button" onClick={(event) => { event.stopPropagation(); onDuplicateExercise?.(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id); }} aria-label="Дублировать упражнение"><Copy size={15} /></button>
                               <button type="button" onClick={(event) => { event.stopPropagation(); setExpandedExerciseId(expanded ? "" : exercise.id); }} aria-label="Дополнительные параметры"><MoreVertical size={16} /></button>
@@ -510,6 +525,8 @@ export default function TrainerProgramConstructor({
         </main>
 
       </div>
+
+      {isDayEditorOpen ? <div className={styles.dayEditorBackdrop} role="presentation" onMouseDown={() => setIsDayEditorOpen(false)} /> : null}
 
       {confirmDelete ? (
         <div className={styles.modalBackdrop} role="presentation" onMouseDown={() => setConfirmDelete(null)}>

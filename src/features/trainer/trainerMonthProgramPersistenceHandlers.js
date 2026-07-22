@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
-import { createFourWeekWorkoutProgramBlocks } from "../../utils/auditSafety";
+import { createSingleDayWorkoutProgramBlocks } from "../../utils/auditSafety";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
 import { buildDraftProgramMetadata } from "../../utils/trainerProgramLifecycle.js";
 import { requestTrainerAiProgramImport } from "./trainerAiProgramImport";
@@ -324,7 +324,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
       ownerRole: owner.role,
       createdByUid: owner.uid,
       updatedByUid: owner.uid,
-      blocks: createFourWeekWorkoutProgramBlocks(Date.now())
+      blocks: createSingleDayWorkoutProgramBlocks(Date.now())
     });
 
     setAdminProgramEditorMode("create");

@@ -79,6 +79,25 @@ export function createFourWeekWorkoutProgramBlocks(seed = "draft") {
   }));
 }
 
+export function createSingleDayWorkoutProgramBlocks(seed = "draft") {
+  return [{
+    id: `microcycle_${seed}_1`,
+    name: "Микроцикл 1",
+    monthId: "month_1",
+    weeks: [{
+      id: `week_${seed}_1`,
+      name: "Неделя 1",
+      workouts: [{
+        id: `workout_${seed}_1`,
+        name: "Тренировка 1",
+        order: 1,
+        sortOrder: 1,
+        exercises: []
+      }]
+    }]
+  }];
+}
+
 export function getMicrocycleWeekNumbers(microcycleNumber, rangeStart, rangeEnd) {
   const normalizedMicrocycle = Math.max(1, Number(microcycleNumber) || 1);
   const fallbackStart = normalizedMicrocycle * 2 - 1;

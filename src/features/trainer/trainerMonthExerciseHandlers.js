@@ -44,7 +44,7 @@ export function createTrainerMonthExerciseHandlers({
           video: libraryVideo,
           videoAutoFilledFrom: libraryVideo ? libraryExercise.name : "",
           requiresWeight: exerciseUsesExternalWeight(libraryExercise || { name: exerciseName }),
-          sets: Array.from({ length: 3 }, () => ({ reps: 8, weight: "" }))
+          sets: [{ reps: 8, weight: "" }]
         }
       ]
     });

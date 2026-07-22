@@ -98,6 +98,38 @@ test("trainer constructor keeps one clear workout day list", async () => {
   assert.doesNotMatch(source, /weekGroups/);
 });
 
+test("trainer constructor opens the selected day in a dedicated editor modal", async () => {
+  const source = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.module.css", import.meta.url), "utf8");
+
+  assert.match(source, /const \[isDayEditorOpen, setIsDayEditorOpen\] = useState\(false\)/);
+  assert.match(source, /setIsDayEditorOpen\(true\)/);
+  assert.match(source, /setIsDayEditorOpen\(false\)/);
+  assert.match(source, /Редактор тренировочного дня/);
+  assert.match(styles, /\.dayEditorModal/);
+  assert.match(styles, /\.dayEditorBackdrop/);
+  assert.doesNotMatch(styles, /!important/);
+});
+
+test("trainer day editor keeps all exercise controls within the mobile sheet", async () => {
+  const source = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.module.css", import.meta.url), "utf8");
+
+  assert.match(source, /className=\{styles\.exerciseMetrics\}/);
+  assert.match(source, /className=\{styles\.metricField\}/);
+  assert.match(styles, /\.dayStats \{ width: 100%;[\s\S]*?grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.exerciseMetrics \{ grid-area: metrics; display: grid; grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /:global\(\.trainerNextRoot\):has\(\.dayEditorModal\) :global\(\.trainerNextMobileNav\) \{ display: none; \}/);
+});
+
+test("new program exercises start with one editable set", async () => {
+  const source = await readFile(new URL("../src/features/trainer/trainerMonthExerciseHandlers.js", import.meta.url), "utf8");
+  const addExercise = source.match(/function addMonthExercise\([\s\S]*?\n  \}/)?.[0] || "";
+
+  assert.match(addExercise, /sets: \[\{ reps: 8, weight: "" \}\]/);
+  assert.doesNotMatch(addExercise, /Array\.from\(\{ length: 3 \}/);
+});
+
 test("trainer workspace does not overlay the brand with the legacy fixed back button", async () => {
   const source = await readFile(new URL("../src/features/trainer/TrainerProgramManagerHeader.jsx", import.meta.url), "utf8");
 
@@ -255,6 +287,18 @@ test("trainer constructor keeps editable names without pencil decorations", asyn
   assert.match(source, /aria-label="Название программы"/);
   assert.match(source, /aria-label="Название тренировки"/);
   assert.match(styles, /\.dayHeader \{[^}]*grid-template-columns: minmax\(170px, 1fr\) auto/);
+});
+
+test("trainer program days open in a dismissible exercise editor modal", async () => {
+  const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspace.module.css", import.meta.url), "utf8");
+
+  assert.match(workspace, /const \[isDayEditorOpen, setIsDayEditorOpen\] = useState\(false\)/);
+  assert.match(workspace, /setIsDayEditorOpen\(true\)/);
+  assert.match(workspace, /aria-label="Закрыть редактор дня"/);
+  assert.match(workspace, /trainerProgramDayEditorBackdrop/);
+  assert.match(styles, /trainerProgramDayPanelModal/);
+  assert.match(styles, /trainerProgramDayModalHeader/);
 });
 
 test("exercise progress load action opens a two-path trainer decision modal", async () => {

@@ -3791,6 +3791,7 @@ export function TrainerProgramConstructor({
   const [openWeeks, setOpenWeeks] = useState({});
   const [expandedExerciseId, setExpandedExerciseId] = useState("");
   const [confirmAction, setConfirmAction] = useState(null);
+  const [isDayEditorOpen, setIsDayEditorOpen] = useState(false);
 
   const workoutContexts = months.flatMap((month, monthIndex) =>
     (month.microcycles || month.blocks || []).flatMap((cycle, cycleIndex) =>
@@ -3830,6 +3831,7 @@ export function TrainerProgramConstructor({
   function selectWorkout(context) {
     setExpandedExerciseId("");
     onSelectWorkout(context.workout.id);
+    setIsDayEditorOpen(true);
   }
 
   function confirmDeleteExercise(exercise) {
@@ -3877,7 +3879,7 @@ export function TrainerProgramConstructor({
         </div>
       </header>
 
-      <div className="trainerProgramConstructorGrid">
+      <div className={`trainerProgramConstructorGrid${isDayEditorOpen ? "" : " trainerProgramConstructorGridPicker"}`}>
         <aside className="trainerProgramTree" aria-label="Структура программы">
           {months.map((month, monthIndex) => {
             const cycles = month.microcycles || month.blocks || [];
@@ -4015,9 +4017,20 @@ export function TrainerProgramConstructor({
           </button>
         </aside>
 
-        <section className="trainerProgramDayPanel">
+        <section
+          className={`trainerProgramDayPanel${isDayEditorOpen ? " trainerProgramDayPanelModal" : ""}`}
+          role={isDayEditorOpen ? "dialog" : undefined}
+          aria-modal={isDayEditorOpen || undefined}
+          aria-labelledby="trainer-program-day-editor-title"
+        >
           {activeContext ? (
             <>
+              <header className="trainerProgramDayModalHeader">
+                <strong id="trainer-program-day-editor-title">Редактор дня</strong>
+                <button type="button" onClick={() => setIsDayEditorOpen(false)} aria-label="Закрыть редактор дня" title="Закрыть редактор дня">
+                  <X size={20} />
+                </button>
+              </header>
               <header className="trainerProgramBreadcrumb">
                 <div>
                   <span>{activeContext.month.name}</span><ChevronRight size={15} />
@@ -4147,6 +4160,7 @@ export function TrainerProgramConstructor({
           )}
         </section>
       </div>
+      {isDayEditorOpen ? <div className="trainerProgramDayEditorBackdrop" role="presentation" onMouseDown={() => setIsDayEditorOpen(false)} /> : null}
       {confirmAction ? (
         <TrainerConfirmDialog
           title={confirmAction.title}

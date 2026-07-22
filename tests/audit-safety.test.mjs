@@ -4,6 +4,7 @@ import {
   applyExerciseLibraryDefaults,
   calculateNutritionFoodStreak,
   createFourWeekWorkoutProgramBlocks,
+  createSingleDayWorkoutProgramBlocks,
   distributeMicrocycleWorkouts,
   exerciseUsesExternalWeight,
   findExerciseLibraryMatch,
@@ -40,6 +41,19 @@ test("new workout programs contain two microcycles and eight ordered workouts", 
     "Тренировка 7",
     "Тренировка 8"
   ]);
+});
+
+test("new workout program drafts start with one editable day", () => {
+  const blocks = createSingleDayWorkoutProgramBlocks("test");
+  const weeks = blocks.flatMap((block) => block.weeks);
+  const workouts = weeks.flatMap((week) => week.workouts);
+
+  assert.equal(blocks.length, 1);
+  assert.equal(weeks.length, 1);
+  assert.equal(workouts.length, 1);
+  assert.equal(workouts[0].id, "workout_test_1");
+  assert.equal(workouts[0].order, 1);
+  assert.deepEqual(workouts[0].exercises, []);
 });
 
 test("Excel microcycle days are split into two global weeks", () => {

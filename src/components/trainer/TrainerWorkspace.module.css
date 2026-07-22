@@ -5180,6 +5180,14 @@
   gap: 14px;
 }
 
+:global(.trainerProgramConstructorGridPicker) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+:global(.trainerProgramConstructorGridPicker .trainerProgramDayPanel) {
+  display: none;
+}
+
 :global(.trainerProgramTree) {
   overflow: hidden;
   padding: 10px;
@@ -5400,6 +5408,60 @@
 :global(.trainerProgramDayPanel) {
   overflow: hidden;
   padding: 0 12px 12px;
+}
+
+:global(.trainerProgramDayEditorBackdrop) {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(40, 38, 46, 0.38);
+  backdrop-filter: blur(5px);
+}
+
+:global(.trainerProgramDayPanelModal) {
+  position: fixed;
+  z-index: 1001;
+  inset: max(20px, env(safe-area-inset-top)) max(36px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(36px, env(safe-area-inset-left));
+  display: block;
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
+  padding: 0 18px 20px;
+  border: 1px solid #EFEBF3;
+  border-radius: 22px;
+  background: #FFFFFF;
+  box-shadow: 0 28px 70px rgba(40, 38, 46, 0.20);
+}
+
+:global(.trainerProgramDayModalHeader) {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 -18px;
+  padding: 0 18px;
+  border-bottom: 1px solid #EFEBF3;
+  background: #FFFFFF;
+}
+
+:global(.trainerProgramDayModalHeader strong) {
+  color: #28262E;
+  font-size: 16px;
+}
+
+:global(.trainerProgramDayModalHeader button) {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #F5F2F7;
+  color: #28262E;
+  cursor: pointer;
 }
 
 :global(.trainerProgramBreadcrumb) {
@@ -8661,6 +8723,19 @@
 
   :global(.trainerProgramDayPanel) {
     padding: 0 9px 9px;
+  }
+
+  :global(.trainerProgramDayPanelModal) {
+    inset: calc(env(safe-area-inset-top) + 76px) 8px 8px;
+    max-height: calc(100dvh - env(safe-area-inset-top) - 84px);
+    padding: 0 12px 14px;
+    border-radius: 20px;
+  }
+
+  :global(.trainerProgramDayModalHeader) {
+    min-height: 56px;
+    margin: 0 -12px;
+    padding: 0 12px;
   }
 
   :global(.trainerProgramBreadcrumb) {
