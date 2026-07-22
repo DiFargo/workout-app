@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import workspaceStyles from "./TrainerWorkspaceCalm.module.css";
 import adaptiveStyles from "./TrainerWorkspaceAdaptive.module.css";
 import trainerProgramConstructorStyles from "./TrainerProgramConstructor.module.css";
+import TrainerClientUtilitySheet from "./TrainerClientUtilitySheet";
 import TrainerWorkoutFeedbackReplyModal from "./TrainerWorkoutFeedbackReplyModal";
 import trainerWorkoutFeedbackReplyStyles from "./TrainerWorkoutFeedbackReplyModal.module.css";
 import TrainerClientContactModal from "./TrainerClientContactModal";
@@ -3274,6 +3275,7 @@ function TrainerClientDetail({
   const [messageAttemptId, setMessageAttemptId] = useState("");
   const [messageChannel, setMessageChannel] = useState("telegram");
   const [contactOpen, setContactOpen] = useState(false);
+  const [utilitySheet, setUtilitySheet] = useState("");
   const [adjustmentRequest, setAdjustmentRequest] = useState(null);
   const [actionsOpen, setActionsOpen] = useState(false);
   const [messageResolvingKey, setMessageResolvingKey] = useState("");
@@ -3448,8 +3450,8 @@ function TrainerClientDetail({
           <span className="trainerNextClientBackMobile">Клиенты</span>
         </button>
         <div>
-          <button className="trainerNextPrimary" type="button" onClick={() => onTabChange("messages")}><MessageSquare size={16} />Сообщения</button>
-          <button type="button" onClick={() => onTabChange("notifications")}><Bell size={16} />Уведомления</button>
+          <button className="trainerNextPrimary" type="button" onClick={() => setUtilitySheet("messages")}><MessageSquare size={16} />Сообщения</button>
+          <button type="button" onClick={() => setUtilitySheet("notifications")}><Bell size={16} />Уведомления</button>
           <button className="trainerNextClientActionsButton" type="button" onClick={() => setActionsOpen(true)} aria-label="Действия">
             <EllipsisVertical size={18} />
             <span>Действия</span>
@@ -3585,6 +3587,38 @@ function TrainerClientDetail({
           resolvingAll={messageResolvingKey === "all"}
           resolutionStatus={messageResolutionStatus}
         />
+      ) : null}
+
+      {utilitySheet === "messages" ? (
+        <TrainerClientUtilitySheet title="Сообщения" eyebrow="Клиент" onRequestClose={() => setUtilitySheet("")}>
+          <ClientMessages
+            history={history}
+            onReplyToMessage={(note) => {
+              setUtilitySheet("");
+              openMessageFromNote(note);
+            }}
+            onMarkAllProcessed={(pendingMessages) => resolveMessagesWithoutReply(pendingMessages, { bulk: true })}
+            processedMessageIds={processedNoteIds}
+            resolvingAll={messageResolvingKey === "all"}
+            resolutionStatus={messageResolutionStatus}
+          />
+        </TrainerClientUtilitySheet>
+      ) : null}
+
+      {utilitySheet === "notifications" ? (
+        <TrainerClientUtilitySheet title="Уведомления" eyebrow="Клиент" onRequestClose={() => setUtilitySheet("")}>
+          <ClientNotifications
+            key={`utility-notifications-${client.id}`}
+            client={client}
+            workouts={workouts}
+            measurements={measurements}
+            photos={photos}
+            status={programStatus}
+            onSave={onSaveNotifications}
+            onTest={onTestNotification}
+            onConnectTelegram={onConnectTelegram}
+          />
+        </TrainerClientUtilitySheet>
       ) : null}
 
       {contactOpen ? (
