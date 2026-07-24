@@ -19,6 +19,9 @@ export default function AdminWorkoutsNextWorkspace({
   programStatus,
   onUpdateWorkout,
   onUpdateExercise,
+  onUpdateLibraryExercise,
+  onRemoveLibraryExercise,
+  onCreateLibraryExercise,
   onUpdateExerciseSet,
   onAddExerciseSet,
   onRemoveExerciseSet,
@@ -27,6 +30,7 @@ export default function AdminWorkoutsNextWorkspace({
   onDuplicateExercise,
   onMoveExercise,
   onUploadExerciseVideo,
+  onUploadLibraryExerciseVideo,
   exerciseVideoUploadingId,
   onAddDay,
   onDuplicateDay,
@@ -61,6 +65,9 @@ export default function AdminWorkoutsNextWorkspace({
       programStatus={programStatus}
       onUpdateWorkout={onUpdateWorkout}
       onUpdateExercise={onUpdateExercise}
+      onUpdateLibraryExercise={onUpdateLibraryExercise}
+      onRemoveLibraryExercise={onRemoveLibraryExercise}
+      onCreateLibraryExercise={onCreateLibraryExercise}
       onUpdateExerciseSet={onUpdateExerciseSet}
       onAddExerciseSet={onAddExerciseSet}
       onRemoveExerciseSet={onRemoveExerciseSet}
@@ -69,6 +76,7 @@ export default function AdminWorkoutsNextWorkspace({
       onDuplicateExercise={onDuplicateExercise}
       onMoveExercise={onMoveExercise}
       onUploadExerciseVideo={onUploadExerciseVideo}
+      onUploadLibraryExerciseVideo={onUploadLibraryExerciseVideo}
       exerciseVideoUploadingId={exerciseVideoUploadingId}
       onAddDay={onAddDay}
       onDuplicateDay={onDuplicateDay}

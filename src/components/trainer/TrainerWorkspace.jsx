@@ -537,7 +537,53 @@ function ClientStatus({ status = {} }) {
     noProgram: "Без программы",
     lost: "Риск срыва"
   };
-  return <span className={`trainerNextStatus ${statusId}`}>{status.label || fallback[statusId] || "Активен"}</span>;
+  return (
+    <span
+      className={`trainerNextStatus ${statusId}`}
+      title={status.detail || undefined}
+      aria-label={status.detail ? `${status.label}. ${status.detail}` : status.label}
+    >
+      {status.label || fallback[statusId] || "Активен"}
+    </span>
+  );
+}
+
+function getClientStatusAction(item = {}) {
+  const { client = {}, summary = {}, status = {}, attention = null } = item;
+  const statusId = attention ? "attention" : (status.id || "active");
+  const actionByType = {
+    program: "Назначить программу",
+    workout: "Проверить тренировку",
+    feedback: "Открыть комментарий",
+    programEnding: "Продлить программу",
+    task: "Открыть задачу",
+    nutrition: "Проверить питание",
+    measure: "Проверить замеры",
+    payment: "Проверить оплату",
+    activity: "Связаться с клиентом"
+  };
+  const actionByStatus = {
+    noProgram: "Назначить программу",
+    lost: "Связаться с клиентом",
+    attention: "Открыть причину"
+  };
+  const isActive = statusId === "active" && !attention;
+  const detail = isActive ? "" : (attention?.reason || getAttentionReason(client, summary));
+
+  return {
+    id: statusId,
+    label: isActive
+      ? "Всё в порядке"
+      : (actionByType[attention?.type] || actionByStatus[statusId] || "Открыть клиента"),
+    detail,
+    targetTab: getTrainerActionItemTargetTab({
+      client,
+      summary,
+      status,
+      attention,
+      type: attention?.type || statusId
+    })
+  };
 }
 
 function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion }) {
@@ -631,7 +677,13 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
         <span>Клиент</span><span>Прогресс</span><span>Тренировки</span><span>Питание</span><span>Активность</span><span>Статус</span>
       </div>
       {filteredClients.map((item) => {
-        const { client, summary, status } = item;
+        const { client, summary } = item;
+        const statusAction = getClientStatusAction(item);
+        const clientDetail = statusAction.detail
+          || (client.subscription ? getSubscriptionAttentionLabel(client.subscription) : "")
+          || client.goalDescription
+          || client.goal
+          || getAttentionReason(client, summary);
         const assignedWorkoutCount = Math.max(0, Number(summary.assignedWorkoutCount) || 0);
         const completedWorkoutCount = Math.min(
           assignedWorkoutCount,
@@ -643,12 +695,12 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
           ? Math.max(0, Math.min(100, Math.round(weeklyProgressScore)))
           : null;
         return (
-          <button type="button" key={client.id} onClick={() => onOpenClient(client)}>
+          <button type="button" key={client.id} onClick={() => onOpenClient(client, statusAction.targetTab)}>
             <span className="trainerNextClientIdentity">
               <TrainerAvatar client={client} size="small" />
               <span>
                 <strong>{client.name || client.email || "Клиент"}</strong>
-                <small>{client.subscription ? getSubscriptionAttentionLabel(client.subscription) : (client.goalDescription || client.goal || getAttentionReason(client, summary))}</small>
+                <small>{clientDetail}</small>
               </span>
             </span>
             <span className="positive" aria-label={progressScore === null ? "Недостаточно данных для недельной оценки прогресса" : `Недельный прогресс: ${progressScore} /100`}>
@@ -658,7 +710,7 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
             <span className="trainerNextClientMetric"><b>{assignedWorkoutCount ? `${completedWorkoutCount} / ${assignedWorkoutCount}` : "—"}</b><small>тренировки</small></span>
             <span className="trainerNextClientMetric"><b>{summary.nutritionDays7 || 0} / 7</b><small>питание</small></span>
             <span className="trainerNextClientActivity"><b>{formatCompactDate(summary.lastWorkoutAt || summary.lastNutritionAt)}</b><small>последнее</small></span>
-            <ClientStatus status={status} />
+            <ClientStatus status={statusAction} />
           </button>
         );
       })}
@@ -853,6 +905,7 @@ function TrainerDashboard({
   onOpenClient,
   onOpenClients,
   onOpenPrograms,
+  appVersion = "",
   loading = false
 }) {
   const completed = clients.reduce((sum, client) => sum + (Number(clientSummaries[client.id]?.workouts7) || 0), 0);
@@ -910,6 +963,8 @@ function TrainerDashboard({
         <DashboardMetric label="Завершено" value={completed} detail={completedDetail} tone="purple" icon={Dumbbell} values={[1, 2, 2, 3, 2.5, 5, 4, 8]} onClick={onOpenPrograms} />
         <DashboardMetric label="Прогресс" value={progressValue} detail={progressDetail} tone="green" icon={TrendingUp} values={[2, 2, 3.5, 3, 5, 4.3, 7]} onClick={onOpenClients} />
       </section>
+
+      {appVersion ? <div className="trainerNextDashboardVersion">{appVersion}</div> : null}
     </div>
   );
 }
@@ -1425,7 +1480,7 @@ function ClientMessages({
   resolutionStatus = ""
 }) {
   const messages = getWorkoutNoteItems(history);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("pending");
   const [expanded, setExpanded] = useState(false);
   const processedCount = messages.filter((message) => processedMessageIds.has(message.id)).length;
   const pendingCount = messages.length - processedCount;
@@ -1452,42 +1507,41 @@ function ClientMessages({
     <section className={trainerClientMessagesStyles.panel} aria-labelledby="trainer-client-messages-title">
       <header className={trainerClientMessagesStyles.header}>
         <div className={trainerClientMessagesStyles.heading}>
-          <h2 id="trainer-client-messages-title">Сообщения клиента</h2>
-          <p>Комментарии, самочувствие и обратная связь после тренировок.</p>
-        </div>
-        <div className={trainerClientMessagesStyles.headerControls}>
-          <div className={trainerClientMessagesStyles.counters} aria-label="Состояние сообщений">
-            <span className={`${trainerClientMessagesStyles.counter} ${pendingCount ? trainerClientMessagesStyles.counterAttention : ""}`}><b>{pendingCount}</b> требуют ответа</span>
-            <span className={trainerClientMessagesStyles.counter}><b>{processedCount}</b> обработано</span>
+          <span className={trainerClientMessagesStyles.chatAvatar} aria-hidden="true"><MessageSquare size={19} /></span>
+          <div>
+            <h2 id="trainer-client-messages-title">Сообщения</h2>
+            <p>{pendingCount ? `${pendingCount} ждут ответа` : "Все сообщения обработаны"}</p>
           </div>
-          {pendingCount && onMarkAllProcessed ? (
-            <button
-              type="button"
-              className={trainerClientMessagesStyles.resolveAllButton}
-              disabled={resolvingAll}
-              onClick={() => onMarkAllProcessed(pendingMessages)}
-            >
-              <Check size={14} />{resolvingAll ? "Отмечаем…" : "Отметить все обработанными"}
-            </button>
-          ) : null}
         </div>
       </header>
 
       {resolutionStatus ? <p className={trainerClientMessagesStyles.resolutionStatus} role="status">{resolutionStatus}</p> : null}
 
-      <nav className={trainerClientMessagesStyles.filters} aria-label="Фильтры сообщений клиента">
-        {filters.map((item) => (
+      <div className={trainerClientMessagesStyles.toolbar}>
+        <nav className={trainerClientMessagesStyles.filters} aria-label="Фильтры сообщений клиента">
+          {filters.map((item) => (
+            <button
+              type="button"
+              key={item.id}
+              className={filter === item.id ? trainerClientMessagesStyles.active : ""}
+              aria-pressed={filter === item.id}
+              onClick={() => selectFilter(item.id)}
+            >
+              {item.label}<span>{item.count}</span>
+            </button>
+          ))}
+        </nav>
+        {pendingCount && onMarkAllProcessed ? (
           <button
             type="button"
-            key={item.id}
-            className={filter === item.id ? trainerClientMessagesStyles.active : ""}
-            aria-pressed={filter === item.id}
-            onClick={() => selectFilter(item.id)}
+            className={trainerClientMessagesStyles.resolveAllButton}
+            disabled={resolvingAll}
+            onClick={() => onMarkAllProcessed(pendingMessages)}
           >
-            {item.label}<span>{item.count}</span>
+            <Check size={14} /><span>{resolvingAll ? "Обрабатываем…" : "Обработать все"}</span>
           </button>
-        ))}
-      </nav>
+        ) : null}
+      </div>
 
       <div className={trainerClientMessagesStyles.feed}>
         {visibleMessages.length ? (
@@ -1498,18 +1552,21 @@ function ClientMessages({
                 <span className={trainerClientMessagesStyles.icon}><MessageSquare size={17} /></span>
                 <div className={trainerClientMessagesStyles.cardBody}>
                   <div className={trainerClientMessagesStyles.cardHeader}>
-                    <strong title={item.title}>{item.title}</strong>
+                    <div className={trainerClientMessagesStyles.messageTitle}>
+                      <strong title={item.title}>{item.title}</strong>
+                      <span>{item.source}</span>
+                    </div>
+                    <time>{formatCompactDate(item.date)}</time>
+                  </div>
+                  <div className={trainerClientMessagesStyles.bubble}>
+                    <p className={trainerClientMessagesStyles.text}>{item.text}</p>
+                  </div>
+                  <div className={trainerClientMessagesStyles.messageFooter}>
                     <span className={processed ? trainerClientMessagesStyles.processedBadge : trainerClientMessagesStyles.pendingBadge}>
                       {processed ? <><Check size={11} />Обработано</> : "Ждёт ответа"}
                     </span>
-                  </div>
-                  <div className={trainerClientMessagesStyles.meta}>
-                    <span>{item.source}</span>
-                    <time>{formatCompactDate(item.date)}</time>
-                  </div>
-                  <p className={trainerClientMessagesStyles.text}>{item.text}</p>
-                  {onReplyToMessage ? (
-                    <div className={trainerClientMessagesStyles.actions}>
+                    {onReplyToMessage ? (
+                      <div className={trainerClientMessagesStyles.actions}>
                       <button
                         type="button"
                         className={`${trainerClientMessagesStyles.reply} ${processed ? "" : trainerClientMessagesStyles.replyPrimary}`}
@@ -1517,8 +1574,9 @@ function ClientMessages({
                       >
                         <Mail size={13} />{processed ? "Ответить ещё раз" : "Ответить"}
                       </button>
-                    </div>
-                  ) : null}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               </article>
             );
@@ -3227,6 +3285,8 @@ function TrainerClientDetail({
   onUpdateExercise,
   onSaveExerciseProgressAdjustment,
   onUpdateLibraryExercise,
+  onRemoveLibraryExercise,
+  onCreateLibraryExercise,
   onUpdateExerciseSet,
   onAddExerciseSet,
   onRemoveExerciseSet,
@@ -3235,6 +3295,7 @@ function TrainerClientDetail({
   onDuplicateExercise,
   onMoveExercise,
   onUploadExerciseVideo,
+  onUploadLibraryExerciseVideo,
   exerciseVideoUploadingId,
   onAddDay,
   onDuplicateDay,
@@ -3546,6 +3607,8 @@ function TrainerClientDetail({
                 onUpdateWorkout,
                 onUpdateExercise,
                 onUpdateLibraryExercise,
+                onRemoveLibraryExercise,
+                onCreateLibraryExercise,
                 onUpdateExerciseSet,
                 onAddExerciseSet,
                 onRemoveExerciseSet,
@@ -3554,6 +3617,7 @@ function TrainerClientDetail({
                 onDuplicateExercise,
                 onMoveExercise,
                 onUploadExerciseVideo,
+                onUploadLibraryExerciseVideo,
                 exerciseVideoUploadingId,
                 onAddDay,
                 onDuplicateDay,
@@ -3709,16 +3773,17 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
         <div><h1>Клиенты</h1><p>{clients.length} {pluralize(clients.length, "клиент", "клиента", "клиентов")} в работе</p></div>
         <button className="trainerNextPrimary" type="button" onClick={onCreateClient}><Plus size={18} />Добавить клиента</button>
       </div>
-      <header className="trainerNextMobileHeader">
-        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
+      <header className="trainerNextMobileHeader trainerNextClientsMobileHeader">
         <div className="trainerNextMobileTitle">Клиенты</div>
-        <button className="trainerNextMobileAddClient" type="button" onClick={onCreateClient} aria-label="Добавить клиента">
-          <Plus size={18} />
-          <span>Добавить</span>
-        </button>
       </header>
       <div className="trainerNextClientsStandalone">
-        <label className="trainerNextSearch open"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Поиск клиента..." /></label>
+        <div className="trainerNextClientSearchRow">
+          <label className="trainerNextSearch open"><Search size={18} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Поиск клиента..." /></label>
+          <button className="trainerNextClientSearchAdd" type="button" onClick={onCreateClient} aria-label="Добавить клиента">
+            <Plus size={18} />
+            <span>Добавить</span>
+          </button>
+        </div>
         <div className="trainerMessageFilters trainerClientFilters" role="group" aria-label="Фильтр клиентов">
           {filters.map(([id, label]) => (
             <button
@@ -4192,6 +4257,8 @@ function TrainerWorkoutEditor({
   onUpdateWorkout,
   onUpdateExercise,
   onUpdateLibraryExercise,
+  onRemoveLibraryExercise,
+  onCreateLibraryExercise,
   onUpdateExerciseSet,
   onAddExerciseSet,
   onRemoveExerciseSet,
@@ -4199,6 +4266,7 @@ function TrainerWorkoutEditor({
   onRemoveExercise,
   onMoveExercise,
   onUploadExerciseVideo,
+  onUploadLibraryExerciseVideo,
   exerciseVideoUploadingId,
   onAddDay,
   onDuplicateDay,
@@ -4210,6 +4278,8 @@ function TrainerWorkoutEditor({
   const [expandedExerciseId, setExpandedExerciseId] = useState("");
   const [librarySearch, setLibrarySearch] = useState("");
   const [libraryEditorTarget, setLibraryEditorTarget] = useState(null);
+  const [libraryEditorDraft, setLibraryEditorDraft] = useState(null);
+  const [libraryEditorSaving, setLibraryEditorSaving] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
 
@@ -4283,23 +4353,136 @@ function TrainerWorkoutEditor({
     || library.find((exercise) => exercise.id === libraryEditorTarget?.exerciseId && exercise.librarySource?.templateId === libraryEditorTarget?.templateId)
     || libraryEditorTarget?.exercise
     || null;
+  const libraryEditorSourceExercise = libraryEditorExercise && libraryEditorWorkout
+    ? {
+      ...libraryEditorExercise,
+      librarySource: { type: "plan", workoutId: libraryEditorWorkout.id },
+    }
+    : libraryEditorExercise;
+  const activeLibraryEditorExercise = libraryEditorDraft || libraryEditorExercise;
+
+  function createLibraryEditorDraft(exercise) {
+    if (!exercise) return null;
+    const usesWeight = exercise.requiresWeight ?? exercise.usesWeight ?? true;
+    const sets = exercise.sets?.length ? exercise.sets : [{ reps: "", weight: "" }];
+    return {
+      ...exercise,
+      requiresWeight: usesWeight,
+      usesWeight,
+      sets: sets.map((set) => ({ ...set }))
+    };
+  }
+
+  function openLibraryEditor(exercise) {
+    if (!exercise) return;
+    setLibraryEditorTarget({ workoutId: exercise.sourceWorkoutId || "", exerciseId: exercise.id, templateId: exercise.librarySource?.templateId || "", exercise });
+    setLibraryEditorDraft(createLibraryEditorDraft(exercise));
+  }
+
+  async function createLibraryExercise() {
+    const exercise = selectedWorkout
+      ? onAddExercise?.(selectedWorkout.id, { name: "Новое упражнение" })
+      : await onCreateLibraryExercise?.(selectedProgramId, { name: "Новое упражнение" });
+    if (!exercise) return;
+
+    openLibraryEditor({
+      ...exercise,
+      ...(selectedWorkout ? {
+        sourceWorkoutId: selectedWorkout.id,
+        librarySource: { type: "plan", workoutId: selectedWorkout.id }
+      } : {})
+    });
+  }
+
+  function closeLibraryEditor() {
+    if (libraryEditorSaving) return;
+    setLibraryEditorTarget(null);
+    setLibraryEditorDraft(null);
+  }
 
   function updateLibraryEditorExercise(patch) {
-    if (!libraryEditorExercise) return;
-    if (libraryEditorWorkout) {
-      onUpdateExercise(libraryEditorWorkout.id, libraryEditorExercise.id, patch);
-      return;
-    }
-    onUpdateLibraryExercise?.(libraryEditorExercise, patch);
+    setLibraryEditorDraft((current) => current ? { ...current, ...patch } : current);
   }
 
   function updateLibraryEditorSet(setIndex, patch) {
-    if (libraryEditorWorkout) {
-      onUpdateExerciseSet(libraryEditorWorkout.id, libraryEditorExercise.id, setIndex, patch);
-      return;
+    setLibraryEditorDraft((current) => {
+      if (!current) return current;
+      const sets = (current.sets?.length ? current.sets : [{ reps: "", weight: "" }]).map((set, index) => (
+        index === setIndex ? { ...set, ...patch } : set
+      ));
+      return { ...current, sets };
+    });
+  }
+
+  function addLibraryEditorSet() {
+    setLibraryEditorDraft((current) => {
+      if (!current) return current;
+      const sets = current.sets?.length ? current.sets : [{ reps: "", weight: "" }];
+      const firstSet = sets[0] || { reps: "", weight: "" };
+      return { ...current, sets: [...sets, { ...firstSet, id: undefined }] };
+    });
+  }
+
+  function removeLibraryEditorSet(setIndex) {
+    setLibraryEditorDraft((current) => {
+      if (!current) return current;
+      const sets = current.sets?.length ? current.sets : [{ reps: "", weight: "" }];
+      if (sets.length <= 1) return current;
+      return { ...current, sets: sets.filter((_, index) => index !== setIndex) };
+    });
+  }
+
+  async function saveLibraryEditor() {
+    if (!libraryEditorExercise || !libraryEditorDraft || libraryEditorSaving) return;
+    setLibraryEditorSaving(true);
+    const patch = { ...libraryEditorDraft };
+    delete patch.librarySource;
+    delete patch.sourceWorkoutId;
+    try {
+      const saved = await onUpdateLibraryExercise?.(libraryEditorSourceExercise, patch);
+      if (saved !== false) {
+        setLibraryEditorTarget(null);
+        setLibraryEditorDraft(null);
+      }
+    } finally {
+      setLibraryEditorSaving(false);
     }
-    const sets = (libraryEditorExercise.sets?.length ? libraryEditorExercise.sets : [{ reps: "", weight: "" }]).map((set, index) => index === setIndex ? { ...set, ...patch } : set);
-    updateLibraryEditorExercise({ sets });
+  }
+
+  async function removeLibraryEditor() {
+    if (!libraryEditorExercise || libraryEditorSaving) return;
+    setLibraryEditorSaving(true);
+    try {
+      const removed = await onRemoveLibraryExercise?.(libraryEditorSourceExercise);
+      if (removed !== false) {
+        setLibraryEditorTarget(null);
+        setLibraryEditorDraft(null);
+      }
+    } finally {
+      setLibraryEditorSaving(false);
+    }
+  }
+
+  function confirmRemoveLibraryEditor() {
+    if (!libraryEditorExercise) return;
+    setConfirmAction({
+      title: "Удалить упражнение",
+      text: `Упражнение «${libraryEditorExercise.name || "Без названия"}» будет удалено из библиотеки и связанного плана.`,
+      onConfirm: () => {
+        setConfirmAction(null);
+        void removeLibraryEditor();
+      }
+    });
+  }
+
+  async function uploadLibraryEditorVideo(event) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !libraryEditorExercise || libraryEditorSaving) return;
+    const url = await onUploadLibraryExerciseVideo?.(libraryEditorSourceExercise, file);
+    if (typeof url === "string") {
+      updateLibraryEditorExercise({ video: url, videoAutoFilledFrom: "" });
+    }
   }
 
   function confirmRemoveWorkout(workout) {
@@ -4343,9 +4526,9 @@ function TrainerWorkoutEditor({
         <div className="trainerNextMobileTitle">{tab === "library" ? "Библиотека" : "План тренировок"}</div>
         {tab === "plan" ? <button type="button" onClick={() => setPreviewOpen(true)} aria-label="Предпросмотр"><Eye size={21} /></button> : <span />}
       </header> : null}
-      {!embedded ? <div className="trainerNextPageTabs">
+      {!embedded && tab !== "plan" ? <div className="trainerNextPageTabs">
         <button type="button" onClick={onOpenProgramManager}>Программы</button>
-        <button type="button" className={tab === "library" ? "active" : ""} aria-pressed={tab === "library"} onClick={() => onWorkoutTabChange("library")}>Библиотека упражнений</button>
+        <button type="button" className={tab === "library" ? "isActive" : ""} aria-current={tab === "library" ? "page" : undefined} aria-pressed={tab === "library"} onClick={() => onWorkoutTabChange("library")}>Библиотека упражнений</button>
       </div> : null}
 
       {tab === "plan" ? (
@@ -4535,7 +4718,18 @@ function TrainerWorkoutEditor({
         <section className="trainerNextLibrary">
           <div className="trainerNextPanelTitle">
             <div><h2>Библиотека упражнений</h2><p>Видео и параметры из сохранённых программ</p></div>
-            <label className="trainerNextSearch open"><Search size={17} /><input value={librarySearch} onChange={(event) => setLibrarySearch(event.target.value)} placeholder="Найти упражнение..." /></label>
+            <div className="trainerNextLibraryActions">
+              <label className="trainerNextSearch open"><Search size={17} /><input value={librarySearch} onChange={(event) => setLibrarySearch(event.target.value)} placeholder="Найти упражнение..." /></label>
+              <button
+                className="trainerNextLibraryAdd"
+                type="button"
+                disabled={!selectedWorkout && (!programTemplates?.length || typeof onCreateLibraryExercise !== "function")}
+  onClick={createLibraryExercise}
+                aria-label="Создать новое упражнение"
+              >
+                <Plus size={16} />Добавить
+              </button>
+            </div>
           </div>
           <div>
             {filteredLibrary.map((exercise, index) => {
@@ -4546,18 +4740,17 @@ function TrainerWorkoutEditor({
                   role="button"
                   tabIndex={0}
                   aria-label={`Редактировать упражнение ${exercise.name || ""}`}
-                  onClick={() => setLibraryEditorTarget({ workoutId: exercise.sourceWorkoutId || "", exerciseId: exercise.id, templateId: exercise.librarySource?.templateId || "", exercise })}
+                  onClick={() => openLibraryEditor(exercise)}
                   onKeyDown={(event) => {
                     if (event.key !== "Enter" && event.key !== " ") return;
                     event.preventDefault();
-                    setLibraryEditorTarget({ workoutId: exercise.sourceWorkoutId || "", exerciseId: exercise.id, templateId: exercise.librarySource?.templateId || "", exercise });
+                    openLibraryEditor(exercise);
                   }}
                 >
                   <span className="trainerNextExerciseImage">
                     {video ? <video src={video} muted preload="metadata" aria-hidden="true" /> : <Dumbbell size={22} />}
                   </span>
                   <div><strong>{exercise.name}</strong><small>{exercise.sets?.length || 0} подх. · {video ? "с видео" : "без видео"}</small></div>
-                  <button type="button" disabled={!selectedWorkout} onClick={(event) => { event.stopPropagation(); selectedWorkout && onAddExercise(selectedWorkout.id, exercise); }}><Plus size={16} />Добавить</button>
                 </article>
               );
             })}
@@ -4566,42 +4759,57 @@ function TrainerWorkoutEditor({
         </section>
       )}
 
-      {libraryEditorExercise ? (
-        <div className={`trainerNextModalBackdrop ${exerciseLibraryEditorStyles.backdrop}`} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setLibraryEditorTarget(null)}>
-          <section className={`trainerNextWorkoutPreview ${exerciseLibraryEditorStyles.modal}`} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-library-editor-title">
-            <button type="button" className="trainerNextModalClose" onClick={() => setLibraryEditorTarget(null)} aria-label="Закрыть редактор упражнения"><X size={18} /></button>
+      {activeLibraryEditorExercise ? (
+        <div className={`trainerNextModalBackdrop ${exerciseLibraryEditorStyles.backdrop}`} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeLibraryEditor()}>
+          <section className={exerciseLibraryEditorStyles.modal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-library-editor-title">
+            <button type="button" className={exerciseLibraryEditorStyles.close} onClick={closeLibraryEditor} disabled={libraryEditorSaving} aria-label="Закрыть редактор упражнения"><X size={18} /></button>
             <header className={exerciseLibraryEditorStyles.header}>
               <small>БИБЛИОТЕКА УПРАЖНЕНИЙ</small>
               <h2 id="trainer-library-editor-title">Редактирование упражнения</h2>
-              <p>Изменения сохраняются в тренировочном плане автоматически.</p>
+              <p>Изменения применятся после нажатия кнопки «Сохранить».</p>
             </header>
-            <div className={`trainerNextExerciseEditor ${exerciseLibraryEditorStyles.body}`}>
-              <div className="trainerNextExerciseFields">
-                <label className="wide"><span>Название</span><input value={libraryEditorExercise.name || ""} onChange={(event) => updateLibraryEditorExercise({ name: event.target.value })} /></label>
-                <label><span>Отдых</span><input value={libraryEditorExercise.rest || ""} onChange={(event) => updateLibraryEditorExercise({ rest: event.target.value })} placeholder="90 сек" /></label>
-                <label className="trainerNextWeightToggle">
+            <div className={exerciseLibraryEditorStyles.body}>
+              <div className={exerciseLibraryEditorStyles.fields}>
+                <label className={exerciseLibraryEditorStyles.nameField}><span>Название</span><input value={activeLibraryEditorExercise.name || ""} onChange={(event) => updateLibraryEditorExercise({ name: event.target.value })} disabled={libraryEditorSaving} /></label>
+                <label className={exerciseLibraryEditorStyles.restField}><span>Отдых</span><input value={activeLibraryEditorExercise.rest || ""} onChange={(event) => updateLibraryEditorExercise({ rest: event.target.value })} placeholder="90 сек" disabled={libraryEditorSaving} /></label>
+                <label className={exerciseLibraryEditorStyles.weightToggle}>
                   <span>Используется вес</span>
-                  <input type="checkbox" checked={libraryEditorExercise.requiresWeight ?? libraryEditorExercise.usesWeight ?? true} onChange={(event) => updateLibraryEditorExercise({ requiresWeight: event.target.checked, usesWeight: event.target.checked })} />
+                  <input type="checkbox" checked={activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true} onChange={(event) => updateLibraryEditorExercise({ requiresWeight: event.target.checked, usesWeight: event.target.checked })} disabled={libraryEditorSaving} />
                 </label>
-                <label className="trainerNextVideoUpload">
+                <label className={exerciseLibraryEditorStyles.videoUpload}>
                   <Upload size={16} />
-                  <span>{exerciseVideoUploadingId === libraryEditorExercise.id ? "Загрузка..." : getExerciseVideo(libraryEditorExercise) ? "Заменить видео" : "Загрузить видео"}</span>
-                  <input type="file" accept="video/*" disabled={!libraryEditorWorkout || exerciseVideoUploadingId === libraryEditorExercise.id} onChange={(event) => libraryEditorWorkout && onUploadExerciseVideo(libraryEditorWorkout.id, libraryEditorExercise.id, event.target.files?.[0])} />
+                  <span>{exerciseVideoUploadingId === libraryEditorExercise.id ? "Загрузка..." : getExerciseVideo(activeLibraryEditorExercise) ? "Заменить видео" : "Загрузить видео"}</span>
+                  <input type="file" accept="video/*" disabled={libraryEditorSaving || exerciseVideoUploadingId === libraryEditorExercise.id} onChange={uploadLibraryEditorVideo} />
                 </label>
+                <div className={exerciseLibraryEditorStyles.videoPreview} aria-label="Предпросмотр видео упражнения">
+                  {getExerciseVideo(activeLibraryEditorExercise) ? (
+                    <video src={getExerciseVideo(activeLibraryEditorExercise)} controls playsInline preload="metadata" />
+                  ) : (
+                    <div className={exerciseLibraryEditorStyles.videoPreviewEmpty}>
+                      <Upload size={20} aria-hidden="true" />
+                      <strong>Видео ещё не добавлено</strong>
+                      <span>Загрузите ролик, чтобы проверить технику упражнения.</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="trainerNextSetEditor">
-                <div className="trainerNextSetEditorHead"><span>Подход</span><span>Повторы</span><span>Вес, кг</span><span /></div>
-                {(libraryEditorExercise.sets?.length ? libraryEditorExercise.sets : [{ reps: "", weight: "" }]).map((set, setIndex, sets) => (
-                  <div className="trainerNextSetRow" key={set.id || setIndex}>
+              <div className={exerciseLibraryEditorStyles.setEditor}>
+                <div className={exerciseLibraryEditorStyles.setEditorHead}><span>Подход</span><span>Повторы</span><span>Вес, кг</span><span /></div>
+                {(activeLibraryEditorExercise.sets?.length ? activeLibraryEditorExercise.sets : [{ reps: "", weight: "" }]).map((set, setIndex, sets) => (
+                  <div className={exerciseLibraryEditorStyles.setRow} key={set.id || setIndex}>
                     <strong>{setIndex + 1}</strong>
-                    <input aria-label={`Повторы, подход ${setIndex + 1}`} value={set.reps ?? ""} onChange={(event) => updateLibraryEditorSet(setIndex, { reps: event.target.value })} />
-                    <input aria-label={`Вес, подход ${setIndex + 1}`} value={set.weight ?? ""} disabled={!(libraryEditorExercise.requiresWeight ?? libraryEditorExercise.usesWeight ?? true)} onChange={(event) => updateLibraryEditorSet(setIndex, { weight: event.target.value })} />
-                    <button type="button" disabled={sets.length <= 1} onClick={() => libraryEditorWorkout ? onRemoveExerciseSet(libraryEditorWorkout.id, libraryEditorExercise.id, setIndex) : updateLibraryEditorExercise({ sets: sets.filter((_, index) => index !== setIndex) })} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
+                    <input aria-label={`Повторы, подход ${setIndex + 1}`} value={set.reps ?? ""} onChange={(event) => updateLibraryEditorSet(setIndex, { reps: event.target.value })} disabled={libraryEditorSaving} />
+                    <input aria-label={`Вес, подход ${setIndex + 1}`} value={set.weight ?? ""} disabled={libraryEditorSaving || !(activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true)} onChange={(event) => updateLibraryEditorSet(setIndex, { weight: event.target.value })} />
+                    <button type="button" disabled={libraryEditorSaving || sets.length <= 1} onClick={() => removeLibraryEditorSet(setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
                   </div>
                 ))}
-                <button className="trainerNextAddSet" type="button" onClick={() => libraryEditorWorkout ? onAddExerciseSet(libraryEditorWorkout.id, libraryEditorExercise.id) : updateLibraryEditorExercise({ sets: [...(libraryEditorExercise.sets || []), { ...(libraryEditorExercise.sets?.[0] || { reps: "", weight: "" }) }] })}><Plus size={15} />Добавить подход</button>
+                <button className={exerciseLibraryEditorStyles.addSet} type="button" disabled={libraryEditorSaving} onClick={addLibraryEditorSet}><Plus size={15} />Добавить подход</button>
               </div>
             </div>
+            <footer className={exerciseLibraryEditorStyles.footer}>
+              <button className={exerciseLibraryEditorStyles.deleteButton} type="button" disabled={libraryEditorSaving} onClick={confirmRemoveLibraryEditor}><Trash2 size={16} />Удалить</button>
+              <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorSaving} onClick={() => void saveLibraryEditor()}><Save size={16} />{libraryEditorSaving ? "Сохраняем..." : "Сохранить"}</button>
+            </footer>
           </section>
         </div>
       ) : null}
@@ -4645,12 +4853,12 @@ function CreateClientModal({ state }) {
   if (!state?.open) return null;
   return (
     <div className="trainerNextModalBackdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && state.onClose()}>
-      <section className="trainerNextModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-create-client-title">
+      <section className="trainerNextModal trainerNextCreateClientModal" role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-create-client-title">
         <button className="trainerNextModalClose" type="button" onClick={state.onClose} aria-label="Закрыть">×</button>
         <div className="trainerNextModalIcon"><UserPlus size={24} /></div>
         <h2 id="trainer-create-client-title">Пригласить клиента</h2>
         <p>Клиент сам задаст пароль по ссылке активации и войдёт по выбранному логину.</p>
-        <form onSubmit={state.onSubmit}>
+        <form className="trainerNextCreateClientForm" onSubmit={state.onSubmit}>
           <label><span>Имя</span><input value={state.name} onChange={(event) => state.onNameChange(event.target.value)} placeholder="Имя клиента" /></label>
           <label><span>Логин</span><input value={state.login} onChange={(event) => state.onLoginChange(event.target.value)} placeholder="например: ilya.fit" autoComplete="off" autoCapitalize="none" spellCheck="false" /></label>
           <small className="trainerNextModalHint">Латиница, цифры, точка, дефис или _; от 3 до 32 символов.</small>
@@ -5397,6 +5605,8 @@ export default function TrainerWorkspace({
   onUpdateExercise,
   onSaveExerciseProgressAdjustment,
   onUpdateLibraryExercise,
+  onRemoveLibraryExercise,
+  onCreateLibraryExercise,
   onUpdateExerciseSet,
   onAddExerciseSet,
   onRemoveExerciseSet,
@@ -5405,6 +5615,7 @@ export default function TrainerWorkspace({
   onDuplicateExercise,
   onMoveExercise,
   onUploadExerciseVideo,
+  onUploadLibraryExerciseVideo,
   exerciseVideoUploadingId = "",
   onAddDay,
   onDuplicateDay,
@@ -5457,6 +5668,7 @@ export default function TrainerWorkspace({
         onOpenClients={() => onNavigate("clients")}
         onOpenPrograms={() => onNavigate("workouts")}
         onCreateClient={onCreateClient}
+        appVersion={appVersion}
         loading={summariesLoading}
       />
     );
@@ -5495,6 +5707,8 @@ export default function TrainerWorkspace({
         onUpdateExercise={onUpdateExercise}
         onSaveExerciseProgressAdjustment={onSaveExerciseProgressAdjustment}
         onUpdateLibraryExercise={onUpdateLibraryExercise}
+        onRemoveLibraryExercise={onRemoveLibraryExercise}
+        onCreateLibraryExercise={onCreateLibraryExercise}
         onUpdateExerciseSet={onUpdateExerciseSet}
         onAddExerciseSet={onAddExerciseSet}
         onRemoveExerciseSet={onRemoveExerciseSet}
@@ -5503,6 +5717,7 @@ export default function TrainerWorkspace({
         onDuplicateExercise={onDuplicateExercise}
         onMoveExercise={onMoveExercise}
         onUploadExerciseVideo={onUploadExerciseVideo}
+        onUploadLibraryExerciseVideo={onUploadLibraryExerciseVideo}
         exerciseVideoUploadingId={exerciseVideoUploadingId}
         onAddDay={onAddDay}
         onDuplicateDay={onDuplicateDay}
@@ -5538,6 +5753,8 @@ export default function TrainerWorkspace({
         onUpdateWorkout={onUpdateWorkout}
         onUpdateExercise={onUpdateExercise}
         onUpdateLibraryExercise={onUpdateLibraryExercise}
+        onRemoveLibraryExercise={onRemoveLibraryExercise}
+        onCreateLibraryExercise={onCreateLibraryExercise}
         onUpdateExerciseSet={onUpdateExerciseSet}
         onAddExerciseSet={onAddExerciseSet}
         onRemoveExerciseSet={onRemoveExerciseSet}
@@ -5546,6 +5763,7 @@ export default function TrainerWorkspace({
         onDuplicateExercise={onDuplicateExercise}
         onMoveExercise={onMoveExercise}
         onUploadExerciseVideo={onUploadExerciseVideo}
+        onUploadLibraryExerciseVideo={onUploadLibraryExerciseVideo}
         exerciseVideoUploadingId={exerciseVideoUploadingId}
         onAddDay={onAddDay}
         onDuplicateDay={onDuplicateDay}

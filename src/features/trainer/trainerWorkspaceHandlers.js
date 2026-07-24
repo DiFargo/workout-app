@@ -3,6 +3,8 @@ export function createTrainerWorkspaceHandlers({
   updateTrainerNextExercise,
   saveTrainerExerciseProgressAdjustment,
   updateTrainerLibraryExercise,
+  removeTrainerLibraryExercise,
+  createTrainerLibraryExercise,
   updateTrainerNextExerciseSet,
   addTrainerNextExerciseSet,
   removeTrainerNextExerciseSet,
@@ -11,6 +13,7 @@ export function createTrainerWorkspaceHandlers({
   duplicateTrainerNextExercise,
   moveTrainerNextExercise,
   uploadTrainerNextExerciseVideo,
+  uploadTrainerLibraryExerciseVideo,
   addTrainerNextWorkoutDay,
   duplicateTrainerNextWorkoutDay,
   removeTrainerNextWorkoutDay,
@@ -38,10 +41,23 @@ export function createTrainerWorkspaceHandlers({
       setAdminClientStatus("Не удалось сохранить изменение нагрузки.");
       return false;
     },
-    onUpdateLibraryExercise: (...args) => {
+    onUpdateLibraryExercise: async (...args) => {
       if (typeof updateTrainerLibraryExercise === "function") {
-        updateTrainerLibraryExercise(...args);
+        return updateTrainerLibraryExercise(...args);
       }
+      return false;
+    },
+    onRemoveLibraryExercise: async (...args) => {
+      if (typeof removeTrainerLibraryExercise === "function") {
+        return removeTrainerLibraryExercise(...args);
+      }
+      return false;
+    },
+    onCreateLibraryExercise: async (...args) => {
+      if (typeof createTrainerLibraryExercise === "function") {
+        return createTrainerLibraryExercise(...args);
+      }
+      return false;
     },
     onUpdateExerciseSet: (...args) => {
       if (typeof updateTrainerNextExerciseSet === "function") {
@@ -62,8 +78,9 @@ export function createTrainerWorkspaceHandlers({
     },
     onAddExercise: (...args) => {
       if (typeof addTrainerNextExercise === "function") {
-        addTrainerNextExercise(...args);
+        return addTrainerNextExercise(...args);
       }
+      return false;
     },
     onRemoveExercise: (...args) => {
       if (typeof removeTrainerNextExercise === "function") {
@@ -82,8 +99,15 @@ export function createTrainerWorkspaceHandlers({
     },
     onUploadExerciseVideo: (...args) => {
       if (typeof uploadTrainerNextExerciseVideo === "function") {
-        uploadTrainerNextExerciseVideo(...args);
+        return uploadTrainerNextExerciseVideo(...args);
       }
+      return false;
+    },
+    onUploadLibraryExerciseVideo: (...args) => {
+      if (typeof uploadTrainerLibraryExerciseVideo === "function") {
+        return uploadTrainerLibraryExerciseVideo(...args);
+      }
+      return false;
     },
     onAddDay: (...args) => {
       if (typeof addTrainerNextWorkoutDay === "function") {

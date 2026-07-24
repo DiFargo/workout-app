@@ -1740,6 +1740,10 @@
   margin-bottom: 22px;
 }
 
+.workspaceRoot :global(.trainerNextDashboardVersion) {
+  display: none;
+}
+
 .workspaceRoot :global(.trainerActionCenterSection),
 .workspaceRoot :global(.trainerAnalyticsPanel),
 .workspaceRoot :global(.trainerCabinetPanel),
@@ -2135,6 +2139,40 @@
   background: var(--tn-purple-soft);
 }
 
+@media (max-width: 760px) {
+  .workspaceRoot :global(.trainerClientFilters) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 12px 0 16px;
+    padding: 0 0 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .workspaceRoot :global(.trainerClientFilters::-webkit-scrollbar) {
+    display: none;
+  }
+
+  .workspaceRoot :global(.trainerClientFilters button) {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: max-content;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .workspaceRoot :global(.trainerClientFilters) {
+    gap: 6px;
+  }
+
+  .workspaceRoot :global(.trainerClientFilters button) {
+    min-height: 36px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+}
+
 .workspaceRoot :global(.trainerNextSectionTitle) {
   margin: 25px 0 12px;
   color: var(--tn-muted);
@@ -2186,6 +2224,89 @@
   background: var(--tn-purple-soft);
 }
 
+.workspaceRoot :global(.trainerNextProgramsTab > .trainerNextPageTabs) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 420px);
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.workspaceRoot :global(.trainerNextProgramsTab > .trainerNextPageTabs button) {
+  display: flex;
+  min-width: 0;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+
+.workspaceRoot :global(.trainerNextProgramsTab > .trainerNextPageTabs button[aria-current="page"]),
+.workspaceRoot :global(.trainerNextProgramsTab > .trainerNextPageTabs button.isActive) {
+  box-shadow: inset 0 0 0 1px rgba(128, 107, 182, 0.14);
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage > .trainerNextPageTabs) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 420px);
+  gap: 4px;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage > .trainerNextPageTabs button) {
+  display: flex;
+  min-width: 0;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+
+.workspaceRoot :global(.trainerNextLibrary > .trainerNextPanelTitle) {
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.workspaceRoot :global(.trainerNextLibraryActions) {
+  display: flex;
+  flex: 1 1 340px;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.workspaceRoot :global(.trainerNextLibraryActions .trainerNextSearch) {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.workspaceRoot :global(.trainerNextPanelTitle button.trainerNextLibraryAdd) {
+  flex: 0 0 auto;
+  min-height: 42px;
+  border-color: #8F7AC8;
+  color: #FFFFFF;
+  background: #8F7AC8;
+  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.22);
+}
+
+.workspaceRoot :global(.trainerNextPanelTitle button.trainerNextLibraryAdd:hover) {
+  border-color: #806BB6;
+  background: #806BB6;
+}
+
+.workspaceRoot :global(.trainerNextPanelTitle button.trainerNextLibraryAdd:focus-visible) {
+  outline: 3px solid rgba(143, 122, 200, 0.3);
+  outline-offset: 2px;
+}
+
 .workspaceRoot :global(.trainerNextStatus),
 .workspaceRoot :global(.trainerNextProgramStatus),
 .workspaceRoot :global(.trainerNextModalStatus) {
@@ -2222,6 +2343,16 @@
 
 .workspaceRoot :global(.trainerNextClientsStandalone) {
   padding: 20px;
+}
+
+.workspaceRoot :global(.trainerNextClientSearchRow) {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.workspaceRoot :global(.trainerNextClientSearchAdd) {
+  display: none;
 }
 
 .workspaceRoot :global(.trainerNextCabinetPage) {
@@ -3122,6 +3253,9 @@
 }
 
 .workspaceRoot :global(.trainerNextExerciseImage) {
+  display: grid;
+  flex: 0 0 48px;
+  place-items: center;
   width: 48px;
   height: 48px;
   overflow: hidden;
@@ -3129,7 +3263,9 @@
   background: var(--tn-purple-soft);
 }
 
-.workspaceRoot :global(.trainerNextExerciseImage img) {
+.workspaceRoot :global(.trainerNextExerciseImage img),
+.workspaceRoot :global(.trainerNextExerciseImage video) {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -3350,6 +3486,50 @@
   margin-top: 16px;
 }
 
+.workspaceRoot :global(.trainerNextLibrary > div:last-child) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.workspaceRoot :global(.trainerNextLibrary article) {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-width: 0;
+  min-height: 72px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface-soft);
+  cursor: pointer;
+}
+
+.workspaceRoot :global(.trainerNextLibrary article > div) {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.workspaceRoot :global(.trainerNextLibrary article strong) {
+  overflow: hidden;
+  color: var(--tn-text);
+  font-size: 14px;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspaceRoot :global(.trainerNextLibrary article small) {
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 12px;
+  font-weight: 560;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .workspaceRoot :global(.trainerNextModalBackdrop),
 .workspaceRoot :global(.trainerNextMoreBackdrop) {
   position: fixed;
@@ -3465,6 +3645,20 @@
 .workspaceRoot :global(.trainerNextModalSubmit) {
   width: 100%;
   margin-top: 4px;
+}
+
+.workspaceRoot :global(.trainerNextCreateClientModal > h2) {
+  margin: 18px 56px 8px 18px;
+}
+
+.workspaceRoot :global(.trainerNextCreateClientModal > p) {
+  margin: 0 18px;
+  color: var(--tn-muted);
+  line-height: 1.5;
+}
+
+.workspaceRoot :global(.trainerNextCreateClientModal > .trainerNextModalIcon) {
+  margin-left: 18px;
 }
 
 .workspaceRoot :global(.trainerNextMoreBackdrop) {
@@ -3610,6 +3804,17 @@
   .workspaceRoot :global(.trainerNextEmbeddedPlan) {
     min-height: auto;
     padding: 0;
+  }
+
+  /* The client list uses the full mobile canvas; its inner card keeps the shared 16px inset. */
+  .workspaceRoot :global(.trainerNextClientsPage) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .workspaceRoot :global(.trainerNextClientsPage .trainerNextMobileHeader) {
+    margin-right: 16px;
+    margin-left: 16px;
   }
 
   .workspaceRoot :global(.trainerNextDesktopPageHead) {
@@ -3896,6 +4101,14 @@
 
   .workspaceRoot :global(.trainerNextPhotoGrid) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspaceRoot :global(.trainerNextLibrary > div:last-child) {
+    grid-template-columns: 1fr;
+  }
+
+  .workspaceRoot :global(.trainerNextLibrary article) {
+    grid-template-columns: 48px minmax(0, 1fr);
   }
 
   .workspaceRoot :global(.trainerNextWorkoutDays) {
@@ -6118,8 +6331,55 @@
 
 /* Phone navigation follows the four core trainer journeys. */
 @media (max-width: 699px) {
+  .workspaceRoot {
+    /*
+     * Use the same iPhone-sized canvas as the client application.
+     * The workspace root is shared by every trainer route, so this keeps
+     * dashboard, clients, programs and cabinet aligned on mobile.
+     */
+    box-sizing: border-box;
+    width: min(402px, 100vw);
+    max-width: 402px;
+    height: min(874px, 100dvh);
+    min-height: min(874px, 100dvh);
+    max-height: min(874px, 100dvh);
+    margin: 0 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 54px;
+
+    /* Keep the trainer dock on the same iOS geometry as the client dock. */
+    --trainer-mobile-nav-height: var(--layout-client-dock-height, 76px);
+    --trainer-mobile-nav-bottom: var(--layout-client-dock-bottom, calc(max(0px, 100dvh - 874px) + 14px));
+    --trainer-mobile-nav-width: var(--layout-client-dock-width, min(382px, calc(100vw - 20px)));
+    --trainer-mobile-nav-radius: var(--layout-client-dock-radius, 28px);
+    --trainer-mobile-nav-clearance: calc(var(--trainer-mobile-nav-height) + var(--trainer-mobile-nav-bottom) + 16px);
+  }
+
+  .workspaceRoot::after {
+    position: fixed;
+    /* Opaque guard: page content must not show through or below the dock. */
+    z-index: 89;
+    bottom: 0;
+    left: 50%;
+    width: min(402px, 100vw);
+    height: calc(var(--trainer-mobile-nav-height) + var(--trainer-mobile-nav-bottom) + 2px);
+    content: "";
+    pointer-events: none;
+    background: var(--tn-page);
+    border-radius: 0 0 54px 54px;
+    transform: translateX(-50%);
+  }
+
   .workspaceRoot :global(.trainerNextMain) {
-    padding-bottom: calc(106px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+    padding-bottom: var(--trainer-mobile-nav-clearance);
+    overflow-x: clip;
+  }
+
+  .workspaceRoot :global(.trainerNextPage) {
+    min-height: calc(100dvh - var(--trainer-mobile-nav-clearance));
+    scroll-padding-bottom: var(--trainer-mobile-nav-clearance);
   }
 
   .workspaceRoot :global(.trainerNextMobileHeader) {
@@ -6150,15 +6410,34 @@
   }
 
   .workspaceRoot :global(.trainerNextMobileNav) {
-    right: 10px;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-    left: 10px;
-    min-height: 74px;
-    padding: 7px;
+    z-index: 90;
+    right: auto;
+    bottom: var(--trainer-mobile-nav-bottom);
+    left: 50vw;
+    box-sizing: border-box;
+    width: var(--trainer-mobile-nav-width);
+    height: var(--trainer-mobile-nav-height);
+    min-height: 0;
+    padding: 6px;
     border-color: var(--tn-line);
-    border-radius: 24px;
-    background: var(--tn-surface);
-    box-shadow: 0 12px 30px rgba(40, 38, 46, 0.15);
+    border-radius: var(--trainer-mobile-nav-radius);
+    background: #ffffff;
+    box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
+    transform: translateX(-50%);
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .workspaceRoot :global(.trainerNextDashboardVersion) {
+    display: block;
+    width: 100%;
+    margin: -2px 0 0;
+    color: #aaa5b2;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 16px;
+    text-align: center;
   }
 
   .workspaceRoot :global(.trainerNextMobileNav button) {
@@ -6202,25 +6481,51 @@
     padding: 16px 16px calc(18px + env(safe-area-inset-bottom));
   }
 
+  .workspaceRoot :global(.trainerNextCreateClientModal > h2) {
+    margin-left: 16px;
+  }
+
+  .workspaceRoot :global(.trainerNextCreateClientModal > p) {
+    margin-right: 16px;
+    margin-left: 16px;
+  }
+
+  .workspaceRoot :global(.trainerNextCreateClientModal > .trainerNextModalIcon) {
+    margin-left: 16px;
+  }
+
   .workspaceRoot :global(.trainerNextModal input:not([type="checkbox"]):not([type="radio"])),
   .workspaceRoot :global(.trainerNextModal select),
   .workspaceRoot :global(.trainerNextModal textarea) {
     font-size: 16px;
   }
 
-  .workspaceRoot :global(.trainerNextMobileHeader:has(.trainerNextMobileAddClient)) {
-    grid-template-columns: 108px minmax(0, 1fr) 108px;
+  .workspaceRoot :global(.trainerNextClientsMobileHeader) {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .workspaceRoot :global(.trainerNextMobileHeader > .trainerNextMobileAddClient) {
+  .workspaceRoot :global(.trainerNextClientSearchRow) {
     display: inline-flex;
-    width: 108px;
-    min-width: 108px;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .workspaceRoot :global(.trainerNextClientSearchRow .trainerNextSearch) {
+    width: auto;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .workspaceRoot :global(.trainerNextClientSearchAdd) {
+    display: inline-flex;
+    min-width: 132px;
+    min-height: 46px;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 0 11px;
-    border-color: var(--tn-purple-strong);
+    gap: 7px;
+    padding: 0 14px;
+    border: 1px solid var(--tn-purple-strong);
     border-radius: 15px;
     color: #fff;
     background: var(--tn-purple);
@@ -6230,9 +6535,19 @@
     white-space: nowrap;
   }
 
-  .workspaceRoot :global(.trainerNextMobileAddClient svg) {
+  .workspaceRoot :global(.trainerNextClientSearchAdd svg) {
     width: 18px;
     height: 18px;
+  }
+
+  .workspaceRoot :global(.trainerNextClientsPage .trainerNextClientTable) {
+    display: grid;
+    gap: 8px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .workspaceRoot :global(.trainerNextClientsPage .trainerNextClientTable > button) {
@@ -6244,6 +6559,14 @@
     min-height: 0;
     gap: 5px 8px;
     padding: 8px 12px;
+    border: 1px solid var(--tn-line);
+    border-radius: 18px;
+    background: var(--tn-surface);
+    box-shadow: 0 8px 18px rgba(56, 44, 78, 0.06);
+  }
+
+  .workspaceRoot :global(.trainerNextClientsPage .trainerNextClientTable > button:last-child) {
+    border-bottom: 1px solid var(--tn-line);
   }
 
   .workspaceRoot :global(.trainerNextClientsPage .trainerNextClientTable > button > .trainerNextClientIdentity) {
@@ -6389,7 +6712,7 @@
   }
 
   .workspaceRoot :global(.trainerNextClientPage) {
-    padding-bottom: calc(98px + env(safe-area-inset-bottom));
+    padding-bottom: 28px;
   }
 
   .workspaceRoot :global(.trainerNextClientPage .trainerNextClientTabs) {
@@ -6398,18 +6721,24 @@
 
   .workspaceRoot :global(.trainerNextClientMobileNav) {
     position: fixed;
-    z-index: 62;
-    right: 10px;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-    left: 10px;
+    z-index: 90;
+    right: auto;
+    bottom: var(--trainer-mobile-nav-bottom);
+    left: 50vw;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    min-height: 76px;
-    padding: 7px;
+    box-sizing: border-box;
+    width: var(--trainer-mobile-nav-width);
+    height: var(--trainer-mobile-nav-height);
+    min-height: 0;
+    padding: 6px;
     border: 1px solid var(--tn-line);
-    border-radius: 24px;
-    background: var(--tn-surface);
-    box-shadow: 0 12px 30px rgba(40, 38, 46, 0.15);
+    border-radius: var(--trainer-mobile-nav-radius);
+    background: #ffffff;
+    box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
+    transform: translateX(-50%);
+    isolation: isolate;
+    overflow: hidden;
   }
 
   .workspaceRoot :global(.trainerNextClientMobileNav button) {
@@ -6515,5 +6844,15 @@
 
   .workspaceRoot :global(.trainerNextClientActionsButton > span) {
     display: none;
+  }
+}
+
+@media (max-width: 402px) {
+  .workspaceRoot {
+    border-radius: 0;
+  }
+
+  .workspaceRoot::after {
+    border-radius: 0;
   }
 }

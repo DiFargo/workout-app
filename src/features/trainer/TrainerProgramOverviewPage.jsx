@@ -1,13 +1,10 @@
 import {
-  CalendarDays as ProgramCalendarIcon,
   Check as ProgramCheckIcon,
   Dumbbell as ProgramDumbbellIcon,
   FileText as ProgramFileTextIcon,
   ListChecks as ProgramListIcon,
   Pencil as ProgramEditIcon,
   Plus as ProgramPlusIcon,
-  RefreshCw as ProgramRefreshIcon,
-  Repeat2 as ProgramCycleIcon,
   Sparkles as ProgramSparklesIcon,
   Trash2 as ProgramTrashIcon,
   Upload as ProgramUploadIcon
@@ -49,7 +46,6 @@ export default function TrainerProgramOverviewPage({
   getTemplateStats,
   importMonthProgramWithAi,
   isTrainerNextWorkspace,
-  loadAdminTrainingTemplates,
   onGoAdmin,
   openProgramFromLibrary,
   setAdminProgramCreateChoiceOpen,
@@ -119,38 +115,15 @@ export default function TrainerProgramOverviewPage({
         </nav>
       )}
 
-      <section className={isNextWorkspace ? styles.section : "programsOverviewSection"}>
+      <section
+        className={isNextWorkspace ? styles.section : "programsOverviewSection"}
+        onClick={() => setAdminSelectedTemplateId("")}
+      >
         <div className={isNextWorkspace ? styles.sectionHead : "programsOverviewSectionHead"}>
           <div>
             <span>БИБЛИОТЕКА</span>
             <h2>Готовые программы</h2>
             <p>Выберите программу для просмотра и редактирования.</p>
-          </div>
-          <div className={styles.headerActions}>
-            {isNextWorkspace && (
-              <>
-                <button
-                  type="button"
-                  disabled={!selectedTemplate}
-                  onClick={() => openProgramFromLibrary(selectedTemplate?.id)}
-                >
-                  <ProgramEditIcon size={18} />
-                  Редактировать
-                </button>
-                <button
-                  className={styles.deleteAction}
-                  type="button"
-                  disabled={!selectedTemplate}
-                  onClick={deleteSelectedProgramFromLibrary}
-                >
-                  <ProgramTrashIcon size={18} />
-                  Удалить
-                </button>
-              </>
-            )}
-            <button type="button" onClick={loadAdminTrainingTemplates} aria-label="Обновить программы">
-              <ProgramRefreshIcon size={17} />Обновить
-            </button>
           </div>
         </div>
 
@@ -180,32 +153,17 @@ export default function TrainerProgramOverviewPage({
                 ? createdAt.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
                 : "—";
 
-              return (
-                <button
-                  className={isNextWorkspace
-                    ? `${styles.card}${isSelected ? ` ${styles.selected}` : ""}`
-                    : `${isSelected ? "programsOverviewCard selected" : "programsOverviewCard"}`}
-                  type="button"
-                  aria-pressed={isSelected}
-                  key={template.id}
-                  onClick={() => setAdminSelectedTemplateId(template.id)}
-                >
+              const programContent = (
+                <>
                   <div className={isNextWorkspace ? styles.cardTitle : "programsOverviewCardTitle"}>
                     <i><ProgramDumbbellIcon size={29} /></i>
                     <div>
                       <strong>{template.name || "Без названия"}</strong>
                       <p>{template.description || "Готовая тренировочная программа из библиотеки."}</p>
                     </div>
-                    {isSelected && (
-                      <span className={styles.selectedMark} aria-label="Выбрана" title="Выбрана">
-                        <ProgramCheckIcon size={15} aria-hidden="true" />
-                      </span>
-                    )}
                   </div>
                   <div className={isNextWorkspace ? styles.cardStats : "programsOverviewCardStats"}>
-                    <span><ProgramCalendarIcon size={16} /><b>{stats.weeksCount}</b><small>недель</small></span>
                     <span><ProgramDumbbellIcon size={16} /><b>{stats.workoutsCount}</b><small>тренировок</small></span>
-                    <span><ProgramCycleIcon size={16} /><b>{stats.blocksCount}</b><small>микроцикла</small></span>
                     <span><ProgramListIcon size={16} /><b>{stats.exercisesCount}</b><small>упражнений</small></span>
                   </div>
                   <footer>
@@ -215,8 +173,59 @@ export default function TrainerProgramOverviewPage({
                       : `programsOverviewStatusBadge status-${statusMeta.tone}`} title={statusMeta.description}>
                       {statusMeta.label}
                     </span>
+                    {isSelected && (
+                      <span className={styles.selectedMark} aria-label="Выбрана" title="Выбрана">
+                        <ProgramCheckIcon size={15} aria-hidden="true" />
+                      </span>
+                    )}
                   </footer>
-                </button>
+                </>
+              );
+
+              if (!isNextWorkspace) {
+                return (
+                  <button
+                    className={isSelected ? "programsOverviewCard selected" : "programsOverviewCard"}
+                    type="button"
+                    aria-pressed={isSelected}
+                    key={template.id}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setAdminSelectedTemplateId(isSelected ? "" : template.id);
+                    }}
+                  >
+                    {programContent}
+                  </button>
+                );
+              }
+
+              return (
+                <article
+                  className={`${styles.card}${isSelected ? ` ${styles.selected}` : ""}`}
+                  key={template.id}
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    className={styles.cardSelect}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setAdminSelectedTemplateId(isSelected ? "" : template.id)}
+                  >
+                    {programContent}
+                  </button>
+                  {isSelected && (
+                    <div className={styles.selectedActions} aria-label={`Действия с программой «${template.name || "Без названия"}»`}>
+                      <button type="button" onClick={() => openProgramFromLibrary(template.id)}>
+                        <ProgramEditIcon size={17} />
+                        Редактировать
+                      </button>
+                      <button className={styles.deleteAction} type="button" onClick={deleteSelectedProgramFromLibrary}>
+                        <ProgramTrashIcon size={17} />
+                        Удалить
+                      </button>
+                    </div>
+                  )}
+                </article>
               );
             })}
             {isNextWorkspace && (

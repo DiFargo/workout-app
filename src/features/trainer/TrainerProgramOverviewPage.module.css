@@ -45,54 +45,56 @@
   line-height: 1.45;
 }
 
-.headerActions {
-  display: grid;
-  grid-template-columns: repeat(3, max-content);
-  align-items: center;
-  gap: 10px;
-  flex: 0 0 auto;
-}
-
-.headerActions button {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 0 14px;
-  border: 1px solid #dfe3ec;
-  border-radius: 10px;
-  background: #fff;
-  color: #59637a;
-  font: inherit;
-  font-size: 10px;
-  font-weight: 750;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.headerActions button:hover:not(:disabled) {
-  border-color: #bcb0f4;
-  background: #f8f6ff;
-  color: #6040d8;
-}
-
-.headerActions button:disabled {
-  cursor: default;
-  opacity: 0.45;
-}
-
-.headerActions .deleteAction {
-  border-color: #f3caca;
-  color: #d94b53;
-}
-
 .grid {
   display: grid;
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(230px, 280px));
   align-items: stretch;
   gap: 18px;
+}
+
+.selectedActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px 18px 16px;
+  border-top: 1px solid #ded3fb;
+  background: #f1edff;
+}
+
+.selectedActions button {
+  min-width: 0;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid #d7cbed;
+  border-radius: 11px;
+  background: #f5f2f7;
+  color: #806bb6;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.selectedActions button:hover {
+  border-color: #b9a5df;
+  background: #efeaf9;
+}
+
+.selectedActions .deleteAction {
+  border-color: #eed4d7;
+  background: #fffafa;
+  color: #b86870;
+}
+
+.selectedActions .deleteAction:hover {
+  border-color: #dfaeb5;
+  background: #fff4f5;
 }
 
 .card,
@@ -108,13 +110,29 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 22px 18px 16px;
+  padding: 0;
   border: 1px solid #e1e4ed;
   background: #fff;
   color: #171922;
   text-align: left;
   box-shadow: 0 10px 24px rgba(44, 49, 66, 0.07);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.cardSelect {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: 22px 18px 16px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -168,10 +186,8 @@
   -webkit-line-clamp: 3;
 }
 
-.cardTitle > span {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+.selectedMark {
+  flex: 0 0 auto;
   width: 28px;
   height: 28px;
   display: grid;
@@ -187,7 +203,7 @@
   box-shadow: 0 3px 9px rgba(104, 68, 245, 0.24);
 }
 
-.cardTitle > span svg {
+.selectedMark svg {
   width: 15px;
   height: 15px;
   stroke-width: 3;
@@ -231,7 +247,7 @@
   font-size: 8px;
 }
 
-.card footer {
+.cardSelect footer {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -241,7 +257,7 @@
   background: #fafbfc;
 }
 
-.card footer > span:first-child {
+.cardSelect footer > span:first-child {
   display: none;
 }
 
@@ -513,7 +529,7 @@
 
 @media (max-width: 720px) {
   .root {
-    padding: var(--trainer-page-block, 12px) var(--trainer-page-gutter, 14px) calc(92px + env(safe-area-inset-bottom));
+    padding: var(--trainer-page-block, 12px) 0 calc(92px + env(safe-area-inset-bottom));
   }
 
   .section {
@@ -526,34 +542,29 @@
     margin-bottom: 16px;
   }
 
-  .headerActions {
-    width: 100%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
-  }
-
-  .headerActions button {
-    min-width: 0;
-    padding: 0 7px;
-    font-size: 8px;
-  }
-
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
 
   .card,
   .createCard {
-    min-height: 280px;
+    min-height: 0;
     border-radius: 14px;
   }
 
-  .card {
-    padding: 16px 13px 13px;
+  .cardSelect {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title status"
+      "stats stats";
+    gap: 12px;
+    padding: 14px;
   }
 
   .cardTitle {
+    grid-area: title;
     grid-template-columns: 40px minmax(0, 1fr);
     gap: 9px;
   }
@@ -568,18 +579,78 @@
   }
 
   .cardStats span {
-    min-height: 52px;
-    padding: 7px;
+    min-height: 46px;
+    grid-template-columns: 16px minmax(0, 1fr);
+    column-gap: 5px;
+    padding: 6px;
   }
 
-  .card footer {
-    margin: 12px -13px -13px;
-    padding: 10px 13px;
+  .cardSelect footer {
+    grid-area: status;
+    align-self: center;
+    justify-self: end;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .cardStats {
+    grid-area: stats;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cardStats svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .selectedActions {
+    gap: 7px;
+    padding: 8px 14px 14px;
+  }
+
+  .selectedActions button {
+    min-height: 38px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .statusBadge {
+    max-width: 106px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .createCard {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: center;
+    justify-content: start;
+    column-gap: 12px;
+    row-gap: 3px;
+    padding: 14px;
+    text-align: left;
   }
 
   .createCard i {
-    width: 62px;
-    height: 62px;
+    grid-row: 1 / -1;
+    width: 48px;
+    height: 48px;
+    box-shadow: none;
+  }
+
+  .createCard strong {
+    font-size: 16px;
+  }
+
+  .createCard span {
+    font-size: 10px;
   }
 
   .overlay {
@@ -593,16 +664,5 @@
     max-height: calc(100dvh - 24px);
     padding: 18px 14px;
     border-radius: 18px;
-  }
-}
-
-@media (max-width: 420px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card,
-  .createCard {
-    min-height: 260px;
   }
 }

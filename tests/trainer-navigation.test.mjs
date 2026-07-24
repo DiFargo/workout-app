@@ -20,14 +20,18 @@ test("exercise library navigation closes the program manager and selects the lib
   assert.match(libraryAction, /setPage\(APP_PAGES\.ADMIN_WORKOUTS\)/);
 });
 
-test("exercise library cards open the exercise editor without hijacking Add", async () => {
+test("exercise library cards open the editor and the Add control creates a new exercise", async () => {
   const source = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
   const styles = await readFile(new URL("../src/components/trainer/TrainerExerciseLibraryEditor.module.css", import.meta.url), "utf8");
 
   assert.match(source, /aria-label=\{`Редактировать упражнение/);
   assert.match(source, /setLibraryEditorTarget\(\{ workoutId: exercise\.sourceWorkoutId \|\| "", exerciseId: exercise\.id/);
   assert.match(source, /id="trainer-library-editor-title">Редактирование упражнения/);
-  assert.match(source, /event\.stopPropagation\(\); selectedWorkout && onAddExercise/);
+  assert.match(source, /onClick=\{\(\) => openLibraryEditor\(exercise\)\}/);
+  assert.match(source, /function createLibraryExercise\(\)/);
+  assert.match(source, /onAddExercise\?\.\(selectedWorkout\.id, \{ name: "Новое упражнение" \}\)/);
+  assert.match(source, /onClick=\{createLibraryExercise\}/);
+  assert.doesNotMatch(source, /event\.stopPropagation\(\); selectedWorkout && onAddExercise/);
   assert.match(source, /TrainerExerciseLibraryEditor\.module\.css/);
   assert.match(styles, /overflow-x: hidden/);
   assert.match(styles, /grid-template-columns: 1fr/);
@@ -45,12 +49,17 @@ test("program overview uses compact app-colored cards and ends with an Add progr
   assert.match(source, /label: "Используется"/);
   assert.match(source, /label: "Архив"/);
   assert.doesNotMatch(source, /<b>•••<\/b>/);
-  assert.match(source, /className=\{styles\.headerActions\}/);
-  assert.match(styles, /grid-template-columns: repeat\(3, max-content\)/);
+  assert.doesNotMatch(source, /className=\{styles\.headerActions\}/);
+  assert.doesNotMatch(source, /ProgramRefreshIcon/);
+  assert.match(source, /className=\{styles\.cardSelect\}/);
+  assert.match(source, /className=\{styles\.selectedActions\}/);
+  assert.match(styles, /\.selectedActions \{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(source, /styles\.statusUsed/);
   assert.match(styles, /\.statusUsed/);
   assert.match(source, /<strong>Добавить программу<\/strong>/);
   assert.match(styles, /grid-template-columns: repeat\(auto-fill, minmax\(230px, 280px\)\)/);
+  assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*?\.grid \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-areas:\s*"title status"\s*"stats stats"/);
   assert.match(styles, /background: #fff/);
   assert.match(styles, /background: #f8f6ff/);
   assert.doesNotMatch(styles, /!important/);
@@ -122,6 +131,33 @@ test("trainer day editor keeps all exercise controls within the mobile sheet", a
   assert.match(styles, /:global\(\.trainerNextRoot\):has\(\.dayEditorModal\) :global\(\.trainerNextMobileNav\) \{ display: none; \}/);
 });
 
+test("trainer program editor keeps mobile back and save actions reachable", async () => {
+  const constructor = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.jsx", import.meta.url), "utf8");
+  const route = await readFile(new URL("../src/features/trainer/TrainerAdminWorkoutsRoute.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.module.css", import.meta.url), "utf8");
+
+  assert.match(route, /adminProgramLibraryTab === "editor" \?[\s\S]*?onClick=\{handleMonthProgramBack\}/);
+  assert.doesNotMatch(constructor, /programBackButton/);
+  assert.match(constructor, /className=\{styles\.deleteButton\}[\s\S]*?onClick=\{onDeleteProgram\}/);
+  assert.match(constructor, /className=\{styles\.saveButton\}[\s\S]*?onClick=\{\(\) => onSaveProgram\(\)\}/);
+  assert.match(styles, /\.programActions \{[\s\S]*?position: fixed;[\s\S]*?bottom: calc\(max\(8px, env\(safe-area-inset-bottom\)\) \+ 84px\)/);
+  assert.doesNotMatch(styles, /!important/);
+});
+
+test("trainer program editor does not render the library switcher", async () => {
+  const source = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
+  const harness = await readFile(new URL("../src/components/trainer/TrainerE2EHarness.jsx", import.meta.url), "utf8");
+  const route = await readFile(new URL("../src/features/trainer/TrainerAdminWorkoutsRoute.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceCalm.module.css", import.meta.url), "utf8");
+
+  assert.match(source, /!embedded && tab !== "plan" \? <div className="trainerNextPageTabs">/);
+  assert.match(harness, /programLibraryTab !== "editor" \? <div className="trainerNextPageTabs">/);
+  assert.match(route, /adminProgramLibraryTab !== "editor" \? \([\s\S]*?<div className="trainerNextPageTabs">/);
+  assert.match(route, /className="isActive"[\s\S]*?aria-current="page"/);
+  assert.match(styles, /trainerNextProgramsTab > \.trainerNextPageTabs\) \{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.doesNotMatch(styles, /!important/);
+});
+
 test("new program exercises start with one editable set", async () => {
   const source = await readFile(new URL("../src/features/trainer/trainerMonthExerciseHandlers.js", import.meta.url), "utf8");
   const addExercise = source.match(/function addMonthExercise\([\s\S]*?\n  \}/)?.[0] || "";
@@ -137,10 +173,22 @@ test("trainer workspace does not overlay the brand with the legacy fixed back bu
   assert.match(source, /className="adminFixedMainBack"/);
 });
 
-test("trainer constructor Back returns directly to the programs overview", async () => {
-  const source = await readFile(new URL("../src/features/trainer/TrainerProgramManagerView.jsx", import.meta.url), "utf8");
+test("mobile client invite action sits beside the client search", async () => {
+  const source = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceCalm.module.css", import.meta.url), "utf8");
+  const clientsPage = source.match(/function TrainerClientsPage\([\s\S]*?\n}\n\nfunction getWorkoutTitle/)?.[0] || "";
 
-  assert.match(source, /<TrainerProgramConstructor[\s\S]*?onBack=\{openAdminProgramsOverview\}/);
+  assert.match(clientsPage, /className="trainerNextClientSearchRow"/);
+  assert.match(clientsPage, /className="trainerNextClientSearchAdd"[\s\S]*?onClick=\{onCreateClient\}/);
+  assert.doesNotMatch(clientsPage, /trainerNextMobileAddClient/);
+  assert.match(styles, /trainerNextClientSearchRow\) \{[\s\S]*?gap: 8px/);
+  assert.match(styles, /trainerNextClientSearchAdd\) \{[\s\S]*?min-width: 132px/);
+});
+
+test("trainer editor Back returns directly to the programs overview", async () => {
+  const source = await readFile(new URL("../src/features/trainer/TrainerAdminWorkoutsRoute.jsx", import.meta.url), "utf8");
+
+  assert.match(source, /onClick=\{handleMonthProgramBack\}/);
 });
 
 test("trainer constructor omits the noisy set field chooser", async () => {
@@ -235,18 +283,18 @@ test("client card exposes compact Messages without the trainer note card", async
   assert.match(clientTabs, /\{ id: "messages", label: "Сообщения" \}/);
   assert.doesNotMatch(clientTabs, /label: "Заметки"/);
   assert.match(workspace, /\["messages", "notes"\]\.includes\(activeTab\)/);
-  assert.match(messagesView, /id="trainer-client-messages-title">Сообщения клиента/);
+  assert.match(messagesView, /id="trainer-client-messages-title">Сообщения/);
   assert.match(messagesView, /aria-label="Фильтры сообщений клиента"/);
   assert.match(messagesView, /Ждут ответа/);
   assert.match(messagesView, /Обработаны/);
   assert.match(messagesView, /onReplyToMessage\(item\)/);
-  assert.match(messagesView, /Отметить все обработанными/);
+  assert.match(messagesView, /Обработать все/);
   assert.doesNotMatch(messagesView, /Задания клиенту|tasksPanel/);
   assert.match(overviewView, /<TrainerClientTasks tasks=\{tasks\} \/>/);
   assert.doesNotMatch(overviewView, /trainerNextRecommendation/);
   assert.match(tasksComponent, /Задания клиенту/);
   assert.doesNotMatch(messagesView, /trainerNextNoteCard|StickyNote|\bnote\b/);
-  assert.match(styles, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /grid-template-columns: 34px minmax\(0, 1fr\)/);
   assert.match(styles, /\.replyPrimary/);
   assert.doesNotMatch(styles, /\.tasksPanel/);
   assert.match(tasksStyles, /grid-column: 1 \/ -1/);

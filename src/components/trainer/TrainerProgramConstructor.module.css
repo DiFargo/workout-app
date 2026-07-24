@@ -279,7 +279,7 @@
 }
 
 @media (max-width: 900px) {
-  .programBar { grid-template-columns: 44px 1fr; }
+  .programBar { grid-template-columns: 44px minmax(0, 1fr); }
   .programActions { grid-column: 1 / -1; overflow-x: auto; }
   .editorGrid { grid-template-columns: 1fr; }
   .daysPanel { min-height: 0; }
@@ -290,9 +290,26 @@
 }
 
 @media (max-width: 620px) {
-  .constructor { gap: 10px; }
-  .programBar { padding: 12px; border-radius: 12px; }
-  .programActions button { flex: 0 0 auto; }
+  .constructor { gap: 10px; padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+  .programBar { min-height: 70px; padding: 12px; border-radius: 12px; }
+  .programActions {
+    position: fixed;
+    z-index: 999;
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 84px);
+    display: grid;
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    gap: 8px;
+    overflow: visible;
+    padding: 8px;
+    border: 1px solid #EFEBF3;
+    border-radius: 18px;
+    background: #FFFFFF;
+    box-shadow: 0 12px 30px rgba(40, 38, 46, .12);
+  }
+  .programActions button { width: 100%; min-height: 46px; padding: 0 12px; border-radius: 12px; }
+  .programActions .saveButton { min-width: 0; }
   .editorGrid { gap: 10px; }
   .daysList { grid-template-columns: 1fr; }
   .editorGridPicker .daysList { grid-template-columns: 1fr; }

@@ -11,7 +11,10 @@ import {
 } from "./trainerWorkoutEditHelpers";
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
-import { patchExerciseInTrainerTemplate } from "../../utils/trainerExerciseLibrary.js";
+import {
+  patchExerciseInTrainerTemplate,
+  removeExerciseFromTrainerTemplate
+} from "../../utils/trainerExerciseLibrary.js";
 
 const DEFAULT_EXERCISE_NAME = "\u041d\u043e\u0432\u043e\u0435 \u0443\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
 const DEFAULT_DAY_NAME = "\u0414\u0435\u043d\u044c";
@@ -37,6 +40,32 @@ function createTrainerNextPlan(plan, workouts) {
     ...(plan || {}),
     workouts
   };
+}
+
+function getTemplateWorkouts(template = {}) {
+  const blocks = Array.isArray(template.blocks)
+    ? template.blocks
+    : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);
+
+  return [
+    ...(template.workouts || []),
+    ...blocks.flatMap((block) => (block.weeks || []).flatMap((week) => week.workouts || []))
+  ];
+}
+
+function appendExerciseToTrainerTemplate(value, workoutId, exercise) {
+  if (Array.isArray(value)) {
+    return value.map((item) => appendExerciseToTrainerTemplate(item, workoutId, exercise));
+  }
+  if (!value || typeof value !== "object") return value;
+
+  const current = value.id === workoutId && Array.isArray(value.exercises)
+    ? { ...value, exercises: [...value.exercises, exercise] }
+    : value;
+
+  return Object.fromEntries(
+    Object.entries(current).map(([key, item]) => [key, appendExerciseToTrainerTemplate(item, workoutId, exercise)])
+  );
 }
 
 export function createTrainerPlanEditorHandlers({
@@ -157,24 +186,97 @@ export function createTrainerPlanEditorHandlers({
 
   async function updateTrainerLibraryExercise(exercise, patch) {
     const source = exercise?.librarySource;
-    if (!source || !exercise?.id || !patch || typeof patch !== "object") return;
+    if (!source || !exercise?.id || !patch || typeof patch !== "object") return false;
 
     if (source.type === "plan" && source.workoutId) {
       updateTrainerNextExercise(source.workoutId, exercise.id, patch);
-      return;
+      return true;
     }
 
-    if (source.type !== "template" || !source.templateId) return;
+    if (source.type !== "template" || !source.templateId) return false;
     const template = (adminTrainingTemplates || []).find((item) => item.id === source.templateId);
-    if (!template) return;
+    if (!template) return false;
 
     const nextTemplate = patchExerciseInTrainerTemplate(template, exercise.id, patch);
     setAdminTrainingTemplates((current) => current.map((item) => item.id === source.templateId ? nextTemplate : item));
     try {
       await setDoc(doc(db, "trainingTemplates", source.templateId), nextTemplate, { merge: true });
+      return true;
     } catch (error) {
       console.error("Trainer library exercise save error:", error);
       setAdminClientStatus("Не удалось сохранить упражнение в библиотеке.");
+      return false;
+    }
+  }
+
+  async function removeTrainerLibraryExercise(exercise) {
+    const source = exercise?.librarySource;
+    if (!source || !exercise?.id) return false;
+
+    if (source.type === "plan" && source.workoutId) {
+      removeTrainerNextExercise(source.workoutId, exercise.id);
+      return true;
+    }
+
+    if (source.type !== "template" || !source.templateId) return false;
+    const template = (adminTrainingTemplates || []).find((item) => item.id === source.templateId);
+    if (!template) return false;
+
+    const nextTemplate = removeExerciseFromTrainerTemplate(template, exercise.id);
+    setAdminTrainingTemplates((current) => current.map((item) => item.id === source.templateId ? nextTemplate : item));
+    try {
+      await setDoc(doc(db, "trainingTemplates", source.templateId), nextTemplate, { merge: true });
+      return true;
+    } catch (error) {
+      console.error("Trainer library exercise delete error:", error);
+      setAdminClientStatus("Не удалось удалить упражнение из библиотеки.");
+      return false;
+    }
+  }
+
+  async function createTrainerLibraryExercise(templateId = "", patch = {}) {
+    const template = (adminTrainingTemplates || []).find((item) => item.id === templateId)
+      || (adminTrainingTemplates || [])[0];
+    if (!template?.id) return false;
+
+    const name = String(patch?.name || DEFAULT_EXERCISE_NAME).trim() || DEFAULT_EXERCISE_NAME;
+    const exercise = {
+      id: `exercise_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      name,
+      muscleGroup: "",
+      rest: "90 сек",
+      requiresWeight: true,
+      usesWeight: true,
+      sets: [createEmptySet(getDefaultExerciseReps(name))],
+      ...patch
+    };
+    const targetWorkout = getTemplateWorkouts(template)[0];
+    const nextTemplate = targetWorkout?.id
+      ? appendExerciseToTrainerTemplate(template, targetWorkout.id, exercise)
+      : {
+        ...template,
+        workouts: [
+          ...(template.workouts || []),
+          {
+            id: `workout_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            name: `${DEFAULT_WORKOUT_NAME} 1`,
+            status: "planned",
+            exercises: [exercise]
+          }
+        ]
+      };
+
+    setAdminTrainingTemplates((current) => current.map((item) => item.id === template.id ? nextTemplate : item));
+    try {
+      await setDoc(doc(db, "trainingTemplates", template.id), nextTemplate, { merge: true });
+      return {
+        ...exercise,
+        librarySource: { type: "template", templateId: template.id }
+      };
+    } catch (error) {
+      console.error("Trainer library exercise create error:", error);
+      setAdminClientStatus("Не удалось создать упражнение в библиотеке.");
+      return false;
     }
   }
 
@@ -290,6 +392,7 @@ export function createTrainerPlanEditorHandlers({
     ]);
 
     persistPlan(createTrainerNextPlan(plan, nextWorkouts));
+    return newExercise;
   }
 
   function removeTrainerNextExercise(...args) {
@@ -368,14 +471,14 @@ export function createTrainerPlanEditorHandlers({
     const exerciseId = getTrainerNextExerciseId(args, constructorMode);
     const file = getTrainerNextPatch(args, constructorMode);
 
-    if (!workoutId || !exerciseId || !file) return;
+    if (!workoutId || !exerciseId || !file) return false;
 
     setAdminExerciseVideoUploadingId(exerciseId);
     try {
       const owner = selectedUserId || auth.currentUser?.uid;
       if (!owner) {
         setAdminClientStatus("\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u043d\u0435 \u0432\u044b\u0431\u0440\u0430\u043d.");
-        return;
+        return false;
       }
 
       const safeName = String(file.name || "exercise-video").replace(/[^\w\u0430-\u044f\u0410-\u042f\u0451\u0401.-]+/g, "_");
@@ -393,9 +496,46 @@ export function createTrainerPlanEditorHandlers({
       setPlan(nextPlan);
       await saveWorkoutsToFirebase(nextPlan, { silent: true });
       setAdminClientStatus("\u0412\u0438\u0434\u0435\u043e \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d\u043e \u0438 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e.");
+      return url;
     } catch (error) {
       console.error("Trainer exercise video upload error:", error);
       setAdminClientStatus("\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0432\u0438\u0434\u0435\u043e.");
+      return false;
+    } finally {
+      setAdminExerciseVideoUploadingId("");
+    }
+  }
+
+  async function uploadTrainerLibraryExerciseVideo(exercise, file) {
+    const source = exercise?.librarySource;
+    if (!source || !exercise?.id || !file) return false;
+
+    if (source.type === "plan" && source.workoutId) {
+      return uploadTrainerNextExerciseVideo(source.workoutId, exercise.id, file);
+    }
+
+    if (source.type !== "template" || !source.templateId) return false;
+    const owner = auth.currentUser?.uid || selectedUserId;
+    if (!owner) {
+      setAdminClientStatus("\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u043d\u0435 \u0432\u044b\u0431\u0440\u0430\u043d.");
+      return false;
+    }
+
+    setAdminExerciseVideoUploadingId(exercise.id);
+    try {
+      const safeName = String(file.name || "exercise-video").replace(/[^\w\u0430-\u044f\u0410-\u042f\u0451\u0401.-]+/g, "_");
+      const uploadedVideo = await uploadStorageFile(
+        `template-exercise-videos/${owner}/${source.templateId}/${Date.now()}-${safeName}`,
+        file
+      );
+      const url = uploadedVideo.url;
+      const saved = await updateTrainerLibraryExercise(exercise, { video: url, videoAutoFilledFrom: "" });
+      if (saved) setAdminClientStatus("\u0412\u0438\u0434\u0435\u043e \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d\u043e \u0438 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e.");
+      return saved ? url : false;
+    } catch (error) {
+      console.error("Trainer library exercise video upload error:", error);
+      setAdminClientStatus("\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0432\u0438\u0434\u0435\u043e.");
+      return false;
     } finally {
       setAdminExerciseVideoUploadingId("");
     }
@@ -465,6 +605,8 @@ export function createTrainerPlanEditorHandlers({
     updateTrainerNextExercise,
     saveTrainerExerciseProgressAdjustment,
     updateTrainerLibraryExercise,
+    removeTrainerLibraryExercise,
+    createTrainerLibraryExercise,
     updateTrainerNextExerciseSet,
     addTrainerNextExerciseSet,
     removeTrainerNextExerciseSet,
@@ -473,6 +615,7 @@ export function createTrainerPlanEditorHandlers({
     duplicateTrainerNextExercise,
     moveTrainerNextExercise,
     uploadTrainerNextExerciseVideo,
+    uploadTrainerLibraryExerciseVideo,
     addTrainerNextWorkoutDay,
     duplicateTrainerNextWorkoutDay,
     removeTrainerNextWorkoutDay

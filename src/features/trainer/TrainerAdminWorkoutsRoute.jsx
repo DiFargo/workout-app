@@ -1,4 +1,5 @@
 import { TrainerShell } from "../../components/trainer/TrainerWorkspace";
+import { ChevronLeft } from "lucide-react";
 import {
   createFourWeekWorkoutProgramBlocks
 } from "../../utils/auditSafety";
@@ -456,12 +457,30 @@ export default function TrainerAdminWorkoutsRoute({
             </div>
           </div>
           <header className="trainerNextMobileHeader">
+            {adminProgramLibraryTab === "editor" ? (
+              <button type="button" onClick={handleMonthProgramBack} aria-label="Назад к программам">
+                <ChevronLeft size={22} />
+              </button>
+            ) : <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />}
             <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
+            <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
           </header>
-          <div className="trainerNextPageTabs">
-            <button type="button" className="active" aria-pressed="true">Программы</button>
-            <button type="button" onClick={openTrainerExerciseLibrary}>Библиотека упражнений</button>
-          </div>
+          {adminProgramLibraryTab !== "editor" ? (
+            <div className="trainerNextPageTabs">
+              <button
+                type="button"
+                className="isActive"
+                aria-current="page"
+                aria-pressed="true"
+                onClick={openAdminProgramsOverview}
+              >
+                Программы
+              </button>
+              <button type="button" aria-pressed="false" onClick={openTrainerExerciseLibrary}>
+                Библиотека упражнений
+              </button>
+            </div>
+          ) : null}
           {programManagerView}
         </div>
       </TrainerShell>

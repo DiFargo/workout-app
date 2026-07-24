@@ -47,7 +47,6 @@ export default function TrainerProgramManagerView({
   importMonthProgramFromFile,
   importMonthProgramWithAi,
   isTrainerNextWorkspace,
-  loadAdminTrainingTemplates,
   loadHistory,
   monthBlocks,
   monthGroups,
@@ -119,7 +118,6 @@ export default function TrainerProgramManagerView({
           getTemplateStats={getTemplateStats}
           importMonthProgramWithAi={importMonthProgramWithAi}
           isTrainerNextWorkspace={isTrainerNextWorkspace}
-          loadAdminTrainingTemplates={loadAdminTrainingTemplates}
           onGoAdmin={() => setPage(APP_PAGES.ADMIN)}
           openProgramFromLibrary={openProgramFromLibrary}
           setAdminProgramCreateChoiceOpen={setAdminProgramCreateChoiceOpen}
@@ -141,7 +139,6 @@ export default function TrainerProgramManagerView({
           onProgramNameChange={updateMonthProgramName}
           onSaveProgram={saveMonthProgramToLibrary}
           onDeleteProgram={deleteSelectedProgramFromLibrary}
-          onBack={openAdminProgramsOverview}
           onAddMonth={addProgramMonth}
           onUpdateMonth={updateProgramMonth}
           onDeleteMonth={removeProgramMonth}

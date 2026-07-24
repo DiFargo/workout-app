@@ -147,6 +147,9 @@ export default function TrainerClientsWorkspaceRoute({
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}
       onSaveExerciseProgressAdjustment={trainerNextWorkspaceHandlers.onSaveExerciseProgressAdjustment}
+      onUpdateLibraryExercise={trainerNextWorkspaceHandlers.onUpdateLibraryExercise}
+      onRemoveLibraryExercise={trainerNextWorkspaceHandlers.onRemoveLibraryExercise}
+      onCreateLibraryExercise={trainerNextWorkspaceHandlers.onCreateLibraryExercise}
       onUpdateExerciseSet={trainerNextWorkspaceHandlers.onUpdateExerciseSet}
       onAddExerciseSet={trainerNextWorkspaceHandlers.onAddExerciseSet}
       onRemoveExerciseSet={trainerNextWorkspaceHandlers.onRemoveExerciseSet}
@@ -155,6 +158,7 @@ export default function TrainerClientsWorkspaceRoute({
       onDuplicateExercise={trainerNextWorkspaceHandlers.onDuplicateExercise}
       onMoveExercise={trainerNextWorkspaceHandlers.onMoveExercise}
       onUploadExerciseVideo={trainerNextWorkspaceHandlers.onUploadExerciseVideo}
+      onUploadLibraryExerciseVideo={trainerNextWorkspaceHandlers.onUploadLibraryExerciseVideo}
       exerciseVideoUploadingId={adminExerciseVideoUploadingId}
       onAddDay={trainerNextWorkspaceHandlers.onAddDay}
       onDuplicateDay={trainerNextWorkspaceHandlers.onDuplicateDay}

@@ -68,3 +68,20 @@ export function patchExerciseInTrainerTemplate(value, exerciseId, patch) {
     Object.entries(current).map(([key, item]) => [key, patchExerciseInTrainerTemplate(item, exerciseId, patch)])
   );
 }
+
+export function removeExerciseFromTrainerTemplate(value, exerciseId) {
+  if (Array.isArray(value)) {
+    return value
+      .filter((item) => !(item && typeof item === "object" && item.id === exerciseId && (
+        Array.isArray(item.sets)
+        || "requiresWeight" in item
+        || "usesWeight" in item
+      )))
+      .map((item) => removeExerciseFromTrainerTemplate(item, exerciseId));
+  }
+  if (!value || typeof value !== "object") return value;
+
+  return Object.fromEntries(
+    Object.entries(value).map(([key, item]) => [key, removeExerciseFromTrainerTemplate(item, exerciseId)])
+  );
+}

@@ -148,6 +148,52 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     { id: "recomp", name: "Рекомпозиция", calories: 2300, protein: 180, fat: 70, carbs: 235 }
   ];
 
+  function addHarnessExercise(workoutId, patch = {}) {
+    const exercise = {
+      id: `e2e_exercise_${Date.now()}`,
+      name: "Новое упражнение",
+      muscleGroup: "",
+      rest: "90 сек",
+      requiresWeight: true,
+      usesWeight: true,
+      sets: [{ reps: "", weight: "" }],
+      ...patch
+    };
+
+    setWorkouts((current) => current.map((workout) => workout.id === workoutId
+      ? { ...workout, exercises: [...(workout.exercises || []), exercise] }
+      : workout));
+
+    return exercise;
+  }
+
+  function updateHarnessLibraryExercise(sourceExercise, patch) {
+    const workoutId = sourceExercise?.librarySource?.workoutId || sourceExercise?.sourceWorkoutId;
+    if (!workoutId || !sourceExercise?.id) return false;
+
+    setWorkouts((current) => current.map((workout) => workout.id === workoutId
+      ? {
+          ...workout,
+          exercises: (workout.exercises || []).map((exercise) => exercise.id === sourceExercise.id
+            ? { ...exercise, ...patch }
+            : exercise)
+        }
+      : workout));
+
+    return true;
+  }
+
+  function removeHarnessLibraryExercise(sourceExercise) {
+    const workoutId = sourceExercise?.librarySource?.workoutId || sourceExercise?.sourceWorkoutId;
+    if (!workoutId || !sourceExercise?.id) return false;
+
+    setWorkouts((current) => current.map((workout) => workout.id === workoutId
+      ? { ...workout, exercises: (workout.exercises || []).filter((exercise) => exercise.id !== sourceExercise.id) }
+      : workout));
+
+    return true;
+  }
+
   function navigate(nextSection) {
     if (nextSection === "more") {
       setMode("cabinet");
@@ -184,10 +230,10 @@ function TrainerE2EHarness({ ProgramManagerView }) {
           <header className="trainerNextMobileHeader">
             <div className="trainerNextMobileTitle">{programLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
           </header>
-          <div className="trainerNextPageTabs">
+          {programLibraryTab !== "editor" ? <div className="trainerNextPageTabs">
             <button type="button" className="active" aria-pressed="true">Программы</button>
             <button type="button">Библиотека упражнений</button>
-          </div>
+          </div> : null}
           <ProgramManagerView
             APP_PAGES={{ ADMIN: "admin" }}
             adminExerciseLibrary={workouts.flatMap((workout) => workout.exercises)}
@@ -420,7 +466,9 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       onUpdateExerciseSet={() => {}}
       onAddExerciseSet={() => {}}
       onRemoveExerciseSet={() => {}}
-      onAddExercise={() => {}}
+      onAddExercise={addHarnessExercise}
+      onUpdateLibraryExercise={updateHarnessLibraryExercise}
+      onRemoveLibraryExercise={removeHarnessLibraryExercise}
       onRemoveExercise={() => {}}
       onDuplicateExercise={() => {}}
       onMoveExercise={() => {}}

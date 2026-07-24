@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import {
-  ArrowLeft,
   CalendarDays,
   ChevronDown,
   ChevronUp,
@@ -65,7 +64,6 @@ export default function TrainerProgramConstructor({
   onProgramNameChange,
   onSaveProgram,
   onDeleteProgram,
-  onBack,
   onAddWorkout,
   onUpdateWorkout,
   onDeleteWorkout,
@@ -290,7 +288,6 @@ export default function TrainerProgramConstructor({
           </span>
         </label>
         <div className={styles.programActions}>
-          <button type="button" onClick={onBack}><ArrowLeft size={17} />Назад</button>
           <button className={styles.deleteButton} type="button" onClick={onDeleteProgram}><Trash2 size={17} />Удалить</button>
           <button className={styles.saveButton} type="button" onClick={() => onSaveProgram()}><Save size={17} />Сохранить</button>
         </div>
