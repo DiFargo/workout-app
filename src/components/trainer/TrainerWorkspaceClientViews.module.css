@@ -1,0 +1,195 @@
+/* The base trainer rules above are shared with legacy pages. Keep client tabs explicit. */
+:global(.trainerNextRoot) :global(.trainerNextClientHeader) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientOverview) {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientSide) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTabs) {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTabs button.active),
+:global(.trainerNextRoot) :global(.trainerNextClientTabs button[aria-pressed="true"]) {
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPhotoGrid) {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (max-width: 760px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    flex-direction: unset;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTaskButton) {
+    min-height: 40px;
+    max-width: 96px;
+    gap: 5px;
+    padding: 0 9px;
+    font-size: 10px;
+    text-align: center;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTaskButton span) {
+    max-width: 54px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientSide) {
+    grid-template-columns: 1fr;
+  }
+}
+:global(.trainerNextRoot) :global(.trainerClientModalBackdrop) {
+  position: fixed;
+  z-index: 400;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(40, 38, 46, 0.34);
+  backdrop-filter: blur(9px);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet) {
+  width: min(100%, 480px);
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 24px;
+  background: var(--tn-surface);
+  box-shadow: 0 24px 60px rgba(40, 38, 46, 0.22);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 19px 20px 14px;
+  border-bottom: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet header span) {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet h2) {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > header button) {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: var(--tn-text);
+  background: var(--tn-surface-soft);
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > div) {
+  display: grid;
+  gap: 9px;
+  padding: 15px 20px 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > div button) {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  min-height: 54px;
+  align-items: center;
+  gap: 11px;
+  padding: 8px 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 15px;
+  color: var(--tn-text);
+  background: var(--tn-surface-soft);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > div button:hover) {
+  border-color: #d9cdec;
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > div button span) {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-surface);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > div button b) {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientActionSheet > div button.danger) {
+  border-color: #f1d9dc;
+  color: var(--tn-red);
+  background: #fff8f8;
+}
+
+@media (max-width: 560px) {
+  :global(.trainerNextRoot) :global(.trainerClientModalBackdrop) {
+    align-items: end;
+    padding: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientActionSheet) {
+    width: 100%;
+    border-radius: 25px 25px 0 0;
+  }
+}

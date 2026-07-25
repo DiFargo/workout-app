@@ -290,9 +290,9 @@
   box-shadow: var(--focus-ring);
 }
 
-:global(:root[data-app-theme="dark-green"]) .amountCard,
-:global(:root[data-app-theme="dark-green"]) .macroCard,
-:global(:root[data-app-theme="dark-green"]) .noteCard {
+:global(:root[data-app-theme="legacy-inactive"]) .amountCard,
+:global(:root[data-app-theme="legacy-inactive"]) .macroCard,
+:global(:root[data-app-theme="legacy-inactive"]) .noteCard {
   border-color: var(--color-control-border);
   background: var(--color-surface);
   color: var(--color-text);
@@ -300,22 +300,22 @@
   box-shadow: var(--shadow-card);
 }
 
-:global(:root[data-app-theme="dark-green"]) .inputWrap {
+:global(:root[data-app-theme="legacy-inactive"]) .inputWrap {
   border-color: var(--color-control-border);
   background: var(--color-control-surface);
 }
 
-:global(:root[data-app-theme="dark-green"]) .input,
-:global(:root[data-app-theme="dark-green"]) .inputWrap em,
-:global(:root[data-app-theme="dark-green"]) .macroCard strong,
-:global(:root[data-app-theme="dark-green"]) .noteButton,
-:global(:root[data-app-theme="dark-green"]) .noteValue {
+:global(:root[data-app-theme="legacy-inactive"]) .input,
+:global(:root[data-app-theme="legacy-inactive"]) .inputWrap em,
+:global(:root[data-app-theme="legacy-inactive"]) .macroCard strong,
+:global(:root[data-app-theme="legacy-inactive"]) .noteButton,
+:global(:root[data-app-theme="legacy-inactive"]) .noteValue {
   color: var(--color-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .amountLabel,
-:global(:root[data-app-theme="dark-green"]) .macroCard span,
-:global(:root[data-app-theme="dark-green"]) .muted .noteValue {
+:global(:root[data-app-theme="legacy-inactive"]) .amountLabel,
+:global(:root[data-app-theme="legacy-inactive"]) .macroCard span,
+:global(:root[data-app-theme="legacy-inactive"]) .muted .noteValue {
   color: var(--color-text-muted);
 }
 
@@ -330,8 +330,8 @@
   -webkit-text-fill-color: currentColor;
 }
 
-:global(:root[data-app-theme="dark-green"]) .macroCard small,
-:global(:root[data-app-theme="dark-green"]) .chevron {
+:global(:root[data-app-theme="legacy-inactive"]) .macroCard small,
+:global(:root[data-app-theme="legacy-inactive"]) .chevron {
   color: rgba(244, 247, 241, 0.7);
   -webkit-text-fill-color: currentColor;
 }
@@ -363,7 +363,7 @@
   min-height: 76px;
   margin-bottom: 12px;
   padding: 12px 14px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 20px;
   background: #fff;
   color: #28262e;
@@ -371,15 +371,15 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .amountLabel { color: #7b7682; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .inputWrap { border: 1px solid #ebe6ef; border-radius: 13px; background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .inputWrap { border: 1px solid #efebf3; border-radius: 13px; background: #f5f2f7; }
 :global(:root[data-app-theme="warm-light"]) .input { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .inputWrap em { color: #7b7682; }
-:global(:root[data-app-theme="warm-light"]) .stepButton { border: 0; border-radius: 13px; background: #f0ebfa; color: #8f7ac8; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .stepButton { border: 0; border-radius: 13px; background: #f5f2f7; color: #8f7ac8; font-weight: 500; }
 
 :global(:root[data-app-theme="warm-light"]) .macros { margin-bottom: 12px; gap: 6px; }
 :global(:root[data-app-theme="warm-light"]) .macroCard {
   min-height: 74px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
   color: #28262e;
@@ -390,10 +390,10 @@
 :global(:root[data-app-theme="warm-light"]) .macroCard small { color: #7b7682; font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .macroCard strong { color: #28262e; font-weight: 700; }
 
-:global(:root[data-app-theme="warm-light"]) .noteCard { border: 1px solid #ebe6ef; border-radius: 18px; background: #fff; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .noteCard { border: 1px solid #efebf3; border-radius: 18px; background: #fff; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .noteButton { min-height: 62px; color: #28262e; }
-:global(:root[data-app-theme="warm-light"]) .noteIcon { width: 34px; height: 34px; border-radius: 11px; background: #f0ebfa; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .noteIcon { width: 34px; height: 34px; border-radius: 11px; background: #f5f2f7; color: #8f7ac8; }
 :global(:root[data-app-theme="warm-light"]) .noteLabel { color: #7b7682; font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .noteValue { color: #28262e; font-size: 14px; font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .chevron { color: #a9aeb2; }
+:global(:root[data-app-theme="warm-light"]) .chevron { color: #7b7682; }
 :global(:root[data-app-theme="warm-light"]) .error { color: #b36e72; }

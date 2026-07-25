@@ -79,7 +79,7 @@
   min-height: 44px;
   color: #8f7ac8;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
   font-size: 17px;
@@ -92,7 +92,7 @@
   gap: 0;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 22px;
   box-shadow: none;
 }
@@ -106,7 +106,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .stats.stats > div + div {
-  border-left: 1px solid #ebe6ef;
+  border-left: 1px solid #efebf3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .stats.stats strong {
@@ -125,7 +125,7 @@
   margin: 0 0 10px;
   padding: 13px 15px;
   color: #28262e;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border: 0;
   border-radius: 18px;
   box-shadow: none;
@@ -165,13 +165,13 @@
   color: #28262e;
   background: #ffffff;
   background-image: none;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 22px;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .card.open .cardInner.cardInner {
-  border-color: #cfd6da;
+  border-color: #efebf3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardTop.cardTop {
@@ -204,7 +204,7 @@
   min-height: 40px;
   margin-right: 10px;
   color: #8f7ac8;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border: 0;
   border-radius: 14px;
   font-size: 15px;
@@ -217,7 +217,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .meta.meta span {
   color: #7b7682;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border: 0;
   border-radius: 11px;
   font-size: 9px;
@@ -227,13 +227,13 @@
 :global(:root[data-app-theme="warm-light"]) .body.body {
   padding: 0 12px 12px;
   gap: 7px;
-  border-top-color: #ebe6ef;
+  border-top-color: #efebf3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .exercise.exercise {
   padding: 11px 12px;
   color: #28262e;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border: 0;
   border-radius: 15px;
 }
@@ -264,7 +264,7 @@
   padding: 28px 22px;
   color: #7b7682;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 24px;
   box-shadow: none;
 }

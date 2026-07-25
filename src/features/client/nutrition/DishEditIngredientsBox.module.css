@@ -192,29 +192,29 @@
   box-shadow: var(--focus-ring);
 }
 
-:global(:root[data-app-theme="dark-green"]) .root {
+:global(:root[data-app-theme="legacy-inactive"]) .root {
   border-color: var(--color-control-border);
   background: var(--color-surface);
   color: var(--color-text);
   box-shadow: var(--shadow-card);
 }
 
-:global(:root[data-app-theme="dark-green"]) .heading strong,
-:global(:root[data-app-theme="dark-green"]) .name,
-:global(:root[data-app-theme="dark-green"]) .nutrition {
+:global(:root[data-app-theme="legacy-inactive"]) .heading strong,
+:global(:root[data-app-theme="legacy-inactive"]) .name,
+:global(:root[data-app-theme="legacy-inactive"]) .nutrition {
   color: var(--color-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .row {
+:global(:root[data-app-theme="legacy-inactive"]) .row {
   border-color: var(--color-control-border);
   background: var(--color-control-surface);
 }
 
-:global(:root[data-app-theme="dark-green"]) .empty {
+:global(:root[data-app-theme="legacy-inactive"]) .empty {
   color: var(--color-food-edit-page-empty-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .icon {
+:global(:root[data-app-theme="legacy-inactive"]) .icon {
   background: var(--color-surface-muted);
 }
 
@@ -263,7 +263,7 @@
 :global(:root[data-app-theme="warm-light"]) .root {
   margin-bottom: 10px;
   padding: 12px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 20px;
   background: #fff;
   color: #28262e;
@@ -276,16 +276,16 @@
   min-height: 44px;
   border: 0;
   border-radius: 14px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
   box-shadow: none;
   font-weight: 600;
 }
 
-:global(:root[data-app-theme="warm-light"]) .empty { background: #f0ebfa; color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .row { border-color: #ebe6ef; background: #fff; color: #28262e; }
-:global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: #f0ebfa; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .empty { background: #f5f2f7; color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .row { border-color: #efebf3; background: #fff; color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: #f5f2f7; color: #8f7ac8; }
 :global(:root[data-app-theme="warm-light"]) .name,
 :global(:root[data-app-theme="warm-light"]) .nutrition { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .nutrition small { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .removeButton { border: 0; background: #f0ebfa; color: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .removeButton { border: 0; background: #f5f2f7; color: #b36e72; }

@@ -75,7 +75,7 @@
   align-items: end;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid #e2e5ef;
+  border: 1px solid #efebf3;
   border-radius: 12px;
   background: #fff;
 }
@@ -91,10 +91,10 @@
   width: 100%;
   min-height: 34px;
   padding: 5px 8px;
-  border: 1px solid #e2e5ef;
+  border: 1px solid #efebf3;
   border-radius: 9px;
   background: #fff;
-  color: #171923;
+  color: #28262e;
 }
 
 .globalNotificationStack {
@@ -220,7 +220,7 @@
   align-items: center;
   gap: 16px;
   padding: 14px 16px;
-  border: 1px solid #e2e5ef;
+  border: 1px solid #efebf3;
   border-radius: 14px;
   background: #fff;
 }
@@ -250,16 +250,16 @@
 .subscriptionModal > header span { color: #6b47ef; font-size: 9px; font-weight: 800; }
 .subscriptionModal > header h2 { margin: 0; font-size: 21px; }
 .subscriptionModal > header p { margin: 0; color: #858999; font-size: 10px; }
-.subscriptionModalClose { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border: 1px solid #e2e5ef; border-radius: 10px; background: #fff; cursor: pointer; }
+.subscriptionModalClose { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
 .subscriptionModalGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
 .subscriptionModalGrid label { display: grid; gap: 5px; }
 .subscriptionModalGrid small { color: #858999; font-size: 9px; }
-.subscriptionModalGrid input { min-height: 40px; padding: 7px 10px; border: 1px solid #e2e5ef; border-radius: 10px; background: #fffdf6; }
-.subscriptionModalSummary { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; padding: 11px 12px; border-radius: 11px; background: #f7f5ff; }
+.subscriptionModalGrid input { min-height: 40px; padding: 7px 10px; border: 1px solid #efebf3; border-radius: 10px; background: #fffdf6; }
+.subscriptionModalSummary { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; padding: 11px 12px; border-radius: 11px; background: #f5f2f7; }
 .subscriptionModalSummary label { display: flex; align-items: center; gap: 7px; font-size: 10px; }
 .subscriptionModal footer { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 .subscriptionModal footer > span { margin-right: auto; }
-.subscriptionModal footer button { min-height: 38px; padding: 0 14px; border: 1px solid #e2e5ef; border-radius: 10px; background: #fff; cursor: pointer; }
+.subscriptionModal footer button { min-height: 38px; padding: 0 14px; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
 
 .reminderCard :global(.trainerReminderCardHead) {
   min-height: 42px;

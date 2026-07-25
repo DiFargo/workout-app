@@ -1,58 +1,45 @@
 :global {
-/* =========================================================
-   FINAL WARM LIGHT PREMIUM SKIN â€” 2026-05-18
-   Targeted layer only. Applies ONLY when appTheme === "warm-light".
-   Goal: one unified cream/wellness style across all pages:
-   loading, main, workouts, nutrition, search, calendar, create/edit product,
-   admin, history and overlays.
-   ========================================================= */
+
 
 :root[data-app-theme="warm-light"],
 body[data-app-theme="warm-light"] {
-  color-scheme: light !important;
+  color-scheme: light;
 
-  /* calm yellow from user's reference, softened for UI */
-  --warm-yellow: #f4e064;
-  --warm-yellow-soft: rgba(244, 224, 100, 0.42);
-  --warm-yellow-muted: #d8bd48;
-  --warm-yellow-deep: #b7952d;
+  /* Legacy aliases resolve to the active light lavender system. */
+  --warm-yellow: #8f7ac8;
+  --warm-yellow-soft: rgba(143, 122, 200, 0.18);
+  --warm-yellow-muted: #806bb6;
+  --warm-yellow-deep: #806bb6;
 
-  --bg: #f3e8c7 !important;
-  --card: #fff8df !important;
-  --card-2: #f7edcf !important;
-  --line: rgba(72, 58, 29, 0.14) !important;
-  --text: #211b12 !important;
-  --muted: rgba(76, 64, 42, 0.64) !important;
+  --bg: #f7f6f8;
+  --card: #ffffff;
+  --card-2: #f5f2f7;
+  --line: #efebf3;
+  --text: #28262e;
+  --muted: #7b7682;
 
-  --accent: var(--warm-yellow) !important;
-  --accent-2: #ecd35a !important;
-  --danger: #bc514f !important;
-  --success: #66a94d !important;
+  --accent: #8f7ac8;
+  --accent-2: #806bb6;
+  --danger: #b36e72;
+  --success: #718879;
 
   --warm-page:
-    radial-gradient(circle at 50% -10%, rgba(244, 224, 100, 0.32), transparent 38%),
-    radial-gradient(circle at 10% 14%, rgba(255, 255, 255, 0.42), transparent 28%),
-    linear-gradient(180deg, #fbf3d7 0%, #f3e8c7 48%, #ead8a8 100%);
+    radial-gradient(circle at 50% -10%, rgba(143, 122, 200, 0.12), transparent 38%),
+    linear-gradient(180deg, #f7f6f8 0%, #f5f2f7 100%);
 
-  --warm-card:
-    linear-gradient(180deg, rgba(255, 252, 237, 0.98) 0%, rgba(248, 239, 211, 0.98) 100%);
+  --warm-card: #ffffff;
+  --warm-card-strong: #ffffff;
+  --warm-dark-card: #f5f2f7;
 
-  --warm-card-strong:
-    radial-gradient(circle at 18% 0%, rgba(244, 224, 100, 0.18), transparent 38%),
-    linear-gradient(180deg, rgba(255, 252, 235, 0.99) 0%, rgba(245, 232, 196, 0.99) 100%);
+  --warm-shadow-sm: 0 8px 20px rgba(40, 38, 46, 0.08);
+  --warm-shadow-md: 0 14px 34px rgba(40, 38, 46, 0.11), inset 0 1px 0 rgba(255,255,255,0.7);
+  --warm-shadow-lg: 0 24px 70px rgba(40, 38, 46, 0.14), inset 0 1px 0 rgba(255,255,255,0.74);
 
-  --warm-dark-card:
-    linear-gradient(180deg, #253022 0%, #101810 100%);
-
-  --warm-shadow-sm: 0 8px 20px rgba(88, 68, 24, 0.09);
-  --warm-shadow-md: 0 14px 34px rgba(88, 68, 24, 0.13), inset 0 1px 0 rgba(255,255,255,0.62);
-  --warm-shadow-lg: 0 24px 70px rgba(88, 68, 24, 0.18), inset 0 1px 0 rgba(255,255,255,0.68);
-
-  --food-green: var(--warm-yellow-muted) !important;
-  --food-text: var(--text) !important;
-  --food-muted: var(--muted) !important;
-  --food-card: #fff8df !important;
-  --food-line: var(--line) !important;
+  --food-green: var(--accent);
+  --food-text: var(--text);
+  --food-muted: var(--muted);
+  --food-card: #ffffff;
+  --food-line: var(--line);
 }
 
 /* root surfaces */
@@ -67,48 +54,48 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .historyPage,
 :root[data-app-theme="warm-light"] .adminPage,
 :root[data-app-theme="warm-light"] .workoutPage {
-  background: var(--warm-page) !important;
-  color: var(--text) !important;
+  background: var(--warm-page);
+  color: var(--text);
 }
 
 /* splash */
 :root[data-app-theme="warm-light"] .appSplash {
-  background: var(--warm-page) !important;
+  background: var(--warm-page);
 }
 
 :root[data-app-theme="warm-light"] .splashInner {
-  background: linear-gradient(180deg, rgba(255, 252, 235, 0.84), rgba(239, 223, 181, 0.74)) !important;
-  border-color: rgba(72, 58, 29, 0.12) !important;
-  box-shadow: var(--warm-shadow-lg) !important;
+  background: linear-gradient(180deg, rgba(255, 252, 235, 0.84), rgba(239, 223, 181, 0.74));
+  border-color: rgba(72, 58, 29, 0.12);
+  box-shadow: var(--warm-shadow-lg);
 }
 
 :root[data-app-theme="warm-light"] .splashMark {
-  background: linear-gradient(180deg, rgba(244, 224, 100, 0.44), rgba(244, 224, 100, 0.20)) !important;
-  border-color: rgba(72, 58, 29, 0.12) !important;
-  box-shadow: var(--warm-shadow-sm) !important;
+  background: linear-gradient(180deg, rgba(244, 224, 100, 0.44), rgba(244, 224, 100, 0.20));
+  border-color: rgba(72, 58, 29, 0.12);
+  box-shadow: var(--warm-shadow-sm);
 }
 
 :root[data-app-theme="warm-light"] .splashLogo {
-  color: #b9902e !important;
-  text-shadow: none !important;
+  color: #b9902e;
+  text-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .splashText {
-  color: var(--muted) !important;
+  color: var(--muted);
 }
 
 :root[data-app-theme="warm-light"] .splashProgress {
-  background: rgba(72, 58, 29, 0.08) !important;
-  border-color: rgba(72, 58, 29, 0.08) !important;
+  background: rgba(72, 58, 29, 0.08);
+  border-color: rgba(72, 58, 29, 0.08);
 }
 
 :root[data-app-theme="warm-light"] .splashProgress span {
-  background: linear-gradient(90deg, #c9a436, var(--warm-yellow), #e0c24e) !important;
-  box-shadow: 0 0 18px rgba(244, 224, 100, 0.46) !important;
+  background: linear-gradient(90deg, #c9a436, var(--warm-yellow), #e0c24e);
+  box-shadow: 0 0 18px rgba(244, 224, 100, 0.46);
 }
 
 :root[data-app-theme="warm-light"] .splashDots i {
-  background: #c8aa3b !important;
+  background: #c8aa3b;
 }
 
 
@@ -130,8 +117,8 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminUserRow strong,
 :root[data-app-theme="warm-light"] .historyCardHeader strong,
 :root[data-app-theme="warm-light"] .finishStatBox strong {
-  color: var(--text) !important;
-  text-shadow: none !important;
+  color: var(--text);
+  text-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] p:not([data-css-module-scope]):not([data-css-module-scope] *),
@@ -148,7 +135,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .previousInfo,
 :root[data-app-theme="warm-light"] .finishWorkoutSubtext,
 :root[data-app-theme="warm-light"] .loginHint {
-  color: var(--muted) !important;
+  color: var(--muted);
 }
 
 /* unified cards across pages */
@@ -185,10 +172,10 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .productListWideFinal,
 :root[data-app-theme="warm-light"] .saveToast,
 :root[data-app-theme="warm-light"] .finishCard {
-  background: var(--warm-card) !important;
-  color: var(--text) !important;
-  border: 1px solid var(--line) !important;
-  box-shadow: var(--warm-shadow-md) !important;
+  background: var(--warm-card);
+  color: var(--text);
+  border: 1px solid var(--line);
+  box-shadow: var(--warm-shadow-md);
 }
 
 /* open meal / large nutrition panels need stronger unified cream */
@@ -202,7 +189,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatPickerSheet,
 :root[data-app-theme="warm-light"] .fatProductCreator,
 :root[data-app-theme="warm-light"] .fatProductEditor {
-  background: var(--warm-card-strong) !important;
+  background: var(--warm-card-strong);
 }
 
 /* workout menu should not stay dark green */
@@ -210,22 +197,22 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .workoutMenuCard,
 :root[data-app-theme="warm-light"] .trainingCard,
 :root[data-app-theme="warm-light"] .workoutCard {
-  background: var(--warm-card) !important;
-  color: var(--text) !important;
-  border-color: var(--line) !important;
-  box-shadow: var(--warm-shadow-md) !important;
+  background: var(--warm-card);
+  color: var(--text);
+  border-color: var(--line);
+  box-shadow: var(--warm-shadow-md);
 }
 
 :root[data-app-theme="warm-light"] .menuTitle::after,
 :root[data-app-theme="warm-light"] .workoutTitle::after {
-  background: var(--warm-yellow-muted) !important;
+  background: var(--warm-yellow-muted);
 }
 
 /* keep text visible on dark media thumbnails */
 :root[data-app-theme="warm-light"] .dayTitle,
 :root[data-app-theme="warm-light"] .bigButton span,
 :root[data-app-theme="warm-light"] .workoutMenuCard span {
-  color: var(--text) !important;
+  color: var(--text);
 }
 
 /* buttons and accents */
@@ -240,10 +227,10 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSaveBtn,
 :root[data-app-theme="warm-light"] .adminSaveBtn,
 :root[data-app-theme="warm-light"] .themeSwitchBtn {
-  background: linear-gradient(180deg, #f6e46c 0%, #d7b73e 100%) !important;
-  color: #211b12 !important;
-  border-color: rgba(72, 58, 29, 0.14) !important;
-  box-shadow: 0 10px 22px rgba(151, 119, 35, 0.18), inset 0 1px 0 rgba(255,255,255,0.46) !important;
+  background: linear-gradient(180deg, #f6e46c 0%, #d7b73e 100%);
+  color: #28262e;
+  border-color: rgba(72, 58, 29, 0.14);
+  box-shadow: 0 10px 22px rgba(151, 119, 35, 0.18), inset 0 1px 0 rgba(255,255,255,0.46);
 }
 
 :root[data-app-theme="warm-light"] .backIconBtn,
@@ -253,10 +240,10 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatCloseBtn,
 :root[data-app-theme="warm-light"] .fatCalendarBtn,
 :root[data-app-theme="warm-light"] .fatSearchBtn {
-  background: rgba(255, 251, 237, 0.76) !important;
-  color: rgba(33, 27, 18, 0.78) !important;
-  border-color: var(--line) !important;
-  box-shadow: var(--warm-shadow-sm) !important;
+  background: rgba(255, 251, 237, 0.76);
+  color: rgba(33, 27, 18, 0.78);
+  border-color: var(--line);
+  box-shadow: var(--warm-shadow-sm);
 }
 
 /* inputs / search / create product forms */
@@ -275,16 +262,16 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatInput,
 :root[data-app-theme="warm-light"] .productForm input,
 :root[data-app-theme="warm-light"] .productForm textarea {
-  background: rgba(255, 253, 243, 0.72) !important;
-  color: var(--text) !important;
-  border: 1px solid var(--line) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.62), 0 8px 20px rgba(88,68,24,0.07) !important;
+  background: rgba(255, 253, 243, 0.72);
+  color: var(--text);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.62), 0 8px 20px rgba(88,68,24,0.07);
 }
 
 :root[data-app-theme="warm-light"] input:not([data-css-module-control])::placeholder,
 :root[data-app-theme="warm-light"] textarea:not([data-css-module-control])::placeholder,
 :root[data-app-theme="warm-light"] .fatSearchInput::placeholder {
-  color: rgba(76, 64, 42, 0.42) !important;
+  color: rgba(76, 64, 42, 0.42);
 }
 
 /* nutrition header / today / week */
@@ -296,45 +283,45 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatCalendarButton,
 :root[data-app-theme="warm-light"] .fatTopAction,
 :root[data-app-theme="warm-light"] .fatSearchShortcut {
-  background: rgba(255, 252, 237, 0.58) !important;
-  border-color: var(--line) !important;
-  color: var(--text) !important;
-  box-shadow: var(--warm-shadow-sm) !important;
+  background: rgba(255, 252, 237, 0.58);
+  border-color: var(--line);
+  color: var(--text);
+  box-shadow: var(--warm-shadow-sm);
 }
 
 :root[data-app-theme="warm-light"] .fatDayCell {
-  background: rgba(255, 251, 236, 0.54) !important;
+  background: rgba(255, 251, 236, 0.54);
 }
 
 :root[data-app-theme="warm-light"] .fatDayCell.active,
 :root[data-app-theme="warm-light"] .fatDayCell.selected,
 :root[data-app-theme="warm-light"] .fatDayCell.done,
 :root[data-app-theme="warm-light"] .fatDayCell.checked {
-  background: linear-gradient(180deg, #f7e965 0%, #d6bd44 100%) !important;
-  color: #211b12 !important;
+  background: linear-gradient(180deg, #f7e965 0%, #d6bd44 100%);
+  color: #28262e;
 }
 
 /* calories grid / summary */
 :root[data-app-theme="warm-light"] .fatCaloriesCard {
-  border-radius: 30px !important;
+  border-radius: 30px;
 }
 
 :root[data-app-theme="warm-light"] .fatCalorieDot.active,
 :root[data-app-theme="warm-light"] .fatDot.active,
 :root[data-app-theme="warm-light"] .calorieDot.active {
-  background: #57d867 !important;
+  background: #57d867;
 }
 
 :root[data-app-theme="warm-light"] .fatMacroDot.carbs {
-  background: #70d6e7 !important;
+  background: #70d6e7;
 }
 
 :root[data-app-theme="warm-light"] .fatMacroDot.fat {
-  background: #eadb8e !important;
+  background: #eadb8e;
 }
 
 :root[data-app-theme="warm-light"] .fatMacroDot.protein {
-  background: #f06d7c !important;
+  background: #f06d7c;
 }
 
 /* bottom sheet / add food / search history */
@@ -342,11 +329,11 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSearchActions,
 :root[data-app-theme="warm-light"] .fatBottomActions,
 :root[data-app-theme="warm-light"] .fatTabBar {
-  background: rgba(255, 251, 231, 0.88) !important;
-  border-color: var(--line) !important;
-  box-shadow: 0 -12px 34px rgba(88,68,24,0.13), inset 0 1px 0 rgba(255,255,255,0.62) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
+  background: rgba(255, 251, 231, 0.88);
+  border-color: var(--line);
+  box-shadow: 0 -12px 34px rgba(88,68,24,0.13), inset 0 1px 0 rgba(255,255,255,0.62);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 /* overlays and modals */
@@ -358,10 +345,10 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .calendarSheet,
 :root[data-app-theme="warm-light"] .mealPickerMenu,
 :root[data-app-theme="warm-light"] .fatMealPicker {
-  background: var(--warm-card-strong) !important;
-  color: var(--text) !important;
-  border-color: var(--line) !important;
-  box-shadow: var(--warm-shadow-lg) !important;
+  background: var(--warm-card-strong);
+  color: var(--text);
+  border-color: var(--line);
+  box-shadow: var(--warm-shadow-lg);
 }
 
 /* active tabs and selected states */
@@ -371,15 +358,15 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatTab.selected,
 :root[data-app-theme="warm-light"] .nutritionTab.active,
 :root[data-app-theme="warm-light"] .nutritionTab.selected {
-  border-color: rgba(183,149,45,0.32) !important;
+  border-color: rgba(183,149,45,0.32);
 }
 
 :root[data-app-theme="warm-light"] .fatTab.active,
 :root[data-app-theme="warm-light"] .fatTab.selected,
 :root[data-app-theme="warm-light"] .nutritionTab.active,
 :root[data-app-theme="warm-light"] .nutritionTab.selected {
-  background: rgba(244, 224, 100, 0.32) !important;
-  color: var(--text) !important;
+  background: rgba(244, 224, 100, 0.32);
+  color: var(--text);
 }
 
 /* keep destructive actions red */
@@ -388,7 +375,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatDonut,
 :root[data-app-theme="warm-light"] .fatDonutRing,
 :root[data-app-theme="warm-light"] .summaryDonut {
-  filter: saturate(0.92) brightness(1.02) !important;
+  filter: saturate(0.92) brightness(1.02);
 }
 
 /* keep warm-light scrollbars aligned with the product purple accent */
@@ -397,16 +384,16 @@ body[data-app-theme="warm-light"],
 }
 
 :root[data-app-theme="warm-light"] *:focus:not([data-css-module-scope] *) {
-  outline-color: rgba(183,149,45,0.34) !important;
+  outline-color: rgba(183,149,45,0.34);
 }
 
 :root[data-app-theme="warm-light"] .appLogo,
 :root[data-app-theme="warm-light"] .finishIcon,
 :root[data-app-theme="warm-light"] .startWorkoutIcon,
 :root[data-app-theme="warm-light"] .saveToastIcon {
-  background: linear-gradient(180deg, rgba(244,224,100,0.42), rgba(244,224,100,0.18)) !important;
-  color: #211b12 !important;
-  border-color: rgba(72, 58, 29, 0.12) !important;
+  background: linear-gradient(180deg, rgba(244,224,100,0.42), rgba(244,224,100,0.18));
+  color: #28262e;
+  border-color: rgba(72, 58, 29, 0.12);
 }
 
 /* mobile polish */
@@ -416,12 +403,12 @@ body[data-app-theme="warm-light"],
   :root[data-app-theme="warm-light"] .fatMealCard,
   :root[data-app-theme="warm-light"] .fatSearchPanel,
   :root[data-app-theme="warm-light"] .fatPickerSheet {
-    border-radius: 28px !important;
+    border-radius: 28px;
   }
 
   :root[data-app-theme="warm-light"] .fatSearchBottomBar,
   :root[data-app-theme="warm-light"] .fatBottomActions {
-    border-radius: 28px 28px 0 0 !important;
+    border-radius: 28px 28px 0 0;
   }
 }
 
@@ -434,163 +421,161 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .nutritionPage [class*="Panel"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
 :root[data-app-theme="warm-light"] .nutritionPage [class*="Sheet"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *),
 :root[data-app-theme="warm-light"] .nutritionPage [class*="Modal"]:not([data-css-module-scope="dish-ingredient-picker"] *):not([data-css-module-scope="food-edit-basic-fields"] *) {
-  border-color: var(--line) !important;
+  border-color: var(--line);
 }
 
 
-/* LOADING GYM COLOR FIX â€” USER YELLOW SAMPLE */
+
 :root[data-app-theme="warm-light"] .splashLogo {
-  color: #f4e064 !important;
+  color: #c7945a;
   text-shadow:
     0 10px 26px rgba(120, 92, 20, 0.16),
-    0 0 18px rgba(244, 224, 100, 0.18) !important;
+    0 0 18px rgba(244, 224, 100, 0.18);
 }
 
 :root[data-app-theme="warm-light"] .splashProgress span,
 :root[data-app-theme="warm-light"] .splashDots i {
-  background: #f4e064 !important;
+  background: #c7945a;
 }
 
 :root[data-app-theme="warm-light"] .splashProgress span {
-  box-shadow: 0 0 18px rgba(244, 224, 100, 0.45) !important;
+  box-shadow: 0 0 18px rgba(244, 224, 100, 0.45);
 }
 
 :root[data-app-theme="warm-light"] .splashMark {
   background:
-    linear-gradient(180deg, rgba(244, 224, 100, 0.34), rgba(244, 224, 100, 0.14)) !important;
+    linear-gradient(180deg, rgba(244, 224, 100, 0.34), rgba(244, 224, 100, 0.14));
 }
 
-/* CLEAN TODAY HEADER â€” WARM LIGHT ONLY */
+
 
 :root[data-app-theme="warm-light"] .fatWeekRow,
 :root[data-app-theme="warm-light"] .fatDayCell {
-  border: none !important;
-  box-shadow: none !important;
-  background: rgba(255,252,237,0.42) !important;
+  border: none;
+  box-shadow: none;
+  background: rgba(255,252,237,0.42);
 }
 
 :root[data-app-theme="warm-light"] .fatDayCell.active,
 :root[data-app-theme="warm-light"] .fatDayCell.done,
 :root[data-app-theme="warm-light"] .fatDayCell.selected {
-  background: linear-gradient(180deg,#f4e064 0%,#d8bd48 100%) !important;
+  background: linear-gradient(180deg,#c7945a 0%,#d8bd48 100%);
 }
 
 :root[data-app-theme="warm-light"] .fatWeekRow::before,
 :root[data-app-theme="warm-light"] .fatWeekRow::after {
-  display:none !important;
+  display:none;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionsExact {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionsDivider {
-  background: rgba(72, 58, 29, 0.10) !important;
-  width: 1px !important;
-  border: 0 !important;
-  box-shadow: none !important;
+  background: rgba(72, 58, 29, 0.10);
+  width: 1px;
+  border: 0;
+  box-shadow: none;
 }
 
-/* WARM LIGHT NUTRITION HEADER FIX â€” visible polish 2026-05-18
-   Only light theme. Dark style is not touched.
-*/
+
 
 /* Search + calendar + calories: slightly yellow warm cards */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard {
   background:
     radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.20), transparent 42%),
-    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%) !important;
-  border-color: rgba(94, 75, 30, 0.12) !important;
+    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%);
+  border-color: rgba(94, 75, 30, 0.12);
   box-shadow:
     0 14px 30px rgba(88, 68, 24, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionQuickActionsDivider {
-  background: transparent !important;
-  opacity: 0 !important;
+  background: transparent;
+  opacity: 0;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderGrid span {
-  background: rgba(86, 82, 61, 0.35) !important;
+  background: rgba(86, 82, 61, 0.35);
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderGrid span.isActive {
-  background: #39d85d !important;
+  background: #39d85d;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderDivider {
-  background: rgba(94, 75, 30, 0.10) !important;
+  background: rgba(94, 75, 30, 0.10);
 }
 
-/* FINAL MEALS POLISH â€” warm light only */
+
 :root[data-app-theme="warm-light"] .nutritionQuickSearchIcon {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: 0 !important;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
 }
 
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive {
-  background: #f4e064 !important;
-  box-shadow: 0 0 10px rgba(244,224,100,0.38) !important;
+  background: #c7945a;
+  box-shadow: 0 0 10px rgba(244,224,100,0.38);
 }
 
 :root[data-app-theme="warm-light"] .fatMealCard,
 :root[data-app-theme="warm-light"] .fatMealMain {
   background:
     radial-gradient(circle at 12% 0%, rgba(244,224,100,0.18), transparent 42%),
-    linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.82) 100%) !important;
-  border-color: rgba(94,75,30,0.10) !important;
+    linear-gradient(180deg, rgba(255,249,215,0.96) 0%, rgba(246,232,174,0.82) 100%);
+  border-color: rgba(94,75,30,0.10);
   box-shadow:
     0 14px 30px rgba(88,68,24,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.62) !important;
+    inset 0 1px 0 rgba(255,255,255,0.62);
 }
 
 :root[data-app-theme="warm-light"] .fatMealCard *,
 :root[data-app-theme="warm-light"] .fatMealMain * {
-  border-color: rgba(94,75,30,0.08) !important;
+  border-color: rgba(94,75,30,0.08);
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage,
 :root[data-app-theme="warm-light"] .fatSecretPage *:not([data-css-module-scope]):not([data-css-module-scope] *) {
-  color: #5f5744 !important;
+  color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive {
-  background: #f4e064 !important;
-  box-shadow: 0 0 12px rgba(244,224,100,0.42) !important;
+  background: #c7945a;
+  box-shadow: 0 0 12px rgba(244,224,100,0.42);
 }
 
 :root[data-app-theme="warm-light"] .fatMealMain,
 :root[data-app-theme="warm-light"] .fatMealCard {
-  border: 0 !important;
+  border: 0;
 }
 
 :root[data-app-theme="warm-light"] .fatMealMain *,
 :root[data-app-theme="warm-light"] .fatMealCard * {
-  border-color: transparent !important;
+  border-color: transparent;
 }
 
-/* FINAL TEXT + MEALS + CALORIES FIX â€” VERIFIED */
+
 :root[data-app-theme="warm-light"] {
-  --text: #5f5744 !important;
+  --text: #7b7682;
 }
 
 /* unify ALL text on nutrition page */
 :root[data-app-theme="warm-light"] .fatSecretPage,
 :root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatMealAdd):not(.fatPlusBtn):not([data-css-module-scope]):not([data-css-module-scope] *) {
-  color: #5f5744 !important;
+  color: #7b7682;
 }
 
 /* bright yellow calories grid */
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive,
 :root[data-app-theme="warm-light"] .fatCaloriesCard .isActive {
-  background: #f4e064 !important;
+  background: #c7945a;
   box-shadow:
     0 0 10px rgba(244,224,100,0.44),
-    0 0 18px rgba(244,224,100,0.24) !important;
+    0 0 18px rgba(244,224,100,0.24);
 }
 
 /* remove square borders from meal cards */
@@ -598,36 +583,36 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatMealCard,
 :root[data-app-theme="warm-light"] .fatMealMain *,
 :root[data-app-theme="warm-light"] .fatMealCard * {
-  border-color: transparent !important;
+  border-color: transparent;
 }
 
 :root[data-app-theme="warm-light"] .fatMealMain::before,
 :root[data-app-theme="warm-light"] .fatMealMain::after,
 :root[data-app-theme="warm-light"] .fatMealCard::before,
 :root[data-app-theme="warm-light"] .fatMealCard::after {
-  display: none !important;
-  content: none !important;
+  display: none;
+  content: none;
 }
 
-/* HARD VISIBLE FIX â€” WARM LIGHT ONLY â€” TITLE / CALORIE GRID / MEAL FRAMES */
+
 
 /* calorie grid: stronger selector than previous green override */
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderCard .nutritionCaloriesRenderGrid span.isActive,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderGrid span.isActive,
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionCaloriesRenderGrid span.isActive,
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive {
-  background: #f4e064 !important;
-  background-color: #f4e064 !important;
+  background: #c7945a;
+  background-color: #c7945a;
   box-shadow:
     0 0 8px rgba(244, 224, 100, 0.52),
-    0 0 16px rgba(244, 224, 100, 0.28) !important;
+    0 0 16px rgba(244, 224, 100, 0.28);
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3 .nutritionCaloriesRenderGrid span:not(.isActive),
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionCaloriesRenderGrid span:not(.isActive),
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span:not(.isActive) {
-  background: rgba(95, 87, 68, 0.34) !important;
-  background-color: rgba(95, 87, 68, 0.34) !important;
+  background: rgba(95, 87, 68, 0.34);
+  background-color: rgba(95, 87, 68, 0.34);
 }
 
 /* meal cards: remove all square frames and keep warm yellow card background */
@@ -636,12 +621,12 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSecretPage .mealRowExact {
   background:
     radial-gradient(circle at 12% 0%, rgba(244, 224, 100, 0.18), transparent 42%),
-    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%) !important;
-  border: 0 !important;
-  outline: 0 !important;
+    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%);
+  border: 0;
+  outline: 0;
   box-shadow:
     0 14px 30px rgba(88, 68, 24, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 /* remove the visible square around icon/text row */
@@ -653,9 +638,9 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSecretPage .mealTitleExact,
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealKcal,
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealActions {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealMain::before,
@@ -668,58 +653,59 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealIcon::after,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealIconExact::before,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealIconExact::after {
-  display: none !important;
-  content: none !important;
+  display: none;
+  content: none;
 }
 
 /* icon becomes clean, without square border */
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealIcon,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealIconExact {
-  background: rgba(255, 253, 240, 0.46) !important;
-  border-radius: 16px !important;
+  background: rgba(255, 253, 240, 0.46);
+  border-radius: 16px;
 }
 
+@media not all {
 /* all nutrition-page text unified to sample color */
 :root[data-app-theme="warm-light"] .fatSecretPage,
 :root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatPlusBtn):not(.mealPlusExact):not([data-css-module-scope]):not([data-css-module-scope] *) {
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
+  color: #7b7682;
+  -webkit-text-fill-color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatPlusBtn,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealPlusExact {
-  color: #241d14 !important;
-  -webkit-text-fill-color: #241d14 !important;
+  color: #241d14;
+  -webkit-text-fill-color: #241d14;
 }
 
 /* verify marker: hard-fix-v2 */
 
-/* DARKER YELLOW + REMOVE INNER MEAL FRAME â€” warm light only */
+
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive,
 :root[data-app-theme="warm-light"] .fatCaloriesCard .isActive {
-  background: #e0c94d !important;
-  background-color: #e0c94d !important;
+  background: #c7945a;
+  background-color: #c7945a;
   box-shadow:
     0 0 8px rgba(224, 201, 77, 0.42),
-    0 0 16px rgba(224, 201, 77, 0.22) !important;
+    0 0 16px rgba(224, 201, 77, 0.22);
 }
 
 /* remove visible inner white/yellow rectangular row */
 :root[data-app-theme="warm-light"] .fatMealMain,
 :root[data-app-theme="warm-light"] .mealRowExact {
-  border: none !important;
-  outline: none !important;
+  border: none;
+  outline: none;
   background:
     linear-gradient(180deg,
       rgba(247, 236, 180, 0.92) 0%,
-      rgba(243, 231, 167, 0.88) 100%) !important;
-  box-shadow: none !important;
+      rgba(243, 231, 167, 0.88) 100%);
+  box-shadow: none;
 }
 
 /* remove any remaining inner borders */
 :root[data-app-theme="warm-light"] .fatMealMain *,
 :root[data-app-theme="warm-light"] .mealRowExact * {
-  border-color: transparent !important;
+  border-color: transparent;
 }
 
 /* flatten meal row container completely */
@@ -727,34 +713,34 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatMealMain::after,
 :root[data-app-theme="warm-light"] .mealRowExact::before,
 :root[data-app-theme="warm-light"] .mealRowExact::after {
-  display: none !important;
-  content: none !important;
+  display: none;
+  content: none;
 }
 
-/* MEAL INNER FRAME + SUMMARY BACKGROUND FIX â€” WARM LIGHT ONLY */
+
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealCard,
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealMain,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealRowExact {
   background:
     radial-gradient(circle at 12% 0%, rgba(224, 201, 77, 0.20), transparent 42%),
-    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%) !important;
+    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%);
 }
 
 /* remove rectangular frame specifically caused by meal row/card inner backgrounds */
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealMain.mealRowExact {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealMain.mealRowExact::before,
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealMain.mealRowExact::after {
-  display: none !important;
-  content: none !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
+  display: none;
+  content: none;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealIcon,
@@ -766,15 +752,15 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSecretPage .mealActionsExact,
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealToggleUnderCount {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealIcon,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealIconExact {
-  background: rgba(255, 250, 223, 0.56) !important;
-  border-radius: 18px !important;
+  background: rgba(255, 250, 223, 0.56);
+  border-radius: 18px;
 }
 
 /* Summary section same warm yellow background as calendar/search cards */
@@ -784,161 +770,161 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .summaryWaterCard {
   background:
     radial-gradient(circle at 12% 0%, rgba(224, 201, 77, 0.20), transparent 42%),
-    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%) !important;
-  border-color: rgba(94, 75, 30, 0.12) !important;
+    linear-gradient(180deg, rgba(255, 249, 215, 0.96) 0%, rgba(246, 232, 174, 0.82) 100%);
+  border-color: rgba(94, 75, 30, 0.12);
   box-shadow:
     0 14px 30px rgba(88, 68, 24, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 :root[data-app-theme="warm-light"] .summaryDotGrid span.on {
-  background: #e0c94d !important;
-  box-shadow: 0 0 10px rgba(224, 201, 77, 0.36) !important;
+  background: #c7945a;
+  box-shadow: 0 0 10px rgba(224, 201, 77, 0.36);
 }
 
 
-/* SUMMARY DONUT SAME AS DARK THEME â€” WARM LIGHT ONLY */
+
 :root[data-app-theme="warm-light"] .summaryDonut {
   background:
     conic-gradient(
-      #67d8ff 0deg calc(var(--carbs-angle, 120deg)),
-      #f2de7b calc(var(--carbs-angle, 120deg)) calc(var(--fat-angle, 240deg)),
-      #ff6b7d calc(var(--fat-angle, 240deg)) 360deg
-    ) !important;
+      #8f7ac8 0deg calc(var(--carbs-angle, 120deg)),
+      #c7945a calc(var(--carbs-angle, 120deg)) calc(var(--fat-angle, 240deg)),
+      #b36e72 calc(var(--fat-angle, 240deg)) 360deg
+    );
 
   box-shadow:
     0 10px 24px rgba(88, 68, 24, 0.12),
-    inset 0 1px 0 rgba(255,255,255,0.42) !important;
+    inset 0 1px 0 rgba(255,255,255,0.42);
 }
 
 :root[data-app-theme="warm-light"] .summaryDonut span {
-  background: #101010 !important;
-  border: 6px solid rgba(255,248,220,0.95) !important;
+  background: #101010;
+  border: 6px solid rgba(255,248,220,0.95);
   box-shadow:
     inset 0 2px 8px rgba(0,0,0,0.45),
-    0 2px 8px rgba(0,0,0,0.12) !important;
+    0 2px 8px rgba(0,0,0,0.12);
 }
 
 :root[data-app-theme="warm-light"] .summaryMacroLegend i.carbs {
-  background: #67d8ff !important;
+  background: #8f7ac8;
 }
 
 :root[data-app-theme="warm-light"] .summaryMacroLegend i.fat {
-  background: #f2de7b !important;
+  background: #c7945a;
 }
 
 :root[data-app-theme="warm-light"] .summaryMacroLegend i.protein {
-  background: #ff6b7d !important;
+  background: #b36e72;
 }
 
-/* FIX SUMMARY DONUT VISIBILITY â€” WARM LIGHT ONLY */
+
 :root[data-app-theme="warm-light"] .summaryDonut {
-  width: 140px !important;
-  height: 140px !important;
-  border-radius: 50% !important;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
 
   background:
     conic-gradient(
-      #67d8ff 0deg 165deg,
-      #f2de7b 165deg 320deg,
-      #ff6b7d 320deg 360deg
-    ) !important;
+      #8f7ac8 0deg 165deg,
+      #c7945a 165deg 320deg,
+      #b36e72 320deg 360deg
+    );
 
-  position: relative !important;
-  overflow: hidden !important;
+  position: relative;
+  overflow: hidden;
 }
 
-/* COMPACT SUMMARY DONUT â€” WARM LIGHT ONLY */
+
 
 :root[data-app-theme="warm-light"] .summaryDonut {
-  width: 88px !important;
-  height: 88px !important;
-  min-width: 88px !important;
-  min-height: 88px !important;
-  max-width: 88px !important;
-  max-height: 88px !important;
+  width: 88px;
+  height: 88px;
+  min-width: 88px;
+  min-height: 88px;
+  max-width: 88px;
+  max-height: 88px;
 
-  border-radius: 50% !important;
-  flex: 0 0 88px !important;
+  border-radius: 50%;
+  flex: 0 0 88px;
 
   background:
     conic-gradient(
-      #67d8ff 0deg 165deg,
-      #f2de7b 165deg 320deg,
-      #ff6b7d 320deg 360deg
-    ) !important;
+      #8f7ac8 0deg 165deg,
+      #c7945a 165deg 320deg,
+      #b36e72 320deg 360deg
+    );
 
-  position: relative !important;
-  overflow: hidden !important;
+  position: relative;
+  overflow: hidden;
 
   box-shadow:
     0 8px 18px rgba(88, 68, 24, 0.12),
-    inset 0 1px 0 rgba(255,255,255,0.42) !important;
+    inset 0 1px 0 rgba(255,255,255,0.42);
 }
 
 :root[data-app-theme="warm-light"] .summaryDonut span {
-  position: absolute !important;
-  inset: 22px !important;
-  width: auto !important;
-  height: auto !important;
+  position: absolute;
+  inset: 22px;
+  width: auto;
+  height: auto;
 
-  display: block !important;
-  border-radius: 50% !important;
+  display: block;
+  border-radius: 50%;
 
   background:
-    linear-gradient(180deg, rgba(255,249,215,1) 0%, rgba(246,232,174,0.95) 100%) !important;
+    linear-gradient(180deg, rgba(255,249,215,1) 0%, rgba(246,232,174,0.95) 100%);
 
-  border: 0 !important;
+  border: 0;
   box-shadow:
     inset 0 1px 4px rgba(255,255,255,0.6),
-    0 2px 6px rgba(88,68,24,0.10) !important;
+    0 2px 6px rgba(88,68,24,0.10);
 
-  z-index: 2 !important;
+  z-index: 2;
 }
 
 
-/* SEARCH ICON + MEAL TOGGLE CLEANUP â€” WARM LIGHT ONLY */
+
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon {
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
+  color: #7b7682;
+  -webkit-text-fill-color: #7b7682;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon::before,
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon::after {
-  border-color: #5f5744 !important;
-  background: #5f5744 !important;
-  box-shadow: none !important;
+  border-color: #7b7682;
+  background: #7b7682;
+  box-shadow: none;
 }
 
 /* if icon is drawn by mask/background */
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon {
-  filter: none !important;
-  opacity: 1 !important;
+  filter: none;
+  opacity: 1;
 }
 
 /* remove accent/background around expand arrow */
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealToggleUnderCount {
-  background: transparent !important;
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  color: #5f5744 !important;
-  -webkit-text-fill-color: #5f5744 !important;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  color: #7b7682;
+  -webkit-text-fill-color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle::before,
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle::after,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealToggleUnderCount::before,
 :root[data-app-theme="warm-light"] .fatSecretPage .mealToggleUnderCount::after {
-  display: none !important;
-  content: none !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
+  display: none;
+  content: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 /* ===== WARM LIGHT FINAL PRODUCT LIST FIX ===== */
@@ -950,30 +936,30 @@ body[data-app-theme="warm-light"],
       180deg,
       rgba(232, 214, 120, 0.42) 0%,
       rgba(223, 204, 104, 0.34) 100%
-    ) !important;
+    );
 
-  border: 0 !important;
-  box-shadow: none !important;
+  border: 0;
+  box-shadow: none;
 }
 
 /* remove white square behind arrow */
 :root[data-app-theme="warm-light"] .fatFoodArrow {
-  background: transparent !important;
-  background-color: transparent !important;
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  color: #5f5744 !important;
+  background: transparent;
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  border-radius: 0;
+  color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodArrow::before,
 :root[data-app-theme="warm-light"] .fatFoodArrow::after {
-  display: none !important;
-  content: none !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
+  display: none;
+  content: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 /* hollow search icon */
@@ -987,33 +973,33 @@ body[data-app-theme="warm-light"],
       180deg,
       rgba(236, 222, 145, 0.82) 0%,
       rgba(229, 214, 128, 0.74) 100%
-    ) !important;
+    );
 
-  border: 0 !important;
-  box-shadow: none !important;
+  border: 0;
+  box-shadow: none;
 }
 
 /* hollow magnifier icon */
 
 /* fallback if icon font */
 
-/* WARM LIGHT â€” PRODUCT ROWS EXACT COLOR LIKE REFERENCE */
+
 :root[data-app-theme="warm-light"] .fatFoodItem {
   background: linear-gradient(
     180deg,
     rgba(248, 238, 191, 0.98) 0%,
     rgba(244, 232, 176, 0.96) 100%
-  ) !important;
+  );
 
-  border: none !important;
-  box-shadow: none !important;
+  border: none;
+  box-shadow: none;
 }
 
 /* remove extra white backgrounds around rows */
 :root[data-app-theme="warm-light"] .fatMealItems {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 /* SEARCH ICON EXACT LIKE REFERENCE */
@@ -1022,19 +1008,19 @@ body[data-app-theme="warm-light"],
 
 /* === NUTRITION BOTTOM BAR V284 === */
 .fatSecretPage.nutritionFixedHeaderV3 {
-  padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: calc(116px + env(safe-area-inset-bottom));
 }
 
 /* === COMPACT NUTRITION MEALS V285 === */
 
-
+}
 /* Workout flow */
 :root[data-app-theme="warm-light"] .warmupExerciseCard,
 :root[data-app-theme="warm-light"] .exerciseCard,
 :root[data-app-theme="warm-light"] .workoutCompletionCard {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
+  border-color: #efebf3;
+  background: #ffffff;
+  color: #28262e;
 }
 
 :root[data-app-theme="warm-light"] .warmupExerciseIntro,
@@ -1044,75 +1030,75 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .exerciseSetRow,
 :root[data-app-theme="warm-light"] .workoutCompletionStats,
 :root[data-app-theme="warm-light"] .workoutCompletionProgress {
-  border-color: #e4e7f1 !important;
-  background: #f7f8fc !important;
-  color: #151824 !important;
+  border-color: #efebf3;
+  background: #f7f6f8;
+  color: #28262e;
 }
 
 :root[data-app-theme="warm-light"] .warmupExerciseItem::after,
 :root[data-app-theme="warm-light"] .warmupExerciseItem::before {
-  background: transparent !important;
-  box-shadow: none !important;
+  background: transparent;
+  box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .exerciseSetRow input,
 :root[data-app-theme="warm-light"] .workoutRunPage input {
-  border-color: #dfe3ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
-  box-shadow: inset 0 1px 2px rgba(47, 54, 91, 0.04) !important;
+  border-color: #efebf3;
+  background: #ffffff;
+  color: #28262e;
+  box-shadow: inset 0 1px 2px rgba(47, 54, 91, 0.04);
 }
 
 :root[data-app-theme="warm-light"] .exerciseSetRow input::placeholder,
 :root[data-app-theme="warm-light"] .workoutRunPage input::placeholder {
-  color: #9aa1b3 !important;
+  color: #7b7682;
 }
 
 
 /* Food search, product and editor */
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium,
 :root[data-app-theme="warm-light"] .nutritionCreateChoiceSheet {
-  border-color: #e0e3ee !important;
-  background: #f9faff !important;
-  color: #151824 !important;
+  border-color: #efebf3;
+  background: #f7f6f8;
+  color: #28262e;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
-  box-shadow: 0 8px 24px rgba(54, 62, 109, 0.07) !important;
+  border-color: #efebf3;
+  background: #ffffff;
+  color: #28262e;
+  box-shadow: 0 8px 24px rgba(54, 62, 109, 0.07);
 }
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input {
-  color: #151824 !important;
+  color: #28262e;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input::placeholder {
-  color: #949caf !important;
+  color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchHistoryNameButton {
-  border-color: #e3e6f0 !important;
-  background: #ffffff !important;
-  color: #151824 !important;
+  border-color: #efebf3;
+  background: #ffffff;
+  color: #28262e;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchHistoryNameButton:active {
-  border-color: #8d80ec !important;
-  background: #efedff !important;
-  color: #4d3bd0 !important;
+  border-color: #8f7ac8;
+  background: #f5f2f7;
+  color: #806bb6;
 }
 
 :root[data-app-theme="warm-light"] .foodEditMealSelector,
 :root[data-app-theme="warm-light"] .foodEditSegmentRow button.active {
-  border-color: #7666e8 !important;
-  background: #efedff !important;
-  color: #4e3bd0 !important;
+  border-color: #8f7ac8;
+  background: #f5f2f7;
+  color: #806bb6;
 }
 
 :root[data-app-theme="warm-light"] .foodEditMacroValue {
-  color: #151824 !important;
+  color: #28262e;
 }
 
 /* Shared bottom navigation and action bars */
@@ -1124,12 +1110,12 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .exerciseBottomPanel,
 :root[data-app-theme="warm-light"] .workoutCompletionBottomPanel,
 :root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar {
-  border-color: #e0e3ee !important;
-  background: rgba(255, 255, 255, 0.96) !important;
+  border-color: #efebf3;
+  background: rgba(255, 255, 255, 0.96);
   box-shadow:
     0 -10px 32px rgba(53, 61, 105, 0.11),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  backdrop-filter: blur(18px) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px);
 }
 
 :root[data-app-theme="warm-light"] .mainMenuBottomBar button,
@@ -1137,10 +1123,10 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSearchBottomBar button,
 :root[data-app-theme="warm-light"] .fatSearchBottomBarFive button,
 :root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar button {
-  border-color: transparent !important;
-  background: transparent !important;
-  color: #7b8295 !important;
-  box-shadow: none !important;
+  border-color: transparent;
+  background: transparent;
+  color: #7b8295;
+  box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .mainMenuBottomBar button.active,
@@ -1148,22 +1134,22 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSearchBottomBar button.active,
 :root[data-app-theme="warm-light"] .fatSearchBottomBarFive button.active,
 :root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar button.active {
-  border-color: #e1defb !important;
-  background: #f0effd !important;
-  color: #5542d8 !important;
+  border-color: #e1defb;
+  background: #f7f6f8;
+  color: #806bb6;
 }
 
 
 /* === UNIFIED CLIENT BOTTOM BAR SIZE ACROSS CORE PAGES === */
 .mainMenuBottomBar.profileBottomTabBar,
 .workoutModeBottomBar {
-  box-sizing: border-box !important;
-  min-height: 80px !important;
-  height: 80px !important;
-  max-height: 80px !important;
-  padding: 5px 6px !important;
-  gap: 3px !important;
-  border-radius: 16px !important;
+  box-sizing: border-box;
+  min-height: 80px;
+  height: 80px;
+  max-height: 80px;
+  padding: 5px 6px;
+  gap: 3px;
+  border-radius: 16px;
 }
 
 /* === BOTTOM BAR LAYOUT NORMALIZER (MAIN / TRAINING / NUTRITION / CABINET) === */
@@ -1171,42 +1157,42 @@ body[data-app-theme="warm-light"],
 .workoutModeBottomBar,
 .mainDashboardPage nav.mainMenuBottomBar.profileBottomTabBar[aria-label="Основные разделы"],
 .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
-  position: fixed !important;
-  left: 50% !important;
-  right: auto !important;
-  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
-  transform: translateX(-50%) !important;
-  width: min(394px, calc(100vw - 20px)) !important;
-  max-width: 394px !important;
-  margin: 0 auto !important;
+  position: fixed;
+  left: 50%;
+  right: auto;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  transform: translateX(-50%);
+  width: min(394px, calc(100vw - 20px));
+  max-width: 394px;
+  margin: 0 auto;
 }
 
 .mainMenuBottomBar.profileBottomTabBar > button,
 .workoutModeBottomBar > button {
-  min-height: 68px !important;
-  height: 68px !important;
-  max-height: 68px !important;
-  padding: 6px 2px 5px !important;
-  border-radius: 13px !important;
+  min-height: 68px;
+  height: 68px;
+  max-height: 68px;
+  padding: 6px 2px 5px;
+  border-radius: 13px;
 }
 
 .mainMenuBottomBar.profileBottomTabBar > button span,
 .workoutModeBottomBar > button span {
-  min-height: 31px !important;
-  height: 31px !important;
-  max-height: 31px !important;
-  font-size: 26px !important;
-  line-height: 31px !important;
+  min-height: 31px;
+  height: 31px;
+  max-height: 31px;
+  font-size: 26px;
+  line-height: 31px;
 }
 
 .mainMenuBottomBar.profileBottomTabBar > button strong,
 .workoutModeBottomBar > button strong {
-  min-height: 16px !important;
-  height: 16px !important;
-  max-height: 16px !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  line-height: 16px !important;
+  min-height: 16px;
+  height: 16px;
+  max-height: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
 }
 
 /* Ensure training containers keep the same anchored width as the navigation bar. */
@@ -1219,8 +1205,8 @@ body[data-app-theme="warm-light"],
 .mainMenuBottomBar.profileBottomTabBar,
 .workoutModeBottomBar,
 .profileTabbedPage:not(.mainDashboardPage) .profileBottomTabBar {
-    width: min(350px, calc(100vw - 52px)) !important;
-    max-width: 350px !important;
+    width: min(350px, calc(100vw - 52px));
+    max-width: 350px;
   }
 }
 
@@ -1230,17 +1216,17 @@ body[data-app-theme="warm-light"],
   .profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection,
   .profileTabbedPage[data-profile-tab="nutrition"] .profileCabinetSection,
   .profileTabbedPage[data-profile-tab="settings"] .profileCabinetSection {
-    width: min(100%, calc(100vw - 28px)) !important;
-    max-width: calc(100vw - 28px) !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-    box-sizing: border-box !important;
+    width: min(100%, calc(100vw - 28px));
+    max-width: calc(100vw - 28px);
+    padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
   }
 
   .mainDashboardPage .profileCabinetSection,
   .profileTabbedPage .profileCabinetSection {
-    margin-left: auto !important;
-    margin-right: auto !important;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -1249,7 +1235,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] input:not([data-css-module-control]),
 :root[data-app-theme="warm-light"] select:not([data-css-module-control]),
 :root[data-app-theme="warm-light"] textarea:not([data-css-module-control]) {
-  caret-color: #5a49df;
+  caret-color: #806bb6;
 }
 
 :root[data-app-theme="warm-light"] .profileDashboardPage input,
@@ -1258,16 +1244,16 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminV3Shell input,
 :root[data-app-theme="warm-light"] .adminV3Shell select,
 :root[data-app-theme="warm-light"] .adminV3Shell textarea {
-  border-color: #dfe3ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
+  border-color: #efebf3;
+  background: #ffffff;
+  color: #28262e;
 }
 
 :root[data-app-theme="warm-light"] .profileDashboardPage input::placeholder,
 :root[data-app-theme="warm-light"] .profileDashboardPage textarea::placeholder,
 :root[data-app-theme="warm-light"] .adminV3Shell input::placeholder,
 :root[data-app-theme="warm-light"] .adminV3Shell textarea::placeholder {
-  color: #9aa1b3 !important;
+  color: #7b7682;
 }
 
 /* Trainer and admin surfaces */
@@ -1282,24 +1268,24 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminV3KpiGrid > *,
 :root[data-app-theme="warm-light"] .adminClientCardCrm,
 :root[data-app-theme="warm-light"] .adminCalendarPanel {
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
-  color: #151824 !important;
-  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08) !important;
+  border-color: #efebf3;
+  background: #ffffff;
+  color: #28262e;
+  box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08);
 }
 
 :root[data-app-theme="warm-light"] .adminV3Sidebar button,
 :root[data-app-theme="warm-light"] .adminV3Tabs button,
 :root[data-app-theme="warm-light"] .adminV3Filters button {
-  color: #60697f !important;
+  color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] .adminV3Sidebar button.active,
 :root[data-app-theme="warm-light"] .adminV3Tabs button.active,
 :root[data-app-theme="warm-light"] .adminV3Filters button.active {
-  border-color: #dedafb !important;
-  background: #efedff !important;
-  color: #4f3dd2 !important;
+  border-color: #dedafb;
+  background: #f5f2f7;
+  color: #806bb6;
 }
 
 :root[data-app-theme="warm-light"] .adminFocusValue,
@@ -1307,20 +1293,20 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminDashboardMiniName,
 :root[data-app-theme="warm-light"] .adminV3PanelHead strong,
 :root[data-app-theme="warm-light"] .adminV3ProfileCard h3 {
-  color: #151824 !important;
+  color: #28262e;
 }
 
 :root[data-app-theme="warm-light"] .adminFocusLabel,
 :root[data-app-theme="warm-light"] .adminDashboardMiniDesc,
 :root[data-app-theme="warm-light"] .adminV3ProfileCard p,
 :root[data-app-theme="warm-light"] .adminV3ProfileCard small {
-  color: #737b91 !important;
+  color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] .adminDashboardMiniStatus,
 :root[data-app-theme="warm-light"] .adminV3OpenEditor,
 :root[data-app-theme="warm-light"] .adminSummaryLink small {
-  color: #5a49df !important;
+  color: #806bb6;
 }
 
 
@@ -1328,22 +1314,22 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .menuRefreshIconBtn,
 :root[data-app-theme="warm-light"] .backIconBtn,
 :root[data-app-theme="warm-light"] .universalFixedBackPointer {
-  border-color: #e1e4ef !important;
-  background: rgba(255, 255, 255, 0.94) !important;
-  color: #434b61 !important;
-  box-shadow: 0 8px 22px rgba(55, 64, 112, 0.09) !important;
+  border-color: #efebf3;
+  background: rgba(255, 255, 255, 0.94);
+  color: #434b61;
+  box-shadow: 0 8px 22px rgba(55, 64, 112, 0.09);
 }
 
 :root[data-app-theme="warm-light"] .appVersionBadge {
-  color: #8a91a4 !important;
+  color: #7b7682;
 }
 
 :root[data-app-theme="warm-light"] button:focus-visible,
 :root[data-app-theme="warm-light"] input:not([data-css-module-control]):focus-visible,
 :root[data-app-theme="warm-light"] textarea:focus-visible,
 :root[data-app-theme="warm-light"] select:focus-visible {
-  outline: 3px solid rgba(90, 73, 223, 0.2) !important;
-  outline-offset: 2px !important;
+  outline: 3px solid rgba(90, 73, 223, 0.2);
+  outline-offset: 2px;
 }
 
 

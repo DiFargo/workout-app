@@ -8,11 +8,11 @@
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
   color: #28262e;
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
 .refresh svg { width: 22px; height: 22px; stroke-width: 2.1; }
-.refresh:active { background: #f0ebfa; transform: rotate(20deg) scale(0.96); }
+.refresh:active { background: #f5f2f7; transform: rotate(20deg) scale(0.96); }

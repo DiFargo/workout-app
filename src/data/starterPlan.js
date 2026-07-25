@@ -1,4 +1,4 @@
-﻿import { makeThreeSets } from "../utils/workoutPlanNormalization";
+import { makeThreeSets } from "../utils/workoutPlanNormalization";
 
 export const starterPlan = {
   workouts: [

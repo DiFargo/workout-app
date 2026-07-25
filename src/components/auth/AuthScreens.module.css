@@ -8,8 +8,8 @@
     place-items: center;
     overflow: hidden;
     padding: 1.5rem;
-    color: #202326;
-    background: #f3f4f3;
+    color: #28262e;
+    background: #f7f6f8;
   }
 
   .splashInner {
@@ -22,7 +22,7 @@
     justify-content: center;
     padding: 2.125rem 1.5rem;
     overflow: hidden;
-    border: 1px solid #e1e4e5;
+    border: 1px solid #efebf3;
     border-radius: 2.375rem;
     background: rgba(255, 255, 255, 0.94);
     box-shadow:
@@ -47,14 +47,14 @@
     place-items: center;
     border: 1px solid #dce2e5;
     border-radius: 1.75rem;
-    background: #edf1f3;
-    color: #627588;
+    background: #efebf3;
+    color: #7b7682;
     box-shadow: none;
     font-size: 2.625rem;
   }
 
   .splashLogo {
-    color: #202326;
+    color: #28262e;
     font-size: clamp(5.125rem, 22vw, 7.625rem);
     font-weight: 900;
     line-height: 0.92;
@@ -63,7 +63,7 @@
 
   .splashText {
     margin-block-start: 0.875rem;
-    color: #74797f;
+    color: #7b7682;
     font-size: 0.9375rem;
     font-weight: 800;
     letter-spacing: 0.02em;
@@ -74,9 +74,9 @@
     height: 0.5625rem;
     margin-block-start: 1.75rem;
     overflow: hidden;
-    border: 1px solid #e1e4e5;
+    border: 1px solid #efebf3;
     border-radius: 999px;
-    background: #edf1f3;
+    background: #efebf3;
   }
 
   .splashProgress > span {
@@ -84,7 +84,7 @@
     width: 42%;
     height: 100%;
     border-radius: inherit;
-    background: #627588;
+    background: #7b7682;
     box-shadow: none;
     animation: splash-loading 1.2s ease-in-out infinite;
   }
@@ -161,15 +161,15 @@
     }
   }
 
-  :global(:root[data-app-theme="dark-green"]) .appSplash {
-    color: #f4f6f2;
+  :global(:root[data-app-theme="legacy-inactive"]) .appSplash {
+    color: #28262e;
     background:
       radial-gradient(circle at 50% 38%, rgba(127, 159, 58, 0.18), transparent 34%),
       radial-gradient(circle at 50% 58%, rgba(127, 159, 58, 0.08), transparent 42%),
       linear-gradient(180deg, #0e140e 0%, #050805 100%);
   }
 
-  :global(:root[data-app-theme="dark-green"]) .splashInner {
+  :global(:root[data-app-theme="legacy-inactive"]) .splashInner {
     border-color: rgba(127, 159, 58, 0.16);
     background: linear-gradient(180deg, rgba(23, 30, 23, 0.72), rgba(9, 12, 9, 0.42));
     box-shadow:
@@ -177,7 +177,7 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
-  :global(:root[data-app-theme="dark-green"]) .splashMark {
+  :global(:root[data-app-theme="legacy-inactive"]) .splashMark {
     border-color: rgba(127, 159, 58, 0.22);
     background: linear-gradient(180deg, rgba(127, 159, 58, 0.24), rgba(127, 159, 58, 0.11));
     box-shadow:
@@ -185,26 +185,26 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
-  :global(:root[data-app-theme="dark-green"]) .splashLogo {
-    color: #91ad4e;
+  :global(:root[data-app-theme="legacy-inactive"]) .splashLogo {
+    color: #72a686;
     text-shadow: 0 1.125rem 2.875rem rgba(0, 0, 0, 0.55);
   }
 
-  :global(:root[data-app-theme="dark-green"]) .splashText {
+  :global(:root[data-app-theme="legacy-inactive"]) .splashText {
     color: rgba(255, 255, 255, 0.5);
   }
 
-  :global(:root[data-app-theme="dark-green"]) .splashProgress {
+  :global(:root[data-app-theme="legacy-inactive"]) .splashProgress {
     border-color: rgba(255, 255, 255, 0.035);
     background: rgba(255, 255, 255, 0.075);
   }
 
-  :global(:root[data-app-theme="dark-green"]) .splashProgress > span {
-    background: linear-gradient(135deg, #7f9f3a, #91ad4e);
+  :global(:root[data-app-theme="legacy-inactive"]) .splashProgress > span {
+    background: linear-gradient(135deg, #7f9f3a, #72a686);
     box-shadow: 0 0 1.375rem rgba(127, 159, 58, 0.38);
   }
 
-  :global(:root[data-app-theme="dark-green"]) .splashDots > i {
+  :global(:root[data-app-theme="legacy-inactive"]) .splashDots > i {
     background: rgba(145, 173, 78, 0.8);
   }
 }
@@ -229,8 +229,8 @@
   justify-content: center;
   gap: 28px;
   overflow-x: hidden;
-  background: #f3f4f3;
-  color: #202326;
+  background: #f7f6f8;
+  color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -247,14 +247,14 @@
   place-items: center;
   border: 0;
   border-radius: 20px;
-  background: #627588;
+  background: #7b7682;
   color: #fff;
   box-shadow: none;
 }
 
 .loginHero h1 {
   margin: 0;
-  color: #202326;
+  color: #28262e;
   font-size: 34px;
   font-weight: 760;
   line-height: 1.05;
@@ -264,7 +264,7 @@
 .loginHero p {
   max-width: 270px;
   margin: 8px auto 0;
-  color: #74797f;
+  color: #7b7682;
   font-size: 14px;
   line-height: 1.35;
 }
@@ -277,7 +277,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #efebf3;
   border-radius: 28px;
   background: #fff;
   box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
@@ -285,7 +285,7 @@
 
 .loginCard h2 {
   margin: 2px 0 0;
-  color: #202326;
+  color: #28262e;
   font-size: 21px;
   font-weight: 720;
   line-height: 1.15;
@@ -295,7 +295,7 @@
 
 .loginInviteNote {
   margin: 0 0 4px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
@@ -304,7 +304,7 @@
 .loginField {
   display: grid;
   gap: 7px;
-  color: #74797f;
+  color: #7b7682;
   font-size: 12px;
   font-weight: 650;
 }
@@ -313,12 +313,12 @@
   width: 100%;
   min-height: 52px;
   padding: 0 14px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #efebf3;
   border-radius: 14px;
   outline: 0;
   appearance: none;
   background: #f7f8f8;
-  color: #202326;
+  color: #28262e;
   font-size: 16px;
   font-weight: 500;
 }
@@ -356,7 +356,7 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: #627588;
+  color: #7b7682;
   box-shadow: none;
 }
 
@@ -398,7 +398,7 @@
 .loginBtn {
   margin-top: 4px;
   border: 0;
-  background: #627588;
+  background: #7b7682;
   color: #fff;
   box-shadow: none;
   font-size: 16px;
@@ -410,9 +410,9 @@
   align-items: center;
   justify-content: center;
   gap: 9px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #efebf3;
   background: #fff;
-  color: #202326;
+  color: #28262e;
   font-size: 14px;
 }
 
@@ -421,10 +421,10 @@
   height: 24px;
   display: grid;
   place-items: center;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #efebf3;
   border-radius: 50%;
   background: #fff;
-  color: #202326;
+  color: #28262e;
   font-size: 13px;
   font-weight: 750;
 }
@@ -432,7 +432,7 @@
 .loginResetBtn {
   border: 0;
   background: transparent;
-  color: #627588;
+  color: #7b7682;
   font-size: 14px;
 }
 
@@ -455,65 +455,65 @@
   padding:
     max(54px, calc(env(safe-area-inset-top) + 30px))
     16px
-    max(24px, calc(env(safe-area-inset-bottom) + 16px)) !important;
-  gap: 28px !important;
-  background: #f3f4f3 !important;
-  color: #202326 !important;
+    max(24px, calc(env(safe-area-inset-bottom) + 16px));
+  gap: 28px;
+  background: #f7f6f8;
+  color: #28262e;
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard {
-  max-width: none !important;
-  padding: 18px !important;
-  gap: 12px !important;
-  border-color: #e1e4e5 !important;
-  border-radius: 28px !important;
-  background: #fff !important;
-  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07) !important;
+  max-width: none;
+  padding: 18px;
+  gap: 12px;
+  border-color: #efebf3;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .appLogo.appLogo,
 :global(html:root[data-app-theme="warm-light"]) .loginBtn.loginBtn {
-  background: #627588 !important;
-  color: #fff !important;
-  box-shadow: none !important;
+  background: #7b7682;
+  color: #fff;
+  box-shadow: none;
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard input {
-  border-color: #e1e4e5 !important;
-  background: #f7f8f8 !important;
-  color: #202326 !important;
+  border-color: #efebf3;
+  background: #f7f8f8;
+  color: #28262e;
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginHero h1,
 :global(html:root[data-app-theme="warm-light"]) .loginCard h2 {
-  color: #202326 !important;
+  color: #28262e;
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginHero p,
 :global(html:root[data-app-theme="warm-light"]) .loginInviteNote,
 :global(html:root[data-app-theme="warm-light"]) .loginHint {
-  color: #74797f !important;
+  color: #7b7682;
 }
 
-:global(:root[data-app-theme="dark-green"]) .loginPage {
-  background: #0d0f0d;
-  color: #f4f6f2;
+:global(:root[data-app-theme="legacy-inactive"]) .loginPage {
+  background: #28262e;
+  color: #28262e;
 }
 
-:global(:root[data-app-theme="dark-green"]) .loginCard {
+:global(:root[data-app-theme="legacy-inactive"]) .loginCard {
   border-color: #2b302b;
-  background: #171a17;
+  background: #28262e;
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="dark-green"]) .loginHero h1,
-:global(:root[data-app-theme="dark-green"]) .loginCard h2,
-:global(:root[data-app-theme="dark-green"]) .loginGoogleBtn {
-  color: #f4f6f2;
+:global(:root[data-app-theme="legacy-inactive"]) .loginHero h1,
+:global(:root[data-app-theme="legacy-inactive"]) .loginCard h2,
+:global(:root[data-app-theme="legacy-inactive"]) .loginGoogleBtn {
+  color: #28262e;
 }
 
-:global(:root[data-app-theme="dark-green"]) .loginCard input,
-:global(:root[data-app-theme="dark-green"]) .loginGoogleBtn {
+:global(:root[data-app-theme="legacy-inactive"]) .loginCard input,
+:global(:root[data-app-theme="legacy-inactive"]) .loginGoogleBtn {
   border-color: #2b302b;
   background: #1d211d;
 }
@@ -550,7 +550,7 @@
   .loginPage {
     min-height: calc(100dvh - 24px);
     margin: 12px auto;
-    border: 1px solid #e1e4e5;
+    border: 1px solid #efebf3;
     border-radius: 30px;
   }
 }
@@ -560,8 +560,8 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: 16px;
-  background: #f3f4f3 !important;
-  color: #202326;
+  background: #f7f6f8;
+  color: #28262e;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -569,10 +569,10 @@
   width: min(100%, 370px);
   min-height: 286px;
   padding: 30px 24px;
-  border: 1px solid #e1e4e5 !important;
+  border: 1px solid #efebf3;
   border-radius: 30px;
-  background: #fff !important;
-  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07) !important;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashInner::before {
@@ -583,37 +583,37 @@
   width: 64px;
   height: 64px;
   margin-bottom: 16px;
-  border: 0 !important;
+  border: 0;
   border-radius: 20px;
-  background: #627588 !important;
-  color: #fff !important;
-  box-shadow: none !important;
+  background: #7b7682;
+  color: #fff;
+  box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashLogo {
-  color: #202326 !important;
+  color: #28262e;
   font-size: 58px;
   line-height: 0.95;
   letter-spacing: 0.08em;
-  text-shadow: none !important;
+  text-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashText {
-  color: #74797f !important;
+  color: #7b7682;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashProgress {
   height: 6px;
   margin-top: 24px;
-  border: 0 !important;
-  background: #edf1f3 !important;
+  border: 0;
+  background: #efebf3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashProgress > span {
-  background: #627588 !important;
-  box-shadow: none !important;
+  background: #7b7682;
+  box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashDots > i {
-  background: #8296a5 !important;
+  background: #8296a5;
 }

@@ -1,4 +1,4 @@
-﻿
+
 import { Dumbbell, Home, UserRound, Utensils } from "lucide-react";
 import styles from "./BottomBar.module.css";
 

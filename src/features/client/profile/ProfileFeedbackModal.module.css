@@ -28,7 +28,7 @@
   background: var(--background-profile-modal);
   box-shadow: var(--shadow-profile-modal);
   color: var(--color-profile-modal);
-  --gradient-primary: linear-gradient(135deg, #9c88d2, #806bb6);
+  --gradient-primary: linear-gradient(135deg, #8f7ac8, #806bb6);
 }
 
 .header {

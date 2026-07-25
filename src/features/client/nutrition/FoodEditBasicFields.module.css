@@ -296,28 +296,28 @@
   outline-offset: 2px;
 }
 
-:global(:root[data-app-theme="dark-green"]) .field {
+:global(:root[data-app-theme="legacy-inactive"]) .field {
   border-radius: 0;
 }
 
-:global(:root[data-app-theme="dark-green"]) .iconField {
+:global(:root[data-app-theme="legacy-inactive"]) .iconField {
   color: var(--color-food-dialog-text);
   -webkit-text-fill-color: var(--color-food-dialog-text-fill);
 }
 
-:global(:root[data-app-theme="dark-green"]) .input,
-:global(:root[data-app-theme="dark-green"]) .portionInput {
+:global(:root[data-app-theme="legacy-inactive"]) .input,
+:global(:root[data-app-theme="legacy-inactive"]) .portionInput {
   outline: medium none currentColor;
   outline-offset: 0;
 }
 
-:global(:root[data-app-theme="dark-green"]) .input:focus-visible,
-:global(:root[data-app-theme="dark-green"]) .portionInput:focus-visible {
+:global(:root[data-app-theme="legacy-inactive"]) .input:focus-visible,
+:global(:root[data-app-theme="legacy-inactive"]) .portionInput:focus-visible {
   outline: 3px solid var(--color-food-edit-focus);
   outline-offset: 2px;
 }
 
-:global(:root[data-app-theme="dark-green"]) .presetRow {
+:global(:root[data-app-theme="legacy-inactive"]) .presetRow {
   width: 100%;
   height: auto;
   margin: 0 0 7px;
@@ -332,7 +332,7 @@
   -webkit-text-fill-color: var(--color-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .presetButton {
+:global(:root[data-app-theme="legacy-inactive"]) .presetButton {
   width: 42px;
   min-width: 42px;
   max-width: none;
@@ -350,18 +350,18 @@
   line-height: 1.5;
 }
 
-:global(:root[data-app-theme="dark-green"]) .presetActive {
+:global(:root[data-app-theme="legacy-inactive"]) .presetActive {
   border-color: var(--color-food-edit-preset-active-border);
   background: var(--color-food-edit-preset-active-surface);
   color: var(--color-food-edit-preset-active-text);
   -webkit-text-fill-color: var(--color-food-edit-preset-active-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .portionField {
+:global(:root[data-app-theme="legacy-inactive"]) .portionField {
   gap: 7px;
 }
 
-:global(:root[data-app-theme="dark-green"]) .portionRow {
+:global(:root[data-app-theme="legacy-inactive"]) .portionRow {
   height: 62px;
   min-height: 46px;
   padding: 0;
@@ -375,7 +375,7 @@
   -webkit-text-fill-color: var(--color-food-dialog-text-fill);
 }
 
-:global(:root[data-app-theme="dark-green"]) .portionInput {
+:global(:root[data-app-theme="legacy-inactive"]) .portionInput {
   width: 100%;
   height: 52px;
   min-height: 52px;
@@ -390,7 +390,7 @@
   text-align: start;
 }
 
-:global(:root[data-app-theme="dark-green"]) .portionToggle {
+:global(:root[data-app-theme="legacy-inactive"]) .portionToggle {
   height: 46px;
   min-width: 86px;
   min-height: 46px;
@@ -471,7 +471,7 @@
   height: 50px;
   min-height: 50px;
   padding: 12px 14px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
   color: #28262e;
@@ -482,11 +482,11 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .input::placeholder,
-:global(:root[data-app-theme="warm-light"]) .portionInput::placeholder { color: #a0a5a9; -webkit-text-fill-color: #a0a5a9; }
+:global(:root[data-app-theme="warm-light"]) .portionInput::placeholder { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 
 :global(:root[data-app-theme="warm-light"]) .iconBox {
   padding: 10px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -497,7 +497,7 @@
 :global(:root[data-app-theme="warm-light"]) .iconPreview {
   border: 0;
   border-radius: 14px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
   box-shadow: none;
 }
@@ -505,7 +505,7 @@
 :global(:root[data-app-theme="warm-light"]) .presetRow { gap: 6px; }
 :global(:root[data-app-theme="warm-light"]) .presetButton {
   min-height: 44px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 13px;
   background: #fff;
   color: #28262e;
@@ -515,22 +515,22 @@
 
 :global(:root[data-app-theme="warm-light"]) .presetActive {
   border-color: #cfd7dc;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
   -webkit-text-fill-color: #8f7ac8;
 }
 
 :global(:root[data-app-theme="warm-light"]) .macroGrid { gap: 7px; }
-:global(:root[data-app-theme="warm-light"]) .macroField { padding: 10px; border: 1px solid #ebe6ef; border-radius: 16px; background: #fff; }
-:global(:root[data-app-theme="warm-light"]) .macroInput { border: 0; background: #f0ebfa; }
-:global(:root[data-app-theme="warm-light"]) .portionRow { border: 1px solid #ebe6ef; border-radius: 16px; background: #fff; }
+:global(:root[data-app-theme="warm-light"]) .macroField { padding: 10px; border: 1px solid #efebf3; border-radius: 16px; background: #fff; }
+:global(:root[data-app-theme="warm-light"]) .macroInput { border: 0; background: #f5f2f7; }
+:global(:root[data-app-theme="warm-light"]) .portionRow { border: 1px solid #efebf3; border-radius: 16px; background: #fff; }
 :global(:root[data-app-theme="warm-light"]) .portionRow .portionInput { border: 0; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .portionToggle {
   min-width: 56px;
   border: 0;
-  border-left: 1px solid #ebe6ef;
+  border-left: 1px solid #efebf3;
   border-radius: 0 16px 16px 0;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
   -webkit-text-fill-color: #8f7ac8;
   font-weight: 600;

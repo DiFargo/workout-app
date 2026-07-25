@@ -248,16 +248,16 @@
   box-shadow: var(--focus-ring);
 }
 
-:global(:root[data-app-theme="dark-green"]) .recentItem {
+:global(:root[data-app-theme="legacy-inactive"]) .recentItem {
   box-shadow: var(--shadow-card);
 }
 
-:global(:root[data-app-theme="dark-green"]) .photoAction {
+:global(:root[data-app-theme="legacy-inactive"]) .photoAction {
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
 }
 
-:global(:root[data-app-theme="dark-green"]) .photoAction::before {
+:global(:root[data-app-theme="legacy-inactive"]) .photoAction::before {
   background: linear-gradient(
     180deg,
     rgba(13, 15, 13, 0) 0%,
@@ -351,7 +351,7 @@
   max-height: 88px;
   padding: 10px 6px;
   gap: 8px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -377,7 +377,7 @@
   padding: 10px 12px;
   grid-template-columns: 44px minmax(0, 1fr) 18px;
   gap: 11px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 20px;
   outline: 0;
   background: #fff;
@@ -400,7 +400,7 @@
   height: 44px;
   min-height: 44px;
   border-radius: 14px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
 }
 
@@ -416,7 +416,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoChevron {
-  color: #a9aeb2;
+  color: #7b7682;
   font-weight: 500;
 }
 

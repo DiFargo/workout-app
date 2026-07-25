@@ -7,7 +7,7 @@
   grid-template-columns: 20px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 6px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 20px;
   background: #fff;
   color: #28262e;
@@ -39,4 +39,4 @@
 .startButton.running { background: #806bb6; }
 .controls { display: flex; gap: 5px; }
 .controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: #f4f4f8; color: #28262e; font: inherit; font-size: 10px; font-weight: 700; }
-.controls .add { background: #f0ebfa; color: #8f7ac8; }
+.controls .add { background: #f5f2f7; color: #8f7ac8; }

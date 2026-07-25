@@ -80,7 +80,7 @@
   max-height: 44px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
 }
@@ -116,13 +116,13 @@
   gap: 12px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 22px;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .card.card:active {
-  background: #fbfafc;
+  background: #ffffff;
   transform: scale(0.99);
 }
 
@@ -130,7 +130,7 @@
   width: 48px;
   height: 48px;
   color: #8f7ac8;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border-radius: 16px;
   font-size: 17px;
   font-weight: 750;
@@ -152,7 +152,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .card.card > i {
-  color: #a9aeb2;
+  color: #7b7682;
   font-size: 22px;
 }
 
@@ -162,7 +162,7 @@
   padding: 0 14px;
   color: #7b7682;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   box-shadow: none;
   font-size: 12px;

@@ -413,15 +413,15 @@
   box-shadow: 0 9px 22px rgba(72, 63, 87, 0.055);
 }
 
-:global(:root[data-app-theme="dark-green"]) .searchIcon {
+:global(:root[data-app-theme="legacy-inactive"]) .searchIcon {
   color: rgba(255, 255, 255, 0.56);
 }
 
-:global(:root[data-app-theme="dark-green"]) .confirmInputLabel {
+:global(:root[data-app-theme="legacy-inactive"]) .confirmInputLabel {
   border-radius: 0;
 }
 
-:global(:root[data-app-theme="dark-green"]) .searchInput:focus-visible {
+:global(:root[data-app-theme="legacy-inactive"]) .searchInput:focus-visible {
   outline: 3px solid #8f7ac8;
   outline-offset: 2px;
 }
@@ -489,11 +489,11 @@
 
 :global(:root[data-app-theme="warm-light"]) .pickerSheet,
 :global(:root[data-app-theme="warm-light"]) .confirmCard {
-  width: min(370px, calc(100vw - 32px)) !important;
-  max-width: 370px !important;
+  width: min(370px, calc(100vw - 32px));
+  max-width: 370px;
   padding: 16px;
-  border: 1px solid #ebe6ef;
-  border-radius: 26px !important;
+  border: 1px solid #efebf3;
+  border-radius: 26px;
   background: #fff;
   color: #28262e;
   -webkit-text-fill-color: #28262e;
@@ -502,9 +502,9 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .pickerSheet {
-  max-height: min(720px, calc(100dvh - 32px)) !important;
-  overflow: hidden !important;
-  scrollbar-gutter: auto !important;
+  max-height: min(720px, calc(100dvh - 32px));
+  overflow: hidden;
+  scrollbar-gutter: auto;
 }
 :global(:root[data-app-theme="warm-light"]) .pickerHeader { min-height: 44px; }
 
@@ -515,7 +515,7 @@
   min-height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #28262e;
   -webkit-text-fill-color: #28262e;
   box-shadow: none;
@@ -528,21 +528,21 @@
 
 :global(:root[data-app-theme="warm-light"]) .searchBox {
   min-height: 50px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #28262e;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchIcon { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 :global(:root[data-app-theme="warm-light"]) .searchInput { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .searchInput::placeholder { color: #a0a5a9; -webkit-text-fill-color: #a0a5a9; }
+:global(:root[data-app-theme="warm-light"]) .searchInput::placeholder { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 
 :global(:root[data-app-theme="warm-light"]) .results { gap: 6px; }
 :global(:root[data-app-theme="warm-light"]) .resultCard {
   min-height: 64px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
   color: #28262e;
@@ -553,7 +553,7 @@
 :global(:root[data-app-theme="warm-light"]) .confirmIcon {
   border: 0;
   border-radius: 14px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
   -webkit-text-fill-color: #8f7ac8;
 }
@@ -562,9 +562,9 @@
 :global(:root[data-app-theme="warm-light"]) .resultMeta,
 :global(:root[data-app-theme="warm-light"]) .confirmMeta { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
 :global(:root[data-app-theme="warm-light"]) .resultAction { color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .manualCard { background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .manualCard { background: #f5f2f7; }
 :global(:root[data-app-theme="warm-light"]) .empty,
-:global(:root[data-app-theme="warm-light"]) .loading { border-color: #ebe6ef; background: #f0ebfa; color: #7b7682; -webkit-text-fill-color: #7b7682; }
+:global(:root[data-app-theme="warm-light"]) .loading { border-color: #efebf3; background: #f5f2f7; color: #7b7682; -webkit-text-fill-color: #7b7682; }
 
 :global(:root[data-app-theme="warm-light"]) .confirmOverlay {
   align-items: flex-end;
@@ -572,10 +572,10 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .confirmInputTitle { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; text-transform: none; }
-:global(:root[data-app-theme="warm-light"]) .confirmInputWrap { border: 1px solid #ebe6ef; border-radius: 16px; background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .confirmInputWrap { border: 1px solid #efebf3; border-radius: 16px; background: #f5f2f7; }
 :global(:root[data-app-theme="warm-light"]) .confirmInput { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .confirmUnit { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 :global(:root[data-app-theme="warm-light"]) .confirmActions { gap: 8px; }
 :global(:root[data-app-theme="warm-light"]) .confirmButton { min-height: 50px; border: 0; border-radius: 16px; font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .confirmCancel { background: #f0ebfa; color: #28262e; -webkit-text-fill-color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .confirmCancel { background: #f5f2f7; color: #28262e; -webkit-text-fill-color: #28262e; }
 :global(:root[data-app-theme="warm-light"]) .confirmAdd { background: #8f7ac8; color: #fff; -webkit-text-fill-color: #fff; }

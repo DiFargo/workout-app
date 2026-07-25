@@ -71,13 +71,13 @@
     padding: 8px;
     color: #28262e;
     background: #ffffff;
-    border: 1px solid #ebe6ef;
+    border: 1px solid #efebf3;
     border-radius: 22px;
     box-shadow: none;
   }
 
   :global(:root[data-app-theme="warm-light"]) .stats.stats > div + div {
-    border-left-color: #ebe6ef;
+    border-left-color: #efebf3;
   }
 
   :global(:root[data-app-theme="warm-light"]) .stats.stats strong {
@@ -100,7 +100,7 @@
   :global(:root[data-app-theme="warm-light"]) .week.week {
     overflow: hidden;
     background: #ffffff;
-    border: 1px solid #ebe6ef;
+    border: 1px solid #efebf3;
     border-radius: 22px;
   }
 
@@ -119,11 +119,11 @@
     gap: 10px;
     color: #28262e;
     background: transparent;
-    border-top-color: #ebe6ef;
+    border-top-color: #efebf3;
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button:active {
-    background: #fbfafc;
+    background: #ffffff;
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button small,
@@ -142,8 +142,8 @@
   :global(:root[data-app-theme="warm-light"]) .week.week button > i {
     width: 32px;
     height: 32px;
-    color: #a9aeb2;
-    background: #f0ebfa;
+    color: #7b7682;
+    background: #f5f2f7;
     border: 0;
     border-radius: 12px;
     font-size: 19px;
@@ -161,7 +161,7 @@
     gap: 7px;
     color: #28262e;
     background: #ffffff;
-    border: 1px solid #ebe6ef;
+    border: 1px solid #efebf3;
     border-radius: 24px;
   }
 

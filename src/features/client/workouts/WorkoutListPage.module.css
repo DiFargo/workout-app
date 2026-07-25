@@ -28,7 +28,7 @@
   }
 
   .individualMode {
-    --render-accent: #8a74c0;
+    --render-accent: #8f7ac8;
   }
 
   .hero {
@@ -669,8 +669,8 @@
       overflow: hidden;
       background:
         radial-gradient(circle at 50% -12%, rgba(156, 136, 210, 0.055), transparent 34%),
-        linear-gradient(180deg, #fcfbfd 0%, #f7f6f8 100%);
-      border: 0.0625rem solid #ebe6ef;
+        linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
+      border: 0.0625rem solid #efebf3;
       border-radius: 1.5rem;
       box-shadow:
         0 1.375rem 3.625rem rgba(72, 63, 87, 0.1),
@@ -696,7 +696,7 @@
       min-height: 0;
       margin: 0;
       color: #28262e;
-      -webkit-text-fill-color: #6f6875;
+      -webkit-text-fill-color: #7b7682;
       font-size: 1.5rem;
       font-weight: 850;
       line-height: 1.08;
@@ -721,9 +721,9 @@
       min-width: 2.75rem;
       height: 2.75rem;
       min-height: 2.75rem;
-      color: #5f5848;
+      color: #7b7682;
       background: rgba(255, 255, 255, 0.96);
-      border-color: #ebe6ef;
+      border-color: #efebf3;
       border-radius: 1rem;
       box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
     }
@@ -796,14 +796,14 @@
       padding: 0 0.875rem;
       align-items: center;
       justify-content: center;
-      color: #8a74c0;
+      color: #8f7ac8;
       font-size: 0.625rem;
       font-weight: 700;
       line-height: 1;
       white-space: nowrap;
       overflow: visible;
       background: #f2f1fd;
-      border: 0.0625rem solid #e4dcf2;
+      border: 0.0625rem solid #efebf3;
       border-radius: 1.125rem;
       backdrop-filter: none;
     }
@@ -837,9 +837,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #b9a9e5 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #b9a9e5 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #9c88d2 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #c4b8e3 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #c4b8e3 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #8f7ac8 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -866,7 +866,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0;
-      color: #211b12;
+      color: #28262e;
       overflow: hidden;
     }
 
@@ -887,7 +887,7 @@
       width: 5.5rem;
       height: 0.4375rem;
       margin: 1.5rem 0 2.375rem;
-      background: linear-gradient(90deg, #8a74c0, #806bb6);
+      background: linear-gradient(90deg, #8f7ac8, #806bb6);
       border-radius: var(--radius-pill);
       box-shadow: 0 0.5rem 1.25rem rgba(143, 122, 200, 0.18);
     }
@@ -1039,7 +1039,7 @@
       place-items: center;
       color: #28262e;
       background: #fff;
-      border: 0.0625rem solid #ebe6ef;
+      border: 0.0625rem solid #efebf3;
       border-radius: 50%;
     }
 
@@ -1125,8 +1125,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #8a74c0 0 var(--completed-workouts-progress, 0%),
-        #ebe6ef var(--completed-workouts-progress, 0%) 100%
+        #8f7ac8 0 var(--completed-workouts-progress, 0%),
+        #efebf3 var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1149,7 +1149,7 @@
       gap: 0.25rem;
       overflow: hidden;
       background: rgba(248, 251, 255, 0.92);
-      border: 0.0625rem solid #ede8f1;
+      border: 0.0625rem solid #f7f6f8;
       border-radius: 1.25rem;
       box-shadow:
         0 1.125rem 2.625rem rgba(72, 63, 87, 0.17),
@@ -1183,9 +1183,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #7561aa;
-      background: #f0effd;
-      border-color: #e4dcf2;
+      color: #806bb6;
+      background: #f7f6f8;
+      border-color: #efebf3;
       box-shadow: none;
     }
 
@@ -1241,7 +1241,7 @@
       height: 3rem;
       min-height: 3rem;
       align-items: center;
-      color: #5f5848;
+      color: #7b7682;
       -webkit-text-fill-color: currentColor;
       font-size: 1.75rem;
       font-weight: 900;
@@ -1256,7 +1256,7 @@
     .individualMode .menuBar {
       padding: 0.4375rem;
       background: rgba(248, 251, 255, 0.94);
-      border-color: #e7e1ee;
+      border-color: #efebf3;
       box-shadow:
         0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -1273,9 +1273,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #8a74c0;
-      background: #f0ebfa;
-      border-color: #e4dcf2;
+      color: #8f7ac8;
+      background: #f5f2f7;
+      border-color: #efebf3;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
   }
@@ -1333,12 +1333,12 @@
       justify-items: stretch;
       row-gap: 0.25rem;
       color: #161924;
-      border: 0.0625rem solid #ebe6ef;
+      border: 0.0625rem solid #efebf3;
       border-radius: 1.5rem;
       overflow: hidden;
       background:
         radial-gradient(circle at 45% -10%, rgba(143, 122, 200, 0.07), transparent 42%),
-        linear-gradient(180deg, #fcfbfd 0%, #f6f7fc 100%);
+        linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
     }
 
     .individualMode .hero {
@@ -1362,7 +1362,7 @@
       margin: 0;
       display: flex;
       align-items: center;
-      color: #5f5848;
+      color: #7b7682;
       font-size: 1.75rem;
       font-weight: 900;
       line-height: 1.06;
@@ -1391,9 +1391,9 @@
       height: 3rem;
       min-height: 3rem;
       max-height: 3rem;
-      color: #5f5848;
+      color: #7b7682;
       background: rgba(255, 255, 255, 0.96);
-      border: 0.0625rem solid #ebe6ef;
+      border: 0.0625rem solid #efebf3;
       border-radius: 1rem;
       box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
       transform: translate(0.0625rem, -0.1875rem);
@@ -1483,7 +1483,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       background: rgba(244, 241, 255, 0.94);
-      border: 1px solid #e4dcf2;
+      border: 1px solid #efebf3;
       border-radius: var(--radius-pill);
       backdrop-filter: none;
     }
@@ -1517,9 +1517,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #b9a9e5 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #b9a9e5 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #9c88d2 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #c4b8e3 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #c4b8e3 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #8f7ac8 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -1564,7 +1564,7 @@
       width: 5.125rem;
       height: 0.375rem;
       margin: 1.125rem 0 1.75rem;
-      background: linear-gradient(90deg, #8a74c0, #806bb6);
+      background: linear-gradient(90deg, #8f7ac8, #806bb6);
       border-radius: var(--radius-pill);
       box-shadow: 0 0.5rem 1.25rem rgba(143, 122, 200, 0.18);
     }
@@ -1768,7 +1768,7 @@
       padding: 0 0.25rem 0.5rem;
       align-items: flex-end;
       justify-content: space-between;
-      color: #5f5848;
+      color: #7b7682;
       font-size: 0.75rem;
       font-weight: 850;
       line-height: 1;
@@ -1784,8 +1784,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #8a74c0 0 var(--completed-workouts-progress, 0%),
-        #ebe6ef var(--completed-workouts-progress, 0%) 100%
+        #8f7ac8 0 var(--completed-workouts-progress, 0%),
+        #efebf3 var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1806,7 +1806,7 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.25rem;
       background: rgba(248, 251, 255, 0.94);
-      border: 1px solid #e7e1ee;
+      border: 1px solid #efebf3;
       border-radius: 1.25rem;
       box-shadow:
         0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
@@ -1834,9 +1834,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #8a74c0;
-      background: #f0ebfa;
-      border-color: #e4dcf2;
+      color: #8f7ac8;
+      background: #f5f2f7;
+      border-color: #efebf3;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -2024,7 +2024,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:active {
-  background: #f0ebfa;
+  background: #f5f2f7;
   transform: scale(0.97);
 }
 
@@ -2047,13 +2047,13 @@
   gap: 12px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 20px;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) button.workoutCard.workoutCard:hover {
-  border-color: #cfd6da;
+  border-color: #efebf3;
   transform: none;
 }
 
@@ -2061,7 +2061,7 @@
   width: 58px;
   height: 58px;
   border-radius: 16px;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 :global(:root[data-app-theme="warm-light"]) .listDay.listDay {
@@ -2079,7 +2079,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .listArrow.listArrow {
-  color: #a9aeb2;
+  color: #7b7682;
   font-size: 24px;
 }
 
@@ -2112,7 +2112,7 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 24px;
   background: #ffffff;
   box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
@@ -2203,7 +2203,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .syncBadge.syncBadge {
   color: #ffffff;
-  background: #b9a9e5;
+  background: #c4b8e3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
@@ -2212,7 +2212,7 @@
   height: calc(100% - 160px);
   border-radius: 23px 23px 0 0;
   opacity: 1;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage::after {
@@ -2232,7 +2232,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback {
   color: #28262e;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback small {
@@ -2289,7 +2289,7 @@
   gap: 4px;
   overflow: hidden;
   color: #7b7682;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border: 0;
   border-radius: 12px;
   font-size: 9.5px;
@@ -2352,7 +2352,7 @@
   gap: 10px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 24px;
   box-shadow: none;
 }
@@ -2361,7 +2361,7 @@
   width: 54px;
   height: 54px;
   color: #8f7ac8;
-  background: #f0ebfa;
+  background: #f5f2f7;
   font-size: 22px;
 }
 
@@ -2429,7 +2429,7 @@
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 14px;
   text-transform: none;
 }
@@ -2447,7 +2447,7 @@
   align-items: flex-start;
   color: #7b7682;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   font-size: 10px;
   font-weight: 600;
@@ -2463,7 +2463,7 @@
   background: linear-gradient(
     90deg,
     #8f7ac8 var(--completed-workouts-progress, 0%),
-    #dce3e7 var(--completed-workouts-progress, 0%)
+    #efebf3 var(--completed-workouts-progress, 0%)
   );
 }
 
@@ -2559,7 +2559,7 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  border-top: 1px solid #ebe6ef;
+  border-top: 1px solid #efebf3;
   border-radius: 24px;
 }
 
@@ -2590,7 +2590,7 @@
   background: linear-gradient(
     90deg,
     #8f7ac8 var(--completed-workouts-progress, 0%),
-    #dce3e7 var(--completed-workouts-progress, 0%)
+    #efebf3 var(--completed-workouts-progress, 0%)
   );
   border-radius: 2px;
 }

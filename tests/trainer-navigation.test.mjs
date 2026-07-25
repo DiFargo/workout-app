@@ -61,7 +61,7 @@ test("program overview uses compact app-colored cards and ends with an Add progr
   assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*?\.grid \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(styles, /grid-template-areas:\s*"title status"\s*"stats stats"/);
   assert.match(styles, /background: #fff/);
-  assert.match(styles, /background: #f8f6ff/);
+  assert.match(styles, /background: #f7f6f8/);
   assert.doesNotMatch(styles, /!important/);
   assert.match(styles, /border: 2px solid #fff/);
   assert.match(styles, /border: 2px dashed #bca9fa/);
@@ -176,13 +176,14 @@ test("trainer workspace does not overlay the brand with the legacy fixed back bu
 test("mobile client invite action sits beside the client search", async () => {
   const source = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
   const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceCalm.module.css", import.meta.url), "utf8");
+  const mobileStyles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceMobile.module.css", import.meta.url), "utf8");
   const clientsPage = source.match(/function TrainerClientsPage\([\s\S]*?\n}\n\nfunction getWorkoutTitle/)?.[0] || "";
 
   assert.match(clientsPage, /className="trainerNextClientSearchRow"/);
   assert.match(clientsPage, /className="trainerNextClientSearchAdd"[\s\S]*?onClick=\{onCreateClient\}/);
   assert.doesNotMatch(clientsPage, /trainerNextMobileAddClient/);
   assert.match(styles, /trainerNextClientSearchRow\) \{[\s\S]*?gap: 8px/);
-  assert.match(styles, /trainerNextClientSearchAdd\) \{[\s\S]*?min-width: 132px/);
+  assert.match(mobileStyles, /trainerNextClientSearchAdd\) \{[\s\S]*?min-width: 132px/);
 });
 
 test("trainer editor Back returns directly to the programs overview", async () => {
@@ -283,7 +284,7 @@ test("client card exposes compact Messages without the trainer note card", async
   assert.match(clientTabs, /\{ id: "messages", label: "Сообщения" \}/);
   assert.doesNotMatch(clientTabs, /label: "Заметки"/);
   assert.match(workspace, /\["messages", "notes"\]\.includes\(activeTab\)/);
-  assert.match(messagesView, /id="trainer-client-messages-title">Сообщения/);
+  assert.match(messagesView, /embedded \? "Новые сообщения" : "Сообщения"/);
   assert.match(messagesView, /aria-label="Фильтры сообщений клиента"/);
   assert.match(messagesView, /Ждут ответа/);
   assert.match(messagesView, /Обработаны/);
@@ -294,7 +295,8 @@ test("client card exposes compact Messages without the trainer note card", async
   assert.doesNotMatch(overviewView, /trainerNextRecommendation/);
   assert.match(tasksComponent, /Задания клиенту/);
   assert.doesNotMatch(messagesView, /trainerNextNoteCard|StickyNote|\bnote\b/);
-  assert.match(styles, /grid-template-columns: 34px minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.embeddedPanel/);
   assert.match(styles, /\.replyPrimary/);
   assert.doesNotMatch(styles, /\.tasksPanel/);
   assert.match(tasksStyles, /grid-column: 1 \/ -1/);
@@ -338,15 +340,15 @@ test("trainer constructor keeps editable names without pencil decorations", asyn
 });
 
 test("trainer program days open in a dismissible exercise editor modal", async () => {
-  const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
-  const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspace.module.css", import.meta.url), "utf8");
+  const workspace = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.module.css", import.meta.url), "utf8");
 
   assert.match(workspace, /const \[isDayEditorOpen, setIsDayEditorOpen\] = useState\(false\)/);
   assert.match(workspace, /setIsDayEditorOpen\(true\)/);
   assert.match(workspace, /aria-label="Закрыть редактор дня"/);
-  assert.match(workspace, /trainerProgramDayEditorBackdrop/);
-  assert.match(styles, /trainerProgramDayPanelModal/);
-  assert.match(styles, /trainerProgramDayModalHeader/);
+  assert.match(workspace, /styles\.dayEditorBackdrop/);
+  assert.match(styles, /\.dayEditorModal\s*\{/);
+  assert.match(styles, /\.dayEditorModalHeader\s*\{/);
 });
 
 test("exercise progress load action opens a two-path trainer decision modal", async () => {

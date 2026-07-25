@@ -172,21 +172,21 @@
   box-shadow: var(--focus-ring);
 }
 
-:global(:root[data-app-theme="dark-green"]) .modeButton,
-:global(:root[data-app-theme="dark-green"]) .dropdownButton,
-:global(:root[data-app-theme="dark-green"]) .menu {
+:global(:root[data-app-theme="legacy-inactive"]) .modeButton,
+:global(:root[data-app-theme="legacy-inactive"]) .dropdownButton,
+:global(:root[data-app-theme="legacy-inactive"]) .menu {
   border-color: var(--color-control-border);
   background: var(--color-surface);
   color: var(--color-text);
   box-shadow: var(--shadow-card);
 }
 
-:global(:root[data-app-theme="dark-green"]) .menuItem {
+:global(:root[data-app-theme="legacy-inactive"]) .menuItem {
   color: var(--color-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .menuItem:hover,
-:global(:root[data-app-theme="dark-green"]) .menuItem:active {
+:global(:root[data-app-theme="legacy-inactive"]) .menuItem:hover,
+:global(:root[data-app-theme="legacy-inactive"]) .menuItem:active {
   background: var(--color-control-surface);
   color: var(--color-text);
 }
@@ -218,9 +218,9 @@
   margin-bottom: 12px;
   padding: 4px;
   gap: 4px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 :global(:root[data-app-theme="warm-light"]) .modeButton,
@@ -252,7 +252,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .menu {
   padding: 6px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.98);
   color: #28262e;
@@ -268,4 +268,4 @@
   font-weight: 500;
 }
 
-:global(:root[data-app-theme="warm-light"]) .menuItem.selected { background: #f0ebfa; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .menuItem.selected { background: #f5f2f7; color: #8f7ac8; }

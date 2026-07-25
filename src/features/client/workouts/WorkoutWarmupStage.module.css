@@ -308,7 +308,7 @@
   min-height: 26px;
   padding: 6px 10px;
   color: #8f7ac8;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border: 0;
   border-radius: 13px;
   font-size: 9px;
@@ -345,7 +345,7 @@
   min-height: 62px;
   padding: 10px 12px;
   gap: 10px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border-radius: 17px;
 }
 
@@ -372,7 +372,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .steps.steps {
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 19px;
 }
 
@@ -386,16 +386,16 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .item.item + .item.item {
-  border-top: 1px solid #ebe6ef;
+  border-top: 1px solid #efebf3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .item.item.completed {
-  background: #fbfafc;
+  background: #ffffff;
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemMarker.itemMarker {
   color: #8f7ac8;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 :global(:root[data-app-theme="warm-light"]) .completed .itemMarker.itemMarker {
@@ -418,7 +418,7 @@
 :global(:root[data-app-theme="warm-light"]) .timer.timer {
   min-height: 60px;
   padding: 9px 11px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border-radius: 17px;
 }
 

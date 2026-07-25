@@ -368,7 +368,7 @@ export function buildTrainerWorkoutReview(historyItem = {}, plannedWorkout = {})
   const feedbackId = String(historyItem.postWorkoutFeedback?.id || historyItem.readiness?.id || "").trim();
   const flags = [
     clientComment ? "clientComment" : "",
-    /pain|hurt|ache|Ð±Ð¾Ð»|Ñ‚Ñ€Ð°Ð²Ð¼|ÑÑƒÑÑ‚Ð°Ð²/i.test(clientComment) ? "pain" : "",
+    /pain|hurt|ache|бол|травм|сустав/i.test(clientComment) ? "pain" : "",
     plannedNames.some((name) => !completedExerciseNames.has(name)) ? "skipped" : ""
   ].filter(Boolean);
 

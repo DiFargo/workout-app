@@ -685,7 +685,7 @@
 :global(:root[data-app-theme="warm-light"]) .main.main > .active,
 :global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active {
   border: 0;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
   box-shadow: none;
 }
@@ -777,7 +777,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .training.training > .active {
   color: #8f7ac8;
-  background: #f0ebfa;
+  background: #f5f2f7;
   border: 0;
   box-shadow: none;
 }

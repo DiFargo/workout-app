@@ -20,7 +20,7 @@
   grid-template-columns: 42px 1fr 20px;
   align-items: center;
   gap: 13px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 22px;
 }
 
@@ -33,18 +33,18 @@
   display: grid;
   place-items: center;
   border-radius: 13px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
 }
 .profileIcon svg { width: 21px; height: 21px; stroke-width: 2.1; }
 .accountText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
 .accountText strong { max-width: 100%; overflow: hidden; font-size: 13px; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
 .accountText small { margin-top: 2px; color: #7b7682; font-size: 11px; font-weight: 500; line-height: 16px; }
-.chevron { width: 20px; height: 20px; color: #a9aeb2; stroke-width: 2; }
+.chevron { width: 20px; height: 20px; color: #7b7682; stroke-width: 2; }
 
 .groupSection { margin: 0; }
 .groupSection h2 { height: 24px; margin: 0 0 0 4px; color: #7b7682; font-size: 10px; font-weight: 700; line-height: 12px; letter-spacing: 0.8px; }
-.group { overflow: hidden; border: 1px solid #ebe6ef; border-radius: 22px; background: #fff; }
+.group { overflow: hidden; border: 1px solid #efebf3; border-radius: 22px; background: #fff; }
 
 .row {
   height: 70px;
@@ -63,16 +63,16 @@
   right: 15px;
   bottom: 0;
   left: 45px;
-  background: #ebe6ef;
+  background: #efebf3;
 }
 
-.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f0ebfa; color: #8f7ac8; }
+.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f5f2f7; color: #8f7ac8; }
 .icon svg { width: 21px; height: 21px; stroke-width: 2.1; }
 .icon.warm { background: #fff2ec; color: #ae8768; }
 .text { min-width: 0; display: flex; flex-direction: column; }
 .text strong { overflow: hidden; color: #28262e; font-size: 13px; font-weight: 700; line-height: 18px; text-overflow: ellipsis; white-space: nowrap; }
 .text small { overflow: hidden; color: #7b7682; font-size: 10px; font-weight: 500; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
-.row:active, .account:active { background: #fbfafc; }
+.row:active, .account:active { background: #ffffff; }
 
 .logoutButton {
   width: 100%;

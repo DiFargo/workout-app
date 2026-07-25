@@ -139,7 +139,7 @@
   -webkit-text-fill-color: var(--color-food-product-screen-text-fill);
 }
 
-:global(:root[data-app-theme="dark-green"]) .productOverlay {
+:global(:root[data-app-theme="legacy-inactive"]) .productOverlay {
   padding: 8px;
   scrollbar-width: auto;
   scrollbar-color: auto;
@@ -154,13 +154,13 @@
   color: var(--color-food-product-screen-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .productLayout {
+:global(:root[data-app-theme="legacy-inactive"]) .productLayout {
   padding: 18px 12px calc(106px + env(safe-area-inset-bottom, 0px));
   border-radius: 24px;
   scrollbar-color: auto;
 }
 
-:global(:root[data-app-theme="dark-green"]) .headerLayout {
+:global(:root[data-app-theme="legacy-inactive"]) .headerLayout {
   width: 100%;
   max-width: none;
   height: 100dvh;
@@ -173,11 +173,11 @@
   background-image: var(--gradient-food-search-screen);
 }
 
-:global(:root[data-app-theme="dark-green"]) .searchOverlay {
+:global(:root[data-app-theme="legacy-inactive"]) .searchOverlay {
   padding: 8px;
 }
 
-:global(:root[data-app-theme="dark-green"]) .fixtureLayout {
+:global(:root[data-app-theme="legacy-inactive"]) .fixtureLayout {
   max-width: 430px;
   height: 100dvh;
   min-height: 100dvh;
@@ -247,14 +247,14 @@
 :global(:root[data-app-theme="warm-light"]) .headerLayout,
 :global(:root[data-app-theme="warm-light"]) .productLayout,
 :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
-  width: min(100%, 402px) !important;
-  max-width: 402px !important;
+  width: min(100%, 402px);
+  max-width: 402px;
   height: 100dvh;
   min-height: 100dvh;
-  max-height: 100dvh !important;
+  max-height: 100dvh;
   margin: 0 auto;
   border: 0;
-  border-radius: 0 !important;
+  border-radius: 0;
   background: #f7f6f8;
   color: #28262e;
   box-shadow: none;
@@ -263,9 +263,9 @@
 
 :global(:root[data-app-theme="warm-light"]) .searchScreen,
 :global(:root[data-app-theme="warm-light"]) .headerLayout {
-  overflow-x: hidden !important;
-  overflow-y: hidden !important;
-  scrollbar-gutter: auto !important;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  scrollbar-gutter: auto;
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchLayout {
@@ -274,8 +274,8 @@
 
 :global(:root[data-app-theme="warm-light"]) .myProductsLayout {
   padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(112px + env(safe-area-inset-bottom, 0px));
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow-x: hidden;
+  overflow-y: auto;
   overscroll-behavior-y: none;
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
@@ -283,9 +283,9 @@
 
 :global(:root[data-app-theme="warm-light"]) .productLayout {
   padding: 0 16px calc(106px + env(safe-area-inset-bottom, 0px));
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  scrollbar-gutter: auto !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: auto;
   -webkit-text-fill-color: #28262e;
 }
 
@@ -293,7 +293,7 @@
   :global(:root[data-app-theme="warm-light"]) .searchScreen,
   :global(:root[data-app-theme="warm-light"]) .productLayout,
   :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
-    border-right: 1px solid #ebe6ef;
-    border-left: 1px solid #ebe6ef;
+    border-right: 1px solid #efebf3;
+    border-left: 1px solid #efebf3;
   }
 }

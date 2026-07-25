@@ -1,4 +1,4 @@
-﻿import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
+import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
 import { X } from "lucide-react";
 import { APP_VERSION } from "../../../constants/appConfig";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";

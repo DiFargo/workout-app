@@ -19,7 +19,7 @@
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
 }
 
-:global(:root[data-app-theme="dark-green"]) .toast {
+:global(:root[data-app-theme="legacy-inactive"]) .toast {
   border-color: rgba(255, 255, 255, 0.1);
   background: rgba(17, 24, 17, 0.96);
   color: #f4f7f1;
@@ -32,7 +32,7 @@
   line-height: 1.5;
 }
 
-:global(:root[data-app-theme="dark-green"]) .message {
+:global(:root[data-app-theme="legacy-inactive"]) .message {
   color: inherit;
 }
 
@@ -67,7 +67,7 @@
   width: min(370px, calc(100vw - 32px));
   min-height: 54px;
   padding: 7px 8px 7px 14px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.98);
   color: #28262e;
@@ -81,7 +81,7 @@
   min-height: 40px;
   padding: 0 14px;
   border-radius: 13px;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
   font-size: 14px;
   font-weight: 650;

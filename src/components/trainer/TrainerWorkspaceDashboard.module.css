@@ -1,0 +1,138 @@
+/* Compact dashboard summary and action filters. */
+:global(.trainerNextRoot) :global(.trainerNextMetrics) {
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextMetric) {
+  min-height: 104px;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextMetric strong) {
+  margin: 11px 0 3px;
+  font-size: 25px;
+}
+
+:global(.trainerNextRoot) :global(.trainerActionCenterGrid) {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerActionCenterCard) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 52px;
+  padding: 10px 12px;
+  border-radius: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerActionCenterCard header) {
+  display: contents;
+}
+
+:global(.trainerNextRoot) :global(.trainerActionCenterCard header span) {
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerActionCenterCard header strong) {
+  min-width: 24px;
+  height: 24px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tn-surface);
+  color: var(--tn-purple-strong);
+  font-size: 13px;
+}
+
+:global(.trainerNextRoot) :global(.trainerActionCenterCard.active header strong),
+:global(.trainerNextRoot) :global(.trainerActionCenterCard[aria-pressed="true"] header strong) {
+  background: var(--tn-purple-strong);
+  color: #fff;
+}
+
+:global(.trainerNextRoot) :global(.trainerActionCenterCard p) {
+  display: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextTrainer) {
+  min-height: 62px;
+  margin: auto 3px 4px;
+  padding: 10px;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface-soft);
+  box-shadow: none;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextTrainer:hover) {
+  border-color: #d8ceea;
+  background: #fcfbff;
+  transform: translateY(-1px);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextTrainer .trainerNextAvatar) {
+  border-radius: 50%;
+  background: var(--tn-purple-soft);
+  color: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextTrainer > span:nth-child(2)) {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextTrainer small) {
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 680;
+  line-height: 1.1;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextTrainer > span:nth-child(2) strong) {
+  display: block;
+  overflow: hidden;
+  color: var(--tn-text);
+  font-size: 11px;
+  font-weight: 740;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextTrainer > svg) {
+  width: 16px;
+  height: 16px;
+  color: var(--tn-purple-strong);
+}
+
+/* A defined plot height keeps percentage-based calorie bars proportional. */
+:global(.trainerNextRoot) :global(.trainerClientBarChart > div > span) {
+  height: 126px;
+  min-height: 0;
+}
+
+@media (max-width: 979px) {
+  :global(.trainerNextRoot) :global(.trainerActionCenterGrid) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  :global(.trainerNextRoot) :global(.trainerActionCenterGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientBarChart > div > span) {
+    height: 112px;
+  }
+}

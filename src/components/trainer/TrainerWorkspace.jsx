@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import workspaceStyles from "./TrainerWorkspaceCalm.module.css";
+import "./TrainerWorkspaceClientProfileSections.module.css";
+import "./TrainerWorkspaceClientViews.module.css";
+import "./TrainerWorkspaceNutritionAnalytics.module.css";
+import "./TrainerWorkspaceClientWorkoutPlan.module.css";
+import "./TrainerWorkspaceClientNutrition.module.css";
+import "./TrainerWorkspaceCabinet.module.css";
+import "./TrainerWorkspaceProgramEditor.module.css";
+import "./TrainerWorkspaceExerciseProgress.module.css";
+import "./TrainerWorkspaceNutritionDiary.module.css";
+import "./TrainerWorkspaceDashboard.module.css";
+import "./TrainerWorkspaceMobile.module.css";
 import adaptiveStyles from "./TrainerWorkspaceAdaptive.module.css";
 import trainerProgramConstructorStyles from "./TrainerProgramConstructor.module.css";
 import TrainerClientUtilitySheet from "./TrainerClientUtilitySheet";
@@ -99,7 +110,6 @@ const NAV_ITEMS = [
 export function TrainerProgramConstructorStyleScope({ children }) {
   return <>{children(trainerProgramConstructorStyles)}</>;
 }
-
 const DESKTOP_NAV_ITEMS = [
   { id: "dashboard", label: "Обзор", icon: Home },
   { id: "clients", label: "Клиенты", icon: Users },
@@ -643,6 +653,7 @@ export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAv
         appVersion={appVersion}
       />
       <main className="trainerNextMain">{children}</main>
+      <div className={workspaceStyles.mobileDockGuard} aria-hidden="true" />
     </div>
   );
 }
@@ -1477,7 +1488,8 @@ function ClientMessages({
   onMarkAllProcessed,
   processedMessageIds = new Set(),
   resolvingAll = false,
-  resolutionStatus = ""
+  resolutionStatus = "",
+  embedded = false
 }) {
   const messages = getWorkoutNoteItems(history);
   const [filter, setFilter] = useState("pending");
@@ -1504,12 +1516,14 @@ function ClientMessages({
   }
 
   return (
-    <section className={trainerClientMessagesStyles.panel} aria-labelledby="trainer-client-messages-title">
-      <header className={trainerClientMessagesStyles.header}>
+    <section className={`${trainerClientMessagesStyles.panel} ${embedded ? trainerClientMessagesStyles.embeddedPanel : ""}`} aria-labelledby="trainer-client-messages-title">
+      <header className={`${trainerClientMessagesStyles.header} ${embedded ? trainerClientMessagesStyles.embeddedHeader : ""}`}>
         <div className={trainerClientMessagesStyles.heading}>
-          <span className={trainerClientMessagesStyles.chatAvatar} aria-hidden="true"><MessageSquare size={19} /></span>
+          {!embedded && (
+            <span className={trainerClientMessagesStyles.chatAvatar} aria-hidden="true"><MessageSquare size={19} /></span>
+          )}
           <div>
-            <h2 id="trainer-client-messages-title">Сообщения</h2>
+            <h2 id="trainer-client-messages-title">{embedded ? "Новые сообщения" : "Сообщения"}</h2>
             <p>{pendingCount ? `${pendingCount} ждут ответа` : "Все сообщения обработаны"}</p>
           </div>
         </div>
@@ -1549,7 +1563,6 @@ function ClientMessages({
             const processed = processedMessageIds.has(item.id);
             return (
               <article className={`${trainerClientMessagesStyles.card} ${processed ? trainerClientMessagesStyles.cardProcessed : trainerClientMessagesStyles.cardPending}`} key={item.id}>
-                <span className={trainerClientMessagesStyles.icon}><MessageSquare size={17} /></span>
                 <div className={trainerClientMessagesStyles.cardBody}>
                   <div className={trainerClientMessagesStyles.cardHeader}>
                     <div className={trainerClientMessagesStyles.messageTitle}>
@@ -1649,7 +1662,7 @@ function getWorkoutScheduleCalendarStatus(entries = []) {
 function getWorkoutScheduleCalendarTitle(dateKey, entries = []) {
   if (!entries.length) return dateKey;
   const details = entries
-    .map((entry) => `№${entry.order} ${WORKOUT_SCHEDULE_DAY_STATUS_TEXT[entry.status] || ""}`.trim())
+    .map((entry) => `â„–${entry.order} ${WORKOUT_SCHEDULE_DAY_STATUS_TEXT[entry.status] || ""}`.trim())
     .join(", ");
   return `${dateKey}: ${details}`;
 }
@@ -1688,7 +1701,7 @@ function WorkoutSchedulePlanner({
         date,
         order: index + 1,
         status: "planned",
-        title: `Тренировка №${index + 1}`
+        title: `Тренировка â„–${index + 1}`
       }];
     return result;
   }, {});
@@ -1731,7 +1744,7 @@ function WorkoutSchedulePlanner({
         <div>
           <span>РАСПИСАНИЕ ПРОГРАММЫ</span>
           <h3>Даты тренировок клиента</h3>
-          <p>Выберите ровно {requiredCount || 0} {pluralize(requiredCount, "дату", "даты", "дат")} под назначенную программу. Порядок дат становится порядком тренировок №1, №2 и дальше.</p>
+          <p>Выберите ровно {requiredCount || 0} {pluralize(requiredCount, "дату", "даты", "дат")} под назначенную программу. Порядок дат становится порядком тренировок â„–1, â„–2 и дальше.</p>
         </div>
         <strong className={datesComplete ? "ready" : ""}>{selectedDates.length}/{requiredCount || 0}<small>выбрано</small></strong>
       </header>
@@ -1751,7 +1764,7 @@ function WorkoutSchedulePlanner({
               const selected = selectedSet.has(day.key);
               const entries = visibleEntriesByDate[day.key] || [];
               const statusClass = getWorkoutScheduleCalendarStatus(entries);
-              const entryLabel = entries.map((entry) => `№${entry.order}`).join(", ");
+              const entryLabel = entries.map((entry) => `â„–${entry.order}`).join(", ");
               return (
                 <button
                   type="button"
@@ -1768,7 +1781,7 @@ function WorkoutSchedulePlanner({
                   title={getWorkoutScheduleCalendarTitle(day.key, entries)}
                 >
                   <b>{day.label}</b>
-                  {entries.length ? <i>{entryLabel}</i> : selected ? <i>№{selectedOrder[day.key]}</i> : null}
+                  {entries.length ? <i>{entryLabel}</i> : selected ? <i>â„–{selectedOrder[day.key]}</i> : null}
                 </button>
               );
             })}
@@ -1958,7 +1971,7 @@ function ClientWorkoutReviewPanel({ review, onAdjustNextWorkout }) {
 
       {review.feedbackTitle || review.clientComment || review.hasPainComment ? (
         <div className="trainerWorkoutReviewFeedback">
-          <span>{review.hasPainComment ? "⚠" : "💬"}</span>
+          <span>{review.hasPainComment ? "⚠️" : "💬"}</span>
           <div>
             <strong>{review.feedbackTitle || (review.hasPainComment ? "Есть жалоба на боль" : "Комментарий клиента")}</strong>
             <p>{review.clientComment || "Клиент оставил оценку после тренировки. Проверьте, нужна ли корректировка нагрузки."}</p>
@@ -3527,6 +3540,16 @@ function TrainerClientDetail({
           <p>{profileMetaText}</p>
           <strong>Цель: {client.goalDescription || profile?.goalLabel || "Персональный результат"}</strong>
         </div>
+        {onCreateTask ? (
+          <button
+            className="trainerNextClientTaskButton"
+            type="button"
+            onClick={onCreateTask}
+          >
+            <ClipboardList size={17} />
+            <span>Назначить задачу</span>
+          </button>
+        ) : null}
       </header>
 
       <nav className="trainerNextClientTabs">
@@ -3665,6 +3688,7 @@ function TrainerClientDetail({
             processedMessageIds={processedNoteIds}
             resolvingAll={messageResolvingKey === "all"}
             resolutionStatus={messageResolutionStatus}
+            embedded
           />
         </TrainerClientUtilitySheet>
       ) : null}
@@ -3734,15 +3758,6 @@ function TrainerClientDetail({
               <button type="button" onClick={() => setActionsOpen(false)} aria-label="Закрыть"><X size={18} /></button>
             </header>
             <div>
-              {onCreateTask ? (
-                <button type="button" onClick={() => {
-                  setActionsOpen(false);
-                  onCreateTask();
-                }}>
-                  <span>✓</span>
-                  <b>Назначить задачу</b>
-                </button>
-              ) : null}
               {clientActions.map((action) => (
                 <button className={action.danger ? "danger" : ""} type="button" key={action.id} onClick={() => runClientAction(action.id)}>
                   <span>{action.icon}</span>
@@ -3817,7 +3832,7 @@ function getExerciseSetSummary(sets = [], field, suffix = "") {
     .filter(Boolean);
   if (!values.length) return "—";
   const uniqueValues = [...new Set(values)];
-  return `${uniqueValues.length === 1 ? uniqueValues[0] : `${uniqueValues[0]}…${uniqueValues.at(-1)}`}${suffix}`;
+  return `${uniqueValues.length === 1 ? uniqueValues[0] : `${uniqueValues[0]}â€¦${uniqueValues.at(-1)}`}${suffix}`;
 }
 
 export function TrainerProgramConstructor({

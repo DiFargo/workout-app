@@ -1,0 +1,605 @@
+/* Client workout plan: schedule, completed-workout history and review. */
+:global(.trainerNextRoot) :global(.trainerClientWorkoutPlan) {
+  display: grid;
+  gap: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel) {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--tn-line);
+  border-radius: 22px;
+  background: var(--tn-surface);
+  box-shadow: 0 14px 30px rgba(40, 38, 46, 0.05);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header > div),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header > div),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header > div) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header span),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header span),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header span) {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: 0.09em;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header h3),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header h3),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header h3) {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 20px;
+  font-weight: 760;
+  letter-spacing: -0.35px;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header p),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header p),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header p) {
+  max-width: 700px;
+  margin: 7px 0 0;
+  color: var(--tn-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header > strong),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header > strong) {
+  display: grid;
+  min-width: 86px;
+  min-height: 62px;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid #e4dbef;
+  border-radius: 16px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+  font-size: 22px;
+  font-weight: 760;
+  line-height: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header > strong.ready) {
+  border-color: #d5e8dd;
+  color: #337554;
+  background: #f1f9f4;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header > strong small),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header > strong small) {
+  margin: 0;
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 680;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleBody) {
+  display: grid;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleCalendar) {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--tn-line);
+  border-radius: 18px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleMonth) {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+  align-items: center;
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleMonth button) {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-surface);
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleMonth button:hover) {
+  border-color: #d9cdec;
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleMonth strong) {
+  color: var(--tn-text);
+  font-size: 15px;
+  font-weight: 740;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleWeekdays),
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid) {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleWeekdays span) {
+  padding: 2px 0;
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 720;
+  text-align: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button) {
+  display: grid;
+  min-height: 50px;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid #eae5ef;
+  border-radius: 12px;
+  color: var(--tn-text);
+  background: var(--tn-surface);
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button:not(:disabled):hover) {
+  border-color: #ccbcea;
+  background: #fbf9fe;
+  transform: translateY(-1px);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner:not(.editing) .trainerWorkoutScheduleGrid button) {
+  cursor: default;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner:not(.editing) .trainerWorkoutScheduleGrid button:disabled),
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.hasWorkout:disabled) {
+  opacity: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button:disabled:not(.selected):not(.hasWorkout)) {
+  color: #b4adbc;
+  background: #ffffff;
+  cursor: not-allowed;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button b) {
+  color: inherit;
+  font-size: 14px;
+  font-weight: 720;
+  line-height: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button i) {
+  min-width: 20px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  color: var(--tn-purple-strong);
+  background: #eee8fa;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 750;
+  line-height: 1.1;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid .muted) {
+  opacity: 0.52;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid .today) {
+  border-color: #d2c1ec;
+  box-shadow: inset 0 0 0 1px #ede5fa;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid .selected),
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.planned) {
+  border-color: var(--tn-purple);
+  color: #ffffff;
+  background: var(--tn-purple);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid .selected i),
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.planned i) {
+  color: var(--tn-purple-strong);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.completed) {
+  border-color: #cce5d6;
+  color: #31744f;
+  background: #f1f9f4;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.completed i) {
+  color: #31744f;
+  background: #d9f0e1;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.completedOffDate) {
+  border-color: #d9cdec;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.missed) {
+  border-color: #efd7dc;
+  color: #b45860;
+  background: #fff8f8;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.missed i) {
+  color: #b45860;
+  background: #fae8eb;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.shifted) {
+  border-color: #ebdab8;
+  color: #9a6b20;
+  background: #fffaf0;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button.shifted i) {
+  color: #9a6b20;
+  background: #f8edcf;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 13px;
+  color: var(--tn-muted);
+  font-size: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend span) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend i) {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tn-purple);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend i.completed) { background: #56a473; }
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend i.completedOffDate) { background: var(--tn-purple-strong); }
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend i.missed) { background: #c36a70; }
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend i.shifted) { background: #bd8a36; }
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleFooter) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleFooter > div) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleFooter span) {
+  padding: 7px 10px;
+  border-radius: 999px;
+  color: var(--tn-muted);
+  background: var(--tn-surface-soft);
+  font-size: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleFooter span b) {
+  display: inline;
+  margin-left: 2px;
+  color: var(--tn-text);
+  font-size: inherit;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleFooter .trainerNextPrimary) {
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutScheduleHint) {
+  margin: -7px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutInsightsRow) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutInsightsRow.single) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList) {
+  display: grid;
+  gap: 9px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList article) {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 11px;
+  row-gap: 4px;
+  padding: 11px;
+  border: 1px solid var(--tn-line);
+  border-radius: 15px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList article > span) {
+  display: grid;
+  grid-row: span 2;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--tn-purple-soft);
+  font-size: 17px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList article > div) {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList strong) {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 14px;
+  font-weight: 730;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList small),
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList time) {
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList time) {
+  align-self: start;
+  padding-top: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryList p) {
+  grid-column: 2 / -1;
+  overflow: hidden;
+  margin: 0;
+  color: var(--tn-purple-strong);
+  font-size: 11px;
+  font-weight: 680;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientHistoryMoreButton),
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewAction) {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 13px;
+  border: 1px solid #dcd1ed;
+  border-radius: 12px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientHistoryMoreButton:hover),
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewAction:hover) {
+  border-color: var(--tn-purple);
+  background: #eae1f7;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header > strong) {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 1px solid #d4e7db;
+  border-radius: 999px;
+  color: #347653;
+  background: #f1f9f4;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header > strong.warning) {
+  border-color: #ecdab7;
+  color: #94671f;
+  background: #fffaf0;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewGrid) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewGrid article) {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 14px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewGrid article.warning) {
+  border-color: #ecdab7;
+  background: #fffaf0;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewGrid span),
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewGrid small) {
+  display: block;
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewGrid strong) {
+  display: block;
+  margin: 6px 0 3px;
+  color: var(--tn-text);
+  font-size: 20px;
+  font-weight: 760;
+  line-height: 1.1;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewFeedback) {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #ded1f0;
+  border-radius: 15px;
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewFeedback > span) {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--tn-surface);
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewFeedback strong) {
+  display: block;
+  margin: 1px 0 0;
+  color: var(--tn-text);
+  font-size: 13px;
+  font-weight: 720;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutReviewFeedback p) {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.42;
+}
+
+@media (max-width: 780px) {
+  :global(.trainerNextRoot) :global(.trainerClientWorkoutInsightsRow) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 620px) {
+  :global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner),
+  :global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock),
+  :global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel) {
+    gap: 15px;
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header),
+  :global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header),
+  :global(.trainerNextRoot) :global(.trainerClientWorkoutReviewPanel > header),
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleFooter) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner > header > strong),
+  :global(.trainerNextRoot) :global(.trainerClientWorkoutHistoryBlock > header > strong) {
+    width: 100%;
+    min-height: 48px;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleCalendar) {
+    padding: 11px;
+    border-radius: 15px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleWeekdays),
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid) {
+    gap: 4px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button) {
+    min-height: 42px;
+    border-radius: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleGrid button b) {
+    font-size: 13px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleLegend) {
+    gap: 6px 9px;
+    font-size: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutScheduleFooter .trainerNextPrimary) {
+    width: 100%;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutReviewGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

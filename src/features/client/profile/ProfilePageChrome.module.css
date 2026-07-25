@@ -9,7 +9,7 @@
   display: grid;
   place-items: center;
   position: relative;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
   color: #28262e;
@@ -37,5 +37,5 @@
   font-weight: 700;
 }
 
-.notificationButton:active { background: #f0ebfa; transform: scale(0.96); }
+.notificationButton:active { background: #f5f2f7; transform: scale(0.96); }
 .notificationButton:focus-visible { outline: 3px solid rgba(143, 122, 200, 0.24); outline-offset: 2px; }

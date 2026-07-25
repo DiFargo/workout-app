@@ -3,5 +3,5 @@
 .root :global(.adminCalendarToggles button),
 .root :global(.adminCalendarSaveButton),
 .root :global(.adminCalendarTestButton) {
-  min-height: 44px !important;
+  min-height: 44px;
 }

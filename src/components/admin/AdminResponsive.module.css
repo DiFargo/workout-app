@@ -1,26 +1,26 @@
 .deniedBack {
-  min-height: 44px !important;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
 }
 
 .actions {
-  display: flex !important;
+  display: flex;
 }
 
 .actions > button {
-  min-height: 44px !important;
+  min-height: 44px;
 }
 
 .root :global(.adminUsersFilterPills button),
 .root :global(.adminClientTabsCrm button) {
-  min-width: 44px !important;
-  min-height: 44px !important;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* The hub stylesheet is loaded for its legacy global selectors. Keep the
  * tappable card contract explicit in this locally imported compatibility
  * module so later theme layers cannot collapse the buttons to text height. */
 :global(.adminPanelHubCard) {
-  min-height: 104px !important;
+  min-height: 104px;
 }

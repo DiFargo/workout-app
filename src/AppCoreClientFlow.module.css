@@ -5,26 +5,26 @@
   html body #root .profileDashboardPage.clientCorePageMain,
   html body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
   html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-    padding-bottom: 156px !important;
+    padding-bottom: 156px;
   }
 
   html body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-    min-height: 100dvh !important;
+    min-height: 100dvh;
   }
 }
 
 html body #root .nutritionZoukModalOverlay {
-  z-index: 16000 !important;
+  z-index: 16000;
 }
 
 html body #root .nutritionZoukModalSheet {
-  z-index: 16001 !important;
+  z-index: 16001;
 }
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-  padding-top: 30px !important;
+  padding-top: 30px;
 }
 
 
@@ -32,51 +32,51 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
 /* Reference lock for the four primary client screens. */
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle {
-  min-width: 0 !important;
-  height: auto !important;
-  overflow: visible !important;
+  min-width: 0;
+  height: auto;
+  overflow: visible;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle strong {
-  overflow: visible !important;
-  text-overflow: clip !important;
-  white-space: nowrap !important;
-  font-size: 17px !important;
-  font-weight: 900 !important;
-  line-height: 1.08 !important;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.08;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle small {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  line-height: 1.16 !important;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.16;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-  grid-template-columns: 46px minmax(0, 1fr) 40px !important;
-  column-gap: 12px !important;
+  grid-template-columns: 46px minmax(0, 1fr) 40px;
+  column-gap: 12px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta {
-  width: 40px !important;
-  min-width: 40px !important;
-  height: 40px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 0 !important;
-  line-height: 1 !important;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  line-height: 1;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta::after {
-  content: "›" !important;
-  color: #625d4e !important;
-  font-size: 26px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
+  content: "›";
+  color: #625d4e;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
 }
 
 
@@ -104,7 +104,7 @@ html:root[data-app-theme="warm-light"] body #root .clientRouteFallbackPanel {
   min-width: 172px;
   min-height: 94px;
   padding: 18px 22px;
-  border: 1px solid #e1e4e5;
+  border: 1px solid #efebf3;
   border-radius: 24px;
   display: flex;
   flex-direction: column;
@@ -120,40 +120,40 @@ html:root[data-app-theme="warm-light"] body #root .clientRouteFallbackSpinner {
   width: 26px;
   height: 26px;
   border: 3px solid rgba(98, 117, 136, 0.18);
-  border-top-color: #627588;
+  border-top-color: #7b7682;
   border-radius: 999px;
   animation: clientRouteFallbackSpin 0.78s linear infinite;
 }
 
 .clientRouteFallbackText,
 html:root[data-app-theme="warm-light"] body #root .clientRouteFallbackText {
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  position: absolute !important;
-  overflow: hidden !important;
-  clip: rect(0 0 0 0) !important;
-  clip-path: inset(50%) !important;
-  white-space: nowrap !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 html:root[data-app-theme="warm-light"],
 html:root[data-app-theme="warm-light"] body,
 html:root[data-app-theme="warm-light"] body #root {
   min-height: 100%;
-  background: #f7f6f8 !important;
+  background: #f7f6f8;
 }
 
 html:root[data-app-theme="warm-light"] body #root:empty {
   min-height: 100dvh;
-  background: #f7f6f8 !important;
+  background: #f7f6f8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .clientRouteFallback {
-  min-height: 100dvh !important;
-  display: grid !important;
-  place-items: center !important;
-  background: #f7f6f8 !important;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: #f7f6f8;
 }
 
 @keyframes clientRouteFallbackSpin {
@@ -168,20 +168,20 @@ html:root[data-app-theme="warm-light"] body #root .clientCorePage .clientPageVer
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
-  color: #737b91 !important;
-  -webkit-text-fill-color: #737b91 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  border-color: #e1e4ef !important;
+  color: #7b7682;
+  -webkit-text-fill-color: #7b7682;
+  opacity: 1;
+  filter: none;
+  text-shadow: none;
+  background: rgba(255, 255, 255, 0.88);
+  border-color: #efebf3;
 }
 
 
 /* Split from client-primary-shell-contract-mobile-rhythm.css: shared client shell, version, titles and actions. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body {
-    background: #f3f5fb !important;
+    background: #f3f5fb;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
@@ -192,24 +192,24 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     --client-top: 70px;
     --client-title-h: 54px;
     --client-title-fz: 30px;
-    --client-title-color: #5f5744;
-    --client-ink: #171923;
-    --client-muted: #737b91;
+    --client-title-color: #7b7682;
+    --client-ink: #28262e;
+    --client-muted: #7b7682;
     --client-card: rgba(255, 255, 255, 0.97);
     --client-border: #e1e5ef;
     --client-radius: 22px;
     --client-action: 52px;
     --client-gap: 14px;
     --client-shadow: 0 18px 48px rgba(57, 64, 96, 0.12);
-    position: relative !important;
-    min-height: 100dvh !important;
-    width: 100% !important;
-    overflow-x: hidden !important;
-    color: var(--client-ink) !important;
+    position: relative;
+    min-height: 100dvh;
+    width: 100%;
+    overflow-x: hidden;
+    color: var(--client-ink);
     background:
       radial-gradient(circle at 14% 0%, rgba(110, 88, 255, 0.08), transparent 30%),
-      linear-gradient(180deg, #fbfbff 0%, #f5f7fc 100%) !important;
-    padding: var(--client-top) var(--client-x) calc(112px + env(safe-area-inset-bottom)) !important;
+      linear-gradient(180deg, #ffffff 0%, #f5f7fc 100%);
+    padding: var(--client-top) var(--client-x) calc(112px + env(safe-area-inset-bottom));
   }
 
   html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge,
@@ -217,26 +217,26 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge {
-    position: absolute !important;
-    top: 14px !important;
-    left: 18px !important;
-    z-index: 45 !important;
-    width: auto !important;
-    min-width: 46px !important;
-    height: 22px !important;
-    padding: 0 8px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid var(--client-border) !important;
-    border-radius: 999px !important;
-    background: rgba(255, 255, 255, 0.86) !important;
-    color: #8a90a0 !important;
-    -webkit-text-fill-color: #8a90a0 !important;
-    font-size: 12px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0 !important;
-    box-shadow: none !important;
+    position: absolute;
+    top: 14px;
+    left: 18px;
+    z-index: 45;
+    width: auto;
+    min-width: 46px;
+    height: 22px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--client-border);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0;
+    box-shadow: none;
   }
 }
 
@@ -246,39 +246,39 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetSection,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionCard {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    border: 1px solid var(--client-border) !important;
-    border-radius: var(--client-radius) !important;
-    background: var(--client-card) !important;
-    box-shadow: var(--client-shadow) !important;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    border: 1px solid var(--client-border);
+    border-radius: var(--client-radius);
+    background: var(--client-card);
+    box-shadow: var(--client-shadow);
   }
 }
 
 /* Split from client-primary-shell-contract-mobile-rhythm.css: nutrition dashboard cards. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    min-height: 88px !important;
-    display: grid !important;
-    grid-template-columns: 62px minmax(0, 1fr) 24px !important;
-    align-items: center !important;
-    gap: 14px !important;
-    padding: 14px 18px !important;
+    min-height: 88px;
+    display: grid;
+    grid-template-columns: 62px minmax(0, 1fr) 24px;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i {
-    width: auto !important;
-    height: auto !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    font-size: 34px !important;
-    line-height: 1 !important;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--client-title-color);
+    -webkit-text-fill-color: var(--client-title-color);
+    font-size: 34px;
+    line-height: 1;
   }
 }
 
@@ -286,7 +286,7 @@ html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCoreP
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
-    padding-top: var(--client-top) !important;
+    padding-top: var(--client-top);
   }
 }
 
@@ -300,26 +300,26 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   --client-title-height: 54px;
   --client-title-size: 31px;
   --client-action-size: 52px;
-  --client-title-color: #5f5744;
-  --client-ink: #171923;
+  --client-title-color: #7b7682;
+  --client-ink: #28262e;
   --client-muted: #7a8193;
   --client-card: rgba(255, 255, 255, 0.96);
-  --client-card-border: #e0e4ef;
+  --client-card-border: #efebf3;
   --client-card-radius: 22px;
   --client-shadow: 0 14px 38px rgba(55, 64, 112, 0.12);
-  color: var(--client-ink) !important;
+  color: var(--client-ink);
   background:
     radial-gradient(circle at 50% -12%, rgba(105, 83, 245, 0.055), transparent 34%),
-    linear-gradient(180deg, #fbfbff 0%, #f5f7fc 100%) !important;
-  overflow-x: hidden !important;
+    linear-gradient(180deg, #ffffff 0%, #f5f7fc 100%);
+  overflow-x: hidden;
 }
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-  padding-left: var(--client-shell-x) !important;
-  padding-right: var(--client-shell-x) !important;
-  padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+  padding-left: var(--client-shell-x);
+  padding-right: var(--client-shell-x);
+  padding-bottom: calc(116px + env(safe-area-inset-bottom));
 }
 
 html:root[data-app-theme="warm-light"] body #root .clientCorePage .appVersionBadge.clientPageVersionBadge,
@@ -327,65 +327,65 @@ html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
-  position: absolute !important;
-  top: 18px !important;
-  left: var(--client-shell-x) !important;
-  z-index: 40 !important;
-  height: 22px !important;
-  min-height: 22px !important;
-  padding: 0 8px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 1px solid #e3e6f0 !important;
-  border-radius: 999px !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  color: #8a90a0 !important;
-  -webkit-text-fill-color: #8a90a0 !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  letter-spacing: 0 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-  box-shadow: 0 8px 22px rgba(80, 86, 118, 0.08) !important;
+  position: absolute;
+  top: 18px;
+  left: var(--client-shell-x);
+  z-index: 40;
+  height: 22px;
+  min-height: 22px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #efebf3;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #7b7682;
+  -webkit-text-fill-color: #7b7682;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  opacity: 1;
+  filter: none;
+  text-shadow: none;
+  box-shadow: 0 8px 22px rgba(80, 86, 118, 0.08);
 }
 
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionCard,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-  border: 1px solid var(--client-card-border) !important;
-  border-radius: var(--client-card-radius) !important;
-  background: var(--client-card) !important;
-  color: var(--client-ink) !important;
-  -webkit-text-fill-color: var(--client-ink) !important;
-  box-shadow: var(--client-shadow) !important;
+  border: 1px solid var(--client-card-border);
+  border-radius: var(--client-card-radius);
+  background: var(--client-card);
+  color: var(--client-ink);
+  -webkit-text-fill-color: var(--client-ink);
+  box-shadow: var(--client-shadow);
 }
 
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
-  padding: var(--client-title-top) var(--client-shell-x) calc(112px + env(safe-area-inset-bottom)) !important;
+  padding: var(--client-title-top) var(--client-shell-x) calc(112px + env(safe-area-inset-bottom));
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchInputWrapPremium {
-  width: 100% !important;
-  min-height: 62px !important;
-  margin: 0 0 18px !important;
-  border: 1px solid var(--client-card-border) !important;
-  border-radius: 17px !important;
-  background: #ffffff !important;
-  box-shadow: 0 10px 28px rgba(55, 64, 112, 0.1) !important;
+  width: 100%;
+  min-height: 62px;
+  margin: 0 0 18px;
+  border: 1px solid var(--client-card-border);
+  border-radius: 17px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(55, 64, 112, 0.1);
 }
 
 
@@ -404,39 +404,39 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionGrid {
-    padding-bottom: 96px !important;
-    clip-path: inset(0 0 86px 0 round 0) !important;
+    padding-bottom: 96px;
+    clip-path: inset(0 0 86px 0 round 0);
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    border-radius: var(--client-page-card-radius) !important;
+    border-radius: var(--client-page-card-radius);
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopExpand,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukExpand {
-    width: auto !important;
-    min-width: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: #5f5744 !important;
-    -webkit-text-fill-color: #5f5744 !important;
+    width: auto;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
-    width: min(390px, calc(100vw - 20px)) !important;
-    height: calc(100dvh - 12px) !important;
-    max-height: calc(100dvh - 12px) !important;
-    margin: 6px auto !important;
-    padding-right: 18px !important;
-    padding-left: 18px !important;
-    border-radius: 24px !important;
+    width: min(390px, calc(100vw - 20px));
+    height: calc(100dvh - 12px);
+    max-height: calc(100dvh - 12px);
+    margin: 6px auto;
+    padding-right: 18px;
+    padding-left: 18px;
+    border-radius: 24px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button {
-    min-height: 64px !important;
-    height: 64px !important;
-    border-radius: 15px !important;
+    min-height: 64px;
+    height: 64px;
+    border-radius: 15px;
   }
 }
 
@@ -445,376 +445,376 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 @media (max-width: 520px) {
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    min-height: 72px !important;
-    display: grid !important;
-    grid-template-columns: 48px minmax(0, 1fr) 18px !important;
-    align-items: center !important;
-    column-gap: 16px !important;
-    padding: 12px 18px !important;
-    border: 1px solid #e1e4ef !important;
-    border-radius: 18px !important;
-    background: #fff !important;
-    box-shadow: 0 9px 25px rgba(55, 64, 112, 0.13) !important;
+    min-height: 72px;
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 18px;
+    align-items: center;
+    column-gap: 16px;
+    padding: 12px 18px;
+    border: 1px solid #efebf3;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 9px 25px rgba(55, 64, 112, 0.13);
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukBlock {
-    padding: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukBlock > .nutritionZoukHeader {
-    width: 100% !important;
-    border: 1px solid #e1e4ef !important;
+    width: 100%;
+    border: 1px solid #efebf3;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukIcon {
-    width: 48px !important;
-    min-width: 48px !important;
-    height: 48px !important;
-    min-height: 48px !important;
-    border-radius: 15px !important;
-    background: #f0edff !important;
-    border: 1px solid #e4e0ff !important;
-    box-shadow: none !important;
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    min-height: 48px;
+    border-radius: 15px;
+    background: #f0edff;
+    border: 1px solid #e4e0ff;
+    box-shadow: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
-    isolation: isolate !important;
+    isolation: isolate;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .mainMenuBottomBar.profileBottomTabBar,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) nav.mainMenuBottomBar.profileBottomTabBar {
-    z-index: 90 !important;
+    z-index: 90;
   }
 }
 
 /* Split from client-primary-food-flow-rhythm-narrow.css: nutrition quick cards and arrows. */
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-  display: grid !important;
-  grid-template-columns: 48px minmax(0, 1fr) 18px !important;
-  align-items: center !important;
-  column-gap: 16px !important;
-  padding: 12px 18px !important;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 18px;
+  align-items: center;
+  column-gap: 16px;
+  padding: 12px 18px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i {
-  width: 18px !important;
-  min-width: 18px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  color: #6f7482 !important;
-  box-shadow: none !important;
-  font-size: 34px !important;
-  font-style: normal !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
+  width: 18px;
+  min-width: 18px;
+  height: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  color: #6f7482;
+  box-shadow: none;
+  font-size: 34px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta {
-  width: 18px !important;
-  min-width: 18px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  margin: 0 !important;
+  width: 18px;
+  min-width: 18px;
+  height: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta small {
-  display: none !important;
+  display: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta i {
-  width: 18px !important;
-  min-width: 18px !important;
-  height: 36px !important;
-  min-height: 36px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  color: #6f7482 !important;
-  box-shadow: none !important;
-  font-size: 34px !important;
-  font-style: normal !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
+  width: 18px;
+  min-width: 18px;
+  height: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  color: #6f7482;
+  box-shadow: none;
+  font-size: 34px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1;
 }
 
 /* Split from client-primary-food-flow-rhythm-narrow.css: cabinet header and workout card tail locks. */
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .mainMenuBottomBar.profileBottomTabBar,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain nav.mainMenuBottomBar.profileBottomTabBar {
-  z-index: 90 !important;
+  z-index: 90;
 }
 
 /* v.1.39: final rhythm lock for the four primary client screens. */
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-  isolation: isolate !important;
+  isolation: isolate;
 }
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::after,
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::after {
-  content: "" !important;
-  position: fixed !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  z-index: 70 !important;
-  height: calc(112px + env(safe-area-inset-bottom)) !important;
-  pointer-events: none !important;
-  background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f6f7fc 22%, #f6f7fc 100%) !important;
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  height: calc(112px + env(safe-area-inset-bottom));
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f7f6f8 22%, #f7f6f8 100%);
 }
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection {
-  padding-top: 0 !important;
+  padding-top: 0;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:has(.fatSearchMyProductsAction.active) .fatSearchInputWrapPremium {
-  margin-top: 0 !important;
+  margin-top: 0;
 }
 
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active {
-  border-color: transparent !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction span,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction strong {
-  color: rgba(97, 106, 128, 0.82) !important;
-  -webkit-text-fill-color: rgba(97, 106, 128, 0.82) !important;
+  color: rgba(97, 106, 128, 0.82);
+  -webkit-text-fill-color: rgba(97, 106, 128, 0.82);
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active span,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchCreateAction.active strong {
-  color: #4834dd !important;
-  -webkit-text-fill-color: #4834dd !important;
+  color: #4834dd;
+  -webkit-text-fill-color: #4834dd;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction {
-  opacity: 1 !important;
-  border-color: #e1e4ef !important;
-  background: #ffffff !important;
+  opacity: 1;
+  border-color: #efebf3;
+  background: #ffffff;
   box-shadow:
     0 14px 30px rgba(55, 64, 112, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction span,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction strong {
-  opacity: 1 !important;
-  color: #4834dd !important;
-  -webkit-text-fill-color: #4834dd !important;
+  opacity: 1;
+  color: #4834dd;
+  -webkit-text-fill-color: #4834dd;
 }
 
 
 
 /* Food search home redesign v1.51 */
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay {
-  padding: 0 !important;
-  background: #f6f7fc !important;
+  padding: 0;
+  background: #f7f6f8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
-  box-sizing: border-box !important;
-  width: min(390px, calc(100vw - 20px)) !important;
-  max-width: 390px !important;
-  height: calc(100dvh - 12px) !important;
-  min-height: calc(100dvh - 12px) !important;
-  max-height: calc(100dvh - 12px) !important;
-  margin: 6px auto !important;
-  border-radius: 24px !important;
+  box-sizing: border-box;
+  width: min(390px, calc(100vw - 20px));
+  max-width: 390px;
+  height: calc(100dvh - 12px);
+  min-height: calc(100dvh - 12px);
+  max-height: calc(100dvh - 12px);
+  margin: 6px auto;
+  border-radius: 24px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium:not([data-food-search-header-layout]):has(.fatSearchBottomBarFour) {
-  padding-bottom: calc(194px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: calc(194px + env(safe-area-inset-bottom));
 }
 
 
 html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour {
-  position: fixed !important;
-  left: 50% !important;
-  bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px)) !important;
-  transform: translateX(-50%) !important;
-  z-index: 99990 !important;
-  width: min(374px, calc(100vw - 20px)) !important;
-  height: 78px !important;
-  padding: 6px !important;
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 6px !important;
-  border: 1px solid #dce2ed !important;
-  border-radius: 20px !important;
-  background: rgba(255, 255, 255, 0.96) !important;
+  position: fixed;
+  left: 50%;
+  bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px));
+  transform: translateX(-50%);
+  z-index: 99990;
+  width: min(374px, calc(100vw - 20px));
+  height: 78px;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  border: 1px solid #dce2ed;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.96);
   box-shadow:
     0 18px 44px rgba(55, 64, 112, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button {
-  min-width: 0 !important;
-  min-height: 64px !important;
-  padding: 6px 4px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-  border: 1px solid transparent !important;
-  border-radius: 15px !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: #7b8396 !important;
-  -webkit-text-fill-color: #7b8396 !important;
+  min-width: 0;
+  min-height: 64px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: transparent;
+  box-shadow: none;
+  color: #7b8396;
+  -webkit-text-fill-color: #7b8396;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button.active {
-  border-color: #ded8ff !important;
-  background: #f0edff !important;
-  color: #4f35e8 !important;
-  -webkit-text-fill-color: #4f35e8 !important;
+  border-color: #ded8ff;
+  background: #f0edff;
+  color: #4f35e8;
+  -webkit-text-fill-color: #4f35e8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button span {
-  font-size: 23px !important;
-  line-height: 1 !important;
-  color: inherit !important;
-  -webkit-text-fill-color: currentColor !important;
+  font-size: 23px;
+  line-height: 1;
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBarFour > button strong {
-  max-width: 100% !important;
-  overflow: hidden !important;
-  color: inherit !important;
-  font-size: 10.5px !important;
-  font-weight: 850 !important;
-  line-height: 1.05 !important;
-  text-align: center !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  -webkit-text-fill-color: currentColor !important;
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-size: 10.5px;
+  font-weight: 850;
+  line-height: 1.05;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-text-fill-color: currentColor;
 }
 
 
 html:root[data-app-theme="warm-light"] body #root .nutritionCreateChoiceScreen .nutritionCreateChoiceHeader {
-  position: relative !important;
-  padding-right: 0 !important;
-  padding-left: 52px !important;
+  position: relative;
+  padding-right: 0;
+  padding-left: 52px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .nutritionCreateChoiceScreen .nutritionCreateChoiceClose {
-  position: absolute !important;
-  top: 0 !important;
-  right: auto !important;
-  left: 0 !important;
-  width: 42px !important;
-  height: 42px !important;
-  display: grid !important;
-  place-items: center !important;
-  border: 1px solid #e1e4ef !important;
-  border-radius: 18px !important;
-  background: #ffffff !important;
-  color: #5f5744 !important;
-  font-size: 28px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-  box-shadow: 0 12px 28px rgba(55, 64, 112, 0.08) !important;
-  -webkit-text-fill-color: #5f5744 !important;
+  position: absolute;
+  top: 0;
+  right: auto;
+  left: 0;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #efebf3;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #7b7682;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 12px 28px rgba(55, 64, 112, 0.08);
+  -webkit-text-fill-color: #7b7682;
 }
 
 html:root[data-app-theme="warm-light"] body #root .nutritionCreateChoiceOverlay.nutritionCreateChoiceScreen {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 99992 !important;
-  width: 100% !important;
-  min-height: 100dvh !important;
-  padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom)) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  background: rgba(246, 247, 252, 0.72) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  position: fixed;
+  inset: 0;
+  z-index: 99992;
+  width: 100%;
+  min-height: 100dvh;
+  padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: rgba(246, 247, 252, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 html:root[data-app-theme="warm-light"] body #root .nutritionCreateChoiceScreen .nutritionCreateChoiceSheet {
-  width: min(360px, calc(100vw - 32px)) !important;
-  min-height: 0 !important;
-  max-height: min(520px, calc(100dvh - 48px)) !important;
-  margin: 0 auto !important;
-  padding: 18px !important;
-  border: 1px solid #e1e5ee !important;
-  border-radius: 24px !important;
-  background: #ffffff !important;
+  width: min(360px, calc(100vw - 32px));
+  min-height: 0;
+  max-height: min(520px, calc(100dvh - 48px));
+  margin: 0 auto;
+  padding: 18px;
+  border: 1px solid #e1e5ee;
+  border-radius: 24px;
+  background: #ffffff;
   box-shadow:
     0 24px 60px rgba(55, 64, 112, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
-  overflow-y: auto !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  overflow-y: auto;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input[type="search"]::-webkit-search-cancel-button,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input[type="search"]::-webkit-search-decoration {
-  width: 0 !important;
-  height: 0 !important;
-  margin: 0 !important;
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  appearance: none !important;
-  -webkit-appearance: none !important;
+  width: 0;
+  height: 0;
+  margin: 0;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium > button {
-  width: 30px !important;
-  min-width: 30px !important;
-  height: 30px !important;
-  min-height: 30px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  outline: 0 !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  color: #5f5744 !important;
-  font-size: 24px !important;
-  font-weight: 800 !important;
-  line-height: 1 !important;
-  -webkit-text-fill-color: #5f5744 !important;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  outline: 0;
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  color: #7b7682;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+  -webkit-text-fill-color: #7b7682;
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium > button::before,
 html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .fatSearchInputWrapPremium > button::after {
-  content: none !important;
-  display: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  content: none;
+  display: none;
+  background: transparent;
+  box-shadow: none;
 }
 
 
@@ -823,7 +823,7 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchScreenPremium .f
 
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection {
-  margin-top: 0 !important;
+  margin-top: 0;
 }
 
 
@@ -833,7 +833,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCo
 /* v.1.963: shared page contract shell and version badge. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root {
-    background: #f7f6f8 !important;
+    background: #f7f6f8;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
@@ -843,37 +843,37 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCo
     --client-page-title-top: 56px;
     --client-page-title-height: 54px;
     --client-page-title-size: 31px;
-    --client-page-title-color: #5f5744;
+    --client-page-title-color: #7b7682;
     --client-page-card-radius: 22px;
-    min-height: 100dvh !important;
-    box-sizing: border-box !important;
-    padding-right: var(--client-page-x) !important;
-    padding-left: var(--client-page-x) !important;
-    padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
-    overflow-x: hidden !important;
-    background: #f3f4f3 !important;
-    color: #171923 !important;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding-right: var(--client-page-x);
+    padding-left: var(--client-page-x);
+    padding-bottom: calc(116px + env(safe-area-inset-bottom));
+    overflow-x: hidden;
+    background: #f7f6f8;
+    color: #28262e;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::before,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::before,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::before {
-    content: none !important;
-    display: none !important;
+    content: none;
+    display: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::after,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::after {
-    content: "" !important;
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    z-index: 70 !important;
-    height: calc(118px + env(safe-area-inset-bottom)) !important;
-    pointer-events: none !important;
-    background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f6f7fc 25%, #f6f7fc 100%) !important;
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    height: calc(118px + env(safe-area-inset-bottom));
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f7f6f8 25%, #f7f6f8 100%);
   }
 
   html:root[data-app-theme="warm-light"] body #root .clientCorePage .appVersionBadge.clientPageVersionBadge,
@@ -881,31 +881,31 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCo
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge {
-    position: absolute !important;
-    top: 18px !important;
-    left: var(--client-page-x) !important;
-    right: auto !important;
-    width: auto !important;
-    min-width: 44px !important;
-    height: 22px !important;
-    min-height: 22px !important;
-    margin: 0 !important;
-    padding: 0 9px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid #e3e6ef !important;
-    border-radius: 999px !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    box-shadow: 0 8px 20px rgba(55, 64, 112, 0.07) !important;
-    color: #8a90a0 !important;
-    -webkit-text-fill-color: #8a90a0 !important;
-    font-size: 11px !important;
-    font-weight: 850 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-    opacity: 1 !important;
-    z-index: 30 !important;
+    position: absolute;
+    top: 18px;
+    left: var(--client-page-x);
+    right: auto;
+    width: auto;
+    min-width: 44px;
+    height: 22px;
+    min-height: 22px;
+    margin: 0;
+    padding: 0 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e3e6ef;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 20px rgba(55, 64, 112, 0.07);
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
+    font-size: 11px;
+    font-weight: 850;
+    line-height: 1;
+    letter-spacing: 0;
+    opacity: 1;
+    z-index: 30;
   }
 
 }
@@ -915,22 +915,22 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCo
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    overflow: visible !important;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionGridItem,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    border: 1px solid #e0e4ef !important;
-    border-radius: var(--client-page-card-radius) !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1) !important;
+    border: 1px solid #efebf3;
+    border-radius: var(--client-page-card-radius);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 14px 34px rgba(55, 64, 112, 0.1);
   }
 
 }
@@ -944,19 +944,19 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
     --client-page-title-top: 54px;
     --client-page-title-height: 52px;
     --client-page-title-size: 30px;
-    --client-page-title-color: #5f5744;
+    --client-page-title-color: #7b7682;
     --client-page-card-radius: 22px;
-    background: #f3f4f3 !important;
+    background: #f7f6f8;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour {
-    width: min(374px, calc(100vw - 20px)) !important;
-    height: 78px !important;
-    border-radius: 20px !important;
-    background: rgba(255, 255, 255, 0.96) !important;
+    width: min(374px, calc(100vw - 20px));
+    height: 78px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.96);
     box-shadow:
       0 18px 44px rgba(55, 64, 112, 0.16),
-      inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
   }
 
 }
@@ -968,7 +968,7 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
   html:root[data-app-theme="warm-light"],
   html:root[data-app-theme="warm-light"] body,
   html:root[data-app-theme="warm-light"] body #root {
-    background: #f5f7fc !important;
+    background: #f5f7fc;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
@@ -980,8 +980,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     --client-title-h: 54px;
     --client-title-fz: 31px;
     --client-action: 52px;
-    --client-title: #5f5744;
-    --client-ink: #171923;
+    --client-title: #7b7682;
+    --client-ink: #28262e;
     --client-muted: #7a8193;
     --client-border: #e1e5ef;
     --client-card: rgba(255, 255, 255, 0.97);
@@ -989,44 +989,44 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     --client-shadow: 0 14px 38px rgba(55, 64, 112, 0.12);
     background:
       radial-gradient(circle at 50% -14%, rgba(105, 83, 245, 0.055), transparent 32%),
-      linear-gradient(180deg, #fbfbff 0%, #f5f7fc 100%) !important;
-    color: var(--client-ink) !important;
-    overflow-x: hidden !important;
+      linear-gradient(180deg, #ffffff 0%, #f5f7fc 100%);
+    color: var(--client-ink);
+    overflow-x: hidden;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage),
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-    padding-left: var(--client-x) !important;
-    padding-right: var(--client-x) !important;
-    padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+    padding-left: var(--client-x);
+    padding-right: var(--client-x);
+    padding-bottom: calc(116px + env(safe-area-inset-bottom));
   }
 
   html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge {
-    position: absolute !important;
-    top: 18px !important;
-    left: var(--client-x) !important;
-    z-index: 40 !important;
-    height: 22px !important;
-    min-height: 22px !important;
-    padding: 0 8px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid #e3e6f0 !important;
-    border-radius: 999px !important;
-    background: rgba(255, 255, 255, 0.88) !important;
-    color: #8a90a0 !important;
-    -webkit-text-fill-color: #8a90a0 !important;
-    font-size: 12px !important;
-    font-weight: 900 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-    opacity: 1 !important;
-    filter: none !important;
-    text-shadow: none !important;
-    box-shadow: 0 8px 22px rgba(80, 86, 118, 0.08) !important;
+    position: absolute;
+    top: 18px;
+    left: var(--client-x);
+    z-index: 40;
+    height: 22px;
+    min-height: 22px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #efebf3;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0;
+    opacity: 1;
+    filter: none;
+    text-shadow: none;
+    box-shadow: 0 8px 22px rgba(80, 86, 118, 0.08);
   }
 
 }
@@ -1037,24 +1037,24 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetActionCard,
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    border: 1px solid var(--client-border) !important;
-    border-radius: var(--client-radius) !important;
-    background: var(--client-card) !important;
-    color: var(--client-ink) !important;
-    -webkit-text-fill-color: var(--client-ink) !important;
-    box-shadow: var(--client-shadow) !important;
+    border: 1px solid var(--client-border);
+    border-radius: var(--client-radius);
+    background: var(--client-card);
+    color: var(--client-ink);
+    -webkit-text-fill-color: var(--client-ink);
+    box-shadow: var(--client-shadow);
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i {
-    width: auto !important;
-    min-width: 0 !important;
-    height: auto !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: #6f7482 !important;
-    -webkit-text-fill-color: #6f7482 !important;
+    width: auto;
+    min-width: 0;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #6f7482;
+    -webkit-text-fill-color: #6f7482;
   }
 
 }
@@ -1063,17 +1063,17 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
 /* v.1.961: food search overlay rhythm. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFoodSearchScreenPremium:not([data-food-search-header-layout]) {
-    padding: var(--client-top) var(--client-x) calc(112px + env(safe-area-inset-bottom)) !important;
+    padding: var(--client-top) var(--client-x) calc(112px + env(safe-area-inset-bottom));
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchInputWrapPremium {
-    width: 100% !important;
-    min-height: 62px !important;
-    margin: 0 0 18px !important;
-    border: 1px solid var(--client-border) !important;
-    border-radius: 17px !important;
-    background: #ffffff !important;
-    box-shadow: 0 10px 28px rgba(55, 64, 112, 0.1) !important;
+    width: 100%;
+    min-height: 62px;
+    margin: 0 0 18px;
+    border: 1px solid var(--client-border);
+    border-radius: 17px;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(55, 64, 112, 0.1);
   }
 
 }
@@ -1082,22 +1082,22 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
 /* v.1.961: food product and edit action rhythm. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour {
-    position: fixed !important;
-    left: max(10px, env(safe-area-inset-left)) !important;
-    right: max(10px, env(safe-area-inset-right)) !important;
-    bottom: max(10px, env(safe-area-inset-bottom)) !important;
-    z-index: 90 !important;
-    width: auto !important;
-    max-width: none !important;
-    height: 84px !important;
-    min-height: 84px !important;
-    padding: 8px !important;
-    border: 1px solid #dfe4ee !important;
-    border-radius: 20px !important;
-    background: rgba(255, 255, 255, 0.92) !important;
-    -webkit-backdrop-filter: blur(18px) !important;
-    backdrop-filter: blur(18px) !important;
-    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18) !important;
+    position: fixed;
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    z-index: 90;
+    width: auto;
+    max-width: none;
+    height: 84px;
+    min-height: 84px;
+    padding: 8px;
+    border: 1px solid #dfe4ee;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18);
   }
 
 }
@@ -1106,16 +1106,16 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour {
-    left: max(10px, env(safe-area-inset-left)) !important;
-    right: max(10px, env(safe-area-inset-right)) !important;
-    bottom: max(10px, env(safe-area-inset-bottom)) !important;
-    width: auto !important;
-    max-width: none !important;
-    height: 84px !important;
-    min-height: 84px !important;
-    max-height: 84px !important;
-    margin: 0 !important;
-    transform: none !important;
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: auto;
+    max-width: none;
+    height: 84px;
+    min-height: 84px;
+    max-height: 84px;
+    margin: 0;
+    transform: none;
   }
 }
 
@@ -1130,43 +1130,43 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     --client-top: 70px;
     --client-title-h: 54px;
     --client-title-fz: 30px;
-    --client-title-color: #5f5744;
-    --client-ink: #171923;
-    --client-muted: #737b91;
+    --client-title-color: #7b7682;
+    --client-ink: #28262e;
+    --client-muted: #7b7682;
     --client-border: #e1e5ef;
     --client-radius: 22px;
     --client-action: 52px;
     --client-shadow: 0 18px 48px rgba(57, 64, 96, 0.12);
-    position: relative !important;
-    min-height: 100dvh !important;
-    overflow-x: hidden !important;
+    position: relative;
+    min-height: 100dvh;
+    overflow-x: hidden;
     background:
       radial-gradient(circle at 14% 0%, rgba(110, 88, 255, 0.08), transparent 30%),
-      linear-gradient(180deg, #fbfbff 0%, #f5f7fc 100%) !important;
-    padding: var(--client-top) var(--client-x) calc(112px + env(safe-area-inset-bottom)) !important;
+      linear-gradient(180deg, #ffffff 0%, #f5f7fc 100%);
+    padding: var(--client-top) var(--client-x) calc(112px + env(safe-area-inset-bottom));
   }
 
   html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge {
-    position: absolute !important;
-    top: 14px !important;
-    left: 18px !important;
-    z-index: 45 !important;
-    min-width: 46px !important;
-    height: 22px !important;
-    padding: 0 8px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid var(--client-border) !important;
-    border-radius: 999px !important;
-    background: rgba(255, 255, 255, 0.86) !important;
-    color: #8a90a0 !important;
-    -webkit-text-fill-color: #8a90a0 !important;
-    font-size: 12px !important;
-    font-weight: 800 !important;
-    line-height: 1 !important;
-    box-shadow: none !important;
+    position: absolute;
+    top: 14px;
+    left: 18px;
+    z-index: 45;
+    min-width: 46px;
+    height: 22px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--client-border);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: none;
   }
 
 }
@@ -1175,32 +1175,32 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileCabinetSection,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileCabinetSection {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    border: 1px solid var(--client-border) !important;
-    border-radius: var(--client-radius) !important;
-    background: #ffffff !important;
-    box-shadow: var(--client-shadow) !important;
+    border: 1px solid var(--client-border);
+    border-radius: var(--client-radius);
+    background: #ffffff;
+    box-shadow: var(--client-shadow);
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta i {
-    width: auto !important;
-    height: auto !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    font-size: 34px !important;
-    font-style: normal !important;
-    line-height: 1 !important;
+    width: auto;
+    height: auto;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--client-title-color);
+    -webkit-text-fill-color: var(--client-title-color);
+    font-size: 34px;
+    font-style: normal;
+    line-height: 1;
   }
 
 }
@@ -1208,40 +1208,40 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 /* v.1.962: navigation and action bar geometry. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour {
-    position: fixed !important;
-    left: max(10px, env(safe-area-inset-left)) !important;
-    right: max(10px, env(safe-area-inset-right)) !important;
-    bottom: max(10px, env(safe-area-inset-bottom)) !important;
-    z-index: 90 !important;
-    width: auto !important;
-    max-width: none !important;
-    height: 84px !important;
-    min-height: 84px !important;
-    max-height: 84px !important;
-    margin: 0 !important;
-    padding: 8px !important;
-    border: 1px solid #dfe4ee !important;
-    border-radius: 20px !important;
-    background: rgba(255, 255, 255, 0.92) !important;
-    -webkit-backdrop-filter: blur(18px) !important;
-    backdrop-filter: blur(18px) !important;
-    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18) !important;
-    transform: none !important;
+    position: fixed;
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    z-index: 90;
+    width: auto;
+    max-width: none;
+    height: 84px;
+    min-height: 84px;
+    max-height: 84px;
+    margin: 0;
+    padding: 8px;
+    border: 1px solid #dfe4ee;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 48px rgba(57, 64, 96, 0.18);
+    transform: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button {
-    height: var(--client-bottom-nav-button-height, 68px) !important;
-    min-height: var(--client-bottom-nav-button-min-height, 68px) !important;
-    border-radius: 16px !important;
-    color: #737b91 !important;
-    -webkit-text-fill-color: #737b91 !important;
+    height: var(--client-bottom-nav-button-height, 68px);
+    min-height: var(--client-bottom-nav-button-min-height, 68px);
+    border-radius: 16px;
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar.fatSearchBottomBarFour > button.active {
-    border-color: #ded7ff !important;
-    background: #f0edff !important;
-    color: #5d43e8 !important;
-    -webkit-text-fill-color: #5d43e8 !important;
+    border-color: #ded7ff;
+    background: #f0edff;
+    color: #5d43e8;
+    -webkit-text-fill-color: #5d43e8;
   }
 
 }
@@ -1250,8 +1250,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchInputWrapPremium {
-    min-height: 64px !important;
-    border-radius: 18px !important;
+    min-height: 64px;
+    border-radius: 18px;
   }
 
 }
@@ -1260,25 +1260,25 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 /* Calm iOS startup and lazy-route loading states. */
 html:root[data-app-theme="warm-light"] body #root:empty,
 html:root[data-app-theme="warm-light"] body #root .clientRouteFallback {
-  min-height: 100dvh !important;
-  background: #f3f4f3 !important;
+  min-height: 100dvh;
+  background: #f7f6f8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .clientRouteFallbackPanel {
-  min-width: 172px !important;
-  min-height: 94px !important;
-  padding: 18px 22px !important;
-  border: 1px solid #e1e4e5 !important;
-  border-radius: 24px !important;
-  background: #fff !important;
-  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1) !important;
+  min-width: 172px;
+  min-height: 94px;
+  padding: 18px 22px;
+  border: 1px solid #efebf3;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 8px 30px rgba(57, 67, 75, 0.1);
 }
 
 html:root[data-app-theme="warm-light"] body #root .clientRouteFallbackSpinner {
-  width: 24px !important;
-  height: 24px !important;
-  border-color: rgba(98, 117, 136, 0.2) !important;
-  border-top-color: #627588 !important;
+  width: 24px;
+  height: 24px;
+  border-color: rgba(98, 117, 136, 0.2);
+  border-top-color: #7b7682;
 }
 
 

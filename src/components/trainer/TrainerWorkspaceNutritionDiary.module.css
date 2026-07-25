@@ -1,0 +1,210 @@
+/* Read-only client nutrition diary. */
+:global(.trainerNextRoot) :global(.trainerNutritionDiary) {
+  gap: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 8px;
+  max-height: 224px;
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid var(--tn-line);
+  border-radius: 18px;
+  background: var(--tn-surface-soft);
+  scrollbar-width: thin;
+  scrollbar-color: #d8ceea transparent;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button) {
+  display: grid;
+  min-height: 60px;
+  padding: 10px 12px;
+  gap: 3px;
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 13px;
+  background: var(--tn-surface);
+  color: var(--tn-text);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button:hover) {
+  border-color: #d8ceea;
+  background: #fcfbff;
+  transform: translateY(-1px);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button.active) {
+  border-color: var(--tn-purple-strong);
+  background: var(--tn-purple-strong);
+  box-shadow: 0 8px 18px rgba(128, 107, 182, 0.22);
+  color: #fff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button strong),
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button small) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button strong) {
+  font-size: 14px;
+  font-weight: 740;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button small) {
+  color: var(--tn-muted);
+  font-size: 12px;
+  font-weight: 620;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button.active small) {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealPanel) {
+  padding: 22px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead) {
+  align-items: flex-start;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead > div) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead span) {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead h2) {
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead > strong) {
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: var(--tn-purple-soft);
+  color: var(--tn-purple-strong);
+  font-size: 17px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryTotals) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 14px 0;
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 14px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryTotals span) {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  min-height: 48px;
+  padding: 11px;
+  border-right: 1px solid var(--tn-line);
+  color: var(--tn-muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryTotals span:last-child) {
+  border-right: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryTotals b) {
+  color: var(--tn-text);
+  font-size: 15px;
+  font-weight: 760;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealList) {
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealList article) {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  min-height: 92px;
+  padding: 14px;
+  border-radius: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealList article > div) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealList article small) {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  font-weight: 620;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealList article strong) {
+  display: block;
+  overflow: hidden;
+  color: var(--tn-text);
+  font-size: 16px;
+  font-weight: 740;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealList article p) {
+  margin: 8px 0 0;
+  color: var(--tn-muted);
+  font-size: 13px;
+  font-weight: 580;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNutritionReadonly) {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 14px 0 0;
+}
+
+@media (max-width: 700px) {
+  :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 248px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealPanel) {
+    padding: 16px;
+  }
+}
+@media (max-width: 440px) {
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryHead > strong) {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryHead h2) {
+    font-size: 18px;
+  }
+}

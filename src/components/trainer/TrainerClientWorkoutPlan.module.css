@@ -2,7 +2,7 @@
   display: grid;
   gap: 12px;
   padding: 15px;
-  border: 1px solid #e1e4ed;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
 }
@@ -21,7 +21,7 @@
   place-items: center;
   border-radius: 11px;
   background: #f0ebff;
-  color: #6330f5;
+  color: #806bb6;
 }
 
 .programHeader h2 {
@@ -66,7 +66,7 @@
   place-items: center;
   border-radius: 11px;
   background: #eee9ff;
-  color: #6330f5;
+  color: #806bb6;
 }
 
 .currentInfo {
@@ -187,8 +187,8 @@
 }
 
 .assignButton {
-  border: 1px solid #6330f5;
-  background: #6330f5;
+  border: 1px solid #806bb6;
+  background: #806bb6;
   color: #fff;
 }
 
@@ -247,8 +247,8 @@
 }
 
 .editorFooter button:last-child {
-  border-color: #6330f5;
-  background: #6330f5;
+  border-color: #806bb6;
+  background: #806bb6;
   color: #fff;
 }
 

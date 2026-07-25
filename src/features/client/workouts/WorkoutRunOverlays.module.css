@@ -175,7 +175,7 @@
 }
 
 .backButton::before {
-  content: "â†";
+  content: "←";
   display: block;
   color: var(--color-workout-run-back);
   -webkit-text-fill-color: var(--color-workout-run-back);
@@ -185,12 +185,12 @@
   transform: none;
 }
 
-:global(html[data-app-theme="dark-green"]) .backButton,
-:global(html[data-app-theme="dark-green"]) .backButton::before {
+:global(html[data-app-theme="legacy-inactive"]) .backButton,
+:global(html[data-app-theme="legacy-inactive"]) .backButton::before {
   font-weight: 800;
 }
 
-:global(html[data-app-theme="dark-green"]) .backButton::before {
+:global(html[data-app-theme="legacy-inactive"]) .backButton::before {
   transform: translateY(-1px);
 }
 
@@ -384,7 +384,7 @@
   gap: 18px;
   color: #28262e;
   background: #ffffff;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 24px;
   text-align: center;
 }

@@ -368,7 +368,7 @@
   }
 }
 
-:global(:root[data-app-theme="dark-green"]) .overlay {
+:global(:root[data-app-theme="legacy-inactive"]) .overlay {
   z-index: 100020;
   padding: 10px 8px;
   display: grid;
@@ -381,25 +381,25 @@
   -webkit-backdrop-filter: var(--filter-food-edit-page-overlay);
 }
 
-:global(:root[data-app-theme="dark-green"]) .sheet {
-  width: min(520px, calc(100vw - 16px)) !important;
-  max-width: none !important;
-  height: 100dvh !important;
-  min-height: 100dvh !important;
-  max-height: 100dvh !important;
+:global(:root[data-app-theme="legacy-inactive"]) .sheet {
+  width: min(520px, calc(100vw - 16px));
+  max-width: none;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
   padding: 18px 12px 104px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   flex-direction: row;
-  overflow: auto !important;
+  overflow: auto;
   border-color: var(--color-food-edit-page-sheet-border);
-  border-radius: 24px !important;
+  border-radius: 24px;
   background: var(--color-food-edit-page-sheet);
   box-shadow: var(--shadow-food-edit-page-sheet);
-  scrollbar-gutter: auto !important;
+  scrollbar-gutter: auto;
 }
 
-:global(:root[data-app-theme="dark-green"]) .header {
+:global(:root[data-app-theme="legacy-inactive"]) .header {
   height: 44px;
   min-height: 44px;
   margin-bottom: 14px;
@@ -409,12 +409,12 @@
   justify-content: center;
 }
 
-:global(:root[data-app-theme="dark-green"]) .headerSpacer {
+:global(:root[data-app-theme="legacy-inactive"]) .headerSpacer {
   width: 100%;
   height: 0;
 }
 
-:global(:root[data-app-theme="dark-green"]) .title {
+:global(:root[data-app-theme="legacy-inactive"]) .title {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -437,7 +437,7 @@
   -webkit-text-fill-color: var(--color-food-edit-page-title-fill);
 }
 
-:global(:root[data-app-theme="dark-green"]) .closeButton {
+:global(:root[data-app-theme="legacy-inactive"]) .closeButton {
   position: static;
   z-index: auto;
   grid-column: auto;
@@ -459,7 +459,7 @@
   -webkit-text-fill-color: var(--color-food-edit-page-close-fill);
 }
 
-:global(:root[data-app-theme="dark-green"]) .content {
+:global(:root[data-app-theme="legacy-inactive"]) .content {
   max-width: none;
   max-height: none;
   padding: 2px 16px 100px;
@@ -469,7 +469,7 @@
   scrollbar-color: auto;
 }
 
-:global(:root[data-app-theme="dark-green"]) .noteField {
+:global(:root[data-app-theme="legacy-inactive"]) .noteField {
   margin-bottom: 7px;
   border-radius: 0;
   color: var(--color-food-edit-page-text);
@@ -478,11 +478,11 @@
   -webkit-text-fill-color: var(--color-food-edit-page-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .noteField > span {
+:global(:root[data-app-theme="legacy-inactive"]) .noteField > span {
   font-size: 9.5px;
 }
 
-:global(:root[data-app-theme="dark-green"]) .noteInput {
+:global(:root[data-app-theme="legacy-inactive"]) .noteInput {
   height: 112px;
   min-height: 112px;
   padding: 13px 14px;
@@ -495,7 +495,7 @@
   line-height: 1.25;
 }
 
-:global(:root[data-app-theme="dark-green"]) .actionBar {
+:global(:root[data-app-theme="legacy-inactive"]) .actionBar {
   position: fixed;
   right: auto;
   bottom: 16px;
@@ -517,7 +517,7 @@
   transform: translateX(-50%);
 }
 
-:global(:root[data-app-theme="dark-green"]) .actionBar::after {
+:global(:root[data-app-theme="legacy-inactive"]) .actionBar::after {
   content: none;
   position: static;
   inset: auto;
@@ -527,7 +527,7 @@
   pointer-events: auto;
 }
 
-:global(:root[data-app-theme="dark-green"]) .actionButton {
+:global(:root[data-app-theme="legacy-inactive"]) .actionButton {
   position: static;
   z-index: auto;
   max-width: none;
@@ -540,7 +540,7 @@
   font-weight: 900;
 }
 
-:global(:root[data-app-theme="dark-green"]) .actionButton > span {
+:global(:root[data-app-theme="legacy-inactive"]) .actionButton > span {
   width: 20px;
   min-width: auto;
   height: 20px;
@@ -549,7 +549,7 @@
   font-weight: 900;
 }
 
-:global(:root[data-app-theme="dark-green"]) .actionButton > strong {
+:global(:root[data-app-theme="legacy-inactive"]) .actionButton > strong {
   overflow: visible;
   font-size: 9.5px;
   font-weight: 950;
@@ -558,7 +558,7 @@
   white-space: normal;
 }
 
-:global(:root[data-app-theme="dark-green"]) .confirmAction:not(:disabled) > span {
+:global(:root[data-app-theme="legacy-inactive"]) .confirmAction:not(:disabled) > span {
   width: 30px;
   height: 30px;
   display: grid;
@@ -582,20 +582,20 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .sheet {
-  width: min(100%, 402px) !important;
-  max-width: 402px !important;
-  height: 100dvh !important;
-  min-height: 100dvh !important;
-  max-height: 100dvh !important;
+  width: min(100%, 402px);
+  max-width: 402px;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
   padding: 0 16px calc(104px + env(safe-area-inset-bottom, 0px));
   border: 0;
-  border-radius: 0 !important;
+  border-radius: 0;
   background: #f7f6f8;
   color: #28262e;
   box-shadow: none;
   font-family: var(--font-family-sans);
-  overflow: hidden !important;
-  scrollbar-gutter: auto !important;
+  overflow: hidden;
+  scrollbar-gutter: auto;
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {
@@ -651,7 +651,7 @@
   padding: 2px 0 96px;
   gap: 12px;
   color: #28262e;
-  scrollbar-color: #cfd6da transparent;
+  scrollbar-color: #efebf3 transparent;
 }
 
 :global(:root[data-app-theme="warm-light"]) .noteField { color: #28262e; backdrop-filter: none; -webkit-backdrop-filter: none; }
@@ -660,7 +660,7 @@
   height: 112px;
   min-height: 112px;
   padding: 14px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -671,7 +671,7 @@
   font-weight: 450;
 }
 
-:global(:root[data-app-theme="warm-light"]) .noteInput::placeholder { color: #a0a5a9; -webkit-text-fill-color: #a0a5a9; }
+:global(:root[data-app-theme="warm-light"]) .noteInput::placeholder { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 :global(:root[data-app-theme="warm-light"]) .actionBar {
   position: fixed;
   right: 0;

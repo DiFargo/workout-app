@@ -277,7 +277,7 @@
   gap: 9px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #9c88d2 rgba(156, 136, 210, 0.12);
+  scrollbar-color: #8f7ac8 rgba(156, 136, 210, 0.12);
 }
 
 .reviewGrid > div {
@@ -398,7 +398,7 @@
 .reviewCard,
 .reviewGrid {
   scrollbar-width: thin;
-  scrollbar-color: #9c88d2 rgba(156, 136, 210, 0.12);
+  scrollbar-color: #8f7ac8 rgba(156, 136, 210, 0.12);
 }
 
 .reviewCard::-webkit-scrollbar,
@@ -415,7 +415,7 @@
 .reviewCard::-webkit-scrollbar-thumb,
 .reviewGrid::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: linear-gradient(180deg, #b9a9e5, #7561aa);
+  background: linear-gradient(180deg, #c4b8e3, #806bb6);
 }
 
 @media (max-width: 390px) {

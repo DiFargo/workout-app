@@ -7,9 +7,9 @@
   html:root[data-app-theme="warm-light"] body #root {
     background:
       radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.075), transparent 36%),
-      linear-gradient(180deg, #fbfbff 0%, #f5f6fb 100%) !important;
-    color: #171923 !important;
-    overflow-x: hidden !important;
+      linear-gradient(180deg, #ffffff 0%, #f5f6fb 100%);
+    color: #28262e;
+    overflow-x: hidden;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
@@ -21,42 +21,42 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     --client-action: 52px;
     --client-title-h: 54px;
     --client-title-fz: 30px;
-    --client-title-color: #5f5744;
+    --client-title-color: #7b7682;
     --client-border: #dfe4ee;
     --client-card-shadow: 0 18px 48px rgba(36, 43, 66, 0.08);
-    width: 100% !important;
-    min-height: 100dvh !important;
-    box-sizing: border-box !important;
-    padding: 0 var(--client-x) calc(112px + env(safe-area-inset-bottom)) !important;
+    width: 100%;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding: 0 var(--client-x) calc(112px + env(safe-area-inset-bottom));
     background:
       radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.075), transparent 36%),
-      linear-gradient(180deg, #fbfbff 0%, #f5f6fb 100%) !important;
-    color: #171923 !important;
-    overflow-x: hidden !important;
+      linear-gradient(180deg, #ffffff 0%, #f5f6fb 100%);
+    color: #28262e;
+    overflow-x: hidden;
   }
 
   html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge {
-    position: absolute !important;
-    top: 14px !important;
-    left: var(--client-x, 26px) !important;
-    z-index: 20 !important;
-    width: auto !important;
-    min-width: 0 !important;
-    height: 22px !important;
-    min-height: 22px !important;
-    padding: 0 8px !important;
-    border: 1px solid #dfe4ee !important;
-    border-radius: 999px !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    color: #737b91 !important;
-    -webkit-text-fill-color: #737b91 !important;
-    font-size: 12px !important;
-    line-height: 20px !important;
-    font-weight: 900 !important;
-    letter-spacing: 0 !important;
-    box-shadow: none !important;
-    opacity: 1 !important;
+    position: absolute;
+    top: 14px;
+    left: var(--client-x, 26px);
+    z-index: 20;
+    width: auto;
+    min-width: 0;
+    height: 22px;
+    min-height: 22px;
+    padding: 0 8px;
+    border: 1px solid #dfe4ee;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 900;
+    letter-spacing: 0;
+    box-shadow: none;
+    opacity: 1;
   }
 
 }
@@ -66,41 +66,41 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatSearchMainTitle {
-    width: auto !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    font-size: var(--client-title-fz) !important;
-    line-height: 1.06 !important;
-    font-weight: 900 !important;
-    letter-spacing: 0 !important;
-    text-shadow: none !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--client-title-color);
+    -webkit-text-fill-color: var(--client-title-color);
+    font-size: var(--client-title-fz);
+    line-height: 1.06;
+    font-weight: 900;
+    letter-spacing: 0;
+    text-shadow: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   html:root[data-app-theme="warm-light"] body #root .menuRefreshIconBtn {
-    width: var(--client-action) !important;
-    min-width: var(--client-action) !important;
-    max-width: var(--client-action) !important;
-    height: var(--client-action) !important;
-    min-height: var(--client-action) !important;
-    max-height: var(--client-action) !important;
-    margin: 0 !important;
-    border: 1px solid var(--client-border) !important;
-    border-radius: 17px !important;
-    background: rgba(255, 255, 255, 0.94) !important;
-    color: #5f5744 !important;
-    -webkit-text-fill-color: #5f5744 !important;
-    box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08) !important;
-    display: grid !important;
-    place-items: center !important;
-    position: static !important;
-    inset: auto !important;
-    transform: none !important;
+    width: var(--client-action);
+    min-width: var(--client-action);
+    max-width: var(--client-action);
+    height: var(--client-action);
+    min-height: var(--client-action);
+    max-height: var(--client-action);
+    margin: 0;
+    border: 1px solid var(--client-border);
+    border-radius: 17px;
+    background: rgba(255, 255, 255, 0.94);
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
+    box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08);
+    display: grid;
+    place-items: center;
+    position: static;
+    inset: auto;
+    transform: none;
   }
 
 }
@@ -110,24 +110,24 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    overflow: visible !important;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
   }
 
   html:root[data-app-theme="warm-light"] body #root .nutritionZoukHeader {
-    border: 1px solid var(--client-border) !important;
-    border-radius: 22px !important;
-    background: #ffffff !important;
-    color: #171923 !important;
-    -webkit-text-fill-color: #171923 !important;
-    box-shadow: var(--client-card-shadow) !important;
+    border: 1px solid var(--client-border);
+    border-radius: 22px;
+    background: #ffffff;
+    color: #28262e;
+    -webkit-text-fill-color: #28262e;
+    box-shadow: var(--client-card-shadow);
   }
 
 }
@@ -143,71 +143,71 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .appVersionBadge.clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .appVersionBadge.clientPageVersionBadge {
-    top: 14px !important;
-    left: var(--client-x, 26px) !important;
-    height: 22px !important;
-    min-height: 22px !important;
-    padding: 0 8px !important;
-    border-radius: 999px !important;
-    font-size: 12px !important;
-    line-height: 20px !important;
+    top: 14px;
+    left: var(--client-x, 26px);
+    height: 22px;
+    min-height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    line-height: 20px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle {
-    width: 100% !important;
-    height: var(--client-title-h) !important;
-    min-height: var(--client-title-h) !important;
-    margin: var(--client-top) 0 16px !important;
-    padding: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 12px !important;
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
+    width: 100%;
+    height: var(--client-title-h);
+    min-height: var(--client-title-h);
+    margin: var(--client-top) 0 16px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    inset: auto;
+    transform: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle,
 html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle {
-    margin: 0 !important;
-    padding: 0 !important;
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    font-size: var(--client-title-fz) !important;
-    line-height: 1.06 !important;
-    font-weight: 900 !important;
-    letter-spacing: 0 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    margin: 0;
+    padding: 0;
+    color: var(--client-title-color);
+    -webkit-text-fill-color: var(--client-title-color);
+    font-size: var(--client-title-fz);
+    line-height: 1.06;
+    font-weight: 900;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle {
-    display: flex !important;
-    align-items: center !important;
+    display: flex;
+    align-items: center;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle {
-    width: 100% !important;
-    height: var(--client-title-h) !important;
-    min-height: var(--client-title-h) !important;
-    margin: var(--client-top) 0 16px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    color: var(--client-title-color) !important;
-    -webkit-text-fill-color: var(--client-title-color) !important;
-    font-size: var(--client-title-fz) !important;
-    line-height: 1.06 !important;
-    font-weight: 900 !important;
-    letter-spacing: 0 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    width: 100%;
+    height: var(--client-title-h);
+    min-height: var(--client-title-h);
+    margin: var(--client-top) 0 16px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: var(--client-title-color);
+    -webkit-text-fill-color: var(--client-title-color);
+    font-size: var(--client-title-fz);
+    line-height: 1.06;
+    font-weight: 900;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -216,7 +216,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle,
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > .clientCorePageTitle {
-    margin-top: calc(var(--client-top, 70px) + 8px) !important;
+    margin-top: calc(var(--client-top, 70px) + 8px);
   }
 }
 
@@ -229,35 +229,35 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     --client-top: 70px;
     --client-title-h: 54px;
     --client-title-fz: 30px;
-    --client-title-color: #5f5744;
+    --client-title-color: #7b7682;
     --client-card-shadow: 0 18px 48px rgba(57, 64, 96, 0.1);
-    padding-left: var(--client-x) !important;
-    padding-right: var(--client-x) !important;
-    padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
-    box-sizing: border-box !important;
-    overflow-x: hidden !important;
+    padding-left: var(--client-x);
+    padding-right: var(--client-x);
+    padding-bottom: calc(112px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 }
 
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    box-sizing: border-box;
   }
 }
 
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root {
-    background: #f5f6fb !important;
+    background: #f5f6fb;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain,
@@ -266,24 +266,24 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     --render-x: 24px;
     --render-top: 72px;
     --render-title-size: 30px;
-    --render-title-color: #5f5848;
+    --render-title-color: #7b7682;
     --render-ink: #161924;
     --render-muted: #71798d;
     --render-accent: #6047f2;
     --render-border: #e0e4ee;
     --render-card: rgba(255, 255, 255, 0.94);
     --render-shadow: 0 18px 42px rgba(37, 44, 68, 0.08);
-    width: 100% !important;
-    min-height: 100dvh !important;
-    max-width: none !important;
-    margin: 0 auto !important;
-    padding: 0 var(--render-x) calc(112px + env(safe-area-inset-bottom, 0px)) !important;
-    overflow-x: hidden !important;
+    width: 100%;
+    min-height: 100dvh;
+    max-width: none;
+    margin: 0 auto;
+    padding: 0 var(--render-x) calc(112px + env(safe-area-inset-bottom, 0px));
+    overflow-x: hidden;
     background:
       radial-gradient(circle at 45% -10%, rgba(111, 79, 255, 0.07), transparent 42%),
-      linear-gradient(180deg, #fbfbff 0%, #f6f7fc 100%) !important;
-    color: var(--render-ink) !important;
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+      linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
+    color: var(--render-ink);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::before,
@@ -292,30 +292,30 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain::after,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition::after {
-    display: none !important;
+    display: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .appVersionBadge.clientPageVersionBadge {
-    position: absolute !important;
-    top: 16px !important;
-    left: var(--render-x) !important;
-    z-index: 8 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 42px !important;
-    height: 22px !important;
-    padding: 0 8px !important;
-    border-radius: 999px !important;
-    border: 1px solid var(--render-border) !important;
-    background: rgba(255, 255, 255, 0.92) !important;
-    box-shadow: 0 8px 18px rgba(26, 32, 44, 0.04) !important;
-    color: #8690a2 !important;
-    font-size: 12px !important;
-    font-weight: 900 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
+    position: absolute;
+    top: 16px;
+    left: var(--render-x);
+    z-index: 8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid var(--render-border);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 8px 18px rgba(26, 32, 44, 0.04);
+    color: #8690a2;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0;
   }
 }
 
@@ -323,115 +323,115 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0 !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 }
 
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .profileProgressInsightTitle span {
-    color: var(--render-accent) !important;
+    color: var(--render-accent);
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
-    gap: 14px !important;
+    gap: 14px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    width: 100% !important;
-    min-height: 88px !important;
-    height: auto !important;
-    padding: 14px 18px !important;
-    border: 1px solid var(--render-border) !important;
-    border-radius: 22px !important;
-    background: var(--render-card) !important;
-    box-shadow: var(--render-shadow) !important;
-    display: grid !important;
-    grid-template-columns: 58px minmax(0, 1fr) 18px !important;
-    align-items: center !important;
-    gap: 14px !important;
+    width: 100%;
+    min-height: 88px;
+    height: auto;
+    padding: 14px 18px;
+    border: 1px solid var(--render-border);
+    border-radius: 22px;
+    background: var(--render-card);
+    box-shadow: var(--render-shadow);
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) 18px;
+    align-items: center;
+    gap: 14px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukIcon {
-    width: 52px !important;
-    height: 52px !important;
-    border-radius: 14px !important;
-    background: #f0edff !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 25px !important;
-    color: var(--render-accent) !important;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: #f0edff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    color: var(--render-accent);
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopText,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukText {
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    gap: 2px !important;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
   }
 }
 
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle {
-    color: var(--render-title-color) !important;
-    font-size: 21px !important;
-    font-weight: 900 !important;
-    line-height: 1.08 !important;
-    margin: 0 !important;
-    white-space: normal !important;
+    color: var(--render-title-color);
+    font-size: 21px;
+    font-weight: 900;
+    line-height: 1.08;
+    margin: 0;
+    white-space: normal;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopSubtitle,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta {
-    color: var(--render-muted) !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    line-height: 1.18 !important;
-    margin: 0 !important;
-    white-space: normal !important;
+    color: var(--render-muted);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.18;
+    margin: 0;
+    white-space: normal;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukArrow {
-    width: auto !important;
-    height: auto !important;
-    min-width: 0 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: var(--render-title-color) !important;
-    font-size: 34px !important;
-    font-weight: 900 !important;
-    line-height: 1 !important;
-    opacity: 1 !important;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--render-title-color);
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1;
+    opacity: 1;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukBlock {
-    width: 100% !important;
-    margin: 0 0 14px !important;
+    width: 100%;
+    margin: 0 0 14px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionOrbitalCard {
-    width: 100% !important;
-    margin: 0 0 14px !important;
-    border: 1px solid var(--render-border) !important;
-    border-radius: 22px !important;
-    background: var(--render-card) !important;
-    box-shadow: var(--render-shadow) !important;
+    width: 100%;
+    margin: 0 0 14px;
+    border: 1px solid var(--render-border);
+    border-radius: 22px;
+    background: var(--render-card);
+    box-shadow: var(--render-shadow);
   }
 }
 
@@ -453,42 +453,42 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
     --render-top: 50px;
     --render-title-size: 28px;
-    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   }
 
 }
 
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
-    gap: 10px !important;
+    gap: 10px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukHeader {
-    min-height: 78px !important;
-    padding: 12px 16px !important;
-    border-radius: 20px !important;
-    grid-template-columns: 48px minmax(0, 1fr) 16px !important;
-    gap: 12px !important;
+    min-height: 78px;
+    padding: 12px 16px;
+    border-radius: 20px;
+    grid-template-columns: 48px minmax(0, 1fr) 16px;
+    gap: 12px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukIcon {
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 13px !important;
-    font-size: 22px !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    font-size: 22px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukTitle {
-    font-size: 19px !important;
+    font-size: 19px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionAiPlanTopSubtitle,
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukMeta {
-    font-size: 12px !important;
+    font-size: 12px;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionZoukArrow {
-    font-size: 30px !important;
+    font-size: 30px;
   }
 
 }
@@ -496,20 +496,20 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
-    padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px));
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage)::after {
-    content: "" !important;
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    display: block !important;
-    height: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
-    pointer-events: none !important;
-    z-index: 35 !important;
-    background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f6f7fc 30%, #f6f7fc 100%) !important;
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    height: calc(112px + env(safe-area-inset-bottom, 0px));
+    pointer-events: none;
+    z-index: 35;
+    background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f7f6f8 30%, #f7f6f8 100%);
   }
 }
 
@@ -518,35 +518,35 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root [data-testid="client-harness-main"] .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > h1.clientCorePageTitle,
   html:root[data-app-theme="warm-light"] body #root [data-testid="client-harness-cabinet"] .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > h1.clientCorePageTitle {
-    height: 48px !important;
-    min-height: 48px !important;
-    max-height: 48px !important;
-    margin: 0 0 12px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    color: var(--render-title-color) !important;
-    font-size: 28px !important;
-    font-weight: 900 !important;
-    line-height: 1.06 !important;
-    transform: translateY(-26px) !important;
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
+    margin: 0 0 12px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: var(--render-title-color);
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.06;
+    transform: translateY(-26px);
   }
 
   html:root[data-app-theme="warm-light"] body #root main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageMain.mainDashboardPage[data-testid="client-harness-main"] .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > h1.clientCorePageTitle.clientCorePageTitle,
   html:root[data-app-theme="warm-light"] body #root main.profileDashboardPage.profileTabbedPage.clientCorePage.clientCorePageCabinet[data-testid="client-harness-cabinet"] .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection > h1.clientCorePageTitle.clientCorePageTitle {
-    height: 48px !important;
-    min-height: 48px !important;
-    max-height: 48px !important;
-    margin: 52px 0 12px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    color: var(--render-title-color) !important;
-    -webkit-text-fill-color: var(--render-title-color) !important;
-    font-size: 28px !important;
-    font-weight: 900 !important;
-    line-height: 1.06 !important;
-    transform: none !important;
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
+    margin: 52px 0 12px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: var(--render-title-color);
+    -webkit-text-fill-color: var(--render-title-color);
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.06;
+    transform: none;
   }
 }
 
@@ -556,30 +556,30 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
   html:root[data-app-theme="warm-light"],
   html:root[data-app-theme="warm-light"] body,
   html:root[data-app-theme="warm-light"] body #root {
-    background-color: #f4f7fd !important;
+    background-color: #f4f7fd;
   }
 
   html:root[data-app-theme="warm-light"] body:has(#root .fatSearchBottomBar)::after {
-    content: none !important;
-    display: none !important;
-    pointer-events: none !important;
+    content: none;
+    display: none;
+    pointer-events: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar {
-    overflow: visible !important;
-    isolation: isolate !important;
-    z-index: 100 !important;
+    overflow: visible;
+    isolation: isolate;
+    z-index: 100;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar::after {
-    content: none !important;
-    display: none !important;
-    pointer-events: none !important;
+    content: none;
+    display: none;
+    pointer-events: none;
   }
 
   html:root[data-app-theme="warm-light"] body #root .fatSearchBottomBar > * {
-    position: relative !important;
-    z-index: 1 !important;
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -589,30 +589,30 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
     --nutrition-grid-x: 25px;
     --nutrition-grid-title-y: 34px;
-    --nutrition-grid-title-color: #5f5848;
-    padding-left: var(--nutrition-grid-x) !important;
-    padding-right: var(--nutrition-grid-x) !important;
+    --nutrition-grid-title-color: #7b7682;
+    padding-left: var(--nutrition-grid-x);
+    padding-right: var(--nutrition-grid-x);
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.clientCorePageMain .clientPageVersionBadge,
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) .clientPageVersionBadge {
-    top: 15px !important;
-    left: 27px !important;
-    height: 22px !important;
-    min-width: 44px !important;
-    padding: 0 6px !important;
-    border-radius: 999px !important;
-    color: #8a90a0 !important;
-    font-size: 12px !important;
-    font-weight: 850 !important;
-    line-height: 20px !important;
+    top: 15px;
+    left: 27px;
+    height: 22px;
+    min-width: 44px;
+    padding: 0 6px;
+    border-radius: 999px;
+    color: #7b7682;
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 20px;
   }
 }
 
 /* v201: main inner render lock, excludes header/nav and gauge drawing. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiDashboardCard {
-    gap: 14px !important;
+    gap: 14px;
   }
 
 }
@@ -621,8 +621,8 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
 /* Split from client-nutrition-grid-shell-dashboard-lock.css: dashboard card, hero, stats and mini cards. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
-    gap: 15px !important;
-    padding-bottom: calc(122px + env(safe-area-inset-bottom, 0px)) !important;
+    gap: 15px;
+    padding-bottom: calc(122px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -635,19 +635,19 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     --main-card-border: #e8ebf4;
     --main-card-purple: #6847ff;
     --main-card-shadow: 0 18px 36px rgba(46, 55, 102, 0.1);
-    box-sizing: border-box !important;
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px)) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 18px !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    overflow: visible !important;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
   }
 
 }
@@ -665,18 +665,18 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection {
-    box-sizing: border-box !important;
-    width: calc(100% - 32px) !important;
-    max-width: 528px !important;
-    margin: 0 auto !important;
-    padding: 0 0 calc(112px + env(safe-area-inset-bottom, 0px)) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 18px !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    overflow: visible !important;
+    box-sizing: border-box;
+    width: calc(100% - 32px);
+    max-width: 528px;
+    margin: 0 auto;
+    padding: 0 0 calc(112px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
   }
 
 }
@@ -684,18 +684,18 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
 /* Split from client-nutrition-grid-render-lock-overrides.css: dashboard shell and card dimensions. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain .profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    gap: 18px !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    gap: 18px;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
@@ -707,30 +707,30 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     --main-inner-border: #e8ebf4;
     --main-inner-purple: #6847ff;
     --main-inner-shadow: 0 18px 36px rgba(46, 55, 102, 0.1);
-    width: 100% !important;
-    max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding: 0 0 calc(118px + env(safe-area-inset-bottom, 0px)) !important;
-    gap: 16px !important;
-    background: transparent !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    overflow: visible !important;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0 calc(118px + env(safe-area-inset-bottom, 0px));
+    gap: 16px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
   }
 }
 
 /* Split from client-nutrition-grid-final-dashboard-alignment.css: dashboard hero and stat alignment. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
-    gap: 14px !important;
-    padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important;
+    gap: 14px;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px));
   }
 }
 
 html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition > .nutritionZoukBlock .nutritionZoukMeta::after {
-  content: none !important;
-  display: none !important;
+  content: none;
+  display: none;
 }
 
 
@@ -738,31 +738,31 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
    Header, version badge, refresh button, bottom navigation, and gauge drawing are intentionally untouched. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain {
-    --main-nutrition-title: #5f5848;
-    --main-nutrition-ink: #171a26;
+    --main-nutrition-title: #7b7682;
+    --main-nutrition-ink: #28262e;
     --main-nutrition-muted: #748096;
     --main-nutrition-soft: #6f778b;
   }
 
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection {
-    gap: 16px !important;
-    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)) !important;
+    gap: 16px;
+    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
   }
 }
 
 @media (max-width: 640px) {
 
   html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard {
-    width: 100% !important;
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0 !important;
-    overflow: hidden !important;
-    background: #ffffff !important;
-    border: 1px solid #e3e7f0 !important;
-    border-radius: 22px !important;
-    box-shadow: 0 18px 36px rgba(31, 39, 68, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e3e7f0;
+    border-radius: 22px;
+    box-shadow: 0 18px 36px rgba(31, 39, 68, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.95);
   }
 }
 
@@ -775,64 +775,64 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain,
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain {
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    overscroll-behavior-y: contain !important;
-    -webkit-overflow-scrolling: touch !important;
-    scroll-padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px)) !important;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px));
   }
 
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain .profileCabinetSection.profileCabinetSection,
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileCabinetSection {
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
   }
 
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain .profileAiDashboardCard.profileAiDashboardCard,
   html:root[data-app-theme="warm-light"] body #root > .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain .profileAiDashboardCard {
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-    padding-bottom: calc(136px + env(safe-area-inset-bottom, 0px)) !important;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+    padding-bottom: calc(136px + env(safe-area-inset-bottom, 0px));
   }
 
   html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain[data-profile-tab="cabinet"] .profileAiDashboardCard > .profileMainHeroStatsCard {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    min-height: 160px !important;
-    display: grid !important;
-    grid-template-rows: 96px 64px !important;
-    align-items: stretch !important;
-    gap: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: visible !important;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 160px;
+    display: grid;
+    grid-template-rows: 96px 64px;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
   }
 }
 
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root#root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.profileTabbedPage.mainDashboardPage.mainDashboardPage.clientCorePage.clientCorePage.clientCorePageMain.clientCorePageMain[data-profile-tab="cabinet"] section.profileUnifiedCard.profileUnifiedCard.profileAiDashboardCard.profileAiDashboardCard.profileCabinetSection.profileCabinetSection > .profileMainHeroStatsCard.profileMainHeroStatsCard {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    min-height: 160px !important;
-    height: auto !important;
-    display: grid !important;
-    grid-template-rows: 96px 64px !important;
-    align-items: stretch !important;
-    gap: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    border-radius: 24px !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    overflow: visible !important;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 160px;
+    height: auto;
+    display: grid;
+    grid-template-rows: 96px 64px;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 24px;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
   }
 }
 

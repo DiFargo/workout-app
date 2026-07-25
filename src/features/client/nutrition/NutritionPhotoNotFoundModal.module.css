@@ -1,7 +1,7 @@
 .overlay {
   --photo-modal-surface: var(--color-surface);
   --photo-modal-text: var(--color-heading);
-  --photo-modal-muted: #73798b;
+  --photo-modal-muted: #7b7682;
   --photo-modal-border: var(--color-dialog-border);
   --photo-control-surface: var(--color-control-surface);
   --photo-control-border: var(--color-control-border);
@@ -18,7 +18,7 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-:global(:root[data-app-theme="dark-green"]) .overlay {
+:global(:root[data-app-theme="legacy-inactive"]) .overlay {
   --photo-modal-surface: var(--color-surface);
   --photo-modal-text: var(--color-text);
   --photo-modal-muted: var(--color-text-muted);
@@ -36,7 +36,7 @@
   text-align: center;
 }
 
-:global(:root[data-app-theme="dark-green"]) .modal {
+:global(:root[data-app-theme="legacy-inactive"]) .modal {
   box-shadow: var(--shadow-overlay);
 }
 
@@ -74,7 +74,7 @@
   font-size: 28px;
 }
 
-:global(:root[data-app-theme="dark-green"]) .icon {
+:global(:root[data-app-theme="legacy-inactive"]) .icon {
   background: rgba(145, 173, 78, 0.16);
 }
 
@@ -148,8 +148,8 @@
   --photo-modal-surface: #fff;
   --photo-modal-text: #28262e;
   --photo-modal-muted: #7b7682;
-  --photo-modal-border: #ebe6ef;
-  --photo-control-surface: #f0ebfa;
+  --photo-modal-border: #efebf3;
+  --photo-control-surface: #f5f2f7;
   --photo-control-border: transparent;
   --photo-control-text: #8f7ac8;
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
@@ -162,7 +162,7 @@
 :global(:root[data-app-theme="warm-light"]) .modal {
   width: min(100%, 370px);
   padding: 22px 18px 18px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 26px;
   background: #fff;
   color: #28262e;
@@ -176,19 +176,19 @@
   min-height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #28262e;
   box-shadow: none;
   font-size: 24px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .icon { background: #f0ebfa; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .icon { background: #f5f2f7; color: #8f7ac8; }
 :global(:root[data-app-theme="warm-light"]) .title { color: #28262e; font-size: 20px; font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .description { color: #7b7682; font-weight: 450; }
 
 :global(:root[data-app-theme="warm-light"]) .actionButton {
   min-height: 50px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
   color: #8f7ac8;

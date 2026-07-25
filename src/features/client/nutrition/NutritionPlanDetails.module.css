@@ -30,14 +30,14 @@
 .root {
   --plan-panel-background: rgba(255, 255, 255, 0.035);
   --plan-panel-border: rgba(255, 255, 255, 0.065);
-  --plan-text: #f4f6f2;
+  --plan-text: #28262e;
   --plan-muted: rgba(255, 255, 255, 0.58);
   --plan-chip-background: rgba(255, 255, 255, 0.04);
   --plan-chip-border: rgba(255, 255, 255, 0.055);
   --plan-chip-text: rgba(255, 255, 255, 0.42);
   --plan-close-background: rgba(127, 159, 58, 0.1);
   --plan-close-border: rgba(181, 230, 85, 0.2);
-  --plan-close-text: #b5e655;
+  --plan-close-text: #72a686;
 
   position: fixed;
   top: 50%;
@@ -205,7 +205,7 @@
 }
 
 .pixelActive {
-  background: linear-gradient(135deg, #7f9f3a, #91ad4e);
+  background: linear-gradient(135deg, #7f9f3a, #72a686);
   box-shadow: 0 0 10px rgba(127, 159, 58, 0.18);
 }
 
@@ -470,20 +470,20 @@
   --nutrition-plan-badge-state: info;
 }
 
-:global(:root[data-app-theme="dark-green"]) .calorieFoot span {
+:global(:root[data-app-theme="legacy-inactive"]) .calorieFoot span {
   color: rgba(245, 247, 251, 0.52);
 }
 
-:global(:root[data-app-theme="dark-green"]) .calorieFoot strong {
+:global(:root[data-app-theme="legacy-inactive"]) .calorieFoot strong {
   color: rgba(255, 255, 255, 0.86);
   -webkit-text-fill-color: var(--plan-muted);
 }
 
-:global(:root[data-app-theme="dark-green"]) .header {
+:global(:root[data-app-theme="legacy-inactive"]) .header {
   grid-template-columns: 44px minmax(0, 1fr) 44px;
 }
 
-:global(:root[data-app-theme="dark-green"]) .close {
+:global(:root[data-app-theme="legacy-inactive"]) .close {
   width: 44px;
   min-width: 44px;
   height: 44px;
@@ -495,16 +495,16 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  --plan-panel-background: #f7f8fc;
+  --plan-panel-background: #f7f6f8;
   --plan-panel-border: #e5e7f0;
-  --plan-text: #6f6875;
-  --plan-muted: #6f6875;
+  --plan-text: #7b7682;
+  --plan-muted: #7b7682;
   --plan-chip-background: #fff;
   --plan-chip-border: #efebf3;
-  --plan-chip-text: #6f6875;
-  --plan-close-background: #f0ebfa;
-  --plan-close-border: #e4dcf2;
-  --plan-close-text: #6f6875;
+  --plan-chip-text: #7b7682;
+  --plan-close-background: #f5f2f7;
+  --plan-close-border: #efebf3;
+  --plan-close-text: #7b7682;
 
   border-color: #efebf3;
   background: #fff;
@@ -528,7 +528,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .pixelActive {
-  background: linear-gradient(135deg, #f4e064, #ecd35a);
+  background: linear-gradient(135deg, #c7945a, #ecd35a);
 }
 
 :global(:root[data-app-theme="warm-light"]) .root[data-state="over-limit"] .pixelActive {
@@ -593,39 +593,39 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  --plan-panel-background: #f0ebfa;
+  --plan-panel-background: #f5f2f7;
   --plan-panel-border: transparent;
   --plan-text: #28262e;
   --plan-muted: #7b7682;
-  --plan-chip-background: #f0ebfa;
+  --plan-chip-background: #f5f2f7;
   --plan-chip-border: transparent;
   --plan-chip-text: #8f7ac8;
-  --plan-close-background: #f0ebfa;
+  --plan-close-background: #f5f2f7;
   --plan-close-border: transparent;
   --plan-close-text: #28262e;
   top: auto;
   bottom: max(16px, env(safe-area-inset-bottom));
-  width: min(370px, calc(100vw - 32px)) !important;
-  max-width: 370px !important;
-  max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px))) !important;
+  width: min(370px, calc(100vw - 32px));
+  max-width: 370px;
+  max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px)));
   padding: 16px;
-  border: 1px solid #ebe6ef;
-  border-radius: 26px !important;
+  border: 1px solid #efebf3;
+  border-radius: 26px;
   background: #fff;
   color: #28262e;
   -webkit-text-fill-color: #28262e;
   box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
   transform: translateX(-50%);
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  scrollbar-gutter: auto !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: auto;
 }
 
 :global(:root[data-app-theme="warm-light"]) .header { grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; }
 :global(:root[data-app-theme="warm-light"]) .titleEyebrow { color: #28262e; -webkit-text-fill-color: #28262e; font-size: 18px; font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .title { color: #7b7682; -webkit-text-fill-color: #7b7682; font-size: 11px; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f0ebfa; color: #28262e; -webkit-text-fill-color: #28262e; font-size: 24px; font-weight: 400; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: #f0ebfa; color: #28262e; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f5f2f7; color: #28262e; -webkit-text-fill-color: #28262e; font-size: 24px; font-weight: 400; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: #f5f2f7; color: #28262e; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .dayPillActive { background: #e8efea; }
 :global(:root[data-app-theme="warm-light"]) .dayTitle { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .dayDescription { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
@@ -634,14 +634,14 @@
 :global(:root[data-app-theme="warm-light"]) .scoreBlock,
 :global(:root[data-app-theme="warm-light"]) .macro,
 :global(:root[data-app-theme="warm-light"]) .conclusion {
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: #dce3e7; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: #efebf3; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .pixelActive { background: #8f7ac8; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .overLimit .pixelActive,
 :global(:root[data-app-theme="warm-light"]) .root[data-state="over-limit"] .pixelActive { background: #b36e72; box-shadow: none; }
@@ -654,10 +654,10 @@
 :global(:root[data-app-theme="warm-light"]) .calorieValue,
 :global(:root[data-app-theme="warm-light"]) .macroValue,
 :global(:root[data-app-theme="warm-light"]) .conclusionText { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: #ebe6ef; }
+:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: #efebf3; }
 :global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .macroDot { background: #8f7ac8; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: #f0ebfa; color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; box-shadow: none; font-weight: 550; }
+:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: #f5f2f7; color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; box-shadow: none; font-weight: 550; }
 :global(:root[data-app-theme="warm-light"]) .good { background: #e8efea; color: #708d79; -webkit-text-fill-color: #708d79; }
 :global(:root[data-app-theme="warm-light"]) .warning { background: #f2ece7; color: #ae8768; -webkit-text-fill-color: #ae8768; }
-:global(:root[data-app-theme="warm-light"]) .info { background: #f0ebfa; color: #6f879c; -webkit-text-fill-color: #6f879c; }
+:global(:root[data-app-theme="warm-light"]) .info { background: #f5f2f7; color: #6f879c; -webkit-text-fill-color: #6f879c; }

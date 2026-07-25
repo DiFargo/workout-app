@@ -14,10 +14,10 @@
   width: 100%;
   max-width: 520px;
   padding: 10px 14px calc(16px + env(safe-area-inset-bottom));
-  border: 1px solid #dfe3ef;
+  border: 1px solid #efebf3;
   border-radius: 18px 18px 12px 12px;
   background: #ffffff;
-  color: #151824;
+  color: #28262e;
   box-shadow: 0 24px 64px rgba(43, 50, 92, 0.2);
 }
 
@@ -31,7 +31,7 @@
 
 .sheet h2 {
   margin: 0 0 12px;
-  color: #151824;
+  color: #28262e;
   font-size: 17px;
   font-weight: 800;
   text-align: center;
@@ -48,14 +48,14 @@
   padding: 9px;
   display: grid;
   gap: 6px;
-  border: 1px solid #e1e4ef;
+  border: 1px solid #efebf3;
   border-radius: 12px;
-  background: #f7f8fc;
+  background: #f7f6f8;
 }
 
 .targetMonth h3 {
   margin: 0 0 2px;
-  color: #5a49df;
+  color: #806bb6;
   font-size: 11px;
   font-weight: 800;
 }
@@ -64,10 +64,10 @@
 .actions button {
   min-height: 40px;
   padding: 0 10px;
-  border: 1px solid #e1e4ef;
+  border: 1px solid #efebf3;
   border-radius: 10px;
-  background: #f7f8fc;
-  color: #596176;
+  background: #f7f6f8;
+  color: #7b7682;
   font-size: 11px;
   font-weight: 700;
 }

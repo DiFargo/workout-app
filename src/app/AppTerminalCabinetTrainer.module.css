@@ -6,29 +6,29 @@
 .adminClientTabContentRender > .adminOverviewNutritionMonthPanel,
 .adminClientTabContentRender > .adminProgressDiagramsPanel,
 .adminClientTabContentRender > .adminClientRecommendationsRender {
-  display: none !important;
+  display: none;
 }
 
 .adminClientWorkspaceCrmPage .adminClientTabContentRender {
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 
 .trainerClientHero {
   position: relative;
-  display: grid !important;
+  display: grid;
   grid-template-columns: minmax(330px, 1.15fr) minmax(440px, 1fr);
-  align-items: center !important;
-  gap: 28px !important;
-  min-height: 150px !important;
-  padding: 20px 24px !important;
-  border: 1px solid rgba(255, 255, 255, 0.09) !important;
-  border-radius: 22px !important;
-  background: rgba(12, 23, 15, 0.82) !important;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16) !important;
+  align-items: center;
+  gap: 28px;
+  min-height: 150px;
+  padding: 20px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 22px;
+  background: rgba(12, 23, 15, 0.82);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
 }
 
 .trainerClientHeroIdentity {
@@ -40,18 +40,18 @@
 }
 
 .adminClientWorkspaceHeaderRender .trainerClientHeroAvatar {
-  position: static !important;
-  inset: auto !important;
-  grid-area: auto !important;
-  width: 92px !important;
-  height: 112px !important;
-  min-width: 92px !important;
-  min-height: 112px !important;
-  margin: 0 !important;
-  display: grid !important;
-  place-items: center !important;
+  position: static;
+  inset: auto;
+  grid-area: auto;
+  width: 92px;
+  height: 112px;
+  min-width: 92px;
+  min-height: 112px;
+  margin: 0;
+  display: grid;
+  place-items: center;
   overflow: hidden;
-  border-radius: 18px !important;
+  border-radius: 18px;
 }
 
 .trainerClientHeroAvatar img {
@@ -75,25 +75,25 @@
 
 .trainerClientHeroNameRow h2 {
   min-width: 0;
-  margin: 0 !important;
+  margin: 0;
   overflow: hidden;
-  color: #fff !important;
-  font-size: 30px !important;
-  line-height: 1.05 !important;
+  color: #fff;
+  font-size: 30px;
+  line-height: 1.05;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .adminClientWorkspaceHeaderRender .trainerClientHeroNameRow .adminClientStatusRender {
-  position: static !important;
-  grid-area: auto !important;
-  align-self: auto !important;
-  justify-self: auto !important;
+  position: static;
+  grid-area: auto;
+  align-self: auto;
+  justify-self: auto;
   flex: 0 0 auto;
-  min-height: 30px !important;
-  padding: 0 11px !important;
-  border-radius: 10px !important;
-  font-size: 11px !important;
+  min-height: 30px;
+  padding: 0 11px;
+  border-radius: 10px;
+  font-size: 11px;
 }
 
 .trainerClientHeroCopy p,
@@ -198,7 +198,7 @@
 }
 
 .trainerClientSectionHead span {
-  color: #b5e655;
+  color: #72a686;
   font-size: 11px;
   font-weight: 950;
   letter-spacing: 0.04em;
@@ -276,7 +276,7 @@
 }
 
 .trainerClientDashboardModal > header span {
-  color: #b5e655;
+  color: #72a686;
   font-size: 10px;
   font-weight: 950;
   letter-spacing: 0.06em;
@@ -422,7 +422,7 @@
 }
 
 .trainerClientAttentionStrip article.success > i {
-  color: #b5e655;
+  color: #72a686;
   background: rgba(159, 202, 71, 0.16);
 }
 
@@ -488,7 +488,7 @@
   place-items: center;
   border: 4px solid rgba(159, 202, 71, 0.25);
   border-radius: 50%;
-  color: #b5e655;
+  color: #72a686;
   font-size: 11px;
 }
 
@@ -617,7 +617,7 @@
 }
 
 .trainerClientTaskPreview > div.completed > button {
-  background: #9fca47;
+  background: #72a686;
 }
 
 .trainerClientTaskPreview > div > span {
@@ -642,7 +642,7 @@
 }
 
 .trainerClientTaskPreview .completed em {
-  color: #b5e655;
+  color: #72a686;
 }
 
 .trainerClientTaskPreview .overdue em {
@@ -689,7 +689,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: conic-gradient(#9fca47 var(--macro-progress), rgba(255, 255, 255, 0.08) 0);
+  background: conic-gradient(#72a686 var(--macro-progress), rgba(255, 255, 255, 0.08) 0);
   transform: translateY(-50%);
 }
 
@@ -788,7 +788,7 @@
 }
 
 .trainerClientNoteEditor summary {
-  color: #b5e655;
+  color: #72a686;
   font-size: 10px;
   font-weight: 850;
 }
@@ -808,7 +808,7 @@
   min-height: 36px;
   border: 0;
   border-radius: 11px;
-  background: #9fca47;
+  background: #72a686;
   color: #102006;
   font-weight: 900;
 }
@@ -827,7 +827,7 @@
   place-items: center;
   border-radius: 12px;
   background: rgba(159, 202, 71, 0.12);
-  color: #b5e655;
+  color: #72a686;
   font-style: normal;
 }
 
@@ -837,7 +837,7 @@
 }
 
 .trainerClientProgramSummary > b {
-  color: #b5e655;
+  color: #72a686;
   font-size: 25px;
 }
 
@@ -888,7 +888,7 @@
   place-items: center;
   border-radius: 6px;
   background: rgba(159, 202, 71, 0.12);
-  color: #b5e655;
+  color: #72a686;
   font-size: 10px;
   font-style: normal;
 }
@@ -914,9 +914,9 @@
 html:root[data-app-theme="warm-light"] body #root .trainerClientHero,
 html:root[data-app-theme="warm-light"] body #root .trainerClientOverviewSection,
 html:root[data-app-theme="warm-light"] body #root .trainerClientKpiGrid > article {
-  border-color: #e4e7f1 !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  box-shadow: 0 12px 32px rgba(64, 70, 112, 0.07) !important;
+  border-color: #efebf3;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 32px rgba(64, 70, 112, 0.07);
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientHeroNameRow h2,
@@ -931,7 +931,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientAiList strong,
 html:root[data-app-theme="warm-light"] body #root .trainerClientProgramSummary strong,
 html:root[data-app-theme="warm-light"] body #root .trainerClientControlRows strong,
 html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList strong {
-  color: #151824 !important;
+  color: #28262e;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientHeroCopy p,
@@ -953,7 +953,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientProgramProgress 
 html:root[data-app-theme="warm-light"] body #root .trainerClientControlRows span,
 html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList span,
 html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList time {
-  color: #747d93 !important;
+  color: #747d93;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientHeroMeta > div,
@@ -967,18 +967,18 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList > d
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientAttentionStrip article {
   border-color: #e8eaf2;
-  background: #fbfbfe;
+  background: #ffffff;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientInlineEditorPanel {
-  border-color: #dedaf8;
+  border-color: #e7e0f5;
   background: #ffffff;
   box-shadow: 0 20px 55px rgba(55, 58, 100, 0.16);
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoRow figure > div {
   border-color: #d9d4fb;
-  background: #f7f5ff;
+  background: #f5f2f7;
   color: #7463dc;
 }
 
@@ -991,13 +991,13 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid i b {
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientNoteEditor textarea {
-  border-color: #e1e4ee;
-  background: #f8f9fd;
-  color: #151824;
+  border-color: #efebf3;
+  background: #f7f6f8;
+  color: #28262e;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientNoteEditor button {
-  background: linear-gradient(135deg, #6552e6, #2d6ff2);
+  background: linear-gradient(135deg, #806bb6, #8f7ac8);
   color: #fff;
 }
 
@@ -1017,7 +1017,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal {
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header h3 {
-  color: #151824;
+  color: #28262e;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header span {
@@ -1026,7 +1026,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal >
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header > button {
   border-color: #e3e5ef;
-  background: #f7f8fc;
+  background: #f7f6f8;
   color: #687188;
 }
 
@@ -1037,8 +1037,8 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
 
 @media (max-width: 1100px) {
   .trainerClientHero {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .trainerClientHeroMeta > div:first-child {
@@ -1085,9 +1085,9 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
   }
 
   .trainerClientHero {
-    min-height: auto !important;
-    padding: 14px !important;
-    border-radius: 18px !important;
+    min-height: auto;
+    padding: 14px;
+    border-radius: 18px;
   }
 
   .trainerClientHeroIdentity {
@@ -1096,11 +1096,11 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
   }
 
   .adminClientWorkspaceHeaderRender .trainerClientHeroAvatar {
-    width: 66px !important;
-    height: 78px !important;
-    min-width: 66px !important;
-    min-height: 78px !important;
-    border-radius: 14px !important;
+    width: 66px;
+    height: 78px;
+    min-width: 66px;
+    min-height: 78px;
+    border-radius: 14px;
   }
 
   .trainerClientHeroNameRow {
@@ -1111,7 +1111,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoCompareModa
 
   .trainerClientHeroNameRow h2 {
     max-width: 100%;
-    font-size: 22px !important;
+    font-size: 22px;
   }
 
   .trainerClientHeroMeta > div {

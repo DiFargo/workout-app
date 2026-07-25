@@ -37,7 +37,7 @@
 .firstSetupChoiceGrid button.active,.firstSetupGoalGrid button.active,.firstSetupDays button.active{background:linear-gradient(135deg,rgba(127,159,58,.34),rgba(127,159,58,.12))}
 .firstSetupBottom{display:flex;gap:10px;margin-top:24px}
 .firstSetupPrimary,.firstSetupSecondary{flex:1;height:58px;border:none;border-radius:22px;font-weight:1000}
-.firstSetupPrimary{background:linear-gradient(135deg,#91ad4e,#6e8836);color:#081007}
+.firstSetupPrimary{background:linear-gradient(135deg,#72a686,#6e8836);color:#081007}
 .firstSetupSecondary{background:rgba(255,255,255,.06);color:#fff}
 
 .firstSetupPrimary:disabled {
@@ -47,9 +47,9 @@
 }
 
 .firstSetupOverlay {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .firstSetupCard {
@@ -70,7 +70,7 @@
   height: 46px;
   display: grid;
   place-items: center;
-  border: 1px solid #ede8f1;
+  border: 1px solid #f7f6f8;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.96);
   color: #5f6678;
@@ -95,7 +95,7 @@
   margin: 0 auto;
   padding: 34px 22px 24px;
   place-items: center;
-  border: 1px solid #ede8f1;
+  border: 1px solid #f7f6f8;
   border-radius: 30px;
   background:
     radial-gradient(circle at 50% 0%, rgba(156, 136, 210, 0.08), transparent 46%),
@@ -162,10 +162,10 @@
   border-radius: 999px;
   background: linear-gradient(
     90deg,
-    #9c88d2 0%,
-    #9c88d2 var(--slider-progress, 0%),
-    #f0ebfa var(--slider-progress, 0%),
-    #f0ebfa 100%
+    #8f7ac8 0%,
+    #8f7ac8 var(--slider-progress, 0%),
+    #f5f2f7 var(--slider-progress, 0%),
+    #f5f2f7 100%
   );
 }
 
@@ -177,7 +177,7 @@
   -webkit-appearance: none;
   border: 10px solid #ffffff;
   border-radius: 50%;
-  background: #9c88d2;
+  background: #8f7ac8;
   box-shadow:
     0 10px 24px rgba(143, 122, 200, 0.26),
     0 0 0 1px rgba(143, 122, 200, 0.16);
@@ -186,13 +186,13 @@
 .firstSetupMetricSlider input[type="range"]::-moz-range-track {
   height: 16px;
   border-radius: 999px;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-progress {
   height: 16px;
   border-radius: 999px;
-  background: #9c88d2;
+  background: #8f7ac8;
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-thumb {
@@ -200,7 +200,7 @@
   height: 18px;
   border: 9px solid #ffffff;
   border-radius: 50%;
-  background: #9c88d2;
+  background: #8f7ac8;
   box-shadow:
     0 10px 24px rgba(143, 122, 200, 0.26),
     0 0 0 1px rgba(143, 122, 200, 0.16);
@@ -254,7 +254,7 @@
   width: 100%;
   min-height: 48px;
   padding: 0 54px 0 14px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 15px;
   outline: none;
   background: #fff;
@@ -269,12 +269,12 @@
   text-align: center;
   font-size: 17px;
   border-radius: 14px;
-  background: #f9faff;
+  background: #f7f6f8;
 }
 
 .firstSetupMetricInput input:focus,
 .profileMetricSliderInput input:focus {
-  border-color: #b9a9e5;
+  border-color: #c4b8e3;
   box-shadow: 0 0 0 3px rgba(156, 136, 210, 0.1);
 }
 
@@ -292,31 +292,31 @@
 
 
 .firstSetupBottom {
-  min-height: 76px !important;
-  padding: 8px !important;
-  display: flex !important;
-  align-items: center !important;
-  border: 1px solid #f0ecf4 !important;
-  border-radius: 26px !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  box-shadow: 0 18px 42px rgba(72, 63, 87, 0.1) !important;
+  min-height: 76px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #f0ecf4;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 42px rgba(72, 63, 87, 0.1);
 }
 
 .firstSetupPrimary,
 .firstSetupSecondary {
-  height: 58px !important;
-  min-height: 58px !important;
-  border-radius: 18px !important;
-  font-size: 15px !important;
-  font-weight: 900 !important;
+  height: 58px;
+  min-height: 58px;
+  border-radius: 18px;
+  font-size: 15px;
+  font-weight: 900;
 }
 
 .firstSetupSecondary {
-  flex: 0 0 110px !important;
+  flex: 0 0 110px;
 }
 
 .firstSetupPrimary {
-  flex: 1 1 auto !important;
+  flex: 1 1 auto;
 }
 
 
@@ -336,7 +336,7 @@
 .firstSetupExitConfirmCard {
   width: min(100%, 330px);
   padding: 22px;
-  border: 1px solid #ede8f1;
+  border: 1px solid #f7f6f8;
   border-radius: 24px;
   background: #ffffff;
   box-shadow: 0 24px 64px rgba(72, 63, 87, 0.18);
@@ -351,10 +351,10 @@
 }
 
 .firstSetupExitConfirmCard p {
-  margin: 10px auto 18px !important;
-  color: #7b7682 !important;
-  font-size: 14px !important;
-  line-height: 1.38 !important;
+  margin: 10px auto 18px;
+  color: #7b7682;
+  font-size: 14px;
+  line-height: 1.38;
 }
 
 .firstSetupExitConfirmCard > div {
@@ -365,7 +365,7 @@
 
 .firstSetupExitConfirmCard button {
   min-height: 50px;
-  border: 1px solid #ede8f1;
+  border: 1px solid #f7f6f8;
   border-radius: 16px;
   background: #ffffff;
   color: #687184;
@@ -375,35 +375,35 @@
 
 .firstSetupExitConfirmCard button.primary {
   border-color: transparent;
-  background: linear-gradient(135deg, #9c88d2, #806bb6);
+  background: linear-gradient(135deg, #8f7ac8, #806bb6);
   color: #ffffff;
   box-shadow: 0 12px 26px rgba(117, 97, 170, 0.2);
 }
 
-:root[data-app-theme="dark-green"] .firstSetupMetricSlider,
-:root[data-app-theme="dark-green"] .profileMetricSlider {
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricSlider,
+:root[data-app-theme="legacy-inactive"] .profileMetricSlider {
   border-color: rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.05);
   color: #fff;
 }
 
-:root[data-app-theme="dark-green"] .firstSetupMetricSlider > span,
-:root[data-app-theme="dark-green"] .firstSetupMetricLabel,
-:root[data-app-theme="dark-green"] .profileMetricSlider > span,
-:root[data-app-theme="dark-green"] .firstSetupMetricSlider > strong small,
-:root[data-app-theme="dark-green"] .firstSetupMetricValue small,
-:root[data-app-theme="dark-green"] .profileMetricSlider > strong small {
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricSlider > span,
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricLabel,
+:root[data-app-theme="legacy-inactive"] .profileMetricSlider > span,
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricSlider > strong small,
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricValue small,
+:root[data-app-theme="legacy-inactive"] .profileMetricSlider > strong small {
   color: rgba(255, 255, 255, 0.58);
 }
 
-:root[data-app-theme="dark-green"] .firstSetupMetricSlider > strong,
-:root[data-app-theme="dark-green"] .firstSetupMetricValue,
-:root[data-app-theme="dark-green"] .profileMetricSlider > strong {
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricSlider > strong,
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricValue,
+:root[data-app-theme="legacy-inactive"] .profileMetricSlider > strong {
   color: #fff;
 }
 
-:root[data-app-theme="dark-green"] .firstSetupMetricInput input,
-:root[data-app-theme="dark-green"] .profileMetricSliderInput input {
+:root[data-app-theme="legacy-inactive"] .firstSetupMetricInput input,
+:root[data-app-theme="legacy-inactive"] .profileMetricSliderInput input {
   border-color: rgba(255, 255, 255, 0.08);
   background: rgba(0, 0, 0, 0.22);
   color: #fff;
@@ -412,245 +412,245 @@
 /* Keep onboarding choices and navigation actions reachable on compact
  * viewport heights even when older global page rules are loaded. */
 html body #root .firstSetupSexGrid button {
-  min-height: 44px !important;
+  min-height: 44px;
 }
 
 html body #root .firstSetupActivityList button,
 html body #root .firstSetupGoalGrid button {
-  min-height: 44px !important;
-  max-height: none !important;
+  min-height: 44px;
+  max-height: none;
 }
 
 html body #root .firstSetupPrimary,
 html body #root .firstSetupSecondary {
-  min-height: 44px !important;
-  max-height: none !important;
+  min-height: 44px;
+  max-height: none;
 }
 
 /* Calm iOS onboarding. This block intentionally keeps the established global
  * class contract because the ten-step flow is also mounted from workout
  * recovery state. Dark-green declarations above remain unchanged. */
 html:root[data-app-theme="warm-light"] body #root .firstSetupOverlay {
-  box-sizing: border-box !important;
-  padding: 0 !important;
-  align-items: stretch !important;
-  background: #f7f6f8 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  color: #28262e !important;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
+  box-sizing: border-box;
+  padding: 0;
+  align-items: stretch;
+  background: #f7f6f8;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: #28262e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
-  box-sizing: border-box !important;
-  width: min(100%, 402px) !important;
-  height: 100dvh !important;
-  max-height: 100dvh !important;
-  margin: 0 auto !important;
+  box-sizing: border-box;
+  width: min(100%, 402px);
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 auto;
   padding:
     max(18px, calc(env(safe-area-inset-top) + 10px))
     16px
-    max(14px, calc(env(safe-area-inset-bottom) + 8px)) !important;
-  gap: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: #f7f6f8 !important;
-  color: #28262e !important;
-  box-shadow: none !important;
+    max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  gap: 0;
+  border: 0;
+  border-radius: 0;
+  background: #f7f6f8;
+  color: #28262e;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupProgress {
-  min-height: 44px !important;
-  grid-template-columns: 42px minmax(0, 1fr) !important;
-  gap: 10px !important;
-  color: #7b7682 !important;
-  font-size: 12px !important;
-  font-weight: 650 !important;
+  min-height: 44px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 10px;
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 650;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupProgress > div {
-  margin-right: 52px !important;
-  gap: 4px !important;
+  margin-right: 52px;
+  gap: 4px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i {
-  height: 4px !important;
-  background: #d9dddf !important;
+  height: 4px;
+  background: #d9dddf;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i.active {
-  background: #8f7ac8 !important;
+  background: #8f7ac8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitButton {
-  top: max(14px, calc(env(safe-area-inset-top) + 6px)) !important;
-  right: 16px !important;
-  width: 44px !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  border: 1px solid #ebe6ef !important;
-  border-radius: 14px !important;
-  background: #fff !important;
-  color: #8f7ac8 !important;
-  box-shadow: none !important;
-  font-size: 25px !important;
-  font-weight: 500 !important;
+  top: max(14px, calc(env(safe-area-inset-top) + 6px));
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  background: #fff;
+  color: #8f7ac8;
+  box-shadow: none;
+  font-size: 25px;
+  font-weight: 500;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupHeader {
-  margin-top: clamp(22px, 4.2dvh, 38px) !important;
-  text-align: left !important;
+  margin-top: clamp(22px, 4.2dvh, 38px);
+  text-align: left;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupCard .firstSetupHeader h2 {
-  margin: 0 !important;
-  color: #28262e !important;
-  font-size: clamp(28px, 8vw, 34px) !important;
-  font-weight: 740 !important;
-  line-height: 1.04 !important;
-  letter-spacing: -0.035em !important;
-  text-align: left !important;
+  margin: 0;
+  color: #28262e;
+  font-size: clamp(28px, 8vw, 34px);
+  font-weight: 740;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-align: left;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupCard .firstSetupHeader p {
-  max-width: 342px !important;
-  margin: 9px 0 0 !important;
-  color: #7b7682 !important;
-  font-size: 14px !important;
-  font-weight: 450 !important;
-  line-height: 1.4 !important;
-  text-align: left !important;
+  max-width: 342px;
+  margin: 9px 0 0;
+  color: #7b7682;
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.4;
+  text-align: left;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupBody {
-  min-height: 0 !important;
-  margin: 16px 0 12px !important;
+  min-height: 0;
+  margin: 16px 0 12px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupWelcomeVisual {
-  width: min(250px, 70vw) !important;
-  height: 220px !important;
+  width: min(250px, 70vw);
+  height: 220px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupWelcomeVisual span {
-  filter: none !important;
+  filter: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupClipboard {
-  border: 1px solid #ebe6ef !important;
-  background: #fff !important;
+  border: 1px solid #efebf3;
+  background: #fff;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview {
-  border: 1px solid #ebe6ef !important;
-  background: #fff !important;
-  color: #28262e !important;
-  box-shadow: none !important;
+  border: 1px solid #efebf3;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button {
-  height: min(190px, 28dvh) !important;
-  border-radius: 22px !important;
+  height: min(190px, 28dvh);
+  border-radius: 22px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList {
-  gap: 8px !important;
+  gap: 8px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button {
-  min-height: 66px !important;
-  border-radius: 18px !important;
+  min-height: 66px;
+  border-radius: 18px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList small,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button small,
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview small {
-  color: #7b7682 !important;
+  color: #7b7682;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button > i {
-  border-color: #a9b0b4 !important;
+  border-color: #a9b0b4;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button.active,
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button.active {
-  border-color: #b9a9e5 !important;
-  background: #f0ebfa !important;
-  color: #28262e !important;
-  box-shadow: inset 0 0 0 1px #b9a9e5 !important;
+  border-color: #c4b8e3;
+  background: #f5f2f7;
+  color: #28262e;
+  box-shadow: inset 0 0 0 1px #c4b8e3;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active > i {
-  border: 5px solid #8f7ac8 !important;
+  border: 5px solid #8f7ac8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button {
-  min-height: 112px !important;
-  border-radius: 20px !important;
+  min-height: 112px;
+  border-radius: 20px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview {
-  padding: 8px 14px !important;
-  border-radius: 22px !important;
+  padding: 8px 14px;
+  border-radius: 22px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div {
-  border-bottom-color: #efebf1 !important;
+  border-bottom-color: #efebf3;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div > span {
-  color: #8f7ac8 !important;
+  color: #8f7ac8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview strong {
-  color: #28262e !important;
+  color: #28262e;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupField {
-  color: #7b7682 !important;
+  color: #7b7682;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupInput,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input {
-  border: 1px solid #ebe6ef !important;
-  border-radius: 15px !important;
-  background: #fff !important;
-  color: #28262e !important;
-  box-shadow: none !important;
+  border: 1px solid #efebf3;
+  border-radius: 15px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupInput:focus,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input:focus {
-  border-color: #b9a9e5 !important;
-  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.14) !important;
+  border-color: #c4b8e3;
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.14);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider {
-  min-height: 318px !important;
-  padding: 30px 20px 22px !important;
-  border: 1px solid #ebe6ef !important;
-  border-radius: 28px !important;
-  background: #fff !important;
-  color: #28262e !important;
-  box-shadow: none !important;
+  min-height: 318px;
+  padding: 30px 20px 22px;
+  border: 1px solid #efebf3;
+  border-radius: 28px;
+  background: #fff;
+  color: #28262e;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricLabel,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricMarks {
-  color: #7b7682 !important;
+  color: #7b7682;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricValue,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricValue small {
-  color: #28262e !important;
+  color: #28262e;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"] {
-  accent-color: #8f7ac8 !important;
+  accent-color: #8f7ac8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-runnable-track {
@@ -658,107 +658,107 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[
     90deg,
     #8f7ac8 0%,
     #8f7ac8 var(--slider-progress, 0%),
-    #ebe6ef var(--slider-progress, 0%),
-    #ebe6ef 100%
-  ) !important;
+    #efebf3 var(--slider-progress, 0%),
+    #efebf3 100%
+  );
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-thumb {
-  border-color: #fff !important;
-  background: #8f7ac8 !important;
-  box-shadow: 0 5px 14px rgba(72, 63, 87, 0.18) !important;
+  border-color: #fff;
+  background: #8f7ac8;
+  box-shadow: 0 5px 14px rgba(72, 63, 87, 0.18);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricTicks i,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricTicks i:nth-child(5n + 1) {
-  background: #cfd5d8 !important;
+  background: #cfd5d8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupBottom {
-  min-height: 56px !important;
-  margin-top: auto !important;
-  gap: 9px !important;
+  min-height: 56px;
+  margin-top: auto;
+  gap: 9px;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary,
 html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
-  height: 56px !important;
-  min-height: 56px !important;
-  border-radius: 16px !important;
-  font-size: 16px !important;
-  font-weight: 680 !important;
-  box-shadow: none !important;
+  height: 56px;
+  min-height: 56px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 680;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary {
-  border: 0 !important;
-  background: #8f7ac8 !important;
-  color: #fff !important;
+  border: 0;
+  background: #8f7ac8;
+  color: #fff;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
-  border: 1px solid #ebe6ef !important;
-  background: #fff !important;
-  color: #8f7ac8 !important;
+  border: 1px solid #efebf3;
+  background: #fff;
+  color: #8f7ac8;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary:disabled {
-  background: #d6dbde !important;
-  color: #8b9296 !important;
+  background: #d6dbde;
+  color: #8b9296;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirm {
-  padding: 48px 0 0 !important;
-  align-items: end !important;
-  background: rgba(40, 38, 46, 0.22) !important;
-  backdrop-filter: blur(10px) !important;
+  padding: 48px 0 0;
+  align-items: end;
+  background: rgba(40, 38, 46, 0.22);
+  backdrop-filter: blur(10px);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard {
-  width: min(100%, 402px) !important;
-  padding: 20px 16px max(16px, calc(env(safe-area-inset-bottom) + 10px)) !important;
-  border: 1px solid #ebe6ef !important;
-  border-bottom: 0 !important;
-  border-radius: 28px 28px 0 0 !important;
-  background: #fff !important;
-  color: #28262e !important;
-  box-shadow: 0 -10px 32px rgba(72, 63, 87, 0.12) !important;
+  width: min(100%, 402px);
+  padding: 20px 16px max(16px, calc(env(safe-area-inset-bottom) + 10px));
+  border: 1px solid #efebf3;
+  border-bottom: 0;
+  border-radius: 28px 28px 0 0;
+  background: #fff;
+  color: #28262e;
+  box-shadow: 0 -10px 32px rgba(72, 63, 87, 0.12);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard h3 {
-  color: #28262e !important;
+  color: #28262e;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard p {
-  color: #7b7682 !important;
+  color: #7b7682;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button {
-  min-height: 50px !important;
-  border: 1px solid #ebe6ef !important;
-  border-radius: 15px !important;
-  background: #f7f6f8 !important;
-  color: #8f7ac8 !important;
-  box-shadow: none !important;
+  min-height: 50px;
+  border: 1px solid #efebf3;
+  border-radius: 15px;
+  background: #f7f6f8;
+  color: #8f7ac8;
+  box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button.primary {
-  border-color: transparent !important;
-  background: #8f7ac8 !important;
-  color: #fff !important;
+  border-color: transparent;
+  background: #8f7ac8;
+  color: #fff;
 }
 
 @media (min-width: 700px) {
   html:root[data-app-theme="warm-light"] body #root .firstSetupOverlay {
-    padding: 12px !important;
-    align-items: center !important;
+    padding: 12px;
+    align-items: center;
   }
 
   html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
-    height: min(850px, calc(100dvh - 24px)) !important;
-    max-height: calc(100dvh - 24px) !important;
-    border: 1px solid #ebe6ef !important;
-    border-radius: 30px !important;
+    height: min(850px, calc(100dvh - 24px));
+    max-height: calc(100dvh - 24px);
+    border: 1px solid #efebf3;
+    border-radius: 30px;
   }
 }
 

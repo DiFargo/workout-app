@@ -1,23 +1,23 @@
 :global {
 .adminHarnessCrmSurface .adminClientWorkspaceActionsRender {
-  display: flex !important;
+  display: flex;
 }
 
 .adminHarnessCrmSurface .adminClientWorkspaceActionsRender button {
-  min-height: 44px !important;
+  min-height: 44px;
 }
 
 .actions {
-  display: flex !important;
+  display: flex;
 }
 
 .actions > button {
-  min-height: 44px !important;
+  min-height: 44px;
 }
 
 .adminHarnessCrmSurface .adminUsersFilterPills button,
 .adminHarnessCrmSurface .adminClientTabsCrm button {
-  min-width: 44px !important;
-  min-height: 44px !important;
+  min-width: 44px;
+  min-height: 44px;
 }
 }

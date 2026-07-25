@@ -30,7 +30,7 @@
   z-index: 9500;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid #ebe6ef;
+  border-top: 1px solid #efebf3;
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;
@@ -205,7 +205,7 @@
     max-height: 76px;
     margin: 0;
     padding: 7px;
-    border: 1px solid #ebe6ef;
+    border: 1px solid #efebf3;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 18px 48px rgba(72, 63, 87, 0.18);
@@ -248,7 +248,7 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .warmupPreviousButton {
-    border-color: #e7e1ee;
+    border-color: #efebf3;
     background: #ffffff;
     box-shadow: 0 12px 24px rgba(72, 63, 87, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     color: #2d3342;
@@ -256,17 +256,17 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .exercisePrevButton {
-    border-color: #ebe6ef;
+    border-color: #efebf3;
     background: #f7f9fe;
     box-shadow: none;
-    color: #736e79;
-    -webkit-text-fill-color: #736e79;
+    color: #7b7682;
+    -webkit-text-fill-color: #7b7682;
   }
 
   :global(:root[data-app-theme="warm-light"]) .warmupReadyButton,
   :global(:root[data-app-theme="warm-light"]) .exerciseNextButton {
     border-color: transparent;
-    background: linear-gradient(135deg, #9c88d2 0%, #806bb6 100%);
+    background: linear-gradient(135deg, #8f7ac8 0%, #806bb6 100%);
     box-shadow: 0 12px 26px rgba(117, 97, 170, 0.23);
     color: #ffffff;
     -webkit-text-fill-color: #ffffff;
@@ -289,7 +289,7 @@
   z-index: 9500;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid #ebe6ef;
+  border-top: 1px solid #efebf3;
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;

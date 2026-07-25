@@ -52,18 +52,18 @@
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
   --meal-backdrop: rgba(72, 63, 87, 0.18);
-  --meal-backdrop-color: #6f6875;
-  --meal-overlay-text: #6f6875;
+  --meal-backdrop-color: #7b7682;
+  --meal-overlay-text: #7b7682;
   --meal-sheet-border: rgba(72, 58, 29, 0.14);
   --meal-sheet-background: var(--color-surface);
   --meal-sheet-text: var(--color-heading);
   --meal-sheet-shadow: 0 24px 60px rgba(72, 63, 87, 0.18);
   --meal-header-muted: var(--color-heading);
   --meal-header-total: var(--color-heading);
-  --meal-header-title: #6f6875;
+  --meal-header-title: #7b7682;
   --meal-icon-border: rgba(72, 58, 29, 0.14);
   --meal-close-color: var(--color-heading);
-  --meal-row-background: #f8f9fd;
+  --meal-row-background: #f7f6f8;
   --meal-row-active: #f1f3f9;
   --meal-delete-background: linear-gradient(135deg, #b8514c, #d37469);
   --meal-delete-color: var(--color-heading);
@@ -428,7 +428,7 @@
 :global(:root[data-app-theme="warm-light"]) .overlay {
   --meal-backdrop: rgba(40, 38, 46, 0.35);
   --meal-overlay-text: #28262e;
-  --meal-sheet-border: #ebe6ef;
+  --meal-sheet-border: #efebf3;
   --meal-sheet-background: #f7f6f8;
   --meal-sheet-text: #28262e;
   --meal-sheet-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
@@ -436,24 +436,24 @@
   --meal-header-total: #7b7682;
   --meal-header-title: #28262e;
   --meal-icon-border: transparent;
-  --meal-icon-background: #f0ebfa;
+  --meal-icon-background: #f5f2f7;
   --meal-close-border: transparent;
-  --meal-close-background: #f0ebfa;
+  --meal-close-background: #f5f2f7;
   --meal-close-color: #28262e;
   --meal-row-background: #fff;
-  --meal-row-active: #fbfafc;
+  --meal-row-active: #ffffff;
   --meal-delete-background: #b36e72;
   --meal-delete-color: #fff;
   --meal-food-icon-border: transparent;
-  --meal-food-icon-background: #f0ebfa;
+  --meal-food-icon-background: #f5f2f7;
   --meal-food-icon-shadow: none;
   --meal-calories: #28262e;
   --meal-calories-label: #7b7682;
   --meal-food-name: #28262e;
   --meal-food-amount: #7b7682;
   --meal-food-amount-fill: #7b7682;
-  --meal-arrow: #a9aeb2;
-  --meal-arrow-fill: #a9aeb2;
+  --meal-arrow: #7b7682;
+  --meal-arrow-fill: #7b7682;
   --meal-add-border: transparent;
   --meal-add-background: #8f7ac8;
   --meal-add-color: #fff;
@@ -467,7 +467,7 @@
   max-width: 370px;
   max-height: min(720px, calc(100dvh - 32px));
   padding: 14px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 26px;
   background: #f7f6f8;
   color: #28262e;
@@ -475,18 +475,18 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .header { padding: 2px 0 14px; }
-:global(:root[data-app-theme="warm-light"]) .icon { border: 0; border-radius: 14px; background: #f0ebfa; }
+:global(:root[data-app-theme="warm-light"]) .icon { border: 0; border-radius: 14px; background: #f5f2f7; }
 :global(:root[data-app-theme="warm-light"]) .title { color: #28262e; font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .headerEyebrow,
 :global(:root[data-app-theme="warm-light"]) .headerTotal { color: #7b7682; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f0ebfa; color: #28262e; font-size: 24px; font-weight: 400; }
+:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f5f2f7; color: #28262e; font-size: 24px; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .list { gap: 8px; }
 :global(:root[data-app-theme="warm-light"]) .swipeShell { border-radius: 18px; background: #b36e72; }
-:global(:root[data-app-theme="warm-light"]) .row { min-height: 68px; padding: 9px 12px; border: 1px solid #ebe6ef; border-radius: 18px; background: #fff; color: #28262e; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .foodIconWrap { border: 0; border-radius: 14px; background: #f0ebfa; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .row { min-height: 68px; padding: 9px 12px; border: 1px solid #efebf3; border-radius: 18px; background: #fff; color: #28262e; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .foodIconWrap { border: 0; border-radius: 14px; background: #f5f2f7; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .calories,
 :global(:root[data-app-theme="warm-light"]) .name { color: #28262e; font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .caloriesLabel,
 :global(:root[data-app-theme="warm-light"]) .amount { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .arrow { color: #a9aeb2; -webkit-text-fill-color: #a9aeb2; }
+:global(:root[data-app-theme="warm-light"]) .arrow { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 :global(:root[data-app-theme="warm-light"]) .addButton { min-height: 54px; border: 0; border-radius: 18px; background: #8f7ac8; color: #fff; box-shadow: none; font-weight: 600; }

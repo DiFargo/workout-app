@@ -38,7 +38,7 @@
 .header p small { color: #777b89; font-size: 10px; }
 .header > button { width: 32px; height: 32px; display: grid; place-items: center; flex: 0 0 auto; padding: 0; border: 1px solid #e3e5ec; border-radius: 9px; background: #fff; color: #747886; cursor: pointer; }
 
-.sourceCard { margin: 0 18px 14px; padding: 12px 14px; border: 1px solid #ded8f8; border-left: 3px solid #6840ed; border-radius: 10px; background: #f8f6ff; }
+.sourceCard { margin: 0 18px 14px; padding: 12px 14px; border: 1px solid #ded8f8; border-left: 3px solid #806bb6; border-radius: 10px; background: #f7f6f8; }
 .sourceCard > span { color: #6a42e9; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
 .sourceCard blockquote { margin: 8px 0 5px; color: #30323c; font-size: 12px; line-height: 1.5; white-space: pre-wrap; }
 .sourceCard small { color: #777b89; font-size: 9px; }
@@ -70,11 +70,11 @@
 .status.sending svg,
 .status.resolving svg { animation: spin .8s linear infinite; }
 
-.adjustButton { width: calc(100% - 36px); min-height: 39px; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 18px 0; border: 1px solid #c8bbf7; border-radius: 9px; background: #faf9ff; color: #5f3bd1; font-size: 10px; font-weight: 750; cursor: pointer; }
+.adjustButton { width: calc(100% - 36px); min-height: 39px; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 18px 0; border: 1px solid #c8bbf7; border-radius: 9px; background: #ffffff; color: #806bb6; font-size: 10px; font-weight: 750; cursor: pointer; }
 
 .footer { display: flex; justify-content: flex-end; gap: 9px; padding: 14px 18px 18px; }
 .footer button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 16px; border: 1px solid #e0e2e9; border-radius: 9px; background: #fff; color: #333640; font-size: 11px; font-weight: 750; cursor: pointer; }
-.footer .markProcessedButton { border-color: #cfc4f8; background: #f8f6ff; color: #5f3bd1; }
+.footer .markProcessedButton { border-color: #cfc4f8; background: #f7f6f8; color: #806bb6; }
 .footer .markProcessedButton:disabled { opacity: .58; cursor: wait; }
 .footer .sendButton { min-width: 126px; border-color: #6031eb; background: linear-gradient(135deg, #7042f4, #5424df); color: #fff; }
 .footer .sendButton:disabled { border-color: #d7d8df; background: #e6e7eb; color: #9a9ca5; cursor: not-allowed; box-shadow: none; }

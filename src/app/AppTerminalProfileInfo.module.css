@@ -597,43 +597,43 @@
 /* PROFILE UNIFIED COMPACT ADJUSTMENTS */
 
 .profileUnifiedStats {
-  grid-template-columns: 1.15fr 0.75fr 0.75fr !important;
-  gap: 8px !important;
-  margin-top: 16px !important;
+  grid-template-columns: 1.15fr 0.75fr 0.75fr;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .profileUnifiedStats > div {
-  min-height: 76px !important;
-  padding: 12px 14px !important;
-  border-radius: 20px !important;
-  gap: 6px !important;
+  min-height: 76px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  gap: 6px;
 }
 
 .profileUnifiedStats span {
-  font-size: 11px !important;
+  font-size: 11px;
 }
 
 .profileUnifiedStats strong {
-  font-size: clamp(18px, 2.3vw, 25px) !important;
+  font-size: clamp(18px, 2.3vw, 25px);
 }
 
 .profileUnifiedStats .primary strong {
-  font-size: clamp(21px, 3vw, 30px) !important;
+  font-size: clamp(21px, 3vw, 30px);
 }
 
 @media (max-width: 760px) {
   .profileUnifiedStats {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 
   .profileUnifiedStats > div.primary {
-    grid-column: auto !important;
+    grid-column: auto;
   }
 }
 
 /* HORIZONTAL PROFILE STATS */
 .profileUnifiedStats {
-  grid-template-columns: repeat(3, 1fr) !important;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .profileUnifiedStats > div {
@@ -641,26 +641,26 @@
 }
 
 .profileUnifiedStats .primary {
-  text-align: center !important;
+  text-align: center;
 }
 
 .profileUnifiedStats .primary strong {
-  max-width: none !important;
+  max-width: none;
 }
 
 @media (max-width: 760px) {
   .profileUnifiedStats > div {
-    min-height: 72px !important;
-    padding: 10px 8px !important;
+    min-height: 72px;
+    padding: 10px 8px;
   }
 
   .profileUnifiedStats strong {
-    font-size: 18px !important;
+    font-size: 18px;
   }
 
   .profileUnifiedStats .primary strong {
-    font-size: 18px !important;
-    line-height: 1 !important;
+    font-size: 18px;
+    line-height: 1;
   }
 }
 
@@ -676,41 +676,41 @@
 
 /* GOAL CARD ALIGN FIX */
 .profileUnifiedStats .primary {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center !important;
-  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
 }
 
 .profileUnifiedStats .primary span {
-  width: 100% !important;
-  text-align: center !important;
+  width: 100%;
+  text-align: center;
 }
 
 .profileUnifiedStats .primary strong {
-  width: 100% !important;
-  max-width: 100% !important;
-  text-align: center !important;
-  line-height: 1.05 !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-  hyphens: auto !important;
-  font-size: clamp(15px, 2vw, 24px) !important;
-  padding: 0 4px !important;
-  box-sizing: border-box !important;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+  font-size: clamp(15px, 2vw, 24px);
+  padding: 0 4px;
+  box-sizing: border-box;
 }
 
 /* PREMIUM AI PROFILE DASHBOARD V1 */
 .profileAiDashboardCard {
-  padding: 24px !important;
+  padding: 24px;
   overflow: hidden;
   position: relative;
   background:
     radial-gradient(circle at 14% 8%, rgba(127, 159, 58, 0.18), transparent 34%),
     radial-gradient(circle at 86% 12%, rgba(42, 171, 238, 0.10), transparent 35%),
-    linear-gradient(180deg, rgba(20, 25, 20, 0.96), rgba(8, 12, 9, 0.96)) !important;
+    linear-gradient(180deg, rgba(20, 25, 20, 0.96), rgba(8, 12, 9, 0.96));
 }
 
 .profileAiDashboardCard::before {
@@ -736,26 +736,26 @@
 }
 
 .profileAiMeasurementPanel {
-  margin-top: 12px !important;
+  margin-top: 12px;
   background:
     radial-gradient(circle at top right, rgba(127,159,58,.17), transparent 46%),
-    rgba(255,255,255,.035) !important;
+    rgba(255,255,255,.035);
 }
 
 @media (max-width: 720px) {
   .profileAiDashboardCard {
-    padding: 16px !important;
-    border-radius: 30px !important;
+    padding: 16px;
+    border-radius: 30px;
   }
 }
 
 /* APP 53 PROFILE POLISHED HEADER */
 .profileAiDashboardCard {
-  padding-top: 18px !important;
+  padding-top: 18px;
 }
 
 .profileAiFormStatus {
-  display: none !important;
+  display: none;
 }
 
 /* AI statuses: full-width row, readable, no clipping */
@@ -767,12 +767,12 @@
 .profileAiProgressStrip,
 .profileAiMeasurementPanel,
 .profileAiHistoryButton {
-  margin-top: 10px !important;
+  margin-top: 10px;
 }
 
 @media (max-width: 420px) {
   .profileAiDashboardCard {
-    padding: 14px !important;
+    padding: 14px;
   }
 }
 
@@ -815,13 +815,13 @@
 /* ADMIN DELETE WORKOUT HISTORY */
 .adminV3TimelineWorkoutItem {
   position: relative;
-  padding-right: 104px !important;
+  padding-right: 104px;
 }
 
 @media (max-width: 620px) {
   .adminV3TimelineWorkoutItem {
-    padding-right: 12px !important;
-    padding-bottom: 54px !important;
+    padding-right: 12px;
+    padding-bottom: 54px;
   }
 }
 
@@ -857,15 +857,15 @@
 
 .adminV3TimelineWorkoutItem {
   position: relative;
-  padding-left: 56px !important;
+  padding-left: 56px;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .adminV3TimelineWorkoutItem.selected {
-  border-color: rgba(255, 107, 107, 0.28) !important;
+  border-color: rgba(255, 107, 107, 0.28);
   background:
     radial-gradient(circle at left, rgba(255, 107, 107, 0.10), transparent 42%),
-    rgba(255, 255, 255, 0.028) !important;
+    rgba(255, 255, 255, 0.028);
 }
 
 @media (max-width: 620px) {
@@ -886,19 +886,19 @@
 
 /* ADMIN HISTORY DELETE VISIBLE FIX */
 .adminV3Tabs {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  overflow: visible !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow: visible;
 }
 
 .adminV3Tabs button {
-  flex: 0 0 auto !important;
+  flex: 0 0 auto;
 }
 
 .adminV3Tabs button.active {
-  border-color: rgba(127, 159, 58, 0.32) !important;
-  background: rgba(127, 159, 58, 0.16) !important;
+  border-color: rgba(127, 159, 58, 0.32);
+  background: rgba(127, 159, 58, 0.16);
 }
 
 .adminHistoryDeleteHint {
@@ -913,78 +913,78 @@
 }
 
 .adminHistorySelectBar {
-  margin: 12px 0 16px !important;
-  display: grid !important;
-  grid-template-columns: 1fr 1.25fr !important;
-  gap: 10px !important;
+  margin: 12px 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 10px;
 }
 
 .adminHistorySelectBar button {
-  min-height: 44px !important;
-  border-radius: 15px !important;
-  border: 1px solid rgba(127, 159, 58, 0.22) !important;
-  background: rgba(127, 159, 58, 0.12) !important;
-  color: rgba(235, 250, 195, 0.96) !important;
-  font-size: 13px !important;
-  font-weight: 950 !important;
-  cursor: pointer !important;
+  min-height: 44px;
+  border-radius: 15px;
+  border: 1px solid rgba(127, 159, 58, 0.22);
+  background: rgba(127, 159, 58, 0.12);
+  color: rgba(235, 250, 195, 0.96);
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
 }
 
 .adminHistorySelectBar button.danger {
-  border-color: rgba(255, 107, 107, 0.28) !important;
-  background: rgba(255, 107, 107, 0.14) !important;
-  color: rgba(255, 205, 205, 0.98) !important;
+  border-color: rgba(255, 107, 107, 0.28);
+  background: rgba(255, 107, 107, 0.14);
+  color: rgba(255, 205, 205, 0.98);
 }
 
 .adminHistorySelectBar button:disabled {
-  opacity: 0.45 !important;
-  cursor: not-allowed !important;
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .adminV3TimelineWorkoutItem {
-  position: relative !important;
-  padding-left: 56px !important;
+  position: relative;
+  padding-left: 56px;
 }
 
 .adminV3TimelineWorkoutItem.selected {
-  border-color: rgba(255, 107, 107, 0.30) !important;
+  border-color: rgba(255, 107, 107, 0.30);
   background:
     radial-gradient(circle at left, rgba(255, 107, 107, 0.12), transparent 44%),
-    rgba(255, 255, 255, 0.032) !important;
+    rgba(255, 255, 255, 0.032);
 }
 
 .adminHistoryCheck {
-  position: absolute !important;
-  left: 14px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  width: 28px !important;
-  height: 28px !important;
-  cursor: pointer !important;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
 }
 
 .adminHistoryCheck input {
-  position: absolute !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .adminHistoryCheck i {
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 10px !important;
-  display: block !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  background: rgba(0, 0, 0, 0.24) !important;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.24);
 }
 
 .adminHistoryCheck input:checked + i {
-  border-color: rgba(255, 107, 107, 0.46) !important;
-  background: rgba(255, 107, 107, 0.20) !important;
+  border-color: rgba(255, 107, 107, 0.46);
+  background: rgba(255, 107, 107, 0.20);
 }
 
 .adminHistoryCheck input:checked + i::after {
-  content: "âœ“";
+  content: "✓";
   width: 100%;
   height: 100%;
   display: grid;
@@ -996,11 +996,11 @@
 
 @media (max-width: 620px) {
   .adminHistorySelectBar {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 
   .adminV3TimelineWorkoutItem {
-    padding-left: 50px !important;
+    padding-left: 50px;
   }
 }
 
@@ -1009,9 +1009,9 @@
 
 .fatSecretPage .nutritionAiPlanMiniBtn,
 .nutritionAiPlanMiniBtn {
-  background: rgba(127, 159, 58, 0.10) !important;
-  border-color: rgba(127, 159, 58, 0.19) !important;
-  color: rgba(184, 215, 108, 0.88) !important;
+  background: rgba(127, 159, 58, 0.10);
+  border-color: rgba(127, 159, 58, 0.19);
+  color: rgba(184, 215, 108, 0.88);
 }
 
 

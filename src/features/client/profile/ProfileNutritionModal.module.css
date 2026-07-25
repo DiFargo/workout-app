@@ -27,7 +27,7 @@
   background: var(--background-profile-nutrition-modal);
   color: var(--color-profile-nutrition-modal-text);
   box-shadow: var(--shadow-profile-nutrition-modal);
-  --gradient-primary: linear-gradient(135deg, #9c88d2, #806bb6);
+  --gradient-primary: linear-gradient(135deg, #8f7ac8, #806bb6);
 }
 
 .header {

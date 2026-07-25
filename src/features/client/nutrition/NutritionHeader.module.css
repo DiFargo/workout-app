@@ -18,7 +18,7 @@
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 16px;
   background: #fff;
   color: #28262e;
@@ -27,7 +27,7 @@
 }
 .icon { width: 22px; height: 22px; stroke-width: 2.1; }
 .calendarIcon { background: transparent; }
-.action:active { background: #f0ebfa; transform: scale(0.96); }
+.action:active { background: #f5f2f7; transform: scale(0.96); }
 
 .week {
   width: calc(100% - 32px);
@@ -36,7 +36,7 @@
   padding: 8px 7px 5px;
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 20px;
   background: #fff;
 }
@@ -62,13 +62,13 @@
   height: 30px;
   display: grid;
   place-items: center;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 50%;
   background: #f7f7fa;
   color: #28262e;
   font-size: 10.5px;
   font-weight: 700;
 }
-.hasFood:not(.selected) .dateNumber { background: #f0ebfa; color: #8f7ac8; }
+.hasFood:not(.selected) .dateNumber { background: #f5f2f7; color: #8f7ac8; }
 .selected .dateNumber { border-color: #8f7ac8; background: #8f7ac8; color: #fff; }
 .selected .dayLabel { color: #8f7ac8; }

@@ -20,7 +20,7 @@
   cursor: pointer;
 }
 .titleText { font-size: 17px; font-weight: 700; }
-.diaryHeader > svg { width: 18px; height: 18px; color: #a9aeb2; }
+.diaryHeader > svg { width: 18px; height: 18px; color: #7b7682; }
 .diaryTitle, .diaryMeta, .subtitleText { display: none; }
 
 .mealList {
@@ -30,12 +30,12 @@
   margin: 0 16px;
   display: block;
   overflow: hidden;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 22px;
   background: #fff;
 }
 .mealCard { height: 50px; position: relative; }
-.mealCard:not(:last-child)::after { content: ""; height: 1px; position: absolute; right: 15px; bottom: 0; left: 45px; background: #ebe6ef; }
+.mealCard:not(:last-child)::after { content: ""; height: 1px; position: absolute; right: 15px; bottom: 0; left: 45px; background: #efebf3; }
 .mealRow {
   width: 100%;
   height: 50px;
@@ -47,14 +47,14 @@
   position: relative;
 }
 .mealOpenArea { position: absolute; z-index: 3; inset: 0; padding: 0; border: 0; background: transparent; cursor: pointer; }
-.mealIcon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 13px; background: #f0ebfa; color: #8f7ac8; }
+.mealIcon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 13px; background: #f5f2f7; color: #8f7ac8; }
 .mealIcon svg { width: 14px; height: 14px; stroke-width: 2; }
 .mealTitle { min-width: 0; display: flex; flex-direction: column; }
 .mealTitle strong { color: #28262e; font-size: 12px; font-weight: 700; line-height: 16px; }
 .mealTitle span { color: #7b7682; font-size: 10px; font-weight: 500; line-height: 15px; }
 .mealCalories { display: flex; align-items: center; gap: 3px; color: #7b7682; }
 .mealCalories strong { font-size: 10.5px; font-weight: 600; }
-.mealCalories svg { width: 16px; height: 16px; color: #a9aeb2; }
+.mealCalories svg { width: 16px; height: 16px; color: #7b7682; }
 
 .modalOverlay { position: fixed; z-index: 1200; inset: 0; display: grid; align-items: end; }
 .modalBackdrop { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(19, 23, 28, 0.42); }
@@ -66,37 +66,37 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-bottom: 0;
   border-radius: 28px 28px 0 0;
   background: #f7f6f8;
   box-shadow: 0 -20px 70px rgba(40, 38, 46, 0.16);
 }
-.modalHeader { padding: 16px 18px; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; border-bottom: 1px solid #ebe6ef; background: #fff; }
-.diaryIcon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: #f0ebfa; }
+.modalHeader { padding: 16px 18px; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; border-bottom: 1px solid #efebf3; background: #fff; }
+.diaryIcon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: #f5f2f7; }
 .modalHeader h2 { margin: 2px 0; color: #28262e; font-size: 18px; }
 .modalHeader small, .modalHeader strong { display: block; color: #7b7682; font-size: 11px; }
-.modalHeader > button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: #f0ebfa; color: #28262e; font-size: 24px; }
+.modalHeader > button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: #f5f2f7; color: #28262e; font-size: 24px; }
 .content { padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 12px; overflow-y: auto; }
-.mealGroup { overflow: hidden; border: 1px solid #ebe6ef; border-radius: 18px; background: #fff; }
+.mealGroup { overflow: hidden; border: 1px solid #efebf3; border-radius: 18px; background: #fff; }
 .mealHeading { padding: 12px; display: grid; grid-template-columns: 40px 1fr 42px; align-items: center; gap: 10px; }
 .mealHeading > div { min-width: 0; display: flex; flex-direction: column; }
 .mealHeading small { color: #7b7682; font-size: 11px; }
 .addButton, .mealAddButton { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #8f7ac8; color: #fff; font-size: 20px; }
-.foods { border-top: 1px solid #ebe6ef; }
+.foods { border-top: 1px solid #efebf3; }
 .swipeShell { position: relative; overflow: hidden; background: #b36e72; }
-.swipeShell + .swipeShell { border-top: 1px solid #ebe6ef; }
+.swipeShell + .swipeShell { border-top: 1px solid #efebf3; }
 .deleteBackground { position: absolute; inset: 0 16px 0 auto; display: grid; place-items: center; color: #fff; }
 .foodButton { width: 100%; min-height: 64px; padding: 8px 12px; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; position: relative; border: 0; background: #fff; color: #28262e; text-align: left; transition: opacity .18s ease, transform .18s ease; }
-.foodIcon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #f0ebfa; }
+.foodIcon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #f5f2f7; }
 .foodText, .foodCalories { min-width: 0; display: flex; flex-direction: column; }
 .foodText strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .foodText small, .foodCalories small { color: #7b7682; font-size: 10px; }
 .foodCalories { align-items: flex-end; }
-.emptyButton { width: calc(100% - 24px); margin: 0 12px 12px; padding: 12px; border: 1px dashed #cfd6da; border-radius: 12px; background: #f0ebfa; color: #7b7682; }
+.emptyButton { width: calc(100% - 24px); margin: 0 12px 12px; padding: 12px; border: 1px dashed #efebf3; border-radius: 12px; background: #f5f2f7; color: #7b7682; }
 .deleting { pointer-events: none; }
 
 @media (min-width: 700px) {
   .modalOverlay { align-items: center; padding: 24px; }
-  .modalSheet { border-bottom: 1px solid #ebe6ef; border-radius: 28px; }
+  .modalSheet { border-bottom: 1px solid #efebf3; border-radius: 28px; }
 }

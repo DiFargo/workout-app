@@ -9,7 +9,7 @@
   align-items: center;
   gap: 12px;
   overflow: hidden;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: var(--color-surface);
   color: var(--color-food-flow-text);
@@ -29,7 +29,7 @@
 }
 
 .root.analyzing {
-  border-color: color-mix(in srgb, var(--color-accent) 30%, #ebe6ef);
+  border-color: color-mix(in srgb, var(--color-accent) 30%, #efebf3);
   background:
     radial-gradient(circle at 0% 50%, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 42%),
     var(--color-surface);
@@ -255,7 +255,7 @@
   box-shadow: var(--focus-ring);
 }
 
-:global(:root[data-app-theme="dark-green"]) .root {
+:global(:root[data-app-theme="legacy-inactive"]) .root {
   border-color: rgba(145, 173, 78, 0.15);
   background:
     radial-gradient(circle at 0% 0%, rgba(127, 159, 58, 0.12), transparent 42%),
@@ -266,23 +266,23 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.045);
 }
 
-:global(:root[data-app-theme="dark-green"]) .root.analyzing {
+:global(:root[data-app-theme="legacy-inactive"]) .root.analyzing {
   border-color: rgba(127, 159, 58, 0.24);
   background:
     radial-gradient(circle at 0% 50%, rgba(127, 159, 58, 0.14), transparent 42%),
     rgba(255, 255, 255, 0.04);
 }
 
-:global(:root[data-app-theme="dark-green"]) .root::before {
+:global(:root[data-app-theme="legacy-inactive"]) .root::before {
   background: linear-gradient(90deg, transparent, rgba(145, 173, 78, 0.12), transparent);
 }
 
-:global(:root[data-app-theme="dark-green"]) .heading strong,
-:global(:root[data-app-theme="dark-green"]) .candidate {
+:global(:root[data-app-theme="legacy-inactive"]) .heading strong,
+:global(:root[data-app-theme="legacy-inactive"]) .candidate {
   color: var(--color-text);
 }
 
-:global(:root[data-app-theme="dark-green"]) .description {
+:global(:root[data-app-theme="legacy-inactive"]) .description {
   color: var(--color-text-muted);
 }
 
@@ -364,7 +364,7 @@
   padding: 10px;
   grid-template-columns: 50px minmax(0, 1fr) 34px;
   gap: 10px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 18px;
   background: #fff;
   color: #28262e;
@@ -379,7 +379,7 @@
   height: 50px;
   border: 0;
   border-radius: 14px;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 :global(:root[data-app-theme="warm-light"]) .analyzing .image { border-color: #cfd7dc; box-shadow: none; }
@@ -387,10 +387,10 @@
 
 :global(:root[data-app-theme="warm-light"]) .heading strong { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .description { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .confidence { background: #f0ebfa; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .confidence { background: #f5f2f7; color: #8f7ac8; }
 
 :global(:root[data-app-theme="warm-light"]) .candidate {
-  border-color: #ebe6ef;
+  border-color: #efebf3;
   border-radius: 14px;
   background: #fff;
   color: #28262e;
@@ -399,7 +399,7 @@
 :global(:root[data-app-theme="warm-light"]) .candidateIcon,
 :global(:root[data-app-theme="warm-light"]) .resetButton {
   border-color: transparent;
-  background: #f0ebfa;
+  background: #f5f2f7;
   color: #8f7ac8;
 }
 

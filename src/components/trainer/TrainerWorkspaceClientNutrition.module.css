@@ -1,0 +1,39 @@
+/* Nutrition client view follows the reading order instead of a desktop sidebar. */
+:global(.trainerNextRoot) :global(.trainerNextNutrition.trainerNextNutritionUnified) {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionQuickNav),
+:global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionUnifiedSection) {
+  grid-column: 1;
+  width: 100%;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionQuickNav) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 6px;
+  border-radius: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionQuickNav button) {
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  color: var(--tn-purple-strong);
+  font-size: 13px;
+  font-weight: 720;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionQuickNav button:hover) {
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+@media (max-width: 560px) {
+  :global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionQuickNav) {
+    grid-template-columns: 1fr;
+  }
+}

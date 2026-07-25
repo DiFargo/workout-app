@@ -23,7 +23,7 @@
   border: 1px solid #e6e1fa;
   border-radius: 10px;
   background: #fff;
-  color: #6437f5;
+  color: #806bb6;
   font: inherit;
   font-size: 13px;
   font-weight: 800;
@@ -34,7 +34,7 @@
 
 .switcher button:hover {
   border-color: #bca9fa;
-  background: #faf9ff;
+  background: #ffffff;
 }
 
 .switcher button:focus-visible {
@@ -43,8 +43,8 @@
 }
 
 .switcher button.active {
-  border-color: #6437f5;
-  background: #6437f5;
+  border-color: #806bb6;
+  background: #806bb6;
   color: #fff;
   box-shadow: 0 7px 16px rgba(100, 55, 245, 0.18);
 }

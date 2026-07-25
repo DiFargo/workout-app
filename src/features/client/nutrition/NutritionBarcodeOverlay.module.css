@@ -15,7 +15,7 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-:global(:root[data-app-theme="dark-green"]) .overlay {
+:global(:root[data-app-theme="legacy-inactive"]) .overlay {
   background:
     radial-gradient(circle at 50% -8%, rgba(145, 173, 78, 0.08), transparent 36%),
     linear-gradient(180deg, #030d11 0%, #03090b 100%);
@@ -41,7 +41,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
-:global(:root[data-app-theme="dark-green"]) .card {
+:global(:root[data-app-theme="legacy-inactive"]) .card {
   background: transparent;
   box-shadow: none;
 }
@@ -79,15 +79,15 @@
   line-height: 1.35;
 }
 
-:global(:root[data-app-theme="dark-green"]) .eyebrow {
+:global(:root[data-app-theme="legacy-inactive"]) .eyebrow {
   color: #aee94d;
 }
 
-:global(:root[data-app-theme="dark-green"]) .title {
+:global(:root[data-app-theme="legacy-inactive"]) .title {
   color: rgba(248, 248, 246, 0.96);
 }
 
-:global(:root[data-app-theme="dark-green"]) .description {
+:global(:root[data-app-theme="legacy-inactive"]) .description {
   color: rgba(232, 237, 230, 0.52);
 }
 
@@ -136,15 +136,15 @@
   line-height: 1.4;
 }
 
-:global(:root[data-app-theme="dark-green"]) .placeholderIcon {
+:global(:root[data-app-theme="legacy-inactive"]) .placeholderIcon {
   color: #aee94d;
 }
 
-:global(:root[data-app-theme="dark-green"]) .placeholderTitle {
+:global(:root[data-app-theme="legacy-inactive"]) .placeholderTitle {
   color: rgba(248, 248, 246, 0.92);
 }
 
-:global(:root[data-app-theme="dark-green"]) .placeholderDescription {
+:global(:root[data-app-theme="legacy-inactive"]) .placeholderDescription {
   color: rgba(232, 237, 230, 0.5);
 }
 
@@ -163,7 +163,7 @@
 :global(:root[data-app-theme="warm-light"]) .card {
   width: min(100%, 370px);
   padding: 18px;
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 24px;
   background: #fff;
   color: #28262e;
@@ -177,9 +177,9 @@
 :global(:root[data-app-theme="warm-light"]) .placeholderDescription { color: #7b7682; font-weight: 450; }
 
 :global(:root[data-app-theme="warm-light"]) .placeholder {
-  border: 1px solid #ebe6ef;
+  border: 1px solid #efebf3;
   border-radius: 20px;
-  background: #f0ebfa;
+  background: #f5f2f7;
 }
 
 :global(:root[data-app-theme="warm-light"]) .placeholderIcon {

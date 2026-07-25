@@ -111,7 +111,7 @@
 .dayMenuWrap > button { width: 20px; height: 30px; display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: #9498a6; }
 .dayMenu { position: absolute; z-index: 20; top: 28px; right: 0; width: 126px; display: grid; padding: 5px; border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: 0 12px 30px rgba(24, 25, 34, .14); }
 .dayMenu button { min-height: 30px; display: flex; align-items: center; gap: 7px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); font-size: 9px; text-align: left; }
-.dayMenu button:hover { background: #f5f2ff; color: var(--purple); }
+.dayMenu button:hover { background: #f7f6f8; color: var(--purple); }
 .dayMenu button:last-child { color: #e44349; }
 .violet { color: #6830f5; } .blue { color: #3180ef; } .green { color: #35bd4a; } .orange { color: #ff9f20; } .rose { color: #e9567a; }
 .emptyDays { padding: 30px 10px; color: var(--muted); font-size: 11px; text-align: center; }
@@ -164,7 +164,7 @@
 .exerciseHead { min-height: 38px; padding: 0 8px 0 104px; color: var(--muted); font-size: 8px; text-align: center; }
 .exerciseHead span:first-child { text-align: left; }
 .exerciseCard { border-top: 1px solid var(--line); background: #fff; transition: background-color .16s ease, box-shadow .16s ease; }
-.constructor .exerciseCard.selectedExercise { position: relative; background: #f7f5ff; box-shadow: inset 3px 0 0 #6b3df3, inset 0 0 0 1px #d9d0ff; }
+.constructor .exerciseCard.selectedExercise { position: relative; background: #f5f2f7; box-shadow: inset 3px 0 0 #806bb6, inset 0 0 0 1px #d9d0ff; }
 .exerciseRow { min-height: 68px; grid-template-columns: 36px 48px minmax(150px, 1fr) 76px 84px 84px 88px 92px; gap: 5px; padding: 5px 7px; }
 .exerciseOrder { display: flex; align-items: center; gap: 7px; color: #747987; }
 .exerciseOrder b { color: var(--ink); font-size: 11px; }
@@ -226,7 +226,7 @@
 .specialBlockMenu summary::-webkit-details-marker { display: none; }
 .specialBlockMenu > div { position: absolute; z-index: 30; top: calc(100% + 5px); right: 0; width: 168px; display: grid; gap: 3px; padding: 5px; border: 1px solid var(--line); border-radius: 9px; background: #fff; box-shadow: 0 14px 30px rgba(24, 25, 34, .14); }
 .specialBlockMenu button { min-height: 32px; padding: 0 9px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); font-size: 9px; text-align: left; }
-.specialBlockMenu button:hover { background: #f5f2ff; color: var(--purple); }
+.specialBlockMenu button:hover { background: #f7f6f8; color: var(--purple); }
 .blockBuilder { display: grid; gap: 10px; margin: 10px 0 14px; padding: 12px; border: 1px solid var(--line); border-radius: 11px; background: #faf9fe; }
 .blockBuilder > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .blockBuilder > header > div:first-child { display: grid; gap: 3px; }
@@ -240,7 +240,7 @@
 .taskBlock_interval { border-left-color: #e99312; }
 .taskBlock_free { border-left-color: #38a55a; }
 .taskBlock > header { display: grid; grid-template-columns: 24px 1fr 28px; align-items: center; gap: 7px; }
-.taskBlock > header > span { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: #f1edff; color: var(--purple); font-size: 9px; font-weight: 800; }
+.taskBlock > header > span { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: #f7f6f8; color: var(--purple); font-size: 9px; font-weight: 800; }
 .taskBlock > header > div { display: grid; gap: 2px; min-width: 0; }
 .taskBlock > header strong { font-size: 10px; }
 .taskBlock > header small { overflow: hidden; color: var(--muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }

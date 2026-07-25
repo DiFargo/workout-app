@@ -38,7 +38,7 @@
   }
 }
 
-:global(:root[data-app-theme="dark-green"]) .root {
+:global(:root[data-app-theme="legacy-inactive"]) .root {
   width: min(560px, 100%);
   max-width: 420px;
   min-height: auto;

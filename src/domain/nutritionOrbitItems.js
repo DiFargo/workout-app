@@ -1,4 +1,4 @@
-﻿export const NUTRITION_ORBIT_BASE_ITEMS = [
+export const NUTRITION_ORBIT_BASE_ITEMS = [
   {
     id: "calories",
     label: "\u041a\u0430\u043b\u043e\u0440\u0438\u0438",

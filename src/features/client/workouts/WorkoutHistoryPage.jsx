@@ -1,4 +1,4 @@
-﻿import HistoryDeleteConfirmDialog from "./HistoryDeleteConfirmDialog";
+import HistoryDeleteConfirmDialog from "./HistoryDeleteConfirmDialog";
 import { RefreshCw } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {

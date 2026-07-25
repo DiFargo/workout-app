@@ -1,0 +1,1387 @@
+/* Client profile, measurements, nutrition, and reminder surfaces. */
+/* Kept separate from the trainer workspace shell to prevent cross-screen cascade conflicts. */
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage) {
+  max-width: 1180px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientBackRow) {
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientBackRow > button),
+:global(.trainerNextRoot) :global(.trainerNextClientBackRow > div > button) {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid var(--tn-line);
+  border-radius: 13px;
+  color: var(--tn-text);
+  background: var(--tn-surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 680;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientBackRow > div) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientBackRow > button:hover),
+:global(.trainerNextRoot) :global(.trainerNextClientBackRow > div > button:not(.trainerNextPrimary):hover) {
+  border-color: #d9cdec;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientHeader) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientHeader > :first-child) {
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientName) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientHeader h1) {
+  font-size: 23px;
+  line-height: 1.15;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientHeader > div > strong) {
+  display: block;
+  margin-top: 6px;
+  color: var(--tn-text);
+  font-size: 13px;
+  font-weight: 690;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientName > span) {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: var(--tn-green);
+  background: var(--tn-green-soft);
+  font-size: 11px;
+  font-weight: 730;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTaskButton) {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid #ded4f0;
+  border-radius: 14px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+  box-shadow: 0 8px 18px rgba(87, 67, 136, 0.1);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 720;
+  line-height: 1.15;
+  text-align: left;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTaskButton:hover) {
+  border-color: var(--tn-purple);
+  background: #eee8fb;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextMobileMore) {
+  display: inline-grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--tn-line);
+  border-radius: 14px;
+  color: var(--tn-text);
+  background: var(--tn-surface-soft);
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTabs) {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTabs button.active),
+:global(.trainerNextRoot) :global(.trainerNextClientTabs button[aria-pressed="true"]) {
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article) {
+  display: grid;
+  min-height: 108px;
+  align-content: start;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--tn-line);
+  border-radius: 18px;
+  background: var(--tn-surface);
+  box-shadow: var(--tn-shadow);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article:last-child:nth-child(4)) {
+  grid-column: auto;
+  min-height: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article.attention) {
+  border-color: #ead9c4;
+  background: #fffaf4;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary span),
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary small) {
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary span) {
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary strong) {
+  overflow: hidden;
+  color: var(--tn-text);
+  font-size: 17px;
+  font-weight: 740;
+  line-height: 1.22;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary p) {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientOverview) {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientSide) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextResultCard),
+:global(.trainerNextRoot) :global(.trainerNextActivityCard) {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  margin: 0;
+  padding: 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextResultCard h3),
+:global(.trainerNextRoot) :global(.trainerNextActivityCard h3) {
+  margin: 0 0 13px;
+  color: var(--tn-text);
+  font-size: 17px;
+  font-weight: 740;
+  letter-spacing: -0.25px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextResultCard > div),
+:global(.trainerNextRoot) :global(.trainerNextActivityCard > div) {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextResultCard span),
+:global(.trainerNextRoot) :global(.trainerNextActivityCard span),
+:global(.trainerNextRoot) :global(.trainerNextActivityCard time) {
+  color: var(--tn-muted);
+  font-size: 13px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextActivityCard span) {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextActivityCard span svg) {
+  color: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextResultCard strong) {
+  color: var(--tn-text);
+  font-size: 15px;
+  font-weight: 730;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextSimplePanel) {
+  padding: 22px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPanelTitle) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPanelTitle h2) {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -0.35px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPanelTitle p) {
+  margin: 5px 0 0;
+  color: var(--tn-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPanelTitle button),
+:global(.trainerNextRoot) :global(.trainerPhotoViewTabs button),
+:global(.trainerNextRoot) :global(.trainerNutritionQuickNav button),
+:global(.trainerNextRoot) :global(.trainerNutritionSectionToggle) {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementCollapsed > div),
+:global(.trainerNextRoot) :global(.trainerMeasurementSummaryGrid),
+:global(.trainerNextRoot) :global(.trainerMeasurementFieldGrid) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementCollapsed article),
+:global(.trainerNextRoot) :global(.trainerMeasurementSummaryGrid article),
+:global(.trainerNextRoot) :global(.trainerMeasurementFieldGrid article) {
+  display: grid;
+  gap: 4px;
+  padding: 13px;
+  border: 1px solid var(--tn-line);
+  border-radius: 15px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementCollapsed article span),
+:global(.trainerNextRoot) :global(.trainerMeasurementSummaryGrid article span),
+:global(.trainerNextRoot) :global(.trainerMeasurementFieldGrid article span),
+:global(.trainerNextRoot) :global(.trainerMeasurementCollapsed article small),
+:global(.trainerNextRoot) :global(.trainerMeasurementSummaryGrid article small),
+:global(.trainerNextRoot) :global(.trainerMeasurementFieldGrid article small) {
+  color: var(--tn-muted);
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementCollapsed article strong),
+:global(.trainerNextRoot) :global(.trainerMeasurementSummaryGrid article strong),
+:global(.trainerNextRoot) :global(.trainerMeasurementFieldGrid article strong) {
+  color: var(--tn-text);
+  font-size: 19px;
+  font-weight: 750;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementCollapsed > p) {
+  margin: 14px 0 0;
+  padding: 12px 13px;
+  border-radius: 14px;
+  color: var(--tn-muted);
+  background: var(--tn-purple-soft);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementCollapsed > p b) {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--tn-text);
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementMainGrid) {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementInsight),
+:global(.trainerNextRoot) :global(.trainerMeasurementChart),
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline) {
+  padding: 16px;
+  border: 1px solid var(--tn-line);
+  border-radius: 17px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementInsight > span),
+:global(.trainerNextRoot) :global(.trainerMeasurementChart header span),
+:global(.trainerNextRoot) :global(.trainerMeasurementChart header strong),
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline h3) {
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 730;
+  letter-spacing: 0.06em;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementInsight h3),
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline h3) {
+  margin: 7px 0;
+  color: var(--tn-text);
+  font-size: 17px;
+  letter-spacing: -0.2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementInsight p),
+:global(.trainerNextRoot) :global(.trainerMeasurementChart p) {
+  margin: 0;
+  color: var(--tn-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementChart header),
+:global(.trainerNextRoot) :global(.trainerMeasurementChart > div) {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementChart svg) {
+  width: 100%;
+  margin-top: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementChart svg line) {
+  stroke: #e8e2ef;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementChart svg polyline) {
+  fill: none;
+  stroke: var(--tn-purple);
+  stroke-width: 3;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementChart svg circle) {
+  fill: var(--tn-surface);
+  stroke: var(--tn-purple);
+  stroke-width: 2;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementFieldGrid) {
+  margin-top: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline h3) {
+  grid-column: 1 / -1;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline article) {
+  display: grid;
+  gap: 4px;
+  padding: 11px;
+  border-radius: 13px;
+  background: var(--tn-surface);
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline time),
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline span) {
+  color: var(--tn-muted);
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerMeasurementTimeline strong) {
+  color: var(--tn-text);
+  font-size: 15px;
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoViewTabs) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoViewTabs button.active),
+:global(.trainerNextRoot) :global(.trainerPhotoViewTabs button[aria-pressed="true"]) {
+  border-color: var(--tn-purple);
+  color: #ffffff;
+  background: var(--tn-purple);
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoComparePanel) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.38fr) minmax(150px, 0.38fr);
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoComparePanel strong) {
+  color: var(--tn-text);
+  font-size: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoComparePanel p) {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoComparePanel select),
+:global(.trainerNextRoot) :global(.trainerNutritionPlan select),
+:global(.trainerNextRoot) :global(.trainerNutritionPlan input) {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  outline: 0;
+  color: var(--tn-text);
+  background: var(--tn-surface);
+  font: inherit;
+  font-size: 13px;
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoCompareGrid) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoCompareGrid figure),
+:global(.trainerNextRoot) :global(.trainerNextPhotoGrid figure) {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 7px;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoCompareGrid img),
+:global(.trainerNextRoot) :global(.trainerNextPhotoGrid figure img),
+:global(.trainerNextRoot) :global(.trainerNextPhotoGrid figure button) {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 4 / 5;
+  border: 0;
+  border-radius: 11px;
+  background: #eeeaf2;
+  object-fit: cover;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPhotoGrid) {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPhotoGrid figure button) {
+  padding: 0;
+  cursor: zoom-in;
+}
+
+:global(.trainerNextRoot) :global(.trainerPhotoCompareGrid figcaption),
+:global(.trainerNextRoot) :global(.trainerNextPhotoGrid figcaption) {
+  color: var(--tn-muted);
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextNutritionUnified) {
+  gap: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionQuickNav) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 4px;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionQuickNav button) {
+  border: 0;
+  background: transparent;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionQuickNav button:hover) {
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionUnifiedSection),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentPlan),
+:global(.trainerNextRoot) :global(.trainerClientAssignment) {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--tn-line);
+  border-radius: 22px;
+  background: var(--tn-surface);
+  box-shadow: var(--tn-shadow);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionUnifiedSectionCollapsed) {
+  padding-bottom: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientBlockHeading) {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientBlockHeading > span) {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerClientBlockHeading h2) {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientBlockHeading p) {
+  margin: 3px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPeriod),
+:global(.trainerNextRoot) :global(.trainerNutritionMetricGrid),
+:global(.trainerNextRoot) :global(.trainerNutritionAnalyticsMain),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentGoals),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta),
+:global(.trainerNextRoot) :global(.trainerNutritionPlanFields),
+:global(.trainerNextRoot) :global(.trainerNutritionGoalInputs),
+:global(.trainerNextRoot) :global(.trainerNutritionValidity),
+:global(.trainerNextRoot) :global(.trainerNutritionPlanActions) {
+  display: grid;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPeriod) {
+  grid-template-columns: minmax(0, 1fr);
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 15px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPeriodButtons),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentGoals),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta),
+:global(.trainerNextRoot) :global(.trainerNutritionPlanActions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPeriodButtons button),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta button),
+:global(.trainerNextRoot) :global(.trainerNutritionPlanActions button),
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryCollapsed) {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  color: var(--tn-text);
+  background: var(--tn-surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 680;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPeriodButtons button.active),
+:global(.trainerNextRoot) :global(.trainerNutritionPeriodButtons button[aria-pressed="true"]) {
+  border-color: var(--tn-purple);
+  color: #ffffff;
+  background: var(--tn-purple);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionMetricGrid) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionMetricGrid article),
+:global(.trainerNextRoot) :global(.trainerClientAnalyticsCard) {
+  padding: 14px;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionMetricGrid span),
+:global(.trainerNextRoot) :global(.trainerNutritionMetricGrid small),
+:global(.trainerNextRoot) :global(.trainerClientAnalyticsCard small),
+:global(.trainerNextRoot) :global(.trainerNutritionLegend span) {
+  color: var(--tn-muted);
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionMetricGrid strong),
+:global(.trainerNextRoot) :global(.trainerClientAnalyticsCard strong) {
+  display: block;
+  margin-top: 5px;
+  color: var(--tn-text);
+  font-size: 20px;
+  font-weight: 750;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionAnalyticsMain) {
+  grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCaloriesChart header),
+:global(.trainerNextRoot) :global(.trainerNutritionBalance header),
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead),
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryTotals) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDonutRow) {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDonut) {
+  width: 108px;
+  height: 108px;
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionLegend) {
+  display: grid;
+  flex: 1;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary) {
+  display: grid;
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > article) {
+  padding: 14px;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead strong),
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryTotals strong),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentPlan h2) {
+  color: var(--tn-text);
+  font-size: 16px;
+  font-weight: 740;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryHead span),
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryTotals span),
+:global(.trainerNextRoot) :global(.trainerNutritionReadonly),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta span),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentPlan p),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentPlan small),
+:global(.trainerNextRoot) :global(.trainerNutritionPlan label > span),
+:global(.trainerNextRoot) :global(.trainerNutritionValidity small) {
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryCollapsed) {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionDiaryCollapsed strong) {
+  color: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentPlan),
+:global(.trainerNextRoot) :global(.trainerClientAssignment) {
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentGoals) {
+  margin: 14px 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentGoals span) {
+  display: grid;
+  min-width: 112px;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentGoals small),
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentGoals strong) {
+  color: var(--tn-muted);
+  font-size: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentGoals strong) {
+  color: var(--tn-text);
+  font-size: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanFields) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionGoalInputs) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanFields label),
+:global(.trainerNextRoot) :global(.trainerNutritionGoalInputs label),
+:global(.trainerNextRoot) :global(.trainerNutritionValidity label) {
+  display: grid;
+  gap: 6px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionGoalInputs label > div) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionGoalInputs label small) {
+  margin-left: -32px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionValidity) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionValidity > small) {
+  grid-column: 1 / -1;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientNotifications) {
+  display: grid;
+  gap: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard),
+:global(.trainerNextRoot) :global(.trainerNotificationSettings) {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--tn-line);
+  border-radius: 22px;
+  background: var(--tn-surface);
+  box-shadow: var(--tn-shadow);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard) {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 13px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationIcon),
+:global(.trainerNextRoot) :global(.trainerReminderIcon) {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationIcon.connected) {
+  color: var(--tn-green);
+  background: var(--tn-green-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard span),
+:global(.trainerNextRoot) :global(.trainerNotificationSettings header > div > span) {
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard h2),
+:global(.trainerNextRoot) :global(.trainerNotificationSettings h2) {
+  margin: 3px 0 0;
+  color: var(--tn-text);
+  font-size: 19px;
+  font-weight: 750;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard p),
+:global(.trainerNextRoot) :global(.trainerNotificationSettings header > div > p),
+:global(.trainerNextRoot) :global(.trainerReminderCard p) {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard > i) {
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: var(--tn-muted);
+  background: var(--tn-surface-soft);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 720;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard > i.connected) {
+  color: var(--tn-green);
+  background: var(--tn-green-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationStatusCard > button),
+:global(.trainerNextRoot) :global(.trainerNotificationActions button) {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSettings > header) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerReminderCard) {
+  padding: 15px;
+  border: 1px solid var(--tn-line);
+  border-radius: 17px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerReminderCard + .trainerReminderCard) {
+  margin-top: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerReminderCardHead) {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerReminderCard strong) {
+  color: var(--tn-text);
+  font-size: 14px;
+  font-weight: 730;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSwitch) {
+  position: relative;
+  display: inline-flex;
+  width: 44px;
+  height: 26px;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSwitch input) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSwitch i) {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: #ded9e2;
+  transition: background-color 160ms ease;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSwitch i::after) {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 5px rgba(40, 38, 46, 0.18);
+  content: "";
+  transition: transform 160ms ease;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSwitch input:checked + i) {
+  background: var(--tn-purple);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSwitch input:checked + i::after) {
+  transform: translateX(18px);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationOffsets > div),
+:global(.trainerNextRoot) :global(.trainerReminderPeriod > div) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationOffsets label),
+:global(.trainerNextRoot) :global(.trainerReminderPeriod button) {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  border: 1px solid var(--tn-line);
+  border-radius: 10px;
+  color: var(--tn-muted);
+  background: var(--tn-surface);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 680;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationOffsets label input) {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationOffsets label span) {
+  display: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationOffsets label.active),
+:global(.trainerNextRoot) :global(.trainerReminderPeriod button.active),
+:global(.trainerNextRoot) :global(.trainerReminderPeriod button[aria-pressed="true"]) {
+  border-color: #d7cbed;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar) {
+  margin-top: 10px;
+  padding: 16px;
+  border: 1px solid var(--tn-line);
+  border-radius: 18px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar > header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar > header > div:last-child) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid var(--tn-line);
+  border-radius: 13px;
+  background: var(--tn-surface);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar > header strong),
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar > header b) {
+  color: var(--tn-text);
+  font-size: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar > header p),
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar > small) {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendar > header button) {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--tn-line);
+  border-radius: 9px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-surface);
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSchedule) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSchedule > span) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 3px 7px;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--tn-surface);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSchedule svg) {
+  grid-row: span 2;
+  color: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSchedule b) {
+  color: var(--tn-text);
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationSchedule small) {
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationWeekdays),
+:global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid) {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationWeekdays span) {
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 690;
+  text-align: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button) {
+  position: relative;
+  display: grid;
+  min-height: 52px;
+  align-content: center;
+  justify-items: center;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--tn-text);
+  background: var(--tn-surface);
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.muted) {
+  color: #b8b1bd;
+  background: transparent;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.today) {
+  border-color: #d7cbed;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.active) {
+  border-color: #d8ceea;
+  color: var(--tn-purple-strong);
+  background: #eee9f7;
+  box-shadow: 0 4px 10px rgba(128, 107, 182, 0.1);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationDayBadges) {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  display: flex;
+  gap: 2px;
+  transform: translateX(-50%);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationDayBadges i),
+:global(.trainerNextRoot) :global(.trainerNotificationLegend i) {
+  display: block;
+  width: 5px;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--tn-purple);
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.active .trainerNotificationDayBadges i) {
+  background: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationDayBadges i.photo),
+:global(.trainerNextRoot) :global(.trainerNotificationLegend i.photo) {
+  background: #c28b58;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationDayBadges i.measurement),
+:global(.trainerNextRoot) :global(.trainerNotificationLegend i.measurement) {
+  background: var(--tn-green);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationLegend) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationLegend span) {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--tn-muted);
+  font-size: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNotificationActions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+@media (max-width: 760px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientBackRow) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientBackRow > button),
+  :global(.trainerNextRoot) :global(.trainerNextClientBackRow > div > button) {
+    min-height: 40px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientBackRow > div) {
+    justify-content: stretch;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientBackRow > div > button) {
+    flex: 1 1 120px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader h1) {
+    font-size: 20px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader > div > strong) {
+    font-size: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary),
+  :global(.trainerNextRoot) :global(.trainerNextClientSide),
+  :global(.trainerNextRoot) :global(.trainerMeasurementCollapsed > div),
+  :global(.trainerNextRoot) :global(.trainerMeasurementSummaryGrid),
+  :global(.trainerNextRoot) :global(.trainerMeasurementFieldGrid),
+  :global(.trainerNextRoot) :global(.trainerNutritionMetricGrid),
+  :global(.trainerNextRoot) :global(.trainerNutritionGoalInputs) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary article:last-child:nth-child(4)) {
+    grid-column: 1 / -1;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextSimplePanel),
+  :global(.trainerNextRoot) :global(.trainerNutritionUnifiedSection),
+  :global(.trainerNextRoot) :global(.trainerNutritionCurrentPlan),
+  :global(.trainerNextRoot) :global(.trainerClientAssignment),
+  :global(.trainerNextRoot) :global(.trainerNotificationStatusCard),
+  :global(.trainerNextRoot) :global(.trainerNotificationSettings) {
+    padding: 16px;
+    border-radius: 19px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextPanelTitle),
+  :global(.trainerNextRoot) :global(.trainerClientBlockHeading) {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientBlockHeading) {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientBlockHeading > .trainerNutritionSectionToggle) {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerMeasurementMainGrid),
+  :global(.trainerNextRoot) :global(.trainerNutritionAnalyticsMain),
+  :global(.trainerNextRoot) :global(.trainerPhotoComparePanel),
+  :global(.trainerNextRoot) :global(.trainerNutritionPlanFields),
+  :global(.trainerNextRoot) :global(.trainerNutritionValidity) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerMeasurementTimeline) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerPhotoCompareGrid) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNotificationStatusCard) {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNotificationStatusCard > i),
+  :global(.trainerNextRoot) :global(.trainerNotificationStatusCard > button) {
+    grid-column: 1 / -1;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNotificationSettings > header),
+  :global(.trainerNextRoot) :global(.trainerNotificationCalendar > header) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNotificationSchedule) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button) {
+    min-height: 36px;
+  }
+}

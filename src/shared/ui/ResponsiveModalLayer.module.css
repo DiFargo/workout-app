@@ -2,10 +2,10 @@
  * mistaken for the dialog itself at a tablet breakpoint. */
 :global([data-modal-surface="true"]) {
   box-sizing: border-box;
-  max-width: min(var(--layout-modal-max-inline), calc(100vw - (var(--layout-modal-gutter) * 2))) !important;
-  max-height: calc(100dvh - (var(--layout-modal-gutter) * 2)) !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  max-width: min(var(--layout-modal-max-inline), calc(100vw - (var(--layout-modal-gutter) * 2)));
+  max-height: calc(100dvh - (var(--layout-modal-gutter) * 2));
+  overflow-x: hidden;
+  overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
 }
@@ -16,31 +16,31 @@
 
 @media (max-width: 699px) {
   :global([data-modal-surface="true"]) {
-    width: calc(100vw - (var(--layout-modal-gutter) * 2)) !important;
-    border-radius: 20px !important;
+    width: calc(100vw - (var(--layout-modal-gutter) * 2));
+    border-radius: 20px;
   }
 
   :global(:root[data-app-theme="warm-light"] body #root [data-testid^="profile-"][data-testid$="-overlay"]:not([data-testid="profile-avatar-crop-overlay"])) {
     padding:
       max(52px, calc(env(safe-area-inset-top) + 40px))
       0
-      0 !important;
-    place-items: end center !important;
+      0;
+    place-items: end center;
   }
 
   :global(:root[data-app-theme="warm-light"] body #root [data-modal-surface="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])) {
-    width: min(100%, 402px) !important;
-    max-width: 402px !important;
-    max-height: calc(100dvh - max(52px, calc(env(safe-area-inset-top) + 40px))) !important;
-    border-right: 0 !important;
-    border-bottom: 0 !important;
-    border-left: 0 !important;
-    border-radius: 28px 28px 0 0 !important;
+    width: min(100%, 402px);
+    max-width: 402px;
+    max-height: calc(100dvh - max(52px, calc(env(safe-area-inset-top) + 40px)));
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 28px 28px 0 0;
   }
 }
 
 @media (min-width: 700px) and (max-width: 979px) {
   :global([data-modal-surface="true"]) {
-    border-radius: 20px !important;
+    border-radius: 20px;
   }
 }
