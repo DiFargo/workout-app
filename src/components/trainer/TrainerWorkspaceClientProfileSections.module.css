@@ -1274,7 +1274,11 @@
   margin-top: 14px;
 }
 
-@media (max-width: 760px) {
+/* The phone toolbar has a dedicated, compact iOS treatment in
+   TrainerWorkspaceMobile.module.css. Keep this intermediate breakpoint for
+   small desktop windows only, otherwise it forces the mobile actions into
+   multiple rows. */
+@media (min-width: 700px) and (max-width: 760px) {
   :global(.trainerNextRoot) :global(.trainerNextClientBackRow) {
     align-items: stretch;
     flex-direction: column;

@@ -10,7 +10,6 @@ import "./TrainerWorkspaceProgramEditor.module.css";
 import "./TrainerWorkspaceExerciseProgress.module.css";
 import "./TrainerWorkspaceNutritionDiary.module.css";
 import "./TrainerWorkspaceDashboard.module.css";
-import "./TrainerWorkspaceMobile.module.css";
 import adaptiveStyles from "./TrainerWorkspaceAdaptive.module.css";
 import trainerProgramConstructorStyles from "./TrainerProgramConstructor.module.css";
 import TrainerClientUtilitySheet from "./TrainerClientUtilitySheet";
@@ -27,6 +26,7 @@ import trainerClientExercisesTabsStyles from "./TrainerClientExercisesTabs.modul
 import trainerClientMessagesStyles from "./TrainerClientMessages.module.css";
 import workspaceFeatureStyles from "./TrainerWorkspaceSubscriptionProgress.module.css";
 import exerciseLibraryEditorStyles from "./TrainerExerciseLibraryEditor.module.css";
+import mobileStyles from "./TrainerWorkspaceMobile.module.css";
 import { analyzeExerciseProgress } from "../../utils/exerciseProgress.js";
 import {
   findTrainerExerciseProgressTarget,
@@ -1662,7 +1662,7 @@ function getWorkoutScheduleCalendarStatus(entries = []) {
 function getWorkoutScheduleCalendarTitle(dateKey, entries = []) {
   if (!entries.length) return dateKey;
   const details = entries
-    .map((entry) => `â„–${entry.order} ${WORKOUT_SCHEDULE_DAY_STATUS_TEXT[entry.status] || ""}`.trim())
+    .map((entry) => `№${entry.order} ${WORKOUT_SCHEDULE_DAY_STATUS_TEXT[entry.status] || ""}`.trim())
     .join(", ");
   return `${dateKey}: ${details}`;
 }
@@ -1701,7 +1701,7 @@ function WorkoutSchedulePlanner({
         date,
         order: index + 1,
         status: "planned",
-        title: `Тренировка â„–${index + 1}`
+        title: `Тренировка №${index + 1}`
       }];
     return result;
   }, {});
@@ -1744,7 +1744,7 @@ function WorkoutSchedulePlanner({
         <div>
           <span>РАСПИСАНИЕ ПРОГРАММЫ</span>
           <h3>Даты тренировок клиента</h3>
-          <p>Выберите ровно {requiredCount || 0} {pluralize(requiredCount, "дату", "даты", "дат")} под назначенную программу. Порядок дат становится порядком тренировок â„–1, â„–2 и дальше.</p>
+          <p>Выберите ровно {requiredCount || 0} {pluralize(requiredCount, "дату", "даты", "дат")} под назначенную программу. Порядок дат становится порядком тренировок №1, №2 и дальше.</p>
         </div>
         <strong className={datesComplete ? "ready" : ""}>{selectedDates.length}/{requiredCount || 0}<small>выбрано</small></strong>
       </header>
@@ -1764,7 +1764,7 @@ function WorkoutSchedulePlanner({
               const selected = selectedSet.has(day.key);
               const entries = visibleEntriesByDate[day.key] || [];
               const statusClass = getWorkoutScheduleCalendarStatus(entries);
-              const entryLabel = entries.map((entry) => `â„–${entry.order}`).join(", ");
+              const entryLabel = entries.map((entry) => `№${entry.order}`).join(", ");
               return (
                 <button
                   type="button"
@@ -1781,7 +1781,7 @@ function WorkoutSchedulePlanner({
                   title={getWorkoutScheduleCalendarTitle(day.key, entries)}
                 >
                   <b>{day.label}</b>
-                  {entries.length ? <i>{entryLabel}</i> : selected ? <i>â„–{selectedOrder[day.key]}</i> : null}
+                  {entries.length ? <i>{entryLabel}</i> : selected ? <i>№{selectedOrder[day.key]}</i> : null}
                 </button>
               );
             })}
@@ -3035,7 +3035,7 @@ function ClientNotifications({
   }
 
   return (
-    <div className="trainerClientNotifications">
+    <div className={`trainerClientNotifications ${mobileStyles.notificationRoot}`}>
       <section className="trainerNotificationStatusCard">
         <div className={`trainerNotificationIcon ${connected ? "connected" : ""}`}><Bell size={22} /></div>
         <div>
@@ -3516,16 +3516,22 @@ function TrainerClientDetail({
   );
 
   return (
-    <div className="trainerNextPage trainerNextClientPage">
-      <div className="trainerNextClientBackRow">
+    <div className={`trainerNextPage trainerNextClientPage ${mobileStyles.clientPageFix}`}>
+      <div className={`trainerNextClientBackRow ${mobileStyles.clientToolbarFix}`}>
         <button className="trainerNextClientBackButton" type="button" onClick={onBack} aria-label="Назад к списку клиентов">
           <ArrowLeft size={20} />
           <span className="trainerNextClientBackDesktop">Назад к списку</span>
           <span className="trainerNextClientBackMobile">Клиенты</span>
         </button>
         <div>
-          <button className="trainerNextPrimary" type="button" onClick={() => setUtilitySheet("messages")}><MessageSquare size={16} />Сообщения</button>
-          <button type="button" onClick={() => setUtilitySheet("notifications")}><Bell size={16} />Уведомления</button>
+          <button className="trainerNextPrimary" type="button" onClick={() => setUtilitySheet("messages")} aria-label="Сообщения клиента">
+            <MessageSquare size={16} />
+            <span className="trainerNextClientActionLabel">Сообщения</span>
+          </button>
+          <button type="button" onClick={() => setUtilitySheet("notifications")} aria-label="Уведомления клиента">
+            <Bell size={16} />
+            <span className="trainerNextClientActionLabel">Уведомления</span>
+          </button>
           <button className="trainerNextClientActionsButton" type="button" onClick={() => setActionsOpen(true)} aria-label="Действия">
             <EllipsisVertical size={18} />
             <span>Действия</span>
@@ -3832,7 +3838,7 @@ function getExerciseSetSummary(sets = [], field, suffix = "") {
     .filter(Boolean);
   if (!values.length) return "—";
   const uniqueValues = [...new Set(values)];
-  return `${uniqueValues.length === 1 ? uniqueValues[0] : `${uniqueValues[0]}â€¦${uniqueValues.at(-1)}`}${suffix}`;
+  return `${uniqueValues.length === 1 ? uniqueValues[0] : `${uniqueValues[0]}…${uniqueValues.at(-1)}`}${suffix}`;
 }
 
 export function TrainerProgramConstructor({
@@ -4396,7 +4402,7 @@ function TrainerWorkoutEditor({
 
   async function createLibraryExercise() {
     const exercise = selectedWorkout
-      ? onAddExercise?.(selectedWorkout.id, { name: "Новое упражнение" })
+      ? await onAddExercise?.(selectedWorkout.id, { name: "Новое упражнение" })
       : await onCreateLibraryExercise?.(selectedProgramId, { name: "Новое упражнение" });
     if (!exercise) return;
 
@@ -4730,7 +4736,7 @@ function TrainerWorkoutEditor({
         </div>
         </>
       ) : (
-        <section className="trainerNextLibrary">
+        <section className={`trainerNextLibrary ${mobileStyles.libraryFix}`}>
           <div className="trainerNextPanelTitle">
             <div><h2>Библиотека упражнений</h2><p>Видео и параметры из сохранённых программ</p></div>
             <div className="trainerNextLibraryActions">
@@ -4970,7 +4976,7 @@ function TrainerCabinetPage({
 
   return (
     <>
-      <div className="trainerNextPage trainerNextCabinetPage">
+      <div className={`trainerNextPage trainerNextCabinetPage ${mobileStyles.cabinetFix}`}>
         <header className="trainerNextMobileHeader">
           <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
           <div className="trainerNextMobileTitle">Кабинет</div>

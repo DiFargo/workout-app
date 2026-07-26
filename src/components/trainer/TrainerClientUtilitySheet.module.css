@@ -79,6 +79,7 @@
 }
 
 .content :global(.trainerClientNotifications) {
+  display: grid;
   gap: 12px;
 }
 
@@ -86,6 +87,375 @@
 .content :global(.trainerNotificationSettings) {
   padding: 16px;
   border-radius: 18px;
+}
+
+.content :global(.trainerClientNotifications),
+.content :global(.trainerClientNotifications *) {
+  box-sizing: border-box;
+}
+
+.content :global(.trainerNotificationStatusCard),
+.content :global(.trainerNotificationSettings),
+.content :global(.trainerReminderCard),
+.content :global(.trainerNotificationCalendar) {
+  border: 1px solid #efebf3;
+  background: #f5f2f7;
+}
+
+.content :global(.trainerNotificationStatusCard) {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.content :global(.trainerNotificationStatusCard) > div:nth-child(2),
+.content :global(.trainerReminderCardHead) > div {
+  min-width: 0;
+}
+
+.content :global(.trainerNotificationStatusCard) h2,
+.content :global(.trainerNotificationSettings) h2,
+.content :global(.trainerReminderCard) p,
+.content :global(.trainerNotificationCalendar) p,
+.content :global(.trainerNotificationSettings) p {
+  margin: 0;
+}
+
+.content :global(.trainerNotificationStatusCard) h2,
+.content :global(.trainerNotificationSettings) h2 {
+  color: #28262e;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.content :global(.trainerNotificationStatusCard) p,
+.content :global(.trainerReminderCard) p,
+.content :global(.trainerNotificationCalendar) p,
+.content :global(.trainerNotificationSettings) p {
+  margin-top: 4px;
+  color: #7b7682;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.content :global(.trainerNotificationStatusCard) > span,
+.content :global(.trainerNotificationSettings header span:first-child) {
+  color: #8f7ac8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+}
+
+.content :global(.trainerNotificationStatusCard) > i,
+.content :global(.trainerNotificationDayBadges) i,
+.content :global(.trainerNotificationLegend) i {
+  font-style: normal;
+}
+
+.content :global(.trainerNotificationStatusCard) > i {
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: #7b7682;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.content :global(.trainerNotificationStatusCard) > i.connected {
+  color: #3f7d5f;
+  background: #e8f5ed;
+}
+
+.content :global(.trainerNotificationIcon),
+.content :global(.trainerReminderIcon) {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 14px;
+  color: #806bb6;
+  background: #eee8fb;
+}
+
+.content :global(.trainerNotificationIcon.connected) {
+  color: #3f7d5f;
+  background: #e8f5ed;
+}
+
+.content :global(.trainerNotificationSettings) {
+  display: grid;
+  gap: 12px;
+}
+
+.content :global(.trainerNotificationSettings) > header,
+.content :global(.trainerNotificationCalendar) > header,
+.content :global(.trainerReminderCardHead) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.content :global(.trainerNotificationSwitch) {
+  position: relative;
+  display: inline-flex;
+  width: 44px;
+  height: 26px;
+  flex: 0 0 auto;
+}
+
+.content :global(.trainerNotificationSwitch input) {
+  position: absolute;
+  opacity: 0;
+}
+
+.content :global(.trainerNotificationSwitch i) {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: #d8d3de;
+}
+
+.content :global(.trainerNotificationSwitch i::after) {
+  display: block;
+  width: 20px;
+  height: 20px;
+  content: "";
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(40, 38, 46, 0.2);
+  transform: translate(3px, 3px);
+  transition: transform 160ms ease;
+}
+
+.content :global(.trainerNotificationSwitch input:checked + i) {
+  background: #8f7ac8;
+}
+
+.content :global(.trainerNotificationSwitch input:checked + i::after) {
+  transform: translate(21px, 3px);
+}
+
+.content :global(.trainerReminderCard),
+.content :global(.trainerNotificationCalendar) {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+}
+
+.content :global(.trainerNotificationOffsets) > div,
+.content :global(.trainerReminderPeriod) > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.content :global(.trainerNotificationOffsets label),
+.content :global(.trainerReminderPeriod button) {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid #efebf3;
+  border-radius: 11px;
+  color: #7b7682;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.content :global(.trainerNotificationOffsets label.active),
+.content :global(.trainerReminderPeriod button.active) {
+  border-color: #d9ccec;
+  color: #806bb6;
+  background: #eee8fb;
+}
+
+.content :global(.trainerNotificationOffsets input) {
+  accent-color: #8f7ac8;
+}
+
+.content :global(.trainerNotificationOffsets label span) {
+  display: none;
+}
+
+.content :global(.trainerNotificationCalendar) > header > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.content :global(.trainerNotificationCalendar) > header button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid #efebf3;
+  border-radius: 10px;
+  color: #806bb6;
+  background: #ffffff;
+}
+
+.content :global(.trainerNotificationCalendar) > header b {
+  color: #28262e;
+  font-size: 14px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.content :global(.trainerNotificationSchedule) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.content :global(.trainerNotificationSchedule) > span {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 3px 8px;
+  padding: 10px;
+  border-radius: 12px;
+  color: #806bb6;
+  background: #ffffff;
+}
+
+.content :global(.trainerNotificationSchedule) > span svg {
+  grid-row: span 2;
+}
+
+.content :global(.trainerNotificationSchedule) b,
+.content :global(.trainerNotificationSchedule) small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content :global(.trainerNotificationSchedule) b {
+  color: #28262e;
+  font-size: 12px;
+}
+
+.content :global(.trainerNotificationSchedule) small {
+  color: #7b7682;
+  font-size: 11px;
+}
+
+.content :global(.trainerNotificationWeekdays),
+.content :global(.trainerNotificationCalendarGrid) {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.content :global(.trainerNotificationWeekdays) span {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.content :global(.trainerNotificationCalendarGrid) button {
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  gap: 1px;
+  padding: 4px 2px;
+  border: 1px solid #efebf3;
+  border-radius: 10px;
+  color: #28262e;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.content :global(.trainerNotificationCalendarGrid) button.muted {
+  color: #b4afbb;
+  background: transparent;
+}
+
+.content :global(.trainerNotificationCalendarGrid) button.active {
+  border-color: #8f7ac8;
+  color: #ffffff;
+  background: #8f7ac8;
+}
+
+.content :global(.trainerNotificationCalendarGrid) button.today:not(.active) {
+  border-color: #d6c8ea;
+  color: #806bb6;
+}
+
+.content :global(.trainerNotificationDayBadges) {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}
+
+.content :global(.trainerNotificationDayBadges) i {
+  font-size: 8px;
+  line-height: 1;
+}
+
+.content :global(.trainerNotificationLegend) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #7b7682;
+  font-size: 11px;
+}
+
+.content :global(.trainerNotificationLegend) span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.content :global(.trainerNotificationLegend) i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8f7ac8;
+}
+
+.content :global(.trainerNotificationLegend) i.photo {
+  background: #c48a58;
+}
+
+.content :global(.trainerNotificationLegend) i.measurement {
+  background: #5a9b79;
+}
+
+.content :global(.trainerNotificationActions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.content :global(.trainerNotificationActions) button,
+.content :global(.trainerNotificationStatusCard) > button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border: 1px solid #dfd6e9;
+  border-radius: 12px;
+  color: #806bb6;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.content :global(.trainerNotificationActions) :global(.trainerNextPrimary) {
+  border-color: #8f7ac8;
+  color: #ffffff;
+  background: #8f7ac8;
 }
 
 @media (max-width: 699px) {
