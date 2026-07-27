@@ -638,6 +638,14 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
       <nav className="trainerNextMobileNav" aria-label="Разделы тренера">
         {mobileItems.map((item) => renderButton(item, true))}
       </nav>
+      {appVersion ? (
+        <span
+          className="trainerNextMobileVersion"
+          aria-label={`Версия приложения ${appVersion}`}
+        >
+          {appVersion}
+        </span>
+      ) : null}
     </>
   );
 }
@@ -653,7 +661,10 @@ export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAv
         appVersion={appVersion}
       />
       <main className="trainerNextMain">{children}</main>
-      <div className={workspaceStyles.mobileDockGuard} aria-hidden="true" />
+      <div
+        className={mobileStyles.mobileDockGuard}
+        aria-hidden="true"
+      />
     </div>
   );
 }
@@ -916,7 +927,6 @@ function TrainerDashboard({
   onOpenClient,
   onOpenClients,
   onOpenPrograms,
-  appVersion = "",
   loading = false
 }) {
   const completed = clients.reduce((sum, client) => sum + (Number(clientSummaries[client.id]?.workouts7) || 0), 0);
@@ -974,8 +984,6 @@ function TrainerDashboard({
         <DashboardMetric label="Завершено" value={completed} detail={completedDetail} tone="purple" icon={Dumbbell} values={[1, 2, 2, 3, 2.5, 5, 4, 8]} onClick={onOpenPrograms} />
         <DashboardMetric label="Прогресс" value={progressValue} detail={progressDetail} tone="green" icon={TrendingUp} values={[2, 2, 3.5, 3, 5, 4.3, 7]} onClick={onOpenClients} />
       </section>
-
-      {appVersion ? <div className="trainerNextDashboardVersion">{appVersion}</div> : null}
     </div>
   );
 }
@@ -5689,7 +5697,6 @@ export default function TrainerWorkspace({
         onOpenClients={() => onNavigate("clients")}
         onOpenPrograms={() => onNavigate("workouts")}
         onCreateClient={onCreateClient}
-        appVersion={appVersion}
         loading={summariesLoading}
       />
     );
