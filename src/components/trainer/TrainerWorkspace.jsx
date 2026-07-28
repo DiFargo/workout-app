@@ -5018,18 +5018,18 @@ function TrainerCabinetPage({
 
         <section className="trainerCabinetWorkspaceLinks" aria-label="Рабочие разделы кабинета">
           <button type="button" onClick={() => setOpenSheet("analytics")}>
-            <span><BarChart3 size={19} /></span>
-            <div><strong>Аналитика</strong><small>Сводка по активности и рискам клиентов</small></div>
+            <span className="trainerCabinetWorkspaceIcon"><BarChart3 size={19} /></span>
+            <div className="trainerCabinetWorkspaceCopy"><strong>Аналитика</strong><small>Сводка по активности и рискам клиентов</small></div>
             <ChevronRight size={18} />
           </button>
           <button type="button" onClick={() => setOpenSheet("notifications")}>
-            <span><Bell size={19} /></span>
-            <div><strong>Уведомления</strong><small>События и настройки напоминаний</small></div>
+            <span className="trainerCabinetWorkspaceIcon"><Bell size={19} /></span>
+            <div className="trainerCabinetWorkspaceCopy"><strong>Уведомления</strong><small>События и настройки напоминаний</small></div>
             <ChevronRight size={18} />
           </button>
           <button type="button" onClick={onOpenTrainerConnections}>
-            <span><Mail size={19} /></span>
-            <div><strong>Подключения</strong><small>Почта и Telegram для доступа и связи</small></div>
+            <span className="trainerCabinetWorkspaceIcon"><Mail size={19} /></span>
+            <div className="trainerCabinetWorkspaceCopy"><strong>Подключения</strong><small>Почта и Telegram для доступа и связи</small></div>
             <ChevronRight size={18} />
           </button>
         </section>

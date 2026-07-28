@@ -7,7 +7,7 @@
 
 :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button) {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr) auto;
+  grid-template-columns: 42px minmax(0, 1fr) 18px;
   min-height: 76px;
   align-items: center;
   gap: 12px;
@@ -28,7 +28,7 @@
   transform: translateY(-1px);
 }
 
-:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button > span) {
+:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks .trainerCabinetWorkspaceIcon) {
   display: grid;
   width: 42px;
   height: 42px;
@@ -38,13 +38,18 @@
   background: var(--tn-purple-soft);
 }
 
-:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button > div) {
-  display: grid;
+:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks .trainerCabinetWorkspaceCopy) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   min-width: 0;
   gap: 3px;
 }
 
-:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button strong) {
+:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks .trainerCabinetWorkspaceCopy strong) {
+  display: block;
+  min-width: 0;
   overflow: hidden;
   color: var(--tn-text);
   font-size: 15px;
@@ -53,12 +58,17 @@
   white-space: nowrap;
 }
 
-:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button small) {
+:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks .trainerCabinetWorkspaceCopy small) {
+  display: -webkit-box;
+  min-width: 0;
+  max-width: 100%;
   overflow: hidden;
   color: var(--tn-muted);
   font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button > svg) {
@@ -68,5 +78,10 @@
 @media (max-width: 680px) {
   :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks) {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button) {
+    min-height: 84px;
+    padding: 14px 16px;
   }
 }
