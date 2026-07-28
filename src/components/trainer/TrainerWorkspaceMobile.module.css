@@ -925,4 +925,49 @@
     width: 100%;
     min-width: 0;
   }
+
+  .cabinetFix :global(.trainerCabinetWorkspaceLinks) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .cabinetFix :global(.trainerCabinetWorkspaceLinks > button) {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 18px;
+    align-items: center;
+    gap: 12px;
+    min-height: 84px;
+    padding: 14px 16px;
+    text-align: left;
+  }
+
+  .cabinetFix :global(.trainerCabinetWorkspaceIcon) {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 13px;
+  }
+
+  .cabinetFix :global(.trainerCabinetWorkspaceCopy) {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .cabinetFix :global(.trainerCabinetWorkspaceCopy strong),
+  .cabinetFix :global(.trainerCabinetWorkspaceCopy small) {
+    display: block;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .cabinetFix :global(.trainerCabinetWorkspaceLinks > button > svg) {
+    justify-self: end;
+    align-self: center;
+  }
 }
