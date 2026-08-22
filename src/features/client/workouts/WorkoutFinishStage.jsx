@@ -10,6 +10,7 @@ export default function WorkoutFinishStage({
   finishSyncText,
   goToPreviousExercise,
   incompleteExerciseNames,
+  isBasicWorkout = false,
   isSaving,
   isWorkoutSaved,
   onClientCommentChange,
@@ -89,7 +90,7 @@ export default function WorkoutFinishStage({
 
           {!isWorkoutSaved && (
             <label className={styles.comment}>
-              <span>Комментарий тренеру</span>
+              <span>{isBasicWorkout ? "Заметка о тренировке" : "Комментарий тренеру"}</span>
               <textarea
                 className={styles.commentInput}
                 data-css-module-control="workout-finish-stage"
@@ -106,7 +107,7 @@ export default function WorkoutFinishStage({
             <p>{finishAdviceText}</p>
           </div>
 
-          {finishSyncText && (
+          {finishSyncText && workoutHistorySyncState !== "synced" && (
             <div className={`${styles.syncStatus} ${styles[workoutHistorySyncState] || ""}`}>
               <span aria-hidden="true">
                 {workoutHistorySyncState === "local" ? "◷" : workoutHistorySyncState === "synced" ? "✓" : "•"}

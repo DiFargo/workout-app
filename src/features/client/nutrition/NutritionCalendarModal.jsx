@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./NutritionCalendarModal.module.css";
@@ -146,10 +146,17 @@ export default function NutritionCalendarModal({
           title="Календарь питания"
           testId="nutrition-calendar-page-header"
           scope="nutrition-calendar-page-header"
-          onBack={onClose}
-          backTestId="nutrition-calendar-close"
-          backAriaLabel="Закрыть календарь"
-          backProps={{ "data-nutrition-calendar-action": "close" }}
+          actions={(
+            <button
+              type="button"
+              data-testid="nutrition-calendar-close"
+              data-nutrition-calendar-action="close"
+              aria-label="Закрыть календарь"
+              onClick={onClose}
+            >
+              <X aria-hidden="true" />
+            </button>
+          )}
         />
 
         <div className={styles.header} data-testid="nutrition-calendar-header">

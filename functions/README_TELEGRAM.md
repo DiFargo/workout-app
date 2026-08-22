@@ -6,7 +6,7 @@
 ## 2. Сохранить token в Firebase Secret
 
 ```bash
-firebase functions:secrets:set TELEGRAM_BOT_TOKEN
+firebase functions:secrets:set TELEGRAM_BOT_TOKEN --project <your-firebase-project-id>
 ```
 
 ## 3. Добавить rewrites в firebase.json
@@ -24,12 +24,9 @@ firebase functions:secrets:set TELEGRAM_BOT_TOKEN
 ## 4. Deploy
 
 ```bash
-cd functions
-npm install
-cd ..
-firebase deploy --only functions,hosting
+npm ci --prefix functions
+firebase deploy --only functions,hosting --project <your-firebase-project-id>
 ```
-
 ## Важно
 Для реальной отправки Telegram нужен `chatId`. Username сам по себе не всегда работает.
 Следующий этап — webhook `/telegram/webhook`, который будет получать `/start <code>` от клиента и сохранять chatId.
@@ -38,18 +35,17 @@ firebase deploy --only functions,hosting
 ## 5. Deploy webhook functions
 
 ```bash
-firebase deploy --only functions
+firebase deploy --only functions --project <your-firebase-project-id>
 ```
 
 ## 6. Установить webhook Telegram
 
-После deploy возьми URL функции `telegramWebhook`, затем выполни в браузере или через curl:
-
-```bash
-https://europe-west1-tren-85720.cloudfunctions.net/telegramSetWebhook?url=https://europe-west1-tren-85720.cloudfunctions.net/telegramWebhook
-```
-
-Если проект/регион отличается — замени URL.
+`telegramSetWebhook` принимает только `POST` от активного администратора с
+Firebase ID token (и App Check token, если включён enforcement). URL webhook
+берётся из `TELEGRAM_WEBHOOK_URL` или выводится из текущего project ID. Не
+открывай старый GET URL в браузере и никогда не подставляй production URL в
+staging. Перед вызовом проверь per-project values в
+`functions/.env.<project-id>`.
 
 ## Как работает привязка
 1. Клиент в приложении нажимает “Привязать Telegram”.
@@ -69,7 +65,9 @@ https://europe-west1-tren-85720.cloudfunctions.net/telegramSetWebhook?url=https:
 - `telegram.lastName`
 - `telegram.avatarUrl`
 
-Important: Telegram avatar URL contains the bot token inside the file URL. It works for displaying the avatar, but do not expose the bot token in logs/screenshots. Later it is better to proxy/cache avatars through Firebase Storage.
+Important: Telegram avatars are cached in Firebase Storage. The resulting
+download URL can contain a Storage download token, so do not expose it in
+unnecessary logs or screenshots; it does not contain the Telegram bot token.
 
 
 ## Telegram Login Widget
@@ -83,7 +81,7 @@ Important: Telegram avatar URL contains the bot token inside the file URL. It wo
 Выбрать бота и указать домен:
 
 ```text
-tren-85720.web.app
+<your-firebase-project-id>.web.app
 ```
 
 Также добавь rewrite в `firebase.json`:
@@ -101,22 +99,5 @@ tren-85720.web.app
 После этого:
 
 ```bash
-firebase deploy --only functions,hosting
+firebase deploy --only functions,hosting --project <your-firebase-project-id>
 ```
-
-
-## Telegram Login Widget через auth_url
-
-Добавь rewrite в `firebase.json`:
-
-```json
-{
-  "source": "/api/telegram/login-callback",
-  "function": {
-    "functionId": "telegramLoginCallback",
-    "region": "europe-west1"
-  }
-}
-```
-
-Этот режим надёжнее на мобильном Chrome, чем `data-onauth`, потому что Telegram редиректит данные авторизации прямо на backend.

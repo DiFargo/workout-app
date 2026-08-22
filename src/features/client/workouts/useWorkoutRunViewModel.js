@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { getWorkoutCompletion } from "../../../utils/auditSafety";
+import { getWorkoutExecutionSteps } from "../../../utils/workoutPlanNormalization";
 
 /**
  * The terminal route supplies one runtime boundary instead of a growing prop
@@ -30,10 +31,14 @@ export function useWorkoutRunViewModel(runtime) {
     leaveWorkoutToPlan,
     showAppError
   } = runtime;
+  const executionSteps = useMemo(
+    () => getWorkoutExecutionSteps(workout),
+    [workout]
+  );
   const isFinishSlideActive = Boolean(
     workout &&
     runtime.workoutStarted &&
-    currentExerciseIndex === workout.exercises.length + 1
+    currentExerciseIndex === executionSteps.length + 1
   );
   const shouldShowTopBackButton = isWorkoutSaved === true && !isFinishSlideActive;
 
@@ -89,12 +94,12 @@ export function useWorkoutRunViewModel(runtime) {
   const selectPostWorkoutFeedback = useCallback((option) => {
     setPostWorkoutFeedback(option);
     setPostWorkoutFeedbackOpen(false);
-    setCurrentExerciseIndex(workout.exercises.length + 1);
+    setCurrentExerciseIndex(executionSteps.length + 1);
   }, [
     setCurrentExerciseIndex,
     setPostWorkoutFeedback,
     setPostWorkoutFeedbackOpen,
-    workout
+    executionSteps.length
   ]);
 
   const closeFullscreenVideo = useCallback(() => {

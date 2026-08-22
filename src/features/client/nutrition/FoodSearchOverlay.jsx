@@ -10,7 +10,8 @@ export function FoodSearchSurface({
   overlayTestId,
   screenTestId,
   dialog = false,
-  ariaLabel
+  ariaLabel,
+  onDismiss
 }) {
   const hasHeaderLayout = layout === "search" || layout === "my-products";
 
@@ -20,12 +21,22 @@ export function FoodSearchSurface({
       data-css-module-scope="food-search-overlay"
       data-testid={overlayTestId}
     >
+      {dialog && onDismiss ? (
+        <button
+          type="button"
+          className={styles.backdrop}
+          onClick={onDismiss}
+          aria-label="Закрыть поиск еды по фону"
+          data-food-search-action="dismiss-backdrop"
+        />
+      ) : null}
       <section
         className={[
           styles.searchScreen,
           hasHeaderLayout ? styles.headerLayout : styles.fixtureLayout,
           layout === "my-products" ? styles.myProductsLayout : "",
-          layout === "search" ? styles.searchLayout : ""
+          layout === "search" ? styles.searchLayout : "",
+          dialog ? styles.modalLayout : ""
         ].filter(Boolean).join(" ")}
         data-food-search-header-layout={hasHeaderLayout ? layout : undefined}
         data-testid={screenTestId}
@@ -34,6 +45,7 @@ export function FoodSearchSurface({
         data-modal-surface={dialog ? "true" : undefined}
         aria-label={ariaLabel}
       >
+        {dialog ? <div className={styles.grabber} aria-hidden="true" data-food-search-grabber /> : null}
         {children}
       </section>
     </div>
@@ -66,9 +78,10 @@ export default function FoodSearchOverlay({
         screenTestId="food-search-screen"
         dialog
         ariaLabel="Поиск еды"
+        onDismiss={headerProps?.onClose}
       >
         <FoodSearchHeader {...headerProps} />
-        <FoodSearchPage {...searchProps} />
+        <FoodSearchPage {...searchProps} modal />
         <NutritionBarcodeOverlay open={barcodeOpen} />
       </FoodSearchSurface>
     );

@@ -1,4 +1,5 @@
 import { TrainerShell } from "../../components/trainer/TrainerWorkspace";
+import AdminWorkspace from "../../components/admin/AdminWorkspace";
 import { ChevronLeft } from "lucide-react";
 import {
   createFourWeekWorkoutProgramBlocks
@@ -12,10 +13,34 @@ import { createTrainerMonthProgramLibraryHandlers } from "./trainerMonthProgramL
 import { createTrainerMonthProgramPersistenceHandlers } from "./trainerMonthProgramPersistenceHandlers";
 import { createTrainerMonthProgramStructureHandlers } from "./trainerMonthProgramStructureHandlers";
 import { createTrainerMonthSelectedExerciseHandlers } from "./trainerMonthSelectedExerciseHandlers";
+import materialsStyles from "./AdminTrainerMaterialsShell.module.css";
+
+function hasAdminAccess(canUseAdminFeatures) {
+  return typeof canUseAdminFeatures === "function"
+    ? canUseAdminFeatures()
+    : Boolean(canUseAdminFeatures);
+}
+
+function isTrainerAccount(user) {
+  return ["trainer", "coach", "тренер", "коуч"].includes(
+    String(user?.role || "").trim().toLocaleLowerCase("ru")
+  );
+}
+
+function getUserLabel(user) {
+  return String(
+    user?.name ||
+    user?.fullName ||
+    user?.displayName ||
+    user?.email?.split("@")?.[0] ||
+    "Тренер"
+  ).trim() || "Тренер";
+}
 
 export default function TrainerAdminWorkoutsRoute({
   APP_PAGES,
   APP_VERSION,
+  adminEmail,
   adminActiveDayId,
   adminActiveProgramId,
   adminClientStatus,
@@ -49,9 +74,12 @@ export default function TrainerAdminWorkoutsRoute({
   handleAdminProgramSwipeStart,
   loadAdminTrainingTemplates,
   loadHistory,
+  logout,
   navigateTrainerNext,
+  openAdminBaseLibrary,
   openAdminClientsWithFilter,
   openAdminProgramsOverview,
+  openProfileAccount,
   openTrainerExerciseLibrary,
   openTrainerProgramManager,
   plan,
@@ -60,6 +88,8 @@ export default function TrainerAdminWorkoutsRoute({
   saveWorkoutsToFirebase,
   setAdminActiveDayId,
   setAdminActiveProgramId,
+  setAdminClientPageOpen,
+  setAdminClientStatus,
   setAdminCreateClientModalOpen,
   setAdminExerciseSearch,
   setAdminExerciseVideoUploadingId,
@@ -73,6 +103,7 @@ export default function TrainerAdminWorkoutsRoute({
   setAdminProgramLibraryTab,
   setAdminProgramSwipeOpenKey,
   setAdminSelectedExerciseId,
+  setAdminSelectedClient,
   setAdminSelectedTemplateId,
   setAdminTemplateName,
   setAdminTrainingTemplates,
@@ -82,6 +113,7 @@ export default function TrainerAdminWorkoutsRoute({
   setSelectedUserId,
   selectedUserId,
   setTrainerProgramManagerOpen,
+  setTrainerWorkoutTab,
   showAppConfirm,
   showAppError,
   sortWorkoutDays,
@@ -107,6 +139,80 @@ export default function TrainerAdminWorkoutsRoute({
   }
 
   const selectedUser = usersList.find((u) => u.id === selectedUserId);
+  const selectedTrainer = adminSelectedClient || selectedUser || null;
+  const selectedTrainerId = String(selectedTrainer?.id || selectedTrainer?.uid || "").trim();
+  const isAdminTrainerMaterials = hasAdminAccess(canUseAdminFeatures) && isTrainerAccount(selectedTrainer);
+  const trainerMaterialsName = getUserLabel(selectedTrainer);
+
+  const clearAdminTrainerMaterialsState = () => {
+    setTrainerProgramManagerOpen?.(false);
+    setAdminClientStatus?.("");
+    setAdminClientPageOpen?.(false);
+  };
+
+  const returnToTrainerProfile = () => {
+    clearAdminTrainerMaterialsState();
+    setTrainerWorkoutTab?.("programs");
+    setAdminSelectedClient?.(selectedTrainer);
+    if (selectedTrainerId) setSelectedUserId?.(selectedTrainerId);
+    setPage?.(APP_PAGES.ADMIN_USERS);
+  };
+
+  const openAdminWorkspaceSection = (sectionId) => {
+    clearAdminTrainerMaterialsState();
+
+    if (sectionId === "overview") {
+      setAdminSelectedClient?.(null);
+      setPage?.(APP_PAGES.ADMIN_PANEL);
+      return;
+    }
+
+    if (sectionId === "users") {
+      setAdminSelectedClient?.(null);
+      if (typeof openAdminClientsWithFilter === "function") {
+        openAdminClientsWithFilter("all");
+        return;
+      }
+      setPage?.(APP_PAGES.ADMIN_USERS);
+      return;
+    }
+
+    const tab = sectionId === "exercises" ? "exercises" : "programs";
+    setAdminSelectedClient?.(null);
+    if (typeof openAdminBaseLibrary === "function") {
+      openAdminBaseLibrary(tab);
+      return;
+    }
+    setPage?.(APP_PAGES.ADMIN_LIBRARY);
+  };
+
+  const renderAdminTrainerMaterials = (content) => {
+    if (!isAdminTrainerMaterials) return content;
+
+    return (
+      <AdminWorkspace
+        activeSection="users"
+        adminEmail={adminEmail || user?.email || ""}
+        adminMeta="Системное управление"
+        adminName={getUserLabel(user)}
+        headerTitle="Материалы тренера"
+        onLogout={logout}
+        onProfileClick={openProfileAccount}
+        onSectionChange={openAdminWorkspaceSection}
+        subtitle={`Личные программы и упражнения: ${trainerMaterialsName}`}
+        testId="admin-trainer-materials-workspace"
+        title="Админка"
+      >
+        <div className={materialsStyles.root}>
+          <button className={materialsStyles.breadcrumb} type="button" onClick={returnToTrainerProfile}>
+            <ChevronLeft aria-hidden="true" size={18} strokeWidth={2} />
+            <span>К профилю тренера</span>
+          </button>
+          <div className={materialsStyles.content}>{content}</div>
+        </div>
+      </AdminWorkspace>
+    );
+  };
 
   if (isTrainerNextWorkspace() && !trainerProgramManagerOpen) {
     const trainerName = telegramProfile.displayName ||
@@ -114,7 +220,7 @@ export default function TrainerAdminWorkoutsRoute({
       auth.currentUser?.email?.split("@")?.[0] ||
       "Trainer";
 
-    return (
+    return renderAdminTrainerMaterials(
       <TrainerAdminWorkoutsNextRoute
         APP_VERSION={APP_VERSION}
         trainerName={trainerName}
@@ -124,6 +230,7 @@ export default function TrainerAdminWorkoutsRoute({
         adminSelectedTemplateId={adminSelectedTemplateId}
         adminTrainingTemplates={adminTrainingTemplates}
         assignSavedProgramToClient={assignSavedProgramToClient}
+        canUseAdminFeatures={canUseAdminFeatures}
         getTrainerNextCreateClientState={getTrainerNextCreateClientState}
         navigateTrainerNext={navigateTrainerNext}
         openTrainerExerciseLibrary={openTrainerExerciseLibrary}
@@ -134,12 +241,15 @@ export default function TrainerAdminWorkoutsRoute({
         selectedUser={selectedUser}
         setAdminCreateClientModalOpen={setAdminCreateClientModalOpen}
         setAdminSelectedTemplateId={setAdminSelectedTemplateId}
+        setTrainerProgramManagerOpen={setTrainerProgramManagerOpen}
+        setTrainerWorkoutTab={setTrainerWorkoutTab}
         sortWorkoutDays={sortWorkoutDays}
         telegramProfile={telegramProfile}
         trainerExerciseLibraryItems={trainerExerciseLibraryItems}
         trainerNextWorkspaceHandlers={trainerNextWorkspaceHandlers}
         trainerWorkoutTab={trainerWorkoutTab}
         usersList={usersList}
+        embedded={isAdminTrainerMaterials}
       />
     );
   }
@@ -171,6 +281,38 @@ export default function TrainerAdminWorkoutsRoute({
       setPlan({ workouts: flatWorkouts });
       return [nextProgram];
     });
+  }
+
+  function restoreMonthProgramDraft(draft = {}) {
+    const sourceProgram = draft?.program;
+    if (!sourceProgram || typeof sourceProgram !== "object" || !sourceProgram.id) return false;
+
+    const nextProgram = normalizeMonthProgram(sourceProgram);
+    const flatWorkouts = nextProgram.blocks.flatMap((block) =>
+      block.weeks.flatMap((week) =>
+        (week.workouts || []).map((workout) => ({
+          ...workout,
+          name: workout.name || `${week.name} — тренировка`,
+          blockName: block.name,
+          weekName: week.name
+        }))
+      )
+    );
+    const isExistingProgram = draft.editorMode === "edit";
+
+    setAdminProgramEditorMode(isExistingProgram ? "edit" : "create");
+    setAdminProgramLibraryTab("editor");
+    setAdminOpenWorkoutId("");
+    setAdminSelectedExerciseId("");
+    setAdminExerciseSearch("");
+    adminExerciseEditSnapshotRef.current = null;
+    setAdminOpenProgramBlocks({});
+    setAdminOpenProgramWeeks({});
+    setAdminActiveProgramId(nextProgram.id);
+    setAdminSelectedTemplateId(isExistingProgram ? nextProgram.id : "");
+    setAdminProgramGroups([nextProgram]);
+    setPlan({ workouts: flatWorkouts });
+    return true;
   }
 
   const normalizedMonthProgram = normalizeMonthProgram(monthProgram);
@@ -237,9 +379,11 @@ export default function TrainerAdminWorkoutsRoute({
 
   const {
     createNewMonthProgramDraft,
+    duplicateMonthProgramFromLibrary,
     editExistingMonthProgram,
     importMonthProgramFromFile,
     importMonthProgramWithAi,
+    prepareMonthProgramForAssignment,
     refreshCurrentMonthProgram,
     saveMonthProgramAndOpenOverview,
     saveMonthProgramToLibrary,
@@ -378,6 +522,7 @@ export default function TrainerAdminWorkoutsRoute({
       createNewMonthProgramDraft={createNewMonthProgramDraft}
       deleteSelectedMonthExercise={deleteSelectedMonthExercise}
       deleteSelectedProgramFromLibrary={deleteSelectedProgramFromLibrary}
+      duplicateMonthProgramFromLibrary={duplicateMonthProgramFromLibrary}
       duplicateMonthExercise={duplicateMonthExercise}
       duplicateMonthWorkout={duplicateMonthWorkout}
       getTemplateStats={getTemplateStats}
@@ -402,6 +547,7 @@ export default function TrainerAdminWorkoutsRoute({
       openMonthExerciseEditor={openMonthExerciseEditor}
       openMonthWorkoutContext={openMonthWorkoutContext}
       openProgramFromLibrary={openProgramFromLibrary}
+      prepareMonthProgramForAssignment={prepareMonthProgramForAssignment}
       refreshCurrentMonthProgram={refreshCurrentMonthProgram}
       removeMonthBlock={removeMonthBlock}
       removeMonthExercise={removeMonthExercise}
@@ -409,6 +555,7 @@ export default function TrainerAdminWorkoutsRoute({
       removeMonthWeek={removeMonthWeek}
       removeProgramMonth={removeProgramMonth}
       renderTrainerWorkspaceBottomBar={renderTrainerWorkspaceBottomBar}
+      restoreMonthProgramDraft={restoreMonthProgramDraft}
       saveMonthExerciseEdit={saveMonthExerciseEdit}
       saveMonthProgramAndOpenOverview={saveMonthProgramAndOpenOverview}
       saveMonthProgramToLibrary={saveMonthProgramToLibrary}
@@ -441,6 +588,49 @@ export default function TrainerAdminWorkoutsRoute({
       auth.currentUser?.email?.split("@")?.[0] ||
       "Тренер";
 
+    const programPage = (
+      <div className="trainerNextPage trainerNextWorkoutPage trainerNextProgramsTab">
+        <div className="trainerNextDesktopPageHead">
+          <div>
+            <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Программы тренировок"}</h1>
+            <p>Создание программ и назначение клиентам</p>
+          </div>
+        </div>
+        <header className="trainerNextMobileHeader">
+          {adminProgramLibraryTab === "editor" ? (
+            <button type="button" onClick={handleMonthProgramBack} aria-label="Назад к программам">
+              <ChevronLeft size={22} />
+            </button>
+          ) : <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />}
+          <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
+          <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
+        </header>
+        {adminProgramLibraryTab !== "editor" ? (
+          <div className="trainerNextPageTabs">
+            <button
+              type="button"
+              className="isActive"
+              aria-current="page"
+              aria-pressed="true"
+              onClick={openAdminProgramsOverview}
+            >
+              Программы
+            </button>
+            <button type="button" aria-pressed="false" onClick={openTrainerExerciseLibrary}>
+              Библиотека упражнений
+            </button>
+          </div>
+        ) : null}
+        {programManagerView}
+      </div>
+    );
+
+    if (isAdminTrainerMaterials) {
+      return renderAdminTrainerMaterials(
+        <div className={`trainerNextRoot ${materialsStyles.programManager}`}>{programPage}</div>
+      );
+    }
+
     return (
       <TrainerShell
         appVersion={APP_VERSION}
@@ -449,40 +639,7 @@ export default function TrainerAdminWorkoutsRoute({
         trainerName={trainerName}
         trainerAvatar={telegramProfile.avatarUrl}
       >
-        <div className="trainerNextPage trainerNextWorkoutPage trainerNextProgramsTab">
-          <div className="trainerNextDesktopPageHead">
-            <div>
-              <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Программы тренировок"}</h1>
-              <p>Создание программ и назначение клиентам</p>
-            </div>
-          </div>
-          <header className="trainerNextMobileHeader">
-            {adminProgramLibraryTab === "editor" ? (
-              <button type="button" onClick={handleMonthProgramBack} aria-label="Назад к программам">
-                <ChevronLeft size={22} />
-              </button>
-            ) : <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />}
-            <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
-            <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
-          </header>
-          {adminProgramLibraryTab !== "editor" ? (
-            <div className="trainerNextPageTabs">
-              <button
-                type="button"
-                className="isActive"
-                aria-current="page"
-                aria-pressed="true"
-                onClick={openAdminProgramsOverview}
-              >
-                Программы
-              </button>
-              <button type="button" aria-pressed="false" onClick={openTrainerExerciseLibrary}>
-                Библиотека упражнений
-              </button>
-            </div>
-          ) : null}
-          {programManagerView}
-        </div>
+        {programPage}
       </TrainerShell>
     );
   }

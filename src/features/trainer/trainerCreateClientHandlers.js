@@ -16,7 +16,6 @@ function isValidLogin(value) {
 }
 
 export function createTrainerCreateClientHandlers({
-  auth,
   currentUserRole,
   adminNewUserName,
   adminNewUserEmail,
@@ -63,25 +62,13 @@ export function createTrainerCreateClientHandlers({
     setAdminCreatedCredentials(null);
 
     try {
-      const token = await auth.currentUser?.getIdToken?.();
-      if (!token) throw new Error("auth/required");
-
-      const abortController = new AbortController();
-      const requestTimeout = setTimeout(() => abortController.abort(), 20000);
-      let response;
-      try {
-        response = await fetch("/api/trainer/create-invite", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ login, name: displayName }),
-          signal: abortController.signal
-        });
-      } finally {
-        clearTimeout(requestTimeout);
-      }
+      const response = await fetchAuthorizedWithTimeout("/api/trainer/create-invite", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ login, name: displayName })
+      }, 20000);
       const result = await response.json().catch(() => ({}));
       if (!response.ok) {
         const error = new Error(result.error || "trainer_invite_create_failed");
@@ -135,3 +122,4 @@ export function createTrainerCreateClientHandlers({
     createUserFromAdminPanel
   };
 }
+import { fetchAuthorizedWithTimeout } from "../../utils/apiClient";

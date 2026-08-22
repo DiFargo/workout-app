@@ -87,13 +87,26 @@ export function createTrainerMessagingHandlers({
     }
   }
 
-  async function sendClientBellNotification(message, client) {
+  async function sendClientBellNotification(message, client, replyContext = null) {
     const sentAt = new Date().toISOString();
+    const replyTopic = String(
+      replyContext?.sourceTitle ||
+      replyContext?.workoutName ||
+      replyContext?.exerciseName ||
+      replyContext?.sourceType ||
+      ""
+    ).trim();
     const notification = {
       type: "trainer_message",
       notificationType: "message",
-      title: "Сообщение от тренера",
+      title: replyContext?.sourceCommentId ? "Ответ тренера" : "Сообщение от тренера",
       message,
+      ...(replyContext?.sourceCommentId ? {
+        sourceCommentId: replyContext.sourceCommentId,
+        messageContext: replyTopic
+          ? `Ответ на ваш комментарий · ${replyTopic}`
+          : "Ответ на ваш комментарий"
+      } : {}),
       status: "progress",
       completedAt: "",
       createdAt: sentAt,
@@ -121,10 +134,6 @@ export function createTrainerMessagingHandlers({
     if (!client?.id || !message) {
       setAdminClientStatus(STATUS_SELECT_CLIENT_AND_MESSAGE);
       return false;
-    }
-
-    if (deliveryChannel === "notification") {
-      return sendClientBellNotification(message, client);
     }
 
     const telegram = getClientTelegramProfile(client);
@@ -163,6 +172,18 @@ export function createTrainerMessagingHandlers({
         setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_INTERNAL_FAILED));
         return false;
       }
+    }
+
+    if (deliveryChannel === "notification") {
+      const sent = await sendClientBellNotification(message, client, replyContext);
+      if (replyDocumentRef) {
+        await setDoc(replyDocumentRef, {
+          status: sent ? "sent" : "error",
+          channel: "internal",
+          ...(sent ? { deliveredAt: new Date().toISOString() } : {})
+        }, { merge: true }).catch((error) => console.warn("Unable to update in-app reply status:", error));
+      }
+      return sent;
     }
 
     if (telegram.connected && telegram.username) {

@@ -88,6 +88,89 @@ function getWeightMultiplier(exercise = {}) {
   return ["per_hand", "per_dumbbell", "each_dumbbell"].includes(mode) ? 2 : 1;
 }
 
+function getExerciseName(exercise = {}) {
+  return String(
+    exercise?.name ||
+    exercise?.title ||
+    exercise?.exerciseName ||
+    exercise?.exercise?.name ||
+    ""
+  ).trim();
+}
+
+function getTrainerAlternativeExercises(exercise = {}) {
+  return Array.isArray(exercise?.trainerAlternatives)
+    ? exercise.trainerAlternatives.filter((item) => item && typeof item === "object")
+    : [];
+}
+
+function getWorkoutExercises(workout = {}) {
+  // Completed workouts created by older app versions used different field
+  // names. Some transitional entries keep the prescription in `exercises`
+  // and the actual completed sets in a second collection. Prefer the most
+  // complete recording for each exercise instead of stopping at the first
+  // non-empty array, otherwise real history is shown as empty to the trainer.
+  const sources = [
+    workout?.exercises,
+    workout?.actualExercises,
+    workout?.completedExercises,
+    workout?.exerciseResults,
+    workout?.results,
+    workout?.workout?.exercises,
+    workout?.workoutSnapshot?.exercises,
+    workout?.data?.exercises
+  ];
+  const byIdentity = new Map();
+
+  sources.forEach((exercises, sourceIndex) => {
+    if (!Array.isArray(exercises)) return;
+    exercises.forEach((exercise, exerciseIndex) => {
+      if (!exercise || typeof exercise !== "object") return;
+      const identity = [...getExerciseIdentityKeys(exercise)][0]
+        || getExerciseProgressKey(getExerciseName(exercise))
+        || `source-${sourceIndex}-exercise-${exerciseIndex}`;
+      const sets = getExerciseSets(exercise);
+      const score = sets.reduce((total, set) => {
+        const hasActualValue = Number(set?.enteredReps ?? set?.actualReps ?? set?.completedReps ?? set?.resultReps ?? set?.enteredWeight ?? set?.actualWeight ?? set?.completedWeight ?? set?.resultWeight) > 0;
+        return total + (set?.completed === true ? 4 : 0) + (hasActualValue ? 2 : 0) + 1;
+      }, 0);
+      const existing = byIdentity.get(identity);
+      if (!existing || score > existing.score) {
+        byIdentity.set(identity, { exercise, score });
+      }
+    });
+  });
+
+  if (byIdentity.size) {
+    return [...byIdentity.values()].map(({ exercise }) => exercise);
+  }
+  return [];
+}
+
+function getExerciseSets(exercise = {}) {
+  if (Array.isArray(exercise?.sets)) return exercise.sets;
+  if (Array.isArray(exercise?.actualSets)) return exercise.actualSets;
+  if (Array.isArray(exercise?.completedSets)) return exercise.completedSets;
+  if (Array.isArray(exercise?.plannedSets)) return exercise.plannedSets;
+  return [];
+}
+
+function getExerciseIdentityKeys(exercise = {}) {
+  return new Set([
+    exercise?.id,
+    exercise?.exerciseId,
+    exercise?.basicExerciseId,
+    exercise?.basicExerciseLibraryId,
+    exercise?.libraryExerciseId,
+    exercise?.catalogueId,
+    exercise?.sourceId,
+    exercise?.sourceExerciseId,
+    exercise?.originalExerciseId
+  ]
+    .map((value) => String(value || "").trim())
+    .filter(Boolean));
+}
+
 function isWorkingSet(set = {}) {
   const type = String(set.setType || set.type || "work").trim().toLowerCase();
   return !NON_WORK_SET_TYPES.has(type) && set.excludeFromVolume !== true;
@@ -95,11 +178,12 @@ function isWorkingSet(set = {}) {
 
 function buildSession(workout, exercise, date, plannedExercise = null) {
   const weightMultiplier = getWeightMultiplier(exercise);
-  const sets = (exercise.sets || [])
+  const sourceSets = getExerciseSets(exercise);
+  const sets = sourceSets
     .map((set, index) => ({
       index,
-      reps: toNumber(set.enteredReps ?? set.actualReps ?? set.reps),
-      weight: toNumber(set.enteredWeight ?? set.actualWeight ?? set.weight ?? set.aiSuggestedWeight),
+      reps: toNumber(set.enteredReps ?? set.actualReps ?? set.completedReps ?? set.resultReps ?? set.reps),
+      weight: toNumber(set.enteredWeight ?? set.actualWeight ?? set.completedWeight ?? set.resultWeight ?? set.weight ?? set.aiSuggestedWeight),
       rpe: toNumber(set.enteredRpe ?? set.actualRpe ?? set.rpe),
       rir: toNumber(set.enteredRir ?? set.actualRir ?? set.rir),
       completed: set.completed !== false,
@@ -132,7 +216,7 @@ function buildSession(workout, exercise, date, plannedExercise = null) {
       || workout.programName
       || ""
     ),
-    targetRange: getTargetRange(exercise, exercise.sets || []),
+    targetRange: getTargetRange(exercise, sourceSets),
     sets: sets.length,
     actualSets: sets.map((set) => ({ ...set, volume: round(set.weight * weightMultiplier * set.reps) })),
     plannedSets: (plannedExercise?.sets || []).map((set, index) => ({
@@ -160,6 +244,109 @@ function buildSession(workout, exercise, date, plannedExercise = null) {
       const actualSet = sets.find((set) => set.index === index);
       return actualSet && toNumber(plannedSet.weight) > 0 && actualSet.weight !== toNumber(plannedSet.weight);
     })
+  };
+}
+
+function getExerciseProgressKey(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .trim()
+    .replace(/[ёЁ]/g, "е")
+    .replace(/[«»'`".,:;!?()[\]{}]/g, " ")
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase("ru-RU");
+}
+
+function exercisesMatch(targetExercise, historyExercise) {
+  const targetVariants = [targetExercise, ...getTrainerAlternativeExercises(targetExercise)];
+  const historyVariants = [historyExercise, ...getTrainerAlternativeExercises(historyExercise)];
+
+  const targetNames = new Set(targetVariants
+    .map((exercise) => getExerciseProgressKey(getExerciseName(exercise)))
+    .filter(Boolean));
+  const historyNames = historyVariants
+    .map((exercise) => getExerciseProgressKey(getExerciseName(exercise)))
+    .filter(Boolean);
+  if (historyNames.some((name) => targetNames.has(name))) return true;
+
+  const targetIdentityKeys = new Set(targetVariants.flatMap((exercise) => [
+    ...getExerciseIdentityKeys(exercise)
+  ]));
+  return historyVariants.some((exercise) => (
+    [...getExerciseIdentityKeys(exercise)].some((key) => targetIdentityKeys.has(key))
+  ));
+}
+
+function buildActualSessionComparison(previous, current) {
+  const hasEnoughHistory = Boolean(previous && current);
+  const hasComparableLoad = hasEnoughHistory
+    && previous.volume > 0
+    && current.volume > 0
+    && previous.bestWeight > 0
+    && current.bestWeight > 0;
+
+  return {
+    available: hasEnoughHistory,
+    volumeDelta: hasComparableLoad ? round(current.volume - previous.volume) : null,
+    volumePercent: hasComparableLoad ? percentChange(previous.volume, current.volume) : null,
+    weightDelta: hasComparableLoad ? round(current.bestWeight - previous.bestWeight) : null,
+    repsDelta: hasEnoughHistory ? round(current.totalReps - previous.totalReps) : null,
+    setsDelta: hasEnoughHistory ? current.sets - previous.sets : null
+  };
+}
+
+/**
+ * Returns only facts recorded in completed working sets for one exercise.
+ *
+ * Unlike analyzeExerciseProgress, this intentionally includes zero and one
+ * completed instances so editor UIs can render an honest empty-history state.
+ * The returned sessions are ordered from oldest to newest; dates remain Date
+ * objects for callers that need locale-specific formatting.
+ */
+export function getExerciseActualProgress(history = [], exerciseName = "") {
+  const targetExercise = typeof exerciseName === "object" ? exerciseName : { name: exerciseName };
+  const requestedName = getExerciseName(targetExercise);
+  const key = getExerciseProgressKey(requestedName);
+  const sessions = [];
+  let matchedHistoryCount = 0;
+  let discardedSessionCount = 0;
+
+  if (key || getExerciseIdentityKeys(targetExercise).size) {
+    (Array.isArray(history) ? history : [])
+      .map((workout) => ({
+        workout,
+        date: toDate(workout?.date || workout?.completedAt || workout?.finishedAt || workout?.createdAt)
+      }))
+      .filter((item) => item.date)
+      .sort((a, b) => a.date - b.date)
+      .forEach(({ workout, date }) => {
+        getWorkoutExercises(workout).forEach((exercise) => {
+          if (!exercisesMatch(targetExercise, exercise)) return;
+          matchedHistoryCount += 1;
+
+          const plannedExercise = (workout?.plannedSnapshot?.exercises || []).find((planned) => (
+            exercisesMatch(exercise, planned)
+          ));
+          const session = buildSession(workout, exercise, date, plannedExercise);
+          if (session) sessions.push(session);
+          else discardedSessionCount += 1;
+        });
+      });
+  }
+
+  const lastSession = sessions.at(-1) || null;
+  const previousSession = sessions.length >= 2 ? sessions.at(-2) : null;
+
+  return {
+    name: requestedName,
+    key,
+    sessions,
+    sessionCount: sessions.length,
+    matchedHistoryCount,
+    discardedSessionCount,
+    lastSession,
+    previousSession,
+    comparison: buildActualSessionComparison(previousSession, lastSession)
   };
 }
 

@@ -7,15 +7,22 @@ export default function FoodSearchInput({
   variant = "search"
 }) {
   const isMyProducts = variant === "my-products";
+  const inputId = isMyProducts ? "my-foods-search" : "nutrition-food-search";
+  const searchLabel = isMyProducts
+    ? "Поиск в моей базе продуктов"
+    : "Поиск еды, бренда или блюда";
 
   return (
     <div
       className={`${styles.root} ${isMyProducts ? styles.myProducts : styles.search}`}
       data-css-module-scope="food-search-input"
       data-testid="food-search-input"
+      role="search"
     >
+      <label className={styles.visuallyHidden} htmlFor={inputId}>{searchLabel}</label>
       <span className={styles.searchIcon} aria-hidden="true">⌕</span>
       <input
+        id={inputId}
         className={styles.input}
         data-css-module-control="food-search-input"
         type="search"

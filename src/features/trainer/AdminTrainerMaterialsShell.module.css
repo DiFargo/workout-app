@@ -1,0 +1,46 @@
+:local(.root) {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+:local(.breadcrumb) {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  color: #5f5870;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-weight: 700;
+  gap: 6px;
+  justify-self: start;
+  min-height: 42px;
+  padding: 0 14px 0 10px;
+}
+
+:local(.breadcrumb:hover) {
+  border-color: #d9d0ec;
+  color: #806bb6;
+}
+
+:local(.breadcrumb:focus-visible) {
+  outline: 3px solid rgba(143, 122, 200, 0.28);
+  outline-offset: 2px;
+}
+
+:local(.content),
+:local(.programManager) {
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  :local(.root) {
+    gap: 10px;
+  }
+
+  :local(.breadcrumb) {
+    min-height: 40px;
+  }
+}

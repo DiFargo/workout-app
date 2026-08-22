@@ -1,8 +1,8 @@
 .root {
   box-sizing: border-box;
   width: 100%;
-  height: 54px;
-  padding: 7px 11px 7px 12px;
+  height: 50px;
+  padding: 5px 11px 5px 12px;
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr) auto auto;
   align-items: center;
@@ -15,8 +15,8 @@
 }
 .root > svg { width: 18px; height: 18px; color: #8f7ac8; stroke-width: 2.2; }
 .timer { padding: 0; display: flex; flex-direction: column; align-items: flex-start; border: 0; background: transparent; color: #28262e; font: inherit; }
-.timer small { color: #7b7682; font-size: 10px; font-weight: 600; line-height: 14px; }
-.timer strong { font-size: 19px; font-weight: 700; line-height: 22px; }
+.timer small { color: #7b7682; font-size: 9.5px; font-weight: 600; line-height: 13px; }
+.timer strong { font-size: 18px; font-weight: 700; line-height: 21px; }
 .startButton {
   min-width: 59px;
   height: 30px;

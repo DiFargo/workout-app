@@ -1,0 +1,1079 @@
+.root {
+  box-sizing: border-box;
+  width: min(100%, 1180px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: max(26px, calc(env(safe-area-inset-top) + 18px)) 24px calc(48px + env(safe-area-inset-bottom));
+  color: #28262e;
+  background: #f7f6f8;
+  font-family: var(--font-family-sans, inherit);
+}
+
+.header,
+.headerActions,
+.identityBlock,
+.nameLine,
+.statusLine,
+.profileQuickActions,
+.metricsGrid,
+.workGrid,
+.cardHeader,
+.materialStats,
+.cardActions,
+.accountRows {
+  display: flex;
+}
+
+.header {
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 20px;
+}
+
+.backButton,
+.iconAction,
+.iconOnlyAction,
+.primaryAction,
+.secondaryAction,
+.cardLink,
+.compactAction {
+  font: inherit;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.backButton,
+.iconAction,
+.iconOnlyAction,
+.secondaryAction,
+.compactAction {
+  border: 1px solid #e9e4ec;
+  color: #4e4856;
+  background: #fff;
+}
+
+.backButton {
+  min-height: 44px;
+  padding: 0 14px 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 780;
+}
+
+.backButton svg,
+.iconAction svg,
+.iconOnlyAction svg {
+  width: 20px;
+  height: 20px;
+  color: #806bb6;
+}
+
+.headerActions {
+  align-items: center;
+  gap: 8px;
+}
+
+.iconAction {
+  position: relative;
+  min-height: 44px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 760;
+}
+
+.iconAction b {
+  min-width: 19px;
+  height: 19px;
+  padding: 0 4px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 10px;
+  background: #806bb6;
+}
+
+.iconOnlyAction {
+  width: 44px;
+  height: 44px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 14px;
+}
+
+.backButton:hover,
+.iconAction:hover,
+.iconOnlyAction:hover,
+.secondaryAction:hover,
+.compactAction:hover {
+  border-color: #d9cee7;
+  background: #f7f3fc;
+}
+
+.backButton:active,
+.iconAction:active,
+.iconOnlyAction:active,
+.primaryAction:active,
+.secondaryAction:active,
+.cardLink:active,
+.compactAction:active {
+  transform: scale(0.985);
+}
+
+.profileCard {
+  min-height: 180px;
+  padding: 26px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid #ede8f1;
+  border-radius: 27px;
+  background: linear-gradient(133deg, #fff 0%, #fff 62%, #f6f1fc 100%);
+  box-shadow: 0 15px 36px rgba(72, 63, 87, 0.07);
+}
+
+.identityBlock {
+  min-width: 0;
+  align-items: center;
+  gap: 17px;
+}
+
+.avatar,
+.clientAvatar {
+  flex: 0 0 auto;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+  background: linear-gradient(145deg, #9d8bd0 0%, #7e69b7 100%);
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border: 4px solid #f1edf8;
+  border-radius: 25px;
+  font-size: 24px;
+  box-shadow: 0 8px 18px rgba(91, 73, 129, 0.17);
+}
+
+.avatar img,
+.clientAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.identityCopy {
+  min-width: 0;
+}
+
+.nameLine {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+
+.nameLine h1 {
+  margin: 0;
+  color: #28262e;
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 820;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.roleBadge,
+.statusBadge,
+.cardCount {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.roleBadge {
+  gap: 5px;
+  padding: 6px 9px;
+  color: #806bb6;
+  background: #f0ebf9;
+}
+
+.roleBadge svg {
+  width: 15px;
+  height: 15px;
+}
+
+.email {
+  min-width: 0;
+  margin: 7px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6f6878;
+  font-size: 14px;
+  font-weight: 560;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.email svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  color: #8f7ac8;
+}
+
+.statusLine {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.statusBadge {
+  gap: 6px;
+  padding: 6px 10px;
+  color: #4d795e;
+  background: #eaf5ee;
+}
+
+.statusBadge > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #5da073;
+}
+
+.statusSuspended {
+  color: #a25d58;
+  background: #fbeceb;
+}
+
+.statusSuspended > span {
+  background: #d97870;
+}
+
+.statusPending {
+  color: #9a7137;
+  background: #fff4e2;
+}
+
+.statusPending > span {
+  background: #d49b4c;
+}
+
+.joinedLabel {
+  color: #8a8490;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profileQuickActions {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.inviteCard {
+  margin: 16px 0;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #f0dfc7;
+  border-radius: 20px;
+  color: #5f513f;
+  background: #fffaf2;
+}
+
+.inviteIcon {
+  flex: 0 0 auto;
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: #a87838;
+  background: #fff0d7;
+}
+
+.inviteIcon svg { width: 20px; height: 20px; }
+
+.inviteCard > div:nth-child(2) { min-width: 0; flex: 1 1 auto; }
+.inviteCard .eyebrow { color: #a87838; }
+.inviteCard strong { display: block; color: #4c4034; font-size: 14px; font-weight: 800; }
+.inviteCard p:not(.eyebrow) { margin: 4px 0 0; color: #7d7062; font-size: 12px; font-weight: 560; line-height: 1.35; }
+.inviteMessage { display: block; margin-top: 7px; color: #786347; font-size: 11px; font-weight: 700; line-height: 1.35; }
+
+.inviteActions { flex: 0 0 auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+
+.primaryAction,
+.secondaryAction {
+  min-height: 44px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 780;
+}
+
+.primaryAction {
+  border: 1px solid #8973c3;
+  color: #fff;
+  background: #8f7ac8;
+  box-shadow: 0 8px 16px rgba(106, 84, 157, 0.2);
+}
+
+.primaryAction:hover {
+  background: #806bb6;
+}
+
+.primaryAction svg,
+.secondaryAction svg {
+  width: 18px;
+  height: 18px;
+}
+
+.metricsGrid {
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metricCard {
+  min-height: 118px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  column-gap: 11px;
+  border: 1px solid #ede8f1;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 9px 24px rgba(72, 63, 87, 0.045);
+}
+
+.metricIcon {
+  grid-row: span 2;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+}
+
+.metricIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.metricCard strong {
+  align-self: end;
+  color: #28262e;
+  font-size: 25px;
+  font-weight: 820;
+  line-height: 1;
+}
+
+.metricCard > span:last-child {
+  align-self: start;
+  margin-top: 4px;
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 620;
+  line-height: 1.25;
+}
+
+.metricLavender .metricIcon {
+  color: #806bb6;
+  background: #f0ebf9;
+}
+
+.metricAmber .metricIcon {
+  color: #af7b35;
+  background: #fcf2df;
+}
+
+.metricMuted .metricIcon {
+  color: #8e8894;
+  background: #f2eff4;
+}
+
+.workGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.managementCard {
+  min-width: 0;
+  padding: 21px;
+  border: 1px solid #ede8f1;
+  border-radius: 23px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(72, 63, 87, 0.05);
+}
+
+.clientsCard {
+  grid-row: span 2;
+}
+
+.cardHeader {
+  align-items: flex-start;
+  gap: 11px;
+}
+
+.cardIcon {
+  flex: 0 0 auto;
+  width: 41px;
+  height: 41px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #806bb6;
+  background: #f0ebf9;
+}
+
+.cardIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.eyebrow {
+  margin: 1px 0 3px;
+  color: #8f7ac8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.cardHeader h2 {
+  margin: 0;
+  color: #28262e;
+  font-size: 19px;
+  font-weight: 810;
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+}
+
+.cardCount {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 6px 9px;
+  color: #806bb6;
+  background: #f5f1fa;
+}
+
+.clientList {
+  margin: 18px 0 13px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.clientList li {
+  min-width: 0;
+  min-height: 55px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid #f0ebf3;
+  border-radius: 14px;
+  background: #fbfafc;
+}
+
+.clientAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  color: #806bb6;
+  font-size: 12px;
+  background: #ede7f6;
+}
+
+.clientCopy {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.clientCopy strong,
+.clientCopy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clientCopy strong {
+  color: #36323c;
+  font-size: 13px;
+  font-weight: 780;
+}
+
+.clientCopy small {
+  color: #807987;
+  font-size: 11px;
+  font-weight: 560;
+}
+
+.emptyClients {
+  min-height: 112px;
+  margin: 18px 0 13px;
+  padding: 20px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed #ddd4e7;
+  border-radius: 16px;
+  color: #837c89;
+  font-size: 13px;
+  font-weight: 580;
+  line-height: 1.4;
+  text-align: center;
+  background: #fbfafc;
+}
+
+.cardLink {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 10px 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 0;
+  border-radius: 13px;
+  color: #806bb6;
+  font-size: 13px;
+  font-weight: 780;
+  background: #f5f1fa;
+}
+
+.cardLink:hover {
+  background: #eee8f7;
+}
+
+.cardLink svg {
+  width: 18px;
+  height: 18px;
+}
+
+.cardDescription {
+  margin: 17px 0 0;
+  color: #77717e;
+  font-size: 13px;
+  font-weight: 560;
+  line-height: 1.45;
+}
+
+.materialStats {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.materialStats span {
+  min-height: 31px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #ece5f3;
+  border-radius: 10px;
+  color: #706978;
+  font-size: 11px;
+  font-weight: 650;
+  background: #faf8fc;
+}
+
+.materialStats svg {
+  width: 14px;
+  height: 14px;
+  color: #8f7ac8;
+}
+
+.materialStats b {
+  color: #494350;
+  font-weight: 800;
+}
+
+.cardActions {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.compactAction {
+  min-height: 39px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 12px;
+  color: #5c5662;
+  font-size: 12px;
+  font-weight: 760;
+}
+
+.compactAction svg {
+  width: 16px;
+  height: 16px;
+  color: #806bb6;
+}
+
+.accountRows {
+  margin: 16px 0 0;
+  gap: 9px;
+}
+
+.accountRows > div {
+  min-width: 0;
+  flex: 1 1 0;
+  padding: 10px 11px;
+  display: grid;
+  gap: 3px;
+  border: 1px solid #efeaf3;
+  border-radius: 13px;
+  background: #faf8fc;
+}
+
+.accountRows span {
+  color: #8a8390;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.accountRows strong {
+  color: #403a47;
+  font-size: 13px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.successText {
+  color: #4d795e !important;
+}
+
+.dangerText {
+  color: #a65d58 !important;
+}
+
+.pendingText { color: #9a7137 !important; }
+
+.accessHint {
+  margin: 13px 0;
+  color: #827b88;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.38;
+}
+
+.warningAction {
+  color: #a35e59;
+  border-color: #efcfcc;
+  background: #fff7f6;
+}
+
+.warningAction svg {
+  color: #c4716a;
+}
+
+.warningAction:hover {
+  border-color: #e7bcb8;
+  background: #fff0ef;
+}
+
+.reassignAction {
+  color: #745ab1;
+  border-color: #d8cbed;
+  background: #f8f4fc;
+}
+
+.reassignAction svg { color: #806bb6; }
+
+.roleDialogOverlay {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
+  display: grid;
+  place-items: center;
+  background: rgba(40, 38, 46, 0.42);
+  backdrop-filter: blur(8px);
+}
+
+.roleDialog {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 440px);
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 26px;
+  color: #28262e;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(45, 37, 58, 0.25);
+}
+
+.roleDialogClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 13px;
+  color: #5f5967;
+  cursor: pointer;
+  background: #f5f2f7;
+}
+
+.roleDialogClose svg {
+  width: 20px;
+  height: 20px;
+}
+
+.roleDialogClose:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.roleDialogIcon {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  color: #806bb6;
+  background: #f0ebf9;
+}
+
+.roleDialogIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.roleDialog h2 {
+  max-width: calc(100% - 45px);
+  margin: 0;
+  color: #28262e;
+  font-size: 24px;
+  font-weight: 820;
+  letter-spacing: -0.025em;
+  line-height: 1.16;
+}
+
+.roleDialog h2 + p,
+.roleDialogError {
+  margin: 11px 0 0;
+  color: #716a78;
+  font-size: 14px;
+  font-weight: 560;
+  line-height: 1.45;
+}
+
+.roleDialogError {
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #a65d58;
+  background: #fff1f0;
+}
+
+.roleDialogActions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.dialogInlineAction {
+  width: 100%;
+  min-height: 40px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 12px;
+  color: #806bb6;
+  background: #f4f0fa;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.trainerChoice {
+  margin-top: 15px;
+  display: grid;
+  gap: 7px;
+}
+
+.trainerChoice > span {
+  color: #686170;
+  font-size: 12px;
+  font-weight: 760;
+}
+
+.trainerChoice select {
+  width: 100%;
+  min-height: 45px;
+  padding: 0 12px;
+  border: 1px solid #ded4ea;
+  border-radius: 13px;
+  color: #3e3845;
+  background: #fbfafc;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 690;
+}
+
+.roleDialogCancel,
+.roleDialogConfirm {
+  min-height: 43px;
+  padding: 0 15px;
+  border-radius: 13px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.roleDialogCancel {
+  border: 1px solid #e7e1eb;
+  color: #5f5967;
+  background: #fff;
+}
+
+.roleDialogConfirm {
+  border: 1px solid #826dc0;
+  color: #fff;
+  background: #8f7ac8;
+}
+
+.roleDialogConfirm:hover {
+  background: #806bb6;
+}
+
+.roleDialogCancel:focus-visible,
+.roleDialogConfirm:focus-visible,
+.roleDialogClose:focus-visible {
+  outline: 3px solid rgba(143, 122, 200, 0.32);
+  outline-offset: 2px;
+}
+
+.roleDialogCancel:disabled,
+.roleDialogConfirm:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.restoreAction {
+  color: #4d795e;
+  border-color: #c7e2ce;
+  background: #f2faf4;
+}
+
+.restoreAction svg {
+  color: #5a9b6d;
+}
+
+.backButton:focus-visible,
+.iconAction:focus-visible,
+.iconOnlyAction:focus-visible,
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible,
+.cardLink:focus-visible,
+.compactAction:focus-visible {
+  outline: 3px solid rgba(143, 122, 200, 0.32);
+  outline-offset: 2px;
+}
+
+@media (max-width: 920px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .clientsCard {
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .root {
+    width: 100%;
+    padding: max(16px, calc(env(safe-area-inset-top) + 10px)) 16px calc(30px + env(safe-area-inset-bottom));
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .iconAction {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+
+  .profileCard {
+    padding: 20px;
+    align-items: flex-start;
+    flex-direction: column;
+    border-radius: 23px;
+  }
+
+  .profileQuickActions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .inviteCard {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .inviteActions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .inviteActions .compactAction { flex: 1 1 auto; }
+
+  .primaryAction,
+  .secondaryAction {
+    flex: 1 1 0;
+  }
+}
+
+@media (max-width: 450px) {
+  .headerActions {
+    gap: 6px;
+  }
+
+  .iconAction {
+    min-height: 42px;
+    padding: 0 9px;
+    font-size: 12px;
+  }
+
+  .iconAction span {
+    display: none;
+  }
+
+  .iconAction b {
+    position: absolute;
+    top: -4px;
+    right: -2px;
+  }
+
+  .identityBlock {
+    align-items: flex-start;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 21px;
+    font-size: 20px;
+  }
+
+  .metricsGrid {
+    gap: 9px;
+  }
+
+  .metricCard {
+    min-height: 103px;
+    padding: 13px;
+    grid-template-columns: 33px minmax(0, 1fr);
+    column-gap: 8px;
+  }
+
+  .metricIcon {
+    width: 33px;
+    height: 33px;
+    border-radius: 11px;
+  }
+
+  .metricIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .metricCard strong {
+    font-size: 22px;
+  }
+
+  .metricCard > span:last-child {
+    font-size: 11px;
+  }
+
+  .managementCard {
+    padding: 17px;
+    border-radius: 20px;
+  }
+
+  .accountRows {
+    flex-direction: column;
+  }
+
+  .roleDialog {
+    padding: 24px 20px 20px;
+    border-radius: 22px;
+  }
+
+  .roleDialogActions {
+    flex-direction: column-reverse;
+  }
+
+  .roleDialogCancel,
+  .roleDialogConfirm {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backButton,
+  .iconAction,
+  .iconOnlyAction,
+  .primaryAction,
+  .secondaryAction,
+  .cardLink,
+  .compactAction {
+    transition: none;
+  }
+}

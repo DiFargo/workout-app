@@ -1,23 +1,33 @@
 import {
   Check as ProgramCheckIcon,
+  Copy as ProgramCopyIcon,
   Dumbbell as ProgramDumbbellIcon,
   FileText as ProgramFileTextIcon,
   ListChecks as ProgramListIcon,
   Pencil as ProgramEditIcon,
   Plus as ProgramPlusIcon,
+  Search as ProgramSearchIcon,
   Sparkles as ProgramSparklesIcon,
   Trash2 as ProgramTrashIcon,
   Upload as ProgramUploadIcon
 } from "lucide-react";
 import { useState } from "react";
-import { getTrainerProgramStatusMeta } from "../../utils/trainerProgramLifecycle.js";
+import {
+  getTrainerProgramStatusMeta,
+  TRAINER_PROGRAM_STATUSES
+} from "../../utils/trainerProgramLifecycle.js";
+import { getTrainerProgramFormatMeta, TRAINER_PROGRAM_FORMATS } from "../../utils/trainerProgramFormat.js";
 import styles from "./TrainerProgramOverviewPage.module.css";
 
 function getProgramLibraryStatusMeta(program = {}) {
   const status = getTrainerProgramStatusMeta(program);
 
   if (status.id === "draft") {
-    return { ...status, label: "Черновик", description: "Видит только тренер" };
+    return {
+      ...status,
+      label: "Черновик",
+      description: "Не назначается клиентам, пока не подготовлена"
+    };
   }
 
   if (status.id === "archived") {
@@ -32,7 +42,12 @@ function getProgramLibraryStatusMeta(program = {}) {
     return { ...status, tone: "used", label: "Используется", description: "Программа назначена одному или нескольким клиентам" };
   }
 
-  return { ...status, tone: "ready", label: "Готова", description: "Программу можно использовать и назначать клиентам" };
+  return {
+    ...status,
+    tone: "ready",
+    label: "Готова к назначению",
+    description: "Программу можно назначать клиентам"
+  };
 }
 
 export default function TrainerProgramOverviewPage({
@@ -43,11 +58,13 @@ export default function TrainerProgramOverviewPage({
   canUseAdminFeatures,
   createNewMonthProgramDraft,
   deleteSelectedProgramFromLibrary,
+  duplicateMonthProgramFromLibrary,
   getTemplateStats,
   importMonthProgramWithAi,
   isTrainerNextWorkspace,
   onGoAdmin,
   openProgramFromLibrary,
+  prepareMonthProgramForAssignment,
   setAdminProgramCreateChoiceOpen,
   setAdminSelectedTemplateId
 }) {
@@ -58,6 +75,13 @@ export default function TrainerProgramOverviewPage({
   const [aiImportFile, setAiImportFile] = useState(null);
   const [aiImportLoading, setAiImportLoading] = useState(false);
   const [aiImportError, setAiImportError] = useState("");
+  const [programSearch, setProgramSearch] = useState("");
+  const normalizedProgramSearch = programSearch.trim().toLocaleLowerCase("ru-RU");
+  const visibleTrainingTemplates = normalizedProgramSearch
+    ? adminTrainingTemplates.filter((template) => [template.name, template.description]
+      .filter(Boolean)
+      .some((value) => String(value).toLocaleLowerCase("ru-RU").includes(normalizedProgramSearch)))
+    : adminTrainingTemplates;
 
   function closeCreateChoice() {
     if (aiImportLoading) return;
@@ -119,13 +143,34 @@ export default function TrainerProgramOverviewPage({
         className={isNextWorkspace ? styles.section : "programsOverviewSection"}
         onClick={() => setAdminSelectedTemplateId("")}
       >
-        <div className={isNextWorkspace ? styles.sectionHead : "programsOverviewSectionHead"}>
-          <div>
-            <span>БИБЛИОТЕКА</span>
-            <h2>Готовые программы</h2>
-            <p>Выберите программу для просмотра и редактирования.</p>
+        {!isNextWorkspace ? (
+          <div className="programsOverviewSectionHead">
+            <div>
+              <span>БИБЛИОТЕКА</span>
+              <h2>Готовые программы</h2>
+              <p>Выберите программу для просмотра и редактирования.</p>
+            </div>
           </div>
-        </div>
+        ) : null}
+
+        {isNextWorkspace ? (
+          <div className={styles.toolbar} onClick={(event) => event.stopPropagation()}>
+            <label className={styles.searchField}>
+              <ProgramSearchIcon size={20} aria-hidden="true" />
+              <input
+                type="search"
+                value={programSearch}
+                onChange={(event) => setProgramSearch(event.target.value)}
+                placeholder="Найти программу"
+                aria-label="Найти программу"
+              />
+            </label>
+            <button className={styles.addButton} type="button" onClick={() => setAdminProgramCreateChoiceOpen(true)}>
+              <ProgramPlusIcon size={20} />
+              Добавить
+            </button>
+          </div>
+        ) : null}
 
         {adminTrainingTemplates.length === 0 && !isNextWorkspace ? (
           <div className="programsOverviewEmpty">
@@ -143,11 +188,13 @@ export default function TrainerProgramOverviewPage({
             </div>
           </div>
         ) : (
-          <div className={isNextWorkspace ? styles.grid : "programsOverviewGrid"}>
-            {adminTrainingTemplates.map((template) => {
-              const stats = getTemplateStats(template);
-              const isSelected = adminSelectedTemplateId === template.id;
-              const statusMeta = getProgramLibraryStatusMeta(template);
+          <div className={isNextWorkspace ? styles.grid : "programsOverviewGrid"} data-testid={isNextWorkspace ? "trainer-program-overview-grid" : undefined}>
+            {visibleTrainingTemplates.map((template) => {
+          const stats = getTemplateStats(template);
+          const isSelected = adminSelectedTemplateId === template.id;
+          const statusMeta = getProgramLibraryStatusMeta(template);
+          const isDraft = statusMeta.id === TRAINER_PROGRAM_STATUSES.DRAFT;
+              const formatMeta = getTrainerProgramFormatMeta(template.trainingFormat);
               const createdAt = template.createdAt ? new Date(template.createdAt) : null;
               const createdLabel = createdAt && !Number.isNaN(createdAt.getTime())
                 ? createdAt.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" })
@@ -160,6 +207,7 @@ export default function TrainerProgramOverviewPage({
                     <div>
                       <strong>{template.name || "Без названия"}</strong>
                       <p>{template.description || "Готовая тренировочная программа из библиотеки."}</p>
+                      {formatMeta ? <span className={styles.formatBadge}>{formatMeta.label}</span> : null}
                     </div>
                   </div>
                   <div className={isNextWorkspace ? styles.cardStats : "programsOverviewCardStats"}>
@@ -202,6 +250,7 @@ export default function TrainerProgramOverviewPage({
               return (
                 <article
                   className={`${styles.card}${isSelected ? ` ${styles.selected}` : ""}`}
+                  data-testid="trainer-program-overview-card"
                   key={template.id}
                   onClick={(event) => event.stopPropagation()}
                 >
@@ -213,11 +262,31 @@ export default function TrainerProgramOverviewPage({
                   >
                     {programContent}
                   </button>
-                  {isSelected && (
-                    <div className={styles.selectedActions} aria-label={`Действия с программой «${template.name || "Без названия"}»`}>
-                      <button type="button" onClick={() => openProgramFromLibrary(template.id)}>
+              {isSelected && (
+                <div
+                  className={[
+                    styles.selectedActions,
+                    isDraft ? styles.selectedActionsWithPrepare : ""
+                  ].filter(Boolean).join(" ")}
+                  aria-label={`Действия с программой «${template.name || "Без названия"}»`}
+                >
+                  {isDraft ? (
+                    <button
+                      className={styles.prepareAction}
+                      type="button"
+                      onClick={() => prepareMonthProgramForAssignment?.(template.id)}
+                    >
+                      <ProgramCheckIcon size={17} />
+                      Подготовить к назначению
+                    </button>
+                  ) : null}
+                  <button className={styles.editAction} type="button" onClick={() => openProgramFromLibrary(template.id)}>
                         <ProgramEditIcon size={17} />
                         Редактировать
+                      </button>
+                      <button className={styles.copyAction} type="button" onClick={() => duplicateMonthProgramFromLibrary(template.id)}>
+                        <ProgramCopyIcon size={17} />
+                        Создать копию программы
                       </button>
                       <button className={styles.deleteAction} type="button" onClick={deleteSelectedProgramFromLibrary}>
                         <ProgramTrashIcon size={17} />
@@ -228,13 +297,12 @@ export default function TrainerProgramOverviewPage({
                 </article>
               );
             })}
-            {isNextWorkspace && (
-              <button className={styles.createCard} type="button" onClick={() => setAdminProgramCreateChoiceOpen(true)}>
-                <i><ProgramPlusIcon size={38} /></i>
-                <strong>Добавить программу</strong>
-                <span>Создать с нуля или импортировать</span>
-              </button>
-            )}
+            {isNextWorkspace && visibleTrainingTemplates.length === 0 ? (
+              <div className={styles.empty}>
+                <strong>{adminTrainingTemplates.length ? "Программы не найдены" : "Программ пока нет"}</strong>
+                <span>{adminTrainingTemplates.length ? "Попробуйте изменить запрос поиска." : "Добавьте первую программу через кнопку выше."}</span>
+              </div>
+            ) : null}
           </div>
         )}
       </section>
@@ -245,21 +313,31 @@ export default function TrainerProgramOverviewPage({
             <header>
               <div>
                 <span>НОВАЯ ПРОГРАММА</span>
-                <h2 id="programCreateChoiceTitle">Создать или загрузить?</h2>
+                <h2 id="programCreateChoiceTitle">Выберите формат программы</h2>
               </div>
               <button type="button" onClick={closeCreateChoice} aria-label="Закрыть">×</button>
             </header>
-            <div>
-              <button
-                type="button"
-                onClick={() => {
-                  setAdminProgramCreateChoiceOpen(false);
-                  createNewMonthProgramDraft();
-                }}
-              >
-                <ProgramPlusIcon size={22} />
-                <span><strong>Создать с нуля</strong><small>Открыть пустой конструктор программы.</small></span>
-              </button>
+            <p className={styles.choiceHint}>Формат сохранится в программе и поможет сразу задать структуру тренировок.</p>
+            <div className={styles.choiceOptions}>
+              {TRAINER_PROGRAM_FORMATS.map((format, index) => {
+                const Icon = index === 1 ? ProgramListIcon : index === 2 ? ProgramSparklesIcon : ProgramDumbbellIcon;
+
+                return (
+                  <button
+                    data-program-format={format.id}
+                    key={format.id}
+                    type="button"
+                    onClick={() => {
+                      setAdminProgramCreateChoiceOpen(false);
+                      createNewMonthProgramDraft(format.id);
+                    }}
+                  >
+                    <Icon size={22} />
+                    <span><strong>{format.label}</strong><small>{format.description}</small></span>
+                  </button>
+                );
+              })}
+              <p className={styles.choiceDivider}>или загрузите уже готовую программу</p>
               <button
                 type="button"
                 onClick={() => {

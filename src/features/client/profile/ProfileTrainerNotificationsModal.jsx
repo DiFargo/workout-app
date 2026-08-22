@@ -65,6 +65,10 @@ export default function ProfileTrainerNotificationsModal({
                 const taskDestination = isMessageNotification ? "" : getTaskDestination(task);
                 const messageRead = isMessageNotification && taskStatus.id === "completed";
                 const messageText = String(task.message || task.description || "").trim();
+                const messageContext = isMessageNotification
+                  ? String(task.messageContext || "").trim()
+                  : "";
+                const isReplyNotification = Boolean(messageContext);
                 const taskDueText = task.dueDate
                   ? `До ${new Date(`${task.dueDate}T12:00:00`).toLocaleDateString("ru-RU")}`
                   : "Без срока";
@@ -75,7 +79,7 @@ export default function ProfileTrainerNotificationsModal({
                     data-task-status={taskStatus.id}
                     data-testid="profile-trainer-notification-item"
                     aria-label={isMessageNotification
-                      ? `Сообщение от тренера: ${messageText || task.title}. ${messageRead ? "Прочитано" : "Новое"}`
+                      ? `${isReplyNotification ? "Ответ тренера" : "Сообщение от тренера"}${messageContext ? `: ${messageContext}` : ""}. ${messageText || task.title}. ${messageRead ? "Прочитано" : "Новое"}`
                       : `Задача тренера: ${task.title}. ${taskStatus.label}. ${taskDueText}`}
                   >
                     <i className={styles.itemIcon} aria-hidden="true">
@@ -84,7 +88,8 @@ export default function ProfileTrainerNotificationsModal({
                         : <AlertCircle size={17} strokeWidth={2.1} />}
                     </i>
                     <span className={styles.itemText}>
-                      <strong className={styles.itemTitle}>{isMessageNotification ? "Сообщение от тренера" : task.title}</strong>
+                      <strong className={styles.itemTitle}>{isMessageNotification ? isReplyNotification ? "Ответ тренера" : "Сообщение от тренера" : task.title}</strong>
+                      {messageContext ? <small className={styles.itemContext}>{messageContext}</small> : null}
                       <small className={styles.itemMeta}>{isMessageNotification ? messageText : taskDueText}</small>
                     </span>
                     <em className={styles.itemStatus}>{isMessageNotification ? messageRead ? "Прочитано" : "Новое" : taskStatus.label}</em>

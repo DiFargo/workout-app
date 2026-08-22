@@ -6,73 +6,185 @@ service firebase.storage {
       return request.auth != null;
     }
 
+    function userData(uid) {
+      return firestore.get(/databases/(default)/documents/users/$(uid)).data;
+    }
+
+    function hasActiveMembershipData(data) {
+      return data.keys().hasAll(["role"]) &&
+        data.role in ["client", "trainer", "admin"] &&
+        (!data.keys().hasAll(["active"]) || data.active != false) &&
+        (!data.keys().hasAll(["archived"]) || data.archived != true) &&
+        (!data.keys().hasAll(["accessDisabled"]) || data.accessDisabled != true) &&
+        (!data.keys().hasAll(["membershipStatus"]) ||
+          !(data.membershipStatus in ["revoked", "suspended"]));
+    }
+
+    function isActiveMember() {
+      return signedIn() &&
+        firestore.exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
+        hasActiveMembershipData(userData(request.auth.uid));
+    }
+
     function isOwner(uid) {
-      return signedIn() && request.auth.uid == uid;
+      return isActiveMember() && request.auth.uid == uid;
     }
 
     function isAdmin() {
-      return signedIn() && request.auth.token.admin == true;
+      return isActiveMember() && request.auth.token.admin == true;
     }
 
     function isTrainer() {
-      return signedIn() &&
-        firestore.exists(/databases/(default)/documents/users/$(request.auth.uid)) &&
-        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "trainer";
+      return isActiveMember() && userData(request.auth.uid).role == "trainer";
     }
 
     function isOwnerOrAdmin(uid) {
       return isOwner(uid) || isAdmin();
     }
 
-    function isAssignedTrainer(uid) {
-      return signedIn() &&
-        firestore.exists(/databases/(default)/documents/users/$(uid)) &&
-        (
-          firestore.get(/databases/(default)/documents/users/$(uid)).data.trainerId == request.auth.uid ||
-          firestore.get(/databases/(default)/documents/users/$(uid)).data.assignedTrainerId == request.auth.uid ||
-          firestore.get(/databases/(default)/documents/users/$(uid)).data.coachId == request.auth.uid ||
-          firestore.get(/databases/(default)/documents/users/$(uid)).data.createdByUid == request.auth.uid
+    function hasAssignedTrainerId(data) {
+      return data.keys().hasAll(["assignedTrainerId"]) &&
+        data.assignedTrainerId is string &&
+        data.assignedTrainerId.size() > 0;
+    }
+
+    function hasTrainerId(data) {
+      return data.keys().hasAll(["trainerId"]) &&
+        data.trainerId is string &&
+        data.trainerId.size() > 0;
+    }
+
+    function hasCoachId(data) {
+      return data.keys().hasAll(["coachId"]) &&
+        data.coachId is string &&
+        data.coachId.size() > 0;
+    }
+
+    function hasCreatedByUid(data) {
+      return data.keys().hasAll(["createdByUid"]) &&
+        data.createdByUid is string &&
+        data.createdByUid.size() > 0;
+    }
+
+    // An explicit lifecycle state is authoritative. Historical creator fields
+    // remain for audit purposes but must never retain a former trainer's access
+    // after the client has been unassigned or revoked.
+    function hasExplicitTrainerAssignmentState(data) {
+      return data.keys().hasAll(["trainerAssignmentState"]) &&
+        data.trainerAssignmentState is string &&
+        data.trainerAssignmentState in ["assigned", "unassigned", "revoked"];
+    }
+
+    function hasResolvedAssignedTrainer(data) {
+      return hasExplicitTrainerAssignmentState(data)
+        ? data.trainerAssignmentState == "assigned" && (
+          (hasAssignedTrainerId(data) && data.assignedTrainerId == request.auth.uid) ||
+          (!hasAssignedTrainerId(data) && hasTrainerId(data) && data.trainerId == request.auth.uid) ||
+          (!hasAssignedTrainerId(data) && !hasTrainerId(data) &&
+            hasCoachId(data) && data.coachId == request.auth.uid)
+        )
+        : (
+          (hasAssignedTrainerId(data) && data.assignedTrainerId == request.auth.uid) ||
+          (!hasAssignedTrainerId(data) && hasTrainerId(data) && data.trainerId == request.auth.uid) ||
+          (!hasAssignedTrainerId(data) && !hasTrainerId(data) &&
+            hasCoachId(data) && data.coachId == request.auth.uid) ||
+          (!hasAssignedTrainerId(data) && !hasTrainerId(data) && !hasCoachId(data) &&
+            hasCreatedByUid(data) && data.createdByUid == request.auth.uid)
         );
     }
 
-    match /users/{uid}/{allPaths=**} {
-      allow read, write: if isOwnerOrAdmin(uid);
+    function isAssignedTrainer(uid) {
+      let client = userData(uid);
+      return isTrainer() && hasResolvedAssignedTrainer(client);
     }
 
-    match /progress-photos/{uid}/{allPaths=**} {
+    function isImage() {
+      return request.resource.contentType.matches("image/(jpeg|png|webp)");
+    }
+
+    function isProfileAvatar() {
+      return isImage() && request.resource.size < 5 * 1024 * 1024;
+    }
+
+    function isProgressPhoto() {
+      return request.resource.contentType == "image/webp" &&
+        request.resource.size < 10 * 1024 * 1024;
+    }
+
+    function isFeedbackAttachment() {
+      return request.resource.size < 25 * 1024 * 1024 &&
+        (
+          request.resource.contentType.matches("image/(jpeg|png|webp)") ||
+          request.resource.contentType.matches("video/(mp4|webm|quicktime)") ||
+          request.resource.contentType == "application/pdf" ||
+          request.resource.contentType == "text/plain"
+        );
+    }
+
+    function isExerciseVideo() {
+      return request.resource.size < 250 * 1024 * 1024 &&
+        request.resource.contentType.matches("video/(mp4|webm|quicktime)");
+    }
+
+    function isCatalogImage() {
+      return isImage() && request.resource.size < 10 * 1024 * 1024;
+    }
+
+    match /users/{uid}/profile/{fileName} {
+      allow read: if isOwnerOrAdmin(uid);
+      allow create, update: if isOwnerOrAdmin(uid) && isProfileAvatar();
+      allow delete: if isOwnerOrAdmin(uid);
+    }
+
+    match /progress-photos/{uid}/{photoId}/{fileName} {
       allow read: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
-      allow write: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
+      allow create, update: if (isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid))) &&
+        isProgressPhoto();
+      allow delete: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
     }
 
     match /feedback/{uid}/{allPaths=**} {
       allow read: if isOwnerOrAdmin(uid);
-      allow create, update: if isOwnerOrAdmin(uid) &&
-        request.resource.size < 25 * 1024 * 1024 &&
-        (
-          request.resource.contentType.matches("image/.*") ||
-          request.resource.contentType.matches("video/.*") ||
-          request.resource.contentType == "application/pdf" ||
-          request.resource.contentType.matches("text/.*") ||
-          request.resource.contentType == "application/octet-stream"
-        );
+      allow create, update: if isOwnerOrAdmin(uid) && isFeedbackAttachment();
       allow delete: if isOwnerOrAdmin(uid);
     }
 
-    // Общие видео/материалы тренировок: читать можно авторизованным, менять только admin.
     match /workout-videos/{allPaths=**} {
-      allow read: if signedIn();
-      allow write: if isAdmin();
+      allow read: if isActiveMember();
+      allow create, update: if isAdmin() && isExerciseVideo();
+      allow delete: if isAdmin();
     }
 
     match /exercise-videos/{ownerUid}/{programId}/{allPaths=**} {
-      allow read: if signedIn();
-      allow write: if isAdmin() || (isTrainer() && isOwner(ownerUid));
+      allow read: if isActiveMember();
+      allow create, update: if (isAdmin() || (isTrainer() && isOwner(ownerUid))) &&
+        isExerciseVideo();
+      allow delete: if isAdmin() || (isTrainer() && isOwner(ownerUid));
     }
 
-    // Старые общие пути остаются читаемыми, но менять их может только admin.
+    match /template-exercise-videos/{ownerUid}/{programId}/{allPaths=**} {
+      allow read: if isActiveMember();
+      allow create, update: if (isAdmin() || (isTrainer() && isOwner(ownerUid))) &&
+        isExerciseVideo();
+      allow delete: if isAdmin() || (isTrainer() && isOwner(ownerUid));
+    }
+
     match /exercise-videos/{allPaths=**} {
-      allow read: if signedIn();
-      allow write: if isAdmin();
+      allow read: if isActiveMember();
+      allow create, update: if isAdmin() && isExerciseVideo();
+      allow delete: if isAdmin();
+    }
+
+    match /basic-exercise-assets/{exerciseId}/images/{fileName} {
+      allow read: if isActiveMember();
+      allow create, update: if isAdmin() && isCatalogImage();
+      allow delete: if isAdmin();
+    }
+
+    match /basic-exercise-assets/{exerciseId}/videos/{fileName} {
+      allow read: if isActiveMember();
+      allow create, update: if isAdmin() && isExerciseVideo();
+      allow delete: if isAdmin();
     }
 
     match /admin/{allPaths=**} {

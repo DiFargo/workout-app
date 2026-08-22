@@ -1,7 +1,25 @@
+import { useEffect, useState } from "react";
 import { Dumbbell, Eye, EyeOff } from "lucide-react";
 import styles from "./AuthScreens.module.css";
 
 export function AppSplash() {
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [isOffline, setIsOffline] = useState(() => typeof navigator !== "undefined" && !navigator.onLine);
+
+  useEffect(() => {
+    const updateConnection = () => setIsOffline(!navigator.onLine);
+    const timerId = window.setTimeout(() => setShowRecovery(true), 6000);
+
+    window.addEventListener("online", updateConnection);
+    window.addEventListener("offline", updateConnection);
+
+    return () => {
+      window.clearTimeout(timerId);
+      window.removeEventListener("online", updateConnection);
+      window.removeEventListener("offline", updateConnection);
+    };
+  }, []);
+
   return (
     <main className={styles.appSplash} role="status" aria-label="Загрузка приложения">
       <div className={styles.splashInner}>
@@ -16,6 +34,16 @@ export function AppSplash() {
           <i />
           <i />
         </div>
+        {showRecovery && (
+          <div className={styles.splashRecovery} role="status" aria-live="polite">
+            <p>{isOffline
+              ? "Нет соединения. Проверь интернет и повтори попытку."
+              : "Загрузка занимает больше обычного. Можно попробовать ещё раз."}</p>
+            <button type="button" className={styles.splashRetry} onClick={() => window.location.reload()}>
+              Повторить
+            </button>
+          </div>
+        )}
       </div>
     </main>
   );

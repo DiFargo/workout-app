@@ -30,4 +30,18 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+  // The app is being migrated to the React Compiler rules in small, testable
+  // slices.  Keep these diagnostics visible in local and CI output, while
+  // allowing the existing event-factory/ref patterns to ship until their
+  // owning feature is extracted.  All correctness, security and unused-code
+  // diagnostics remain errors.
+  {
+    files: ['src/**/*.{js,jsx}'],
+    rules: {
+      'react-hooks/purity': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-refresh/only-export-components': 'warn',
+    },
+  },
 ])

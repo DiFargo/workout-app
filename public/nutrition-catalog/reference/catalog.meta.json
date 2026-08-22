@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "nutrition-catalog-verified-v2",
+  "generatedAt": "2026-08-02T06:35:58.008Z",
+  "productCount": 7500,
+  "minimumRequiredRecords": 7500,
+  "sourceKinds": [
+    "USDA FoodData Central SR Legacy"
+  ],
+  "verificationRequirement": "source_record, label_photo_present, or verified, always with evidenceUrl",
+  "compactNutritionScale": 1000,
+  "indexes": {
+    "exact": "alias-exact-index.json (normalized term -> array of product ids)",
+    "prefix": "alias-prefix-index.json (2-7 character token prefix -> array of product ids)",
+    "token": "search-token-index.json (normalized token -> array of product ids)",
+    "barcode": "barcode-index.json (GTIN -> product id)"
+  }
+}

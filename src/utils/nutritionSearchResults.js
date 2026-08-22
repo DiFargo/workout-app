@@ -22,7 +22,13 @@ export function buildNutritionSearchResults({
   const query = String(nutritionSearch || "").trim().toLowerCase();
   const recentIds = nutrition.recent || [];
   const favoriteIds = nutrition.favorites || [];
-  const localFoods = nutritionFoodDatabase.map(normalizeNutritionFood);
+
+  // The picker is normally closed with an empty query. Avoid sorting and
+  // normalizing the whole personal catalog during every diary update.
+  if (!query && !["my", "recent", "favorites"].includes(nutritionSearchTab)) {
+    return [];
+  }
+
   const myFoods = buildMyNutritionFoods(nutrition.myFoods || {});
 
   if (nutritionSearchTab === "my") {
@@ -36,6 +42,7 @@ export function buildNutritionSearchResults({
   }
 
   if (nutritionSearchTab === "recent") {
+    const localFoods = nutritionFoodDatabase.map(normalizeNutritionFood);
     return recentIds
       .map((id) =>
         myFoods.find((food) => food.id === id || food.foodId === id) ||
@@ -48,6 +55,7 @@ export function buildNutritionSearchResults({
   }
 
   if (nutritionSearchTab === "favorites") {
+    const localFoods = nutritionFoodDatabase.map(normalizeNutritionFood);
     return favoriteIds
       .map((id) =>
         myFoods.find((food) => food.id === id || food.foodId === id) ||

@@ -1,5 +1,4 @@
-const RESOLVE_LOGIN_FUNCTION_URL =
-  "https://europe-west1-tren-85720.cloudfunctions.net/resolveLoginAlias";
+import { getAppCheckApiHeaders } from "../../utils/apiClient.js";
 
 function makeLoginResolutionError(code) {
   const error = new Error(code);
@@ -7,17 +6,14 @@ function makeLoginResolutionError(code) {
   return error;
 }
 
-export function getLoginResolutionEndpoint(hostname = globalThis.location?.hostname || "") {
-  return hostname === "127.0.0.1" || hostname === "localhost"
-    ? RESOLVE_LOGIN_FUNCTION_URL
-    : "/api/auth/resolve-login";
+export function getLoginResolutionEndpoint() {
+  return "/api/auth/resolve-login";
 }
 
 export async function resolveEmailForLogin(
   validation,
   {
     fetchImpl = globalThis.fetch,
-    hostname = globalThis.location?.hostname || "",
     timeoutMs = 10000
   } = {}
 ) {
@@ -33,9 +29,9 @@ export async function resolveEmailForLogin(
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetchImpl(getLoginResolutionEndpoint(hostname), {
+    const response = await fetchImpl(getLoginResolutionEndpoint(), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: await getAppCheckApiHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify({ login: validation.loginAlias }),
       signal: controller.signal
     });

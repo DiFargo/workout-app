@@ -1,4 +1,8 @@
 /* Analytics and notification settings live under the trainer cabinet. */
+:local(.scope) {
+  min-width: 0;
+}
+
 :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

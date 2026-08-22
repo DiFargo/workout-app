@@ -25,6 +25,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root.root {
+  --workout-run-content-width: min(402px, 100vw);
+  --workout-run-content-half: min(201px, 50vw);
   --workout-stage-panel-height: 77px;
   --workout-stage-panel-bottom: 0px;
   box-sizing: border-box;
@@ -49,6 +51,36 @@
     max-height: min(874px, 100dvh);
     border-radius: 54px;
     box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
+  }
+}
+
+/* The workout itself stays a focused flow, while the surrounding canvas uses
+   the same wide client workspace as the rest of the app on tablets and PCs. */
+@media (min-width: 700px) and (max-width: 979px) {
+  :global(:root[data-app-theme="warm-light"]) .root.root {
+    --workout-run-content-width: min(680px, calc(100vw - 64px));
+    --workout-run-content-half: min(340px, calc(50vw - 32px));
+    width: min(var(--layout-client-shell-tablet-max), calc(100vw - (var(--layout-tablet-gutter) * 2)));
+    max-width: var(--layout-client-shell-tablet-max);
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border-radius: 28px;
+  }
+}
+
+@media (min-width: 980px) {
+  :global(:root[data-app-theme="warm-light"]) .root.root {
+    --workout-run-content-width: min(760px, calc(100vw - 96px));
+    --workout-run-content-half: min(380px, calc(50vw - 48px));
+    width: min(var(--layout-client-shell-desktop-max), calc(100vw - (var(--layout-client-shell-desktop-gutter) * 2)));
+    max-width: var(--layout-client-shell-desktop-max);
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border-radius: 30px;
   }
 }
 

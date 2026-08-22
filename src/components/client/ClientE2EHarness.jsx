@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
+import { normalizeAppTheme } from "../../app/appTheme";
 import { POST_WORKOUT_FEEDBACK_OPTIONS } from "../../domain/workoutPresentation";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import FirstSetupOnboarding from "../../features/auth/FirstSetupOnboarding";
@@ -12,6 +13,8 @@ import BasicWorkoutQuizPage from "../../features/client/workouts/BasicWorkoutQui
 import WorkoutListPage from "../../features/client/workouts/WorkoutListPage";
 import WorkoutModePage from "../../features/client/workouts/WorkoutModePage";
 import WorkoutPlanPage from "../../features/client/workouts/WorkoutPlanPage";
+import { WorkoutModePickerDialog } from "../../features/client/workouts/WorkoutListDialogs";
+import BasicWorkoutExerciseExplainer from "../../features/client/workouts/BasicWorkoutExerciseExplainer";
 import WorkoutExerciseVideoFrame from "../../features/client/workouts/WorkoutExerciseVideoFrame";
 import WorkoutExerciseSets from "../../features/client/workouts/WorkoutExerciseSets";
 import WorkoutRunStageView, { WorkoutRunExercisePreview } from "../../features/client/workouts/WorkoutRunStageView";
@@ -38,6 +41,8 @@ import ProfileEmailModal from "../../features/client/profile/ProfileEmailModal";
 import ProfileHeroCard from "../../features/client/profile/ProfileHeroCard";
 import ProfileMainMeasurementSnapshot from "../../features/client/profile/ProfileMainMeasurementSnapshot";
 import ProfileMainRoleActions from "../../features/client/profile/ProfileMainRoleActions";
+import ProfileQuickWeightModal from "../../features/client/profile/ProfileQuickWeightModal";
+import ProfileWeightCheckInReminder from "../../features/client/profile/ProfileWeightCheckInReminder";
 import { ProfileNextWorkoutCard } from "../../features/client/profile/ProfileMainSummaryCards";
 import ProfileMeasurementWizardPanel from "../../features/client/profile/ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "../../features/client/profile/ProfileMeasurementsModal";
@@ -72,6 +77,7 @@ import {
   shiftNutritionCalendarMonthKey
 } from "../../utils/nutritionCalendar";
 import { buildAiNutritionMonthlyPlan } from "../../utils/aiNutritionPlanBuilder";
+import { replaceBasicWorkoutExerciseInPlan } from "../../utils/basicWorkoutAlternatives";
 import { getProfileMeasurementFields } from "../../utils/profileMeasurements";
 
 const HARNESS_DATE = "2026-06-22";
@@ -406,22 +412,27 @@ function getHarnessWeekDates(selectedKey) {
 
 function HarnessCabinetActions({
   onOpenPhotos,
+  onOpenWeight,
   onOpenNutrition,
   onOpenJournal,
-  onOpenSettings
+  onOpenSettings,
+  onOpenWorkoutMode
 }) {
   return (
     <ProfileCabinetActionGrid
       showClientOnlyActions
       latestPhotoText="Последние: 22.06.2026"
       latestMeasurementText="22.06.2026"
+      weightText="Пора взвеситься"
       nutritionText="2409 ккал · Рекомпозиция"
       historyText="4 тренировки сохранено"
       onOpenBodyControl={onOpenPhotos}
+      onOpenWeight={onOpenWeight}
       onOpenNutrition={onOpenNutrition}
       onOpenCalendar={onOpenJournal}
       onOpenAccount={onOpenSettings}
       onOpenQuestionnaire={() => {}}
+      onOpenWorkoutMode={onOpenWorkoutMode}
       onOpenNotifications={() => {}}
       onOpenFeedback={() => {}}
       onLogout={() => {}}
@@ -442,9 +453,10 @@ export default function ClientE2EHarness() {
   const workoutHistoryHarnessState = harnessParams?.get("clientHistoryState") || "";
   const harnessPageParam = harnessParams?.get("clientHarnessPage") || "";
   const harnessRunStageParam = harnessParams?.get("clientWorkoutRunStage") || "exercise";
-  const harnessThemeParam = harnessParams?.get("clientHarnessTheme") === "dark-green"
-    ? "dark-green"
-    : "warm-light";
+  const harnessRunIsBasicWorkout = harnessParams?.get("clientWorkoutRunMode") === "basic";
+  // The harness must reproduce production's migration behavior for old
+  // deep links instead of rendering the retired theme directly.
+  const harnessThemeParam = normalizeAppTheme(harnessParams?.get("clientHarnessTheme"));
   const telegramHarnessConnected = harnessParams?.get("clientTelegramState") !== "disconnected";
   const workoutDialogParam = harnessParams?.get("clientWorkoutDialog") || "draft";
   const firstSetupStepValue = Number(harnessParams?.get("clientFirstSetupStep") || 1);
@@ -460,6 +472,7 @@ export default function ClientE2EHarness() {
   const measurementsTabbed = harnessParams?.get("clientMeasurementsTabbed") === "1";
   const measurementsState = harnessParams?.get("clientMeasurementsState") || "default";
   const measurementSnapshotState = harnessParams?.get("clientMeasurementSnapshotState") || "trend";
+  const weightCheckInDue = harnessParams?.get("clientWeightCheckInDue") === "1";
   const measurementWizardState = harnessParams?.get("clientMeasurementStep") || "intro";
   const visibleHarnessWorkouts = workoutHarnessState === "empty" ? [] : harnessWorkouts;
   const visibleHarnessWorkoutHistory = workoutHarnessState === "completed"
@@ -513,6 +526,8 @@ export default function ClientE2EHarness() {
           ? "basicQuiz"
         : harnessPageParam === "exerciseVideo"
           ? "exerciseVideo"
+        : harnessPageParam === "basicExerciseExplainer"
+          ? "basicExerciseExplainer"
         : harnessPageParam === "exerciseSets"
           ? "exerciseSets"
         : harnessPageParam === "workoutRunOverlays"
@@ -545,19 +560,19 @@ export default function ClientE2EHarness() {
     () => ({ ...harnessMeasurementDraftSeed })
   );
   const [harnessMeasurementStatus, setHarnessMeasurementStatus] = useState("");
+  const [harnessQuickWeightOpen, setHarnessQuickWeightOpen] = useState(false);
+  const [harnessQuickWeightSaving, setHarnessQuickWeightSaving] = useState(false);
   const [workoutHistoryOpenId, setWorkoutHistoryOpenId] = useState(
     workoutHistoryHarnessState === "expanded" ? harnessWorkoutHistory[0].id : null
   );
   const [workoutHistoryDeleteCandidate, setWorkoutHistoryDeleteCandidate] = useState(
     workoutHistoryHarnessState === "delete" ? harnessWorkoutHistory[0] : null
   );
-  const [harnessWorkoutModeRemember, setHarnessWorkoutModeRemember] = useState(
-    harnessParams?.get("clientWorkoutModeRemember") === "1"
-  );
   const [harnessBasicWorkoutQuiz, setHarnessBasicWorkoutQuiz] = useState({
     goal: "muscle",
     level: "middle",
-    days: "4"
+    days: "4",
+    twoDayStructure: "recovery_split"
   });
   const harnessRunDeckRef = useRef(null);
   const harnessRunInlineVideoTimerRef = useRef(null);
@@ -588,9 +603,20 @@ export default function ClientE2EHarness() {
   const [harnessRunSaved, setHarnessRunSaved] = useState(harnessRunStageParam === "saved");
   const [harnessRunSavedCard, setHarnessRunSavedCard] = useState(harnessRunStageParam === "saved");
   const [harnessExerciseSets, setHarnessExerciseSets] = useState(() => [
-    { reps: "10", weight: "60", enteredReps: "", enteredWeight: "", completed: harnessParams?.get("clientExerciseSetsState") === "completed" },
-    { reps: "10", weight: "62.5", enteredReps: "", enteredWeight: "", completed: false },
-    { reps: "8", weight: "65", enteredReps: "", enteredWeight: "", completed: false }
+    ...(harnessParams?.get("clientExerciseSetsState") === "timed"
+      ? Array.from({ length: 3 }, () => ({
+          reps: "",
+          weight: "",
+          durationSeconds: 30,
+          enteredReps: "",
+          enteredWeight: "",
+          completed: false
+        }))
+      : [
+          { reps: "10", weight: "60", enteredReps: "", enteredWeight: "", completed: harnessParams?.get("clientExerciseSetsState") === "completed" },
+          { reps: "10", weight: "62.5", enteredReps: "", enteredWeight: "", completed: false },
+          { reps: "8", weight: "65", enteredReps: "", enteredWeight: "", completed: false }
+        ])
   ]);
   const [harnessDishIngredients, setHarnessDishIngredients] = useState([
     {
@@ -643,6 +669,9 @@ export default function ClientE2EHarness() {
     harnessPageParam === "nutritionMealModal" ? { breakfast: true } : {}
   );
   const [nutritionZoukExpanded, setNutritionZoukExpanded] = useState(false);
+  const [nutritionVoiceMode, setNutritionVoiceMode] = useState(false);
+  const [nutritionVoiceRecording, setNutritionVoiceRecording] = useState(false);
+  const [nutritionVoiceFeedback, setNutritionVoiceFeedback] = useState("");
   const [isAiNutritionPlanExpanded, setIsAiNutritionPlanExpanded] = useState(false);
   const [nutritionCreateChoiceOpen, setNutritionCreateChoiceOpen] = useState(false);
   const [nutritionSearch, setNutritionSearch] = useState("");
@@ -666,8 +695,8 @@ export default function ClientE2EHarness() {
   const [individualWorkoutIndexInitialized, setIndividualWorkoutIndexInitialized] = useState(
     () => workoutHarnessState === "completed"
   );
-  const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
+  const [cabinetWorkoutModeOpen, setCabinetWorkoutModeOpen] = useState(false);
   const [workoutReadinessPending, setWorkoutReadinessPending] = useState(null);
   const [cabinetWorkoutJournalOpen, setCabinetWorkoutJournalOpen] = useState(
     () => cabinetModalParam === "calendar" || cabinetModalParam === "history"
@@ -1144,14 +1173,11 @@ export default function ClientE2EHarness() {
       <main data-testid="client-harness-basic-quiz">
         <BasicWorkoutQuizPage
           renderClientMainBottomBar={renderBottomBar}
-          workoutModePreference={{ mode: "basic" }}
-          workoutModeRemember={harnessWorkoutModeRemember}
           basicWorkoutQuiz={harnessBasicWorkoutQuiz}
+          startingWeightProfile={{ weight: "80", height: "178", age: "30", activity: "medium", goal: "recomp" }}
+          workoutHistory={harnessWorkoutHistory}
           onBasicWorkoutQuizChange={setHarnessBasicWorkoutQuiz}
-          onOpenIndividualWorkouts={() => setPage("workouts")}
-          onOpenBasicWorkouts={() => setPage("workouts")}
           onApplyBasicWorkoutPlan={() => setPage("workouts")}
-          onToggleWorkoutModeRemember={setHarnessWorkoutModeRemember}
           canUseTrainerFeatures={false}
           onGoMain={() => setPage("main")}
           onOpenTraining={() => setPage("workouts")}
@@ -1169,14 +1195,11 @@ export default function ClientE2EHarness() {
     return (
       <main data-testid="client-harness-workout-mode">
         <WorkoutModePage
-          workoutModePreference={{ mode: "individual" }}
-          workoutModeRemember={harnessWorkoutModeRemember}
           renderClientMainBottomBar={renderBottomBar}
           canUseTrainerFeatures={false}
           onBackToMain={() => setPage("main")}
           onOpenBasicWorkouts={() => setPage("workouts")}
           onOpenIndividualWorkouts={() => setPage("workouts")}
-          onToggleWorkoutModeRemember={setHarnessWorkoutModeRemember}
           onOpenTraining={() => setPage("workouts")}
           onOpenNutrition={() => setPage("nutrition")}
           onOpenCabinet={() => setPage("cabinet")}
@@ -1229,6 +1252,19 @@ export default function ClientE2EHarness() {
         ))
       }));
     };
+    const replaceHarnessRunExercise = (exerciseId, alternative) => {
+      const { plan: nextPlan, replacement } = replaceBasicWorkoutExerciseInPlan(
+        { source: "basic", workouts: [harnessRunWorkout] },
+        harnessRunWorkout.id,
+        exerciseId,
+        alternative
+      );
+
+      if (!replacement) return false;
+
+      setHarnessRunWorkout(nextPlan.workouts[0]);
+      return true;
+    };
     const noHeader = !harnessRunSaved;
 
     return (
@@ -1265,9 +1301,15 @@ export default function ClientE2EHarness() {
             normalizeExercise={(exercise) => exercise}
             openVideoId={null}
             openWorkoutExerciseModal={(setter, exerciseId) => setter(exerciseId)}
-            plan={{ workouts: [harnessRunWorkout] }}
+            plan={{
+              source: harnessRunIsBasicWorkout ? "basic" : undefined,
+              workouts: [harnessRunWorkout]
+            }}
             postWorkoutFeedback={{ advice: "Отличная работа" }}
             requestLeaveWorkout={() => setPage("main")}
+            replaceBasicWorkoutExercise={
+              harnessRunIsBasicWorkout ? replaceHarnessRunExercise : undefined
+            }
             restTimerDuration={119}
             restTimerRunning={harnessRunRestTimerRunning}
             restTimerSeconds={harnessRunRestTimerSeconds}
@@ -1323,7 +1365,11 @@ export default function ClientE2EHarness() {
             warmupTimerDuration={harnessRunWarmupTimerDuration}
             warmupTimerRunning={harnessRunWarmupTimerRunning}
             warmupTimerSeconds={harnessRunWarmupTimerSeconds}
-            workout={harnessRunWorkout}
+            workout={
+              harnessRunIsBasicWorkout
+                ? { ...harnessRunWorkout, source: "basic" }
+                : harnessRunWorkout
+            }
             workoutClientComment={harnessRunClientComment}
             workoutDurationText="42 мин"
             workoutFinishedAt={Date.parse("2026-06-22T18:42:00.000Z")}
@@ -1419,11 +1465,52 @@ export default function ClientE2EHarness() {
     );
   }
 
+  if (page === "basicExerciseExplainer") {
+    const exercise = {
+      id: "client_harness_basic_exercise_explainer",
+      name: "Жим штанги лёжа",
+      equipment: "Штанга",
+      video: "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4",
+      sets: []
+    };
+
+    return (
+      <main data-testid="client-harness-basic-exercise-explainer">
+        <WorkoutRunPageShell noHeader>
+          <WorkoutRunExercisePreview exercise={exercise} hasVideo videoOpen>
+            <BasicWorkoutExerciseExplainer exercise={exercise}>
+              <WorkoutExerciseVideoFrame
+                exercise={exercise}
+                exerciseVideoFailed={false}
+                fallbackHint="Держите лопатки сведёнными и контролируйте амплитуду."
+                inlinePlayingVideoId=""
+                inlineVideoControlsVisible
+                onFullscreenVideo={() => {}}
+                onInlineVideoPlayFailed={() => {}}
+                onRetryVideo={() => {}}
+                onVideoCanPlay={() => {}}
+                onVideoEnded={() => {}}
+                onVideoError={() => {}}
+                onVideoLoadedMetadata={() => {}}
+                onVideoLoadStart={() => {}}
+                onVideoPause={() => {}}
+                onVideoPlay={() => {}}
+                videoLoadingId=""
+                videoRetryToken={0}
+              />
+            </BasicWorkoutExerciseExplainer>
+          </WorkoutRunExercisePreview>
+        </WorkoutRunPageShell>
+      </main>
+    );
+  }
+
   if (page === "exerciseSets") {
-    const hasExternalWeight = harnessParams?.get("clientExerciseSetsState") !== "bodyweight";
+    const isTimedExercise = harnessParams?.get("clientExerciseSetsState") === "timed";
+    const hasExternalWeight = harnessParams?.get("clientExerciseSetsState") !== "bodyweight" && !isTimedExercise;
     const exercise = {
       id: "client_harness_exercise_sets",
-      name: hasExternalWeight ? "Жим штанги лёжа" : "Отжимания",
+      name: isTimedExercise ? "Планка" : hasExternalWeight ? "Жим штанги лёжа" : "Отжимания",
       video: "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4",
       sets: harnessExerciseSets
     };
@@ -1491,8 +1578,6 @@ export default function ClientE2EHarness() {
           individualWorkoutIndexInitialized={individualWorkoutIndexInitialized}
           setIndividualWorkoutIndex={setIndividualWorkoutIndex}
           setIndividualWorkoutIndexInitialized={setIndividualWorkoutIndexInitialized}
-          workoutModeModalOpen={workoutModeModalOpen}
-          setWorkoutModeModalOpen={setWorkoutModeModalOpen}
           workoutHistoryModalOpen={workoutHistoryModalOpen}
           setWorkoutHistoryModalOpen={setWorkoutHistoryModalOpen}
           workoutDraftRestorePrompt={null}
@@ -1509,7 +1594,6 @@ export default function ClientE2EHarness() {
           loadHistory={() => {}}
           openWorkout={() => {}}
           onOpenBasicMode={() => {}}
-          onOpenIndividualWorkouts={() => {}}
           openCabinetWorkoutHistory={() => setPage("cabinet")}
           handleWorkoutDraftChoice={() => {}}
         />
@@ -1673,6 +1757,11 @@ export default function ClientE2EHarness() {
           nutritionToday,
           nutritionTotals,
           nutritionUndoDelete: null,
+          nutritionVoiceAnalyzing: false,
+          nutritionVoiceAudioLevel: nutritionVoiceRecording ? 0.58 : 0,
+          nutritionVoiceFeedback,
+          nutritionVoiceMode,
+          nutritionVoiceRecording,
           nutritionWeekDates,
           nutritionZoukExpanded,
           openDishIngredientPicker: () => setDishIngredientPickerOpen(true),
@@ -1699,6 +1788,14 @@ export default function ClientE2EHarness() {
           selectNutritionDate: setNutritionDateKey,
           selectNutritionPhotoAiCandidate: () => {},
           selectedNutritionFood,
+          startNutritionVoiceCapture: () => {
+            setNutritionVoiceRecording(true);
+            setNutritionVoiceFeedback("Говорите…");
+          },
+          stopNutritionVoiceCapture: ({ cancelled = false } = {}) => {
+            setNutritionVoiceRecording(false);
+            setNutritionVoiceFeedback(cancelled ? "" : "Тестовая запись завершена.");
+          },
           setBarcodeScannerOpen: () => {},
           setDishIngredientPickerOpen,
           setDishIngredientSearch,
@@ -1733,6 +1830,11 @@ export default function ClientE2EHarness() {
           },
           showRecentNutritionFoods,
           todayNutritionKey,
+          toggleNutritionVoiceMode: () => {
+            setNutritionVoiceMode((current) => !current);
+            setNutritionVoiceRecording(false);
+            setNutritionVoiceFeedback("");
+          },
           updateSelectedDishTotalWeight: () => {},
           updateSelectedNutritionFoodField: updateHarnessSelectedFoodField,
           updateSelectedNutritionPortionUnit: (unit) => updateHarnessSelectedFoodField("portion", `100 ${unit}`),
@@ -1753,13 +1855,43 @@ export default function ClientE2EHarness() {
       <>
         <HarnessCabinetActions
           onOpenPhotos={() => setCabinetPhotosOpen(true)}
+          onOpenWeight={() => setHarnessQuickWeightOpen(true)}
           onOpenNutrition={() => setCabinetNutritionOpen(true)}
           onOpenJournal={() => {
             setCabinetWorkoutJournalTab("calendar");
             setCabinetWorkoutJournalOpen(true);
           }}
           onOpenSettings={() => setCabinetSettingsOpen(true)}
+          onOpenWorkoutMode={() => setCabinetWorkoutModeOpen(true)}
         />
+        <WorkoutModePickerDialog
+          open={cabinetWorkoutModeOpen}
+          workoutModePreference={{ mode: "individual", remember: false }}
+          onClose={() => setCabinetWorkoutModeOpen(false)}
+          onOpenBasic={() => {
+            setCabinetWorkoutModeOpen(false);
+            setPage("basicQuiz");
+          }}
+          onOpenIndividual={() => {
+            setCabinetWorkoutModeOpen(false);
+            setPage("workouts");
+          }}
+        />
+        {harnessQuickWeightOpen && (
+          <ProfileQuickWeightModal
+            open
+            initialWeight=""
+            saving={harnessQuickWeightSaving}
+            onClose={() => setHarnessQuickWeightOpen(false)}
+            onSave={async () => {
+              setHarnessQuickWeightSaving(true);
+              await Promise.resolve();
+              setHarnessQuickWeightSaving(false);
+              setHarnessQuickWeightOpen(false);
+              return true;
+            }}
+          />
+        )}
         <ProfileMeasurementsModal
           open={cabinetMeasurementsOpen}
           latestMeasurement={measurementsState === "empty" ? null : harnessLatestMeasurement}
@@ -1991,6 +2123,18 @@ export default function ClientE2EHarness() {
         }}
       />
 
+      {weightCheckInDue && (
+        <ProfileWeightCheckInReminder
+          checkIn={{
+            isDue: true,
+            isFirst: measurementSnapshotState === "empty",
+            isOverdue: measurementSnapshotState !== "empty",
+            latestDateText: "16.06.2026"
+          }}
+          onOpen={() => setHarnessQuickWeightOpen(true)}
+        />
+      )}
+
       <ProfileMainMeasurementSnapshot
         measurementSeries={measurementSnapshotState === "empty"
           ? []
@@ -2005,6 +2149,22 @@ export default function ClientE2EHarness() {
         latestWeight={measurementSnapshotState === "empty" ? 0 : 89}
         weightChange={measurementSnapshotState === "trend" ? -0.5 : 0}
       />
+
+      {harnessQuickWeightOpen && (
+        <ProfileQuickWeightModal
+          open
+          initialWeight=""
+          saving={harnessQuickWeightSaving}
+          onClose={() => setHarnessQuickWeightOpen(false)}
+          onSave={async () => {
+            setHarnessQuickWeightSaving(true);
+            await Promise.resolve();
+            setHarnessQuickWeightSaving(false);
+            setHarnessQuickWeightOpen(false);
+            return true;
+          }}
+        />
+      )}
 
     </>
   ));

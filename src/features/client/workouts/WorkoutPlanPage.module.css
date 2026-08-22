@@ -97,6 +97,21 @@
     gap: 10px;
   }
 
+  :global(:root[data-app-theme="warm-light"]) .microcycleTabs {
+    background: #f5f2f7;
+    border-color: #efebf3;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .microcycleTabs button {
+    min-height: 34px;
+    color: #7b7682;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .microcycleTabs button.activeMicrocycleTab {
+    color: #806bb6;
+    background: #ffffff;
+  }
+
   :global(:root[data-app-theme="warm-light"]) .week.week {
     overflow: hidden;
     background: #ffffff;
@@ -131,6 +146,11 @@
     color: #7b7682;
     font-size: 10px;
     font-weight: 550;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .week.week button .groupSummary {
+    color: #8f7ac8;
+    font-weight: 700;
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button strong {
@@ -277,10 +297,78 @@
     line-height: 1.15;
   }
 
+  .completedPlanNotice {
+    display: grid;
+    margin-top: 12px;
+    padding: 14px 15px;
+    gap: 4px;
+    background: var(--color-workout-plan-complete-surface);
+    border: 1px solid var(--color-workout-plan-complete-border);
+    border-radius: 18px;
+  }
+
+  .completedPlanNotice strong {
+    color: var(--color-workout-plan-complete);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .completedPlanNotice span {
+    color: var(--color-workout-plan-row-muted);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .completedPlanNotice button {
+    min-height: 40px;
+    margin-top: 7px;
+    padding: 8px 13px;
+    color: #fff;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 750;
+    background: var(--color-workout-plan-accent);
+    border: 0;
+    border-radius: 13px;
+  }
+
+  .completedPlanNotice button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
   .weekList {
     display: grid;
     margin-top: 14px;
     gap: 12px;
+  }
+
+  .microcycleTabs {
+    display: grid;
+    padding: 4px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    background: var(--color-workout-plan-icon-surface);
+    border: 1px solid var(--color-workout-plan-card-border);
+    border-radius: 16px;
+  }
+
+  .microcycleTabs button {
+    min-height: 34px;
+    padding: 0 8px;
+    color: var(--color-workout-plan-row-muted);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 750;
+    background: transparent;
+    border: 0;
+    border-radius: 11px;
+  }
+
+  .microcycleTabs button.activeMicrocycleTab {
+    color: var(--color-workout-plan-accent);
+    background: var(--color-workout-plan-card-surface);
+    box-shadow: 0 1px 5px rgba(60, 48, 82, 0.08);
   }
 
   .week {
@@ -339,6 +427,16 @@
     font-size: 11px;
     font-style: normal;
     font-weight: 650;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .groupSummary {
+    overflow: hidden;
+    color: var(--color-workout-plan-accent);
+    font-size: 10px;
+    font-weight: 750;
     line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;

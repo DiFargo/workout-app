@@ -228,13 +228,6 @@
   background: var(--background-profile-nutrition-modal-calorie-over-fill);
 }
 
-.proteinFill {
-  left: 0;
-  width: 3px;
-  border-radius: 0 5px 0 11px;
-  background: var(--background-profile-nutrition-modal-protein-fill);
-}
-
 .legend {
   margin: 8px 0 0;
   display: flex;
@@ -265,10 +258,6 @@
 
 .factLegend {
   background: var(--background-profile-nutrition-modal-legend-fact);
-}
-
-.proteinLegend {
-  background: var(--background-profile-nutrition-modal-legend-protein);
 }
 
 .planLegend {
@@ -348,7 +337,7 @@
 .macroGrid {
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 5px;
 }
 

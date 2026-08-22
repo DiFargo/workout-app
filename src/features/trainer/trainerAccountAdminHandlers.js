@@ -195,7 +195,7 @@ export async function updateUserTrainerRoleWithDeps({
 }) {
   if (!canUseAdminFeatures() || !targetUser?.id) {
     setAdminClientStatus("Только админ может назначать роль тренера.");
-    return;
+    return false;
   }
 
   const nextRole = makeTrainer ? "trainer" : "client";
@@ -210,8 +210,10 @@ export async function updateUserTrainerRoleWithDeps({
     setAdminAllUsersList((prev) => prev.map((item) => item.id === targetUser.id ? { ...item, role: nextRole } : item));
     setAdminSelectedClient((prev) => prev?.id === targetUser.id ? { ...prev, role: nextRole } : prev);
     setAdminClientStatus(makeTrainer ? "Роль тренера назначена." : "Роль тренера снята.");
+    return true;
   } catch (error) {
     console.error("Trainer role update error:", error);
     setAdminClientStatus("Не удалось изменить роль тренера. Проверь права Firestore.");
+    return false;
   }
 }

@@ -1,10 +1,10 @@
 .constructor {
   isolation: isolate;
-  --purple: #5b28f4;
-  --purple-soft: #f4f0ff;
-  --ink: #181922;
-  --muted: #777b8b;
-  --line: #e5e7ee;
+  --purple: #806bb6;
+  --purple-soft: #f0ebfa;
+  --ink: #28262e;
+  --muted: #7b7682;
+  --line: #efebf3;
   display: grid;
   gap: 16px;
   color: var(--ink);
@@ -37,7 +37,7 @@
   background: linear-gradient(145deg, #faf8ff, #f3efff);
 }
 
-.programIcon { width: 48px; height: 48px; color: #fff; border: 0; background: linear-gradient(145deg, #6d35ff, #4b18e6); }
+.programIcon { width: 48px; height: 48px; color: #fff; border: 0; background: linear-gradient(145deg, #9a87ce, #806bb6); }
 .programName { min-width: 0; display: grid; align-content: center; gap: 4px; }
 .programName > span:first-child { color: var(--muted); font-size: 10px; line-height: 1.2; }
 .nameInputRow {
@@ -87,7 +87,7 @@
   white-space: nowrap;
 }
 .programActions .deleteButton { border-color: #ff777d; color: #ef343b; }
-.programActions .saveButton { min-width: 124px; border-color: var(--purple); background: linear-gradient(135deg, #6935f8, #4f20e6); color: #fff; box-shadow: 0 7px 18px rgba(91, 40, 244, .23); }
+.programActions .saveButton { min-width: 124px; border-color: var(--purple); background: linear-gradient(135deg, #9a87ce, #806bb6); color: #fff; box-shadow: 0 7px 18px rgba(128, 107, 182, .23); }
 
 .editorGrid { min-width: 0; display: grid; grid-template-columns: 248px minmax(600px, 1fr); align-items: start; gap: 12px; }
 .daysPanel, .dayEditor { border: 1px solid var(--line); border-radius: 14px; background: #fff; }
@@ -99,12 +99,14 @@
 
 .daysList { display: grid; gap: 9px; }
 
-.dayCard { min-height: 74px; display: grid; grid-template-columns: 14px 24px minmax(0, 1fr) 16px; align-items: center; gap: 7px; padding: 9px 8px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.dayCard { min-height: 74px; display: grid; grid-template-columns: 24px minmax(0, 1fr) 30px; align-items: center; gap: 8px; padding: 9px 8px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 .dayCard.selectedDay { border-color: #7b4aff; background: linear-gradient(135deg, #fff, #faf8ff); box-shadow: inset 0 0 0 1px rgba(91, 40, 244, .08); }
 .dayGrip { color: #9498a6; }
-.dayCard > button { min-width: 0; display: grid; gap: 2px; padding: 0; border: 0; background: transparent; text-align: left; }
-.dayCard strong { font-size: 12px; }
-.dayCard button > span { color: var(--purple); font-size: 10px; }
+.dayCard > svg { grid-column: 1; justify-self: center; flex: 0 0 auto; }
+.dayCard > button { min-width: 0; display: grid; grid-column: 2; align-content: center; gap: 2px; padding: 0; border: 0; background: transparent; text-align: left; }
+.dayCard > .dayMenuWrap { grid-column: 3; justify-self: end; }
+.dayCard strong { min-width: 0; overflow: hidden; font-size: 12px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+.dayCard button > span { min-width: 0; overflow: hidden; color: var(--purple); font-size: 10px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .dayCard small { min-width: 0; overflow: hidden; color: var(--muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .dayCard small i { width: 5px; height: 5px; display: inline-block; margin-right: 5px; border-radius: 50%; background: currentColor; }
 .dayMenuWrap { position: relative; display: block; }
@@ -123,6 +125,53 @@
 .dayEditorModalHeader { position: sticky; z-index: 2; top: 0; min-height: 58px; display: flex; align-items: center; justify-content: space-between; margin: 0 -18px; padding: 0 18px; border-bottom: 1px solid #EFEBF3; background: #fff; }
 .dayEditorModalHeader strong { color: #28262E; font-size: 15px; }
 .dayEditorModalHeader button { width: 38px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #F5F2F7; color: #28262E; }
+
+/* The constructor is also used inside the program-library sheet.  In that
+   context the sheet itself owns the backdrop, title controls and save bar;
+   turning a selected day into a second fixed viewport layer would cover
+   those actions.  Keep the day editor in the sheet's scrollable body. */
+.embeddedInModal { min-height: 0; gap: 0; }
+.embeddedInModal .programBar { display: none; }
+.embeddedInModal .editorGrid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+.embeddedInModal .editorGrid:not(.editorGridPicker) .daysPanel { display: none; }
+.embeddedInModal .dayEditorModal {
+  position: relative;
+  z-index: 0;
+  inset: auto;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding: 0 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: none;
+}
+.embeddedInModal .dayEditorModalHeader { margin: 0 -12px; padding: 0 12px; }
+.embeddedInModal .exerciseTable {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: #cbbce7 transparent;
+  scrollbar-width: thin;
+}
+.embeddedInModal .exerciseHead,
+.embeddedInModal .exerciseRow { min-width: 900px; }
+
+@media (min-width: 761px) {
+  .embeddedInModal .dayHeader > label input {
+    width: 100%;
+    max-width: none;
+  }
+}
+.embeddedInModal .exerciseTable::-webkit-scrollbar { height: 8px; }
+.embeddedInModal .exerciseTable::-webkit-scrollbar-thumb {
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #cbbce7;
+}
 .breadcrumbs { height: 42px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 10px; }
 .breadcrumbs strong { color: var(--purple); }
 .dayHeader { min-height: 88px; display: grid; grid-template-columns: minmax(170px, 1fr) auto; align-items: center; gap: 14px; }
@@ -185,7 +234,17 @@
 .exerciseActions { display: flex; align-items: center; justify-content: flex-end; gap: 1px; }
 .exerciseActions button { width: 28px; height: 30px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #555b68; }
 .exerciseActions button:last-child { color: #777c88; }
+.groupExerciseCard { border-left: 3px solid #1686d9; }
+.groupExerciseCard .exerciseRow { background: #fcfbff; }
+.groupExerciseMedia { background: #eee9fb; color: #806bb6; }
+.groupMetric { min-width: 0; display: grid; align-content: center; gap: 3px; padding: 0 4px; color: var(--ink); text-align: center; }
+.groupMetric small { overflow: hidden; color: var(--muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.groupMetric b { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .expandedEditor { display: grid; grid-template-columns: 1.4fr 1fr auto auto; align-items: end; gap: 10px; padding: 12px 16px 14px 88px; border-top: 1px dashed var(--line); background: #faf9fe; }
+.groupExpandedEditor { grid-template-columns: minmax(0, 1fr) auto; }
+.groupExpandedEditor .groupExerciseEditor,
+.groupExpandedEditor .blockFields { grid-column: 1 / -1; }
+.deleteExerciseButton { min-height: 40px; grid-column: 1 / -1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid #e9b8bd; border-radius: 10px; background: #fffafa; color: #c96b73; font-size: 11px; font-weight: 750; }
 .expandedEditor label { display: grid; gap: 5px; }
 .expandedEditor label > span { color: var(--muted); font-size: 8px; }
 .expandedEditor input { min-width: 0; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 10px; }
@@ -203,6 +262,16 @@
 .videoUpload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .moveButtons { display: flex; gap: 5px; }
 .moveButtons button { height: 36px; display: inline-flex; align-items: center; gap: 3px; padding: 0 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 9px; }
+.alternativeEditor { grid-column: 1 / -1; display: grid; gap: 8px; margin-top: 2px; padding: 12px; border: 1px solid #e4ddf3; border-radius: 10px; background: #fff; }
+.alternativeEditor > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.alternativeEditor > header > div { display: grid; gap: 3px; }
+.alternativeEditor strong { color: var(--ink); font-size: 10px; }
+.alternativeEditor small, .alternativeEditor label > span { color: var(--muted); font-size: 8px; }
+.alternativeEditor > header > span { flex: 0 0 auto; padding: 3px 7px; border-radius: 999px; background: #f0ebfb; color: var(--purple); font-size: 9px; font-weight: 750; }
+.alternativeEditor label { display: grid; gap: 5px; }
+.alternativeList { display: flex; flex-wrap: wrap; gap: 6px; }
+.alternativeList > span { display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 3px 5px 3px 9px; border: 1px solid #ded3f6; border-radius: 999px; background: #f7f3ff; color: #66508e; font-size: 9px; font-weight: 700; }
+.alternativeList button { width: 20px; height: 20px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: #fff; color: #806bb6; font-size: 15px; line-height: 1; }
 .setsEditor { grid-column: 1 / -1; display: grid; gap: 6px; margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--line); }
 .setsEditor header, .setRow { display: grid; grid-template-columns: 54px repeat(2, minmax(90px, 1fr)) 34px; align-items: center; gap: 6px; }
 .setsEditor header { padding: 0 4px; color: var(--muted); font-size: 8px; text-align: center; }
@@ -222,9 +291,9 @@
 .exerciseAddRow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px; margin-top: 12px; }
 .addExerciseButton { width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 9px; margin: 0; border: 1px dashed #7f56f5; border-radius: 9px; background: #fff; color: var(--purple); font-size: 12px; font-weight: 700; }
 .specialBlockMenu { position: relative; }
-.specialBlockMenu summary { min-height: 48px; display: flex; align-items: center; gap: 6px; padding: 0 13px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: #686d7b; font-size: 10px; font-weight: 650; white-space: nowrap; cursor: pointer; list-style: none; }
-.specialBlockMenu summary::-webkit-details-marker { display: none; }
-.specialBlockMenu > div { position: absolute; z-index: 30; top: calc(100% + 5px); right: 0; width: 168px; display: grid; gap: 3px; padding: 5px; border: 1px solid var(--line); border-radius: 9px; background: #fff; box-shadow: 0 14px 30px rgba(24, 25, 34, .14); }
+.specialBlockMenu > button { min-height: 48px; display: flex; align-items: center; gap: 6px; padding: 0 13px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: #686d7b; font-size: 10px; font-weight: 650; white-space: nowrap; }
+.specialBlockMenu > button[aria-expanded="true"] { border-color: #b9a8ff; background: #faf8ff; color: var(--purple); }
+.specialBlockMenu > div { position: absolute; z-index: 30; right: 0; bottom: calc(100% + 5px); width: 176px; display: grid; gap: 3px; padding: 5px; border: 1px solid var(--line); border-radius: 9px; background: #fff; box-shadow: 0 14px 30px rgba(24, 25, 34, .14); }
 .specialBlockMenu button { min-height: 32px; padding: 0 9px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); font-size: 9px; text-align: left; }
 .specialBlockMenu button:hover { background: #f7f6f8; color: var(--purple); }
 .blockBuilder { display: grid; gap: 10px; margin: 10px 0 14px; padding: 12px; border: 1px solid var(--line); border-radius: 11px; background: #faf9fe; }
@@ -246,11 +315,26 @@
 .taskBlock > header small { overflow: hidden; color: var(--muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
 .taskBlock > header button { width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 7px; background: #fff4f4; color: #de4545; }
 .taskBlock > header button:disabled { background: #f5f5f7; color: #b9bbc2; }
-.blockFields { display: grid; grid-template-columns: repeat(6, minmax(80px, 1fr)); gap: 7px; }
+.groupExerciseEditor { display: grid; gap: 7px; padding: 8px; border: 1px solid #e5dff7; border-radius: 8px; background: #faf9fe; }
+.groupExerciseEditor > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.groupExerciseEditor > header strong { font-size: 9px; }
+.groupExerciseEditor > header span { color: var(--muted); font-size: 8px; }
+.groupExerciseSlots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.groupExerciseSlot { min-width: 0; display: grid; grid-template-columns: 24px minmax(0, 1fr) 28px; align-items: center; gap: 6px; }
+.groupExerciseSlot b { width: 24px; height: 28px; display: grid; place-items: center; border-radius: 7px; background: #eee9fb; color: var(--purple); font-size: 9px; }
+.groupExerciseSlot select, .groupExerciseSlot input { min-width: 0; width: 100%; height: 30px; padding: 0 7px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); font-size: 9px; }
+.groupExerciseSlot input:focus { border-color: #8a66f7; outline: 0; box-shadow: 0 0 0 2px rgba(91, 40, 244, .08); }
+.groupExerciseSlot > button { width: 28px; height: 28px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 7px; background: #fff4f4; color: #de4545; }
+.groupExerciseSearch { position: relative; min-width: 0; }
+.groupExerciseSearch .exerciseSearchDropdown { top: calc(100% + 4px); }
+.groupSearchEmpty { display: block; padding: 9px; color: var(--muted); font-size: 8px; line-height: 1.35; }
+.groupExerciseEditor > button { justify-self: start; min-height: 30px; display: inline-flex; align-items: center; gap: 5px; padding: 0 9px; border: 1px dashed #a78ce7; border-radius: 7px; background: #fff; color: var(--purple); font-size: 9px; font-weight: 700; }
+.groupExerciseEditor > button:disabled { border-color: var(--line); color: var(--muted); cursor: default; }
+.blockFields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
 .blockFields label { display: grid; gap: 4px; }
 .blockFields label > span { color: var(--muted); font-size: 8px; }
 .blockFields input, .blockFields select, .expandedEditor select { min-width: 0; height: 34px; padding: 0 8px; border: 1px solid var(--line); border-radius: 7px; background: #fff; font-size: 9px; }
-.blockFields .wideField { grid-column: span 2; }
+.blockFields .wideField { grid-column: 1 / -1; }
 .freeBlockText { min-height: 78px; padding: 9px; border: 1px solid var(--line); border-radius: 8px; resize: vertical; font: inherit; font-size: 9px; }
 .setAdvanced { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 7px; padding: 5px 0 1px 54px; }
 .setAdvanced label { min-width: 86px; display: grid; gap: 3px; }
@@ -285,8 +369,23 @@
   .daysPanel { min-height: 0; }
   .daysList { grid-template-columns: repeat(2, 1fr); }
   .dayEditor { min-height: 560px; }
-  .exerciseTable { overflow-x: auto; }
-  .exerciseHead, .exerciseRow { min-width: 780px; }
+  .exerciseTable { overflow: visible; }
+  .exerciseHead { display: none; }
+  .exerciseRow {
+    min-width: 0;
+    min-height: 0;
+    grid-template-columns: 28px 46px minmax(0, 1fr) 96px;
+    grid-template-areas: "order media name actions" "metrics metrics metrics metrics";
+    gap: 7px;
+    padding: 9px;
+  }
+  .exerciseOrder { grid-area: order; gap: 4px; }
+  .exerciseMedia { grid-area: media; }
+  .exerciseName { grid-area: name; min-height: 46px; padding: 0; }
+  .exerciseActions { grid-area: actions; }
+  .exerciseMetrics { grid-area: metrics; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+  .metricField { min-width: 0; display: grid; gap: 4px; }
+  .metricLabel { display: block; overflow: hidden; color: var(--muted); font-size: 8px; line-height: 1; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
 }
 
 @media (max-width: 620px) {
@@ -294,10 +393,12 @@
   .programBar { min-height: 70px; padding: 12px; border-radius: 12px; }
   .programActions {
     position: fixed;
-    z-index: 999;
-    left: max(12px, env(safe-area-inset-left));
-    right: max(12px, env(safe-area-inset-right));
-    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 84px);
+    z-index: 4;
+    left: 50%;
+    right: auto;
+    bottom: max(16px, calc(env(safe-area-inset-bottom) + 12px));
+    width: min(calc(86vw - 24px), 588px);
+    transform: translateX(-50%);
     display: grid;
     grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
     gap: 8px;
@@ -350,6 +451,8 @@
   .setRow button,
   .taskBlock > header button { width: 40px; height: 40px; }
   .specialBlockMenu > div { right: auto; left: 0; }
+  .groupExerciseSlots { grid-template-columns: 1fr; }
+  .groupExerciseEditor > button { width: 100%; justify-content: center; min-height: 40px; }
   .settingsGrid { grid-template-columns: 1fr; }
   .expandedEditor { min-width: 0; grid-template-columns: 1fr; padding: 10px; }
   .moveButtons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -358,4 +461,773 @@
   .setAdvanced { padding-left: 0; }
 
   :global(.trainerNextRoot):has(.dayEditorModal) :global(.trainerNextMobileNav) { display: none; }
+}
+
+@media (max-width: 520px) {
+  .programActions {
+    width: calc(100vw - 48px);
+  }
+}
+
+/* Constructor clarity pass -------------------------------------------------
+   Keep the same controls, but make the day outline and the next action
+   immediately legible.  These overrides are intentionally scoped to the
+   constructor so the programme library and client editor retain their own
+   visual language. */
+.constructor {
+  gap: 12px;
+  min-width: 0;
+}
+
+.constructor button:focus-visible,
+.constructor input:focus-visible,
+.constructor textarea:focus-visible,
+.constructor select:focus-visible {
+  outline: 3px solid rgba(128, 107, 182, .24);
+  outline-offset: 2px;
+}
+
+.programBar {
+  min-height: 70px;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 16px;
+  box-shadow: 0 10px 26px rgba(40, 38, 46, .045);
+}
+
+.programIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+}
+
+.programName > span:first-child {
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.constructor .nameInputRow input {
+  font-size: 18px;
+}
+
+.programActions {
+  gap: 8px;
+}
+
+.programActions button {
+  min-height: 40px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 720;
+}
+
+.programActions .saveButton {
+  min-width: 136px;
+}
+
+.editorGrid {
+  grid-template-columns: 226px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.daysPanel {
+  position: sticky;
+  top: 12px;
+  min-height: 0;
+  padding: 12px 10px 10px;
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(40, 38, 46, .035);
+}
+
+.daysPanel h2 {
+  margin: 3px 7px 11px;
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: .02em;
+}
+
+.daysList {
+  gap: 7px;
+}
+
+.dayCard {
+  min-height: 68px;
+  grid-template-columns: 24px minmax(0, 1fr) 32px;
+  gap: 8px;
+  padding: 8px 7px;
+  border-radius: 11px;
+  transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+.dayCard:hover {
+  border-color: #ddd4f5;
+  background: #fcfbff;
+}
+
+.dayCard.selectedDay {
+  border-color: rgba(128, 107, 182, .62);
+  background: linear-gradient(135deg, #f7f3ff 0%, #fff 100%);
+  box-shadow: inset 3px 0 0 var(--purple), 0 5px 14px rgba(128, 107, 182, .09);
+}
+
+.dayCard.selectedDay strong,
+.dayCard.selectedDay button > span {
+  color: var(--purple);
+}
+
+.dayCard strong {
+  font-size: 12px;
+}
+
+.dayCard small {
+  font-size: 9px;
+}
+
+.dayMenuWrap > button {
+  width: 28px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.dayMenuWrap > button:hover,
+.dayMenuWrap > button:focus-visible {
+  color: var(--purple);
+  background: var(--purple-soft);
+}
+
+.addDayButton {
+  min-height: 42px;
+  margin-top: 10px;
+  border-style: dashed;
+  border-radius: 10px;
+  background: #fbfaff;
+  font-size: 11px;
+}
+
+.addDayButton:hover {
+  border-color: var(--purple);
+  background: var(--purple-soft);
+}
+
+.dayEditorModal {
+  border-radius: 24px;
+}
+
+.dayEditorModalHeader {
+  min-height: 62px;
+}
+
+.dayEditorModalHeader strong {
+  font-size: 16px;
+}
+
+.dayEditorModalHeader button {
+  width: 40px;
+  height: 40px;
+  transition: background-color .16s ease, color .16s ease;
+}
+
+.dayEditorModalHeader button:hover {
+  background: var(--purple-soft);
+  color: var(--purple);
+}
+
+.breadcrumbs {
+  height: 36px;
+  gap: 8px;
+  font-size: 10px;
+}
+
+.dayHeader {
+  min-height: 76px;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.constructor .dayHeader > label input {
+  font-size: 19px;
+}
+
+.dayHeader > label span {
+  font-size: 11px;
+}
+
+.dayStats {
+  gap: 7px;
+}
+
+.dayStats > span {
+  min-width: 94px;
+  height: 46px;
+  grid-template-columns: 22px 1fr;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: #fcfbff;
+}
+
+.dayStats b {
+  font-size: 12px;
+}
+
+.dayStats small {
+  font-size: 8px;
+}
+
+.editorTabs {
+  gap: 4px;
+  margin-top: 2px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #faf9fc;
+}
+
+.editorTabs button {
+  min-height: 40px;
+  flex: 1 1 0;
+  justify-content: center;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 650;
+  transition: color .16s ease, background-color .16s ease, border-color .16s ease;
+}
+
+.editorTabs button:hover {
+  color: var(--purple);
+  background: #fff;
+}
+
+.editorTabs button.active {
+  border-color: #d9cff3;
+  background: var(--purple-soft);
+  box-shadow: 0 2px 5px rgba(40, 38, 46, .035);
+}
+
+.exerciseTable {
+  margin-top: 12px;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.exerciseHead {
+  min-height: 36px;
+  padding-left: 108px;
+  color: #87818f;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+.exerciseCard {
+  transition: background-color .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+
+.exerciseCard:hover {
+  background: #fcfbff;
+}
+
+.constructor .exerciseCard.selectedExercise {
+  background: #faf8ff;
+  box-shadow: inset 3px 0 0 var(--purple), inset 0 0 0 1px #d9d0ff;
+}
+
+.exerciseRow {
+  min-height: 76px;
+  grid-template-columns: 32px 50px minmax(170px, 1fr) 76px 82px 86px 92px 104px;
+  gap: 7px;
+  padding: 8px 10px;
+}
+
+.exerciseMedia {
+  width: 48px;
+  height: 48px;
+  border-radius: 11px;
+  background: #f2f0f5;
+}
+
+.exerciseName {
+  gap: 5px;
+  padding: 0 5px;
+}
+
+.exerciseName strong {
+  font-size: 12px;
+  font-weight: 740;
+}
+
+.exerciseName small {
+  font-size: 9px;
+}
+
+.metricInput {
+  height: 38px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 650;
+  transition: border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+
+.metricInput:hover:not(:disabled) {
+  border-color: #d4c8ed;
+}
+
+.metricWithSuffix small {
+  font-size: 8px;
+}
+
+.exerciseActions {
+  gap: 3px;
+}
+
+.exerciseActions button {
+  width: 32px;
+  height: 34px;
+  border-radius: 9px;
+  transition: background-color .16s ease, color .16s ease;
+}
+
+.exerciseActions button:hover,
+.exerciseActions button:focus-visible {
+  background: var(--purple-soft);
+  color: var(--purple);
+}
+
+.exerciseActions button:last-child:hover,
+.exerciseActions button:last-child:focus-visible {
+  background: #fff3f4;
+  color: #c95b64;
+}
+
+.expandedEditor {
+  gap: 12px;
+  padding: 14px 16px 16px 98px;
+  background: #faf9fe;
+}
+
+.alternativeEditor,
+.groupExerciseEditor {
+  border-radius: 12px;
+}
+
+.setsEditor {
+  gap: 8px;
+  padding-top: 14px;
+}
+
+.setRow {
+  min-height: 42px;
+  border-radius: 10px;
+}
+
+.setRow input {
+  height: 32px;
+}
+
+.exerciseAddRow {
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.addExerciseButton {
+  min-height: 54px;
+  border: 1px dashed #8f7ac8;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--purple);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: none;
+  transition: border-color .16s ease, background .16s ease, color .16s ease;
+}
+
+.addExerciseButton:hover {
+  background: #f5f1ff;
+  border-color: #806bb6;
+  color: #725da9;
+}
+
+.addExerciseButton:active {
+  background: #eee8fb;
+}
+
+.specialBlockMenu > button {
+  min-height: 54px;
+  border-radius: 12px;
+  background: #fbfaff;
+  color: #5f5868;
+  font-size: 10px;
+}
+
+.specialBlockMenu > div {
+  width: 190px;
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.emptyExercises {
+  min-height: 224px;
+  margin: 10px;
+  padding: 24px;
+  border: 1px dashed #cdbfe9;
+  border-radius: 12px;
+  background: #fcfbff;
+}
+
+.emptyExercises strong {
+  font-size: 14px;
+}
+
+.embeddedInModal .dayEditorModal {
+  border-radius: 16px;
+}
+
+.embeddedInModal .exerciseHead,
+.embeddedInModal .exerciseRow {
+  min-width: 952px;
+}
+
+@media (max-width: 900px) {
+  .daysPanel {
+    position: static;
+  }
+
+  .exerciseRow {
+    grid-template-columns: 28px 46px minmax(0, 1fr) 102px;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .embeddedInModal .exerciseHead {
+    display: none;
+  }
+
+  .embeddedInModal .exerciseTable,
+  .embeddedInModal .exerciseRow {
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .exerciseMetrics {
+    gap: 8px;
+  }
+
+  .metricInput {
+    height: 38px;
+  }
+}
+
+@media (max-width: 620px) {
+  .constructor {
+    gap: 10px;
+  }
+
+  .programBar {
+    border-radius: 14px;
+  }
+
+  .daysPanel {
+    padding: 10px 8px;
+    border-radius: 14px;
+  }
+
+  .dayCard {
+    min-height: 64px;
+  }
+
+  .dayHeader {
+    gap: 10px;
+  }
+
+  .constructor .dayHeader > label input {
+    font-size: 18px;
+  }
+
+  .editorTabs {
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .editorTabs button {
+    min-height: 42px;
+    padding: 0 4px;
+    font-size: 9px;
+  }
+
+  .editorTabs button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .exerciseTable {
+    border-radius: 12px;
+  }
+
+  .exerciseRow {
+    grid-template-columns: 22px 42px minmax(0, 1fr) 86px;
+    gap: 6px;
+    padding: 9px;
+  }
+
+  .exerciseMedia {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+  }
+
+  .exerciseName strong {
+    font-size: 11px;
+  }
+
+  .exerciseActions button {
+    width: 28px;
+    height: 34px;
+  }
+
+  .metricInput {
+    height: 35px;
+    font-size: 10px;
+  }
+
+  .metricLabel {
+    font-size: 8px;
+  }
+
+  .expandedEditor {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .exerciseAddRow {
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .addExerciseButton,
+  .specialBlockMenu > button {
+    min-height: 50px;
+  }
+}
+
+/* Final constructor pass: the compact header keeps day navigation available
+   even when the parent modal intentionally hides the full days rail. */
+.dayEditorTitle {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.dayEditorTitle > span {
+  color: var(--purple);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .02em;
+}
+
+.dayEditorTitle strong {
+  display: block;
+}
+
+.dayEditorNavigation {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.dayEditorNavigation button:disabled {
+  cursor: not-allowed;
+  opacity: .38;
+  pointer-events: none;
+}
+
+.constructor .exerciseOrder {
+  justify-content: center;
+  gap: 0;
+}
+
+.exerciseActions button:last-child:hover,
+.exerciseActions button:last-child:focus-visible {
+  background: var(--purple-soft);
+  color: var(--purple);
+}
+
+@media (max-width: 900px) {
+  .dayEditorNavigation {
+    gap: 4px;
+  }
+
+  .dayEditorTitle > span {
+    font-size: 9px;
+  }
+}
+
+/* The selected training day uses the same visual frame as the calendar.
+   Navigation remains at the top while the whole editor reads as one surface. */
+.dayEditorSurface {
+  margin-top: 14px;
+  border: 1px solid #e8e2ef;
+  border-radius: 20px;
+  background: #f7f5fa;
+}
+
+.dayEditorSurface .dayEditorModalHeader {
+  position: sticky;
+  z-index: 3;
+  top: 0;
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr) 148px;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  margin: 0;
+  padding: 10px 12px;
+  border-bottom-color: #e8e2ef;
+  border-radius: 20px 20px 0 0;
+  background: #f7f5fa;
+}
+
+.dayEditorSurface .dayEditorTitle {
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.dayEditorSurface .dayEditorTitle > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.dayEditorSurface .dayEditorTitle strong {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 17px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dayEditorSurface .dayNavigatorButton {
+  width: 148px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid #b7a3df;
+  border-radius: 14px;
+  background: #eee8fb;
+  box-shadow: 0 3px 10px rgba(77, 57, 124, .08);
+  color: #725aaa;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.dayEditorSurface .dayNavigatorButton:first-child {
+  justify-self: start;
+}
+
+.dayEditorSurface .dayNavigatorButton:last-child {
+  justify-self: end;
+}
+
+.dayEditorSurface .dayNavigatorButton:hover:not(:disabled),
+.dayEditorSurface .dayNavigatorButton:focus-visible:not(:disabled) {
+  border-color: #806bb6;
+  background: #e5dcf7;
+  color: #624b97;
+}
+
+.dayEditorSurface .dayNavigatorButton:disabled {
+  cursor: not-allowed;
+  border-color: #e6e1ea;
+  background: #f5f2f7;
+  box-shadow: none;
+  color: #9a94a2;
+  opacity: .58;
+}
+
+.dayEditorSurface .dayEditorContent {
+  padding: 0 16px 18px;
+}
+
+.dayEditorSurface .breadcrumbs {
+  min-height: 38px;
+  height: auto;
+  border-bottom-color: #e8e2ef;
+}
+
+.returnToDaysButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid #cbbce7;
+  border-radius: 10px;
+  background: #f0ebfa;
+  color: #6d57a6;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.returnToDaysButton:hover,
+.returnToDaysButton:focus-visible {
+  border-color: #9c86cf;
+  background: #e8e0f7;
+  color: #5f4996;
+  text-decoration: none;
+}
+
+.returnToDaysButton:focus-visible {
+  outline: 2px solid rgba(143, 122, 200, 0.42);
+  outline-offset: 2px;
+}
+
+.embeddedInModal .dayEditorSurface {
+  margin-top: 10px;
+  border-radius: 18px;
+}
+
+@media (max-width: 620px) {
+  .dayEditorSurface {
+    margin-top: 8px;
+    border-radius: 16px;
+  }
+
+  .dayEditorSurface .dayEditorModalHeader {
+    grid-template-columns: 46px minmax(0, 1fr) 46px;
+    gap: 6px;
+    min-height: 64px;
+    padding: 8px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .dayEditorSurface .dayNavigatorButton {
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border-radius: 13px;
+  }
+
+  .dayEditorSurface .dayNavigatorButton span {
+    display: none;
+  }
+
+  .dayEditorSurface .dayEditorTitle strong {
+    font-size: 14px;
+  }
+
+  .dayEditorSurface .dayEditorContent {
+    padding: 0 10px 14px;
+  }
 }

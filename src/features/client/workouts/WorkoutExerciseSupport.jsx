@@ -6,37 +6,53 @@ export default function WorkoutExerciseSupport({
   exerciseHistoryOpenId,
   lastExerciseText,
   onOpenNote,
+  onStartingWeightFeedback,
   onToggleHistory,
   readinessVolumeText,
+  startingWeightCheck = null,
   showNoteButton = true
 }) {
+  const needsStartingWeightFeedback = Boolean(startingWeightCheck?.awaitingFeedback);
+  const showsStartingWeightHint = Boolean(startingWeightCheck && !needsStartingWeightFeedback);
+
   return (
     <div
       className={styles.root}
       data-testid="workout-exercise-support"
       data-css-module-scope="workout-exercise-support"
     >
-      <button
-        type="button"
-        className={styles.previousInfo}
-        data-css-module-control="workout-exercise-support"
-        onClick={onToggleHistory}
-      >
-        {lastExerciseText}
-        {exerciseHistoryOpenId === exercise.id && (
-          <small>План сейчас: {exercise.sets.length} подхода · нажми ещё раз, чтобы свернуть</small>
-        )}
-      </button>
+      {needsStartingWeightFeedback ? (
+        <div className={styles.startingWeightCheck} data-testid="basic-workout-starting-weight-check">
+          <span>Первый подход?</span>
+          <button type="button" onClick={() => onStartingWeightFeedback?.("too_easy")}>Легко</button>
+          <button type="button" onClick={() => onStartingWeightFeedback?.("just_right")}>Норма</button>
+          <button type="button" onClick={() => onStartingWeightFeedback?.("too_hard")}>Тяжело</button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className={`${styles.previousInfo} ${showsStartingWeightHint ? styles.startingWeightHint : ""}`}
+          data-css-module-control="workout-exercise-support"
+          onClick={showsStartingWeightHint ? undefined : onToggleHistory}
+        >
+          {showsStartingWeightHint
+            ? "Стартовый вес по анкете — скорректируй после первого подхода"
+            : lastExerciseText}
+          {!showsStartingWeightHint && exerciseHistoryOpenId === exercise.id && (
+            <small>План сейчас: {exercise.sets.length} подхода · нажми ещё раз, чтобы свернуть</small>
+          )}
+        </button>
+      )}
 
-      {showNoteButton && (
+      {!needsStartingWeightFeedback && showNoteButton && (
         <button
           type="button"
           className={styles.noteButton}
           data-css-module-control="workout-exercise-support"
           onClick={onOpenNote}
-          aria-label="Открыть заметку к упражнению"
+          aria-label="Открыть заметку тренеру к упражнению"
         >
-          <span>Заметка</span>
+          <span>Заметка тренеру</span>
           <span aria-hidden="true">✎</span>
         </button>
       )}

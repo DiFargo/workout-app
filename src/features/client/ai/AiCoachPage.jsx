@@ -10,7 +10,9 @@ import {
   isAiNutritionTrainingDay
 } from "../../../utils/aiNutritionSchedule";
 import { buildAiNutritionMonthlyPlan } from "../../../utils/aiNutritionPlanBuilder";
+import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 import styles from "./AiCoachPage.module.css";
 
 export default function AiCoachPage({
@@ -39,12 +41,13 @@ export default function AiCoachPage({
   const activeAiNutritionWeekNumber = getAiNutritionCurrentWeek(activeAiNutritionPlan);
   const activeAiNutritionWeek = activeAiNutritionPlan?.weeks?.[activeAiNutritionWeekNumber - 1] || activeAiNutritionPlan?.weeks?.[0];
   const activeAiNutritionProfile = activeAiNutritionPlan?.profile || aiNutritionProfile || aiNutritionProfileDraft;
+  const aiNutritionProfileValidation = getAiNutritionProfileValidation(aiNutritionProfileDraft);
   const isAiTrainingDayToday = isAiNutritionTrainingDay(activeAiNutritionProfile);
   const activeAiNutritionTodayMacros = getAiNutritionDayMacros(activeAiNutritionWeek || nutrition.goals, activeAiNutritionProfile);
   const aiNutritionTrainingAdvice = getAiNutritionTrainingDayAdvice(isAiTrainingDayToday, activeAiNutritionProfile?.goal);
 
   return (
-    <div className={styles.root} data-css-module-scope="ai-coach-page" data-testid="ai-coach-page">
+    <div className={`${styles.root} ${adaptiveShellStyles.shell}`} data-client-adaptive-shell="true" data-css-module-scope="ai-coach-page" data-testid="ai-coach-page">
       <ClientPageHeader
         compact
         className={styles.pageHeader}
@@ -79,6 +82,7 @@ export default function AiCoachPage({
                 </div>
                 <div className={styles.bodyReadOnlyGrid}>
                   <span><i>Вес</i><b>{aiNutritionProfileDraft.weight || "—"}</b></span>
+                  <span><i>Цель</i><b>{aiNutritionProfileDraft.targetWeight || "—"}</b></span>
                   <span><i>Рост</i><b>{aiNutritionProfileDraft.height || "—"}</b></span>
                   <span><i>Возраст</i><b>{aiNutritionProfileDraft.age || "—"}</b></span>
                   <span><i>Пол</i><b>{aiNutritionProfileDraft.sex === "female" ? "Ж" : "М"}</b></span>
@@ -149,9 +153,20 @@ export default function AiCoachPage({
                 className={styles.primaryButton}
                 data-testid="ai-nutrition-create"
                 onClick={() => saveAiNutritionPlan()}
+                disabled={!aiNutritionProfileValidation.valid}
+                aria-describedby={!aiNutritionProfileValidation.valid ? "ai-nutrition-profile-hint" : undefined}
               >
                 Создать AI-план
               </button>
+              {!aiNutritionProfileValidation.valid && (
+                <p
+                  className={styles.validationHint}
+                  id="ai-nutrition-profile-hint"
+                  role="status"
+                >
+                  Для точного плана заполни в кабинете: {aiNutritionProfileValidation.missing.join(", ")}.
+                </p>
+              )}
             </div>
           ) : (
             <div className={styles.planCard} data-testid="ai-nutrition-plan">

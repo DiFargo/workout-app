@@ -1,6 +1,64 @@
-const CACHE_NAME = "workout-app-v826";
-const WORKOUT_VIDEO_CACHE = "workout-videos-v2";
+const CACHE_NAME = "workout-app-v__APP_VERSION__";
+const WORKOUT_VIDEO_CACHE = "workout-videos-v__APP_VERSION__";
+const RUNTIME_CACHE = "workout-runtime-v__APP_VERSION__";
+const NUTRITION_CATALOG_CACHE = "workout-nutrition-catalog-v__APP_VERSION__";
 const APP_SHELL = ["/", "/index.html", "/manifest.json"];
+
+// Entry limits and a maximum response size keep offline support from growing
+// indefinitely on a mobile device. Large files still work online; they simply
+// are not retained by the service worker.
+const RUNTIME_CACHE_MAX_ENTRIES = 32;
+const NUTRITION_CATALOG_CACHE_MAX_ENTRIES = 8;
+const WORKOUT_VIDEO_CACHE_MAX_ENTRIES = 4;
+const MAX_CACHEABLE_RUNTIME_BYTES = 2 * 1024 * 1024;
+const MAX_CACHEABLE_NUTRITION_BYTES = 4 * 1024 * 1024;
+const MAX_CACHEABLE_VIDEO_BYTES = 20 * 1024 * 1024;
+const MANAGED_CACHE_PREFIXES = [
+  "workout-app-",
+  "workout-videos-",
+  "workout-runtime-",
+  "workout-nutrition-catalog-"
+];
+
+function responseHasSafeContentLength(response, maximumBytes) {
+  const contentLength = response?.headers?.get("content-length");
+  const bytes = Number(contentLength);
+  return Boolean(contentLength) && Number.isFinite(bytes) && bytes > 0 && bytes <= maximumBytes;
+}
+
+function canCacheRuntimeResponse(response, maximumBytes) {
+  return response?.status === 200
+    && response.type === "basic"
+    && responseHasSafeContentLength(response, maximumBytes);
+}
+
+function canCacheVideoResponse(response) {
+  return response?.status === 200
+    && response.type !== "opaque"
+    && responseHasSafeContentLength(response, MAX_CACHEABLE_VIDEO_BYTES);
+}
+
+async function enforceCacheEntryLimit(cacheName, maximumEntries) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  const excess = Math.max(0, keys.length - maximumEntries);
+  if (!excess) return;
+
+  await Promise.all(keys.slice(0, excess).map((request) => cache.delete(request)));
+}
+
+async function cacheResponse(cacheName, request, response, maximumEntries) {
+  const cache = await caches.open(cacheName);
+  await cache.put(request, response.clone());
+  await enforceCacheEntryLimit(cacheName, maximumEntries);
+}
+
+function cacheInBackground(event, cacheName, request, response, maximumEntries) {
+  event.waitUntil(
+    cacheResponse(cacheName, request, response, maximumEntries)
+      .catch((error) => console.warn("Service worker cache write failed:", error))
+  );
+}
 
 async function createCachedVideoRangeResponse(response, rangeHeader) {
   if (!response || response.status !== 200 || response.type === "opaque") {
@@ -33,11 +91,30 @@ async function createCachedVideoRangeResponse(response, rangeHeader) {
   });
 }
 
+function isManagedCache(key) {
+  return MANAGED_CACHE_PREFIXES.some((prefix) => key.startsWith(prefix));
+}
+
+function getRuntimeCacheConfig(url) {
+  if (url.pathname.startsWith("/nutrition-catalog/")) {
+    return {
+      name: NUTRITION_CATALOG_CACHE,
+      maximumEntries: NUTRITION_CATALOG_CACHE_MAX_ENTRIES,
+      maximumBytes: MAX_CACHEABLE_NUTRITION_BYTES
+    };
+  }
+
+  return {
+    name: RUNTIME_CACHE,
+    maximumEntries: RUNTIME_CACHE_MAX_ENTRIES,
+    maximumBytes: MAX_CACHEABLE_RUNTIME_BYTES
+  };
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
   );
 });
 
@@ -46,10 +123,12 @@ self.addEventListener("activate", (event) => {
     caches.keys()
       .then((keys) => Promise.all(
         keys
-          .filter((key) => (
-            (key.startsWith("workout-app-") && key !== CACHE_NAME) ||
-            (key.startsWith("workout-videos-") && key !== WORKOUT_VIDEO_CACHE)
-          ))
+          .filter((key) => isManagedCache(key) && ![
+            CACHE_NAME,
+            WORKOUT_VIDEO_CACHE,
+            RUNTIME_CACHE,
+            NUTRITION_CATALOG_CACHE
+          ].includes(key))
           .map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())
@@ -60,9 +139,7 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
 
-  if (request.method !== "GET") {
-    return;
-  }
+  if (request.method !== "GET") return;
 
   if (request.destination === "video") {
     event.respondWith(
@@ -82,8 +159,8 @@ self.addEventListener("fetch", (event) => {
         if (cached) return cached;
 
         const response = await fetch(request);
-        if (response.status === 200 || response.type === "opaque") {
-          cache.put(request, response.clone());
+        if (canCacheVideoResponse(response)) {
+          cacheInBackground(event, WORKOUT_VIDEO_CACHE, request, response, WORKOUT_VIDEO_CACHE_MAX_ENTRIES);
         }
         return response;
       })
@@ -91,14 +168,17 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/") || url.pathname === "/sw.js") {
+    return;
+  }
 
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+          if (canCacheRuntimeResponse(response, MAX_CACHEABLE_RUNTIME_BYTES)) {
+            cacheInBackground(event, CACHE_NAME, "/index.html", response, APP_SHELL.length);
+          }
           return response;
         })
         .catch(async () => (
@@ -109,16 +189,17 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  const cacheConfig = getRuntimeCacheConfig(url);
   event.respondWith(
-    caches.match(request).then((cached) => {
+    caches.open(cacheConfig.name).then(async (cache) => {
+      const cached = await cache.match(request);
       if (cached) return cached;
 
-      return fetch(request).then((response) => {
-        if (!response || response.status !== 200 || response.type !== "basic") return response;
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-        return response;
-      });
+      const response = await fetch(request);
+      if (canCacheRuntimeResponse(response, cacheConfig.maximumBytes)) {
+        cacheInBackground(event, cacheConfig.name, request, response, cacheConfig.maximumEntries);
+      }
+      return response;
     })
   );
 });
@@ -129,7 +210,7 @@ self.addEventListener("message", (event) => {
   const urls = [...new Set(
     (Array.isArray(event.data.urls) ? event.data.urls : [])
       .filter((url) => typeof url === "string" && url.trim())
-  )];
+  )].slice(0, WORKOUT_VIDEO_CACHE_MAX_ENTRIES);
 
   event.waitUntil(
     caches.open(WORKOUT_VIDEO_CACHE).then(async (cache) => {
@@ -139,8 +220,8 @@ self.addEventListener("message", (event) => {
 
         try {
           const response = await fetch(request);
-          if (response.status === 200 || response.type === "opaque") {
-            await cache.put(request, response.clone());
+          if (canCacheVideoResponse(response)) {
+            await cacheResponse(WORKOUT_VIDEO_CACHE, request, response, WORKOUT_VIDEO_CACHE_MAX_ENTRIES);
           }
         } catch (error) {
           console.warn("Workout video prefetch failed:", url, error);

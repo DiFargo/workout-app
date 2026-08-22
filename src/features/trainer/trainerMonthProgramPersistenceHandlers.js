@@ -2,7 +2,12 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { createSingleDayWorkoutProgramBlocks } from "../../utils/auditSafety";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
-import { buildDraftProgramMetadata } from "../../utils/trainerProgramLifecycle.js";
+import {
+  buildDraftProgramMetadata,
+  buildReadyProgramMetadata,
+  getTrainerProgramStatusMeta
+} from "../../utils/trainerProgramLifecycle.js";
+import { getTrainerProgramFormatMeta } from "../../utils/trainerProgramFormat.js";
 import { requestTrainerAiProgramImport } from "./trainerAiProgramImport";
 import { createTrainerMonthProgramImportHelpers } from "./trainerMonthProgramImportHelpers";
 
@@ -103,6 +108,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
         id: program.id,
         name: program.name,
         description: program.description || "",
+        trainingFormat: program.trainingFormat || "",
         type: "monthly_program",
         source: "program_library",
         ownerUid,
@@ -126,6 +132,55 @@ export function createTrainerMonthProgramPersistenceHandlers({
     } catch (error) {
       console.error("Save month program to library error:", error);
       showAppError("firebase", "Не получилось сохранить программу в библиотеку.");
+      return false;
+    }
+  }
+
+  async function prepareMonthProgramForAssignment(templateId = adminSelectedTemplateId) {
+    const template = adminTrainingTemplates.find((item) => item.id === templateId);
+    const owner = getCurrentProgramOwner();
+
+    if (!template) {
+      showAppError("load", "Программа не найдена.");
+      return false;
+    }
+    if (!owner.uid) {
+      showAppError("load", "Не удалось определить владельца программы.");
+      return false;
+    }
+    if (!canUseAdminFeatures() && !canManageTrainingTemplate(template)) {
+      showAppError("load", "Тренер может изменять только свои программы.");
+      return false;
+    }
+    if (getTrainerProgramStatusMeta(template).id !== "draft") {
+      showAppError("savedLocal", "Программа уже готова к назначению.");
+      return true;
+    }
+
+    const nowIso = new Date().toISOString();
+    const ownerUid = canUseAdminFeatures()
+      ? (template.ownerUid || owner.uid)
+      : owner.uid;
+    const lifecycleMetadata = buildReadyProgramMetadata(template, { nowIso, ownerUid });
+
+    try {
+      await setDoc(doc(db, "trainingTemplates", template.id), {
+        ...lifecycleMetadata,
+        updatedAt: nowIso
+      }, { merge: true });
+
+      setAdminTrainingTemplates((current) => current.map((item) =>
+        item.id === template.id
+          ? { ...item, ...lifecycleMetadata, updatedAt: nowIso }
+          : item
+      ));
+      setAdminSelectedTemplateId(template.id);
+      showAppError("savedLocal", "Программа готова к назначению.");
+      loadAdminTrainingTemplates();
+      return true;
+    } catch (error) {
+      console.error("Prepare month program for assignment error:", error);
+      showAppError("firebase", "Не удалось подготовить программу к назначению. Попробуйте ещё раз.");
       return false;
     }
   }
@@ -315,11 +370,14 @@ export function createTrainerMonthProgramPersistenceHandlers({
     }
   }
 
-  function createNewMonthProgramDraft() {
+  function createNewMonthProgramDraft(trainingFormat = "") {
     const owner = getCurrentProgramOwner();
+    const formatMeta = getTrainerProgramFormatMeta(trainingFormat);
     const nextProgram = normalizeMonthProgram({
       id: `month_${Date.now()}`,
-      name: "Новая программа на месяц",
+      name: formatMeta ? `Новая программа: ${formatMeta.label}` : "Новая программа на месяц",
+      description: formatMeta?.draftDescription || "",
+      trainingFormat: formatMeta?.id || "",
       ownerUid: owner.uid,
       ownerRole: owner.role,
       createdByUid: owner.uid,
@@ -336,6 +394,56 @@ export function createTrainerMonthProgramPersistenceHandlers({
     setAdminSelectedTemplateId("");
     setAdminProgramGroups([nextProgram]);
     setPlan({ workouts: flattenMonthProgramWorkouts(nextProgram) });
+  }
+
+  async function duplicateMonthProgramFromLibrary(templateId) {
+    const template = adminTrainingTemplates.find((item) => item.id === templateId);
+
+    if (!template) return false;
+    if (!canManageTrainingTemplate(template)) {
+      showAppError("load", "У вас нет прав на создание копии этой программы.");
+      return false;
+    }
+
+    const owner = getCurrentProgramOwner();
+    if (!owner.uid) {
+      showAppError("load", "Не удалось определить владельца новой программы.");
+      return false;
+    }
+
+    const stamp = Date.now();
+    const nowIso = new Date(stamp).toISOString();
+    const nextProgram = normalizeMonthProgram({
+      ...template,
+      id: `month_copy_${stamp}`,
+      name: `${template.name || "Программа"} — копия`,
+      ownerUid: owner.uid,
+      ownerRole: owner.role,
+      createdByUid: owner.uid,
+      updatedByUid: owner.uid,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      lifecycleStatus: "draft",
+      programStatus: "draft",
+      visibility: "trainer_draft",
+      publishedAt: "",
+      archivedAt: "",
+      assignedClientIds: []
+    });
+
+    const saved = await saveMonthProgramToLibrary(nextProgram);
+    if (!saved) return false;
+
+    const flatWorkouts = flattenMonthProgramWorkouts(nextProgram);
+    setAdminProgramLibraryTab("overview");
+    setAdminProgramEditorMode("create");
+    setAdminSelectedTemplateId(nextProgram.id);
+    setAdminTrainingTemplates((current) => [
+      { ...nextProgram, workouts: flatWorkouts },
+      ...current.filter((item) => item.id !== nextProgram.id)
+    ]);
+    showAppError("savedLocal", "Создана независимая копия программы. Теперь её можно отредактировать и назначить клиенту.");
+    return true;
   }
 
   function editExistingMonthProgram(templateId) {
@@ -386,6 +494,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
       id: template.id,
       name: template.name || "Программа на месяц",
       description: template.description || "",
+      trainingFormat: template.trainingFormat || "",
       ownerUid: template.ownerUid || "",
       ownerRole: template.ownerRole || "",
       createdByUid: template.createdByUid || "",
@@ -429,6 +538,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
         id: template.id,
         name: template.name || "Программа на месяц",
         description: template.description || "",
+        trainingFormat: template.trainingFormat || "",
         ownerUid: template.ownerUid || "",
         ownerRole: template.ownerRole || "",
         createdByUid: template.createdByUid || "",
@@ -469,9 +579,11 @@ export function createTrainerMonthProgramPersistenceHandlers({
 
   return {
     createNewMonthProgramDraft,
+    duplicateMonthProgramFromLibrary,
     editExistingMonthProgram,
     importMonthProgramFromFile,
     importMonthProgramWithAi,
+    prepareMonthProgramForAssignment,
     refreshCurrentMonthProgram,
     saveMonthProgramAndOpenOverview,
     saveMonthProgramToLibrary,

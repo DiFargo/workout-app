@@ -75,6 +75,12 @@ const {
   nutritionToday,
   nutritionTotals,
   nutritionUndoDelete,
+  nutritionVoiceAddedItems,
+  nutritionVoiceAnalyzing,
+  nutritionVoiceAudioLevel,
+  nutritionVoiceFeedback,
+  nutritionVoiceRecording,
+  nutritionVoiceStarting,
   nutritionWeekDates,
   nutritionZoukExpanded,
   openDishIngredientPicker,
@@ -82,10 +88,13 @@ const {
   openNutritionEditPage,
   openNutritionFoodEditor,
   openNutritionPicker,
+  finishNutritionVoiceResult,
   pendingDishIngredient,
   pendingDishIngredientGrams,
   recentNutritionFoods,
   removeSelectedDishIngredient,
+  removeNutritionVoiceAddedItem,
+  updateNutritionVoiceAddedItem,
   renderTrainerMainBottomBar,
   resetNutritionPhotoAiSearch,
   resetNutritionPhotoAiState,
@@ -97,6 +106,8 @@ const {
   selectNutritionDate,
   selectNutritionPhotoAiCandidate,
   selectedNutritionFood,
+  startNutritionVoiceCapture,
+  stopNutritionVoiceCapture,
   setBarcodeScannerOpen,
   setDishIngredientPickerOpen,
   setDishIngredientSearch,
@@ -211,7 +222,30 @@ const {
         dateTitle: nutritionDateTitle,
         dateKey: nutritionDateKey,
         streakText: nutritionStreakText,
-        onAdd: () => openNutritionPicker()
+        caloriesLeft,
+        onAdd: () => openNutritionPicker(),
+        onPhotoSearch: (event) => {
+          const file = event.target.files?.[0];
+          openNutritionPicker();
+          handleNutritionPhotoAiSearch({
+            target: { files: file ? [file] : [], value: "" }
+          });
+          event.target.value = "";
+        },
+        voiceEnabled: true,
+        voiceState: nutritionVoiceAnalyzing
+          ? "analyzing"
+          : nutritionVoiceRecording || nutritionVoiceStarting
+            ? "recording"
+            : "idle",
+        voiceAudioLevel: nutritionVoiceAudioLevel || 0,
+        voiceFeedback: nutritionVoiceFeedback || "",
+        voiceAddedItems: nutritionVoiceAddedItems || [],
+        onVoiceStart: startNutritionVoiceCapture || (() => {}),
+        onVoiceEnd: stopNutritionVoiceCapture || (() => {}),
+        onVoiceAddedItemRemove: removeNutritionVoiceAddedItem || (() => {}),
+        onVoiceAddedItemUpdate: updateNutritionVoiceAddedItem || (() => false),
+        onVoiceDone: finishNutritionVoiceResult || (() => {})
       }}
       diaryProps={{
         nutritionZoukExpanded,

@@ -130,6 +130,10 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientTabs button.active),
+:local(.scope) {
+  min-width: 0;
+}
+
 :global(.trainerNextRoot) :global(.trainerNextClientTabs button[aria-pressed="true"]) {
   color: var(--tn-purple-strong);
   background: var(--tn-purple-soft);
@@ -1387,5 +1391,51 @@
 
   :global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button) {
     min-height: 36px;
+  }
+}
+
+/* Client detail refinements live here rather than in the broad responsive
+   pass: they only affect the profile header and its primary tab switcher. */
+:global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeader) {
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+:global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientTaskButton) {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+  min-width: 150px;
+  margin: 0;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientTabs) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+}
+
+:global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientTabs button) {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeader) {
+    grid-template-columns: 46px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientTaskButton) {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-self: stretch;
+    width: 100%;
+    min-width: 0;
+    margin-top: 1px;
   }
 }

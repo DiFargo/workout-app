@@ -1,0 +1,149 @@
+/*
+ * One visual frame for trainer dialogs.  The data attributes deliberately
+ * travel with portals as well as workspace-local modals, so every trainer
+ * flow receives the same compact card and backdrop.
+ */
+.scope {
+  min-width: 0;
+  --trainer-modal-layer: 110000;
+  --trainer-modal-inset-x: 12px;
+  --trainer-modal-radius: 30px;
+  --trainer-control-touch: 44px;
+}
+
+:global([data-trainer-modal-backdrop="true"]) {
+  --trainer-modal-inset: max(12px, env(safe-area-inset-top));
+  position: fixed !important;
+  /* One layer above every dock, sheet and legacy workspace overlay. */
+  z-index: var(--trainer-modal-layer) !important;
+  inset: 0 !important;
+  box-sizing: border-box;
+  display: grid !important;
+  place-items: center !important;
+  align-items: center !important;
+  padding: var(--trainer-modal-inset) var(--trainer-modal-inset-x) max(12px, env(safe-area-inset-bottom)) !important;
+  overflow: hidden !important;
+  overscroll-behavior: contain;
+  isolation: isolate;
+  background: rgba(40, 38, 46, 0.34) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+:global([data-trainer-modal-surface="true"]) {
+  box-sizing: border-box;
+  min-width: 0;
+  width: min(620px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: min(760px, calc(100dvh - 24px)) !important;
+  margin: 0 !important;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  border: 1px solid #efebf3 !important;
+  border-radius: var(--trainer-modal-radius) !important;
+  background: #fbfafc !important;
+  box-shadow: 0 28px 72px rgba(40, 38, 46, 0.24) !important;
+}
+
+/* A modal may opt into a stable application frame.  Its title controls and
+   actions stay visible while only the explicitly marked center region moves. */
+:global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"]) {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0;
+  overflow: hidden !important;
+}
+
+:global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"] [data-trainer-modal-header="true"]) {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+:global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"] .trainerNextModalClose) {
+  position: absolute !important;
+  z-index: 3 !important;
+  top: 10px !important;
+  right: 12px !important;
+  width: var(--trainer-control-touch) !important;
+  min-width: var(--trainer-control-touch) !important;
+  height: var(--trainer-control-touch) !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: #f5f2f7 !important;
+  box-shadow: none !important;
+  color: #28262e !important;
+}
+
+:global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"] .trainerNextModalClose:hover) {
+  background: #efeaf9 !important;
+  color: #806bb6 !important;
+}
+
+:global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"] [data-trainer-modal-content="true"]) {
+  min-height: 0;
+  min-width: 0;
+  flex: 1 1 auto;
+  scrollbar-gutter: stable;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+:global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"] > [data-trainer-modal-footer="true"]) {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  background: #fbfafc;
+}
+
+/* Dense editors remain scrollable cards instead of becoming full-screen
+   workspaces. */
+:global(.trainerWorkoutEditorModal[data-trainer-modal-surface="true"]) {
+  height: min(760px, calc(100dvh - 32px)) !important;
+}
+
+:global([data-trainer-modal-surface="true"][data-trainer-modal-floating="true"]) {
+  position: fixed !important;
+  z-index: calc(var(--trainer-modal-layer) + 1) !important;
+  inset: auto !important;
+  top: 50% !important;
+  left: 50% !important;
+  height: auto !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+@media (max-width: 520px) {
+  :global([data-trainer-modal-backdrop="true"]) {
+    padding: 12px !important;
+  }
+
+  :global([data-trainer-modal-surface="true"]) {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    border-radius: 26px !important;
+  }
+
+  :global(.trainerWorkoutEditorModal[data-trainer-modal-surface="true"]) {
+    height: calc(100dvh - 24px) !important;
+  }
+}
+
+@media (max-width: 359px) {
+  :global([data-trainer-modal-backdrop="true"]) {
+    padding: 8px !important;
+  }
+
+  :global([data-trainer-modal-surface="true"]) {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    border-radius: 22px !important;
+  }
+}

@@ -103,10 +103,11 @@ test("trainer program validation rejects negative reps and invalid weight", () =
 });
 
 test("trainer schedule validation requires exact unique dates", () => {
-  const duplicateResult = validateTrainerWorkoutScheduleDates(["2026-07-10", "2026-07-10", "2026-07-12"], 2);
-  const invalidResult = validateTrainerWorkoutScheduleDates(["2026-07-10", "tomorrow"], 2);
-  const mismatchResult = validateTrainerWorkoutScheduleDates(["2026-07-10"], 2);
-  const validResult = validateTrainerWorkoutScheduleDates(["2026-07-12", "2026-07-10"], 2);
+  const options = { todayDate: "2026-07-01" };
+  const duplicateResult = validateTrainerWorkoutScheduleDates(["2026-07-10", "2026-07-10", "2026-07-12"], 2, options);
+  const invalidResult = validateTrainerWorkoutScheduleDates(["2026-07-10", "tomorrow"], 2, options);
+  const mismatchResult = validateTrainerWorkoutScheduleDates(["2026-07-10"], 2, options);
+  const validResult = validateTrainerWorkoutScheduleDates(["2026-07-12", "2026-07-10"], 2, options);
 
   assert.equal(duplicateResult.ok, false);
   assert.equal(duplicateResult.errors.some((error) => error.code === "schedule_date_duplicate"), true);
@@ -116,6 +117,23 @@ test("trainer schedule validation requires exact unique dates", () => {
   assert.equal(mismatchResult.errors.some((error) => error.code === "schedule_date_count_mismatch"), true);
   assert.equal(validResult.ok, true);
   assert.deepEqual(validResult.cleanDates, ["2026-07-10", "2026-07-12"]);
+});
+
+test("trainer schedule validation rejects newly assigned past dates but preserves existing ones", () => {
+  const pastDateResult = validateTrainerWorkoutScheduleDates(
+    ["2026-08-19", "2026-08-22"],
+    2,
+    { todayDate: "2026-08-21" }
+  );
+  const existingDateResult = validateTrainerWorkoutScheduleDates(
+    ["2026-08-19", "2026-08-22"],
+    2,
+    { todayDate: "2026-08-21", allowedPastDates: ["2026-08-19"] }
+  );
+
+  assert.equal(pastDateResult.ok, false);
+  assert.equal(pastDateResult.errors.some((error) => error.code === "schedule_date_past"), true);
+  assert.equal(existingDateResult.ok, true);
 });
 
 test("trainer validation messages stay readable", () => {

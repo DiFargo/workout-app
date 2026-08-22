@@ -1,4 +1,5 @@
 import styles from "./ProfileBodyMetricsSettingsSection.module.css";
+import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations";
 
 const SEX_OPTIONS = [
   { id: "male", title: "Мужчина" },
@@ -81,6 +82,7 @@ export default function ProfileBodyMetricsSettingsSection({
   const variantClass = variant === "tab" ? styles.tab : styles.modal;
   const isCollapsible = variant === "tab";
   const expanded = isCollapsible ? open : true;
+  const profileValidation = getAiNutritionProfileValidation(draft);
   const heading = (
     <div className={styles.headText}>
       <span className={styles.eyebrow}>ПРОФИЛЬ</span>
@@ -187,9 +189,16 @@ export default function ProfileBodyMetricsSettingsSection({
             className={styles.saveButton}
             data-testid="profile-body-metrics-save"
             onClick={onSave}
+            disabled={!profileValidation.valid}
+            aria-describedby={!profileValidation.valid ? "profile-body-metrics-hint" : undefined}
           >
             Сохранить анкету
           </button>
+          {!profileValidation.valid && (
+            <p className={styles.validationHint} id="profile-body-metrics-hint" role="status">
+              Для расчёта целей заполни: {profileValidation.missing.join(", ")}.
+            </p>
+          )}
         </div>
       )}
     </section>

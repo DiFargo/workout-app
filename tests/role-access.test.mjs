@@ -62,3 +62,10 @@ test("admin claim keeps admin role and trainer access", () => {
     true
   );
 });
+
+test("stored trainer role is normalized before access is resolved", () => {
+  assert.equal(
+    resolveUserRole({ isAdminClaim: false, role: " Trainer " }),
+    "trainer"
+  );
+});

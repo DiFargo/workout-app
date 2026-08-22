@@ -343,3 +343,16 @@
     overflow: visible;
   }
 }
+
+@media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .exercisePanel.exercisePanel,
+  :global(:root[data-app-theme="warm-light"]) .warmupPanel.warmupPanel {
+    width: var(--workout-run-content-width);
+    max-width: var(--workout-run-content-width);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .exerciseNavigationRow.exerciseNavigationRow,
+  :global(:root[data-app-theme="warm-light"]) .warmupPanel.warmupPanel .navigationRow.navigationRow {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+}

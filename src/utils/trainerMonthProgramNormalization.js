@@ -1,4 +1,5 @@
 import { normalizeWorkoutTaskBlocks } from "./universalWorkoutBlocks.js";
+import { normalizeTrainerProgramFormat } from "./trainerProgramFormat.js";
 
 export function normalizeTrainerMonthProgram(program = {}, options = {}) {
   const getNowIso = typeof options.getNowIso === "function"
@@ -69,6 +70,7 @@ export function normalizeTrainerMonthProgram(program = {}, options = {}) {
     id: program.id || getFallbackId(),
     name: program.name || "Программа на месяц",
     description: program.description || "",
+    trainingFormat: normalizeTrainerProgramFormat(program.trainingFormat),
     ownerUid: program.ownerUid || "",
     ownerRole: program.ownerRole || "",
     createdByUid: program.createdByUid || "",

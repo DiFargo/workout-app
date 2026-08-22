@@ -1,7 +1,8 @@
+import { BARCODE_SEARCH_ENABLED } from "../../../constants/appConfig";
 import styles from "./NutritionBarcodeOverlay.module.css";
 
 export default function NutritionBarcodeOverlay({ open }) {
-  if (!open) {
+  if (!BARCODE_SEARCH_ENABLED || !open) {
     return null;
   }
 

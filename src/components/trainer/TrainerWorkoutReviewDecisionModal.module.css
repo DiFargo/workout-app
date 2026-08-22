@@ -10,11 +10,12 @@
 }
 
 .modal {
-  position: relative;
   width: min(640px, 100%);
-  max-height: calc(100vh - 40px);
-  overflow: auto;
-  padding: 24px;
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
   border: 1px solid #efebf3;
   border-radius: 20px;
   background: #fff;
@@ -22,12 +23,10 @@
 }
 
 .close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
   place-items: center;
   border: 1px solid #efebf3;
   border-radius: 12px;
@@ -37,10 +36,17 @@
 }
 
 .header {
-  padding-right: 48px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 16px;
 }
 
-.header > span,
+.header > div { min-width: 0; }
+
+.header span,
 .context span {
   display: block;
   margin-bottom: 5px;
@@ -67,10 +73,15 @@
 }
 
 .context {
+  min-width: 0;
+  flex: 1 1 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: 20px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 24px 16px;
 }
 
 .context > div {
@@ -89,10 +100,13 @@
 }
 
 .actions {
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: 16px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid #efebf3;
+  background: #ffffff;
 }
 
 .actions button {
@@ -148,7 +162,8 @@
 }
 
 .status {
-  margin: 12px 0 0;
+  grid-column: 1 / -1;
+  margin: 0;
   color: #bd4c4c;
   font-size: 12px;
   font-weight: 700;
@@ -162,9 +177,14 @@
 
   .modal {
     max-height: calc(100dvh - 20px);
-    padding: 20px 16px 16px;
     border-radius: 18px;
   }
+
+  .header { padding: 18px 16px 14px; }
+
+  .context { padding: 2px 16px 14px; }
+
+  .actions { padding: 14px 16px max(16px, env(safe-area-inset-bottom)); }
 
   .header h2 {
     font-size: 21px;

@@ -1,10 +1,200 @@
 /* The base trainer rules above are shared with legacy pages. Keep client tabs explicit. */
+:local(.scope) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoading) {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--tn-line);
+  border-radius: 24px;
+  background: var(--tn-surface);
+  box-shadow: var(--tn-shadow);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingHeader) {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 72px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingAvatar),
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingTabs span),
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingCards span) {
+  display: block;
+  border-radius: 14px;
+  background: linear-gradient(100deg, var(--tn-surface-soft) 30%, #ffffff 48%, var(--tn-surface-soft) 66%);
+  background-size: 220% 100%;
+  animation: trainerClientLoadingShimmer 1.25s ease-in-out infinite;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingAvatar) {
+  width: 60px;
+  height: 60px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingHeader strong) {
+  display: block;
+  color: var(--tn-text);
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingHeader p) {
+  margin: 5px 0 0;
+  color: var(--tn-muted);
+  font-size: 13px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingTabs) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingTabs span) {
+  height: 42px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingCards) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientLoadingCards span) {
+  height: 112px;
+}
+
+@keyframes trainerClientLoadingShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
 :global(.trainerNextRoot) :global(.trainerNextClientHeader) {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
   padding: 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientHeaderLocked) {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireStatus) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  margin-top: 6px;
+  padding: 0 11px;
+  border-radius: 999px;
+  color: #716988;
+  background: var(--tn-surface-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGate) {
+  position: relative;
+  display: grid;
+  min-height: 360px;
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 24px;
+  background: var(--tn-surface);
+  box-shadow: var(--tn-shadow);
+  isolation: isolate;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreview) {
+  display: grid;
+  align-content: start;
+  gap: 20px;
+  padding: 26px;
+  filter: blur(7px);
+  opacity: 0.58;
+  transform: scale(1.025);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewTabs),
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewCards) {
+  display: grid;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewTabs) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewCards) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewTabs span),
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewCards span),
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewWide) {
+  display: block;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewTabs span) {
+  height: 42px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewCards span) {
+  min-height: 118px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewWide) {
+  min-height: 92px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateMessage) {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 520px;
+  margin: auto;
+  padding: 28px;
+  text-align: left;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateIcon) {
+  display: inline-grid;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 18px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateMessage strong) {
+  display: block;
+  color: var(--tn-text);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateMessage p) {
+  max-width: 390px;
+  margin: 7px 0 0;
+  color: var(--tn-muted);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientOverview) {
@@ -47,12 +237,69 @@
 }
 
 @media (max-width: 760px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientLoading) {
+    gap: 12px;
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientLoadingHeader) {
+    min-height: 60px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientLoadingAvatar) {
+    width: 52px;
+    height: 52px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientLoadingCards span) {
+    height: 86px;
+  }
+
   :global(.trainerNextRoot) :global(.trainerNextClientHeader) {
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     flex-direction: unset;
     gap: 12px;
     padding: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGate) {
+    min-height: 315px;
+    border-radius: 20px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreview) {
+    gap: 12px;
+    padding: 18px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewTabs) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewCards) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnairePreviewCards span) {
+    min-height: 96px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateMessage) {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateIcon) {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateMessage strong) {
+    font-size: 18px;
   }
 
   :global(.trainerNextRoot) :global(.trainerNextClientTaskButton) {

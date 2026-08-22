@@ -27,6 +27,7 @@ import {
 import { getClientEffectiveNutritionGoals } from "../../utils/clientNutritionPlan";
 import { buildProgressInsight } from "../../utils/progressInsight";
 import { getTrainerSummaryPeriodBounds } from "../../utils/trainerSummaryDates";
+import { MAX_TRAINER_SUMMARY_CONCURRENCY } from "../../utils/trainerDataReadLimits.js";
 
 function getTrainerClientScheduledDates(client = {}, workouts = []) {
   const calendar = client?.workoutCalendar || {};
@@ -56,6 +57,7 @@ export function createTrainerClientSummaryLoader({
     const requestId = trainerClientSummaryRequestRef.current + 1;
     trainerClientSummaryRequestRef.current = requestId;
     const safeClients = Array.isArray(clients) ? clients.filter((client) => client?.id) : [];
+    setTrainerClientSummariesLoading(true);
 
     if (!safeClients.length) {
       setTrainerClientSummaries({});
@@ -64,16 +66,21 @@ export function createTrainerClientSummaryLoader({
     }
 
     setTrainerClientSummaries((previous) => Object.fromEntries(
-      safeClients.map((client) => [client.id, getTrainerClientFastSummary(client, previous[client.id])])
+      safeClients.map((client) => [client.id, {
+        ...getTrainerClientFastSummary(client, previous[client.id]),
+        trainerSummaryReady: false
+      }])
     ));
-    setTrainerClientSummariesLoading(false);
     const nextSummaries = {};
     let nextClientIndex = 0;
     const { weekStart, sevenDayStart, thirtyDayStart } = getTrainerSummaryPeriodBounds();
 
     const loadClientSummary = async (client) => {
       if (!canLoadTrainerClientDeepSummary(client)) {
-        return getTrainerClientFastSummary(client);
+        return {
+          ...getTrainerClientFastSummary(client),
+          trainerSummaryReady: true
+        };
       }
 
       const [historyResult, nutritionResult, measurementsResult, paymentResult, workoutsResult, tasksResult] = await Promise.allSettled([
@@ -113,7 +120,8 @@ export function createTrainerClientSummaryLoader({
       const completedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(
         clientHistory,
         assignedProgramUpdatedAt,
-        client.workoutCalendar || {}
+        client.workoutCalendar || {},
+        clientWorkouts
       );
       const assignedWorkoutCount = getTrainerAssignedWorkoutCount(client, clientWorkouts);
       const payment = getTrainerSettledDocumentData(paymentResult);
@@ -163,12 +171,13 @@ export function createTrainerClientSummaryLoader({
           assignedWorkoutCount,
           completedWorkoutCount,
           historyResult.status === "fulfilled"
-        )
+        ),
+        trainerSummaryReady: true
       };
     };
 
     const workers = Array.from(
-      { length: Math.min(4, safeClients.length) },
+      { length: Math.min(MAX_TRAINER_SUMMARY_CONCURRENCY, safeClients.length) },
       async () => {
         while (nextClientIndex < safeClients.length) {
           const client = safeClients[nextClientIndex];
@@ -178,7 +187,18 @@ export function createTrainerClientSummaryLoader({
             nextSummaries[client.id] = await loadClientSummary(client);
           } catch (error) {
             console.warn(`Trainer summary load failed for ${client.id}:`, error);
-            nextSummaries[client.id] = getTrainerClientEmptySummary(client);
+            nextSummaries[client.id] = {
+              ...getTrainerClientEmptySummary(client),
+              trainerSummaryReady: true
+            };
+          }
+
+          if (trainerClientSummaryRequestRef.current === requestId) {
+            const resolvedSummary = nextSummaries[client.id];
+            setTrainerClientSummaries((previous) => ({
+              ...previous,
+              [client.id]: resolvedSummary
+            }));
           }
         }
       }

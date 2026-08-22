@@ -6,8 +6,27 @@ import {
 import { getFoodIcon } from "../../../utils/nutritionFoodPresentation";
 import { parseNutritionNumber, roundMacro } from "../../../utils/nutritionNumbers";
 import { getFoodPortionAmount, getFoodScale } from "../../../utils/nutritionPortions";
-import { loadRecentNutritionFoods } from "../../../utils/nutritionPreferenceStorage";
+import {
+  loadRecentNutritionFoods,
+  saveRecentNutritionFood
+} from "../../../utils/nutritionPreferenceStorage";
 import { validateNutritionAmount } from "../../../utils/clientUx";
+
+function createNutritionEntryId(foodId) {
+  const uniquePart = globalThis.crypto?.randomUUID?.() || `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+  return `${foodId}_${uniquePart}`;
+}
+
+function isAiNutritionEstimate(food = {}) {
+  const source = String(food.source || "").trim();
+  const sourceType = String(food.sourceType || "").trim().toLowerCase();
+  const evidenceType = String(food.evidenceType || "").trim().toLowerCase();
+
+  return food.requiresReview === true ||
+    sourceType === "ai_estimate" ||
+    evidenceType === "estimate" ||
+    /(?:оценка\s*ии|ai\s*(?:фото|voice|estimate)|openai)/i.test(source);
+}
 
 export function createNutritionFoodCommitHandlers({
   editingNutritionItemId,
@@ -28,7 +47,12 @@ export function createNutritionFoodCommitHandlers({
   setNutritionEditNote,
   setRecentNutritionFoods
 }) {
-  function addNutritionFood(food, mealId = nutritionMeal, amount = nutritionAmount) {
+  function getPersonalFoodId(food) {
+    const explicitId = String(food?.foodId || food?.id || "");
+    return explicitId.startsWith("my_") ? explicitId : makePersonalFoodKey(food);
+  }
+
+  function saveNutritionFoodToMyDatabase(food, amount = 100, options = {}) {
     const amountValidation = validateNutritionAmount(amount);
     if (!amountValidation.valid) {
       setNutritionAmountError(amountValidation.error);
@@ -36,18 +60,77 @@ export function createNutritionFoodCommitHandlers({
     }
 
     const sourceFood = normalizeNutritionFood(food);
+    const amountMode = options.amountMode === "portion" ? "portion" : "grams";
+    const note = typeof options.note === "string" ? options.note.trim() : "";
     const numericAmount = amountValidation.amount;
-    const scale = getFoodScale(numericAmount, sourceFood, nutritionAmountMode);
+    const myFoodId = getPersonalFoodId(sourceFood);
+
+    setNutrition((prev) => {
+      const existing = prev.myFoods?.[myFoodId];
+      const personalFood = normalizeMyFoodRecord(
+        {
+          ...sourceFood,
+          id: myFoodId,
+          foodId: myFoodId,
+          note,
+          description: note,
+          amountMode,
+          portionAmount: amountMode === "portion"
+            ? numericAmount
+            : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood))
+        },
+        numericAmount,
+        existing
+      );
+      const nextMyFoods = {
+        ...(prev.myFoods || {}),
+        [myFoodId]: personalFood
+      };
+
+      savePersonalMyFoodsToFirebase(nextMyFoods, {
+        id: myFoodId,
+        food: personalFood
+      });
+
+      return {
+        ...prev,
+        myFoods: nextMyFoods,
+        recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId && id !== sourceFood.id)].slice(0, 20)
+      };
+    });
+
+    setNutritionAmountError("");
+    return true;
+  }
+
+  function addNutritionFood(food, mealId = nutritionMeal, amount = nutritionAmount, options = {}) {
+    const amountValidation = validateNutritionAmount(amount);
+    if (!amountValidation.valid) {
+      setNutritionAmountError(amountValidation.error);
+      return false;
+    }
+
+    const amountMode = options.amountMode === "grams" || options.amountMode === "portion"
+      ? options.amountMode
+      : nutritionAmountMode;
+    const note = typeof options.note === "string" ? options.note.trim() : nutritionEditNote.trim();
+    const shouldExpandMeal = options.expandMeal !== false;
+    const sourceFood = normalizeNutritionFood(food);
+    const shouldSaveToMyFoods = typeof options.saveToMyFoods === "boolean"
+      ? options.saveToMyFoods
+      : !isAiNutritionEstimate(sourceFood);
+    const numericAmount = amountValidation.amount;
+    const scale = getFoodScale(numericAmount, sourceFood, amountMode);
     const item = {
-      id: `${sourceFood.id}_${Date.now()}`,
+      id: createNutritionEntryId(sourceFood.id),
       foodId: sourceFood.id,
       fatSecretId: food.fatSecretId || "",
       name: sourceFood.name,
       mealId,
       amount: numericAmount,
-      amountMode: nutritionAmountMode,
+      amountMode,
       portion: sourceFood.portion,
-      portionAmount: nutritionAmountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood)),
+      portionAmount: amountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood)),
       calories: Math.round(sourceFood.calories * scale),
       protein: roundMacro(sourceFood.protein * scale),
       fat: roundMacro(sourceFood.fat * scale),
@@ -57,24 +140,32 @@ export function createNutritionFoodCommitHandlers({
       type: sourceFood.type || "",
       totalWeight: parseNutritionNumber(sourceFood.totalWeight, 0) || parseNutritionNumber(sourceFood.portionAmount, 0) || 0,
       ingredients: Array.isArray(sourceFood.ingredients) ? sourceFood.ingredients : [],
-      note: nutritionEditNote.trim(),
+      note,
       addedAt: new Date().toISOString()
     };
 
     addNutritionFoodToDay(item);
+    saveRecentNutritionFood(sourceFood);
 
     setNutrition((prev) => {
-      const myFoodId = makePersonalFoodKey(sourceFood);
+      if (!shouldSaveToMyFoods) {
+        return {
+          ...prev,
+          recent: [sourceFood.id, ...(prev.recent || []).filter((id) => id !== sourceFood.id)].slice(0, 20)
+        };
+      }
+
+      const myFoodId = getPersonalFoodId(sourceFood);
       const existing = prev.myFoods?.[myFoodId];
       const personalFood = normalizeMyFoodRecord(
         {
           ...sourceFood,
           id: myFoodId,
           foodId: myFoodId,
-          note: nutritionEditNote.trim(),
-          description: nutritionEditNote.trim(),
-          amountMode: nutritionAmountMode,
-          portionAmount: nutritionAmountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood))
+          note,
+          description: note,
+          amountMode,
+          portionAmount: amountMode === "portion" ? numericAmount : (Number(sourceFood.portionAmount) || getFoodPortionAmount(sourceFood))
         },
         numericAmount,
         existing
@@ -85,7 +176,10 @@ export function createNutritionFoodCommitHandlers({
         [myFoodId]: personalFood
       };
 
-      savePersonalMyFoodsToFirebase(nextMyFoods);
+      savePersonalMyFoodsToFirebase(nextMyFoods, {
+        id: myFoodId,
+        food: personalFood
+      });
 
       return {
         ...prev,
@@ -94,11 +188,14 @@ export function createNutritionFoodCommitHandlers({
       };
     });
 
-    setExpandedNutritionMeals((prev) => ({
-      ...prev,
-      [mealId]: true
-    }));
+    if (shouldExpandMeal) {
+      setExpandedNutritionMeals((prev) => ({
+        ...prev,
+        [mealId]: true
+      }));
+    }
     setNutritionAmountError("");
+    if (typeof options.onAdded === "function") options.onAdded(item);
     return true;
   }
 
@@ -110,6 +207,7 @@ export function createNutritionFoodCommitHandlers({
     }
 
     const sourceFood = normalizeNutritionFood(food);
+    const shouldSaveToMyFoods = !isAiNutritionEstimate(sourceFood);
     const numericAmount = amountValidation.amount;
     const scale = getFoodScale(numericAmount, sourceFood, nutritionAmountMode);
 
@@ -144,7 +242,11 @@ export function createNutritionFoodCommitHandlers({
     }));
 
     setNutrition((prev) => {
-      const myFoodId = makePersonalFoodKey(sourceFood);
+      if (!shouldSaveToMyFoods) {
+        return prev;
+      }
+
+      const myFoodId = getPersonalFoodId(sourceFood);
       const existing = prev.myFoods?.[myFoodId];
       const personalFood = normalizeMyFoodRecord(
         {
@@ -165,7 +267,10 @@ export function createNutritionFoodCommitHandlers({
         [myFoodId]: personalFood
       };
 
-      savePersonalMyFoodsToFirebase(nextMyFoods);
+      savePersonalMyFoodsToFirebase(nextMyFoods, {
+        id: myFoodId,
+        food: personalFood
+      });
 
       return {
         ...prev,
@@ -205,24 +310,6 @@ export function createNutritionFoodCommitHandlers({
           : (Number(selectedNutritionFood.portionAmount) || getFoodPortionAmount(selectedNutritionFood))
       });
 
-      setNutrition((prev) => {
-        const current = prev.myFoods?.[myFoodId] || {};
-        const updatedFood = normalizeMyFoodRecord(foodToAdd, numericAmount, current);
-
-        const nextMyFoods = {
-          ...(prev.myFoods || {}),
-          [myFoodId]: updatedFood
-        };
-
-        savePersonalMyFoodsToFirebase(nextMyFoods);
-
-        return {
-          ...prev,
-          myFoods: nextMyFoods,
-          recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId)].slice(0, 20)
-        };
-      });
-
       if (!addNutritionFood(foodToAdd, nutritionMeal, numericAmount)) return;
 
       setRecentNutritionFoods(loadRecentNutritionFoods());
@@ -244,6 +331,7 @@ export function createNutritionFoodCommitHandlers({
 
   return {
     addNutritionFood,
+    saveNutritionFoodToMyDatabase,
     updateNutritionFood,
     confirmNutritionFoodFromPicker
   };

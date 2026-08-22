@@ -84,7 +84,7 @@
 
 .panel.embeddedPanel .filters button,
 .panel.embeddedPanel .resolveAllButton {
-  min-height: 36px;
+  min-height: 44px;
 }
 
 .panel.embeddedPanel .resolveAllButton {
@@ -177,13 +177,18 @@
   font-size: 9px;
 }
 
-.filters button.active {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
+.filters button.active,
+.filters button[aria-pressed="true"],
+.filters button[data-selected="true"] {
+  border-color: #806bb6;
+  background: #806bb6;
   color: #fff;
+  box-shadow: 0 5px 12px rgba(128, 107, 182, 0.24);
 }
 
-.filters button.active span {
+.filters button.active span,
+.filters button[aria-pressed="true"] span,
+.filters button[data-selected="true"] span {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
@@ -306,17 +311,18 @@
 }
 
 .reply {
-  min-height: 28px;
+  min-height: 44px;
   padding: 0 9px;
   border: 1px solid #ded5ff;
   background: #fff;
-  color: var(--tn-purple);
+  color: #806bb6;
 }
 
 .replyPrimary {
-  border-color: var(--tn-purple);
-  background: var(--tn-purple);
+  border-color: #806bb6;
+  background: #806bb6;
   color: #fff;
+  box-shadow: 0 5px 12px rgba(128, 107, 182, 0.24);
 }
 
 .empty {
@@ -384,6 +390,14 @@
 
   .resolveAllButton {
     justify-self: start;
+  }
+}
+
+@media (max-width: 699px) {
+  .filters button,
+  .resolveAllButton,
+  .moreButton {
+    min-height: 44px;
   }
 }
 

@@ -16,9 +16,13 @@ function startOfUtcDay(value = new Date()) {
 export function normalizeClientSubscription(subscription = {}) {
   const purchasedSessions = Math.max(0, Number(subscription.purchasedSessions ?? subscription.totalSessions) || 0);
   const usedSessions = Math.max(0, Number(subscription.usedSessions) || 0);
-  const remainingSessions = Math.max(0, Number.isFinite(Number(subscription.remainingSessions))
-    ? Number(subscription.remainingSessions)
-    : purchasedSessions - usedSessions);
+  const hasSessionCounters = subscription.purchasedSessions !== undefined ||
+    subscription.totalSessions !== undefined || subscription.usedSessions !== undefined;
+  // `remainingSessions` was written by older saves and can retain the balance
+  // of the previous cycle. Counters are the source of truth for an active plan.
+  const remainingSessions = Math.max(0, hasSessionCounters
+    ? purchasedSessions - usedSessions
+    : (Number(subscription.remainingSessions) || 0));
   const cycleId = String(subscription.cycleId || subscription.renewedAt || subscription.startDate || "legacy")
     .replace(/[^a-zA-Z0-9_-]/g, "_");
 
@@ -50,7 +54,7 @@ export function getSubscriptionStatus(subscription = {}, now = new Date(), setti
   if (frozen) return { id: "frozen", label: "Заморожен", tone: "neutral", daysRemaining, ...normalized };
   if (expiredByDate || expiredBySessions) return { id: "expired", label: "Закончился", tone: "negative", daysRemaining, ...normalized };
   if ((daysRemaining !== null && daysRemaining <= warningDays) || (normalized.purchasedSessions > 0 && normalized.remainingSessions <= warningSessions)) {
-    return { id: "ending", label: "Скоро закончится", tone: "warning", daysRemaining, ...normalized };
+    return { id: "ending", label: "Абонемент скоро закончится", tone: "warning", daysRemaining, ...normalized };
   }
   if (subscription.lastRenewedAt || subscription.status === "renewed") {
     return { id: "renewed", label: "Продлён", tone: "positive", daysRemaining, ...normalized };

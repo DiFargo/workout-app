@@ -1,18 +1,13 @@
-import { useState } from "react";
-import { Paperclip } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
-import { WorkoutModePickerDialog } from "./WorkoutListDialogs";
+import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 import styles from "./WorkoutModePage.module.css";
 
 export default function WorkoutModePage({
-  workoutModePreference,
-  workoutModeRemember,
   renderClientMainBottomBar,
   canUseTrainerFeatures,
   onBackToMain,
   onOpenBasicWorkouts,
   onOpenIndividualWorkouts,
-  onToggleWorkoutModeRemember,
   onOpenTraining,
   onOpenNutrition,
   onOpenCabinet,
@@ -20,31 +15,21 @@ export default function WorkoutModePage({
   onOpenTrainerPrograms,
   onLoadTrainerCabinet
 }) {
-  const [workoutModePickerOpen, setWorkoutModePickerOpen] = useState(false);
-  const resolvedWorkoutModePreference = workoutModePreference || { mode: "individual" };
-
   return (
-    <div className={styles.page} data-testid="workout-mode-page" data-css-module-scope="workout-mode">
+    <div className={`${styles.page} ${adaptiveShellStyles.shell}`} data-client-adaptive-shell="true" data-testid="workout-mode-page" data-css-module-scope="workout-mode">
       <ClientPageHeader
         compact
         className={styles.topBar}
-        title="Режим запуска"
-        eyebrow="Тренировки"
-        onBack={onBackToMain}
-        backAriaLabel="Вернуться на главную"
+        title="Режим тренировок"
+        eyebrow="Кабинет"
+        onBack={onOpenCabinet || onBackToMain}
+        backAriaLabel="Вернуться в кабинет"
         testId="workout-mode-header"
         scope="workout-mode-header"
-        actions={(
-          <div className={styles.topActions}>
-          <button className={styles.topButton} type="button" onClick={() => setWorkoutModePickerOpen(true)} aria-label="Выбрать режим запуска тренировки">
-            <Paperclip aria-hidden="true" />
-          </button>
-          </div>
-        )}
       />
 
       <p className={styles.lead} data-testid="workout-mode-lead">
-        Можно тренироваться по базовой программе или по индивидуальному плану от тренера.
+        Выбери, по какой программе тренироваться. Режим можно изменить в кабинете в любой момент.
       </p>
 
       <section className={styles.cards} data-testid="workout-mode-cards">
@@ -67,15 +52,6 @@ export default function WorkoutModePage({
         </button>
       </section>
 
-      <label className={styles.remember} data-testid="workout-mode-remember">
-        <input
-          type="checkbox"
-          checked={workoutModeRemember}
-          onChange={(event) => onToggleWorkoutModeRemember(event.target.checked)}
-        />
-        <span>Запомнить выбор и больше не спрашивать</span>
-      </label>
-
       {renderClientMainBottomBar?.(
         "workouts",
         {
@@ -91,21 +67,6 @@ export default function WorkoutModePage({
         }
       )}
 
-      <WorkoutModePickerDialog
-        open={workoutModePickerOpen}
-        workoutModePreference={resolvedWorkoutModePreference}
-        rememberChoice={workoutModeRemember}
-        onClose={() => setWorkoutModePickerOpen(false)}
-        onOpenBasic={() => {
-          setWorkoutModePickerOpen(false);
-          onOpenBasicWorkouts();
-        }}
-        onOpenIndividual={() => {
-          setWorkoutModePickerOpen(false);
-          onOpenIndividualWorkouts();
-        }}
-        onRememberChoiceChange={onToggleWorkoutModeRemember}
-      />
     </div>
   );
 }

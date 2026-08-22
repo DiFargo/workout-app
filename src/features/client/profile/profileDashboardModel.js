@@ -1,7 +1,89 @@
+import { isWorkoutPlanForMode } from "../../../utils/workoutPlanMode.js";
+
 function normalizeDashboardDateKeys(values = []) {
   return [...new Set((Array.isArray(values) ? values : [])
     .filter((dateKey) => typeof dateKey === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dateKey))
   )].sort();
+}
+
+function getRussianDayLabel(days) {
+  const lastTwoDigits = days % 100;
+  const lastDigit = days % 10;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return "дней";
+  if (lastDigit === 1) return "день";
+  if (lastDigit >= 2 && lastDigit <= 4) return "дня";
+  return "дней";
+}
+
+const WEIGHT_CHECK_IN_INTERVAL_DAYS = 7;
+const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+function getCalendarDayTimestamp(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return 0;
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
+export function getProfileWeightCheckInState(measurements = [], {
+  now = new Date(),
+  intervalDays = WEIGHT_CHECK_IN_INTERVAL_DAYS
+} = {}) {
+  const safeIntervalDays = Math.max(1, Math.round(Number(intervalDays) || WEIGHT_CHECK_IN_INTERVAL_DAYS));
+  const weightedMeasurements = (Array.isArray(measurements) ? measurements : [])
+    .map((measurement) => {
+      const weight = Number(measurement?.weight);
+      const timestamp = getCalendarDayTimestamp(
+        measurement?.date || measurement?.createdAt || measurement?.savedAt || ""
+      );
+
+      return Number.isFinite(weight) && weight > 0 && timestamp
+        ? { measurement, timestamp }
+        : null;
+    })
+    .filter(Boolean)
+    .sort((left, right) => right.timestamp - left.timestamp);
+
+  const latest = weightedMeasurements[0] || null;
+  const todayTimestamp = getCalendarDayTimestamp(now);
+
+  if (!latest) {
+    return {
+      isDue: true,
+      isFirst: true,
+      isOverdue: false,
+      intervalDays: safeIntervalDays,
+      latestMeasurement: null,
+      latestTimestamp: 0,
+      nextDueTimestamp: todayTimestamp
+    };
+  }
+
+  const nextDueTimestamp = latest.timestamp + safeIntervalDays * DAY_IN_MS;
+  const daysPastDue = Math.floor((todayTimestamp - nextDueTimestamp) / DAY_IN_MS);
+
+  return {
+    isDue: todayTimestamp >= nextDueTimestamp,
+    isFirst: false,
+    isOverdue: daysPastDue > 0,
+    daysPastDue: Math.max(0, daysPastDue),
+    intervalDays: safeIntervalDays,
+    latestMeasurement: latest.measurement,
+    latestTimestamp: latest.timestamp,
+    nextDueTimestamp
+  };
+}
+
+export function getProfileMeasurementTrendPeriodLabel(currentTimestamp, previousTimestamp) {
+  if (!Number.isFinite(currentTimestamp) || !Number.isFinite(previousTimestamp)) {
+    return "с прошлого замера";
+  }
+
+  const intervalMs = Math.abs(currentTimestamp - previousTimestamp);
+  const days = Math.round(intervalMs / (24 * 60 * 60 * 1000));
+
+  if (days < 1) return "с прошлого замера";
+  return `за ${days} ${getRussianDayLabel(days)}`;
 }
 
 export function getProfileDashboardScheduleDates(savedDates = [], workouts = [], sortWorkoutDays = (items) => items) {
@@ -82,7 +164,8 @@ export function buildProfileDashboardModel(ctx) {
     shiftProfileWorkoutMonthKey,
     sortWorkoutDays,
     telegramProfile,
-    user
+    user,
+    workoutModePreference
   } = ctx;
 
     const isMainDashboard = page === APP_PAGES.MAIN;
@@ -95,8 +178,10 @@ export function buildProfileDashboardModel(ctx) {
       ...(aiNutritionProfile || {}),
       ...aiNutritionProfileDraft
     };
-    const latestProfileMeasurement = Array.isArray(profileMeasurements) && profileMeasurements.length
-      ? profileMeasurements[0]
+    const bodyMeasurements = (Array.isArray(profileMeasurements) ? profileMeasurements : [])
+      .filter((measurement) => measurement?.measurementType !== "weight_checkin");
+    const latestProfileMeasurement = bodyMeasurements.length
+      ? bodyMeasurements[0]
       : null;
     const latestClientProgressPhoto = Array.isArray(clientProgressPhotos) && clientProgressPhotos.length
       ? clientProgressPhotos[0]
@@ -174,7 +259,11 @@ export function buildProfileDashboardModel(ctx) {
       result[key] = [...(result[key] || []), item];
       return result;
     }, {});
-    const profileCalendarWorkouts = sortWorkoutDays(plan.workouts || []);
+    const selectedWorkoutMode = workoutModePreference?.mode === "basic" ? "basic" : "individual";
+    const selectedModePlan = isWorkoutPlanForMode(plan, selectedWorkoutMode)
+      ? plan
+      : { workouts: [] };
+    const profileCalendarWorkouts = sortWorkoutDays(selectedModePlan.workouts || []);
     const dashboardScheduledDates = getProfileDashboardScheduleDates(
       profileWorkoutScheduledDates,
       profileCalendarWorkouts,
@@ -202,6 +291,44 @@ export function buildProfileDashboardModel(ctx) {
     const nextWorkoutExerciseCount = Array.isArray(nextWorkoutSource?.exercises)
       ? nextWorkoutSource.exercises.length
       : 0;
+    const hasWorkoutPlan = profileCalendarWorkouts.length > 0;
+    const hasPlanInAnotherMode = !hasWorkoutPlan && Array.isArray(plan?.workouts) && plan.workouts.length > 0;
+    const hasPendingWorkout = profileWorkoutSlots.some((slot) => !slot.isCompleted);
+    const homeWorkoutAction = !hasWorkoutPlan && hasPlanInAnotherMode
+      ? {
+          state: "choose",
+          eyebrow: "ТРЕНИРОВКИ",
+          title: "Выберите режим тренировок",
+          dateText: "У вас уже есть план — выберите, как его открыть",
+          exerciseCount: 0,
+          actionLabel: "Выбрать режим"
+        }
+      : !hasWorkoutPlan
+      ? {
+          state: "create",
+          eyebrow: "ТРЕНИРОВКИ",
+          title: "Создайте первый план",
+          dateText: "Выберите формат — приложение подготовит стартовую программу",
+          exerciseCount: 0,
+          actionLabel: "Перейти к тренировке"
+        }
+      : !hasPendingWorkout
+        ? {
+            state: "complete",
+            eyebrow: "ТРЕНИРОВКИ",
+            title: "План выполнен",
+            dateText: "Все тренировки текущего плана завершены",
+            exerciseCount: 0,
+            actionLabel: "Открыть тренировки"
+          }
+        : {
+            state: "ready",
+            eyebrow: nextWorkoutSlot?.isMissed ? "ТРЕНИРОВКА ПЕРЕНЕСЕНА" : "СЛЕДУЮЩАЯ ТРЕНИРОВКА",
+            title: nextWorkoutTitle,
+            dateText: nextWorkoutDate,
+            exerciseCount: nextWorkoutExerciseCount,
+            actionLabel: "Открыть тренировку"
+          };
     const profileWorkoutCalendarEntries = buildWorkoutScheduleCalendarEntries(profileWorkoutSlots);
     const profileWorkoutEntriesByDate = profileWorkoutCalendarEntries.reduce((result, entry) => {
       if (!result[entry.date]) result[entry.date] = [];
@@ -266,7 +393,7 @@ export function buildProfileDashboardModel(ctx) {
           ? userSnapshot.data()?.workoutCalendar || {}
           : {};
         const scheduledDates = [...new Set(profileWorkoutCalendarDraftDates)].sort();
-        const plannedWorkouts = buildWorkoutScheduleDraft(scheduledDates, sortWorkoutDays(plan.workouts || []));
+        const plannedWorkouts = buildWorkoutScheduleDraft(scheduledDates, profileCalendarWorkouts);
         const nextCalendar = {
           ...currentCalendar,
           scheduledDates,
@@ -356,7 +483,16 @@ export function buildProfileDashboardModel(ctx) {
           .split(".")
           .slice(0, 2)
           .join(".");
-        return Number.isFinite(weight) && weight > 0 ? { weight, dateLabel } : null;
+        const timestamp = new Date(
+          measurement?.date || measurement?.createdAt || measurement?.savedAt || ""
+        ).getTime();
+        return Number.isFinite(weight) && weight > 0
+          ? {
+              weight,
+              dateLabel,
+              timestamp: Number.isFinite(timestamp) ? timestamp : 0
+            }
+          : null;
       })
       .filter(Boolean);
     const mainMeasurementSeries = savedMainMeasurementSeries.length
@@ -367,9 +503,31 @@ export function buildProfileDashboardModel(ctx) {
     const mainLatestWeight = mainMeasurementSeries.at(-1)?.weight ||
       (Number.isFinite(mainProfileWeight) && mainProfileWeight > 0 ? mainProfileWeight : 0);
     const mainPreviousWeight = mainMeasurementSeries.at(-2)?.weight || 0;
+    const mainWeightTrendPeriod = getProfileMeasurementTrendPeriodLabel(
+      mainMeasurementSeries.at(-1)?.timestamp,
+      mainMeasurementSeries.at(-2)?.timestamp
+    );
     const mainWeightChange = mainLatestWeight && mainPreviousWeight
       ? mainLatestWeight - mainPreviousWeight
       : 0;
+    const weightCheckInState = getProfileWeightCheckInState(profileMeasurements);
+    const weightCheckInLatestDateText = weightCheckInState.latestMeasurement
+      ? formatProfileMeasurementDate(weightCheckInState.latestMeasurement)
+      : "";
+    const weightCheckInNextDateText = weightCheckInState.nextDueTimestamp
+      ? new Date(weightCheckInState.nextDueTimestamp).toLocaleDateString("ru-RU", {
+          day: "numeric",
+          month: "long"
+        })
+      : "";
+    const weightCheckIn = {
+      ...weightCheckInState,
+      latestDateText: weightCheckInLatestDateText,
+      nextDueDateText: weightCheckInNextDateText,
+      cabinetText: weightCheckInState.isDue
+        ? (weightCheckInState.isFirst ? "Добавьте первый вес" : "Пора взвеситься")
+        : `Следующее взвешивание ${weightCheckInNextDateText}`
+    };
     const progressInsight = buildProgressInsight({
       history,
       measurements: profileMeasurements,
@@ -419,6 +577,7 @@ export function buildProfileDashboardModel(ctx) {
     nextWorkoutDate,
     nextWorkoutTitle,
     nextWorkoutExerciseCount,
+    homeWorkoutAction,
     profileWorkoutCalendarEntries,
     profileWorkoutEntriesByDate,
     profileWorkoutDraftEntriesByDate,
@@ -452,10 +611,13 @@ export function buildProfileDashboardModel(ctx) {
     profileStreak,
     mainProfileWeight,
     savedMainMeasurementSeries,
+    hasSavedWeightMeasurement: savedMainMeasurementSeries.length > 0,
     mainMeasurementSeries,
     mainLatestWeight,
     mainPreviousWeight,
     mainWeightChange,
+    mainWeightTrendPeriod,
+    weightCheckIn,
     progressInsight
   };
 }

@@ -2,8 +2,8 @@
   grid-column: 1 / -1;
   min-width: 0;
   padding: 18px;
-  border: 1px solid var(--tn-line, #e4e7ef);
-  border-radius: 12px;
+  border: 1px solid #efebf3;
+  border-radius: 18px;
   background: #fff;
 }
 
@@ -11,21 +11,21 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin-bottom: 12px;
 }
 
 .dashboardHeader h2 {
   margin: 0;
-  color: var(--tn-text, #151821);
-  font-size: 18px;
+  color: var(--tn-text, #28262e);
+  font-size: 19px;
   line-height: 1.25;
 }
 
 .dashboardHeader p {
   margin: 5px 0 0;
-  color: var(--tn-muted, #7d8494);
-  font-size: 11px;
+  color: var(--tn-muted, #7b7682);
+  font-size: 12px;
 }
 
 .periods {
@@ -36,12 +36,12 @@
 }
 
 .periods button {
-  min-height: 36px;
+  min-height: 38px;
   padding: 0 13px;
-  border: 1px solid var(--tn-line, #e4e7ef);
+  border: 1px solid #e8e2ee;
   border-radius: 9px;
-  background: #fff;
-  color: var(--tn-text, #151821);
+  background: #fcfbfd;
+  color: #5e5867;
   font: inherit;
   font-size: 11px;
   font-weight: 700;
@@ -49,13 +49,14 @@
 }
 
 .periods button:hover {
-  border-color: #cfc5ff;
+  border-color: #d8cee7;
+  background: #f8f5fb;
 }
 
 .periods .active {
-  border-color: #6333f4;
-  background: #6333f4;
-  color: #fff;
+  border-color: #d9cee9;
+  background: #eee9f7;
+  color: #68558b;
 }
 
 .grid {
@@ -70,48 +71,48 @@
 }
 
 .card {
-  --chart-color: #6333f4;
-  --chart-soft: #f3efff;
+  --chart-color: #8c7aac;
+  --chart-soft: #f4f1f7;
   min-width: 0;
   padding: 13px;
-  border: 1px solid var(--tn-line, #e4e7ef);
-  border-radius: 10px;
-  background: #fdfdff;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  background: #fcfbfd;
 }
 
 .weight {
-  --chart-color: #376fd8;
-  --chart-soft: #eef4ff;
+  --chart-color: #7e91ae;
+  --chart-soft: #f2f4f7;
 }
 
 .body {
-  --chart-color: #6b3df2;
-  --chart-soft: #f3efff;
+  --chart-color: #8c7dac;
+  --chart-soft: #f4f1f7;
 }
 
 .strength {
-  --chart-color: #24835b;
-  --chart-soft: #edf8f3;
+  --chart-color: #789486;
+  --chart-soft: #f1f5f2;
 }
 
 .nutrition {
-  --chart-color: #a86a13;
-  --chart-soft: #fff7e8;
+  --chart-color: #9b876b;
+  --chart-soft: #f8f4ef;
 }
 
 .cardHeader {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) auto;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
 }
 
 .icon {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   display: grid;
   place-items: center;
-  border-radius: 9px;
+  border-radius: 10px;
   background: var(--chart-soft);
   color: var(--chart-color);
 }
@@ -123,7 +124,7 @@
 .cardTitle small {
   display: block;
   margin-bottom: 2px;
-  color: var(--tn-muted, #7d8494);
+  color: #89828f;
   font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.055em;
@@ -131,35 +132,39 @@
 
 .cardTitle h3 {
   margin: 0;
-  color: var(--tn-text, #151821);
+  color: var(--tn-text, #28262e);
   font-size: 13px;
   line-height: 1.2;
 }
 
 .badge {
   max-width: 140px;
-  padding: 5px 8px;
+  padding: 4px 7px;
+  border: 1px solid #ece7f0;
   border-radius: 999px;
-  background: #f3f4f7;
-  color: #697080;
+  background: #f8f6fa;
+  color: #7a7481;
   font-size: 8px;
   font-weight: 800;
   white-space: nowrap;
 }
 
 .badge.positive {
-  background: #eaf8f1;
-  color: #19764e;
+  border-color: #e2ece5;
+  background: #f4f8f5;
+  color: #6b816f;
 }
 
 .badge.negative {
-  background: #fff0f1;
-  color: #c23443;
+  border-color: #f0e4e6;
+  background: #fbf6f7;
+  color: #927178;
 }
 
 .badge.warning {
-  background: #fff5e6;
-  color: #9b620f;
+  border-color: #eee7dd;
+  background: #faf7f2;
+  color: #8b7a63;
 }
 
 .metricRow {
@@ -172,36 +177,36 @@
 }
 
 .metricRow strong {
-  color: var(--tn-text, #151821);
+  color: var(--tn-text, #28262e);
   font-size: 20px;
   line-height: 1;
 }
 
 .metricRow span {
-  color: var(--tn-muted, #7d8494);
+  color: #817b87;
   font-size: 9px;
   font-weight: 700;
   text-align: right;
 }
 
 .chartWrap {
-  min-height: 112px;
+  min-height: 100px;
 }
 
 .chartWrap svg {
   width: 100%;
-  height: 92px;
+  height: 82px;
   display: block;
   overflow: visible;
 }
 
 .gridLine {
-  stroke: #eceef4;
+  stroke: #f0edf2;
   stroke-width: 1;
 }
 
 .baseline {
-  stroke: #cfd3de;
+  stroke: #dad4df;
   stroke-width: 1;
   stroke-dasharray: 4 4;
 }
@@ -209,7 +214,7 @@
 .line {
   fill: none;
   stroke: var(--chart-color);
-  stroke-width: 2.5;
+  stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -217,7 +222,7 @@
 .dot {
   fill: #fff;
   stroke: var(--chart-color);
-  stroke-width: 2.5;
+  stroke-width: 2;
 }
 
 .chartDates {
@@ -229,7 +234,7 @@
 }
 
 .emptyChart {
-  min-height: 112px;
+  min-height: 100px;
   display: grid;
   place-items: center;
   border-radius: 8px;
@@ -240,13 +245,17 @@
 }
 
 .explanation {
-  min-height: 32px;
+  min-height: 0;
   margin: 7px 0 0;
   padding-top: 9px;
-  border-top: 1px solid #eceef4;
-  color: #6d7483;
+  border-top: 1px solid #efebf3;
+  color: #7b7682;
   font-size: 9px;
   line-height: 1.45;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 @media (max-width: 1180px) {
@@ -286,7 +295,7 @@
   }
 
   .cardHeader {
-    grid-template-columns: 38px minmax(0, 1fr);
+    grid-template-columns: 34px minmax(0, 1fr);
   }
 
   .badge {

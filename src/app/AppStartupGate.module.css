@@ -1,4 +1,70 @@
 :global {
+/* A signed-in account must never fall back to the client UI before its
+   server-side role has been verified. */
+.roleAccessGate {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #f7f6f8;
+  color: #28262e;
+}
+
+.roleAccessGateCard {
+  box-sizing: border-box;
+  width: min(100%, 420px);
+  padding: 28px;
+  border: 1px solid #efebf3;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 24px 58px rgba(72, 63, 87, 0.12);
+}
+
+.roleAccessGateCard > span {
+  color: #8f7ac8;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.roleAccessGateCard h1 {
+  margin: 12px 0 8px;
+  font-size: 26px;
+  line-height: 1.12;
+}
+
+.roleAccessGateCard p {
+  margin: 0;
+  color: #7b7682;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.roleAccessGateCard > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.roleAccessGateCard button {
+  min-height: 48px;
+  border: 1px solid #efebf3;
+  border-radius: 15px;
+  background: #fff;
+  color: #8f7ac8;
+  font: inherit;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.roleAccessGateCard button.primary {
+  border-color: #8f7ac8;
+  background: #8f7ac8;
+  color: #fff;
+}
+
 /* Profile body metrics and first setup core surfaces. */
 .profileBodyMetricsCard {
   width: 100%;

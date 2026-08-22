@@ -1,3 +1,5 @@
+import styles from "./appFeedback.module.css";
+
 function getAppErrorPreset(type = "api") {
   const presets = {
     offline: {
@@ -79,33 +81,33 @@ export function showAppConfirm(messageOrOptions = "", maybeOptions = {}) {
 
   return new Promise((resolve) => {
     const overlay = document.createElement("div");
-    overlay.className = "appConfirmOverlay";
+    overlay.className = styles.confirmOverlay;
 
     const dialog = document.createElement("div");
-    dialog.className = "appConfirmDialog";
+    dialog.className = styles.confirmDialog;
     dialog.setAttribute("role", "dialog");
     dialog.setAttribute("aria-modal", "true");
     dialog.setAttribute("aria-label", titleText);
 
     const title = document.createElement("div");
-    title.className = "appConfirmTitle";
+    title.className = styles.confirmTitle;
     title.textContent = titleText;
 
     const text = document.createElement("div");
-    text.className = "appConfirmText";
+    text.className = styles.confirmText;
     text.textContent = bodyText;
 
     const actions = document.createElement("div");
-    actions.className = "appConfirmActions";
+    actions.className = styles.confirmActions;
 
     const cancelButton = document.createElement("button");
     cancelButton.type = "button";
-    cancelButton.className = "appConfirmButton appConfirmButtonGhost";
+    cancelButton.className = `${styles.confirmButton} ${styles.confirmButtonGhost}`;
     cancelButton.textContent = cancelText;
 
     const confirmButton = document.createElement("button");
     confirmButton.type = "button";
-    confirmButton.className = `appConfirmButton appConfirmButtonPrimary${danger ? " danger" : ""}`;
+    confirmButton.className = `${styles.confirmButton} ${styles.confirmButtonPrimary}${danger ? ` ${styles.danger}` : ""}`;
     confirmButton.textContent = confirmText;
 
     let resolved = false;

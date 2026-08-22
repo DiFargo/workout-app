@@ -2,17 +2,24 @@ import { createPortal } from "react-dom";
 import styles from "./WorkoutExerciseModals.module.css";
 
 export default function WorkoutExerciseModals({
+  alternativeSource = "basic",
+  alternatives = [],
   exercise,
   noteOpen,
   onCloseNote,
+  onCloseSwap,
   onCloseTechnique,
+  onSelectAlternative,
   onUpdateNote,
+  swapOpen,
   techniqueHint,
   techniqueOpen
 }) {
   if (!exercise || exercise.id === "warmup") {
     return null;
   }
+
+  const alternativesGroupLabel = alternatives[0]?.groupLabel || "";
 
   return (
     <>
@@ -38,14 +45,14 @@ export default function WorkoutExerciseModals({
             <header>
               <div>
                 <small>{exercise.name}</small>
-                <h2 id="workoutExerciseNoteTitle">Заметка</h2>
+                <h2 id="workoutExerciseNoteTitle">Заметка тренеру</h2>
               </div>
               <button
                 type="button"
                 className={styles.closeButton}
                 data-css-module-control="workout-exercise-modals"
                 onClick={onCloseNote}
-                aria-label="Закрыть заметку"
+                aria-label="Закрыть заметку тренеру"
               >
                 ×
               </button>
@@ -65,6 +72,67 @@ export default function WorkoutExerciseModals({
             >
               Готово
             </button>
+          </section>
+        </div>,
+        document.body
+      )}
+
+      {swapOpen && createPortal(
+        <div
+          className={styles.overlay}
+          data-testid="basic-workout-exercise-swap-modal"
+          data-css-module-scope="workout-exercise-modals"
+          role="presentation"
+          onClick={onCloseSwap}
+          onTouchStart={(event) => event.stopPropagation()}
+          onTouchMove={(event) => event.stopPropagation()}
+          onTouchEnd={(event) => event.stopPropagation()}
+        >
+          <section
+            className={`${styles.modal} ${styles.swapModal}`}
+            role="dialog"
+            aria-modal="true"
+            data-modal-surface="true"
+            aria-labelledby="basicWorkoutSwapTitle"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header>
+              <div>
+                <small>Вместо: {exercise.name}</small>
+                <h2 id="basicWorkoutSwapTitle">Заменить упражнение</h2>
+              </div>
+              <button
+                type="button"
+                className={styles.closeButton}
+                data-css-module-control="workout-exercise-modals"
+                onClick={onCloseSwap}
+                aria-label="Закрыть выбор альтернативы"
+              >
+                ×
+              </button>
+            </header>
+            <p className={styles.swapHint}>
+              {alternativeSource === "trainer"
+                ? "Тренер назначил эти варианты для замены. Подходы и повторы сохранятся."
+                : <>{alternativesGroupLabel ? `Похожие упражнения: ${alternativesGroupLabel}. ` : ""}Подходы и повторы сохранятся.</>}
+            </p>
+            <div className={styles.alternativeList}>
+              {alternatives.map((alternative) => (
+                <button
+                  key={alternative.id || alternative.name}
+                  type="button"
+                  className={styles.alternativeButton}
+                  data-testid="basic-workout-exercise-alternative"
+                  onClick={() => onSelectAlternative?.(alternative)}
+                >
+                  <span>
+                    <strong>{alternative.name}</strong>
+                    <small>{alternative.equipment || "Без дополнительного инвентаря"}</small>
+                  </span>
+                  <b>Выбрать</b>
+                </button>
+              ))}
+            </div>
           </section>
         </div>,
         document.body

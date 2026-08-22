@@ -1,4 +1,5 @@
 import AdminWorkoutsNextWorkspace from "../../components/admin/AdminWorkoutsNextWorkspace";
+import { buildTrainerExerciseLibraryItems } from "../../utils/trainerExerciseLibrary";
 
 export default function TrainerAdminWorkoutsNextRoute({
   APP_VERSION,
@@ -8,6 +9,7 @@ export default function TrainerAdminWorkoutsNextRoute({
   adminSelectedClient,
   adminTrainingTemplates,
   assignSavedProgramToClient,
+  canUseAdminFeatures,
   getTrainerNextCreateClientState,
   navigateTrainerNext,
   openTrainerExerciseLibrary,
@@ -17,33 +19,72 @@ export default function TrainerAdminWorkoutsNextRoute({
   saveWorkoutsToFirebase,
   selectedUser,
   setAdminSelectedTemplateId,
+  setTrainerProgramManagerOpen,
+  setTrainerWorkoutTab,
   sortWorkoutDays,
   telegramProfile,
   trainerName,
   trainerExerciseLibraryItems,
   trainerNextWorkspaceHandlers,
   trainerWorkoutTab,
-  usersList
+  usersList,
+  embedded = false
 }) {
   const selectedWorkoutClient = adminSelectedClient || selectedUser || usersList[0];
+  const isAdmin = typeof canUseAdminFeatures === "function"
+    ? canUseAdminFeatures()
+    : Boolean(canUseAdminFeatures);
+  const selectedTrainerId = String(selectedWorkoutClient?.id || selectedWorkoutClient?.uid || "");
+  const isTrainerMaterials = isAdmin && selectedWorkoutClient?.role === "trainer" && Boolean(selectedTrainerId);
+  const visibleProgramTemplates = isTrainerMaterials
+    ? (adminTrainingTemplates || []).filter((template) =>
+      template?.ownerRole === "trainer" && String(template?.ownerUid || "") === selectedTrainerId
+    )
+    : adminTrainingTemplates;
+  const isExerciseLibraryTab = trainerWorkoutTab === "library";
+  const activeWorkoutClient = isExerciseLibraryTab ? null : selectedWorkoutClient || null;
+  const activeWorkouts = isExerciseLibraryTab ? [] : sortWorkoutDays(plan.workouts || []);
+  const activeExerciseLibrary = isExerciseLibraryTab
+    ? buildTrainerExerciseLibraryItems({}, visibleProgramTemplates)
+    : trainerExerciseLibraryItems;
+
+  const handleWorkoutTabChange = () => {
+    if (isTrainerMaterials) {
+      setTrainerProgramManagerOpen?.(false);
+      setTrainerWorkoutTab?.("library");
+      return;
+    }
+    openTrainerExerciseLibrary?.();
+  };
+
+  const handleAssignProgram = (options) => {
+    if (isExerciseLibraryTab || !selectedWorkoutClient) return false;
+    return assignSavedProgramToClient(selectedWorkoutClient.id, adminSelectedTemplateId, options);
+  };
+
+  const handleSaveWorkoutSchedule = (dates, assignmentWorkouts) => {
+    if (isExerciseLibraryTab || !selectedWorkoutClient) return false;
+    return saveTrainerClientWorkoutSchedule(dates, selectedWorkoutClient, assignmentWorkouts);
+  };
 
   return (
     <AdminWorkoutsNextWorkspace
       appVersion={APP_VERSION}
+      embedded={embedded}
       trainerName={trainerName}
       trainerAvatar={telegramProfile.avatarUrl}
       clients={usersList}
-      selectedClient={selectedWorkoutClient || null}
-      workouts={sortWorkoutDays(plan.workouts || [])}
-      exerciseLibrary={trainerExerciseLibraryItems}
-      programTemplates={adminTrainingTemplates}
+      selectedClient={activeWorkoutClient}
+      workouts={activeWorkouts}
+      exerciseLibrary={activeExerciseLibrary}
+      programTemplates={visibleProgramTemplates}
       selectedProgramId={adminSelectedTemplateId}
       onSelectProgram={setAdminSelectedTemplateId}
-      onAssignProgram={() => assignSavedProgramToClient(selectedWorkoutClient?.id, adminSelectedTemplateId)}
-      onSaveWorkoutSchedule={(dates) => saveTrainerClientWorkoutSchedule(dates, selectedWorkoutClient)}
+      onAssignProgram={handleAssignProgram}
+      onSaveWorkoutSchedule={handleSaveWorkoutSchedule}
       onOpenProgramManager={openTrainerProgramManager}
       activeWorkoutTab={trainerWorkoutTab}
-      onWorkoutTabChange={openTrainerExerciseLibrary}
+      onWorkoutTabChange={handleWorkoutTabChange}
       programStatus={adminClientStatus}
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}

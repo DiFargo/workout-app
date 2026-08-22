@@ -1,4 +1,4 @@
-import { lazy, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./styles/_variables.css";
 import "./shared/ui/ResponsiveModalLayer.module.css";
 import "./AppCoreFoundation.module.css";
@@ -7,7 +7,6 @@ import "./AppCoreSurface.module.css";
 import "./AppCoreLayout.module.css";
 import "./AppCoreClientFlow.module.css";
 import "./AppCoreClientVisual.module.css";
-import clientIosThemeStyles from "./AppCoreClientIosTheme.module.css";
 /* eslint-disable react-hooks/refs -- Event factories capture refs for later handlers; they do not read refs during render. */
 import {
   defaultNutritionState
@@ -41,6 +40,7 @@ import { createNutritionFoodCommitHandlers } from "./features/client/nutrition/n
 import { createNutritionFoodEntryHandlers } from "./features/client/nutrition/nutritionFoodEntryHandlers";
 import { createNutritionMyFoodsHandlers } from "./features/client/nutrition/nutritionMyFoodsHandlers";
 import { createNutritionPhotoAiHandlers } from "./features/client/nutrition/nutritionPhotoAiHandlers";
+import { useNutritionVoiceRuntime } from "./features/client/nutrition/useNutritionVoiceRuntime";
 import { createNutritionProductEditorHandlers } from "./features/client/nutrition/nutritionProductEditorHandlers";
 import { createNutritionSelectedFoodDeleteHandlers } from "./features/client/nutrition/nutritionSelectedFoodDeleteHandlers";
 import { createNutritionCloudLoader } from "./features/client/nutrition/nutritionCloudLoader";
@@ -55,7 +55,6 @@ import { useProfileTelegramEffects } from "./features/client/profile/useProfileT
 import { useProfileUiEffects } from "./features/client/profile/useProfileUiEffects";
 import { showAppConfirm, showAppError } from "./utils/appFeedback";
 import { createPerformanceCheckHandlers } from "./utils/performanceChecks";
-import { usePreventMobileZoom } from "./shared/hooks/usePreventMobileZoom";
 import {
   getFoodIcon
 } from "./utils/nutritionFoodPresentation";
@@ -127,9 +126,6 @@ import {
   getLastExerciseText
 } from "./utils/workoutHistoryPresentation";
 import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary";
-import { isClientE2EHarnessEnabled } from "./utils/clientHarness";
-import { isTrainerE2EHarnessEnabled } from "./utils/trainerHarness";
-import { isAdminE2EHarnessEnabled } from "./utils/adminHarness";
 import {
   formatTrainerSummaryDate,
   getTrainerSummaryDayStart,
@@ -182,7 +178,6 @@ import {
 import {
   normalizeClientPrimaryPage
 } from "./utils/clientUx";
-import { useModalFocusTrap } from "./shared/hooks/useModalFocusTrap";
 import { createAuthHandlers } from "./features/auth/authHandlers";
 import { createFirstSetupHandlers } from "./features/auth/firstSetupHandlers";
 import {
@@ -228,7 +223,6 @@ import {
 import {
   getTimestampValue
 } from "./utils/auditSafety";
-
 import { auth, db } from "./firebase";
 
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -244,12 +238,16 @@ import {
   AppTerminalRouteRenderer as renderAppTerminalRoute
 } from "./app/appTerminalRoutes";
 import {
-  getFirstSetupGateState,
-  renderAppStartupGate
+  AppStartupGate
 } from "./app/appStartupGate";
+import {
+  getFirstSetupGateState,
+  getRoleAccessGateState
+} from "./app/appStartupGateState";
 import { isAppRouterPage } from "./app/appRouterPages";
+import AppBootstrap from "./app/AppBootstrap";
 import RouteFallback from "./app/RouteFallback";
-import { DEFAULT_APP_THEME, normalizeAppTheme, APP_THEMES } from "./app/appTheme";
+import { DEFAULT_APP_THEME, normalizeAppTheme } from "./app/appTheme";
 import { isClientPrimaryPage, isTrainerForbiddenClientPage, normalizeAppPage } from "./app/appNavigation";
 import {
   createAppSessionNavigationHandlers
@@ -260,15 +258,9 @@ import { useBodyScrollLock } from "./shared/hooks/useBodyScrollLock";
 import { useAppRuntimeEffects } from "./app/useAppRuntimeEffects";
 import { useAuthBootstrapEffect } from "./app/useAuthBootstrapEffect";
 
-const loadClientE2EHarness = () => import("./components/client/ClientE2EHarness");
 const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
-const loadTrainerE2EHarness = () => import("./features/trainer/TrainerFullE2EHarness");
-const loadAdminE2EHarness = () => import("./components/admin/AdminE2EHarness");
 
-const ClientE2EHarness = lazy(loadClientE2EHarness);
 const NutritionRoute = lazy(loadNutritionRoute);
-const TrainerE2EHarness = lazy(loadTrainerE2EHarness);
-const AdminE2EHarness = lazy(loadAdminE2EHarness);
 
 const {
   ADMIN_EMAIL,
@@ -295,49 +287,14 @@ const {
 } = appConfig || {};
 
 export default function App() {
-  useModalFocusTrap();
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.add(clientIosThemeStyles.contract);
-    return () => root.classList.remove(clientIosThemeStyles.contract);
-  }, []);
-  const showClientHarness = isClientE2EHarnessEnabled();
-  const showTrainerHarness = isTrainerE2EHarnessEnabled();
-  const showAdminHarness = isAdminE2EHarnessEnabled();
-  usePreventMobileZoom();
-
-  if (showClientHarness) {
-    return (
-      <Suspense fallback={<RouteFallback />}>
-        <ClientE2EHarness />
-      </Suspense>
-    );
-  }
-
-  if (showTrainerHarness) {
-    return (
-      <Suspense fallback={<RouteFallback />}>
-        <TrainerE2EHarness />
-      </Suspense>
-    );
-  }
-
-  if (showAdminHarness) {
-    return (
-      <Suspense fallback={<RouteFallback />}>
-        <AdminE2EHarness />
-      </Suspense>
-    );
-  }
-
-  return <AppRuntime />;
+  return <AppBootstrap RuntimeComponent={AppRuntime} />;
 }
 
 function AppRuntime() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isAdminClaim, setIsAdminClaim] = useState(false);
-  const [currentUserRole, setCurrentUserRole] = useState("client");
+  const [currentUserRole, setCurrentUserRole] = useState("resolving");
   const [appLoading, setAppLoading] = useState(true);
   const [appTheme, setAppTheme] = useState(() => {
     try {
@@ -396,17 +353,23 @@ function AppRuntime() {
   const [plan, setPlan] = useState({ workouts: [] });
   const [workoutModePreference, setWorkoutModePreference] = useState(getDefaultWorkoutModePreference);
   const [workoutModeRemember, setWorkoutModeRemember] = useState(false);
-  const [workoutModeModalOpen, setWorkoutModeModalOpen] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
   const [basicWorkoutQuiz, setBasicWorkoutQuiz] = useState({
-    goal: "muscle",
+    goal: "general_fitness",
     level: "beginner",
-    days: "4"
+    location: "gym",
+    days: "3",
+    duration: "45",
+    restrictions: "none",
+    restrictionDetails: "",
+    twoDayStructure: "recovery_split"
   });
 
   const [page, setPageState] = useState(APP_PAGES.MAIN);
   const setPage = useCallback((nextPage) => {
-    startTransition(() => setPageState(nextPage));
+    // A tap-driven navigation must not wait behind a larger state update such
+    // as nutrition persistence. Background work has its own debounced effects.
+    setPageState(nextPage);
   }, []);
   useNutritionPageScrollEffect({ active: page === APP_PAGES.NUTRITION });
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
@@ -490,13 +453,14 @@ function AppRuntime() {
   const [adminClientHistory, setAdminClientHistory] = useState([]);
   const [adminClientNutrition, setAdminClientNutrition] = useState(null);
   const [adminClientMeasurements, setAdminClientMeasurements] = useState([]);
-  const [, setAdminClientLoading] = useState(false);
+  const [adminClientLoading, setAdminClientLoading] = useState(false);
   const [adminClientStatus, setAdminClientStatus] = useState("");
   const [adminClientFilter, setAdminClientFilter] = useState("all");
   const [trainerNextSection, setTrainerNextSection] = useState("dashboard");
   const [trainerSubscriptionNotificationSettings, setTrainerSubscriptionNotificationSettings] = useState(() => normalizeTrainerSubscriptionNotificationSettings());
   const [trainerProgramManagerOpen, setTrainerProgramManagerOpen] = useState(false);
   const [trainerWorkoutTab, setTrainerWorkoutTab] = useState("programs");
+  const [adminBaseLibraryTab, setAdminBaseLibraryTab] = useState("programs");
   const [adminUsersSelectedTab, setAdminUsersSelectedTab] = useState("overview");
   const loadAdminClientOverviewRef = useRef(null);
   const loadAdminClientOverview = (...args) => {
@@ -512,6 +476,7 @@ function AppRuntime() {
     openTrainerProgramManager,
     openTrainerExerciseLibrary
   } = createTrainerNavigationActions({
+    canUseAdminFeatures,
     canUseTrainerFeatures,
     page,
     usersList,
@@ -520,6 +485,7 @@ function AppRuntime() {
     setTrainerNextSection,
     setAdminUsersSelectedTab,
     setAdminSelectedClient,
+    setAdminBaseLibraryTab,
     loadAdminClientOverview,
     setTrainerProgramManagerOpen,
     setTrainerWorkoutTab
@@ -765,6 +731,12 @@ function AppRuntime() {
   const [deletingNutritionFoodId, setDeletingNutritionFoodId] = useState(null);
   const [nutritionUndoDelete, setNutritionUndoDelete] = useState(null);
   const nutritionUndoTimerRef = useRef(null);
+  const nutritionMyFoodsSaveQueueRef = useRef({
+    timer: null,
+    uid: "",
+    fullSave: null,
+    changes: new Map()
+  });
   const [nutritionDeleteConfirmOpen, setNutritionDeleteConfirmOpen] = useState(false);
   const [nutritionBarcode, setNutritionBarcode] = useState("");
   const [nutritionPhotoName, setNutritionPhotoName] = useState("");
@@ -883,6 +855,7 @@ function AppRuntime() {
     nutritionReplayInProgressRef,
     plan,
     selectedUserId,
+    workoutModePreference,
     setAdminClientStatus,
     setAdminSelectedClient,
     setNutrition,
@@ -896,7 +869,6 @@ function AppRuntime() {
     sortWorkoutDays,
     startPerformanceCheck
   }));
-
 
 
   const {
@@ -913,7 +885,9 @@ function AppRuntime() {
   } = createTrainerBridgeHandlers(() => ({
     ADMIN_EMAIL,
     adminAllUsersList,
+    setAdminAllUsersList,
     adminClientHistory,
+    adminClientLoading,
     adminClientMeasurements,
     adminClientNutrition,
     adminCreateClientModalOpen,
@@ -943,7 +917,6 @@ function AppRuntime() {
     recordTrainerEvent,
     saveTrainerClientNotificationSettings,
     selectedUserId,
-    setAdminAllUsersList,
     setAdminClientEvents,
     setAdminCreateClientModalOpen,
     setAdminCreateUserStatus,
@@ -1013,7 +986,6 @@ function AppRuntime() {
     AI_NUTRITION_PLAN_STORAGE_KEY,
     AI_NUTRITION_PROFILE_STORAGE_KEY,
     APP_PAGES,
-    APP_THEMES,
     BASIC_WORKOUT_PLAN_STORAGE_KEY,
     CLIENT_LAST_PAGE_STORAGE_KEY,
     FIRST_SETUP_REQUIRED_VERSION,
@@ -1366,6 +1338,7 @@ function AppRuntime() {
     NUTRITION_BACKUP_STORAGE_KEY,
     NUTRITION_STORAGE_KEY,
     auth,
+    myFoodsSaveQueueRef: nutritionMyFoodsSaveQueueRef,
     user,
     nutrition,
     showAppError,
@@ -1414,7 +1387,8 @@ function AppRuntime() {
 
   const {
     addNutritionFood,
-    confirmNutritionFoodFromPicker
+    confirmNutritionFoodFromPicker,
+    saveNutritionFoodToMyDatabase
   } = createNutritionFoodCommitHandlers({
     editingNutritionItemId,
     nutritionAmount,
@@ -1436,6 +1410,21 @@ function AppRuntime() {
     setNutritionAmountError,
     setNutritionEditNote,
     setRecentNutritionFoods
+  });
+
+  const {
+    finishNutritionVoiceResult, nutritionVoiceAddedItems, nutritionVoiceAnalyzing,
+    nutritionVoiceAudioLevel, nutritionVoiceFeedback, nutritionVoiceMode,
+    nutritionVoiceRecording, nutritionVoiceStarting, removeNutritionVoiceAddedItem, startNutritionVoiceCapture,
+    stopNutritionVoiceCapture, toggleNutritionVoiceMode, updateNutritionVoiceAddedItem
+  } = useNutritionVoiceRuntime({
+    addNutritionFood,
+    endPerformanceCheck,
+    nutritionMyFoods: nutrition.myFoods,
+    saveNutritionFoodToMyDatabase,
+    showAppError,
+    startPerformanceCheck,
+    updateNutritionDay
   });
 
   const {
@@ -1609,7 +1598,9 @@ function AppRuntime() {
     FIRST_SETUP_REQUIRED_VERSION,
     aiNutritionProfileDraft,
     hasRequiredAiNutritionProfileFields,
+    profileMeasurements,
     saveAiNutritionPlan,
+    saveProfileMeasurement,
     setFirstSetupCompletedInSession,
     setFirstSetupSaveStatus,
     setOnboardingStep,
@@ -1623,7 +1614,6 @@ function AppRuntime() {
 
   const {
     refreshPage,
-    toggleAppTheme,
     openProfileAccount,
     openProfileAvatarCrop,
     closeProfileAvatarCrop,
@@ -1639,9 +1629,7 @@ function AppRuntime() {
     changeProfilePassword,
     sendProfilePasswordReset
   } = createProfileAccountHandlers({
-    APP_THEMES,
     auth,
-    appTheme,
     db,
     profileAccount,
     profileAccountDraft,
@@ -1654,7 +1642,6 @@ function AppRuntime() {
     profileAvatarCropImageRef,
     profileAvatarCropDragRef,
     profileSettingsModalBodyRef,
-    setAppTheme,
     setProfileAccount,
     setProfileAccountDraft,
     setProfileAccountAvatarFile,
@@ -1771,6 +1758,9 @@ function AppRuntime() {
   const {
     updateSet,
     updateExerciseNote,
+    replaceBasicWorkoutExercise,
+    replaceTrainerAssignedWorkoutExercise,
+    confirmBasicStartingWeightFeedback,
     openWorkoutExerciseModal,
     closeWorkoutExerciseModal,
     startRestTimer,
@@ -1778,6 +1768,10 @@ function AppRuntime() {
     toggleWarmupStep,
     setWarmupTimerPreset
   } = createWorkoutRuntimeHandlers({
+    BASIC_WORKOUT_PLAN_STORAGE_KEY,
+    auth,
+    db,
+    plan,
     workout,
     restTimerDuration,
     deckRef,
@@ -1861,6 +1855,9 @@ function AppRuntime() {
     assignAdminTemplateToClient,
     clearClientProgram,
     assignSavedProgramToClient,
+    archiveClientProgramAssignment,
+    restoreClientProgramAssignment,
+    deleteClientProgramAssignment,
     copyCurrentProgramToClient
   } = createTrainerProgramTemplateHandlers({
     db,
@@ -1890,10 +1887,15 @@ function AppRuntime() {
     recordTrainerEvent
   });
 
-  function openAdminProgramsOverview() {
+  function openAdminBaseLibrary(tab = "programs") {
     setAdminOpenWorkoutId("");
+    setAdminBaseLibraryTab(tab === "exercises" ? "exercises" : "programs");
+    setPage(canUseAdminFeatures() ? APP_PAGES.ADMIN_LIBRARY : APP_PAGES.ADMIN_WORKOUTS);
+  }
+
+  function openAdminProgramsOverview() {
     setAdminProgramLibraryTab("overview");
-    setPage(APP_PAGES.ADMIN_WORKOUTS);
+    openAdminBaseLibrary("programs");
   }
 
   function openAdminClientsWithFilter(filter = "all") {
@@ -2106,7 +2108,7 @@ function AppRuntime() {
     saveAdminClientCalendar,
     sendAdminTestWorkoutReminder,
     saveTrainerClientWorkoutSchedule,
-    saveTrainerClientNotificationSettings, loadTrainerSubscriptionNotificationSettings, saveTrainerSubscriptionNotificationSettings, openClientTelegramConnection
+    saveTrainerClientNotificationSettings, saveTrainerClientSetupProgress, loadTrainerSubscriptionNotificationSettings, saveTrainerSubscriptionNotificationSettings, openClientTelegramConnection
   } = createTrainerClientCalendarHandlers({
     db,
     auth,
@@ -2195,7 +2197,10 @@ function AppRuntime() {
     db,
     user,
     plan,
+    history,
     basicWorkoutQuiz,
+    aiNutritionProfile,
+    aiNutritionProfileDraft,
     workoutDraftRestorePrompt,
     loadHistory,
     loadWorkoutsFromFirebase,
@@ -2381,8 +2386,9 @@ function AppRuntime() {
     requiredVersion: FIRST_SETUP_REQUIRED_VERSION
   });
 
-  const startupGate = renderAppStartupGate({
+  const startupGate = AppStartupGate({
     appLoading,
+    roleAccessGateState: getRoleAccessGateState({ isLoggedIn, currentUserRole }),
     firstSetupStillResolving,
     showFirstSetupOnboarding,
     firstSetupRequiredNow,
@@ -2416,9 +2422,13 @@ function AppRuntime() {
   if (startupGate) {
     return startupGate;
   }
-
   const trainerForbiddenClientPage = canUseTrainerFeatures() && isTrainerForbiddenClientPage(page);
-  const effectivePage = trainerForbiddenClientPage ? APP_PAGES.ADMIN : page;
+  const isClaimAdmin = canUseAdminFeatures();
+  const effectivePage = trainerForbiddenClientPage
+    ? (isClaimAdmin ? APP_PAGES.ADMIN_PANEL : APP_PAGES.ADMIN)
+    : isClaimAdmin && page === APP_PAGES.ADMIN
+      ? APP_PAGES.ADMIN_PANEL
+      : page;
 
   const routedPage = renderAppRoutePage({
     APP_VERSION,
@@ -2444,6 +2454,7 @@ function AppRuntime() {
     openTrainerProgramsList,
     openTrainerCabinetFromBottomBar,
     openAdminProgramsOverview,
+    openAdminBaseLibrary,
     history,
     historyLoading,
     openHistoryKey,
@@ -2481,6 +2492,9 @@ function AppRuntime() {
     aiNutritionAdaptedToday,
     setAiNutritionAdaptedToday,
     plan,
+    adminBaseLibraryTab,
+    adminAllUsersList,
+    adminTrainingTemplates,
     nutrition,
     profileWorkoutCalendarData,
     user,
@@ -2491,8 +2505,6 @@ function AppRuntime() {
     individualWorkoutIndexInitialized,
     setIndividualWorkoutIndex,
     setIndividualWorkoutIndexInitialized,
-    workoutModeModalOpen,
-    setWorkoutModeModalOpen,
     workoutHistoryModalOpen,
     setWorkoutHistoryModalOpen,
     workoutDraftRestorePrompt,
@@ -2511,7 +2523,6 @@ function AppRuntime() {
   if (isAppRouterPage(effectivePage, { selectedWorkoutId })) {
     return routedPage;
   }
-
   function renderNutritionPage() {
     const nutritionRouteProps = {
       activeNutritionSearchResultLimit,
@@ -2573,6 +2584,12 @@ function AppRuntime() {
       nutritionPhotoInputRef,
       nutritionPhotoNotFoundOpen,
       nutritionPhotoPreview,
+      nutritionVoiceAddedItems,
+      nutritionVoiceAnalyzing,
+      nutritionVoiceAudioLevel,
+      nutritionVoiceFeedback,
+      nutritionVoiceMode,
+      nutritionVoiceRecording, nutritionVoiceStarting,
       nutritionPickerOpen,
       nutritionProductErrors,
       nutritionProductUnitMenuOpen,
@@ -2588,12 +2605,15 @@ function AppRuntime() {
       openDishIngredientPicker,
       openNutritionCalendar,
       openNutritionEditPage,
+      finishNutritionVoiceResult,
       openNutritionFoodEditor,
       openNutritionPicker,
       pendingDishIngredient,
       pendingDishIngredientGrams,
       recentNutritionFoods,
       removeSelectedDishIngredient,
+      removeNutritionVoiceAddedItem,
+      updateNutritionVoiceAddedItem,
       renderTrainerMainBottomBar,
       resetNutritionPhotoAiSearch,
       resetNutritionPhotoAiState,
@@ -2602,6 +2622,8 @@ function AppRuntime() {
       selectNutritionDate,
       selectNutritionPhotoAiCandidate,
       selectedNutritionFood,
+      startNutritionVoiceCapture,
+      stopNutritionVoiceCapture,
       setBarcodeScannerOpen,
       setDishIngredientPickerOpen,
       setDishIngredientSearch,
@@ -2634,6 +2656,7 @@ function AppRuntime() {
       shiftNutritionCalendarMonth,
       showRecentNutritionFoods,
       todayNutritionKey,
+      toggleNutritionVoiceMode,
       updateSelectedDishTotalWeight,
       updateSelectedNutritionFoodField,
       updateSelectedNutritionPortionUnit,
@@ -2652,6 +2675,7 @@ function AppRuntime() {
     adminActiveDayId,
     adminActiveProgramId,
     adminAllUsersList,
+    setAdminAllUsersList,
     adminCalendarDraft,
     adminCalendarSaving,
     adminCalendarTesting,
@@ -2721,13 +2745,14 @@ function AppRuntime() {
     aiNutritionProfileDraft,
     aiNutritionSavedPlan,
     APP_PAGES,
-    APP_THEMES,
     APP_VERSION,
     applyProfileAvatarCrop,
     applyWorkoutReadiness,
     appTheme,
     assignAdminTemplateToClient,
     assignSavedProgramToClient,
+    archiveClientProgramAssignment,
+    restoreClientProgramAssignment,
     auth,
     buildAdminNutritionMonthOverview,
     buildAiNutritionMonthlyPlan,
@@ -2762,6 +2787,7 @@ function AppRuntime() {
     db,
     deckRef,
     deleteAdminClientTask,
+    deleteClientProgramAssignment,
     deleteClientEverywhereFromAdminPanel,
     deleteSelectedAdminClientHistory,
     disconnectTelegram,
@@ -2856,6 +2882,8 @@ function AppRuntime() {
     leaveWorkoutToPlan,
     loadAdminClientOverview,
     loadAdminTrainingTemplates,
+    loadUsers,
+    loadClientTrainerTasks,
     loadHistory,
     loadWorkoutsFromFirebase,
     logout,
@@ -2869,8 +2897,12 @@ function AppRuntime() {
     nutritionKeyToDate,
     onboardingStep,
     openAdminClientsWithFilter,
+    openAdminBaseLibrary,
     openAdminProgramsOverview,
     openCabinetWorkoutHistory,
+    openIndividualWorkouts,
+    openSavedBasicWorkoutsOrQuiz,
+    openTrainingEntry,
     openClientTelegramConnection,
     openClientTrainerTask,
     openHistoryKey,
@@ -2952,7 +2984,8 @@ function AppRuntime() {
     saveProfileAccount,
     saveProfileMeasurement,
     saveProfileNutritionPlanAndClose,
-    saveTrainerClientNotificationSettings, loadTrainerSubscriptionNotificationSettings, saveTrainerSubscriptionNotificationSettings,
+    saveWorkoutModePreference,
+    saveTrainerClientNotificationSettings, saveTrainerClientSetupProgress, loadTrainerSubscriptionNotificationSettings, saveTrainerSubscriptionNotificationSettings,
     saveTrainerClientNutritionPlan,
     saveTrainerClientWorkoutSchedule,
     saveWorkoutsToFirebase,
@@ -3073,6 +3106,7 @@ function AppRuntime() {
     setTelegramStatus,
     setTrainerNextSection,
     setTrainerProgramManagerOpen,
+    setTrainerWorkoutTab,
     setUsersList,
     setVideoLoadingId,
     setVideoRetryToken,
@@ -3109,7 +3143,6 @@ function AppRuntime() {
     toggleAdminCalendarDay,
     toggleAdminSelectAllHistory,
     toggleAdminSelectedHistoryId,
-    toggleAppTheme,
     toggleCabinetWorkoutHistory,
     toggleClientTelegramNotifications,
     toggleWarmupStep,
@@ -3127,6 +3160,9 @@ function AppRuntime() {
     updateAdminClientTask,
     updateClientTrainerTask,
     updateExerciseNote,
+    confirmBasicStartingWeightFeedback,
+    replaceBasicWorkoutExercise,
+    replaceTrainerAssignedWorkoutExercise,
     updateSet,
     updateUserTrainerRole,
     uploadAdminProgressPhotos,
@@ -3150,6 +3186,7 @@ function AppRuntime() {
     workoutReadiness,
     workoutReadinessOpen,
     workoutReadinessPending,
-    workoutStarted
+    workoutStarted,
+    workoutModePreference
   });
 }

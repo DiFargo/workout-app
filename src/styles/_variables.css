@@ -516,9 +516,11 @@
   --color-workout-calendar-completed-border: #ccebd6;
   --background-workout-calendar-completed: #f2fbf5;
   --color-workout-calendar-completed: #16813d;
-  --color-workout-calendar-off-date-border: #efebf3;
-  --background-workout-calendar-off-date: #f6f3ff;
-  --color-workout-calendar-off-date: #8f7ac8;
+  /* A workout completed on another day is informational, not planned.
+     Keep it clearly separate from the lavender planned-workout state. */
+  --color-workout-calendar-off-date-border: #cfdceb;
+  --background-workout-calendar-off-date: #f2f7fc;
+  --color-workout-calendar-off-date: #557da7;
   --color-workout-calendar-missed-border: #ffd6d6;
   --background-workout-calendar-missed: #fff6f6;
   --color-workout-calendar-missed: #d53838;
@@ -529,12 +531,12 @@
   --shadow-workout-calendar-selected: 0 0 0 3px rgba(185, 169, 229, 0.14);
   --background-workout-calendar-planned-badge: #ebe5ff;
   --background-workout-calendar-completed-badge: #e5f8eb;
-  --background-workout-calendar-off-date-badge: #ece6ff;
+  --background-workout-calendar-off-date-badge: #e5f0fa;
   --background-workout-calendar-missed-badge: #fff0f0;
   --background-workout-calendar-shifted-badge: #fff2d4;
   --color-workout-calendar-legend-planned: #8f7ac8;
   --color-workout-calendar-legend-completed: #1fad54;
-  --color-workout-calendar-legend-off-date: #8f7ac8;
+  --color-workout-calendar-legend-off-date: #6d95bf;
   --color-workout-calendar-legend-missed: #ff5c5c;
   --color-workout-calendar-legend-shifted: #d99a22;
   --color-workout-calendar-primary: #ffffff;

@@ -1,14 +1,21 @@
+// Compatibility suggestions for existing saved food IDs. These are real USDA
+// FoodData Central reference foods, not barcode-backed retail SKUs. The full
+// source-backed catalog is loaded separately from public/nutrition-catalog.
+
+const USDA_SOURCE = "USDA FoodData Central SR Legacy";
+const fdcUrl = (id) => `https://fdc.nal.usda.gov/fdc-app.html#/food-details/${id}/nutrients`;
+
 export const nutritionFoodDatabase = [
-  { id: "food_chicken", name: "Куриная грудка", portion: "100 г", calories: 165, protein: 31, fat: 3.6, carbs: 0, barcode: "4810000000011" },
-  { id: "food_rice", name: "Рис варёный", portion: "100 г", calories: 130, protein: 2.7, fat: 0.3, carbs: 28, barcode: "4810000000028" },
-  { id: "food_buckwheat", name: "Гречка варёная", portion: "100 г", calories: 110, protein: 3.6, fat: 1.1, carbs: 21, barcode: "4810000000035" },
-  { id: "food_egg", name: "Яйцо куриное", portion: "1 шт", calories: 78, protein: 6.3, fat: 5.3, carbs: 0.6, barcode: "4810000000042" },
-  { id: "food_curd", name: "Творог 5%", portion: "100 г", calories: 121, protein: 17, fat: 5, carbs: 1.8, barcode: "4810000000059" },
-  { id: "food_oatmeal", name: "Овсянка", portion: "100 г", calories: 68, protein: 2.4, fat: 1.4, carbs: 12, barcode: "4810000000066" },
-  { id: "food_banana", name: "Банан", portion: "1 шт", calories: 105, protein: 1.3, fat: 0.3, carbs: 27, barcode: "4810000000073" },
-  { id: "food_salmon", name: "Лосось", portion: "100 г", calories: 208, protein: 20, fat: 13, carbs: 0, barcode: "4810000000080" },
-  { id: "food_yogurt", name: "Греческий йогурт", portion: "100 г", calories: 73, protein: 10, fat: 2, carbs: 3.6, barcode: "4810000000097" },
-  { id: "food_protein", name: "Протеин", portion: "1 порция", calories: 120, protein: 24, fat: 1.5, carbs: 3, barcode: "4810000000103" },
-  { id: "food_apple", name: "Яблоко", portion: "1 шт", calories: 95, protein: 0.5, fat: 0.3, carbs: 25, barcode: "4810000000110" },
-  { id: "food_potato", name: "Картофель варёный", portion: "100 г", calories: 87, protein: 1.9, fat: 0.1, carbs: 20, barcode: "4810000000127" }
+  { id: "food_chicken", name: "Chicken, broilers or fryers, breast, meat only, cooked, roasted", aliases: ["куриная грудка", "куриное филе"], portion: "100 г", calories: 165, protein: 31, fat: 3.57, carbs: 0, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("171477") },
+  { id: "food_rice", name: "Rice, white, long-grain, regular, enriched, cooked", aliases: ["рис вареный", "рис белый вареный"], portion: "100 г", calories: 130, protein: 2.69, fat: 0.28, carbs: 28.2, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("168878") },
+  { id: "food_buckwheat", name: "Buckwheat groats, roasted, cooked", aliases: ["гречка вареная", "гречка"], portion: "100 г", calories: 92, protein: 3.38, fat: 0.62, carbs: 19.9, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("170686") },
+  { id: "food_egg", name: "Egg, whole, cooked, hard-boiled", aliases: ["яйцо вареное", "яйцо куриное"], portion: "100 г", calories: 155, protein: 12.6, fat: 10.6, carbs: 1.12, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("173424") },
+  { id: "food_curd", name: "Cheese, cottage, creamed, large or small curd", aliases: ["творог", "творожный сыр"], portion: "100 г", calories: 98, protein: 11.1, fat: 4.3, carbs: 3.38, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("172179") },
+  { id: "food_oatmeal", name: "Oats (Includes foods for USDA's Food Distribution Program)", aliases: ["овсянка", "овес"], portion: "100 г", calories: 389, protein: 16.9, fat: 6.9, carbs: 66.3, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("169705") },
+  { id: "food_banana", name: "Bananas, raw", aliases: ["банан", "бананы"], portion: "100 г", calories: 89, protein: 1.09, fat: 0.33, carbs: 22.8, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("173944") },
+  { id: "food_salmon", name: "Fish, salmon, Atlantic, wild, cooked, dry heat", aliases: ["лосось", "семга", "рыба"], portion: "100 г", calories: 182, protein: 25.4, fat: 8.13, carbs: 0, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("171998") },
+  { id: "food_yogurt", name: "Yogurt, Greek, plain, nonfat (Includes foods for USDA's Food Distribution Program)", aliases: ["йогурт греческий", "греческий йогурт"], portion: "100 г", calories: 59, protein: 10.2, fat: 0.39, carbs: 3.6, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("170894") },
+  { id: "food_protein", name: "Protein supplement, milk based, Muscle Milk Light, powder", aliases: ["протеиновая смесь", "протеин"], portion: "100 г", calories: 396, protein: 50, fat: 12, carbs: 22, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("173460") },
+  { id: "food_apple", name: "Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)", aliases: ["яблоко", "яблоки"], portion: "100 г", calories: 52, protein: 0.26, fat: 0.17, carbs: 13.8, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("171688") },
+  { id: "food_potato", name: "Potatoes, boiled, cooked without skin, flesh, without salt", aliases: ["картофель вареный", "картошка вареная"], portion: "100 г", calories: 86, protein: 1.71, fat: 0.1, carbs: 20, recordType: "reference_food", source: USDA_SOURCE, sourceUrl: fdcUrl("170440") }
 ];

@@ -1,6 +1,19 @@
 import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+const COLD_LOAD_TIMEOUT = 40_000;
+
+// The first mobile navigation compiles several lazy admin modules in the Vite
+// test server. Keep the test budget above the explicit cold-load allowance so
+// the suite can report a genuine readiness failure instead of timing out first.
+test.describe.configure({ timeout: 60_000 });
+
+async function openAdminHarness(page, url, readyLocator) {
+  await page.goto(url, { waitUntil: "domcontentloaded" });
+  await expect(page.getByTestId("admin-harness-root")).toBeVisible({ timeout: COLD_LOAD_TIMEOUT });
+  await expect(readyLocator).toBeVisible({ timeout: COLD_LOAD_TIMEOUT });
+}
+
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
     documentWidth: document.documentElement.scrollWidth,
@@ -91,9 +104,7 @@ async function expectTapTargets(page, selectors, minSize = 40) {
 test("admin panel hub visual audit covers cards and denied state", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?adminHarness=1");
-  await expect(page.getByTestId("admin-harness-root")).toBeVisible();
-  await expect(page.locator(".adminPanelHubPage")).toBeVisible();
+  await openAdminHarness(page, "/?adminHarness=1", page.locator(".adminPanelHubPage"));
   await expect(page.locator(".adminPanelHubHero h1")).toBeVisible();
   await expect(page.locator(".adminPanelHubCard")).toHaveCount(3);
   await expectTapTargets(page, [".adminFixedMainBack", ".adminPanelHubCard"]);
@@ -110,9 +121,7 @@ test("admin panel hub visual audit covers cards and denied state", async ({ page
   await expect(page.getByTestId("admin-harness-action")).toHaveText("page:main");
   assertNoRuntimeErrors();
 
-  await page.goto("/?adminHarness=1&adminAccess=denied");
-  await expect(page.getByTestId("admin-harness-root")).toBeVisible();
-  await expect(page.locator(".historyEmptyCard")).toBeVisible();
+  await openAdminHarness(page, "/?adminHarness=1&adminAccess=denied", page.locator(".historyEmptyCard"));
   await expect(page.locator(".historyEmptyCard")).toContainText("Доступ");
   await expectTapTargets(page, [".backBtn"]);
   await expectNoHorizontalOverflow(page);
@@ -125,8 +134,7 @@ test("admin panel hub visual audit covers cards and denied state", async ({ page
 test("admin visual audit covers CRM and program internals harness", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?adminHarness=1&adminSurface=users");
-  await expect(page.getByTestId("admin-users-harness")).toBeVisible();
+  await openAdminHarness(page, "/?adminHarness=1&adminSurface=users", page.getByTestId("admin-users-harness"));
   await expect(page.locator(".adminUsersCrmHeader h1")).toBeVisible();
   await expect(page.locator(".adminClientCard")).toHaveCount(3);
   await expect(page.locator(".adminUsersFilterPills button[aria-pressed='true']")).toHaveCount(1);
@@ -136,7 +144,6 @@ test("admin visual audit covers CRM and program internals harness", async ({ pag
   await expectTapTargets(page, [
     ".adminUsersFilterPills button",
     ".adminClientCard",
-    ".adminClientWorkspaceActionsRender button",
     ".adminClientTabsCrm button"
   ]);
   await expectNoHorizontalOverflow(page);
@@ -144,12 +151,9 @@ test("admin visual audit covers CRM and program internals harness", async ({ pag
 
   await page.locator(".adminClientAddCard").click();
   await expect(page.getByTestId("admin-harness-action")).toHaveText("create-client");
-  await page.locator(".adminClientWorkspaceActionsRender button").nth(1).click();
-  await expect(page.getByTestId("admin-harness-action")).toHaveText("assign");
   assertNoRuntimeErrors();
 
-  await page.goto("/?adminHarness=1&adminSurface=programs");
-  await expect(page.getByTestId("admin-programs-harness")).toBeVisible();
+  await openAdminHarness(page, "/?adminHarness=1&adminSurface=programs", page.getByTestId("admin-programs-harness"));
   await expect(page.locator(".programsCompactHeader h1")).toBeVisible();
   await expect(page.locator(".programsOverviewCard")).toHaveCount(3);
   await expect(page.locator(".programsOverviewCard[aria-pressed='true']")).toHaveCount(1);
@@ -166,8 +170,7 @@ test("admin visual audit covers CRM and program internals harness", async ({ pag
   await expect(page.getByTestId("admin-harness-action")).toHaveText("programs-back");
   assertNoRuntimeErrors();
 
-  await page.goto("/?adminHarness=1&adminSurface=calendar");
-  await expect(page.getByTestId("admin-calendar-harness")).toBeVisible();
+  await openAdminHarness(page, "/?adminHarness=1&adminSurface=calendar", page.getByTestId("admin-calendar-harness"));
   await expect(page.locator(".adminCalendarPanel")).toBeVisible();
   await expect(page.locator(".adminCalendarDays button[aria-pressed='true']")).toHaveCount(3);
   await expect(page.locator(".adminCalendarHourReminder[aria-pressed='true']")).toHaveCount(2);

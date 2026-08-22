@@ -105,6 +105,7 @@ test("bodyweight exercises do not require a weight field", () => {
   assert.equal(exerciseUsesExternalWeight({ name: "Планка" }), false);
   assert.equal(exerciseUsesExternalWeight({ name: "Жим гантелей" }), true);
   assert.equal(exerciseUsesExternalWeight({ name: "Пресс", requiresWeight: true }), true);
+  assert.equal(exerciseUsesExternalWeight(null), false);
 });
 
 test("exercise library prefers an exact match with video", () => {

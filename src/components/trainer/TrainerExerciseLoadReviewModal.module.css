@@ -12,7 +12,9 @@
 .modal {
   width: min(650px, 100%);
   max-height: calc(100dvh - 40px);
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 1px solid #e2e4eb;
   border-radius: 18px;
   background: #fff;
@@ -43,8 +45,9 @@
 .header h2 { margin: 0; font-size: 22px; line-height: 1.18; }
 .header p { margin: 6px 0 0; color: #777b89; font-size: 11px; line-height: 1.45; }
 .header > button {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
@@ -54,6 +57,41 @@
   background: #fff;
   color: #6f7380;
   cursor: pointer;
+}
+
+.scrollContent {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 18px;
+}
+
+.footer {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 22px max(16px, env(safe-area-inset-bottom));
+  border-top: 1px solid #efebf3;
+  background: #ffffff;
+}
+
+.footer button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #cfc5f6;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #4e34b5;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.footer button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
 .issueCard {
@@ -265,8 +303,8 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 620px) {
-  .backdrop { align-items: end; padding: 0; }
-  .modal { max-height: 94dvh; border-radius: 18px 18px 0 0; }
+  .backdrop { padding: 12px; }
+  .modal { max-height: calc(100dvh - 24px); border-radius: 18px; }
   .header { padding: 17px 16px 12px; }
   .issueCard, .okayChoice, .editorChoice { margin-left: 16px; margin-right: 16px; }
   .divider { margin-left: 16px; margin-right: 16px; }
@@ -277,4 +315,5 @@
   .setRow { grid-template-columns: 30px minmax(0, 1fr) minmax(0, 1fr) 32px; }
   .editorFooter { grid-template-columns: 1fr; }
   .error { margin-left: 16px; margin-right: 16px; }
+  .footer { padding-left: 16px; padding-right: 16px; }
 }

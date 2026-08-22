@@ -68,7 +68,7 @@
 
 .header {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: start;
   gap: 8px;
   margin-bottom: 12px;
@@ -103,9 +103,10 @@
 }
 
 .close {
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
   padding: 0;
   display: flex;
   grid-column: 3;
@@ -546,7 +547,7 @@
 
 @media (max-width: 390px) {
   .header {
-    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
     margin-bottom: 12px;
   }
 

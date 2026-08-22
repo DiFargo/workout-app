@@ -25,6 +25,7 @@ export default function ClientPageHeader({
   controlsVariant = "default",
   embedded = false,
   frameClassName = "",
+  extensionClassName = "",
   rootProps,
   scope,
   testId,
@@ -127,7 +128,7 @@ export default function ClientPageHeader({
           {actions ? <div className={styles.actions}>{actions}</div> : null}
         </div>
 
-        {children ? <div className={styles.extension}>{children}</div> : null}
+        {children ? <div className={`${styles.extension} ${extensionClassName}`.trim()}>{children}</div> : null}
       </header>
     </div>
   );

@@ -1,6 +1,41 @@
+import { useEffect } from "react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileSettingsModal.module.css";
+
+function useProfilePageScrollLock(locked) {
+  useEffect(() => {
+    if (!locked || typeof document === "undefined") {
+      return undefined;
+    }
+
+    // The cabinet page is its own scroll container, so locking body alone
+    // still allowed it to move behind the profile sheet on mobile.
+    const scrollHosts = Array.from(document.querySelectorAll(
+      ".profileTabbedPage, .clientCorePageCabinet"
+    ));
+    const previousStyles = scrollHosts.map((host) => ({
+      host,
+      overflowY: host.style.overflowY,
+      overscrollBehaviorY: host.style.overscrollBehaviorY,
+      touchAction: host.style.touchAction
+    }));
+
+    scrollHosts.forEach((host) => {
+      host.style.overflowY = "hidden";
+      host.style.overscrollBehaviorY = "none";
+      host.style.touchAction = "none";
+    });
+
+    return () => {
+      previousStyles.forEach(({ host, overflowY, overscrollBehaviorY, touchAction }) => {
+        host.style.overflowY = overflowY;
+        host.style.overscrollBehaviorY = overscrollBehaviorY;
+        host.style.touchAction = touchAction;
+      });
+    };
+  }, [locked]);
+}
 
 function getProfileSettingsModalTitle(section) {
   if (section === "account") return "Профиль и настройки";
@@ -24,6 +59,8 @@ export default function ProfileSettingsModal({
   onClose,
   children
 }) {
+  useProfilePageScrollLock(open);
+
   if (!open) {
     return null;
   }

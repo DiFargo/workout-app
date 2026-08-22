@@ -1,3 +1,5 @@
+import { getWorkoutExecutionSteps } from "../../../utils/workoutPlanNormalization";
+
 export function createWorkoutRunNavigationHandlers({
   workout,
   workoutStarted,
@@ -20,6 +22,9 @@ export function createWorkoutRunNavigationHandlers({
   setExerciseValidationMessage,
   setSwipeOffset
 }) {
+  const executionSteps = getWorkoutExecutionSteps(workout);
+  const totalExecutionSteps = executionSteps.length;
+
   function showExerciseValidation(message) {
     if (exerciseValidationTimerRef?.current) {
       window.clearTimeout(exerciseValidationTimerRef.current);
@@ -83,10 +88,16 @@ export function createWorkoutRunNavigationHandlers({
     if (
       workoutStarted &&
       currentExerciseIndex > 0 &&
-      currentExerciseIndex <= workout.exercises.length
+      currentExerciseIndex <= totalExecutionSteps
     ) {
-      const currentExercise = workout.exercises[currentExerciseIndex - 1];
-      const sets = Array.isArray(currentExercise?.sets) ? currentExercise.sets : [];
+      const currentStep = executionSteps[currentExerciseIndex - 1];
+      const currentExercise = currentStep
+        ? workout.exercises[currentStep.exerciseIndex]
+        : null;
+      const sourceSets = Array.isArray(currentExercise?.sets) ? currentExercise.sets : [];
+      const sets = Number.isInteger(currentStep?.setIndex)
+        ? [sourceSets[currentStep.setIndex]].filter(Boolean)
+        : sourceSets;
       const completedSetsCount = sets.filter((set) => set?.completed).length;
       const hasCompletedSet = completedSetsCount > 0;
 
@@ -97,7 +108,7 @@ export function createWorkoutRunNavigationHandlers({
       }
 
       if (sets.length > 0 && completedSetsCount > 0 && completedSetsCount < sets.length) {
-        const warningKey = `${workout.id || "workout"}:${currentExercise.id || currentExerciseIndex}`;
+        const warningKey = `${workout.id || "workout"}:${currentExercise?.id || currentExerciseIndex}:${currentStep?.setIndex ?? "all"}`;
         const alreadyWarned = partialExerciseWarningKeysRef?.current?.has(warningKey);
 
         if (!alreadyWarned) {
@@ -117,7 +128,7 @@ export function createWorkoutRunNavigationHandlers({
 
     if (
       workoutStarted &&
-      currentExerciseIndex === workout.exercises.length &&
+      currentExerciseIndex === totalExecutionSteps &&
       !postWorkoutFeedback
     ) {
       setExerciseValidationMessage("");
@@ -133,7 +144,7 @@ export function createWorkoutRunNavigationHandlers({
       setCurrentExerciseIndex(0);
     } else {
       setCurrentExerciseIndex((prev) =>
-        Math.min(prev + 1, workout.exercises.length + 1)
+        Math.min(prev + 1, totalExecutionSteps + 1)
       );
     }
 

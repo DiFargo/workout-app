@@ -1,5 +1,6 @@
 export const TRAINER_PROGRAM_STATUSES = Object.freeze({
   DRAFT: "draft",
+  READY: "ready",
   ASSIGNED: "assigned",
   ACTIVE: "active",
   COMPLETED: "completed",
@@ -14,6 +15,12 @@ const TRAINER_PROGRAM_STATUS_META = Object.freeze({
     label: "Черновик",
     tone: "draft",
     description: "Видит только тренер"
+  }),
+  [TRAINER_PROGRAM_STATUSES.READY]: Object.freeze({
+    id: TRAINER_PROGRAM_STATUSES.READY,
+    label: "Готова к назначению",
+    tone: "ready",
+    description: "Можно назначить клиенту"
   }),
   [TRAINER_PROGRAM_STATUSES.ASSIGNED]: Object.freeze({
     id: TRAINER_PROGRAM_STATUSES.ASSIGNED,
@@ -47,8 +54,12 @@ export function normalizeTrainerProgramStatus(value = "", fallback = TRAINER_PRO
 }
 
 export function getTrainerProgramStatusMeta(program = {}) {
-  const status = normalizeTrainerProgramStatus(program.lifecycleStatus || program.programStatus);
-  return TRAINER_PROGRAM_STATUS_META[status] || TRAINER_PROGRAM_STATUS_META[TRAINER_PROGRAM_STATUSES.DRAFT];
+  const rawStatus = String(program.lifecycleStatus || program.programStatus || "").trim();
+  const status = rawStatus
+    ? normalizeTrainerProgramStatus(rawStatus, TRAINER_PROGRAM_STATUSES.DRAFT)
+    : TRAINER_PROGRAM_STATUSES.READY;
+
+  return TRAINER_PROGRAM_STATUS_META[status] || TRAINER_PROGRAM_STATUS_META[TRAINER_PROGRAM_STATUSES.READY];
 }
 
 export function isTrainerProgramArchived(program = {}) {
@@ -81,12 +92,31 @@ export function buildDraftProgramMetadata(program = {}, { nowIso = "", ownerUid 
   };
 }
 
+export function buildReadyProgramMetadata(program = {}, { nowIso = "", ownerUid = "" } = {}) {
+  const safeNow = nowIso || new Date().toISOString();
+
+  return {
+    lifecycleStatus: TRAINER_PROGRAM_STATUSES.READY,
+    programStatus: TRAINER_PROGRAM_STATUSES.READY,
+    visibility: "trainer_library",
+    draftUpdatedAt: program.draftUpdatedAt || "",
+    updatedByUid: ownerUid || program.updatedByUid || "",
+    publishedAt: program.publishedAt || safeNow,
+    archivedAt: ""
+  };
+}
+
 export function buildProgramAssignmentMetadata(template = {}, {
   clientId = "",
   assignedAt = "",
   assignedByUid = ""
 } = {}) {
   const safeAssignedAt = assignedAt || new Date().toISOString();
+  const rawSourceStatus = String(template.lifecycleStatus || template.programStatus || "").trim();
+  const sourceStatus = rawSourceStatus
+    ? normalizeTrainerProgramStatus(rawSourceStatus, TRAINER_PROGRAM_STATUSES.READY)
+    : TRAINER_PROGRAM_STATUSES.READY;
+  const persistedSourceStatus = sourceStatus;
   const assignedClientIds = [
     ...new Set([
       ...(Array.isArray(template.assignedClientIds) ? template.assignedClientIds : []),
@@ -95,9 +125,13 @@ export function buildProgramAssignmentMetadata(template = {}, {
   ];
 
   return {
-    lifecycleStatus: TRAINER_PROGRAM_STATUSES.ASSIGNED,
-    programStatus: TRAINER_PROGRAM_STATUSES.ASSIGNED,
-    visibility: "trainer_published",
+    lifecycleStatus: persistedSourceStatus,
+    programStatus: persistedSourceStatus,
+    visibility: persistedSourceStatus === TRAINER_PROGRAM_STATUSES.DRAFT
+      ? "trainer_draft"
+      : persistedSourceStatus === TRAINER_PROGRAM_STATUSES.ARCHIVED
+        ? (template.visibility || "trainer_archived")
+        : "trainer_library",
     publishedAt: template.publishedAt || safeAssignedAt,
     lastAssignedAt: safeAssignedAt,
     lastAssignedByUid: assignedByUid || "",

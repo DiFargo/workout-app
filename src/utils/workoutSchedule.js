@@ -46,6 +46,7 @@ export function buildPlannedWorkoutSlots({
   workouts = [],
   calendar = {},
   history = [],
+  completedWorkoutIds = [],
   now = new Date()
 } = {}) {
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
@@ -66,6 +67,12 @@ export function buildPlannedWorkoutSlots({
   ].map(toWorkoutDateKey).filter(Boolean))].sort();
   const plannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
   const completionMaps = buildCompletionMaps(relevantHistory);
+  const allHistoryCompletionMaps = buildCompletionMaps(history);
+  const forcedCompletedWorkoutIds = new Set(
+    (Array.isArray(completedWorkoutIds) ? completedWorkoutIds : [])
+      .map((workoutId) => getWorkoutKey(workoutId))
+      .filter(Boolean)
+  );
   const workoutNameCounts = safeWorkouts.reduce((counts, workout, index) => {
     const name = getWorkoutKey(workout?.name || `Тренировка ${index + 1}`);
     if (name) counts.set(name, (counts.get(name) || 0) + 1);
@@ -89,9 +96,20 @@ export function buildPlannedWorkoutSlots({
       sortedDates[index]
     );
     const workoutNameKey = getWorkoutKey(workoutName);
-    const completion = completionMaps.byId.get(getWorkoutKey(workoutId)) ||
+    const workoutIdKey = getWorkoutKey(workoutId);
+    const forcedCompleted = forcedCompletedWorkoutIds.has(workoutIdKey);
+    const fallbackCompletedDate = toWorkoutDateKey(
+      workout?.completedAt || workout?.statusUpdatedAt || plannedDate
+    );
+    const completion = completionMaps.byId.get(workoutIdKey) ||
       (workoutNameCounts.get(workoutNameKey) === 1
         ? completionMaps.byName.get(workoutNameKey)
+        : null) ||
+      // The current trainer UI has already confirmed these IDs from the
+      // client's immutable completed-history records. Keep the calendar in
+      // sync if an older assignment marker would otherwise hide that fact.
+      (forcedCompleted
+        ? allHistoryCompletionMaps.byId.get(workoutIdKey) || { completedDate: fallbackCompletedDate }
         : null);
     const manualStatus = String(workout?.status || planned?.status || "planned").trim().toLowerCase();
     const completedDate = completion?.completedDate ||
@@ -136,7 +154,7 @@ export function buildWorkoutScheduleCalendarEntries(slots = []) {
   const entries = [];
 
   (Array.isArray(slots) ? slots : []).forEach((slot) => {
-    if (slot.plannedDate) {
+    if (slot.plannedDate && !slot.isCompletedOffDate) {
       entries.push({
         id: `${slot.workoutId || slot.order}-planned`,
         date: slot.plannedDate,
@@ -220,10 +238,14 @@ export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], update
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
   const workoutAssignment = safeWorkouts.find((workout) => workout?.assignedProgramUpdatedAt) || {};
   const workoutProgram = safeWorkouts.find((workout) => workout?.assignedProgramId || workout?.assignedProgramName) || {};
+  const workoutProgramAssignment = safeWorkouts.find((workout) => workout?.assignedProgramAddedAt || workout?.programAssignmentId) || {};
   const assignedProgramId = String(workoutProgram.assignedProgramId || calendar.assignedProgramId || "").trim();
   const assignedProgramName = String(workoutProgram.assignedProgramName || calendar.assignedProgramName || "").trim();
   const assignedProgramUpdatedAt = String(
     workoutAssignment.assignedProgramUpdatedAt || calendar.assignedProgramUpdatedAt || ""
+  ).trim();
+  const assignedProgramAddedAt = String(
+    workoutProgramAssignment.assignedProgramAddedAt || workoutProgramAssignment.programAssignmentId || ""
   ).trim();
   const scheduledDates = [...new Set([
     ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
@@ -251,6 +273,7 @@ export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], update
       date: toWorkoutDateKey(existing.date || workout?.scheduledDate || workout?.plannedDate || scheduledDates[index] || ""),
       status,
       assignedProgramUpdatedAt,
+      assignedProgramAddedAt,
       movedToDate: toWorkoutDateKey(workout?.movedToDate || existing.movedToDate || ""),
       statusUpdatedAt: workout?.statusUpdatedAt || existing.statusUpdatedAt || (status !== "planned" ? updatedAt : "")
     };

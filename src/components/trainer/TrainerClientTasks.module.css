@@ -1,4 +1,10 @@
 .panel {
+  --tn-line: #efebf3;
+  --tn-purple: #8f7ac8;
+  --tn-purple-strong: #806bb6;
+  --tn-purple-soft: #eee8fb;
+  --tn-text: #28262e;
+  --tn-muted: #7b7682;
   grid-column: 1 / -1;
   width: 100%;
   min-width: 0;
@@ -65,6 +71,49 @@
 
 .panel[open] .chevron {
   transform: rotate(180deg);
+}
+
+.embedded {
+  display: grid;
+  gap: 0;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.embeddedHeader {
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+}
+
+.createButton {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--tn-purple);
+  border-radius: 11px;
+  color: #ffffff;
+  background: var(--tn-purple);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.createButton:hover {
+  background: var(--tn-purple-strong, #806bb6);
+}
+
+.embedded .list {
+  padding: 0 14px 14px;
+  border-top: 0;
 }
 
 .list {
@@ -149,5 +198,29 @@
 
   .list {
     padding: 8px;
+  }
+
+  .embeddedHeader {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    padding: 12px;
+  }
+
+  .embedded .list {
+    padding: 0 12px 12px;
+  }
+
+  .createButton {
+    padding: 0;
+  }
+}
+
+@media (max-width: 359px) {
+  .embeddedHeader {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .createButton {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 }

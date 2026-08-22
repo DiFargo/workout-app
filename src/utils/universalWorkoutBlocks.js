@@ -107,10 +107,19 @@ export function buildExecutableWorkout(workout = {}) {
 
   normalized.taskBlocks.forEach((block) => {
     if ([WORKOUT_BLOCK_TYPES.EXERCISE, WORKOUT_BLOCK_TYPES.GROUP].includes(block.type)) {
-      (block.exerciseIds || []).forEach((exerciseId) => {
+      (block.exerciseIds || []).forEach((exerciseId, exerciseIndex) => {
         const exercise = exercisesById.get(exerciseId);
         if (!exercise || usedIds.has(exerciseId)) return;
-        orderedExercises.push({ ...exercise, taskBlockId: block.id, taskBlockType: block.type });
+        orderedExercises.push({
+          ...exercise,
+          taskBlockId: block.id,
+          taskBlockType: block.type,
+          ...(block.type === WORKOUT_BLOCK_TYPES.GROUP ? {
+            taskBlockConfig: { ...block },
+            taskBlockExerciseIndex: exerciseIndex,
+            taskBlockExerciseCount: (block.exerciseIds || []).length
+          } : {})
+        });
         usedIds.add(exerciseId);
       });
       return;

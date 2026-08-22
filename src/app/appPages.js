@@ -10,6 +10,7 @@ export const APP_PAGES = Object.freeze({
   ADMIN: "admin",
   ADMIN_USERS: "adminUsers",
   ADMIN_WORKOUTS: "adminWorkouts",
+  ADMIN_LIBRARY: "adminLibrary",
   ADMIN_PANEL: "adminPanel",
   BASIC_WORKOUT_QUIZ: "basicWorkoutQuiz",
   AI_COACH: "aiCoach"
@@ -32,6 +33,7 @@ export const APP_PAGE_GROUPS = Object.freeze({
     APP_PAGES.ADMIN,
     APP_PAGES.ADMIN_USERS,
     APP_PAGES.ADMIN_WORKOUTS,
+    APP_PAGES.ADMIN_LIBRARY,
     APP_PAGES.ADMIN_PANEL,
     APP_PAGES.MEASUREMENT_WIZARD
   ],
@@ -39,6 +41,7 @@ export const APP_PAGE_GROUPS = Object.freeze({
     APP_PAGES.ADMIN,
     APP_PAGES.ADMIN_USERS,
     APP_PAGES.ADMIN_WORKOUTS,
+    APP_PAGES.ADMIN_LIBRARY,
     APP_PAGES.ADMIN_PANEL
   ],
   MEASUREMENT_AND_NUTRITION: [

@@ -52,7 +52,7 @@ test("draft program metadata stays trainer-only until assignment", () => {
   assert.equal(isTrainerProgramClientVisible(metadata), false);
 });
 
-test("assignment metadata publishes the template and activates the client copy", () => {
+test("assignment metadata keeps the reusable template ready and activates the client copy", () => {
   const templatePatch = buildProgramAssignmentMetadata({
     assignedClientIds: ["client-0"]
   }, {
@@ -65,11 +65,11 @@ test("assignment metadata publishes the template and activates the client copy",
     assignedByUid: "trainer-1"
   });
 
-  assert.equal(templatePatch.lifecycleStatus, "assigned");
-  assert.equal(templatePatch.visibility, "trainer_published");
+  assert.equal(templatePatch.lifecycleStatus, "ready");
+  assert.equal(templatePatch.visibility, "trainer_library");
   assert.equal(templatePatch.updatedByUid, "trainer-1");
   assert.deepEqual(templatePatch.assignedClientIds, ["client-0", "client-1"]);
-  assert.equal(isTrainerProgramClientVisible(templatePatch), true);
+  assert.equal(isTrainerProgramClientVisible(templatePatch), false);
   assert.equal(clientPatch.assignedProgramLifecycleStatus, "active");
   assert.equal(clientPatch.assignedProgramVisibility, "client_active");
 });

@@ -143,6 +143,7 @@
 }
 
 .itemMeta,
+.itemContext,
 .itemStatus {
   color: var(--color-profile-trainer-notifications-muted);
   font-size: 10px;
@@ -151,6 +152,15 @@
 
 .itemMeta {
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemContext {
+  overflow: hidden;
+  color: var(--color-profile-trainer-notifications-item-title);
+  font-size: 11px;
+  font-weight: 750;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

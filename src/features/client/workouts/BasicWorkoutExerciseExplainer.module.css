@@ -1,0 +1,389 @@
+.explainer {
+  box-sizing: border-box;
+  width: 100%;
+  height: 252px;
+  min-height: 252px;
+  max-height: 252px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px;
+  gap: 8px;
+}
+
+.tabs {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 0;
+  border: 0;
+  background: transparent;
+}
+
+.tab {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 8px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
+  background: #fff;
+  color: #7b7682;
+  font: inherit;
+  font-size: 9.5px;
+  font-weight: 750;
+  line-height: 1.05;
+  box-shadow: 0 2px 6px rgba(72, 63, 87, 0.05);
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, margin 160ms ease, transform 160ms ease;
+}
+
+.tab svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.tab:active {
+  transform: scale(0.97);
+}
+
+.tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.tab:focus {
+  outline: none;
+}
+
+.tab:focus-visible {
+  outline: 2px solid #8f7ac8;
+  outline-offset: 2px;
+}
+
+.activeTab {
+  width: auto;
+  margin-left: -8px;
+  padding-left: 10px;
+  border-color: #ded3f3;
+  border-radius: 0 16px 16px 0;
+  background: #eee9f7;
+  color: #806bb6;
+  box-shadow: 0 4px 10px rgba(72, 63, 87, 0.08);
+}
+
+.activeTab::before {
+  content: "";
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #8f7ac8;
+}
+
+.referenceContent + .tabs .activeTab {
+  background: #eee9f7;
+}
+
+.content {
+  min-width: 0;
+  height: 252px;
+  overflow: hidden;
+}
+
+.content :global([data-testid="workout-exercise-video-frame"]) {
+  width: 100%;
+  height: 252px;
+  min-height: 252px;
+  max-height: 252px;
+}
+
+.referenceCard {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: 252px;
+  padding: 15px 15px 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #efebf3;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+}
+
+.referenceCopy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 3px;
+}
+
+.referenceCopy span {
+  color: #8f7ac8;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.24px;
+  text-transform: uppercase;
+}
+
+.referenceCopy h2 {
+  margin: 0;
+  overflow: hidden;
+  color: #28262e;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.16;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.referenceCard p {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  max-width: 205px;
+  margin: auto 0 0;
+  padding: 5px 7px;
+  border: 1px solid rgba(239, 235, 243, 0.9);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.84);
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.34;
+}
+
+.referenceCard p strong {
+  color: #28262e;
+  font-weight: 800;
+}
+
+.referenceCard p span {
+  color: #8f7ac8;
+  font-weight: 750;
+}
+
+.muscleReferenceCard {
+  padding: 12px;
+  isolation: isolate;
+  background: #eee9f7;
+}
+
+.muscleReferenceCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(40, 38, 46, 0.16) 100%);
+}
+
+.muscleReferenceCard .exerciseIllustration {
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-position: center 42%;
+}
+
+.muscleReferenceCard .exerciseIllustrationFallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  padding: 24px;
+  color: #6f5aa8;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.8), transparent 48%),
+    linear-gradient(145deg, #ece6f8 0%, #ddd4f0 100%);
+}
+
+.exerciseIllustrationFallback span {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.exerciseIllustrationFallback strong {
+  max-width: 148px;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.muscleReferenceCard .referenceCopy {
+  z-index: 2;
+  width: fit-content;
+  max-width: 76%;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 2px 8px rgba(47, 38, 61, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.muscleReferenceCard .referenceCopy h2 {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.muscleReferenceCard p {
+  z-index: 2;
+  max-width: 100%;
+  margin-top: auto;
+  padding: 7px 9px;
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(47, 38, 61, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.equipmentReferenceCard {
+  padding: 12px;
+  isolation: isolate;
+  background: #eee9f7;
+}
+
+.equipmentReferenceCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(40, 38, 46, 0.16) 100%);
+}
+
+.equipmentReferenceCard .referenceCopy,
+.equipmentReferenceCard p {
+  z-index: 2;
+}
+
+.equipmentReferenceCard .referenceCopy {
+  width: fit-content;
+  max-width: 82%;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 2px 8px rgba(47, 38, 61, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.equipmentReferenceCard .referenceCopy h2 {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.equipmentReferenceCard p {
+  max-width: 100%;
+  margin-top: auto;
+  padding: 7px 9px;
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(47, 38, 61, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.exerciseIllustration,
+.equipmentDiagram,
+.equipmentIllustration {
+  position: absolute;
+  top: 45px;
+  right: 4px;
+  width: min(84%, 205px);
+  height: 174px;
+}
+
+.exerciseIllustration {
+  top: 40px;
+  right: 2px;
+  width: min(86%, 210px);
+  height: 192px;
+  border-radius: 17px;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.equipmentIllustration {
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: contain;
+  object-position: center;
+}
+
+.equipmentSurface {
+  fill: #f2eef7;
+  stroke: #e1d9e8;
+  stroke-width: 2;
+}
+
+.equipmentAccent {
+  fill: #9c84cf;
+}
+
+.equipmentStroke {
+  fill: none;
+  stroke: #71667d;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 6;
+}
+
+@media (max-width: 350px) {
+  .explainer {
+    grid-template-columns: minmax(0, 1fr) 58px;
+    gap: 6px;
+  }
+
+  .tabs {
+    gap: 6px;
+    padding: 10px 0;
+  }
+
+  .activeTab {
+    margin-left: -6px;
+    padding-left: 8px;
+  }
+
+  .referenceCopy h2 {
+    font-size: 14px;
+  }
+}
+
+@media (max-height: 824px) {
+  .explainer,
+  .content,
+  .content :global([data-testid="workout-exercise-video-frame"]),
+  .referenceCard {
+    height: clamp(202px, calc(100dvh - 525px), 252px);
+    min-height: clamp(202px, calc(100dvh - 525px), 252px);
+    max-height: clamp(202px, calc(100dvh - 525px), 252px);
+  }
+}

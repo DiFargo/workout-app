@@ -36,6 +36,7 @@ test("completed workout on another day gets a distinct calendar status", () => {
 
   const entries = buildWorkoutScheduleCalendarEntries(slots);
   assert.ok(entries.some((item) => item.date === "2026-06-21" && item.status === "completed_off_date"));
+  assert.equal(entries.some((item) => item.date === "2026-06-20" && item.status === "planned"), false);
 });
 
 test("missed planned workout is marked and projected forward", () => {
@@ -77,6 +78,21 @@ test("manual planned workout status is shown as completed in calendar", () => {
   assert.equal(entries.filter((entry) => entry.status === "completed").length, 3);
 });
 
+test("explicit completed workout ids make every completed plan date non-purple", () => {
+  const slots = buildPlannedWorkoutSlots({
+    workouts,
+    calendar: {
+      plannedWorkouts: buildWorkoutScheduleDraft(["2026-06-15", "2026-06-17", "2026-06-20"], workouts)
+    },
+    completedWorkoutIds: ["w1", "w2", "w3"],
+    now: new Date("2026-06-20T12:00:00.000Z")
+  });
+  const entries = buildWorkoutScheduleCalendarEntries(slots);
+
+  assert.equal(slots.every((slot) => slot.isCompleted), true);
+  assert.equal(entries.some((entry) => entry.status === "planned"), false);
+});
+
 test("planned workout slots ignore history from an older assignment", () => {
   const slots = buildPlannedWorkoutSlots({
     workouts: [{ id: "w1", name: "Workout A", assignedProgramUpdatedAt: "new-assignment" }],
@@ -92,6 +108,22 @@ test("planned workout slots ignore history from an older assignment", () => {
 
   assert.equal(slots[0].status, "planned");
   assert.equal(slots[0].isCompleted, false);
+});
+
+test("explicit completed workout ids keep the calendar aligned with immutable history", () => {
+  const slots = buildPlannedWorkoutSlots({
+    workouts: [{ id: "w1", name: "Workout A", assignedProgramUpdatedAt: "new-assignment" }],
+    calendar: {
+      assignedProgramUpdatedAt: "new-assignment",
+      plannedWorkouts: [{ workoutId: "w1", order: 1, date: "2026-06-20", status: "planned" }]
+    },
+    history: [{ workoutId: "w1", date: "2026-06-20", assignedProgramUpdatedAt: "old-assignment" }],
+    completedWorkoutIds: ["w1"],
+    now: new Date("2026-06-20T12:00:00.000Z")
+  });
+
+  assert.equal(slots[0].status, "completed");
+  assert.equal(slots[0].isCompleted, true);
 });
 
 test("a completed workout name does not complete another workout with the same name", () => {

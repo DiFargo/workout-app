@@ -1,3 +1,7 @@
+import { X } from "lucide-react";
+import { createPortal } from "react-dom";
+import styles from "./TrainerAdminCreateClientModal.module.css";
+
 export default function TrainerAdminCreateClientModal({
   adminCreateUserLoading,
   adminCreateUserStatus,
@@ -10,21 +14,36 @@ export default function TrainerAdminCreateClientModal({
   setAdminNewUserEmail,
   setAdminNewUserName
 }) {
-  return (
-    <div className="adminCreateClientModalOverlay">
-      <div className="adminCreateClientModal">
-        <button
-          type="button"
-          className="adminCreateClientModalClose"
-          onClick={() => setAdminCreateClientModalOpen(false)}
-        >
-          ×
-        </button>
+  const modal = (
+    <div
+      className={styles.backdrop}
+      data-trainer-modal-backdrop="true"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) setAdminCreateClientModalOpen(false);
+      }}
+    >
+      <section
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trainer-create-client-modal-title"
+        data-modal-surface="true"
+        data-trainer-modal-surface="true"
+        data-trainer-modal-frame="true"
+      >
+        <header className={styles.header} data-trainer-modal-header="true">
+          <div>
+            <span>КЛИЕНТЫ</span>
+            <h2 id="trainer-create-client-modal-title">Пригласить клиента</h2>
+            <p>Клиент сам задаст пароль по ссылке активации и войдёт по выбранному логину.</p>
+          </div>
+          <button type="button" onClick={() => setAdminCreateClientModalOpen(false)} aria-label="Закрыть создание клиента">
+            <X size={20} />
+          </button>
+        </header>
 
-        <h2>Пригласить клиента</h2>
-        <p>Клиент сам задаст пароль по ссылке активации и войдёт по выбранному логину.</p>
-
-        <form className="adminCreateUserForm" onSubmit={createUserFromAdminPanel}>
+        <form id="trainer-create-client-form" className={styles.content} data-trainer-modal-content="true" onSubmit={createUserFromAdminPanel}>
           <label>
             <span>Имя клиента</span>
             <input
@@ -45,27 +64,31 @@ export default function TrainerAdminCreateClientModal({
             />
           </label>
 
-          <button type="submit" className="adminCreateUserSubmit" disabled={adminCreateUserLoading}>
-            {adminCreateUserLoading ? "Создаю..." : "Создать приглашение"}
-          </button>
+          {adminCreateUserStatus && <p className={styles.status}>{adminCreateUserStatus}</p>}
+
+          {adminCreatedCredentials && (
+            <div className={styles.credentials}>
+              <span>Ссылка активации</span>
+              <strong>Логин: {adminCreatedCredentials.login || adminCreatedCredentials.email}</strong>
+              <code>{adminCreatedCredentials.shareUrl || adminCreatedCredentials.inviteUrl}</code>
+              <button
+                type="button"
+                onClick={() => navigator.clipboard?.writeText(adminCreatedCredentials.shareUrl || adminCreatedCredentials.activationUrl || credentialsText)}
+              >
+                Скопировать ссылку
+              </button>
+            </div>
+          )}
         </form>
 
-        {adminCreateUserStatus && <p className="adminCreateUserStatus">{adminCreateUserStatus}</p>}
-
-        {adminCreatedCredentials && (
-          <div className="adminCredentialsBox">
-            <span>Ссылка активации</span>
-            <strong>Логин: {adminCreatedCredentials.login || adminCreatedCredentials.email}</strong>
-            <code>{adminCreatedCredentials.shareUrl || adminCreatedCredentials.inviteUrl}</code>
-            <button
-              type="button"
-              onClick={() => navigator.clipboard?.writeText(adminCreatedCredentials.shareUrl || adminCreatedCredentials.activationUrl || credentialsText)}
-            >
-              Скопировать ссылку
-            </button>
-          </div>
-        )}
-      </div>
+        <footer className={styles.footer} data-trainer-modal-footer="true">
+          <button type="submit" form="trainer-create-client-form" disabled={adminCreateUserLoading}>
+            {adminCreateUserLoading ? "Создаю..." : "Создать приглашение"}
+          </button>
+        </footer>
+      </section>
     </div>
   );
+
+  return typeof document === "undefined" ? modal : createPortal(modal, document.body);
 }

@@ -1,4 +1,8 @@
 /* Client exercise progress: reviewable signals instead of an unstructured data list. */
+:local(.scope) {
+  min-width: 0;
+}
+
 :global(.trainerNextRoot) :global(.trainerClientExerciseProgress) {
   display: grid;
   gap: 16px;

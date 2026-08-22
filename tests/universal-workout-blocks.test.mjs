@@ -34,6 +34,10 @@ test("executable workouts keep group order and expose interval and instruction s
 
   assert.deepEqual(executable.exercises.map((exercise) => exercise.id), ["press", "row", "day_3_run", "day_3_coach"]);
   assert.equal(executable.exercises[0].taskBlockType, "group");
+  assert.equal(executable.exercises[0].taskBlockConfig.groupMode, "superset");
+  assert.equal(executable.exercises[0].taskBlockExerciseIndex, 0);
+  assert.equal(executable.exercises[1].taskBlockExerciseIndex, 1);
+  assert.equal(executable.exercises[0].taskBlockExerciseCount, 2);
   assert.equal(executable.exercises[2].taskBlockConfig.rounds, 6);
   assert.equal(executable.exercises[3].instruction, "Stop at technical failure");
 });

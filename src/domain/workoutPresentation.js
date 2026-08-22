@@ -292,7 +292,7 @@ export function buildWorkoutFinishSummary({
 
 export function getDefaultWorkoutModePreference() {
   return {
-    mode: "",
+    mode: "individual",
     remember: false
   };
 }

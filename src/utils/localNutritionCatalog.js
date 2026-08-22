@@ -1,5 +1,8 @@
 import { LOCAL_NUTRITION_SEARCH_LIMIT } from "../data/nutritionDefaults";
-import { searchLazyNutritionCatalog } from "../data/nutrition-catalog/lazyCatalog";
+import {
+  findExactLazyNutritionCatalogFoods,
+  searchLazyNutritionCatalog
+} from "../data/nutrition-catalog/lazyCatalog";
 import { normalizeNutritionFood } from "./nutritionFoodModel";
 
 export function normalizeLocalCatalogFood(food = {}) {
@@ -12,8 +15,12 @@ export function normalizeLocalCatalogFood(food = {}) {
     name: food.name || "Продукт",
     aliases: food.aliases || [],
     brand: food.brand || "",
+    barcode: food.barcode || "",
+    recordType: food.recordType || "sku",
     category: food.category || "",
-    source: food.source || "Локальная база",
+    source: food.source || (food.recordType === "reference_food"
+      ? "USDA FoodData Central"
+      : "Open Food Facts"),
     sourceType: "local_catalog",
     basisUnit,
     portion: basisUnit === "ml" ? `${portionAmount} мл` : `${portionAmount} г`,
@@ -31,6 +38,11 @@ export function normalizeLocalCatalogFood(food = {}) {
 
 export async function searchLocalNutritionFoods(query, limit = LOCAL_NUTRITION_SEARCH_LIMIT) {
   const foods = await searchLazyNutritionCatalog(query, limit);
+  return foods.map(normalizeLocalCatalogFood);
+}
+
+export async function findExactLocalNutritionFoods(query) {
+  const foods = await findExactLazyNutritionCatalogFoods(query);
   return foods.map(normalizeLocalCatalogFood);
 }
 

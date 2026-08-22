@@ -1,3 +1,5 @@
+import { X } from "lucide-react";
+import { createPortal } from "react-dom";
 import styles from "./TrainerProgramCopySheet.module.css";
 
 export default function TrainerProgramCopySheet({
@@ -8,19 +10,36 @@ export default function TrainerProgramCopySheet({
 }) {
   if (!adminProgramCopyTarget) return null;
 
-  return (
-    <div className={styles.backdrop} onClick={() => setAdminProgramCopyTarget(null)}>
+  const sheet = (
+    <div
+      className={styles.backdrop}
+      data-trainer-modal-backdrop="true"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) setAdminProgramCopyTarget(null);
+      }}
+    >
       <section
         className={styles.sheet}
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
+        data-trainer-modal-surface="true"
+        data-trainer-modal-frame="true"
         aria-labelledby="program-copy-sheet-title"
-        onClick={(event) => event.stopPropagation()}
+        onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className={styles.handle} />
-        <h2 id="program-copy-sheet-title">Куда вставить копию микроцикла?</h2>
+        <header className={styles.header} data-trainer-modal-header="true">
+          <div>
+            <div className={styles.handle} />
+            <h2 id="program-copy-sheet-title">Куда вставить копию микроцикла?</h2>
+          </div>
+          <button type="button" onClick={() => setAdminProgramCopyTarget(null)} aria-label="Закрыть копирование микроцикла">
+            <X size={20} />
+          </button>
+        </header>
 
-        <div className={styles.targetList}>
+        <div className={styles.targetList} data-trainer-modal-content="true">
           {monthGroups.map((month, monthIndex) => (
             <section className={styles.targetMonth} key={month.id}>
               <h3>Месяц {monthIndex + 1}</h3>
@@ -47,10 +66,12 @@ export default function TrainerProgramCopySheet({
           ))}
         </div>
 
-        <div className={styles.actions}>
+        <footer className={styles.actions} data-trainer-modal-footer="true">
           <button type="button" onClick={() => setAdminProgramCopyTarget(null)}>Отмена</button>
-        </div>
+        </footer>
       </section>
     </div>
   );
+
+  return typeof document === "undefined" ? sheet : createPortal(sheet, document.body);
 }

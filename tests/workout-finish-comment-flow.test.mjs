@@ -14,19 +14,21 @@ test("post workout feedback opens finish summary before saving client comment", 
   assert.ok(feedbackHandlerMatch, "Post workout feedback handler should stay explicit in the workout route view model");
   assert.match(feedbackHandlerMatch[1], /setPostWorkoutFeedback\(option\)/);
   assert.match(feedbackHandlerMatch[1], /setPostWorkoutFeedbackOpen\(false\)/);
-  assert.match(feedbackHandlerMatch[1], /setCurrentExerciseIndex\(workout\.exercises\.length \+ 1\)/);
+  assert.match(feedbackHandlerMatch[1], /setCurrentExerciseIndex\(executionSteps\.length \+ 1\)/);
   assert.doesNotMatch(feedbackHandlerMatch[1], /saveWorkoutToFirebase\(option\)/);
 });
 
-test("finish summary keeps trainer comment editable and saved to history", async () => {
+test("finish summary keeps a private note for basic workouts and a trainer comment for individual plans", async () => {
   const finishSource = await readFile(WORKOUT_FINISH_PATH, "utf8");
   const stageSource = await readFile(WORKOUT_STAGE_PATH, "utf8");
   const saveSource = await readFile(WORKOUT_SAVE_PATH, "utf8");
 
-  assert.match(finishSource, /Комментарий тренеру/);
+  assert.match(finishSource, /Заметка о тренировке/);
+  assert.match(finishSource, /isBasicWorkout \? "Заметка о тренировке" : "Комментарий тренеру"/);
   assert.match(finishSource, /value=\{workoutClientComment\}/);
   assert.match(finishSource, /onClientCommentChange/);
   assert.match(finishSource, /onClick=\{onFinishWorkout\}/);
   assert.match(stageSource, /if \(postWorkoutFeedback\) \{[\s\S]*?saveWorkoutToFirebase\(postWorkoutFeedback\)/);
+  assert.match(saveSource, /personalNote:\s*workoutClientComment\.trim\(\)/);
   assert.match(saveSource, /clientComment:\s*workoutClientComment\.trim\(\)/);
 });

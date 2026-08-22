@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TrainerWorkspace from "../../components/trainer/TrainerWorkspace";
 import TrainerClientOverviewModals from "./TrainerClientOverviewModals";
+import AdminTrainerProfileRoute, { isAdminTrainerSelection } from "./AdminTrainerProfileRoute";
 import ProfileAccountSettingsSection from "../client/profile/ProfileAccountSettingsSection";
 import ProfileAppSettingsSection from "../client/profile/ProfileAppSettingsSection";
 import ProfileAvatarCropModal from "../client/profile/ProfileAvatarCropModal";
@@ -171,9 +172,11 @@ function TrainerAccountSettingsModals({
 
 export default function TrainerDashboardWorkspaceRoute({
   APP_VERSION,
+  adminAllUsersList,
   applyProfileAvatarCrop,
   adminClientEvents,
   adminClientHistory,
+  adminClientLoading,
   adminClientMeasurements,
   adminNewTaskDueDate,
   adminNewTaskTitle,
@@ -185,6 +188,8 @@ export default function TrainerDashboardWorkspaceRoute({
   adminSelectedTemplateId,
   adminTrainingTemplates,
   adminTrainerNote,
+  archiveClientProgramAssignment,
+  restoreClientProgramAssignment,
   adminUsersSelectedTab,
   assignSavedProgramToClient,
   attentionCount,
@@ -196,6 +201,7 @@ export default function TrainerDashboardWorkspaceRoute({
   clientNutritionDays,
   closeProfileAvatarCrop,
   createAdminClientTask,
+  deleteClientProgramAssignment,
   disconnectTelegram,
   endProfileAvatarCropDrag,
   getAdminClientGoalLabel,
@@ -206,6 +212,8 @@ export default function TrainerDashboardWorkspaceRoute({
   logout,
   navigateTrainerNext,
   openClientTelegramConnection,
+  openAdminBaseLibrary,
+  openAdminClientsWithFilter,
   openProfileAccount,
   openProfileAvatarCrop,
   openTelegramChat,
@@ -213,7 +221,9 @@ export default function TrainerDashboardWorkspaceRoute({
   refreshPage,
   saveTrainerClientNutritionPlan,
   saveTrainerClientNotificationSettings,
+  saveTrainerClientSetupProgress,
   loadTrainerSubscriptionNotificationSettings,
+  loadUsers,
   moveProfileAvatarCrop,
   saveTrainerSubscriptionNotificationSettings,
   saveTrainerClientWorkoutSchedule,
@@ -227,9 +237,11 @@ export default function TrainerDashboardWorkspaceRoute({
   sendTrainerClientMessage,
   setAdminClientPageOpen,
   setAdminClientStatus,
+  setAdminAllUsersList,
   setAdminNewTaskDueDate,
   setAdminNewTaskTitle,
   setAdminSelectedTemplateId,
+  setAdminSelectedClient,
   setAdminTaskComposerOpen,
   setAdminUsersSelectedTab,
   setProfileAccountDraft,
@@ -242,6 +254,9 @@ export default function TrainerDashboardWorkspaceRoute({
   setTelegramProfile,
   setTelegramStatus,
   setTrainerNextSection,
+  setTrainerProgramManagerOpen,
+  setTrainerWorkoutTab,
+  setPage,
   startProfileAvatarCropDrag,
   sortWorkoutDays,
   plan,
@@ -280,10 +295,38 @@ export default function TrainerDashboardWorkspaceRoute({
   trainerNextWorkspaceHandlers,
   trainerNutritionPlanOptions,
   trainerStatusCounts,
+  updateUserTrainerRole,
   user,
   usersList,
   adminExerciseVideoUploadingId
 }) {
+  if (isAdminTrainerSelection({ canUseAdminFeatures, selectedClient })) {
+    return (
+      <AdminTrainerProfileRoute
+        adminAllUsersList={adminAllUsersList}
+        adminTrainingTemplates={adminTrainingTemplates}
+        canUseAdminFeatures={canUseAdminFeatures}
+        loadUsers={loadUsers}
+        logout={logout}
+        openAdminBaseLibrary={openAdminBaseLibrary}
+        openAdminClientsWithFilter={openAdminClientsWithFilter}
+        openProfileAccount={openProfileAccount}
+        selectedClient={selectedClient}
+        setAdminClientPageOpen={setAdminClientPageOpen}
+        setAdminClientStatus={setAdminClientStatus}
+        setAdminAllUsersList={setAdminAllUsersList}
+        setAdminSelectedClient={setAdminSelectedClient}
+        setPage={setPage}
+        setTrainerNextSection={setTrainerNextSection}
+        setTrainerProgramManagerOpen={setTrainerProgramManagerOpen}
+        setTrainerWorkoutTab={setTrainerWorkoutTab}
+        updateUserTrainerRole={updateUserTrainerRole}
+        user={user}
+        usersList={usersList}
+      />
+    );
+  }
+
   return (
     <>
       <TrainerWorkspace
@@ -298,6 +341,7 @@ export default function TrainerDashboardWorkspaceRoute({
       clientSummaries={trainerNextSummaries}
       actionCenter={trainerActionCenter}
       summariesLoading={trainerClientSummariesLoading}
+      clientLoading={adminClientLoading}
       counts={{
         active: trainerStatusCounts.active,
         attention: attentionCount
@@ -337,6 +381,7 @@ export default function TrainerDashboardWorkspaceRoute({
       onGenerateNutritionPlan={() => setAdminClientStatus("Параметры AI-плана открыты в разделе питания.")}
       onSaveNutritionPlan={saveTrainerClientNutritionPlan}
       onSaveNotifications={saveTrainerClientNotificationSettings}
+      onSaveClientSetupProgress={saveTrainerClientSetupProgress}
       trainerSubscriptionNotificationSettings={trainerSubscriptionNotificationSettings}
       onLoadTrainerSubscriptionNotifications={loadTrainerSubscriptionNotificationSettings}
       onSaveTrainerSubscriptionNotifications={saveTrainerSubscriptionNotificationSettings}
@@ -358,14 +403,19 @@ export default function TrainerDashboardWorkspaceRoute({
       onCreateTask={() => setAdminTaskComposerOpen(true)}
       onClientAction={handleTrainerClientAction}
       canDeleteClients={canUseAdminFeatures()}
+      canAdminManageProgramAssignments={canUseAdminFeatures()}
       onResolveExerciseProgress={(payload) => handleTrainerClientAction("resolve_exercise_progress", selectedClient, payload)}
       workouts={sortWorkoutDays(plan.workouts || [])}
+      archivedWorkouts={sortWorkoutDays(plan.archivedWorkouts || [])}
       exerciseLibrary={trainerExerciseLibraryItems}
       programTemplates={adminTrainingTemplates}
       selectedProgramId={adminSelectedTemplateId}
       onSelectProgram={setAdminSelectedTemplateId}
-      onAssignProgram={() => assignSavedProgramToClient(selectedClient?.id, adminSelectedTemplateId)}
-      onSaveWorkoutSchedule={(dates) => saveTrainerClientWorkoutSchedule(dates, selectedClient)}
+      onAssignProgram={(options) => assignSavedProgramToClient(selectedClient?.id, adminSelectedTemplateId, options)}
+      onArchiveProgramAssignment={(assignment) => archiveClientProgramAssignment(selectedClient?.id, assignment)}
+      onRestoreProgramAssignment={(assignment) => restoreClientProgramAssignment(selectedClient?.id, assignment)}
+      onDeleteProgramAssignment={(assignment) => deleteClientProgramAssignment(selectedClient?.id, assignment)}
+      onSaveWorkoutSchedule={(dates, assignmentWorkouts) => saveTrainerClientWorkoutSchedule(dates, selectedClient, assignmentWorkouts)}
       programStatus={adminClientStatus}
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}

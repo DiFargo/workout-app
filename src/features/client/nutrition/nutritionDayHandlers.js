@@ -1,8 +1,9 @@
 import {
   makeEmptyNutritionDay,
   todayNutritionKey
-} from "../../../domain/nutritionPresentation";
-import { shiftNutritionCalendarMonthKey } from "../../../utils/nutritionCalendar";
+} from "../../../domain/nutritionPresentation.js";
+import { findLazyNutritionCatalogByBarcode } from "../../../data/nutrition-catalog/lazyCatalog.js";
+import { shiftNutritionCalendarMonthKey } from "../../../utils/nutritionCalendar.js";
 
 export function createNutritionDayHandlers({
   nutritionBarcode,
@@ -10,6 +11,7 @@ export function createNutritionDayHandlers({
   nutritionFoodDatabase,
   nutritionPhotoName,
   addNutritionFood,
+  findCatalogFoodByBarcode = findLazyNutritionCatalogByBarcode,
   setExpandedNutritionMeals,
   setNutrition,
   setNutritionBarcode,
@@ -77,13 +79,23 @@ export function createNutritionDayHandlers({
     }));
   }
 
-  function findFoodByBarcode() {
-    const food = nutritionFoodDatabase.find((item) => item.barcode === nutritionBarcode.trim());
+  async function findFoodByBarcode(value = nutritionBarcode) {
+    const barcode = String(value || "").trim();
+    if (!barcode) return null;
+
+    let food = null;
+    try {
+      food = await findCatalogFoodByBarcode(barcode);
+    } catch (error) {
+      console.warn("Nutrition catalog barcode lookup failed:", error);
+    }
+    if (!food) food = nutritionFoodDatabase.find((item) => item.barcode === barcode);
+
     if (food) {
-      addNutritionFood(food);
       setNutritionSearch(food.name);
       setNutritionBarcode("");
     }
+    return food || null;
   }
 
   function recognizePhotoFood() {

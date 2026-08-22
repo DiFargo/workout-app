@@ -6,6 +6,7 @@ import {
   getTrainerNextWorkoutSourceExercise
 } from "./trainerWorkoutArgs";
 import {
+  getTrainerExercisePresentationIdentity,
   mapTrainerNextWorkoutSetExercise,
   normalizeTrainerNextExerciseDefaults
 } from "./trainerWorkoutEditHelpers";
@@ -378,6 +379,7 @@ export function createTrainerPlanEditorHandlers({
     const sourceVideo = sourceExercise?.video || sourceExercise?.videoUrl || sourceExercise?.videoURL || "";
     const newExercise = sourceExercise ? {
       id: `exercise_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      ...getTrainerExercisePresentationIdentity(sourceExercise),
       name: sourceExercise.name || exerciseName,
       video: sourceVideo,
       videoAutoFilledFrom: sourceVideo ? sourceExercise.name : "",
@@ -399,14 +401,34 @@ export function createTrainerPlanEditorHandlers({
     const constructorMode = args.length >= 4;
     const workoutId = getTrainerNextWorkoutId(args, constructorMode);
     const exerciseId = getTrainerNextExerciseId(args, constructorMode);
+    const exerciseIndex = Number(args[constructorMode ? 4 : 2]);
+    const hasExerciseId = exerciseId !== undefined && exerciseId !== null && String(exerciseId).trim() !== "";
+    const hasExerciseIndex = Number.isInteger(exerciseIndex) && exerciseIndex >= 0;
 
-    if (!workoutId || !exerciseId) return;
+    if (!workoutId || (!hasExerciseId && !hasExerciseIndex)) return false;
 
-    const nextWorkouts = mapTrainerNextWorkoutSetExercise(getPlanWorkouts(plan), workoutId, exerciseId, (exercises) => (
-      exercises.filter((exercise) => exercise.id !== exerciseId)
+    const workouts = getPlanWorkouts(plan);
+    const targetWorkout = workouts.find((workout) => String(workout?.id || "") === String(workoutId));
+    const exercises = Array.isArray(targetWorkout?.exercises) ? targetWorkout.exercises : [];
+    const matchedExerciseIndex = hasExerciseId
+      ? exercises.findIndex((exercise) => String(exercise?.id || "") === String(exerciseId))
+      : -1;
+
+    // Older assignments may lack exercise ids, and a stale in-document id can
+    // disagree with the loaded row. Prefer the exact id, then use the row index
+    // that the editor rendered so the visible future exercise can still be removed.
+    const targetExerciseIndex = matchedExerciseIndex >= 0
+      ? matchedExerciseIndex
+      : (hasExerciseIndex ? exerciseIndex : -1);
+
+    if (targetExerciseIndex < 0 || targetExerciseIndex >= exercises.length) return false;
+
+    const nextWorkouts = mapTrainerNextWorkoutSetExercise(workouts, workoutId, exerciseId, (currentExercises) => (
+      currentExercises.filter((_, index) => index !== targetExerciseIndex)
     ));
 
     persistPlan(createTrainerNextPlan(plan, nextWorkouts));
+    return true;
   }
 
   function duplicateTrainerNextExercise(...args) {
@@ -595,9 +617,10 @@ export function createTrainerPlanEditorHandlers({
     const workouts = getPlanWorkouts(plan);
 
     const nextWorkouts = workouts.filter((workout) => workout.id !== workoutId);
-    if (nextWorkouts.length === workouts.length) return;
+    if (nextWorkouts.length === workouts.length) return false;
 
     persistPlan(createTrainerNextPlan(plan, nextWorkouts));
+    return true;
   }
 
   return {

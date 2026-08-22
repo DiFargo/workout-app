@@ -55,19 +55,31 @@
   font-size: 0;
   pointer-events: auto;
 }
-:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton { right: 16px; }
-:global(:root[data-app-theme="warm-light"]) .backButton.backButton { right: auto; left: 16px; }
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton {
+  right: max(
+    calc(env(safe-area-inset-right, 0px) + 16px),
+    calc(50% - min(201px, 50vw) + 16px)
+  );
+}
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton {
+  right: auto;
+  left: max(
+    calc(env(safe-area-inset-left, 0px) + 16px),
+    calc(50% - min(201px, 50vw) + 16px)
+  );
+}
 :global(:root[data-app-theme="warm-light"]) .closeButton.closeButton svg,
 :global(:root[data-app-theme="warm-light"]) .backButton.backButton svg { width: 22px; height: 22px; stroke-width: 2.1; }
 :global(:root[data-app-theme="warm-light"]) .backButton.backButton::before { display: none; content: none; }
 
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle {
   box-sizing: border-box;
-  width: 100%;
+  width: min(402px, 100vw);
+  max-width: 402px;
   height: 44px;
   min-height: 44px;
   margin: 0;
-  padding: 0 58px;
+  padding: 0 62px;
   position: fixed;
   top: max(8px, env(safe-area-inset-top, 0px));
   left: 50%;
@@ -80,15 +92,76 @@
   pointer-events: none;
 }
 :global(:root[data-app-theme="warm-light"]) .stageTitleText.stageTitleText {
-  max-width: 250px;
-  display: block;
+  max-width: 268px;
+  display: -webkit-box;
   overflow: hidden;
   color: #28262e;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 650;
-  line-height: 22px;
-  text-overflow: ellipsis;
+  line-height: 17px;
+  text-align: center;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+:global(:root[data-app-theme="warm-light"]) .stageTitleWithSwap.stageTitleWithSwap {
+  padding-right: 114px;
+  padding-left: 66px;
+  justify-content: flex-start;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitleWithSwap .stageTitleText {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  font-size: clamp(12px, 3.7vw, 14px);
+  line-height: 15px;
+  letter-spacing: -0.18px;
+  text-align: left;
+}
+
+:global(:root[data-app-theme="warm-light"]) .swapExerciseButton.swapExerciseButton {
+  box-sizing: border-box;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: max(8px, env(safe-area-inset-top, 0px));
+  right: max(
+    calc(env(safe-area-inset-right, 0px) + 68px),
+    calc(50% - min(201px, 50vw) + 68px)
+  );
+  z-index: 103;
+  border: 1px solid #efebf3;
+  border-radius: 13px;
+  background: #fff;
+  color: #806bb6;
+  box-shadow: 0 2px 7px rgba(72, 63, 87, 0.05);
+  line-height: 1;
+}
+:global(:root[data-app-theme="warm-light"]) .swapExerciseButton.swapExerciseButton svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+:global(:root[data-app-theme="warm-light"]) .swapExerciseButton.swapExerciseButton span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
   white-space: nowrap;
+}
+:global(:root[data-app-theme="warm-light"]) .swapExerciseButton.swapExerciseButton:active {
+  transform: scale(0.97);
 }
 
 :global([data-workout-run-no-header="true"]) .topHeader {
@@ -451,4 +524,37 @@
   object-fit: contain;
   border-radius: 18px;
   background: #000000;
+}
+
+@media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .topHeader.topHeader,
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle {
+    width: var(--workout-run-content-width);
+    max-width: var(--workout-run-content-width);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .stageTitleText.stageTitleText {
+    max-width: 520px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .closeButton.closeButton {
+    right: max(
+      calc(env(safe-area-inset-right, 0px) + 16px),
+      calc(50% - var(--workout-run-content-half) + 16px)
+    );
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .backButton.backButton {
+    left: max(
+      calc(env(safe-area-inset-left, 0px) + 16px),
+      calc(50% - var(--workout-run-content-half) + 16px)
+    );
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .swapExerciseButton.swapExerciseButton {
+    right: max(
+      calc(env(safe-area-inset-right, 0px) + 68px),
+      calc(50% - var(--workout-run-content-half) + 68px)
+    );
+  }
 }

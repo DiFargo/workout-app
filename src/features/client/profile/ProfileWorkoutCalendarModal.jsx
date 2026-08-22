@@ -25,6 +25,7 @@ export function ProfileWorkoutCalendarContent({
 }) {
   const currentDates = editing ? draftDates : scheduledDates;
   const scheduledThisMonth = scheduledDates.filter((dateKey) => dateKey.startsWith(monthKey)).length;
+  const selectedDayScheduled = currentDates.includes(selectedDate);
 
   return (
     <div
@@ -178,7 +179,9 @@ export function ProfileWorkoutCalendarContent({
             </button>
           ))
         ) : (
-          <p className={styles.emptyDay}>В этот день тренировок нет.</p>
+          <p className={styles.emptyDay}>
+            {selectedDayScheduled ? "Тренировка запланирована. Её номер указан в календаре." : "В этот день тренировок нет."}
+          </p>
         )}
       </div>
     </div>

@@ -1,4 +1,5 @@
-import { auth } from "../firebase";
+import { auth } from "../firebase.js";
+import { getClientAppCheckToken } from "../app/appCheck.js";
 
 function makeTimeoutSignal(timeoutMs = 16000, externalSignal = null) {
   const controller = new AbortController();
@@ -37,10 +38,32 @@ async function getAuthorizedApiHeaders(headers = {}) {
     throw new Error("Authentication required");
   }
 
-  return {
+  return getAppCheckApiHeaders({
     ...headers,
     "Authorization": `Bearer ${await currentUser.getIdToken()}`
-  };
+  });
+}
+
+export async function getAppCheckApiHeaders(headers = {}) {
+  const appCheckToken = await getClientAppCheckToken();
+  return withAppCheckHeader(headers, appCheckToken);
+}
+
+export function withAppCheckHeader(headers = {}, appCheckToken = "") {
+  const token = String(appCheckToken || "").trim();
+  return token
+    ? {
+        ...headers,
+        "X-Firebase-AppCheck": token
+      }
+    : headers;
+}
+
+export async function fetchWithAppCheck(url, options = {}) {
+  return fetch(url, {
+    ...options,
+    headers: await getAppCheckApiHeaders(options.headers)
+  });
 }
 
 export async function fetchAuthorized(url, options = {}) {

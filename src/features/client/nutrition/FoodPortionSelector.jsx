@@ -13,8 +13,11 @@ export default function FoodPortionSelector({
 }) {
   const unitOptions = getSmartUnits(selectedFood).filter((unit) => unit.id !== "grams");
   const selectedUnitId = getSmartUnitId(selectedFood, amount, amountMode);
-  const selectedUnit = unitOptions.find((unit) => unit.id === selectedUnitId) || unitOptions[0];
+  const selectedUnit = unitOptions.find((unit) => unit.id === selectedUnitId);
   const isPortionMode = amountMode === "portion";
+  const selectedUnitLabel = isPortionMode
+    ? (selectedUnit?.shortLabel || selectedUnit?.label || "Порция")
+    : "Порция";
 
   return (
     <div
@@ -44,7 +47,7 @@ export default function FoodPortionSelector({
           aria-expanded={unitMenuOpen}
           onClick={onToggleUnitMenu}
         >
-          <strong data-css-module-text>{selectedUnit?.shortLabel || selectedUnit?.label || "Порция"}</strong>
+          <strong data-css-module-text>{selectedUnitLabel}</strong>
           <em aria-hidden="true">{unitMenuOpen ? "⌃" : "⌄"}</em>
         </button>
 

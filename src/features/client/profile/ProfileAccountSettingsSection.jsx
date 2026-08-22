@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { AtSign, Camera, LockKeyhole, Pencil, UserRound } from "lucide-react";
 import styles from "./ProfileAccountSettingsSection.module.css";
 
+const MAX_DISPLAY_NAME_LENGTH = 30;
+
 export default function ProfileAccountSettingsSection({
   avatarPreview,
   avatarUrl,
@@ -51,7 +53,9 @@ export default function ProfileAccountSettingsSection({
 
   function saveFieldSnapshot(field, value, { exit = true } = {}) {
     window.clearTimeout(autoSaveTimerRef.current);
-    const normalizedValue = field === "login" ? String(value || "").trim().toLowerCase() : value;
+    const normalizedValue = field === "login"
+      ? String(value || "").trim().toLowerCase()
+      : String(value || "").slice(0, MAX_DISPLAY_NAME_LENGTH);
     const nextDraft = { ...draftRef.current, [field]: normalizedValue };
     draftRef.current = nextDraft;
     onDraftChange(field, normalizedValue);
@@ -95,9 +99,12 @@ export default function ProfileAccountSettingsSection({
   }
 
   function changeField(field, value) {
-    const nextDraft = { ...draftRef.current, [field]: value };
+    const nextValue = field === "displayName"
+      ? String(value || "").slice(0, MAX_DISPLAY_NAME_LENGTH)
+      : value;
+    const nextDraft = { ...draftRef.current, [field]: nextValue };
     draftRef.current = nextDraft;
-    onDraftChange(field, value);
+    onDraftChange(field, nextValue);
     if (field !== "login") {
       scheduleAutoSave(nextDraft);
     }
@@ -153,6 +160,7 @@ export default function ProfileAccountSettingsSection({
             ref={displayNameRef}
             readOnly={editingField !== "displayName"}
             value={draft.displayName || ""}
+            maxLength={MAX_DISPLAY_NAME_LENGTH}
             onChange={(event) => changeField("displayName", event.target.value)}
             onBlur={(event) => {
               if (editingFieldRef.current === "displayName") {

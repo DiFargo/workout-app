@@ -13,6 +13,7 @@ import {
   getHistoryWorkoutParts
 } from "../../../utils/workoutHistoryPresentation";
 import styles from "./WorkoutHistoryPage.module.css";
+import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 
 export default function WorkoutHistoryPage({
   canUseTrainerFeatures,
@@ -45,7 +46,7 @@ export default function WorkoutHistoryPage({
   const latestHistoryWorkout = historyItems[0];
 
   return (
-    <div className={styles.page} data-testid="workout-history-page" data-css-module-scope="workout-history">
+    <div className={`${styles.page} ${adaptiveShellStyles.shell}`} data-client-adaptive-shell="true" data-testid="workout-history-page" data-css-module-scope="workout-history">
       <ClientPageHeader
         compact
         className={styles.header}
@@ -124,9 +125,16 @@ export default function WorkoutHistoryPage({
                 onTouchStart={(event) => handleHistoryTouchStart(event, item.id)}
                 onTouchEnd={(event) => handleHistoryTouchEnd(event, item)}
               >
-                <div className={styles.deleteAction} data-testid="workout-history-delete-action" onClick={() => requestDeleteOwnHistoryWorkout(item)}>
+                <button
+                  type="button"
+                  className={styles.deleteAction}
+                  data-testid="workout-history-delete-action"
+                  onClick={() => requestDeleteOwnHistoryWorkout(item)}
+                  disabled={historyDeletingId === item.id}
+                  aria-label={`Удалить тренировку: ${parts.title}`}
+                >
                   {historyDeletingId === item.id ? "Удаляю..." : "Удалить"}
-                </div>
+                </button>
 
                 <div className={styles.cardInner} data-testid="workout-history-card-inner">
                   <div className={styles.cardTop}>

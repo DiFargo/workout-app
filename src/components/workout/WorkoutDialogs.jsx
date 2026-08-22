@@ -1,4 +1,4 @@
-import { WORKOUT_READINESS_OPTIONS } from "../../domain/workoutPresentation";
+import { getWorkoutReadinessOption, WORKOUT_READINESS_OPTIONS } from "../../domain/workoutPresentation";
 import { AlertCircle, LogOut, X } from "lucide-react";
 import styles from "./WorkoutDialogs.module.css";
 
@@ -114,6 +114,7 @@ export function WorkoutReadinessDialog({
   onApply
 }) {
   if (!open || !selectedWorkoutId || workoutStarted) return null;
+  const selectedOption = pendingOption || getWorkoutReadinessOption("good");
 
   return (
     <div
@@ -145,10 +146,10 @@ export function WorkoutReadinessDialog({
                 type="button"
                 key={option.id}
                 className={`${styles.readinessOption} ${
-                  pendingOption?.id === option.id ? styles.active : ""
+                  selectedOption?.id === option.id ? styles.active : ""
                 }`}
                 data-workout-readiness-option={option.id}
-                aria-pressed={pendingOption?.id === option.id}
+                aria-pressed={selectedOption?.id === option.id}
                 onClick={() => onSelectOption(option)}
               >
                 <span>{option.emoji}</span>
@@ -166,12 +167,10 @@ export function WorkoutReadinessDialog({
             ))}
           </div>
 
-          <p className={`${styles.readinessConfirmation} ${pendingOption ? "" : styles.empty}`}>
-            {pendingOption
-              ? pendingOption.id === "good"
+          <p className={styles.readinessConfirmation}>
+            {selectedOption.id === "good"
                 ? "Плановые веса тренера останутся без изменений."
-                : `Будет применена корректировка: ${pendingOption.volumeText}.`
-              : "Выберите вариант самочувствия."}
+                : `Будет применена корректировка: ${selectedOption.volumeText}.`}
           </p>
         </div>
 
@@ -181,8 +180,7 @@ export function WorkoutReadinessDialog({
           </button>
           <button
             type="button"
-            disabled={!pendingOption}
-            onClick={() => onApply(pendingOption)}
+            onClick={() => onApply(selectedOption)}
           >
             Продолжить
           </button>

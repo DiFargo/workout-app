@@ -10,6 +10,8 @@ Do not commit real passwords or private account credentials. Test account creden
 - Open with a cache-busting query when checking a fresh release, for example `?verify=<timestamp>`.
 - Confirm the visible app version matches the expected release version.
 - If version is stale, hard refresh once and check that `/sw.js` and `/index.html` are not stuck on old cache.
+- When App Check is enabled for the environment, confirm a protected `/api/...`
+  action succeeds without a 401 and review the environment's App Check metrics.
 
 ## Client Smoke
 
@@ -91,3 +93,6 @@ Record:
 - Any changed test data.
 - Pass/fail for client, trainer and admin.
 - Bugs found, with screenshots when visual.
+- Error-reporting collector status and any release-version errors during the observation window.
+- App Check status (`monitoring` or `enforced`) and any rejected request count.
+- Backup/export job status (or the approved maintenance exception).

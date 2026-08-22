@@ -11,9 +11,24 @@ const productionFirebaseConfig = {
   appId: "1:870948637708:web:2b99749866f761c394f229"
 };
 
+// This config exists only for Node unit tests, where Firebase services can be
+// imported by pure helpers. It is deliberately not a real Firebase project and
+// keeps tests from falling back to production credentials.
+const testFirebaseConfig = {
+  apiKey: "AIzaSyA12345678901234567890123456789012",
+  authDomain: "workout-app-test.invalid",
+  projectId: "workout-app-test",
+  storageBucket: "workout-app-test.invalid",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:test"
+};
+
 const runtimeEnvironment = typeof import.meta.env === "undefined" ? {} : import.meta.env;
 const runtimeMode = typeof import.meta.env === "undefined" ? "test" : import.meta.env.MODE;
-const runtimeIsDevelopment = typeof import.meta.env === "undefined" ? false : import.meta.env.DEV;
+const runtimeIsTest = typeof import.meta.env === "undefined";
+const firebaseEnvironment = String(
+  runtimeEnvironment.VITE_FIREBASE_ENVIRONMENT || (runtimeMode === "production" ? "production" : "")
+).trim().toLowerCase();
 
 const environmentFirebaseConfig = {
   apiKey: runtimeEnvironment.VITE_FIREBASE_API_KEY,
@@ -28,22 +43,25 @@ const missingEnvironmentValues = Object.entries(environmentFirebaseConfig)
   .filter(([, value]) => !String(value || "").trim())
   .map(([key]) => key);
 
-if (runtimeMode === "staging" && missingEnvironmentValues.length > 0) {
-  throw new Error(`Staging Firebase configuration is incomplete: ${missingEnvironmentValues.join(", ")}`);
+const usesBundledProductionConfig = firebaseEnvironment === "production";
+
+if (!runtimeIsTest && usesBundledProductionConfig && runtimeMode !== "production") {
+  throw new Error("Bundled production Firebase configuration is allowed only in a production build.");
 }
 
-const firebaseConfig = {
-  apiKey: environmentFirebaseConfig.apiKey || productionFirebaseConfig.apiKey,
-  authDomain: environmentFirebaseConfig.authDomain || productionFirebaseConfig.authDomain,
-  projectId: environmentFirebaseConfig.projectId || productionFirebaseConfig.projectId,
-  storageBucket: environmentFirebaseConfig.storageBucket || productionFirebaseConfig.storageBucket,
-  messagingSenderId: environmentFirebaseConfig.messagingSenderId || productionFirebaseConfig.messagingSenderId,
-  appId: environmentFirebaseConfig.appId || productionFirebaseConfig.appId
-};
-
-if (runtimeIsDevelopment && firebaseConfig.projectId === productionFirebaseConfig.projectId) {
-  console.warn("Local development is connected to the production Firebase project.");
+if (!runtimeIsTest && !usesBundledProductionConfig && missingEnvironmentValues.length > 0) {
+  throw new Error(`Firebase configuration is incomplete: ${missingEnvironmentValues.join(", ")}`);
 }
+
+if (!runtimeIsTest && !usesBundledProductionConfig && environmentFirebaseConfig.projectId === productionFirebaseConfig.projectId) {
+  throw new Error("A non-production build cannot use the production Firebase project.");
+}
+
+const firebaseConfig = usesBundledProductionConfig
+  ? productionFirebaseConfig
+  : runtimeIsTest
+    ? testFirebaseConfig
+    : environmentFirebaseConfig;
 
 export const app = initializeApp(firebaseConfig);
 

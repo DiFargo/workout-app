@@ -165,28 +165,21 @@ export function getClientAttentionState(client = {}, summary = {}, now = new Dat
     return { type: "programEnding", reason: summary.programEndingAttention.reason };
   }
 
-  const activeTrainerTasksCount = Number(summary.activeTrainerTasksCount ?? client.activeTrainerTasksCount) || 0;
-  if (activeTrainerTasksCount > 0) {
-    return {
-      type: "task",
-      reason: activeTrainerTasksCount === 1
-        ? "Есть активная задача от тренера"
-        : `${activeTrainerTasksCount} ${pluralizeRu(activeTrainerTasksCount, "активная задача", "активные задачи", "активных задач")} от тренера`
-    };
-  }
-
   const nutritionReason = getNutritionAttentionReason(summary, now);
   if (nutritionReason) return { type: "nutrition", reason: nutritionReason };
 
   const measurementDays = getTrainerAttentionDaysSince(summary.lastMeasurementAt, now);
+  if (measurementDays !== null && measurementDays >= 14) {
+    return {
+      type: "measure",
+      reason: `Не взвешивался ${measurementDays} ${pluralizeRu(measurementDays, "день", "дня", "дней")}`
+    };
+  }
   if (summary.plateau?.isPlateau) {
     return { type: "measure", reason: `Вес стоит ${summary.plateau.days} ${pluralizeRu(summary.plateau.days, "день", "дня", "дней")}` };
   }
   if (["overdue", "soon"].includes(summary.paymentAttention?.id)) {
     return { type: "payment", reason: summary.paymentAttention.label || "Проверь оплату клиента" };
-  }
-  if (measurementDays !== null && measurementDays >= 30) {
-    return { type: "measure", reason: `Нет замера ${measurementDays} ${pluralizeRu(measurementDays, "день", "дня", "дней")}` };
   }
   if (!summary.lastWorkoutAt && !summary.lastNutritionAt && assignedDays !== null && assignedDays >= 7) {
     return { type: "activity", reason: "Нет недавней активности" };

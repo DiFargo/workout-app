@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 
 import {
   buildCustomNutritionDishDraft,
-  buildCustomNutritionFoodDraft
+  buildCustomNutritionFoodDraft,
+  makePersonalFoodKey
 } from "../src/utils/nutritionFoodModel.js";
 
 test("custom nutrition food draft keeps editable defaults", () => {
@@ -26,4 +27,16 @@ test("custom nutrition dish draft starts with dish defaults", () => {
   assert.equal(draft.type, "dish");
   assert.equal(draft.totalWeight, 100);
   assert.deepEqual(draft.ingredients, []);
+});
+
+test("personal food keys preserve a GTIN or catalog ID before falling back to the name", () => {
+  assert.equal(
+    makePersonalFoodKey({ name: "Same product name", barcode: "4812345678900" }),
+    "my_gtin_4812345678900"
+  );
+  assert.equal(
+    makePersonalFoodKey({ name: "Same product name", id: "ref-usda-173944" }),
+    "my_catalog_ref-usda-173944"
+  );
+  assert.equal(makePersonalFoodKey({ name: "Manual food" }), "my_manual_food");
 });

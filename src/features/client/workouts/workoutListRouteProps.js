@@ -8,13 +8,10 @@ export function createWorkoutListProps({
   workoutCalendar,
   userId,
   workoutModePreference,
-  workoutModeRemember,
   individualWorkoutIndex,
   individualWorkoutIndexInitialized,
   setIndividualWorkoutIndex,
   setIndividualWorkoutIndexInitialized,
-  workoutModeModalOpen,
-  setWorkoutModeModalOpen,
   workoutHistoryModalOpen,
   setWorkoutHistoryModalOpen,
   workoutDraftRestorePrompt,
@@ -32,8 +29,6 @@ export function createWorkoutListProps({
   openAdminClientsWithFilter,
   openAdminProgramsOverview,
   openWorkout,
-  saveWorkoutModePreference,
-  openIndividualWorkouts,
   openSavedBasicWorkoutsOrQuiz,
   openBasicWorkoutQuiz,
   openCabinetWorkoutHistory,
@@ -47,13 +42,10 @@ export function createWorkoutListProps({
     workoutCalendar: workoutCalendar || {},
     currentUserId: userId || "",
     workoutModePreference,
-    workoutModeRemember,
     individualWorkoutIndex,
     individualWorkoutIndexInitialized,
     setIndividualWorkoutIndex,
     setIndividualWorkoutIndexInitialized,
-    workoutModeModalOpen,
-    setWorkoutModeModalOpen,
     workoutHistoryModalOpen,
     setWorkoutHistoryModalOpen,
     workoutDraftRestorePrompt,
@@ -75,18 +67,8 @@ export function createWorkoutListProps({
     onOpenTrainerPrograms: openAdminProgramsOverview,
     loadHistory,
     openWorkout,
-    onOpenBasicMode: () => {
-      setWorkoutModeModalOpen(false);
-      openSavedBasicWorkoutsOrQuiz();
-    },
-    onOpenBasicSettings: () => {
-      setWorkoutModeModalOpen(false);
-      openBasicWorkoutQuiz();
-    },
-    onOpenIndividualWorkouts: openIndividualWorkouts,
-    onToggleWorkoutModeRemember: (remember) => {
-      saveWorkoutModePreference(workoutModePreference?.mode || "individual", remember);
-    },
+    onOpenBasicMode: openSavedBasicWorkoutsOrQuiz,
+    onOpenBasicSettings: openBasicWorkoutQuiz,
     openCabinetWorkoutHistory,
     handleWorkoutDraftChoice
   };

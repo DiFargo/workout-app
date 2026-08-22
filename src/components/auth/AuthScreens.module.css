@@ -111,6 +111,41 @@
     animation-delay: 0.32s;
   }
 
+  .splashRecovery {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin-block-start: 1rem;
+    display: grid;
+    gap: 0.625rem;
+    text-align: center;
+  }
+
+  .splashRecovery p {
+    margin: 0;
+    color: #7b7682;
+    font-size: 0.8125rem;
+    font-weight: 650;
+    line-height: 1.35;
+  }
+
+  .splashRetry {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid #ded7e9;
+    border-radius: 14px;
+    background: #f5f2f7;
+    color: #4c4656;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 750;
+  }
+
+  .splashRetry:focus-visible {
+    outline: 3px solid rgba(143, 122, 200, 0.32);
+    outline-offset: 2px;
+  }
+
   @keyframes splash-loading {
     0% {
       transform: translateX(-115%);
@@ -398,9 +433,9 @@
 .loginBtn {
   margin-top: 4px;
   border: 0;
-  background: #7b7682;
+  background: linear-gradient(135deg, #9a85d1, #806bb6);
   color: #fff;
-  box-shadow: none;
+  box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
   font-size: 16px;
 }
 
@@ -436,10 +471,17 @@
   font-size: 14px;
 }
 
-.loginBtn:disabled,
 .loginGoogleBtn:disabled,
 .loginResetBtn:disabled {
   opacity: 0.48;
+}
+
+.loginCard .loginBtn:disabled {
+  opacity: 1;
+  cursor: wait;
+  background: linear-gradient(135deg, #9a85d1, #806bb6);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(105, 82, 157, 0.18);
 }
 
 .loginHint {
@@ -471,11 +513,16 @@
   box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
 }
 
-:global(html:root[data-app-theme="warm-light"]) .appLogo.appLogo,
-:global(html:root[data-app-theme="warm-light"]) .loginBtn.loginBtn {
+:global(html:root[data-app-theme="warm-light"]) .appLogo.appLogo {
   background: #7b7682;
   color: #fff;
   box-shadow: none;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .loginBtn.loginBtn {
+  background: linear-gradient(135deg, #9a85d1, #806bb6);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard input {
@@ -616,4 +663,10 @@
 
 :global(:root[data-app-theme="warm-light"]) .splashDots > i {
   background: #8296a5;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashRetry {
+  border-color: #efebf3;
+  background: #f5f2f7;
+  color: #4c4656;
 }

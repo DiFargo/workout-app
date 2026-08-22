@@ -289,6 +289,12 @@ export async function handleTrainerClientActionWithDeps({
 
     if (action === "archive" || action === "restore") {
       const archived = action === "archive";
+      const confirmed = await showAppConfirm(
+        archived
+          ? `Архивировать клиента ${client.name || client.email || client.id}? Его история и программа сохранятся, а карточка исчезнет из активного списка.`
+          : `Восстановить клиента ${client.name || client.email || client.id} в активном списке?`
+      );
+      if (!confirmed) return false;
       const patch = {
         archived,
         active: !archived,
@@ -304,13 +310,24 @@ export async function handleTrainerClientActionWithDeps({
       return true;
     }
 
-    if (action === "disable_notifications") {
+    if (action === "disable_notifications" || action === "enable_notifications") {
+      const notificationsEnabled = action === "enable_notifications";
+      const currentCalendar = client.workoutCalendar || {};
+      const currentProgressReminders = currentCalendar.progressReminderSettings || client.progressReminderSettings || {};
       await saveTrainerClientNotificationSettings({
-        enabled: false,
-        offsets: client.workoutCalendar?.reminderOffsetsHours || [24],
-        scheduledDates: client.workoutCalendar?.scheduledDates || client.workoutCalendar?.monthlyTrainingDates || []
+        enabled: notificationsEnabled,
+        offsets: currentCalendar.reminderOffsetsHours || [24],
+        scheduledDates: currentCalendar.scheduledDates || currentCalendar.monthlyTrainingDates || [],
+        progressPhotoEnabled: currentProgressReminders.photoEnabled === true || client.progressPhotoReminderEnabled === true,
+        measurementsEnabled: currentProgressReminders.measurementsEnabled === true || client.measurementsReminderEnabled === true,
+        progressPhotoIntervalDays: currentProgressReminders.photoIntervalDays || client.progressPhotoReminderIntervalDays,
+        measurementsIntervalDays: currentProgressReminders.measurementsIntervalDays || client.measurementsReminderIntervalDays
       }, client);
-      await recordTrainerEvent(client.id, "notifications", "Уведомления отключены");
+      await recordTrainerEvent(
+        client.id,
+        "notifications",
+        notificationsEnabled ? "Напоминания включены" : "Напоминания отключены"
+      );
       return true;
     }
 

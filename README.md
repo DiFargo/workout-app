@@ -7,4 +7,5 @@ The current architecture notes, layer boundaries and verification commands are d
 - [docs/architecture.md](docs/architecture.md)
 - [docs/environments.md](docs/environments.md)
 - [docs/mvp-execution-plan-v2.md](docs/mvp-execution-plan-v2.md)
+- [docs/release-operations.md](docs/release-operations.md)
 - [docs/refactor-status.md](docs/refactor-status.md)

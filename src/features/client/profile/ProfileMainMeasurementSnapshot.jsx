@@ -15,7 +15,8 @@ function formatSnapshotWeight(value) {
 export default function ProfileMainMeasurementSnapshot({
   measurementSeries,
   latestWeight,
-  weightChange
+  weightChange,
+  weightTrendPeriod = "с прошлого замера"
 }) {
   const safeSeries = Array.isArray(measurementSeries) ? measurementSeries.slice(-4) : [];
   const latestWeightLabel = formatSnapshotWeight(latestWeight);
@@ -36,6 +37,11 @@ export default function ProfileMainMeasurementSnapshot({
   });
   const chartPolyline = chartPoints.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
   const lastPoint = chartPoints.at(-1);
+  const trendValue = weightChange
+    ? `${weightChange > 0 ? "+" : ""}${weightChange.toFixed(1)} кг`
+    : safeSeries.length >= 2
+      ? "Без изменений"
+      : "";
   const bubbleWidth = 58;
   const bubbleX = lastPoint ? clampNumber(lastPoint.x - bubbleWidth / 2, 6, 280 - bubbleWidth - 6) : 0;
   const bubbleY = lastPoint ? clampNumber(lastPoint.y - 42, 4, 48) : 0;
@@ -55,14 +61,17 @@ export default function ProfileMainMeasurementSnapshot({
       <div className={styles.body} data-testid="profile-measurement-snapshot-body">
         <div className={styles.weight} data-testid="profile-measurement-snapshot-weight">
           <strong>{latestWeightLabel}</strong>
-          {weightChange !== 0 && (
-            <em>{weightChange > 0 ? "+" : ""}{weightChange.toFixed(1)} кг</em>
-          )}
-          <small>{weightChange ? `${weightChange > 0 ? "+" : ""}${weightChange.toFixed(1)} кг за неделю` : "0 кг за неделю"}</small>
+          {trendValue ? (
+            <span className={styles.trendSummary}>
+              <span>{trendValue}</span>
+              <span>{weightTrendPeriod}</span>
+            </span>
+          ) : null}
         </div>
         <div className={styles.chart} data-testid="profile-measurement-snapshot-chart">
           {chartPoints.length >= 2 ? (
-            <svg
+            <>
+              <svg
               className={styles.trend}
               data-testid="profile-measurement-snapshot-trend"
               viewBox="0 0 280 118"
@@ -123,15 +132,16 @@ export default function ProfileMainMeasurementSnapshot({
                   {point.dateLabel}
                 </text>
               ))}
-            </svg>
+              </svg>
+            </>
           ) : chartPoints.length === 1 ? (
             <div className={styles.single} data-testid="profile-measurement-snapshot-single">
-              <strong>Первая точка сохранена</strong>
-              <span>Добавь ещё один замер, чтобы увидеть динамику.</span>
+              <strong>Первый замер сохранён</strong>
+              <span>Следующее взвешивание откроет динамику.</span>
             </div>
           ) : (
             <div className={styles.empty} data-testid="profile-measurement-snapshot-empty">
-              Добавь первый замер, чтобы отслеживать динамику веса
+              <span>Данные о весе появятся после первого взвешивания.</span>
             </div>
           )}
         </div>

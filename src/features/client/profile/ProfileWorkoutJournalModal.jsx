@@ -43,7 +43,7 @@ export default function ProfileWorkoutJournalModal({
           className={styles.header}
           title="Тренировки"
           titleId="cabinetWorkoutJournalTitle"
-          eyebrow="Календарь и история"
+          eyebrow="Расписание и история"
           actions={(
             <ProfileModalCloseButton
               testId="profile-workout-journal-close"

@@ -55,11 +55,12 @@ async function expectTapTargets(page, selectors, minSize = 40) {
 test("client AI coach visual audit covers insights and nutrition plan states", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  for (const theme of ["warm-light", "dark-green"]) {
+  for (const requestedTheme of ["warm-light", "dark-green"]) {
     for (const width of [320, 390, 1366]) {
       await page.setViewportSize({ width, height: width === 320 ? 720 : 844 });
-      await page.goto(`/?clientHarness=1&clientHarnessPage=aiCoach&clientHarnessTheme=${theme}`);
+      await page.goto(`/?clientHarness=1&clientHarnessPage=aiCoach&clientHarnessTheme=${requestedTheme}`);
       await expect(page.getByTestId("client-harness-ai-coach")).toBeVisible({ timeout: 40_000 });
+      await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
       await expect(page.getByTestId("ai-coach-page")).toBeVisible();
       await expect(page.getByTestId("ai-coach-hero")).toBeVisible();
       await expect(page.getByTestId("ai-coach-result")).toBeVisible();
@@ -78,10 +79,10 @@ test("client AI coach visual audit covers insights and nutrition plan states", a
           backHeight: Math.round(backRect?.height || 0)
         };
       });
-      expect(visualContract.width).toBeLessThanOrEqual(theme === "warm-light" ? 402 : 560);
-      expect(visualContract.headingColor).toBe(theme === "warm-light" ? "rgb(40, 38, 46)" : "rgb(255, 255, 255)");
-      expect(visualContract.backWidth).toBe(theme === "warm-light" ? 44 : 46);
-      expect(visualContract.backHeight).toBe(theme === "warm-light" ? 44 : 46);
+      expect(visualContract.width).toBeLessThanOrEqual(402);
+      expect(visualContract.headingColor).toBe("rgb(40, 38, 46)");
+      expect(visualContract.backWidth).toBe(44);
+      expect(visualContract.backHeight).toBe(44);
     }
   }
 

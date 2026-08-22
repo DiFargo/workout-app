@@ -22,10 +22,13 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  z-index: 2;
+  /* The shared modal header is intentionally layered above the content.
+     Keep the close control one layer above that header so it stays tappable
+     on compact phone sheets. */
+  z-index: 3;
   display: inline-flex;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -378,8 +381,8 @@
   .close {
     top: 14px;
     right: 14px;
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
   }
 
   .header {

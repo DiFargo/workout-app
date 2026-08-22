@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { reportClientError } from "../../utils/errorReporting";
 import styles from "./AppErrorBoundary.module.css";
 
 export default class AppErrorBoundary extends Component {
@@ -13,6 +14,7 @@ export default class AppErrorBoundary extends Component {
 
   componentDidCatch(error, info) {
     console.error("App runtime error:", error, info);
+    void reportClientError(error, { source: "react.error-boundary", feature: "app-shell" });
   }
 
   render() {

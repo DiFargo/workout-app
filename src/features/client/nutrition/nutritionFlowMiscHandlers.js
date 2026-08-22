@@ -1,3 +1,5 @@
+import { findLazyNutritionCatalogByBarcode } from "../../../data/nutrition-catalog/lazyCatalog.js";
+
 export function createNutritionProductFromPhotoWithDeps({
   aiFood = {},
   fallbackName = "",
@@ -22,6 +24,8 @@ export function createNutritionProductFromPhotoWithDeps({
 }) {
   const candidate = aiFood.candidates?.[0] || {};
   const rawAiResponse = aiFood.rawAiResponse || {};
+  const evidenceType = aiFood.evidenceType === "label" ? "label" : "estimate";
+  const sourceLabel = evidenceType === "label" ? "Данные с этикетки" : "Примерная оценка ИИ";
   const brand = String(aiFood.brand || candidate.brand || rawAiResponse.brand || "").trim();
   const productName = String(aiFood.name || candidate.name || fallbackName || "Новый продукт").trim();
   const cleanName = brand && !productName.toLowerCase().includes(brand.toLowerCase())
@@ -42,6 +46,8 @@ export function createNutritionProductFromPhotoWithDeps({
   const ingredientsText = Array.isArray(ingredients) ? ingredients.filter(Boolean).join(", ") : String(ingredients || "").trim();
   const netWeight = String(aiFood.netWeight || aiFood.servingSize || rawAiResponse.netWeight || rawAiResponse.servingSize || "").trim();
   const aiDescription = [
+    `Источник: ${sourceLabel}.`,
+    evidenceType === "estimate" ? "Проверьте КБЖУ и порцию перед добавлением в дневник." : "Проверьте данные с этикетки перед добавлением в дневник.",
     brand ? `Бренд: ${brand}` : "",
     labelText ? `Текст с этикетки: ${labelText}` : "",
     ingredientsText ? `Состав: ${ingredientsText}` : "",
@@ -65,7 +71,10 @@ export function createNutritionProductFromPhotoWithDeps({
     protein,
     fat,
     carbs,
-    source: "AI фото",
+    source: sourceLabel,
+    sourceType: evidenceType === "label" ? "ai_photo_label" : "ai_estimate",
+    evidenceType,
+    requiresReview: evidenceType !== "label",
     amountMode: "grams",
     lastAmount: estimatedGrams,
     icon: getFoodIcon({ name: cleanName }) || "🍽️"
@@ -75,7 +84,11 @@ export function createNutritionProductFromPhotoWithDeps({
   setNutritionFallbackSuggestions([]);
   setNutritionPhotoAiCandidates([]);
   setNutritionPhotoAiConfidence("");
-  setNutritionPhotoAiResult(`ИИ распознал этикетку: ${draftFood.name}. Проверь КБЖУ и сохрани продукт.`);
+  setNutritionPhotoAiResult(
+    evidenceType === "label"
+      ? `Найдены данные с этикетки: ${draftFood.name}. Проверьте КБЖУ перед добавлением.`
+      : `ИИ дал примерную оценку: ${draftFood.name}. Проверьте КБЖУ и порцию перед добавлением.`
+  );
   setNutritionSearch(draftFood.name);
   setEditingNutritionItemId(null);
   setNutritionMealMenuOpen(false);
@@ -125,10 +138,11 @@ export function returnToNutritionMainAfterAddWithDeps({
   setPage(APP_PAGES.NUTRITION);
 }
 
-export function addFoodByBarcodeFromPickerWithDeps({
+export async function addFoodByBarcodeFromPickerWithDeps({
   nutritionBarcode,
   nutritionFoodDatabase,
   addNutritionFoodFromPicker,
+  findCatalogFoodByBarcode = findLazyNutritionCatalogByBarcode,
   setBarcodeScannerError,
   setBarcodeScannerOpen,
   setNutritionBarcode
@@ -136,7 +150,13 @@ export function addFoodByBarcodeFromPickerWithDeps({
   const code = nutritionBarcode.trim();
   if (!code) return;
 
-  const food = nutritionFoodDatabase.find((item) => item.barcode === code);
+  let food = null;
+  try {
+    food = await findCatalogFoodByBarcode(code);
+  } catch (error) {
+    console.warn("Nutrition catalog barcode lookup failed:", error);
+  }
+  if (!food) food = nutritionFoodDatabase.find((item) => item.barcode === code);
   if (food) {
     setBarcodeScannerError("");
     setBarcodeScannerOpen(false);

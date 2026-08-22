@@ -11,7 +11,7 @@
   min-height: 80px;
   padding: 6px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
   gap: 6px;
   border: 1px solid var(--color-food-nav-border);
@@ -181,9 +181,9 @@
 
 :global(:root[data-app-theme="warm-light"]) .button {
   box-sizing: border-box;
-  width: calc((100% - 12px) / 4);
+  width: calc((100% - 8px) / 3);
   min-width: 0;
-  max-width: 78px;
+  max-width: 112px;
   height: var(--layout-client-dock-button-height);
   min-height: var(--layout-client-dock-button-height);
   max-height: var(--layout-client-dock-button-height);

@@ -17,6 +17,54 @@ export function getAiNutritionActivityMultiplier(activity = "medium") {
   return 1.48;
 }
 
+function getFiniteProfileNumber(value) {
+  const normalized = String(value ?? "").trim().replace(",", ".");
+  if (!normalized) return null;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+/**
+ * Keep the plan builder from silently inventing body data. The onboarding has
+ * the same fields, but this guard is also used by the optional AI-plan screen.
+ */
+export function getAiNutritionProfileValidation(profile = {}) {
+  const checks = [
+    ["weight", "вес", 35, 350],
+    ["targetWeight", "целевой вес", 35, 350],
+    ["height", "рост", 120, 250],
+    ["age", "возраст", 14, 100]
+  ];
+  const missing = checks
+    .filter(([field, , min, max]) => {
+      const value = getFiniteProfileNumber(profile?.[field]);
+      return value === null || value < min || value > max;
+    })
+    .map(([, label]) => label);
+
+  if (!["female", "male"].includes(profile?.sex)) missing.push("пол");
+
+  return {
+    valid: missing.length === 0,
+    missing,
+    message: missing.length
+      ? `Заполни: ${missing.join(", ")}.`
+      : ""
+  };
+}
+
+export function calculateAiNutritionTargetCalorieAdjustment(profile = {}) {
+  const currentWeight = getFiniteProfileNumber(profile?.weight);
+  const targetWeight = getFiniteProfileNumber(profile?.targetWeight);
+  if (currentWeight === null || targetWeight === null) return 0;
+
+  const deltaKg = targetWeight - currentWeight;
+  if (Math.abs(deltaKg) < 0.5) return 0;
+
+  const magnitude = Math.min(320, Math.max(120, Math.round(Math.abs(deltaKg) * 28)));
+  return deltaKg > 0 ? magnitude : -magnitude;
+}
+
 export function calculateAiNutritionBmr({ weight = 80, height = 180, age = 30, sex = "male" } = {}) {
   const safeWeight = Math.max(35, Number(weight) || 80);
   const safeHeight = Math.max(120, Number(height) || 180);
@@ -36,6 +84,9 @@ export function calculatePersonalAiNutritionCalories(profile = {}) {
   const bmr = calculateAiNutritionBmr({ weight, height, age, sex });
   const maintenance = Math.round(bmr * getAiNutritionActivityMultiplier(activity));
   const personalizedBase = maintenance;
+
+  const targetAdjustment = calculateAiNutritionTargetCalorieAdjustment(profile);
+  if (targetAdjustment) return Math.round(personalizedBase + targetAdjustment);
 
   if (goal === "mass") return Math.round(personalizedBase + 220);
   if (goal === "cut") return Math.round(personalizedBase - 320);

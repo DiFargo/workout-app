@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   buildTrainerUserLists,
+  isCurrentTrainerClient,
   normalizeTrainerClientRecord
 } from "../src/utils/trainerUserLists.js";
 
@@ -43,4 +44,40 @@ test("admin lists clients and trainers but excludes admin email", () => {
   ], { isAdmin: true, adminEmail: "admin@example.com" });
 
   assert.deepEqual(clients.map((item) => item.id), ["client", "trainer"]);
+});
+
+test("explicit reassignment prevents a previous trainer from seeing a legacy client", () => {
+  const reassignedClient = {
+    id: "client-1",
+    role: "client",
+    createdByUid: "old-trainer",
+    trainerAssignmentState: "assigned",
+    assignedTrainerId: "new-trainer",
+    trainerId: "new-trainer",
+    coachId: "new-trainer"
+  };
+
+  assert.equal(isCurrentTrainerClient(reassignedClient, { trainerUid: "old-trainer" }), false);
+  assert.equal(isCurrentTrainerClient(reassignedClient, { trainerUid: "new-trainer" }), true);
+});
+
+test("explicit unassignment overrides a legacy creator link", () => {
+  assert.equal(isCurrentTrainerClient({
+    id: "client-1",
+    role: "client",
+    createdByUid: "trainer-1",
+    trainerAssignmentState: "unassigned",
+    assignedTrainerId: "",
+    trainerId: "",
+    coachId: ""
+  }, { trainerUid: "trainer-1" }), false);
+});
+
+test("a stale trainer mirror never authorizes a client card by itself", () => {
+  assert.equal(isCurrentTrainerClient({
+    id: "client-1",
+    role: "client",
+    trainerLinkOnly: true,
+    trainerId: "trainer-1"
+  }, { trainerUid: "trainer-1" }), false);
 });

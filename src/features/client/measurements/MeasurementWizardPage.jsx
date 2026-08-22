@@ -1,12 +1,16 @@
 import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
 import { X } from "lucide-react";
+import { useState } from "react";
 import { APP_VERSION } from "../../../constants/appConfig";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
   getProfileMeasurementFields,
-  getProfileMeasurementValue
+  getProfileMeasurementValue,
+  PROFILE_MEASUREMENT_LIMITS,
+  validateProfileMeasurementValue
 } from "../../../utils/profileMeasurements";
 import "./ClientMeasurements.module.css";
+import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 import styles from "./MeasurementWizardPage.module.css";
 
 const versionedMeasurementAsset = (src) => `${src}?v=${encodeURIComponent(APP_VERSION)}`;
@@ -29,6 +33,7 @@ export default function MeasurementWizardPage({
   onNavigateProfilePage,
   setPage
 }) {
+  const [measurementMode, setMeasurementMode] = useState("full");
   const activeProfile = {
     ...(aiNutritionProfile || {}),
     ...aiNutritionProfileDraft
@@ -36,15 +41,23 @@ export default function MeasurementWizardPage({
   const latestProfileMeasurement = Array.isArray(profileMeasurements) && profileMeasurements.length
     ? profileMeasurements[0]
     : null;
-  const measurementFields = getProfileMeasurementFields(activeProfile?.goal || "recomp");
+  const allMeasurementFields = getProfileMeasurementFields(activeProfile?.goal || "recomp");
+  const measurementFields = measurementMode === "weight"
+    ? allMeasurementFields.filter((field) => field.id === "weight")
+    : allMeasurementFields;
   const totalWizardScreens = measurementFields.length + 2;
   const isIntroStep = profileMeasurementWizardStep === 0;
   const isReviewStep = profileMeasurementWizardStep === totalWizardScreens - 1;
   const activeField = !isIntroStep && !isReviewStep ? measurementFields[profileMeasurementWizardStep - 1] : null;
+  const activeFieldValidation = activeField
+    ? validateProfileMeasurementValue(activeField, profileMeasurementDraft[activeField.id])
+    : null;
+  const activeFieldLimits = activeField ? PROFILE_MEASUREMENT_LIMITS[activeField.id] : null;
   const nextMeasurementField = measurementFields[profileMeasurementWizardStep] || null;
   const progressPercent = Math.max(4, Math.round(((profileMeasurementWizardStep + 1) / totalWizardScreens) * 100));
 
   const closeMeasurementWizard = () => {
+    setMeasurementMode("full");
     setProfileMeasurementDraft({
       weight: "",
       neck: "",
@@ -85,7 +98,34 @@ export default function MeasurementWizardPage({
   };
 
   const handleGoNext = () => {
+    if (isIntroStep) {
+      setMeasurementMode("full");
+      setProfileMeasurementStatus("");
+      setProfileMeasurementWizardStep(1);
+      return;
+    }
+
+    if (activeField) {
+      const validation = validateProfileMeasurementValue(
+        activeField,
+        profileMeasurementDraft[activeField.id]
+      );
+
+      if (!validation.valid) {
+        setProfileMeasurementStatus(validation.error);
+        return;
+      }
+
+      if (!validation.empty && validation.value !== profileMeasurementDraft[activeField.id]) {
+        setProfileMeasurementDraft((previous) => ({
+          ...previous,
+          [activeField.id]: validation.value
+        }));
+      }
+    }
+
     if (!isReviewStep) {
+      setProfileMeasurementStatus("");
       setProfileMeasurementWizardStep((step) => Math.min(totalWizardScreens - 1, step + 1));
       return;
     }
@@ -93,9 +133,22 @@ export default function MeasurementWizardPage({
     saveProfileMeasurement();
   };
 
+  const startWeightOnlyMeasurement = () => {
+    setMeasurementMode("weight");
+    setProfileMeasurementStatus("");
+    setProfileMeasurementWizardStep(1);
+  };
+
+  const startFullMeasurement = () => {
+    setMeasurementMode("full");
+    setProfileMeasurementStatus("");
+    setProfileMeasurementWizardStep(1);
+  };
+
   return (
     <div
-      className={styles.page}
+      className={`${styles.page} ${adaptiveShellStyles.shell}`}
+      data-client-adaptive-shell="true"
       data-css-module-scope="measurement-wizard-page"
       data-testid="measurement-wizard-page"
     >
@@ -160,6 +213,17 @@ export default function MeasurementWizardPage({
               <span>Без натяжения</span>
               <span>Фото можно делать отдельно</span>
             </div>
+
+            <div className={styles.modeChoices} data-testid="measurement-wizard-mode-choices">
+              <button type="button" onClick={startWeightOnlyMeasurement}>
+                <strong>Только вес</strong>
+                <small>Быстрая отметка без остальных замеров</small>
+              </button>
+              <button type="button" className={styles.fullMode} onClick={startFullMeasurement}>
+                <strong>Полный замер</strong>
+                <small>Вес и параметры тела</small>
+              </button>
+            </div>
           </section>
         )}
 
@@ -192,13 +256,30 @@ export default function MeasurementWizardPage({
                 <input
                   data-css-module-control
                   inputMode="decimal"
+                  autoComplete="off"
                   value={profileMeasurementDraft[activeField.id] || ""}
                   placeholder="0"
-                  onChange={(event) => setProfileMeasurementDraft((prev) => ({ ...prev, [activeField.id]: event.target.value }))}
+                  aria-label={`${activeField.label}, ${activeField.unit}`}
+                  aria-invalid={Boolean(activeFieldValidation && !activeFieldValidation.valid)}
+                  aria-describedby={`measurement-${activeField.id}-range`}
+                  maxLength={6}
+                  onChange={(event) => {
+                    setProfileMeasurementDraft((prev) => ({ ...prev, [activeField.id]: event.target.value }));
+                    if (profileMeasurementStatus) setProfileMeasurementStatus("");
+                  }}
                 />
                 <em>{activeField.unit}</em>
               </div>
             </label>
+
+            {activeFieldLimits && (
+              <small
+                className={styles.rangeHint}
+                id={`measurement-${activeField.id}-range`}
+              >
+                Допустимо: {activeFieldLimits.min}–{activeFieldLimits.max} {activeField.unit}
+              </small>
+            )}
 
             <small className={styles.previous}>
               Прошлый раз: {getProfileMeasurementValue(latestProfileMeasurement, activeField)} {activeField.unit}
@@ -218,7 +299,7 @@ export default function MeasurementWizardPage({
               {measurementFields.map((field) => (
                 <div key={field.id} data-testid="measurement-wizard-review-cell">
                   <span>{field.label}</span>
-                  <strong>{profileMeasurementDraft[field.id] || "0"}</strong>
+                  <strong>{profileMeasurementDraft[field.id] || "Не указано"}</strong>
                   <small>{field.unit}</small>
                 </div>
               ))}
@@ -238,7 +319,7 @@ export default function MeasurementWizardPage({
       </main>
 
       {profileMeasurementStatus && (
-        <p className={styles.status}>{profileMeasurementStatus}</p>
+        <p className={styles.status} role="status" aria-live="polite">{profileMeasurementStatus}</p>
       )}
 
       <div className={styles.navigation} data-testid="measurement-wizard-navigation">
@@ -255,7 +336,9 @@ export default function MeasurementWizardPage({
           disabled={isReviewStep && profileMeasurementSaving}
           onClick={handleGoNext}
         >
-          {!isReviewStep ? "Вперёд →" : (profileMeasurementStatus.startsWith("Замер сохранён") ? "Сохранено ✓" : "Сохранить")}
+          {isIntroStep
+            ? "Полный замер →"
+            : (!isReviewStep ? "Вперёд →" : (profileMeasurementStatus.startsWith("Замер сохранён") ? "Сохранено ✓" : "Сохранить"))}
         </button>
       </div>
     </div>

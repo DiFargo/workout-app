@@ -73,14 +73,28 @@ async function expectCrispProfileModal(page, overlayTestId, dialogTestId, closeT
       right: window.innerWidth - rect.right,
       top: rect.top,
       bottom: window.innerHeight - rect.bottom,
-      radius: Number.parseFloat(window.getComputedStyle(element).borderTopLeftRadius)
+      radius: Number.parseFloat(window.getComputedStyle(element).borderTopLeftRadius),
+      bottomRadius: Number.parseFloat(window.getComputedStyle(element).borderBottomLeftRadius),
+      isWarmMobile: window.innerWidth < 700
+        && document.documentElement.dataset.appTheme === "warm-light"
     };
   });
 
-  expect(geometry.left).toBeGreaterThanOrEqual(10);
-  expect(geometry.right).toBeGreaterThanOrEqual(10);
-  expect(geometry.top).toBeGreaterThanOrEqual(10);
-  expect(geometry.bottom).toBeGreaterThanOrEqual(10);
+  const isWarmMobileBottomSheet = geometry.isWarmMobile
+    && dialogTestId !== "profile-avatar-crop-dialog";
+
+  if (isWarmMobileBottomSheet) {
+    expect(Math.abs(geometry.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(geometry.right)).toBeLessThanOrEqual(1);
+    expect(geometry.top).toBeGreaterThanOrEqual(52);
+    expect(Math.abs(geometry.bottom)).toBeLessThanOrEqual(1);
+    expect(geometry.bottomRadius).toBeLessThanOrEqual(1);
+  } else {
+    expect(geometry.left).toBeGreaterThanOrEqual(10);
+    expect(geometry.right).toBeGreaterThanOrEqual(10);
+    expect(geometry.top).toBeGreaterThanOrEqual(10);
+    expect(geometry.bottom).toBeGreaterThanOrEqual(10);
+  }
   expect(geometry.radius).toBeGreaterThanOrEqual(28);
 
   const modalHeader = dialog.locator('[data-client-page-header="true"]');
@@ -128,7 +142,9 @@ async function expectMainDashboardContent(page) {
   await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
   await expect(page.getByTestId("profile-progress-card")).toBeVisible();
   await expect(page.getByTestId("profile-progress-gauge")).toHaveAttribute("aria-label", /90.*100/);
-  await expect(page.getByTestId("profile-progress-badge")).toHaveCount(3);
+  await expect(page.getByTestId("profile-progress-headline")).toBeVisible();
+  await expect(page.getByTestId("profile-progress-title")).toBeVisible();
+  await expect(page.getByTestId("profile-progress-copy")).toBeVisible();
   await expect(page.getByTestId("profile-measurement-snapshot")).toBeVisible();
 }
 
@@ -175,35 +191,126 @@ async function expectMainMeasurementSnapshotLayout(page) {
 }
 
 test("profile measurement snapshot keeps every data state inside its adaptive card", async ({ page }) => {
-  for (const theme of ["warm-light", "dark-green"]) {
-    for (const state of ["trend", "single", "empty"]) {
-      await page.goto(`/?clientHarness=1&clientHarnessTheme=${theme}&clientMeasurementSnapshotState=${state}`);
-      const card = page.getByTestId("profile-measurement-snapshot");
-      await expect(card).toBeVisible();
-      await expect(card).toHaveAttribute("data-state", state);
-      await expect(page.getByTestId("profile-measurement-snapshot-weight")).toBeVisible();
-      await expect(page.getByTestId("profile-measurement-snapshot-chart")).toBeVisible();
+  for (const state of ["trend", "single", "empty"]) {
+    await page.goto(`/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=${state}`);
+    await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
+    const card = page.getByTestId("profile-measurement-snapshot");
+    await expect(card).toBeVisible();
+    await expect(card).toHaveAttribute("data-state", state);
+    await expect(page.getByTestId("profile-measurement-snapshot-weight")).toBeVisible();
+    await expect(page.getByTestId("profile-measurement-snapshot-chart")).toBeVisible();
 
-      if (state === "trend") {
+    if (state === "trend") {
         await expect(page.getByTestId("profile-measurement-snapshot-trend")).toHaveAttribute("aria-label", /Изменение веса/);
-      } else {
+    } else {
         await expect(page.getByTestId(`profile-measurement-snapshot-${state}`)).toBeVisible();
       }
 
-      const fit = await card.evaluate((root) => {
-        const rootRect = root.getBoundingClientRect();
-        const header = root.querySelector('[data-testid="profile-measurement-snapshot-header"] span')?.getBoundingClientRect();
-        const chart = root.querySelector('[data-testid="profile-measurement-snapshot-chart"]')?.getBoundingClientRect();
-        return {
-          headerFits: Boolean(header && header.right <= rootRect.right + 1),
-          chartFits: Boolean(chart && chart.right <= rootRect.right + 1 && chart.bottom <= rootRect.bottom + 1)
-        };
-      });
+    const fit = await card.evaluate((root) => {
+      const rootRect = root.getBoundingClientRect();
+      const header = root.querySelector('[data-testid="profile-measurement-snapshot-header"] span')?.getBoundingClientRect();
+      const chart = root.querySelector('[data-testid="profile-measurement-snapshot-chart"]')?.getBoundingClientRect();
+      const stateCopy = root.querySelector('[data-testid="profile-measurement-snapshot-single"], [data-testid="profile-measurement-snapshot-empty"]')?.getBoundingClientRect();
+      return {
+        headerFits: Boolean(header && header.right <= rootRect.right + 1),
+        chartFits: Boolean(chart && chart.right <= rootRect.right + 1 && chart.bottom <= rootRect.bottom + 1),
+        stateCopyFits: !stateCopy || Boolean(
+          chart &&
+          stateCopy.left >= chart.left - 1 &&
+          stateCopy.right <= chart.right + 1 &&
+          stateCopy.top >= chart.top - 1 &&
+          stateCopy.bottom <= chart.bottom + 1
+        )
+      };
+    });
 
-      expect(fit).toEqual({ headerFits: true, chartFits: true });
-      await expectNoHorizontalOverflow(page);
-    }
+    expect(fit).toEqual({ headerFits: true, chartFits: true, stateCopyFits: true });
+
+    await expectNoHorizontalOverflow(page);
   }
+});
+
+test("weight reminder opens a focused weight-only modal and saves it", async ({ page }) => {
+  await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=single&clientWeightCheckInDue=1");
+
+  await expect(page.getByTestId("profile-weight-checkin-reminder")).toBeVisible();
+  await page.getByTestId("profile-weight-checkin-action").click();
+  const dialog = page.getByTestId("profile-quick-weight-dialog");
+
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAttribute("data-modal-surface", "true");
+  await expect(dialog.locator("input")).toHaveCount(1);
+  await expect(page.getByTestId("profile-quick-weight-input")).toHaveValue("");
+  await expectTapTargets(page, [
+    '[data-testid="profile-quick-weight-close"]',
+    '[data-testid="profile-quick-weight-submit"]'
+  ]);
+
+  await page.getByTestId("profile-quick-weight-input").fill("88,5");
+  await page.getByTestId("profile-quick-weight-submit").click();
+  await expect(dialog).toBeHidden();
+  await expectNoHorizontalOverflow(page);
+});
+
+test("basic plan review keeps the AI action visible while answers stay compact", async ({ page }) => {
+  await page.goto("/?clientHarness=1&clientHarnessPage=basicQuiz");
+
+  for (let step = 0; step < 7; step += 1) {
+    await page.locator("button").filter({ hasText: "Далее" }).click();
+  }
+
+  const review = page.getByTestId("basic-quiz-review");
+  const actions = page.getByTestId("basic-quiz-review-actions");
+  const generate = page.getByTestId("basic-quiz-generate");
+  await expect(review).toBeVisible();
+  await expect(actions).toBeVisible();
+  await expect(generate).toBeVisible();
+  await expect(generate).toHaveCSS("min-height", "50px");
+
+  const fit = await page.evaluate(() => {
+    const action = document.querySelector('[data-testid="basic-quiz-generate"]')?.getBoundingClientRect();
+    const dock = document.querySelector('[data-testid="client-bottom-nav"]')?.getBoundingClientRect();
+    return {
+      actionBottom: action?.bottom ?? 0,
+      dockTop: dock?.top ?? window.innerHeight
+    };
+  });
+
+  expect(fit.actionBottom).toBeLessThanOrEqual(fit.dockTop - 8);
+  await expectNoHorizontalOverflow(page);
+});
+
+test("client profile shell keeps the compact dock clear of content in short landscape", async ({ page }) => {
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
+
+  const shell = page.getByTestId("client-harness-main");
+  const dock = page.getByTestId("client-bottom-nav");
+  await expect(shell).toBeVisible();
+  await expect(dock).toBeVisible();
+
+  await shell.evaluate((node) => node.scrollTo(0, node.scrollHeight));
+
+  const metrics = await page.evaluate(() => {
+    const rectOf = (node) => {
+      const rect = node?.getBoundingClientRect();
+      return rect ? { top: rect.top, bottom: rect.bottom, height: rect.height } : null;
+    };
+    const dockNode = document.querySelector('[data-testid="client-bottom-nav"]');
+    const dockRect = rectOf(dockNode);
+    const buttonRect = rectOf(dockNode?.querySelector("button"));
+    const snapshotRect = rectOf(document.querySelector('[data-testid="profile-measurement-snapshot"]'));
+
+    return { dockRect, buttonRect, snapshotRect };
+  });
+
+  expect(metrics.dockRect).not.toBeNull();
+  expect(metrics.buttonRect).not.toBeNull();
+  expect(metrics.snapshotRect).not.toBeNull();
+  expect(metrics.dockRect.height).toBeCloseTo(64, 0);
+  expect(metrics.buttonRect.height).toBeGreaterThanOrEqual(44);
+  expect(metrics.snapshotRect.bottom).toBeLessThanOrEqual(metrics.dockRect.top + 1);
+  await expectNoHorizontalOverflow(page);
 });
 
 async function expectClientCardTextReadable(page, mode) {
@@ -221,7 +328,8 @@ async function expectClientCardTextReadable(page, mode) {
     const clippedTexts = [
       '[data-testid="profile-main-stats"] strong',
       '[data-testid="profile-main-summary-grid"] strong',
-      '[data-testid="profile-progress-badge"] small'
+      '[data-testid="profile-progress-title"]',
+      '[data-testid="profile-progress-copy"]'
     ].flatMap((selector) => (
       [...document.querySelectorAll(selector)].map((node) => ({
         selector,
@@ -299,13 +407,14 @@ async function clickClientCabinetNav(page) {
   await page.getByTestId("client-nav-cabinet").click();
 }
 
-test("client main bottom bar stays scoped and adaptive across themes", async ({ page }, testInfo) => {
+test("client main bottom bar stays scoped and adaptive across supported and legacy deep links", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  for (const theme of ["warm-light", "dark-green"]) {
+  for (const requestedTheme of ["warm-light", "dark-green"]) {
     for (const width of [320, 390, 1366]) {
       await page.setViewportSize({ width, height: width === 320 ? 720 : 844 });
-      await page.goto(`/?clientHarness=1&clientHarnessTheme=${theme}`);
+      await page.goto(`/?clientHarness=1&clientHarnessTheme=${requestedTheme}`);
+      await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
 
       const navigation = page.getByTestId("client-bottom-nav");
       await expect(navigation).toBeVisible({ timeout: 40_000 });
@@ -337,9 +446,9 @@ test("client main bottom bar stays scoped and adaptive across themes", async ({ 
       expect(mainMetrics.position).toBe("relative");
       expect(mainMetrics.dockPosition).toBe("fixed");
       expect(mainMetrics.width).toBeLessThanOrEqual(394);
-      expect(mainMetrics.height).toBe(theme === "warm-light" ? 76 : 80);
-      expect(mainMetrics.buttonHeight).toBe(theme === "warm-light" ? 58 : 68);
-      if (theme === "warm-light" && width <= 900) {
+      expect(mainMetrics.height).toBe(76);
+      expect(mainMetrics.buttonHeight).toBe(58);
+      if (width <= 900) {
         expect(mainMetrics.x).toBe(mainMetrics.pageX + 10);
         expect(mainMetrics.right).toBe(mainMetrics.pageRight - 10);
       }
@@ -353,7 +462,7 @@ test("client main bottom bar stays scoped and adaptive across themes", async ({ 
       expect(cabinetRect).toEqual({ x: mainMetrics.x, width: mainMetrics.width, height: mainMetrics.height });
 
       if (width === 390) {
-        await testInfo.attach(`client-bottom-bar-${theme}.png`, {
+        await testInfo.attach(`client-bottom-bar-${requestedTheme}.png`, {
           body: await navigation.screenshot(),
           contentType: "image/png"
         });
@@ -464,8 +573,9 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
 
   const originalViewport = page.viewportSize();
   await page.setViewportSize({ width: 320, height: 568 });
-  for (const theme of ["warm-light", "dark-green"]) {
-    await page.goto(`/?clientHarness=1&clientCabinetModal=nutrition&clientHarnessTheme=${theme}`);
+  for (const requestedTheme of ["warm-light", "dark-green"]) {
+    await page.goto(`/?clientHarness=1&clientCabinetModal=nutrition&clientHarnessTheme=${requestedTheme}`);
+    await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
     await clickClientCabinetNav(page);
 
     const compactContent = page.getByTestId("profile-nutrition-content");
@@ -579,7 +689,6 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await expect(page.getByTestId("profile-account-identity")).toBeVisible();
   await expect(page.getByTestId("profile-account-quick-panel")).toBeVisible();
   await expect(page.getByTestId("profile-settings-email")).toBeVisible();
-  await expect(page.getByTestId("profile-settings-theme")).toHaveAttribute("aria-pressed", /^(true|false)$/);
   await expect(page.getByTestId("profile-settings-telegram")).toHaveAttribute("aria-label", /Telegram/);
   await expect(page.getByTestId("profile-settings-logout")).toHaveCount(0);
   await expectTapTargets(page, [
@@ -587,7 +696,6 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
     '[data-testid="profile-account-avatar"]',
     '[data-testid="profile-account-password"]',
     '[data-testid="profile-settings-email"]',
-    '[data-testid="profile-settings-theme"]',
     '[data-testid="profile-settings-telegram"]'
   ]);
   await expectNoHorizontalOverflow(page);
@@ -735,6 +843,28 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
     '[data-testid="measurement-wizard-page"] button[aria-label="Закрыть без сохранения"]',
     '[data-testid="measurement-wizard-navigation"] button'
   ]);
+  const headerFit = await page.getByTestId("measurement-wizard-header").evaluate((header) => {
+    const viewportWidth = window.innerWidth;
+    const targets = [
+      header.querySelector("button"),
+      header.querySelector(".progress"),
+      header.querySelector("i")
+    ].filter(Boolean).map((element) => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right };
+    });
+
+    return {
+      header: header.getBoundingClientRect().toJSON(),
+      targets,
+      viewportWidth
+    };
+  });
+  expect(headerFit.header.left).toBeGreaterThanOrEqual(-1);
+  expect(headerFit.header.right).toBeLessThanOrEqual(headerFit.viewportWidth + 1);
+  expect(headerFit.targets.every((target) => (
+    target.left >= -1 && target.right <= headerFit.viewportWidth + 1
+  ))).toBe(true);
   await expectNoHorizontalOverflow(page);
   if (isCompactMobile) {
     const introHeight = await page.getByTestId("measurement-wizard-intro").evaluate((intro) => (
@@ -744,7 +874,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   }
   await attachScreenshot(page, testInfo, "client-measurement-wizard-intro.png");
 
-  await page.getByTestId("measurement-wizard-navigation").getByRole("button", { name: "Вперёд →" }).click();
+  await page.getByTestId("measurement-wizard-navigation").getByRole("button", { name: "Полный замер →" }).click();
   await expect(page.getByTestId("measurement-wizard-measurement")).toBeVisible();
   await expect(page.getByTestId("measurement-wizard-measurement").locator("input[data-css-module-control]")).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -766,9 +896,9 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
 
   await page.goto("/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=measurement&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("measurement-wizard-measurement")).toBeVisible();
-  await expect(page.locator("html")).toHaveAttribute("data-app-theme", "dark-green");
+  await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
   await expectNoHorizontalOverflow(page);
-  await attachScreenshot(page, testInfo, "client-measurement-wizard-dark.png");
+  await attachScreenshot(page, testInfo, "client-measurement-wizard-theme-fallback.png");
 
   assertNoRuntimeErrors();
 });
@@ -799,10 +929,10 @@ test("client profile role actions stay scoped and adaptive", async ({ page }, te
   await attachScreenshot(page, testInfo, "client-profile-role-actions.png");
 
   await page.goto("/?clientHarness=1&clientHarnessPage=profileRoleActions&clientHarnessTheme=dark-green");
-  await expect(page.locator("html")).toHaveAttribute("data-app-theme", "dark-green");
+  await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
   await expect(page.getByTestId("profile-main-role-actions")).toBeVisible();
   await expectNoHorizontalOverflow(page);
-  await attachScreenshot(page, testInfo, "client-profile-role-actions-dark.png");
+  await attachScreenshot(page, testInfo, "client-profile-role-actions-theme-fallback.png");
 
   assertNoRuntimeErrors();
 });
@@ -843,10 +973,10 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
   await attachScreenshot(page, testInfo, "client-profile-settings-tab.png");
 
   await page.goto("/?clientHarness=1&clientHarnessPage=profileSettingsTab&clientHarnessTheme=dark-green");
-  await expect(page.locator("html")).toHaveAttribute("data-app-theme", "dark-green");
-  await expect(page.getByTestId("profile-settings-tab-title")).toHaveCSS("color", "rgb(169, 209, 63)");
+  await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
+  await expect(page.getByTestId("profile-settings-tab-title")).toHaveCSS("color", "rgb(40, 38, 46)");
   await expectNoHorizontalOverflow(page);
-  await attachScreenshot(page, testInfo, "client-profile-settings-tab-dark.png");
+  await attachScreenshot(page, testInfo, "client-profile-settings-tab-theme-fallback.png");
 
   assertNoRuntimeErrors();
 });
@@ -914,5 +1044,42 @@ test("client first setup visual audit covers selected choices", async ({ page },
   await page.locator(".firstSetupGoalGrid button").first().click();
   await expect(page.locator(".firstSetupGoalGrid button[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".firstSetupGoalGrid button").first()).toHaveAttribute("aria-pressed", "true");
+  assertNoRuntimeErrors();
+});
+
+test("client first setup keeps the app shell on every onboarding step", async ({ page }) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const step of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+    await page.goto(`/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=${step}`);
+    await expect(page.getByTestId("first-setup-onboarding")).toBeVisible();
+    await expect(page.getByTestId("first-setup-card")).toHaveAttribute("data-step", String(step));
+    await expect(page.getByTestId("first-setup-navigation")).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+
+    const layout = await page.getByTestId("first-setup-card").evaluate((card) => {
+      const cardRect = card.getBoundingClientRect();
+      const navigationRect = card.querySelector('[data-testid="first-setup-navigation"]')?.getBoundingClientRect();
+      const cardStyle = getComputedStyle(card);
+
+      return {
+        cardTop: cardRect.top,
+        cardBottom: cardRect.bottom,
+        navigationBottom: navigationRect?.bottom ?? 0,
+        viewportHeight: window.innerHeight,
+        cardBackground: cardStyle.backgroundColor,
+        cardDisplay: cardStyle.display
+      };
+    });
+
+    expect(layout.cardTop).toBeGreaterThanOrEqual(0);
+    expect(layout.cardBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
+    expect(layout.navigationBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
+    expect(layout.cardBackground).toBe("rgb(247, 246, 248)");
+    expect(layout.cardDisplay).toBe("flex");
+  }
+
   assertNoRuntimeErrors();
 });

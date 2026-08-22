@@ -111,6 +111,96 @@ export function getProfileMeasurementFields() {
   ];
 }
 
+// These ranges are deliberately broad enough for the adult fitness audience,
+// while still catching the most common input mistakes (a missing decimal point
+// or a value entered in the wrong unit) before they become part of progress
+// history.
+export const PROFILE_MEASUREMENT_LIMITS = Object.freeze({
+  weight: { min: 25, max: 350, unit: "кг" },
+  neck: { min: 20, max: 80, unit: "см" },
+  shoulders: { min: 50, max: 250, unit: "см" },
+  chest: { min: 40, max: 250, unit: "см" },
+  biceps: { min: 10, max: 100, unit: "см" },
+  forearm: { min: 10, max: 80, unit: "см" },
+  wrist: { min: 8, max: 50, unit: "см" },
+  belly: { min: 30, max: 300, unit: "см" },
+  pelvis: { min: 30, max: 300, unit: "см" },
+  thigh: { min: 15, max: 150, unit: "см" },
+  calf: { min: 15, max: 100, unit: "см" },
+  ankle: { min: 10, max: 70, unit: "см" }
+});
+
+function formatProfileMeasurementNumber(value) {
+  const rounded = Math.round(value * 100) / 100;
+  return String(rounded);
+}
+
+export function validateProfileMeasurementValue(field = {}, value = "") {
+  const rawValue = String(value ?? "").trim();
+  const limits = PROFILE_MEASUREMENT_LIMITS[field?.id];
+
+  if (!rawValue) {
+    return { valid: true, empty: true, value: "", error: "" };
+  }
+
+  if (!/^\d{1,3}(?:[.,]\d{1,2})?$/u.test(rawValue)) {
+    return {
+      valid: false,
+      empty: false,
+      value: rawValue,
+      error: `${field?.label || "Значение"}: введи число, например 82,5.`
+    };
+  }
+
+  const numericValue = Number(rawValue.replace(",", "."));
+  if (!Number.isFinite(numericValue)) {
+    return {
+      valid: false,
+      empty: false,
+      value: rawValue,
+      error: `${field?.label || "Значение"}: введи корректное число.`
+    };
+  }
+
+  if (limits && (numericValue < limits.min || numericValue > limits.max)) {
+    return {
+      valid: false,
+      empty: false,
+      value: rawValue,
+      error: `${field.label}: укажи значение от ${limits.min} до ${limits.max} ${limits.unit}.`
+    };
+  }
+
+  return {
+    valid: true,
+    empty: false,
+    value: formatProfileMeasurementNumber(numericValue),
+    numericValue,
+    error: ""
+  };
+}
+
+export function validateProfileMeasurementDraft(draft = {}, fields = getProfileMeasurementFields()) {
+  const values = {};
+  const errors = {};
+  let hasValue = false;
+
+  fields.forEach((field) => {
+    const validation = validateProfileMeasurementValue(field, draft?.[field.id]);
+    values[field.id] = validation.value;
+    if (!validation.empty) hasValue = true;
+    if (!validation.valid) errors[field.id] = validation.error;
+  });
+
+  return {
+    valid: Object.keys(errors).length === 0,
+    hasValue,
+    values,
+    errors,
+    firstError: Object.values(errors)[0] || ""
+  };
+}
+
 export function getProfileMeasurementGoalText(goal = "recomp") {
   if (goal === "mass") return "Для набора важно видеть рост веса и объёмов без резкого набора талии.";
   if (goal === "cut" || goal === "dry") return "Для похудения и сушки важны вес, талия и объёмы — так видно, уходит ли жир.";

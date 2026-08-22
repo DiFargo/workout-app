@@ -40,6 +40,29 @@ test("program id without a client version keeps only its latest assignment", () 
   assert.deepEqual(result.map((workout) => workout.id), ["current_only"]);
 });
 
+test("durable assignment identity wins over a shared mutable queue version", () => {
+  const result = filterTrainerCurrentPlanWorkouts([
+    {
+      id: "old-copy",
+      assignedProgramId: "same_program",
+      assignedProgramAddedAt: "2026-08-01T10:00:00.000Z",
+      assignedProgramUpdatedAt: "2026-08-20T10:00:00.000Z"
+    },
+    {
+      id: "fresh-copy",
+      assignedProgramId: "same_program",
+      assignedProgramAddedAt: "2026-08-16T10:00:00.000Z",
+      assignedProgramUpdatedAt: "2026-08-20T10:00:00.000Z"
+    }
+  ], {
+    assignedProgramId: "same_program",
+    assignedProgramAddedAt: "2026-08-16T10:00:00.000Z",
+    assignedProgramUpdatedAt: "2026-08-20T10:00:00.000Z"
+  });
+
+  assert.deepEqual(result.map((workout) => workout.id), ["fresh-copy"]);
+});
+
 test("missing client assignment metadata does not merge historical program versions", () => {
   const result = filterTrainerCurrentPlanWorkouts([
     { id: "history_1", status: "completed", assignedProgramId: "program", assignedProgramUpdatedAt: "2026-05-01T10:00:00.000Z" },

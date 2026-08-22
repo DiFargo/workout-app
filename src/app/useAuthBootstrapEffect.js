@@ -11,13 +11,14 @@ import {
   resetAuthBootstrapState
 } from "./appBootstrapHelpers";
 
+const BOOTSTRAP_FALLBACK_TIMEOUT_MS = 9000;
+
 export function useAuthBootstrapEffect(getBootstrapContext) {
   useEffect(() => {
     const {
       AI_NUTRITION_PLAN_STORAGE_KEY,
       AI_NUTRITION_PROFILE_STORAGE_KEY,
       APP_PAGES,
-      APP_THEMES,
       CLIENT_LAST_PAGE_STORAGE_KEY,
       FIRST_SETUP_REQUIRED_VERSION,
       BASIC_WORKOUT_PLAN_STORAGE_KEY,
@@ -131,12 +132,13 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
 
       bootstrapFallbackTimerId = window.setTimeout(() => {
         if (!disposed && runId === bootstrapRunId) {
-          console.warn("Auth bootstrap timeout: forcing loading screen to close");
+          console.warn("Auth bootstrap timeout: role could not be verified");
           setFirstSetupProfileHydrated(true);
           setAppThemeCloudReady(true);
+          setCurrentUserRole("unresolved");
           setAppLoading(false);
         }
-      }, 15000);
+      }, BOOTSTRAP_FALLBACK_TIMEOUT_MS);
 
       try {
         resetAuthBootstrapState({
@@ -171,7 +173,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           setProfileMeasurements,
           setRecentNutritionFoods,
           setUser,
-          setIsLoggedIn
+          setIsLoggedIn,
+          setCurrentUserRole
         });
 
         hydrateCachedUserState({
@@ -220,7 +223,6 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             db,
             isAdmin: nextIsAdmin,
             APP_PAGES,
-            APP_THEMES,
             AI_NUTRITION_PLAN_STORAGE_KEY,
             AI_NUTRITION_PROFILE_STORAGE_KEY,
             CLIENT_LAST_PAGE_STORAGE_KEY,
@@ -280,7 +282,10 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             setWorkoutModeRemember(false);
           }
 
-          await hydrateRemoteTelegramProfile({
+          // Telegram is a secondary profile enhancement. It must not keep the
+          // application splash screen open after the workout and profile core
+          // are ready.
+          void hydrateRemoteTelegramProfile({
             user: u,
             db,
             TELEGRAM_PROFILE_STORAGE_KEY,

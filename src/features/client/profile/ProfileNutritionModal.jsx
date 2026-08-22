@@ -24,7 +24,7 @@ function getGoalHint(goal) {
   }
 
   if (goal === "recomp") {
-    return "Рекомпозиция: небольшой дефицит и повышенный белок для снижения жира с сохранением мышц.";
+    return "Рекомпозиция: небольшой дефицит и сбалансированный рацион для снижения жира с сохранением мышц.";
   }
 
   return "КБЖУ будут пересчитаны под выбранную цель.";
@@ -40,7 +40,7 @@ function getProfileNutritionDayLabel(day, plannedMacros, showPlan) {
         month: "long"
       });
   const status = day.hasFood
-    ? `записано ${Math.round(day.calories)} ккал и ${Math.round(day.protein)} г белка`
+    ? `записано ${Math.round(day.calories)} ккал`
     : showPlan
       ? `план ${Math.round(plannedMacros.calories)} ккал`
       : "нет записей";
@@ -98,9 +98,9 @@ export default function ProfileNutritionModal({
           embedded
           controlsVariant="workout"
           className={styles.header}
-          title="План питания"
+          title="Цели питания"
           titleId="cabinetNutritionModalTitle"
-          eyebrow="КБЖУ и недельный план"
+          eyebrow="Калории и макронутриенты"
           actions={(
             <ProfileModalCloseButton
               testId="profile-nutrition-close"
@@ -116,7 +116,7 @@ export default function ProfileNutritionModal({
           <div className={`${styles.card} ${styles.goalCard}`} data-testid="profile-nutrition-goal-card">
             <div className={styles.inlinePlan}>
               <div className={styles.planHeader}>
-                <span>ВЫБРАТЬ ПЛАН</span>
+                <span>ВЫБРАТЬ ЦЕЛЬ</span>
                 <strong>{getAiNutritionGoalLabel(currentGoal)}</strong>
               </div>
 
@@ -141,7 +141,6 @@ export default function ProfileNutritionModal({
 
               <div className={styles.macroGrid}>
                 <div><span>Ккал</span><strong>{Math.round(draftMacros.calories || nutritionGoals.calories)}</strong></div>
-                <div><span>Белки</span><strong>{Math.round(draftMacros.protein || nutritionGoals.protein)} г</strong></div>
                 <div><span>Жиры</span><strong>{Math.round(draftMacros.fat || nutritionGoals.fat)} г</strong></div>
                 <div><span>Угл.</span><strong>{Math.round(draftMacros.carbs || nutritionGoals.carbs)} г</strong></div>
               </div>
@@ -200,9 +199,7 @@ export default function ProfileNutritionModal({
                     day.date
                   );
                   const calorieGoal = Number(plannedMacros?.calories || nutritionGoals.calories) || 1;
-                  const proteinGoal = Number(plannedMacros?.protein || nutritionGoals.protein) || 1;
                   const caloriePercent = Math.min(100, Math.round((day.calories / calorieGoal) * 100));
-                  const proteinPercent = Math.min(100, Math.round((day.protein / proteinGoal) * 100));
                   const showPlan = !day.hasFood && day.key >= todayNutritionKey();
 
                   return (
@@ -227,15 +224,11 @@ export default function ProfileNutritionModal({
                         className={styles.calorieFill}
                         style={{ height: `${day.hasFood ? Math.max(8, caloriePercent) : 0}%` }}
                       />
-                      <i
-                        className={styles.proteinFill}
-                        style={{ height: `${day.hasFood ? Math.max(5, proteinPercent) : 0}%` }}
-                      />
                       <span>{day.dayNumber}</span>
                       {day.hasFood ? (
                         <>
                           <strong>{day.calories}</strong>
-                          <small>{day.protein}г</small>
+                          <small>факт</small>
                         </>
                       ) : showPlan ? (
                         <>
@@ -252,7 +245,6 @@ export default function ProfileNutritionModal({
 
               <div className={styles.legend}>
                 <span><i className={styles.factLegend} /> Факт</span>
-                <span><i className={styles.proteinLegend} /> Белок</span>
                 <span><i className={styles.planLegend} /> План</span>
               </div>
 

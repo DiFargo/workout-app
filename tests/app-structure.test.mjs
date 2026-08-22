@@ -117,14 +117,27 @@ test("AppCore remains a coordinator", async () => {
   assert.ok(source.split(/\r?\n/).length <= 3200);
 });
 
-test("the application shell lazy-loads the runtime coordinator", async () => {
+test("trainer daily journal stays isolated and lazy-loaded", async () => {
+  const [workspace, journal] = await Promise.all([
+    readText("src/components/trainer/TrainerWorkspace.jsx"),
+    readText("src/components/trainer/TrainerDailyJournal.jsx")
+  ]);
+
+  assert.match(workspace, /lazy\(\(\) => import\(["']\.\/TrainerDailyJournal["']\)\)/);
+  assert.match(workspace, /<Suspense fallback=\{null\}>/);
+  assert.match(journal, /TrainerDailyJournal\.module\.css/);
+  assert.match(journal, /buildTrainerDailyJournal/);
+});
+
+test("the application shell keeps the startup splash under one runtime owner", async () => {
   const source = await readText("src/App.jsx");
 
-  assert.match(source, /const AppCore = lazy\(\(\) => import\(["']\.\/AppCore["']\)\)/);
-  assert.match(source, /<Suspense/);
-  assert.match(source, /function AppModuleSurface\(\)/);
-  assert.match(source, /fallback=\{<AppModuleSurface \/>\}/);
-  assert.doesNotMatch(source, /fallback=\{<AppSplash \/>\}/);
+  assert.match(source, /import AppCore from ["']\.\/AppCore["'];/);
+  assert.match(source, /<AppCore \/>/);
+  assert.doesNotMatch(source, /\blazy\(/);
+  assert.doesNotMatch(source, /<Suspense/);
+  assert.doesNotMatch(source, /AppSplash/);
+  assert.doesNotMatch(source, /AppModuleSurface/);
   assert.doesNotMatch(source, /App\.module\.css/);
 });
 

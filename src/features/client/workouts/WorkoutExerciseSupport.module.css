@@ -11,25 +11,27 @@
 :global(:root[data-app-theme="warm-light"]) .root.root {
   box-sizing: border-box;
   width: 100%;
-  height: 48px;
-  min-height: 48px;
-  padding: 6px 18px 7px 11px;
+  height: 42px;
+  min-height: 42px;
+  padding: 5px 14px 6px 10px;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   border-top: 1px solid #efebf3;
 }
 :global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo {
-  max-width: 230px;
+  min-width: 0;
+  max-width: none;
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   overflow: hidden;
   color: #7b7682;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 500;
-  line-height: 15px;
+  line-height: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -37,9 +39,9 @@
 :global(:root[data-app-theme="warm-light"]) .noteButton.noteButton {
   min-width: 66px;
   max-width: 80px;
-  height: 26px;
-  min-height: 26px;
-  max-height: 26px;
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
   padding: 0 10px;
   border: 0;
   border-radius: 13px;
@@ -48,7 +50,57 @@
   font-size: 9.5px;
   font-weight: 700;
 }
+:global(:root[data-app-theme="warm-light"]) .swapButton.swapButton {
+  min-width: 88px;
+  height: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 13px;
+  background: #eee9fb;
+  color: #806bb6;
+  font-size: 9.5px;
+  font-weight: 700;
+}
 :global(:root[data-app-theme="warm-light"]) .aiAdjustHint { display: none; }
+:global(:root[data-app-theme="warm-light"]) .startingWeightCheck {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+:global(:root[data-app-theme="warm-light"]) .startingWeightCheck > span {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: #7b7682;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+:global(:root[data-app-theme="warm-light"]) .startingWeightCheck > button {
+  min-width: 48px;
+  height: 27px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 14px;
+  background: #f5f2f7;
+  color: #7b7682;
+  font: inherit;
+  font-size: 8.5px;
+  font-weight: 750;
+  line-height: 1;
+}
+:global(:root[data-app-theme="warm-light"]) .startingWeightCheck > button:nth-of-type(2) {
+  background: #eee9fb;
+  color: #806bb6;
+}
+:global(:root[data-app-theme="warm-light"]) .startingWeightHint.startingWeightHint {
+  color: #806bb6;
+  font-weight: 650;
+  white-space: normal;
+}
 
 .previousInfo {
   width: auto;
@@ -83,6 +135,38 @@
   font-size: 9px;
 }
 
+.startingWeightCheck {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.startingWeightCheck > span {
+  flex: 1 1 auto;
+  color: var(--color-workout-support-text);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.startingWeightCheck > button {
+  min-width: 52px;
+  height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--color-workout-support-note-surface);
+  color: var(--color-workout-support-note);
+  font: inherit;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.startingWeightHint {
+  color: var(--color-workout-support-ai);
+  white-space: normal;
+}
+
 .noteButton {
   box-sizing: border-box;
   width: auto;
@@ -114,6 +198,34 @@
 .noteButton span:last-child {
   color: var(--color-workout-support-note-icon);
   font-size: 13px;
+}
+
+.swapButton {
+  box-sizing: border-box;
+  width: auto;
+  min-width: 94px;
+  height: 36px;
+  min-height: 36px;
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid var(--color-workout-support-note-border);
+  border-radius: 11px;
+  background: var(--color-workout-support-note-surface);
+  color: var(--color-workout-support-note);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.swapButton svg {
+  width: 13px;
+  height: 13px;
 }
 
 .aiAdjustHint {

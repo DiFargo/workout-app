@@ -5,7 +5,8 @@ import test from "node:test";
 import { migrateLegacyUserStorage } from "../src/utils/userScopedStorage.js";
 import {
   calculateAiNutritionBmr,
-  calculatePersonalAiNutritionCalories
+  calculatePersonalAiNutritionCalories,
+  getAiNutritionProfileValidation
 } from "../src/utils/aiNutritionCalculations.js";
 
 function createStorage() {
@@ -58,6 +59,23 @@ test("new nutrition calorie target depends only on the current profile", () => {
   assert.equal(calculatePersonalAiNutritionCalories(profile), maintenance - 120);
 });
 
+test("nutrition plan requires real profile data and respects the target weight", () => {
+  const baseProfile = {
+    weight: 80,
+    height: 180,
+    age: 30,
+    sex: "male",
+    activity: "medium",
+    goal: "recomp"
+  };
+  const maintenance = Math.round(calculateAiNutritionBmr(baseProfile) * 1.48);
+
+  assert.equal(getAiNutritionProfileValidation(baseProfile).valid, false);
+  assert.equal(getAiNutritionProfileValidation({ ...baseProfile, targetWeight: 70 }).valid, true);
+  assert.ok(calculatePersonalAiNutritionCalories({ ...baseProfile, targetWeight: 70 }) < maintenance - 120);
+  assert.ok(calculatePersonalAiNutritionCalories({ ...baseProfile, targetWeight: 90 }) > maintenance - 120);
+});
+
 test("nutrition analysis has no shared FatSecret baseline dependency", async () => {
   const source = await readFile(new URL("../src/utils/aiNutritionAnalysis.js", import.meta.url), "utf8");
 
@@ -77,4 +95,15 @@ test("auth bootstrap clears client data and rejects stale account responses", as
   assert.match(bootstrapSource, /setProfileMeasurements\(\[\]\);/);
   assert.match(bootstrapSource, /setClientProgressPhotos\(\[\]\);/);
   assert.match(effectSource, /isCurrentRun: \(\) => !disposed && runId === bootstrapRunId/);
+});
+
+test("email change keeps the active Firebase session instead of forcing a sign-out", async () => {
+  const source = await readFile(
+    new URL("../src/features/client/profile/profileAccountHandlers.js", import.meta.url),
+    "utf8"
+  );
+
+  assert.doesNotMatch(source, /await verifiedUser\.reload\(\)/);
+  assert.doesNotMatch(source, /verifiedUser\.getIdToken\(true\)/);
+  assert.match(source, /Вы остаётесь в аккаунте/);
 });

@@ -25,6 +25,9 @@ export function normalizeNutritionFood(food) {
     description: food.description || food.note || "",
     barcode: food.barcode || "",
     source: food.source || "Локальная база",
+    sourceType: food.sourceType || "",
+    evidenceType: food.evidenceType || "",
+    requiresReview: food.requiresReview === true,
     icon: food.icon || getFoodIcon(food),
     portionAmount: parseNutritionNumber(food.portionAmount, 0),
     lastAmount: parseNutritionNumber(food.lastAmount, 0),
@@ -242,7 +245,12 @@ export function enrichNutritionFoodIcon(food) {
 }
 
 export function makePersonalFoodKey(food) {
-  const raw = String(food?.name || food?.id || "food")
+  const barcode = String(food?.barcode || "").trim();
+  const catalogId = String(food?.foodId || food?.id || "").trim();
+  const stableCatalogKey = barcode
+    ? `gtin_${barcode}`
+    : (/^(?:sku|ref)-/u.test(catalogId) ? `catalog_${catalogId}` : "");
+  const raw = String(stableCatalogKey || food?.name || catalogId || "food")
     .trim()
     .toLowerCase()
     .replace(/\s+/g, "_")

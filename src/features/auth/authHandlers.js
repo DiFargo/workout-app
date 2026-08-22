@@ -1,5 +1,4 @@
 import {
-  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -17,6 +16,17 @@ import { resolveEmailForLogin } from "./loginResolution";
 
 const googleProvider = new GoogleAuthProvider();
 const ACTIVE_INVITE_STATUSES = new Set(["active", "created"]);
+
+function hasActiveMembership(profile = {}) {
+  const role = String(profile.role || "").trim().toLowerCase();
+
+  return ["client", "trainer", "admin"].includes(role) &&
+    profile.active !== false &&
+    profile.archived !== true &&
+    profile.accessDisabled !== true &&
+    profile.membershipStatus !== "revoked" &&
+    profile.membershipStatus !== "suspended";
+}
 
 function makeAuthError(code) {
   const error = new Error(code);
@@ -62,8 +72,13 @@ async function getActiveInviteForUser(db, user) {
   const invite = inviteSnapshot.data() || {};
   const inviteEmail = String(invite.email || "").trim().toLowerCase();
   const inviteStatus = String(invite.status || "active").trim().toLowerCase();
+  const inviteAuthUid = String(invite.authUid || "").trim();
 
-  if (inviteEmail !== email || !ACTIVE_INVITE_STATUSES.has(inviteStatus)) {
+  if (
+    inviteEmail !== email ||
+    !ACTIVE_INVITE_STATUSES.has(inviteStatus) ||
+    (inviteAuthUid && inviteAuthUid !== user.uid)
+  ) {
     return null;
   }
 
@@ -83,6 +98,7 @@ async function createInvitedUserProfile(db, user, invite) {
     loginLower,
     name: user.displayName || invite.name || email.split("@")[0],
     role: "client",
+    active: true,
     createdAt: now,
     updatedAt: now,
     authProvider: "invite",
@@ -138,6 +154,10 @@ export function createAuthHandlers({
     const userSnapshot = await getDoc(userRef);
 
     if (userSnapshot.exists()) {
+      if (!hasActiveMembership(userSnapshot.data() || {})) {
+        await signOut(auth).catch(() => {});
+        throw makeAuthError("auth/user-disabled");
+      }
       await updateExistingUserProfile(db, user, userSnapshot);
     } else {
       const invite = await getActiveInviteForUser(db, user);
@@ -234,43 +254,9 @@ export function createAuthHandlers({
     }
   }
 
-  async function handleRegister() {
-    const validation = validateLoginFields(login, password);
-    setLoginFieldErrors(validation.errors);
-    setLoginError("");
-    setLoginNotice("");
-    if (!validation.valid || !validation.isEmail) {
-      if (!validation.isEmail && validation.valid) {
-        setLoginFieldErrors({ email: "Для регистрации через пароль укажи email." });
-      }
-      return;
-    }
-
-    try {
-      const result = await createUserWithEmailAndPassword(auth, validation.email, validation.password);
-
-      await finishAuth(result.user);
-    } catch (err) {
-      console.error(err);
-
-      if (err.code === "auth/email-already-in-use") {
-        setLoginError("Этот email уже зарегистрирован");
-      } else if (err.code === "auth/invalid-email") {
-        setLoginError("Неверный формат email");
-      } else if (err.code === "auth/weak-password") {
-        setLoginError("Пароль должен быть минимум 6 символов");
-      } else if (err.code === "auth/invite-required") {
-        setLoginError(mapLoginAuthError(err));
-      } else {
-        setLoginError("Ошибка регистрации");
-      }
-    }
-  }
-
   return {
     handleGoogleAuth,
     handleLogin,
-    handleLoginPasswordReset,
-    handleRegister
+    handleLoginPasswordReset
   };
 }

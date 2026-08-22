@@ -944,6 +944,42 @@
   }
 }
 
+@media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage {
+    width: min(720px, calc(100vw - 64px));
+    max-width: 720px;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessCard.readinessCard {
+    padding: 22px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessGrid.readinessGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption {
+    min-height: 126px;
+    padding: 14px 12px;
+    grid-template-columns: 1fr;
+    align-content: center;
+    justify-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions {
+    width: min(720px, calc(100vw - 64px));
+    max-width: 720px;
+    padding-right: 24px;
+    padding-left: 24px;
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 640px) {
   :global(:root[data-app-theme="warm-light"]) .postOverlay {
     box-sizing: border-box;

@@ -11,11 +11,31 @@
 .mainDock,
 .trainingDock {
   z-index: var(--z-training-nav);
+  isolation: isolate;
 }
 
 .nutritionDock {
   z-index: 90;
   bottom: 14px;
+  isolation: isolate;
+}
+
+/* The dock floats above the page, but the safe area below it must remain a
+   calm opaque surface. Otherwise a scrollable page can show through the
+   small gap below the rounded bar. */
+:global(:root[data-app-theme="warm-light"]) .mainDock::before,
+:global(:root[data-app-theme="warm-light"]) .nutritionDock::before,
+:global(:root[data-app-theme="warm-light"]) .trainingDock::before {
+  position: absolute;
+  z-index: -1;
+  top: -12px;
+  right: 0;
+  bottom: -36px;
+  left: 0;
+  display: block;
+  content: "";
+  background: #f7f6f8;
+  pointer-events: none;
 }
 
 .main,
@@ -788,4 +808,12 @@
 
 :global(:root[data-app-theme="warm-light"]) .training.training > .active > strong {
   font-weight: 700;
+}
+
+@media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .mainDock,
+  :global(:root[data-app-theme="warm-light"]) .nutritionDock,
+  :global(:root[data-app-theme="warm-light"]) .trainingDock.trainingDock {
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  }
 }

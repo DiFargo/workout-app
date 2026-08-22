@@ -90,6 +90,23 @@ test("trainer completed workout count includes manual calendar statuses", () => 
   assert.equal(getTrainerCompletedWorkoutCountForAssignment([], "new-assignment", calendar), 0);
 });
 
+test("trainer completed workout count includes a manually completed current workout", () => {
+  const assignedAt = "2026-06-20T10:00:00.000Z";
+  const workouts = [
+    { id: "w1", assignedProgramUpdatedAt: assignedAt, status: "completed" },
+    { id: "w2", assignedProgramUpdatedAt: assignedAt, status: "planned" },
+    { id: "old", assignedProgramUpdatedAt: "2026-06-01T10:00:00.000Z", status: "completed" }
+  ];
+
+  assert.equal(getTrainerCompletedWorkoutCountForAssignment([], assignedAt, {}, workouts), 1);
+  assert.equal(getTrainerCompletedWorkoutCountForAssignment(
+    [{ workoutId: "w1", assignedProgramUpdatedAt: assignedAt }],
+    assignedAt,
+    {},
+    workouts
+  ), 1);
+});
+
 test("trainer workout activity summary counts recent and weekly workout days", () => {
   const today = dateKeyOffset(0);
   const yesterday = dateKeyOffset(-1);
@@ -337,11 +354,11 @@ test("trainer client attention reasons stay compact and readable", () => {
       lastMeasurementAt: dateKeyOffset(-7),
       activeTrainerTasksCount: 2
     }),
-    ["2 активные задачи"]
+    ["активность в норме"]
   );
 });
 
-test("trainer client activity status treats active tasks as attention", () => {
+test("trainer client activity status keeps active client tasks informational", () => {
   assert.deepEqual(
     getClientActivityStatus({
       assignedProgramId: "p1",
@@ -350,7 +367,7 @@ test("trainer client activity status treats active tasks as attention", () => {
       lastMeasurementAt: dateKeyOffset(-7),
       activeTrainerTasksCount: 1
     }),
-    { id: "attention", label: "Требует внимания" }
+    { id: "active", label: "Активный" }
   );
 });
 

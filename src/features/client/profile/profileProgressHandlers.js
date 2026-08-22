@@ -10,7 +10,8 @@ import {
 } from "../../../utils/offlineSyncStorage";
 import {
   getMeasurementTimestampValue,
-  getProfileMeasurementFields
+  getProfileMeasurementFields,
+  validateProfileMeasurementDraft
 } from "../../../utils/profileMeasurements";
 import { getTrainerSummaryTimestamp } from "../../../utils/trainerSummaryDates";
 import {
@@ -180,18 +181,32 @@ export function createProfileProgressHandlers({
     }
   }
 
-  async function saveProfileMeasurement() {
+  async function saveProfileMeasurement(draftOverride = null, options = {}) {
     const uid = auth.currentUser?.uid;
-    if (!uid) return;
+    if (!uid) return false;
+
+    const measurementDraft = draftOverride && typeof draftOverride === "object"
+      ? draftOverride
+      : profileMeasurementDraft;
 
     const activeGoal = aiNutritionProfileDraft.goal || aiNutritionProfile?.goal || "recomp";
     const fields = getProfileMeasurementFields(activeGoal);
-    const hasAnyValue = fields.some((field) => String(profileMeasurementDraft[field.id] || "").trim());
+    const draftValidation = validateProfileMeasurementDraft(measurementDraft, fields);
 
-    if (!hasAnyValue) {
+    if (!draftValidation.hasValue) {
       setProfileMeasurementStatus("Заполни хотя бы один замер.");
-      return;
+      return false;
     }
+
+    if (!draftValidation.valid) {
+      setProfileMeasurementStatus(draftValidation.firstError);
+      return false;
+    }
+
+    const normalizedMeasurementDraft = {
+      ...measurementDraft,
+      ...draftValidation.values
+    };
 
     setProfileMeasurementSaving(true);
     setProfileMeasurementStatus("");
@@ -199,9 +214,12 @@ export function createProfileProgressHandlers({
     const measurementId = `measurement_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
     const now = new Date().toISOString();
     const measurement = {
-      ...profileMeasurementDraft,
+      ...normalizedMeasurementDraft,
       id: measurementId,
       clientSaveId: measurementId,
+      measurementType: options?.measurementType === "weight_checkin"
+        ? "weight_checkin"
+        : "body_measurement",
       goal: activeGoal,
       goalLabel: getAiNutritionGoalLabel(activeGoal),
       date: now,
@@ -210,12 +228,12 @@ export function createProfileProgressHandlers({
     const queuedMeasurement = {
       id: measurementId,
       measurement,
-      profileWeight: profileMeasurementDraft.weight || "",
-      aiNutritionProfile: profileMeasurementDraft.weight
+      profileWeight: normalizedMeasurementDraft.weight || "",
+      aiNutritionProfile: normalizedMeasurementDraft.weight
         ? {
             ...(aiNutritionProfile || {}),
             ...(aiNutritionProfileDraft || {}),
-            weight: profileMeasurementDraft.weight
+            weight: normalizedMeasurementDraft.weight
           }
         : null,
       queuedAt: now
@@ -225,64 +243,105 @@ export function createProfileProgressHandlers({
       ...(Array.isArray(profileMeasurements) ? profileMeasurements : [])
         .filter((item) => item?.id !== measurementId)
     ].sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
+    const requireCloudSave = options?.requireCloudSave === true;
+    const completeFirstSetupVersion = String(options?.completeFirstSetupVersion || "").trim();
+    const isOffline = () => typeof navigator !== "undefined" && navigator.onLine === false;
+    const applyLocalMeasurement = (queueForSync = false) => {
+      setProfileMeasurements(nextMeasurements);
+      safeWriteUserJsonStorage(MEASUREMENTS_STORAGE_KEY, uid, nextMeasurements);
+      setFailedMeasurementQueue(
+        uid,
+        queueForSync
+          ? [
+              queuedMeasurement,
+              ...getFailedMeasurementQueue(uid).filter((item) => item?.id !== measurementId)
+            ]
+          : getFailedMeasurementQueue(uid).filter((item) => item?.id !== measurementId)
+      );
 
-    setProfileMeasurements(nextMeasurements);
-    safeWriteUserJsonStorage(MEASUREMENTS_STORAGE_KEY, uid, nextMeasurements);
-    setFailedMeasurementQueue(uid, [
-      queuedMeasurement,
-      ...getFailedMeasurementQueue(uid).filter((item) => item?.id !== measurementId)
-    ]);
+      if (normalizedMeasurementDraft.weight) {
+        setAiNutritionProfileDraft((prev) => ({ ...prev, weight: normalizedMeasurementDraft.weight }));
+        setAiNutritionProfile((prev) => ({
+          ...(prev || {}),
+          ...(aiNutritionProfileDraft || {}),
+          weight: normalizedMeasurementDraft.weight
+        }));
+      }
+    };
+    const closeSavedMeasurement = () => {
+      setProfileMeasurementDraft({
+        weight: "",
+        neck: "",
+        shoulders: "",
+        chest: "",
+        biceps: "",
+        forearm: "",
+        wrist: "",
+        belly: "",
+        pelvis: "",
+        thigh: "",
+        calf: "",
+        ankle: "",
+        note: ""
+      });
+      setProfileMeasurementWizardStep(0);
+      setProfileMeasurementOpen(false);
+      setProfileActiveTab(profileMeasurementReturnTab);
+      setPage(APP_PAGES.PROFILE);
+    };
 
-    if (profileMeasurementDraft.weight) {
-      setAiNutritionProfileDraft((prev) => ({ ...prev, weight: profileMeasurementDraft.weight }));
-      setAiNutritionProfile((prev) => ({
-        ...(prev || {}),
-        ...(aiNutritionProfileDraft || {}),
-        weight: profileMeasurementDraft.weight
-      }));
+    if (isOffline()) {
+      setProfileMeasurementSaving(false);
+      if (requireCloudSave) {
+        setProfileMeasurementStatus("Нет подключения к интернету. Замер не сохранён в облаке — подключитесь и повторите.");
+        return false;
+      }
+
+      applyLocalMeasurement(true);
+      setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
+      closeSavedMeasurement();
+      return true;
     }
 
     try {
       await setDoc(doc(db, "users", uid, "measurements", measurementId), measurement);
 
-      if (profileMeasurementDraft.weight) {
+      if (normalizedMeasurementDraft.weight) {
         await setDoc(doc(db, "users", uid), {
           aiNutritionProfile: queuedMeasurement.aiNutritionProfile,
+          ...(completeFirstSetupVersion ? {
+            firstSetupCompleted: true,
+            firstSetupCompletedVersion: completeFirstSetupVersion,
+            firstSetupCompletedAt: new Date().toISOString()
+          } : {}),
           updatedAt: new Date().toISOString()
         }, { merge: true });
       }
 
-      setFailedMeasurementQueue(
-        uid,
-        getFailedMeasurementQueue(uid).filter((item) => item?.id !== measurementId)
-      );
+      applyLocalMeasurement(false);
       setProfileMeasurementStatus("Замер сохранён. Эти данные можно использовать для коррекции плана.");
     } catch (error) {
       console.error("Ошибка сохранения замера:", error);
-      setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
+
+      if (!requireCloudSave && isOffline()) {
+        applyLocalMeasurement(true);
+        setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
+        closeSavedMeasurement();
+        return true;
+      }
+
+      setProfileMeasurementStatus(
+        isOffline()
+          ? "Нет подключения к интернету. Замер не сохранён в облаке — подключитесь и повторите."
+          : "Не удалось сохранить замер в облаке. Проверьте соединение и повторите."
+      );
+      return false;
     } finally {
       setProfileMeasurementSaving(false);
     }
 
-    setProfileMeasurementDraft({
-      weight: "",
-      neck: "",
-      shoulders: "",
-      chest: "",
-      biceps: "",
-      forearm: "",
-      wrist: "",
-      belly: "",
-      pelvis: "",
-      thigh: "",
-      calf: "",
-      ankle: "",
-      note: ""
-    });
-    setProfileMeasurementWizardStep(0);
-    setProfileMeasurementOpen(false);
-    setProfileActiveTab(profileMeasurementReturnTab);
-    setPage(APP_PAGES.PROFILE);
+    closeSavedMeasurement();
+    return true;
   }
 
   async function replayFailedMeasurementSaves(uid = auth.currentUser?.uid) {

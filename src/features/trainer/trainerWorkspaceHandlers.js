@@ -84,8 +84,9 @@ export function createTrainerWorkspaceHandlers({
     },
     onRemoveExercise: (...args) => {
       if (typeof removeTrainerNextExercise === "function") {
-        removeTrainerNextExercise(...args);
+        return removeTrainerNextExercise(...args);
       }
+      return false;
     },
     onDuplicateExercise: (...args) => {
       if (typeof duplicateTrainerNextExercise === "function") {
@@ -121,8 +122,9 @@ export function createTrainerWorkspaceHandlers({
     },
     onRemoveDay: (...args) => {
       if (typeof removeTrainerNextWorkoutDay === "function") {
-        removeTrainerNextWorkoutDay(...args);
+        return removeTrainerNextWorkoutDay(...args);
       }
+      return false;
     }
   };
 }

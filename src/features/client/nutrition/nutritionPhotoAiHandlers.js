@@ -104,7 +104,10 @@ export function createNutritionPhotoAiHandlers({
   function selectNutritionPhotoAiCandidate(food) {
     const normalizedFood = normalizeNutritionFood({
       ...food,
-      source: food.source || "ИИ фото"
+      source: food.source || "Примерная оценка ИИ",
+      sourceType: food.sourceType || "ai_estimate",
+      evidenceType: food.evidenceType || "estimate",
+      requiresReview: food.requiresReview !== false
     });
     const preferredUnitId = loadNutritionPreferredUnit(normalizedFood);
     const defaultUnit =

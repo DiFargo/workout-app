@@ -9,6 +9,7 @@ const TRAINER_NEXT_SECTIONS = new Set([
   "more",
   "nutrition",
   "workouts",
+  "library",
   "client"
 ]);
 
@@ -25,6 +26,7 @@ export function isTrainerNextWorkspacePage({ canUseTrainerFeatures, page }) {
 }
 
 export function createTrainerNavigationActions({
+  canUseAdminFeatures,
   canUseTrainerFeatures,
   page,
   usersList,
@@ -33,10 +35,21 @@ export function createTrainerNavigationActions({
   setTrainerNextSection,
   setAdminUsersSelectedTab,
   setAdminSelectedClient,
+  setAdminBaseLibraryTab,
   loadAdminClientOverview,
   setTrainerProgramManagerOpen,
   setTrainerWorkoutTab
 }) {
+  const hasAdminAccess = typeof canUseAdminFeatures === "function"
+    ? canUseAdminFeatures
+    : () => Boolean(canUseAdminFeatures);
+
+  const openAdminBaseLibrary = (tab) => {
+    setTrainerProgramManagerOpen(false);
+    setAdminBaseLibraryTab?.(tab === "exercises" ? "exercises" : "programs");
+    setPage(APP_PAGES.ADMIN_LIBRARY);
+  };
+
   return {
     isTrainerNextWorkspace() {
       return isTrainerNextWorkspacePage({
@@ -50,8 +63,23 @@ export function createTrainerNavigationActions({
       setTrainerNextSection(nextSection === "more" ? "cabinet" : nextSection);
 
       if (nextSection === "workouts") {
+        if (hasAdminAccess()) {
+          openAdminBaseLibrary("programs");
+          return;
+        }
         setTrainerProgramManagerOpen(true);
         setTrainerWorkoutTab("plan");
+        setPage(APP_PAGES.ADMIN_WORKOUTS);
+        return;
+      }
+
+      if (nextSection === "library") {
+        if (hasAdminAccess()) {
+          openAdminBaseLibrary("exercises");
+          return;
+        }
+        setTrainerProgramManagerOpen(false);
+        setTrainerWorkoutTab("library");
         setPage(APP_PAGES.ADMIN_WORKOUTS);
         return;
       }
@@ -79,16 +107,34 @@ export function createTrainerNavigationActions({
       if (targetTab && typeof setAdminUsersSelectedTab === "function") {
         setAdminUsersSelectedTab(targetTab);
       }
+
+      const isAdmin = typeof canUseAdminFeatures === "function"
+        ? canUseAdminFeatures()
+        : Boolean(canUseAdminFeatures);
+      const isTrainerAccount = String(targetClient.role || "").trim().toLowerCase() === "trainer";
+      const shouldOpenTrainerProfile = isAdmin && isTrainerAccount;
+
       setAdminSelectedClient(targetClient);
       setTrainerNextSection("client");
-      setPage(APP_PAGES.ADMIN);
-      loadAdminClientOverview(targetClient);
+      setPage(shouldOpenTrainerProfile ? APP_PAGES.ADMIN_USERS : APP_PAGES.ADMIN);
+
+      if (!shouldOpenTrainerProfile) {
+        loadAdminClientOverview(targetClient);
+      }
     },
     openTrainerProgramManager() {
+      if (hasAdminAccess()) {
+        openAdminBaseLibrary("programs");
+        return;
+      }
       setTrainerProgramManagerOpen(true);
       setPage(APP_PAGES.ADMIN_WORKOUTS);
     },
     openTrainerExerciseLibrary() {
+      if (hasAdminAccess()) {
+        openAdminBaseLibrary("exercises");
+        return;
+      }
       setTrainerProgramManagerOpen(false);
       setTrainerWorkoutTab("library");
       setPage(APP_PAGES.ADMIN_WORKOUTS);

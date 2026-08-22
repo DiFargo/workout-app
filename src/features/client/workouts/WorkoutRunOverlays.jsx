@@ -1,4 +1,4 @@
-import { ChevronLeft, X } from "lucide-react";
+import { ChevronLeft, RefreshCw, X } from "lucide-react";
 import styles from "./WorkoutRunOverlays.module.css";
 
 export function WorkoutNotFoundPage({ onBackToMenu }) {
@@ -84,15 +84,18 @@ export function WorkoutStageHeading({
   exercise,
   isFinishSlide,
   isStartSlide,
-  isWorkoutSaved
+  isWorkoutSaved,
+  onOpenSwap,
+  showSwapButton = false
 }) {
   if (isStartSlide) {
     return null;
   }
 
   return (
+    <>
       <div
-        className={styles.stageTitle}
+        className={`${styles.stageTitle} ${showSwapButton ? styles.stageTitleWithSwap : ""}`}
         data-css-module-scope="workout-stage-heading"
       >
         <span className={styles.stageTitleText}>
@@ -100,8 +103,24 @@ export function WorkoutStageHeading({
             ? isWorkoutSaved
               ? "Тренировка завершена"
               : "Итоги тренировки"
-            : exercise?.name}
+          : exercise?.name}
         </span>
       </div>
+      {showSwapButton && (
+        <button
+          type="button"
+          className={styles.swapExerciseButton}
+          data-testid="basic-workout-exercise-swap"
+          onClick={(event) => {
+            event.stopPropagation();
+            onOpenSwap?.();
+          }}
+          aria-label="Заменить упражнение"
+        >
+          <RefreshCw aria-hidden="true" />
+          <span>Заменить</span>
+        </button>
+      )}
+    </>
   );
 }

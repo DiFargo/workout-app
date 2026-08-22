@@ -1,4 +1,8 @@
 /* Full-screen client programme editor: one focused workspace, not detached panels. */
+.scope {
+  min-width: 0;
+}
+
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModalBackdrop) {
   z-index: 500;
   padding: 20px;
@@ -6,8 +10,8 @@
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal) {
   display: grid;
-  width: min(1280px, calc(100vw - 40px));
-  height: min(900px, calc(100dvh - 40px));
+  width: min(1440px, calc(100vw - 32px));
+  height: min(920px, calc(100dvh - 32px));
   max-height: calc(100dvh - 40px);
   grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;

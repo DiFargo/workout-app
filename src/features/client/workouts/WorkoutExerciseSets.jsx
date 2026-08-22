@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Pencil } from "lucide-react";
+import { Check, Pause, Pencil, Play } from "lucide-react";
+import {
+  createWorkoutCountdownDeadline,
+  getWorkoutCountdownRemainingSeconds
+} from "./workoutCountdownTimer";
 import styles from "./WorkoutExerciseSets.module.css";
 
 const WHEEL_ITEM_HEIGHT = 42;
@@ -22,6 +26,23 @@ function getPlannedValue(actualValue, plannedValue) {
   }
 
   return "";
+}
+
+function getTimedSetDurationSeconds(exercise, set) {
+  const isPlank = String(exercise?.name || "").toLocaleLowerCase("ru").includes("планка");
+  const sourceValue = set?.durationSeconds ?? (isPlank ? set?.reps : 0);
+  const durationSeconds = Number.parseInt(String(sourceValue || ""), 10);
+
+  return Number.isFinite(durationSeconds) && durationSeconds > 0
+    ? Math.min(600, Math.max(10, durationSeconds))
+    : 0;
+}
+
+function formatTimedSetDuration(seconds) {
+  const safeSeconds = Math.max(0, Math.round(Number(seconds) || 0));
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainingSeconds = safeSeconds % 60;
+  return minutes ? `${minutes}:${String(remainingSeconds).padStart(2, "0")}` : `${remainingSeconds} сек`;
 }
 
 function parseNumericValue(value, fallbackValue) {
@@ -118,9 +139,13 @@ export default function WorkoutExerciseSets({
   onToggleSetCompleted,
   onUpdateSet,
   sharedExerciseAiWeightAdjustment,
-  showTitle = true
+  showTitle = true,
+  visibleSetIndexes = null
 }) {
   const [editingSetDraft, setEditingSetDraft] = useState(null);
+  const [activeTimedSet, setActiveTimedSet] = useState(null);
+  const [pausedTimedSet, setPausedTimedSet] = useState(null);
+  const [timedSetSeconds, setTimedSetSeconds] = useState(0);
   const repsWheelRef = useRef(null);
   const weightWheelRef = useRef(null);
   const wheelScrollFrameRef = useRef({ reps: null, weight: null });
@@ -181,6 +206,42 @@ export default function WorkoutExerciseSets({
     clearWheelSettleWork();
   }, [clearWheelSettleWork]);
 
+  useEffect(() => {
+    const deadline = Number(activeTimedSet?.deadline);
+    const hasActiveTimedSet = Number.isInteger(activeTimedSet?.index);
+    if (!hasActiveTimedSet || !Number.isFinite(deadline) || deadline <= 0) {
+      return undefined;
+    }
+
+    const timedSetIndex = activeTimedSet.index;
+    let completed = false;
+    const syncTimedSetTimer = () => {
+      const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadline);
+      setTimedSetSeconds((current) => (current === remainingSeconds ? current : remainingSeconds));
+
+      if (remainingSeconds > 0 || completed) return;
+
+      completed = true;
+      setActiveTimedSet(null);
+      setPausedTimedSet(null);
+      onToggleSetCompleted(exercise.id, timedSetIndex);
+      navigator.vibrate?.([80, 50, 80]);
+    };
+
+    syncTimedSetTimer();
+    const timer = window.setInterval(syncTimedSetTimer, 1000);
+    document.addEventListener("visibilitychange", syncTimedSetTimer);
+    window.addEventListener("focus", syncTimedSetTimer);
+    window.addEventListener("pageshow", syncTimedSetTimer);
+
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", syncTimedSetTimer);
+      window.removeEventListener("focus", syncTimedSetTimer);
+      window.removeEventListener("pageshow", syncTimedSetTimer);
+    };
+  }, [activeTimedSet?.deadline, activeTimedSet?.index, exercise.id, onToggleSetCompleted]);
+
   function closeEditModal() {
     clearWheelSettleWork();
     initializedWheelKeyRef.current = "";
@@ -214,8 +275,61 @@ export default function WorkoutExerciseSets({
     }
 
     event.preventDefault();
+    toggleSetCompleted(index);
+  }
+
+  function toggleSetCompleted(index) {
+    if (activeTimedSet?.index === index) {
+      setActiveTimedSet(null);
+      setTimedSetSeconds(0);
+    }
+    if (pausedTimedSet?.index === index) {
+      setPausedTimedSet(null);
+      setTimedSetSeconds(0);
+    }
     onToggleSetCompleted(exercise.id, index);
   }
+
+  function toggleTimedSetTimer(index, durationSeconds) {
+    if (activeTimedSet?.index === index) {
+      const remainingSeconds = getWorkoutCountdownRemainingSeconds(activeTimedSet.deadline);
+      setActiveTimedSet(null);
+      if (!remainingSeconds) {
+        setPausedTimedSet(null);
+        setTimedSetSeconds(0);
+        onToggleSetCompleted(exercise.id, index);
+        navigator.vibrate?.([80, 50, 80]);
+        return;
+      }
+      setPausedTimedSet({ index, seconds: remainingSeconds });
+      setTimedSetSeconds(remainingSeconds);
+      return;
+    }
+
+    const resumeSeconds = pausedTimedSet?.index === index
+      ? pausedTimedSet.seconds
+      : durationSeconds;
+    const nextSeconds = Math.max(0, Number(resumeSeconds) || 0);
+
+    if (!nextSeconds) {
+      setPausedTimedSet(null);
+      return;
+    }
+
+    setTimedSetSeconds(nextSeconds);
+    setPausedTimedSet(null);
+    setActiveTimedSet({
+      index,
+      deadline: createWorkoutCountdownDeadline(nextSeconds)
+    });
+  }
+
+  const visibleSets = (Array.isArray(visibleSetIndexes)
+    ? visibleSetIndexes
+    : exercise.sets.map((_, index) => index)
+  )
+    .map((index) => ({ index, set: exercise.sets[index] }))
+    .filter(({ set }) => Boolean(set));
 
   function setRepsFromWheel(value) {
     setEditingSetDraft((draft) => (draft ? { ...draft, reps: String(Math.round(Number(value))) } : draft));
@@ -285,22 +399,38 @@ export default function WorkoutExerciseSets({
     >
       {showTitle && <div className={styles.title}>План на сегодня</div>}
       <div className={styles.list}>
-        {exercise.sets.map((set, index) => {
+        {visibleSets.map(({ set, index }) => {
+          const durationSeconds = getTimedSetDurationSeconds(exercise, set);
+          const isTimedSet = durationSeconds > 0;
+          const isTimedSetRunning = activeTimedSet?.index === index;
+          const isTimedSetPaused = pausedTimedSet?.index === index;
+          const shownTimedSetSeconds = isTimedSetRunning
+            ? timedSetSeconds
+            : isTimedSetPaused
+              ? pausedTimedSet.seconds
+              : durationSeconds;
           const repsValue = getPlannedValue(set.enteredReps, set.reps);
           const weightValue = getPlannedValue(set.enteredWeight, set.weight);
-          const repsText = repsValue ? `${repsValue} повторений` : "Повторы не указаны";
-          const weightText = hasExternalWeight
+          const repsText = isTimedSet
+            ? `${formatTimedSetDuration(shownTimedSetSeconds)} · на время`
+            : repsValue ? `${repsValue} повторений` : "Повторы не указаны";
+          const isStartingWeightEstimate = hasExternalWeight
+            && set.startingWeightSource === "estimate"
+            && !set.startingWeightConfirmed;
+          const weightText = isTimedSet
+            ? isTimedSetRunning ? "Таймер идёт" : "Упражнение на время"
+            : hasExternalWeight
             ? (weightValue ? `${weightValue} кг` : "Вес не указан")
             : "Свой вес";
 
           return (
             <div
               data-testid="workout-exercise-set-row"
-              className={`${styles.row} ${set.completed ? styles.completed : ""}`}
+              className={`${styles.row} ${set.completed ? styles.completed : ""} ${isTimedSet ? styles.timedRow : ""}`}
               key={`${exercise.id}:${index}`}
               role="button"
               tabIndex={0}
-              onClick={() => onToggleSetCompleted(exercise.id, index)}
+              onClick={() => toggleSetCompleted(index)}
               onKeyDown={(event) => handleSetRowKeyDown(event, index)}
               aria-pressed={set.completed}
             >
@@ -313,35 +443,63 @@ export default function WorkoutExerciseSets({
               </span>
 
               <div className={styles.plan}>
-                <span className={styles.reps}>{repsText}</span>
+                <span className={styles.reps}>
+                  {repsText}{isStartingWeightEstimate ? <em className={styles.startingWeightLabel}>ориентир</em> : null}
+                </span>
                 <strong className={styles.weight}>{weightText}</strong>
               </div>
 
               <div className={styles.actions}>
+                {isTimedSet ? (
+                  <button
+                    type="button"
+                    className={`${styles.timerButton}${isTimedSetRunning ? ` ${styles.timerButtonActive}` : ""}`}
+                    data-css-module-control="workout-exercise-sets"
+                    data-testid="workout-timed-set-timer"
+                    data-running={isTimedSetRunning}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleTimedSetTimer(index, durationSeconds);
+                    }}
+                    aria-label={isTimedSetRunning
+                      ? `Поставить таймер подхода ${index + 1} на паузу`
+                      : isTimedSetPaused
+                        ? `Продолжить таймер подхода ${index + 1}`
+                        : `Запустить таймер подхода ${index + 1} на ${formatTimedSetDuration(durationSeconds)}`}
+                  >
+                    {isTimedSetRunning ? <Pause size={16} fill="currentColor" aria-hidden="true" /> : <Play size={16} fill="currentColor" aria-hidden="true" />}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.editButton}
+                    data-css-module-control="workout-exercise-sets"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setEditingSetDraft({
+                        index,
+                        reps: repsValue || "10",
+                        weight: weightValue || "0"
+                      });
+                    }}
+                    aria-label={`Изменить подход ${index + 1}`}
+                  >
+                    <Pencil size={15} strokeWidth={2.2} aria-hidden="true" />
+                  </button>
+                )}
+
                 <button
                   type="button"
-                  className={styles.editButton}
-                  data-css-module-control="workout-exercise-sets"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setEditingSetDraft({
-                      index,
-                      reps: repsValue || "10",
-                      weight: weightValue || "0"
-                    });
-                  }}
-                  aria-label={`Изменить подход ${index + 1}`}
-                >
-                  <Pencil size={15} strokeWidth={2.2} aria-hidden="true" />
-                </button>
-
-                <span
                   className={styles.completeButton}
                   aria-label={set.completed ? `Подход ${index + 1} выполнен` : `Выполнить подход ${index + 1}`}
                   aria-pressed={set.completed}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleSetCompleted(index);
+                  }}
                 >
                   <Check size={20} strokeWidth={3} aria-hidden="true" />
-                </span>
+                </button>
               </div>
             </div>
           );

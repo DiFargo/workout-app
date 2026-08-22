@@ -13,6 +13,10 @@
 .modal {
   box-sizing: border-box;
   width: min(420px, 100%);
+  max-height: min(680px, calc(100dvh - 40px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 1px solid #efebf3;
   border-radius: 24px;
   background: #ffffff;
@@ -62,8 +66,9 @@
 }
 
 .header > button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
   display: grid;
   flex: 0 0 auto;
   place-items: center;
@@ -76,9 +81,35 @@
 }
 
 .options {
+  min-height: 0;
+  flex: 1 1 auto;
   display: grid;
   gap: 10px;
-  padding: 2px 22px 22px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 22px 14px;
+}
+
+.footer {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 22px 18px;
+  border-top: 1px solid #efebf3;
+  background: #ffffff;
+}
+
+.footer button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #dfd6e9;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #806bb6;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
 }
 
 .option {
@@ -152,11 +183,18 @@
 
 @media (max-width: 560px) {
   .backdrop {
-    align-items: end;
-    padding: 0;
+    padding: 12px;
   }
 
   .modal {
-    border-radius: 24px 24px 0 0;
+    max-height: calc(100dvh - 24px);
+    border-radius: 24px;
+  }
+
+  .header,
+  .options,
+  .footer {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }

@@ -7,6 +7,21 @@ import {
 import { normalizeNutritionFood } from "../../../utils/nutritionFoodModel";
 import styles from "./FoodSearchResults.module.css";
 
+function getFoodSourceLabel(food = {}, isMyFoodResult = false) {
+  if (isMyFoodResult) return "Моя база";
+
+  const source = String(food.source || "").trim();
+  const sourceType = String(food.sourceType || "").trim().toLowerCase();
+  const looksGenerated = sourceType === "ai_estimate" || /(?:оценка\s*ии|ai\s*(?:фото|voice|estimate)|openai)/i.test(source);
+
+  if (looksGenerated) return "Примерная оценка ИИ";
+  if (sourceType === "local_catalog") {
+    return source ? `Проверенная база · ${source}` : "Проверенная база";
+  }
+  if (/fatsecret/i.test(source)) return "Каталог брендов · FatSecret";
+  return source ? `Общая база · ${source}` : "Общая база";
+}
+
 export default function FoodSearchResults({
   search,
   searchTab,
@@ -39,7 +54,7 @@ export default function FoodSearchResults({
 
       {!fatSecretLoading && cleanSearch.length >= 2 && searchResults.length === 0 && (
         <div className={styles.status} data-food-search-status="empty-search">
-          <strong className={styles.statusTitle}>В моей базе нет — ищу через AI/FatSecret</strong>
+          <strong className={styles.statusTitle}>Точного совпадения пока нет</strong>
           {fallbackSuggestions.length > 0 && (
             <div className={styles.suggestions}>
               {fallbackSuggestions
@@ -95,7 +110,7 @@ export default function FoodSearchResults({
               <span className={styles.itemMeta}>
                 <em className={styles.itemPortion}>{getFoodDisplayPortion(normalizedFood)}</em>
                 <small className={styles.itemDetails}>
-                  {isMyFoodResult ? "Моя база · " : "AI/FatSecret · "}
+                  {getFoodSourceLabel(normalizedFood, isMyFoodResult)} ·
                   РСК {getFoodRskPercent(normalizedFood, nutrition.goals)}% · {Math.round(Number(normalizedFood.calories) || 0)} ккал
                 </small>
               </span>
@@ -121,7 +136,7 @@ export default function FoodSearchResults({
       {fatSecretLoading && cleanSearch.length >= 2 && (
         <div className={styles.loading} data-testid="food-search-loading">
           <span className={styles.loadingSpinner} />
-          <strong className={styles.loadingText}>Ищу ещё варианты через AI/FatSecret…</strong>
+          <strong className={styles.loadingText}>Ищу ещё варианты в общей базе…</strong>
         </div>
       )}
     </div>

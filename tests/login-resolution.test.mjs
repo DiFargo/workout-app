@@ -47,10 +47,10 @@ test("login alias is resolved through the server endpoint", async () => {
   assert.deepEqual(JSON.parse(requests[0].options.body), { login: "alfa" });
 });
 
-test("local preview resolves aliases through the deployed function", () => {
+test("local preview uses the same-origin API path", () => {
   assert.equal(
     getLoginResolutionEndpoint("127.0.0.1"),
-    "https://europe-west1-tren-85720.cloudfunctions.net/resolveLoginAlias"
+    "/api/auth/resolve-login"
   );
 });
 

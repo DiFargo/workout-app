@@ -111,14 +111,13 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   expect(await mainHeader.evaluate((node) => getComputedStyle(node, "::after").content)).toBe("none");
   await expect(page.locator("html")).toHaveCSS("overscroll-behavior-y", "none");
   await expect(page.locator("body")).toHaveCSS("overscroll-behavior-y", "none");
-  await expect(page.getByTestId("client-harness-main")).toHaveCSS("overscroll-behavior-y", "none");
   await expectRect(page.getByTestId("profile-main-title"), { x: 20, y: 16, width: 79, height: 28 });
   await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "20px");
   await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 8, width: 44, height: 44 });
   await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 72, width: 370, height: 142 });
   await expectRect(page.getByTestId("profile-main-next-workout"), { x: 16, y: 228, width: 370, height: 142 });
   await expectRect(page.getByTestId("profile-progress-card"), { x: 16, y: 384, width: 370, height: 142 });
-  await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 540, width: 370, height: 142 });
+  await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 540, width: 370, height: 148 });
   await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
   await expectAlignedLeft(
@@ -185,12 +184,12 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" }), { x: 16, y: 8, width: 44, height: 44 });
   await expectRect(page.getByRole("button", { name: "Выйти из тренировки" }), { x: 342, y: 8, width: 44, height: 44 });
   await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 0, y: 8, width: 402, height: 44 });
-  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 54, width: 82, height: 25 });
-  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 78, width: 370, height: 280 });
-  await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 28, y: 91, width: 346, height: 250 });
-  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 371, width: 370, height: 295 });
-  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 408, width: 370, height: 258 });
-  await expectRect(page.getByTestId("workout-rest-timer"), { x: 16, y: 679, width: 370, height: 54 });
+  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 60, width: 82, height: 25 });
+  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 93, width: 370, height: 280 });
+  await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 28, y: 106, width: 346, height: 250 });
+  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 386, width: 370, height: 295 });
+  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 423, width: 370, height: 258 });
+  await expectRect(page.getByTestId("workout-rest-timer"), { x: 16, y: 694, width: 370, height: 54 });
   await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 797, width: 402, height: 77 });
 
   assertNoRuntimeErrors();

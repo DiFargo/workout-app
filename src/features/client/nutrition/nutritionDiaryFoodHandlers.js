@@ -53,7 +53,7 @@ export function createNutritionDiaryFoodHandlers({
       nutritionUndoTimerRef.current = window.setTimeout(() => {
         setNutritionUndoDelete(null);
         nutritionUndoTimerRef.current = null;
-      }, 6000);
+      }, 3500);
     }
 
     return true;

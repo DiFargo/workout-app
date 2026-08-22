@@ -9,6 +9,7 @@ import {
 import {
   calculateAiNutritionBmr,
   calculateAiNutritionMacros,
+  calculateAiNutritionTargetCalorieAdjustment,
   calculatePersonalAiNutritionCalories,
   getAiNutritionActivityMultiplier
 } from "./aiNutritionCalculations";
@@ -27,6 +28,10 @@ export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, p
   const age = Number(profile?.age) || 30;
   const sex = profile?.sex || "male";
   const goal = profile?.goal || "recomp";
+  const targetWeight = Number(profile?.targetWeight);
+  const targetWeightIsValid = Number.isFinite(targetWeight) && targetWeight >= 35 && targetWeight <= 350;
+  const targetDeltaKg = targetWeightIsValid ? Number((targetWeight - weight).toFixed(1)) : null;
+  const targetCalorieAdjustment = calculateAiNutritionTargetCalorieAdjustment(profile);
   const trainingDays = getAiNutritionTrainingDays(profile);
   const activity = profile?.activity || "medium";
   const bmr = calculateAiNutritionBmr({ weight, height, age, sex });
@@ -47,6 +52,7 @@ export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, p
     String(previousPlan?.profile?.weight || "") === String(profile?.weight || "") &&
     String(previousPlan?.profile?.height || "") === String(profile?.height || "") &&
     String(previousPlan?.profile?.age || "") === String(profile?.age || "") &&
+    String(previousPlan?.profile?.targetWeight || "") === String(profile?.targetWeight || "") &&
     String(previousPlan?.profile?.sex || "") === String(sex) &&
     String(previousPlan?.profile?.activity || "medium") === String(activity);
 
@@ -109,12 +115,15 @@ export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, p
     activityLabel: getAiNutritionActivityLabel(activity),
     profile: {
       weight: String(profile?.weight || ""),
+      targetWeight: targetWeightIsValid ? String(profile?.targetWeight || "") : "",
       height: String(profile?.height || ""),
       age: String(profile?.age || ""),
       sex,
       activity,
       goal,
-      trainingDays
+      trainingDays,
+      targetDeltaKg,
+      targetCalorieAdjustment
     },
     goalLabel: getAiNutritionGoalLabel(goal),
     start: currentWeek,
@@ -124,6 +133,9 @@ export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, p
     workoutsCount,
     weightTrend,
     warnings: [
+      targetWeightIsValid && Math.abs(targetDeltaKg) >= 0.5
+        ? `Цель: ${targetWeight} кг (${targetDeltaKg > 0 ? "+" : ""}${targetDeltaKg} кг от текущего веса). Калории рассчитаны с учётом этой цели.`
+        : "Целевой вес близок к текущему — план строится на поддержание и композицию тела.",
       goal === "dry"
         ? "Сушка: дефицит мягкий, белок выше, жиры не режем в ноль, углеводы держим вокруг тренировки."
         : goal === "cut"

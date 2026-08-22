@@ -1,18 +1,761 @@
-:global(.firstSetupSexGrid button) {
+/* The onboarding is mounted before the regular app shell.  These are
+ * deliberately global class rules: the JSX has an established global class
+ * contract and must not rely on another route's CSS module being loaded. */
+:global(.firstSetupOverlay) {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+  background: #f7f6f8;
+  color: #28262e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+:global(.firstSetupCard) {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: max(18px, calc(env(safe-area-inset-top) + 10px)) 20px max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  border: 0;
+  border-radius: 0;
+  background: #f7f6f8;
+  color: #28262e;
+  box-shadow: none;
+}
+
+:global(.firstSetupProgress) {
+  box-sizing: border-box;
+  width: 100%;
   min-height: 44px;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding-right: 54px;
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+:global(.firstSetupProgress > span) {
+  white-space: nowrap;
+}
+
+:global(.firstSetupProgress > div) {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 4px;
+}
+
+:global(.firstSetupProgress i) {
+  height: 4px;
+  border-radius: 999px;
+  background: #e4e0e9;
+}
+
+:global(.firstSetupProgress i.active) {
+  background: #8f7ac8;
+}
+
+:global(.firstSetupExitButton) {
+  position: absolute;
+  z-index: 1;
+  top: max(14px, calc(env(safe-area-inset-top) + 6px));
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #77649f;
+  box-shadow: 0 8px 22px rgba(72, 57, 99, 0.08);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+:global(.firstSetupHeader) {
+  flex: 0 0 auto;
+  margin-top: clamp(24px, 5dvh, 44px);
+  text-align: left;
+}
+
+:global(.firstSetupCard .firstSetupHeader h2) {
+  margin: 0;
+  color: #28262e;
+  font-size: clamp(28px, 8vw, 34px);
+  font-weight: 760;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+:global(.firstSetupCard .firstSetupHeader p) {
+  max-width: 350px;
+  margin: 10px 0 0;
+  color: #7b7682;
+  font-size: 15px;
+  font-weight: 450;
+  line-height: 1.42;
+}
+
+:global(.firstSetupBody) {
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 18px 0 12px;
+  padding: 2px;
+  scrollbar-width: none;
+}
+
+:global(.firstSetupBody::-webkit-scrollbar) {
+  display: none;
+}
+
+:global(.firstSetupWelcomeVisual) {
+  position: relative;
+  width: min(260px, 72vw);
+  height: 220px;
+  margin: 0 auto;
+}
+
+:global(.firstSetupWelcomeVisual span) {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 12px 14px rgba(91, 71, 133, 0.12));
+}
+
+:global(.firstSetupClipboard) {
+  inset: 18px 44px 20px;
+  border: 1px solid #efebf3;
+  border-radius: 38px;
+  background: linear-gradient(145deg, #f1ecfa, #ffffff 68%);
+  font-size: 108px;
+}
+
+:global(.firstSetupDumbbell) {
+  bottom: 8px;
+  left: 0;
+  font-size: 58px;
+  transform: rotate(-8deg);
+}
+
+:global(.firstSetupApple) {
+  right: 8px;
+  bottom: 6px;
+  font-size: 54px;
+}
+
+:global(.firstSetupBottle) {
+  top: 70px;
+  right: 0;
+  font-size: 40px;
+}
+
+:global(.firstSetupChoiceGrid),
+:global(.firstSetupGoalGrid) {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+:global(.firstSetupSexGrid button),
+:global(.firstSetupActivityList button),
+:global(.firstSetupGoalGrid button) {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #efebf3;
+  background: #ffffff;
+  color: #28262e;
+  box-shadow: 0 8px 20px rgba(70, 59, 91, 0.045);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+:global(.firstSetupSexGrid button:active),
+:global(.firstSetupActivityList button:active),
+:global(.firstSetupGoalGrid button:active),
+:global(.firstSetupPrimary:active),
+:global(.firstSetupSecondary:active) {
+  transform: scale(0.985);
+}
+
+:global(.firstSetupSexGrid button) {
+  min-height: 168px;
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 22px;
+}
+
+:global(.firstSetupSexGrid button span) {
+  font-size: 72px;
+  line-height: 1;
+}
+
+:global(.firstSetupSexGrid button strong) {
+  font-size: 16px;
+  font-weight: 740;
+}
+
+:global(.firstSetupSexGrid button.active),
+:global(.firstSetupActivityList button.active),
+:global(.firstSetupGoalGrid button.active) {
+  border-color: #b8a7de;
+  background: linear-gradient(145deg, #f4effb, #ffffff);
+  box-shadow: inset 0 0 0 1px #c4b8e3, 0 10px 22px rgba(104, 82, 153, 0.1);
+}
+
+:global(.firstSetupField) {
+  width: 100%;
+  display: grid;
+  gap: 9px;
+  color: #7b7682;
+  font-size: 13px;
+  font-weight: 680;
+}
+
+:global(.firstSetupInput),
+:global(.firstSetupMetricInput input) {
+  box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  border: 1px solid #efebf3;
+  background: #ffffff;
+  color: #28262e;
+  box-shadow: 0 8px 20px rgba(70, 59, 91, 0.04);
+  font-family: inherit;
+  font-weight: 720;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+:global(.firstSetupInput) {
+  height: 58px;
+  min-height: 58px;
+  padding: 0 16px;
+  border-radius: 17px;
+  font-size: 17px;
+}
+
+:global(.firstSetupInput::placeholder) {
+  color: #aaa4b0;
+  font-weight: 500;
+}
+
+:global(.firstSetupInput:focus),
+:global(.firstSetupMetricInput input:focus) {
+  border-color: #b8a7de;
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.14);
+}
+
+:global(.firstSetupMetricSlider) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 278px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 26px 20px 20px;
+  border: 1px solid #efebf3;
+  border-radius: 26px;
+  background: #ffffff;
+  color: #28262e;
+  box-shadow: 0 10px 24px rgba(70, 59, 91, 0.05);
+}
+
+:global(.firstSetupMetricLabel) {
+  color: #7b7682;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+:global(.firstSetupMetricValue) {
+  display: block;
+  margin: 5px 0 18px;
+  color: #28262e;
+  font-size: 42px;
+  font-weight: 780;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+:global(.firstSetupMetricValue small) {
+  margin-left: 5px;
+  color: #7b7682;
+  font-size: 17px;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+}
+
+:global(.firstSetupMetricSlider input[type="range"]) {
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  outline: none;
+  background: transparent;
+  accent-color: #8f7ac8;
+}
+
+:global(.firstSetupMetricSlider input[type="range"]::-webkit-slider-runnable-track) {
+  height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8f7ac8 0%, #8f7ac8 var(--slider-progress, 0%), #eeebf3 var(--slider-progress, 0%), #eeebf3 100%);
+}
+
+:global(.firstSetupMetricSlider input[type="range"]::-webkit-slider-thumb) {
+  width: 28px;
+  height: 28px;
+  margin-top: -9.5px;
+  appearance: none;
+  border: 5px solid #ffffff;
+  border-radius: 50%;
+  background: #8f7ac8;
+  box-shadow: 0 4px 10px rgba(97, 75, 143, 0.24);
+}
+
+:global(.firstSetupMetricSlider input[type="range"]::-moz-range-track) {
+  height: 9px;
+  border-radius: 999px;
+  background: #eeebf3;
+}
+
+:global(.firstSetupMetricSlider input[type="range"]::-moz-range-progress) {
+  height: 9px;
+  border-radius: 999px;
+  background: #8f7ac8;
+}
+
+:global(.firstSetupMetricSlider input[type="range"]::-moz-range-thumb) {
+  width: 18px;
+  height: 18px;
+  border: 5px solid #ffffff;
+  border-radius: 50%;
+  background: #8f7ac8;
+  box-shadow: 0 4px 10px rgba(97, 75, 143, 0.24);
+}
+
+:global(.firstSetupMetricTicks) {
+  width: calc(100% - 8px);
+  display: grid;
+  grid-template-columns: repeat(21, minmax(0, 1fr));
+  margin: 4px 4px 0;
+}
+
+:global(.firstSetupMetricTicks i) {
+  justify-self: center;
+  width: 1px;
+  height: 7px;
+  background: #e4e0e9;
+}
+
+:global(.firstSetupMetricTicks i:nth-child(5n + 1)) {
+  height: 11px;
+  background: #cfc6dd;
+}
+
+:global(.firstSetupMetricMarks) {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: #928b9c;
+  font-size: 11px;
+  font-weight: 620;
+}
+
+:global(.firstSetupMetricInput) {
+  position: relative;
+  width: min(164px, 58%);
+  margin-top: auto;
+}
+
+:global(.firstSetupMetricInput input) {
+  height: 46px;
+  min-height: 46px;
+  padding: 0 43px 0 14px;
+  border-radius: 14px;
+  font-size: 17px;
+}
+
+:global(.firstSetupMetricInput em) {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  color: #7b7682;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 650;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+:global(.firstSetupActivityList) {
+  width: 100%;
+  display: grid;
+  gap: 9px;
+}
+
+:global(.firstSetupActivityList button) {
+  min-height: 64px;
+  padding: 10px 13px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 18px;
+  text-align: left;
+}
+
+:global(.firstSetupActivityList button > span:first-child) {
+  font-size: 24px;
+  text-align: center;
+}
+
+:global(.firstSetupActivityList button > span:nth-child(2)) {
+  display: grid;
+  gap: 3px;
+}
+
+:global(.firstSetupActivityList strong),
+:global(.firstSetupActivityList small) {
+  display: block;
+}
+
+:global(.firstSetupActivityList strong) {
+  font-size: 14px;
+  font-weight: 730;
+}
+
+:global(.firstSetupActivityList small),
+:global(.firstSetupGoalGrid button small) {
+  color: #7b7682;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+:global(.firstSetupActivityList button > i) {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: 1.5px solid #c4bdce;
+  border-radius: 50%;
+}
+
+:global(.firstSetupActivityList button.active > i) {
+  border: 5px solid #8f7ac8;
+}
+
+:global(.firstSetupGoalStep) {
+  width: 100%;
+}
+
+:global(.firstSetupGoalGrid) {
+  gap: 10px;
+}
+
+:global(.firstSetupGoalGrid button) {
+  min-height: 104px;
+  padding: 12px 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+:global(.firstSetupGoalGrid button > span) {
+  font-size: 29px;
+  line-height: 1;
+}
+
+:global(.firstSetupGoalGrid button strong) {
+  font-size: 13px;
+  font-weight: 740;
+  line-height: 1.16;
+}
+
+:global(.firstSetupReview) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 14px;
+  display: grid;
+  border: 1px solid #efebf3;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(70, 59, 91, 0.05);
+}
+
+:global(.firstSetupReview > div) {
+  min-height: 43px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #efebf3;
+}
+
+:global(.firstSetupReview > div:last-child) {
+  border-bottom: 0;
+}
+
+:global(.firstSetupReview > div > span) {
+  color: #8f7ac8;
+  font-size: 14px;
+  text-align: center;
+}
+
+:global(.firstSetupReview small) {
+  color: #7b7682;
+  font-size: 11px;
+}
+
+:global(.firstSetupReview strong) {
+  max-width: 154px;
+  overflow: hidden;
+  color: #28262e;
+  font-size: 12px;
+  font-weight: 720;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.firstSetupBottom) {
+  flex: 0 0 auto;
+  display: flex;
+  min-height: 56px;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 8px;
 }
 
 :global(.firstSetupPrimary),
 :global(.firstSetupSecondary) {
-  min-height: 44px;
-  max-height: none;
+  min-height: 56px;
+  border-radius: 17px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 740;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
-.activityOption {
-  min-height: 44px;
-  max-height: none;
+:global(.firstSetupPrimary) {
+  flex: 1 1 auto;
+  border: 0;
+  background: linear-gradient(135deg, #9a85d1, #806bb6);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
 }
 
+:global(.firstSetupPrimary:disabled) {
+  background: #ded9e6;
+  color: #97919f;
+  box-shadow: none;
+}
+
+:global(.firstSetupSecondary) {
+  flex: 0 0 110px;
+  border: 1px solid #e6dfed;
+  background: #ffffff;
+  color: #74628f;
+}
+
+:global(.firstSetupExitConfirm) {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: end center;
+  padding: 20px;
+  background: rgba(40, 38, 46, 0.36);
+  backdrop-filter: blur(8px);
+}
+
+:global(.firstSetupExitConfirmCard) {
+  width: min(100%, 360px);
+  box-sizing: border-box;
+  padding: 22px;
+  border-radius: 26px;
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(40, 38, 46, 0.2);
+  text-align: center;
+}
+
+:global(.firstSetupExitConfirmCard h3) {
+  margin: 0;
+  color: #28262e;
+  font-size: 20px;
+  font-weight: 760;
+}
+
+:global(.firstSetupExitConfirmCard p) {
+  margin: 9px auto 18px;
+  color: #7b7682;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+:global(.firstSetupExitConfirmCard > div) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+:global(.firstSetupExitConfirmCard button) {
+  min-height: 50px;
+  border: 1px solid #e6dfed;
+  border-radius: 15px;
+  background: #ffffff;
+  color: #74628f;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 720;
+}
+
+:global(.firstSetupExitConfirmCard button.primary) {
+  border-color: transparent;
+  background: #8f7ac8;
+  color: #ffffff;
+}
+
+@media (min-width: 480px) {
+  :global(.firstSetupOverlay) {
+    align-items: center;
+    padding: 16px;
+  }
+
+  :global(.firstSetupCard) {
+    height: min(820px, calc(100dvh - 32px));
+    min-height: 0;
+    max-height: calc(100dvh - 32px);
+    border: 1px solid #efebf3;
+    border-radius: 30px;
+    background: #fbfafc;
+    box-shadow: 0 24px 60px rgba(67, 54, 91, 0.12);
+  }
+}
+
+@media (max-height: 720px) {
+  :global(.firstSetupCard) {
+    padding-top: max(12px, calc(env(safe-area-inset-top) + 6px));
+  }
+
+  :global(.firstSetupHeader) {
+    margin-top: 14px;
+  }
+
+  :global(.firstSetupCard .firstSetupHeader h2) {
+    font-size: 26px;
+  }
+
+  :global(.firstSetupCard .firstSetupHeader p) {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  :global(.firstSetupBody) {
+    margin: 10px 0 8px;
+  }
+
+  :global(.firstSetupWelcomeVisual) {
+    height: 170px;
+  }
+
+  :global(.firstSetupClipboard) {
+    font-size: 82px;
+  }
+
+  :global(.firstSetupSexGrid button) {
+    min-height: 132px;
+  }
+
+  :global(.firstSetupSexGrid button span) {
+    font-size: 56px;
+  }
+
+  :global(.firstSetupMetricSlider) {
+    min-height: 240px;
+    padding: 18px 18px 15px;
+  }
+
+  :global(.firstSetupMetricValue) {
+    margin-bottom: 10px;
+    font-size: 34px;
+  }
+
+  :global(.firstSetupActivityList) {
+    gap: 6px;
+  }
+
+  :global(.firstSetupActivityList button) {
+    min-height: 54px;
+    padding-block: 7px;
+  }
+
+  :global(.firstSetupGoalGrid button) {
+    min-height: 78px;
+    padding: 8px 6px;
+  }
+
+  :global(.firstSetupGoalGrid button > span) {
+    font-size: 22px;
+  }
+
+  :global(.firstSetupGoalGrid button small) {
+    font-size: 9px;
+  }
+
+  :global(.firstSetupReview > div) {
+    min-height: 37px;
+  }
+
+  :global(.firstSetupBottom),
+  :global(.firstSetupPrimary),
+  :global(.firstSetupSecondary) {
+    min-height: 50px;
+  }
+}
+
+@media (max-height: 620px) {
+  :global(.firstSetupCard .firstSetupHeader p) {
+    display: none;
+  }
+
+  :global(.firstSetupGoalGrid button small) {
+    display: none;
+  }
+}
+
+.activityOption,
 .goalOption {
   min-height: 44px;
   max-height: none;

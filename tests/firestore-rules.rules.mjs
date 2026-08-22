@@ -6,7 +6,7 @@ import {
   assertSucceeds,
   initializeTestEnvironment
 } from "@firebase/rules-unit-testing";
-import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 
 let testEnv;
 
@@ -60,12 +60,91 @@ test("profile owner can update normal fields but cannot change protected fields"
   await assertFails(updateDoc(doc(clientDb, "users", "client-1"), {
     assignedProgramLifecycleStatus: "active"
   }));
+  await assertFails(updateDoc(doc(clientDb, "users", "client-1"), {
+    subscription: { endDate: "2099-12-31", remainingSessions: 999 }
+  }));
+  await assertFails(updateDoc(doc(clientDb, "users", "client-1"), {
+    telegram: { chatId: "attacker-chat", telegramUserId: "attacker-user" }
+  }));
+});
+
+test("legacy profile without a role can restore only its own client access", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "users", "legacy-client"), {
+      name: "Legacy client",
+      active: true
+    });
+    await setDoc(doc(context.firestore(), "users", "disabled-legacy-client"), {
+      name: "Disabled legacy client",
+      active: false
+    });
+    await setDoc(doc(context.firestore(), "users", "legacy-member"), {
+      name: "Legacy member",
+      role: "member"
+    });
+  });
+
+  const legacyClientDb = testEnv.authenticatedContext("legacy-client").firestore();
+  const disabledLegacyClientDb = testEnv.authenticatedContext("disabled-legacy-client").firestore();
+
+  await assertFails(getDoc(doc(legacyClientDb, "users", "legacy-client")));
+  await assertSucceeds(updateDoc(doc(legacyClientDb, "users", "legacy-client"), {
+    role: "client",
+    updatedAt: "2026-08-10T12:00:00.000Z"
+  }));
+  await assertSucceeds(getDoc(doc(legacyClientDb, "users", "legacy-client")));
+  await assertFails(updateDoc(doc(legacyClientDb, "users", "legacy-client"), {
+    role: "trainer"
+  }));
+  await assertFails(updateDoc(doc(disabledLegacyClientDb, "users", "disabled-legacy-client"), {
+    role: "client",
+    updatedAt: "2026-08-10T12:00:00.000Z"
+  }));
+
+  const legacyMemberDb = testEnv.authenticatedContext("legacy-member").firestore();
+  await assertSucceeds(updateDoc(doc(legacyMemberDb, "users", "legacy-member"), {
+    role: "client",
+    updatedAt: "2026-08-10T12:00:00.000Z"
+  }));
+  await assertFails(updateDoc(doc(legacyMemberDb, "users", "legacy-member"), {
+    role: "admin"
+  }));
+});
+
+test("client can save their own basic plan without changing trainer assignment fields", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "users", "client-1"), {
+      role: "client",
+      assignedProgramId: "trainer-program",
+      assignedWorkoutCount: 8
+    });
+  });
+
+  const clientDb = testEnv.authenticatedContext("client-1").firestore();
+  await assertSucceeds(updateDoc(doc(clientDb, "users", "client-1"), {
+    workoutModePreference: { mode: "basic", remember: true },
+    workoutCalendar: { assignedProgramId: "basic-plan-1", plannedWorkouts: [] },
+    basicWorkoutPlan: { basicPlanId: "basic-plan-1", source: "basic", workouts: [] },
+    updatedAt: "2026-08-10T10:00:00.000Z"
+  }));
+  await assertSucceeds(setDoc(doc(clientDb, "users", "client-1", "workouts", "basic-day-1"), {
+    source: "basic",
+    assignedProgramId: "basic-plan-1",
+    assignedProgramUpdatedAt: "basic:basic-plan-1",
+    status: "planned"
+  }));
+  await assertFails(updateDoc(doc(clientDb, "users", "client-1"), {
+    assignedWorkoutCount: 16
+  }));
 });
 
 test("admin claim can update protected role fields", async () => {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     await setDoc(doc(context.firestore(), "users", "client-1"), {
       role: "client"
+    });
+    await setDoc(doc(context.firestore(), "users", "admin-1"), {
+      role: "admin"
     });
   });
 
@@ -75,7 +154,48 @@ test("admin claim can update protected role fields", async () => {
   }));
 });
 
+test("managed base program versions are append-only and private to administrators", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "admin-1"), { role: "admin" });
+    await setDoc(doc(db, "users", "client-1"), { role: "client" });
+  });
+
+  const adminDb = testEnv.authenticatedContext("admin-1", { admin: true }).firestore();
+  const clientDb = testEnv.authenticatedContext("client-1").firestore();
+  const programRef = doc(adminDb, "admin", "basicProgramTemplates", "items", "program-1");
+  const versionRef = doc(programRef, "versions", "version-1");
+
+  await assertSucceeds(setDoc(programRef, {
+    id: "program-1",
+    status: "draft",
+    title: "Program 1"
+  }));
+  await assertSucceeds(setDoc(versionRef, {
+    id: "version-1",
+    status: "draft",
+    title: "Program 1"
+  }));
+  await assertSucceeds(getDoc(programRef));
+  await assertSucceeds(getDoc(versionRef));
+  await assertSucceeds(updateDoc(programRef, { status: "published" }));
+
+  const clientProgramRef = doc(clientDb, "admin", "basicProgramTemplates", "items", "program-1");
+  const clientVersionRef = doc(clientProgramRef, "versions", "version-1");
+  await assertFails(getDoc(clientProgramRef));
+  await assertFails(getDoc(clientVersionRef));
+  await assertFails(setDoc(clientProgramRef, { id: "program-1", status: "draft" }));
+  await assertFails(updateDoc(versionRef, { status: "published" }));
+  await assertFails(deleteDoc(versionRef));
+});
+
 test("login aliases are private and writable only by the owner", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "client-1"), { role: "client" });
+    await setDoc(doc(db, "users", "admin-1"), { role: "admin" });
+  });
+
   const ownerDb = testEnv.authenticatedContext("client-1", { email: "client@example.com" }).firestore();
   const strangerDb = testEnv.authenticatedContext("client-2", { email: "stranger@example.com" }).firestore();
   const adminDb = testEnv.authenticatedContext("admin-1", { admin: true }).firestore();
@@ -160,6 +280,46 @@ test("trainer invite lets the matching client activate a protected profile", asy
   }));
 });
 
+test("trainer cannot take over another trainer's pending invite", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "trainer-2"), { role: "trainer" });
+  });
+
+  const ownerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const otherTrainerDb = testEnv.authenticatedContext("trainer-2").firestore();
+  const ownerInviteRef = doc(ownerDb, "clientInvites", "client@example.com");
+  const otherInviteRef = doc(otherTrainerDb, "clientInvites", "client@example.com");
+
+  await assertSucceeds(setDoc(ownerInviteRef, {
+    email: "client@example.com",
+    name: "Client",
+    status: "active",
+    authUid: "",
+    trainerId: "trainer-1",
+    trainerEmail: "trainer-1@example.com",
+    createdByUid: "trainer-1",
+    createdByEmail: "trainer-1@example.com",
+    createdAt: "2026-08-20T09:00:00.000Z",
+    updatedAt: "2026-08-20T09:00:00.000Z",
+    inviteUrl: "http://localhost/?invite=client%40example.com"
+  }));
+
+  await assertSucceeds(updateDoc(ownerInviteRef, {
+    name: "Client updated by owner",
+    updatedAt: "2026-08-20T09:01:00.000Z"
+  }));
+
+  await assertFails(updateDoc(otherInviteRef, {
+    trainerId: "trainer-2",
+    trainerEmail: "trainer-2@example.com",
+    createdByUid: "trainer-2",
+    createdByEmail: "trainer-2@example.com",
+    updatedAt: "2026-08-20T09:02:00.000Z"
+  }));
+});
+
 test("trainer can read only assigned clients", async () => {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const db = context.firestore();
@@ -188,6 +348,7 @@ test("trainer archives clients instead of deleting their account data", async ()
       trainerId: "trainer-1",
       archived: false
     });
+    await setDoc(doc(db, "users", "admin-1"), { role: "admin" });
   });
 
   const trainerDb = testEnv.authenticatedContext("trainer-1").firestore();
@@ -249,6 +410,11 @@ test("client cannot read trainer invite only because their uid is trainerId", as
 });
 
 test("nutrition data stays writable only by its owner", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "client-1"), { role: "client" });
+  });
+
   const ownerDb = testEnv.authenticatedContext("client-1").firestore();
   const strangerDb = testEnv.authenticatedContext("client-2").firestore();
   const nutritionRef = doc(ownerDb, "users", "client-1", "nutrition", "current");
@@ -258,6 +424,75 @@ test("nutrition data stays writable only by its owner", async () => {
     doc(strangerDb, "users", "client-1", "nutrition", "current"),
     { days: {} }
   ));
+});
+
+test("uninvited Firebase accounts cannot access member data", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "client-1"), { role: "client" });
+  });
+
+  const orphanDb = testEnv.authenticatedContext("orphan-1", {
+    email: "orphan@example.com"
+  }).firestore();
+
+  await assertFails(setDoc(doc(orphanDb, "users", "orphan-1", "nutrition", "current"), {
+    days: {}
+  }));
+  await assertFails(setDoc(doc(orphanDb, "loginAliases", "orphan"), {
+    email: "orphan@example.com",
+    uid: "orphan-1",
+    createdAt: "2026-08-02T00:00:00.000Z",
+    updatedAt: "2026-08-02T00:00:00.000Z"
+  }));
+  await assertFails(getDoc(doc(orphanDb, "users", "client-1")));
+});
+
+test("stale legacy trainer fields do not override an assigned trainer", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "trainer-2"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      assignedTrainerId: "trainer-2",
+      trainerId: "trainer-2",
+      coachId: "trainer-1",
+      createdByUid: "trainer-1"
+    });
+  });
+
+  const staleTrainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const assignedTrainerDb = testEnv.authenticatedContext("trainer-2").firestore();
+
+  await assertFails(getDoc(doc(staleTrainerDb, "users", "client-1")));
+  await assertSucceeds(getDoc(doc(assignedTrainerDb, "users", "client-1")));
+});
+
+test("explicit unassignment or revocation prevents historical trainer fields from restoring access", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    const historicalAssignment = {
+      role: "client",
+      assignedTrainerId: "",
+      trainerId: "",
+      coachId: "",
+      createdByUid: "trainer-1"
+    };
+    await setDoc(doc(db, "users", "unassigned-client"), {
+      ...historicalAssignment,
+      trainerAssignmentState: "unassigned"
+    });
+    await setDoc(doc(db, "users", "revoked-client"), {
+      ...historicalAssignment,
+      trainerAssignmentState: "revoked"
+    });
+  });
+
+  const historicalTrainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  await assertFails(getDoc(doc(historicalTrainerDb, "users", "unassigned-client")));
+  await assertFails(getDoc(doc(historicalTrainerDb, "users", "revoked-client")));
 });
 
 test("assigned trainer can update nutrition plan but not food diary", async () => {
@@ -404,6 +639,47 @@ test("assigned trainer can update only the subscription of their client", async 
   await assertFails(updateDoc(doc(otherTrainerDb, "users", "client-1"), update));
 });
 
+test("assigned trainer can advance only the client setup checklist", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "trainer-2"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      trainerId: "trainer-1"
+    });
+  });
+
+  const checklist = {
+    version: 1,
+    status: "in_progress",
+    currentStep: "program",
+    startedAt: "2026-08-13T09:00:00.000Z",
+    updatedAt: "2026-08-13T09:01:00.000Z",
+    completedSteps: {
+      subscription: true,
+      program: false,
+      nutrition: false,
+      notifications: false
+    }
+  };
+  const assignedTrainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const otherTrainerDb = testEnv.authenticatedContext("trainer-2").firestore();
+
+  await assertSucceeds(updateDoc(doc(assignedTrainerDb, "users", "client-1"), {
+    trainerSetupChecklist: checklist,
+    updatedAt: "2026-08-13T09:01:00.000Z"
+  }));
+  await assertFails(updateDoc(doc(otherTrainerDb, "users", "client-1"), {
+    trainerSetupChecklist: checklist,
+    updatedAt: "2026-08-13T09:01:00.000Z"
+  }));
+  await assertFails(updateDoc(doc(assignedTrainerDb, "users", "client-1"), {
+    trainerSetupChecklist: checklist,
+    name: "Not allowed"
+  }));
+});
+
 test("assigned trainer can publish active program lifecycle fields", async () => {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const db = context.firestore();
@@ -441,6 +717,7 @@ test("assigned trainer can publish active program lifecycle fields", async () =>
     assignedProgramId: "template-1",
     assignedProgramName: "Plan",
     assignedProgramAt: "2026-07-11T10:00:00.000Z",
+    assignedProgramAddedAt: "2026-07-11T10:00:00.000Z",
     assignedProgramUpdatedAt: "2026-07-11T10:00:00.000Z",
     assignedProgramLifecycleStatus: "active",
     assignedProgramVisibility: "client_active",
@@ -457,6 +734,269 @@ test("assigned trainer can publish active program lifecycle fields", async () =>
   await assertFails(updateDoc(doc(otherTrainerDb, "users", "client-1"), {
     assignedProgramLifecycleStatus: "active"
   }));
+});
+
+test("assigned trainer can atomically create an individual program copy", async () => {
+  const assignedAt = "2026-08-20T10:00:00.000Z";
+
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      trainerId: "trainer-1"
+    });
+    await setDoc(doc(db, "trainingTemplates", "template-1"), {
+      name: "Plan",
+      ownerUid: "trainer-1",
+      ownerRole: "trainer",
+      createdByUid: "trainer-1",
+      updatedByUid: "trainer-1",
+      lifecycleStatus: "draft",
+      programStatus: "draft",
+      visibility: "trainer_draft"
+    });
+  });
+
+  const trainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const batch = writeBatch(trainerDb);
+
+  batch.set(doc(trainerDb, "users", "client-1", "workouts", "assigned-day-1"), {
+    name: "Workout 1",
+    exercises: [],
+    status: "planned",
+    completed: false,
+    assignedBy: "trainer-1",
+    assignedProgramId: "template-1",
+    assignedProgramName: "Plan",
+    assignedAt,
+    assignedProgramAddedAt: assignedAt,
+    assignedProgramUpdatedAt: assignedAt,
+    assignedProgramLifecycleStatus: "active",
+    assignedProgramVisibility: "client_active",
+    assignedProgramPublishedAt: assignedAt,
+    assignedProgramAssignedByUid: "trainer-1"
+  });
+  batch.set(doc(trainerDb, "users", "client-1"), {
+    assignedProgramId: "template-1",
+    assignedProgramName: "Plan",
+    assignedProgramAt: assignedAt,
+    assignedProgramAddedAt: assignedAt,
+    assignedProgramUpdatedAt: assignedAt,
+    assignedProgramLifecycleStatus: "active",
+    assignedProgramVisibility: "client_active",
+    assignedProgramPublishedAt: assignedAt,
+    assignedProgramAssignedByUid: "trainer-1",
+    assignedWorkoutCount: 1,
+    workoutCalendar: {
+      assignedProgramId: "template-1",
+      assignedProgramName: "Plan",
+      assignedProgramUpdatedAt: assignedAt,
+      plannedWorkouts: []
+    }
+  }, { merge: true });
+  batch.set(doc(trainerDb, "trainingTemplates", "template-1"), {
+    lifecycleStatus: "assigned",
+    programStatus: "assigned",
+    visibility: "trainer_published",
+    publishedAt: assignedAt,
+    lastAssignedAt: assignedAt,
+    lastAssignedByUid: "trainer-1",
+    updatedByUid: "trainer-1",
+    assignedClientIds: ["client-1"]
+  }, { merge: true });
+
+  await assertSucceeds(batch.commit());
+});
+
+test("assigned trainer can archive the final active client program", async () => {
+  const assignedAt = "2026-08-20T10:00:00.000Z";
+  const archivedAt = "2026-08-21T10:00:00.000Z";
+
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      trainerId: "trainer-1",
+      assignedProgramId: "template-1",
+      assignedProgramName: "Plan",
+      assignedProgramAt: assignedAt,
+      assignedProgramAddedAt: assignedAt,
+      assignedProgramUpdatedAt: assignedAt,
+      assignedProgramLifecycleStatus: "active",
+      assignedProgramVisibility: "client_active",
+      assignedProgramPublishedAt: assignedAt,
+      assignedProgramAssignedByUid: "trainer-1",
+      assignedWorkoutCount: 1,
+      workoutCalendar: { plannedWorkouts: [] }
+    });
+    await setDoc(doc(db, "users", "client-1", "workouts", "assigned-day-1"), {
+      name: "Workout 1",
+      exercises: [],
+      status: "planned",
+      completed: false,
+      assignedBy: "trainer-1",
+      assignedProgramId: "template-1",
+      assignedProgramName: "Plan",
+      assignedProgramAddedAt: assignedAt,
+      assignedProgramLifecycleStatus: "active",
+      assignedProgramVisibility: "client_active"
+    });
+  });
+
+  const trainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const batch = writeBatch(trainerDb);
+  batch.update(doc(trainerDb, "users", "client-1", "workouts", "assigned-day-1"), {
+    assignedProgramLifecycleStatus: "archived",
+    assignedProgramVisibility: "trainer_archived",
+    assignedProgramArchivedAt: archivedAt
+  });
+  batch.update(doc(trainerDb, "users", "client-1"), {
+    assignedProgramId: "",
+    assignedProgramName: "",
+    assignedProgramAt: archivedAt,
+    assignedProgramAddedAt: "",
+    assignedProgramUpdatedAt: archivedAt,
+    assignedProgramLifecycleStatus: "archived",
+    assignedProgramVisibility: "client_archived",
+    assignedWorkoutCount: 0,
+    workoutCalendar: { plannedWorkouts: [] }
+  });
+
+  await assertSucceeds(batch.commit());
+});
+
+test("assigned trainer can restore and edit a client copy, but delete only an unstarted workout", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      trainerId: "trainer-1",
+      assignedProgramId: "archived-copy",
+      assignedProgramName: "Archived client copy",
+      assignedProgramAt: "2026-08-17T09:00:00.000Z",
+      assignedProgramUpdatedAt: "2026-08-17T09:00:00.000Z",
+      assignedProgramLifecycleStatus: "archived",
+      assignedProgramVisibility: "client_archived",
+      assignedProgramPublishedAt: "2026-08-17T09:00:00.000Z",
+      assignedProgramAssignedByUid: "trainer-1",
+      assignedWorkoutCount: 1,
+      workoutCalendar: { plannedWorkouts: [] }
+    });
+    await setDoc(doc(db, "users", "client-1", "workouts", "future-day"), {
+      assignedBy: "trainer-1",
+      assignedProgramId: "archived-copy",
+      assignedProgramName: "Archived client copy",
+      assignedProgramAddedAt: "2026-08-17T09:00:00.000Z",
+      assignedProgramLifecycleStatus: "active",
+      assignedProgramVisibility: "client_active",
+      status: "planned",
+      completed: false,
+      name: "Future day",
+      exercises: []
+    });
+    await setDoc(doc(db, "users", "client-1", "workouts", "started-day"), {
+      assignedBy: "trainer-1",
+      assignedProgramId: "archived-copy",
+      assignedProgramName: "Archived client copy",
+      assignedProgramAddedAt: "2026-08-17T09:00:00.000Z",
+      assignedProgramLifecycleStatus: "active",
+      assignedProgramVisibility: "client_active",
+      status: "completed",
+      completed: true,
+      completedAt: "2026-08-17T12:00:00.000Z",
+      name: "Started day",
+      exercises: []
+    });
+  });
+
+  const trainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const clientRef = doc(trainerDb, "users", "client-1");
+  const futureWorkoutRef = doc(trainerDb, "users", "client-1", "workouts", "future-day");
+  const startedWorkoutRef = doc(trainerDb, "users", "client-1", "workouts", "started-day");
+
+  // No trainingTemplates document is seeded: the trainer restores the saved
+  // client copy rather than reassigning a source template.
+  await assertSucceeds(updateDoc(clientRef, {
+    assignedProgramLifecycleStatus: "active",
+    assignedProgramVisibility: "client_active",
+    assignedProgramPublishedAt: "2026-08-18T09:00:00.000Z"
+  }));
+  await assertSucceeds(updateDoc(clientRef, {
+    workoutCalendar: { plannedWorkouts: ["future-day"] },
+    assignedWorkoutCount: 2,
+    updatedAt: "2026-08-18T09:01:00.000Z"
+  }));
+  await assertSucceeds(updateDoc(futureWorkoutRef, { name: "Edited future day" }));
+  await assertFails(updateDoc(startedWorkoutRef, { name: "Edited completed day" }));
+  await assertFails(deleteDoc(startedWorkoutRef));
+  await assertSucceeds(deleteDoc(futureWorkoutRef));
+});
+
+test("assigned trainer can restore an archived client copy in one atomic batch", async () => {
+  const assignmentTime = "2026-08-17T09:00:00.000Z";
+  const archivedAt = "2026-08-18T10:00:00.000Z";
+
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      trainerId: "trainer-1",
+      assignedProgramId: "",
+      assignedProgramName: "",
+      assignedProgramAt: archivedAt,
+      assignedProgramAddedAt: "",
+      assignedProgramUpdatedAt: archivedAt,
+      assignedProgramLifecycleStatus: "archived",
+      assignedProgramVisibility: "client_archived",
+      assignedProgramPublishedAt: archivedAt,
+      assignedProgramAssignedByUid: "trainer-1",
+      assignedWorkoutCount: 0,
+      workoutCalendar: { plannedWorkouts: [] }
+    });
+    await setDoc(doc(db, "users", "client-1", "workouts", "archived-day"), {
+      assignedBy: "trainer-1",
+      assignedProgramId: "archived-copy",
+      assignedProgramName: "Archived client copy",
+      assignedProgramAddedAt: assignmentTime,
+      assignedProgramLifecycleStatus: "archived",
+      assignedProgramVisibility: "trainer_archived",
+      assignedProgramPublishedAt: assignmentTime,
+      assignedProgramAssignedByUid: "trainer-1",
+      assignedProgramArchivedAt: archivedAt,
+      status: "planned",
+      completed: false,
+      name: "Archived day",
+      exercises: []
+    });
+  });
+
+  const trainerDb = testEnv.authenticatedContext("trainer-1").firestore();
+  const batch = writeBatch(trainerDb);
+  batch.update(doc(trainerDb, "users", "client-1", "workouts", "archived-day"), {
+    assignedProgramLifecycleStatus: "active",
+    assignedProgramVisibility: "client_active",
+    assignedProgramPublishedAt: assignmentTime,
+    assignedProgramAssignedByUid: "trainer-1",
+    assignedProgramArchivedAt: ""
+  });
+  batch.update(doc(trainerDb, "users", "client-1"), {
+    assignedProgramId: "archived-copy",
+    assignedProgramName: "Archived client copy",
+    assignedProgramAt: assignmentTime,
+    assignedProgramAddedAt: assignmentTime,
+    assignedProgramUpdatedAt: assignmentTime,
+    assignedProgramLifecycleStatus: "active",
+    assignedProgramVisibility: "client_active",
+    assignedProgramPublishedAt: assignmentTime,
+    assignedProgramAssignedByUid: "trainer-1",
+    assignedWorkoutCount: 1
+  });
+
+  await assertSucceeds(batch.commit());
 });
 
 test("only the assigned trainer can read a client's telegram messages", async () => {
@@ -509,6 +1049,44 @@ test("assigned trainer can add an outgoing manual message but cannot forge incom
     ...outgoingMessage,
     direction: "in"
   }));
+});
+
+test("assigned trainer can create and confirm a reply linked to a client comment", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), {
+      role: "client",
+      trainerId: "trainer-1"
+    });
+  });
+
+  const trainerDb = testEnv.authenticatedContext("trainer-1", { email: "trainer@example.com" }).firestore();
+  const replyRef = doc(trainerDb, "users", "client-1", "telegramMessages", "feedback-reply-1");
+  const linkedReply = {
+    type: "manual",
+    direction: "out",
+    text: "Хорошая работа, продолжай в том же темпе.",
+    status: "sending",
+    sentAt: "2026-07-12T09:00:00.000Z",
+    sentByUid: "trainer-1",
+    sentByEmail: "trainer@example.com",
+    sourceCommentId: "workout-1-comment",
+    workoutId: "workout-1",
+    exerciseId: "",
+    replyContext: {
+      sourceCommentId: "workout-1-comment",
+      workoutId: "workout-1"
+    }
+  };
+
+  await assertSucceeds(setDoc(replyRef, linkedReply));
+  await assertSucceeds(updateDoc(replyRef, {
+    status: "sent",
+    channel: "internal",
+    deliveredAt: "2026-07-12T09:00:01.000Z"
+  }));
+  await assertFails(updateDoc(replyRef, { text: "Подменённый ответ" }));
 });
 
 test("assigned trainer can mark an incoming message as read without changing its contents", async () => {

@@ -3,12 +3,15 @@ import { doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
 import { buildWorkoutScheduleDraftWithExistingStatuses } from "../../utils/workoutSchedule";
 import { sortWorkoutDays } from "../../utils/workoutPlanNormalization";
 import { normalizeAdminProgressReminderInterval } from "../../utils/adminClientCalendar";
-import { getClientTelegramProfile } from "../../utils/clientTelegramProfile";
 import { normalizeClientSubscription, renewClientSubscription } from "../../utils/clientSubscription";
 import { fetchAuthorized } from "../../utils/apiClient";
 import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus";
 import { validateTrainerWorkoutScheduleDates } from "../../utils/trainerProgramValidation";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
+import {
+  buildNextTrainerClientSetupChecklist,
+  TRAINER_CLIENT_SETUP_STEPS
+} from "../../utils/trainerClientSetupChecklist";
 
 const STATUS_SELECT_CLIENT = "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0432\u044b\u0431\u0435\u0440\u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 const STATUS_CALENDAR_SAVING = "\u0421\u043e\u0445\u0440\u0430\u043d\u044f\u044e \u043a\u0430\u043b\u0435\u043d\u0434\u0430\u0440\u044c...";
@@ -199,10 +202,16 @@ export function createTrainerClientCalendarHandlers({
     }
   }
 
-  async function saveTrainerClientWorkoutSchedule(dates = [], client = adminSelectedClient) {
+  async function saveTrainerClientWorkoutSchedule(dates = [], client = adminSelectedClient, assignmentWorkouts = []) {
     const targetClient = client?.id ? client : (adminSelectedClient?.id ? adminSelectedClient : usersList.find((item) => item.id === selectedUserId));
     const clientId = targetClient?.id || selectedUserId;
-    const workouts = sortWorkoutDays(plan.workouts || []);
+    const allWorkouts = sortWorkoutDays(plan.workouts || []);
+    const requestedWorkoutIds = new Set((Array.isArray(assignmentWorkouts) ? assignmentWorkouts : [])
+      .map((workout) => String(workout?.id || "").trim())
+      .filter(Boolean));
+    const workouts = requestedWorkoutIds.size
+      ? allWorkouts.filter((workout) => requestedWorkoutIds.has(String(workout?.id || "").trim()))
+      : allWorkouts;
 
     if (!clientId) {
       setAdminClientStatus(STATUS_SELECT_CLIENT);
@@ -214,64 +223,85 @@ export function createTrainerClientCalendarHandlers({
       return false;
     }
 
-    const scheduleValidation = validateTrainerWorkoutScheduleDates(dates, workouts.length);
+    const nowIso = new Date().toISOString();
+    const currentCalendar = targetClient?.workoutCalendar || {};
+    const assignmentWorkoutIds = new Set(workouts.map((workout) => String(workout?.id || "").trim()).filter(Boolean));
+    const assignmentId = String(workouts[0]?.assignedProgramAddedAt || workouts[0]?.programAssignmentId || "").trim();
+    const assignmentInfo = {
+      assignedProgramId: workouts[0]?.assignedProgramId || targetClient?.assignedProgramId || plan.assignedProgramId || "",
+      assignedProgramName: workouts[0]?.assignedProgramName || targetClient?.assignedProgramName || plan.assignedProgramName || "",
+      assignedProgramUpdatedAt: workouts[0]?.assignedProgramUpdatedAt || targetClient?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || "",
+      assignedProgramAddedAt: assignmentId
+    };
+    const existingAssignmentEntries = (currentCalendar.plannedWorkouts || []).filter((entry) => (
+      assignmentWorkoutIds.has(String(entry?.workoutId || "").trim()) ||
+      Boolean(assignmentId) && String(entry?.assignedProgramAddedAt || entry?.programAssignmentId || "").trim() === assignmentId
+    ));
+    const scheduleValidation = validateTrainerWorkoutScheduleDates(dates, workouts.length, {
+      allowedPastDates: [
+        ...existingAssignmentEntries.map((entry) => entry?.date),
+        ...workouts.map((workout) => workout?.scheduledDate || workout?.plannedDate)
+      ]
+    });
     const cleanDates = scheduleValidation.cleanDates;
 
     if (!scheduleValidation.ok) {
       setAdminClientStatus(scheduleValidation.message);
       return false;
     }
-
-    const nowIso = new Date().toISOString();
-    const currentCalendar = targetClient?.workoutCalendar || {};
-    const plannedWorkouts = buildWorkoutScheduleDraftWithExistingStatuses(
+    const assignmentPlannedWorkouts = buildWorkoutScheduleDraftWithExistingStatuses(
       cleanDates,
       workouts,
-      currentCalendar.plannedWorkouts || []
-    );
-    const assignmentInfo = {
-      assignedProgramId: targetClient?.assignedProgramId || workouts[0]?.assignedProgramId || plan.assignedProgramId || "",
-      assignedProgramName: targetClient?.assignedProgramName || workouts[0]?.assignedProgramName || plan.assignedProgramName || "",
-      assignedProgramUpdatedAt: targetClient?.assignedProgramUpdatedAt || workouts[0]?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || ""
-    };
+      existingAssignmentEntries
+    ).map((entry) => ({ ...entry, ...assignmentInfo }));
+    const plannedWorkouts = [
+      ...(currentCalendar.plannedWorkouts || []).filter((entry) => !assignmentWorkoutIds.has(String(entry?.workoutId || "").trim())),
+      ...assignmentPlannedWorkouts
+    ];
     const nextCalendar = {
       ...currentCalendar,
       enabled: currentCalendar.enabled !== false,
-      scheduledDates: cleanDates,
-      monthlyTrainingDates: cleanDates,
+      scheduledDates: [...new Set(plannedWorkouts.map((item) => item?.date).filter(Boolean))].sort(),
+      monthlyTrainingDates: [...new Set(plannedWorkouts.map((item) => item?.date).filter(Boolean))].sort(),
       plannedWorkouts,
       ...assignmentInfo,
       updatedAt: nowIso,
       updatedBy: auth.currentUser?.uid || ""
     };
-    const nextWorkouts = workouts.map((workout, index) => ({
-      ...workout,
-      scheduledDate: cleanDates[index],
-      plannedDate: cleanDates[index],
-      scheduleOrder: index + 1,
-      status: plannedWorkouts[index]?.status || workout.status || "planned",
-      movedToDate: plannedWorkouts[index]?.movedToDate || workout.movedToDate || "",
-      statusUpdatedAt: plannedWorkouts[index]?.statusUpdatedAt || workout.statusUpdatedAt || "",
-      ...assignmentInfo
+    const scheduledWorkoutsById = new Map(workouts.map((workout, index) => {
+      const planned = assignmentPlannedWorkouts[index] || {};
+      return [String(workout?.id || "").trim(), {
+        ...workout,
+        scheduledDate: cleanDates[index],
+        plannedDate: cleanDates[index],
+        scheduleOrder: index + 1,
+        status: planned.status || workout.status || "planned",
+        movedToDate: planned.movedToDate || workout.movedToDate || "",
+        statusUpdatedAt: planned.statusUpdatedAt || workout.statusUpdatedAt || "",
+        ...assignmentInfo
+      }];
     }));
+    const nextWorkouts = allWorkouts.map((workout) => (
+      scheduledWorkoutsById.get(String(workout?.id || "").trim()) || workout
+    ));
     const batch = writeBatch(db);
     setAdminClientStatus(STATUS_SCHEDULE_SAVING);
 
-    nextWorkouts.forEach((workout, index) => {
+    workouts.forEach((workout, index) => {
+      const scheduledWorkout = scheduledWorkoutsById.get(String(workout?.id || "").trim());
       if (!workout.id) return;
       batch.set(doc(db, "users", clientId, "workouts", workout.id), {
         scheduledDate: cleanDates[index],
         plannedDate: cleanDates[index],
         scheduleOrder: index + 1,
-        status: workout.status || "planned",
-        movedToDate: workout.movedToDate || "",
-        statusUpdatedAt: workout.statusUpdatedAt || "",
+        status: scheduledWorkout?.status || workout.status || "planned",
+        movedToDate: scheduledWorkout?.movedToDate || workout.movedToDate || "",
+        statusUpdatedAt: scheduledWorkout?.statusUpdatedAt || workout.statusUpdatedAt || "",
         ...assignmentInfo
       }, { merge: true });
     });
     batch.set(doc(db, "users", clientId), {
       workoutCalendar: nextCalendar,
-      ...assignmentInfo,
       trainingDays: currentCalendar.trainingDays || targetClient?.trainingDays || [],
       workoutTime: currentCalendar.workoutTime || targetClient?.workoutTime || "",
       updatedAt: nowIso
@@ -309,11 +339,19 @@ export function createTrainerClientCalendarHandlers({
 
     if (settings.subscriptionOnly) {
       const updatedAt = new Date().toISOString();
+      const subscriptionDraft = {
+        ...(client.subscription || {}),
+        ...(settings.subscription || {})
+      };
+      const purchasedSessions = Math.max(0, Number(subscriptionDraft.purchasedSessions ?? subscriptionDraft.totalSessions) || 0);
+      const usedSessions = Math.max(0, Number(subscriptionDraft.usedSessions) || 0);
       const subscription = settings.renewSubscription
         ? renewClientSubscription(client.subscription || {}, settings.subscription || {})
         : normalizeClientSubscription({
-            ...(client.subscription || {}),
-            ...(settings.subscription || {})
+            ...subscriptionDraft,
+            // A manually updated subscription starts a new balance. Do not retain
+            // an expired balance from the previous subscription cycle.
+            remainingSessions: Math.max(0, purchasedSessions - usedSessions)
           });
       const patch = { subscription };
       let previousClient = null;
@@ -346,7 +384,11 @@ export function createTrainerClientCalendarHandlers({
     }
 
     const currentCalendar = client.workoutCalendar || {};
-    const currentTelegram = getClientTelegramProfile(client);
+    // Keep only the persisted Telegram shape here. getClientTelegramProfile adds
+    // display-only derived fields, which must never be written back to Firestore.
+    const currentTelegram = client?.telegram && typeof client.telegram === "object"
+      ? client.telegram
+      : {};
     const enabled = settings.enabled !== false;
     const updatedAt = new Date().toISOString();
     const photoIntervalDays = normalizeAdminProgressReminderInterval(settings.progressPhotoIntervalDays);
@@ -382,10 +424,7 @@ export function createTrainerClientCalendarHandlers({
       monthlyTrainingDates: scheduledDates,
       updatedAt
     };
-    const nextTelegram = {
-      ...currentTelegram,
-      notificationsEnabled: enabled
-    };
+    const nextTelegram = { ...currentTelegram, notificationsEnabled: enabled };
     const patch = {
       workoutCalendar: nextCalendar,
       telegram: nextTelegram,
@@ -418,6 +457,43 @@ export function createTrainerClientCalendarHandlers({
       return true;
     } catch (error) {
       console.error("Telegram reminders save failed:", error);
+      setAdminSelectedClient((prev) => prev?.id === client.id && previousClient ? previousClient : prev);
+      setUsersList((prev) => prev.map((item) => item.id === client.id && previousClient ? previousClient : item));
+      setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_NOTIFICATIONS_FAILED));
+      return false;
+    }
+  }
+
+  async function saveTrainerClientSetupProgress(
+    completedStep,
+    client = adminSelectedClient,
+    currentChecklist = null
+  ) {
+    if (!client?.id || !TRAINER_CLIENT_SETUP_STEPS.includes(completedStep)) {
+      setAdminClientStatus(STATUS_SELECT_CLIENT);
+      return false;
+    }
+
+    const updatedAt = new Date().toISOString();
+    const trainerSetupChecklist = buildNextTrainerClientSetupChecklist(
+      currentChecklist || client.trainerSetupChecklist || {},
+      completedStep,
+      updatedAt
+    );
+    const patch = { trainerSetupChecklist };
+    let previousClient = null;
+
+    setAdminSelectedClient((prev) => {
+      if (prev?.id === client.id) previousClient = prev;
+      return prev?.id === client.id ? { ...prev, ...patch } : prev;
+    });
+    setUsersList((prev) => prev.map((item) => item.id === client.id ? { ...item, ...patch } : item));
+
+    try {
+      await setDoc(doc(db, "users", client.id), { ...patch, updatedAt }, { merge: true });
+      return trainerSetupChecklist;
+    } catch (error) {
+      console.error("Trainer client setup save failed:", error);
       setAdminSelectedClient((prev) => prev?.id === client.id && previousClient ? previousClient : prev);
       setUsersList((prev) => prev.map((item) => item.id === client.id && previousClient ? previousClient : item));
       setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_NOTIFICATIONS_FAILED));
@@ -479,6 +555,7 @@ export function createTrainerClientCalendarHandlers({
     sendAdminTestWorkoutReminder,
     saveTrainerClientWorkoutSchedule,
     saveTrainerClientNotificationSettings,
+    saveTrainerClientSetupProgress,
     loadTrainerSubscriptionNotificationSettings,
     saveTrainerSubscriptionNotificationSettings,
     openClientTelegramConnection

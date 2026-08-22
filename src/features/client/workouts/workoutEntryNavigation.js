@@ -4,6 +4,7 @@ import {
 } from "../../../utils/userScopedStorage";
 import { doc, setDoc } from "firebase/firestore";
 import { normalizeBasicWorkoutPlanState } from "../../../utils/basicWorkoutPlanBuilder";
+import { isWorkoutPlanForMode } from "../../../utils/workoutPlanMode";
 
 export function createWorkoutEntryNavigation({
   APP_PAGES,
@@ -49,6 +50,20 @@ export function createWorkoutEntryNavigation({
 
   function openIndividualWorkouts() {
     saveWorkoutModePreference("individual", workoutModeRemember);
+    const currentUserId = (auth.currentUser || user)?.uid;
+    const cachedIndividualPlan = currentUserId
+      ? safeReadUserJsonStorage(STORAGE_KEY, currentUserId, null)
+      : null;
+
+    if (
+      isWorkoutPlanForMode(cachedIndividualPlan, "individual") &&
+      cachedIndividualPlan?.workouts?.length > 0
+    ) {
+      setPlan(cachedIndividualPlan);
+    } else if (!isWorkoutPlanForMode(plan, "individual")) {
+      setPlan({ workouts: [] });
+    }
+
     setSelectedWorkoutId(null);
     setIndividualWorkoutIndex(0);
     setIndividualWorkoutIndexInitialized(false);
@@ -57,9 +72,11 @@ export function createWorkoutEntryNavigation({
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     });
 
-    const currentUserId = (auth.currentUser || user)?.uid;
     if (currentUserId) {
-      loadWorkoutsFromFirebase(currentUserId, { preserveCurrentPlanOnError: true }).catch((error) => {
+      loadWorkoutsFromFirebase(currentUserId, {
+        mode: "individual",
+        preserveCurrentPlanOnError: true
+      }).catch((error) => {
         console.warn("Background workouts refresh error", error);
       });
     }
@@ -79,7 +96,9 @@ export function createWorkoutEntryNavigation({
 
     for (const candidate of candidates) {
       if (
-        (candidate?.source === "basic" || candidate?.basicPlanId || candidate?.assignedProgramUpdatedAt) &&
+        (candidate?.source === "basic" ||
+          candidate?.basicPlanId ||
+          String(candidate?.assignedProgramUpdatedAt || "").startsWith("basic:")) &&
         Array.isArray(candidate?.workouts) &&
         candidate.workouts.length > 0
       ) {
@@ -107,6 +126,17 @@ export function createWorkoutEntryNavigation({
       window.requestAnimationFrame(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       });
+      // Render the saved copy immediately, then reconcile it with the full
+      // canonical plan in the user profile. This prevents a stale cache with
+      // only recently opened workouts from becoming the visible program.
+      if (currentUser?.uid) {
+        loadWorkoutsFromFirebase(currentUser.uid, {
+          mode: "basic",
+          preserveCurrentPlanOnError: true
+        }).catch((error) => {
+          console.warn("Background basic workouts refresh error", error);
+        });
+      }
       return;
     }
 
@@ -131,13 +161,9 @@ export function createWorkoutEntryNavigation({
       return;
     }
 
-    if (savedPreference?.remember && savedPreference?.mode === "individual") {
-      openIndividualWorkouts();
-      return;
-    }
-
-    setSelectedWorkoutId(null);
-    setPage(APP_PAGES.WORKOUT_MODE);
+    // A trainer invitation starts the client in the individual mode. The mode
+    // can still be changed deliberately from the Cabinet settings.
+    openIndividualWorkouts();
   }
 
   return {

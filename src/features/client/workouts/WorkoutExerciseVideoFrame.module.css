@@ -16,23 +16,23 @@
 :global(:root[data-app-theme="warm-light"]) .frame.frame {
   box-sizing: border-box;
   width: 100%;
-  height: 280px;
-  min-height: 280px;
-  max-height: 280px;
+  height: 252px;
+  min-height: 252px;
+  max-height: 252px;
   aspect-ratio: auto;
   margin: 0;
-  padding: 12px 11px;
+  padding: 10px;
   overflow: hidden;
   border: 1px solid #efebf3;
-  border-radius: 24px;
+  border-radius: 20px;
   background: #fff;
-  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+  box-shadow: 0 2px 7px rgba(72, 63, 87, 0.07);
 }
 :global(:root[data-app-theme="warm-light"]) .video.video,
 :global(:root[data-app-theme="warm-light"]) .fallbackContent.fallbackContent {
   width: 100%;
-  height: 250px;
-  border-radius: 22px;
+  height: 230px;
+  border-radius: 16px;
   background: #28262e;
   object-fit: cover;
 }
@@ -50,19 +50,20 @@
   transform: translate(-50%, -50%) scale(0.96);
 }
 :global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton {
-  width: 30px;
-  min-width: 30px;
-  max-width: 30px;
-  height: 30px;
-  min-height: 30px;
-  max-height: 30px;
-  top: 20px;
-  right: 20px;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  top: 14px;
+  right: 14px;
   bottom: auto;
   opacity: 0.45;
 }
 .techniqueButton {
-  height: 27px;
+  min-height: 44px;
+  height: 44px;
   padding: 0 10px;
   display: inline-flex;
   align-items: center;
@@ -166,12 +167,12 @@
   right: 10px;
   bottom: 10px;
   z-index: 3;
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
-  min-height: 38px;
-  max-width: 38px;
-  max-height: 38px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 44px;
+  max-height: 44px;
   margin: 0;
   padding: 0;
   display: flex;
@@ -228,9 +229,9 @@
 
 .retryButton {
   width: auto;
-  height: 34px;
-  min-height: 34px;
-  max-height: 34px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
   margin-top: 7px;
   padding: 0 12px;
   border: 1px solid var(--color-workout-video-retry-border);

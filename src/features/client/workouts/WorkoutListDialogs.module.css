@@ -277,6 +277,27 @@
   align-items: center;
 }
 
+:global(:root[data-app-theme="warm-light"]) .modeCloseButton.modeCloseButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #28262e;
+  background: rgba(123, 118, 130, 0.1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:global(:root[data-app-theme="warm-light"]) .modeCloseButton.modeCloseButton:active {
+  background: rgba(123, 118, 130, 0.18);
+  transform: scale(0.94);
+}
+
 :global(:root[data-app-theme="warm-light"]) .eyebrow.eyebrow {
   margin-bottom: 2px;
   color: #7b7682;

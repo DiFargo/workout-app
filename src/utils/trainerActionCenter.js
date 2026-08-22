@@ -193,7 +193,6 @@ export function buildTrainerActionCenter(clients = [], summaries = {}, now = Dat
     ...missedWorkouts,
     ...feedbackItems,
     ...programEndingItems,
-    ...taskItems,
     ...attentionItems
   ]);
 
@@ -219,12 +218,12 @@ export function buildTrainerActionCenter(clients = [], summaries = {}, now = Dat
 
 export function getTrainerActionItemTargetTab(item = {}, groupId = "") {
   if (groupId === "feedbackItems") return "messages";
-  if (groupId === "taskItems") return "notifications";
+  if (groupId === "taskItems") return "tasks";
   if (groupId === "programEndingItems") return "workouts";
   if (groupId === "todayWorkouts" || groupId === "missedWorkouts") return "workouts";
 
   if (item.summary?.workoutFeedbackAttention?.id) return "messages";
-  if (Number(item.summary?.activeTrainerTasksCount) > 0) return "notifications";
+  if (Number(item.summary?.activeTrainerTasksCount) > 0) return "tasks";
   if (item.summary?.programEndingAttention?.id) return "workouts";
 
   const type = item.attention?.type || item.type || "";
@@ -232,7 +231,7 @@ export function getTrainerActionItemTargetTab(item = {}, groupId = "") {
   if (type === "nutrition") return "nutrition";
   if (type === "measure") return "bodyProgress";
   if (type === "feedback") return "messages";
-  if (type === "task") return "notifications";
+  if (type === "task") return "tasks";
   return "overview";
 }
 

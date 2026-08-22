@@ -104,7 +104,9 @@ export default function NutritionMealModal({
 
                 <div className={styles.info} data-nutrition-meal-part="info">
                   <strong className={styles.name}>{item.name}</strong>
-                  <span className={styles.amount}>{item.amount} г</span>
+                  <span className={styles.amount}>
+                    {item.amount} г{item.source === "Оценка ИИ" ? " · Оценка ИИ" : ""}
+                  </span>
                 </div>
 
                 <div className={styles.arrow} data-nutrition-meal-part="arrow">›</div>

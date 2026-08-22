@@ -56,6 +56,7 @@ test("trainer action center groups today's work, feedback, tasks and ending prog
       lastWorkoutAt: dateKeyOffset(-1),
       lastNutritionAt: dateKeyOffset(-1),
       lastMeasurementAt: dateKeyOffset(-7),
+      nutritionDays7: 4,
       activeTrainerTasksCount: 2
     }
   };
@@ -66,7 +67,7 @@ test("trainer action center groups today's work, feedback, tasks and ending prog
   assert.deepEqual(center.feedbackItems.map((item) => item.client.id), ["feedback"]);
   assert.deepEqual(center.programEndingItems.map((item) => item.client.id), ["ending"]);
   assert.deepEqual(center.taskItems.map((item) => item.client.id), ["tasks"]);
-  assert.deepEqual(center.priorityItems.map((item) => item.client.id), ["feedback", "ending", "tasks", "today"]);
+  assert.deepEqual(center.priorityItems.map((item) => item.client.id), ["feedback", "ending", "today"]);
   assert.ok(center.quickActions.some((item) => item.id === "createTask"));
 });
 
@@ -98,7 +99,7 @@ test("trainer action center keeps one priority row per client with several signa
 
 test("trainer action items open the relevant client tab", () => {
   assert.equal(getTrainerActionItemTargetTab({}, "feedbackItems"), "messages");
-  assert.equal(getTrainerActionItemTargetTab({}, "taskItems"), "notifications");
+  assert.equal(getTrainerActionItemTargetTab({}, "taskItems"), "tasks");
   assert.equal(getTrainerActionItemTargetTab({}, "programEndingItems"), "workouts");
   assert.equal(getTrainerActionItemTargetTab({}, "todayWorkouts"), "workouts");
   assert.equal(getTrainerActionItemTargetTab({ attention: { type: "measure" } }), "bodyProgress");

@@ -1,0 +1,2420 @@
+/*
+ * Final responsive pass for the trainer workspace.  This file is imported
+ * last so its breakpoints can keep route-local modules in one coherent
+ * layout without changing their data or interaction logic.
+ */
+
+/* Keeps this CSS Module attached to the workspace route; the remaining
+   selectors intentionally style shared trainer markup through :global(). */
+.scope { min-width: 0; }
+
+/* Program-editor sheets can be rendered outside the workspace root. Keep the
+   native file field invisible there as well, while the whole label remains
+   the large, tappable video-upload control. */
+:global(.trainerNextVideoUpload) {
+  position: relative;
+  overflow: hidden;
+}
+
+:global(.trainerNextVideoUpload input[type="file"]) {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPage),
+:global(.trainerNextRoot) :global(.trainerNextPage > *),
+:global(.trainerNextRoot) :global(.trainerNextClientHeader > *),
+:global(.trainerNextRoot) :global(.trainerNextClientHeader > * > *),
+:global(.trainerNextRoot) :global(.trainerNextClientTable > button > *),
+:global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button > *) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientContextActions) {
+  display: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextPage) :global(img),
+:global(.trainerNextRoot) :global(.trainerNextPage) :global(video) {
+  max-width: 100%;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientHeader) {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  align-items: start;
+  justify-content: stretch;
+  gap: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientHeader .trainerNextAvatar.large) {
+  width: 60px;
+  height: 60px;
+  flex-basis: 60px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientName) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(132px, 154px);
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 3px;
+  overflow: visible;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientName h1) {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientName > span:first-of-type) {
+  grid-column: 1;
+  grid-row: 2;
+  color: var(--tn-text);
+  font-size: 13px;
+  font-weight: 720;
+  line-height: 1.25;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTaskButton) {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  justify-self: end;
+  align-self: center;
+  display: inline-flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 13px;
+  margin: 0;
+  border: 1px solid #d6caee;
+  border-radius: 13px;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+  box-shadow: 0 6px 14px rgba(86, 68, 126, 0.08);
+  font-size: 13px;
+  font-weight: 730;
+  line-height: 1.18;
+  text-align: center;
+  white-space: normal;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTaskButton svg) {
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientTaskButton > span) {
+  min-width: 0;
+}
+
+/* Cabinet reports use the same comfortable canvas as Connections without
+   becoming edge-to-edge sheets. */
+:global(.trainerCabinetUtilitySheet[data-trainer-modal-surface="true"]) {
+  width: min(94vw, 620px) !important;
+  max-width: calc(100vw - 24px) !important;
+}
+
+:global(.trainerCabinetUtilitySheet [data-trainer-modal-content="true"]) {
+  min-width: 0;
+}
+
+:global(.trainerCabinetUtilitySheet .trainerUtilityPage) {
+  width: 100%;
+  padding: 0 !important;
+}
+
+:global(.trainerCabinetUtilitySheet .trainerUtilityBody) {
+  gap: 12px !important;
+  padding: 16px 20px 20px !important;
+}
+
+/* Notification saving is a modal action, not a scrolling page row. Keep it
+   at the bottom of the shared sheet while the feed and settings scroll. */
+:global(.trainerCabinetUtilitySheetFooter) {
+  z-index: 3;
+  min-width: 0;
+  padding: 10px 16px max(12px, env(safe-area-inset-bottom));
+  border-top: 1px solid #efebf3;
+  background: #fbfafc;
+}
+
+:global(.trainerCabinetUtilitySheetFooter .globalSubscriptionActions) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+:global(.trainerCabinetUtilitySheetFooter .globalSubscriptionActions > small),
+:global(.trainerCabinetUtilitySheetFooter .globalSubscriptionActions > span) {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+:global(.trainerCabinetUtilitySheetFooter .globalSubscriptionActions > button) {
+  min-width: 116px;
+  min-height: 44px;
+}
+
+:global(.trainerCabinetUtilitySheetFooter .globalSubscriptionActions > span) {
+  grid-column: 1 / -1;
+}
+
+:global(.trainerCabinetUtilitySheet > header) {
+  justify-content: center !important;
+  padding: 13px 68px !important;
+}
+
+:global(.trainerCabinetUtilitySheetTitle > span) {
+  display: none !important;
+}
+
+:global(.trainerCabinetUtilitySheetTitle h2) {
+  font-size: 22px !important;
+  font-weight: 760 !important;
+}
+
+/* The workout-history sheet uses the same stable modal frame as the cabinet
+   sheets: a fixed header and one scrollable record list. */
+:global(.trainerWorkoutHistoryModal[data-trainer-modal-surface="true"]) {
+  width: min(94vw, 620px) !important;
+  max-width: calc(100vw - 24px) !important;
+  padding: 0 !important;
+}
+
+:global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"]) {
+  display: flex;
+  min-height: 92px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 70px 14px 18px;
+  border-bottom: 1px solid #efebf3;
+  background: #fbfafc;
+}
+
+:global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"] > div) {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+:global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"] span) {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: .06em;
+}
+
+:global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"] h2) {
+  margin: 0;
+  color: #28262e;
+  font-size: 22px;
+  line-height: 1.12;
+}
+
+:global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"] p) {
+  margin: 3px 0 0;
+  color: #7b7682;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+:global(.trainerWorkoutHistoryModalBody) {
+  padding: 14px 16px 18px;
+}
+
+/* This preview is rendered by the trainer route, while its former styles live
+ * in a legacy module that is not loaded by that route. Keep it in the shared
+ * sheet system so it cannot fall back to unstyled inline text. */
+:global(.trainerNextWorkoutPreview) {
+  position: relative;
+  display: grid;
+  gap: 0;
+  padding: 24px;
+}
+
+:global(.trainerNextWorkoutPreview > small) {
+  color: var(--tn-purple-strong);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.05em;
+}
+
+:global(.trainerNextWorkoutPreview > h2) {
+  margin: 6px 0 18px;
+  color: var(--tn-text);
+  font-size: 22px;
+  letter-spacing: -0.35px;
+}
+
+:global(.trainerNextWorkoutPreview > div) {
+  display: grid;
+  gap: 10px;
+}
+
+:global(.trainerNextWorkoutPreview article) {
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
+  background: var(--tn-surface);
+}
+
+:global(.trainerNextWorkoutPreview article header) {
+  display: grid;
+  gap: 3px;
+  padding: 12px 14px;
+  background: var(--tn-surface-soft);
+}
+
+:global(.trainerNextWorkoutPreview article header span),
+:global(.trainerNextWorkoutPreview article div small) {
+  color: var(--tn-muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+:global(.trainerNextWorkoutPreview article header strong) {
+  color: var(--tn-text);
+  font-size: 15px;
+}
+
+:global(.trainerNextWorkoutPreview article div) {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextWorkoutPreview article div > span) {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+  font-size: 11px;
+  font-weight: 760;
+}
+
+:global(.trainerNextWorkoutPreview article div strong) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--tn-text);
+  font-size: 13px;
+}
+
+/* A 480px+ handset must use the available canvas instead of an iPhone-only rail. */
+@media (min-width: 480px) and (max-width: 699px) {
+  :global(.trainerNextRoot) {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    --trainer-mobile-nav-width: min(520px, calc(100vw - 32px));
+    --trainer-mobile-shell-width: 100vw;
+  }
+
+  :global(.trainerNextRoot)::after,
+  :global(.trainerNextRoot) :global(.mobileDockGuard) {
+    border-radius: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextPage) {
+    width: min(100%, 620px);
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientsPage) {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientsPage .trainerNextMobileHeader) {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextMobileHeader) {
+    scroll-margin-top: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextMobileHeaderActions),
+  :global(.trainerNextRoot) :global(.trainerNextClientBackRow > div) {
+    flex-shrink: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader) {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader .trainerNextAvatar.large) {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientName) {
+    grid-template-columns: minmax(0, 1fr) minmax(118px, 136px);
+    column-gap: 9px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader h1) {
+    font-size: 21px;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTaskButton) {
+    min-height: 48px;
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTaskButton > span) {
+    max-width: 84px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader p),
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader > div > strong) {
+    overflow-wrap: anywhere;
+  }
+
+  :global(.trainerNextWorkoutPreview) {
+    padding: 20px 16px;
+  }
+
+  :global(.trainerNextWorkoutPreview article div) {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  :global(.trainerNextWorkoutPreview article div small) {
+    grid-column: 2;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextPageTabs),
+  :global(.trainerNextRoot) :global(.trainerNextProgramsTab > .trainerNextPageTabs),
+  :global(.trainerNextRoot) :global(.trainerNextWorkoutPage > .trainerNextPageTabs) {
+    display: flex;
+    gap: 7px;
+    max-width: 100%;
+    padding-bottom: 2px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextPageTabs::-webkit-scrollbar) {
+    display: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextPageTabs button) {
+    min-height: 42px;
+    padding: 0 13px;
+    white-space: nowrap;
+  }
+
+  /* The program/library switch is a two-way segmented control, not a
+     horizontally scrolling tab row. Keep both touch targets equal. */
+  :global(.trainerNextRoot) :global(.trainerNextWorkoutPage > .trainerNextPageTabs) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 4px;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextWorkoutPage > .trainerNextPageTabs button) {
+    width: 100%;
+    min-width: 0;
+    padding: 0 10px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextProgramControl),
+  :global(.trainerNextRoot) :global(.trainerNextLibraryActions),
+  :global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta),
+  :global(.trainerNextRoot) :global(.trainerNextPanelTitle) {
+    min-width: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextProgramControl > button),
+  :global(.trainerNextRoot) :global(.trainerNextLibraryAdd),
+  :global(.trainerNextRoot) :global(.trainerNextOutlineAdd) {
+    white-space: normal;
+    text-align: center;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerActionCenterCard),
+  :global(.trainerNextRoot) :global(.trainerUtilityCard),
+  :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button) {
+    overflow-wrap: anywhere;
+  }
+
+  :global([data-trainer-modal-backdrop="true"]) {
+    padding-right: 14px !important;
+    padding-left: 14px !important;
+  }
+
+  :global([data-trainer-modal-surface="true"]) {
+    width: min(560px, calc(100vw - 28px)) !important;
+    max-width: calc(100vw - 28px) !important;
+  }
+}
+
+/* Tablet uses readable cards instead of a six-column table with a scrollbar. */
+@media (min-width: 700px) and (max-width: 979px) {
+  :global(.trainerNextRoot) :global(.trainerNextPage) {
+    width: min(100%, 960px);
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTable) {
+    display: grid;
+    gap: 10px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTableHead) {
+    display: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button) {
+    display: grid;
+    min-width: 0;
+    grid-template-areas:
+      "identity identity status"
+      "progress workouts nutrition"
+      "activity activity activity";
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+    gap: 10px 14px;
+    min-height: 142px;
+    padding: 15px 17px;
+    border: 1px solid var(--tn-line);
+    border-radius: 18px;
+    background: var(--tn-surface);
+    box-shadow: 0 8px 18px rgba(56, 44, 78, 0.06);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button:last-child) {
+    border-bottom: 1px solid var(--tn-line);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientIdentity) { grid-area: identity; }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientIdentity > span:last-child) {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientIdentity strong),
+  :global(.trainerNextRoot) :global(.trainerNextClientIdentity small) {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > .positive),
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > .negative) { grid-area: progress; }
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > .trainerNextClientMetric:nth-of-type(3)) { grid-area: workouts; }
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > .trainerNextClientMetric:nth-of-type(4)) { grid-area: nutrition; }
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > .trainerNextClientActivity) { grid-area: activity; }
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > .trainerNextStatus) { grid-area: status; justify-self: end; }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > span:not(.trainerNextClientIdentity):not(.trainerNextStatus)) {
+    display: grid;
+    align-content: center;
+    gap: 3px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTable > button > .trainerNextClientActivity) {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientMetricLabel) {
+    display: block;
+  }
+
+  :global([data-trainer-modal-surface="true"]) {
+    width: min(680px, calc(100vw - 48px)) !important;
+    max-width: calc(100vw - 48px) !important;
+  }
+}
+
+@media (max-width: 359px) {
+  :global(.trainerNextRoot) :global(.trainerNextPage),
+  :global(.trainerNextRoot) :global(.trainerNextClientsPage) {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientsPage .trainerNextMobileHeader) {
+    margin-right: 12px;
+    margin-left: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader) {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientHeader .trainerNextAvatar.large) {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientName) {
+    grid-template-columns: minmax(0, 1fr) 110px;
+    column-gap: 7px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTaskButton) {
+    gap: 5px;
+    padding-right: 7px;
+    padding-left: 7px;
+    font-size: 11px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientTaskButton svg) {
+    width: 15px;
+    height: 15px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextMetrics),
+  :global(.trainerNextRoot) :global(.trainerActionCenterGrid),
+  :global(.trainerNextRoot) :global(.trainerAnalyticsGrid),
+  :global(.trainerNextRoot) :global(.trainerNutritionSummary) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientSearchRow),
+  :global(.trainerNextRoot) :global(.trainerNextLibraryActions) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientSearchAdd),
+  :global(.trainerNextRoot) :global(.trainerNextLibraryAdd) {
+    width: 100%;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextMobileNav),
+  :global(.trainerNextRoot) :global(.trainerNextClientMobileNav) {
+    max-width: calc(100vw - 16px);
+  }
+}
+
+/* Shared compact sheets for the flows that used to keep their own inline
+   layout.  Headers and action controls stay in the frame; only the data
+   region scrolls. */
+:global(.trainerPhotoPreviewModal[data-trainer-modal-surface="true"]),
+:global(.trainerNextWorkoutPreview[data-trainer-modal-surface="true"]),
+:global(.trainerMessageModal[data-trainer-modal-surface="true"]) {
+  gap: 0 !important;
+  padding: 0 !important;
+}
+
+:global(.trainerPhotoPreviewModal[data-trainer-modal-surface="true"]) {
+  width: min(920px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px) !important;
+}
+
+:global(.trainerPhotoPreviewModal > [data-trainer-modal-header="true"]),
+:global(.trainerNextWorkoutPreview > [data-trainer-modal-header="true"]),
+:global(.trainerMessageModal > [data-trainer-modal-header="true"]) {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 68px 14px 18px;
+  border-bottom: 1px solid #efebf3;
+  background: #fbfafc;
+}
+
+:global(.trainerNextWorkoutPreview > [data-trainer-modal-header="true"]) {
+  display: grid;
+  align-content: center;
+  justify-content: stretch;
+  gap: 3px;
+}
+
+:global(.trainerNextWorkoutPreview > [data-trainer-modal-header="true"] small) {
+  color: var(--tn-purple-strong);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: .06em;
+}
+
+:global(.trainerNextWorkoutPreview > [data-trainer-modal-header="true"] h2) {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 21px;
+  line-height: 1.15;
+}
+
+:global(.trainerPhotoPreviewBody),
+:global(.trainerNextWorkoutPreviewBody),
+:global(.trainerMessageModalBody) {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px 18px;
+}
+
+:global(.trainerPhotoPreviewBody) {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+:global(.trainerPhotoPreviewImage) {
+  min-height: min(420px, 52dvh) !important;
+}
+
+:global(.trainerPhotoPreviewImage img) {
+  max-width: 100%;
+  max-height: 52dvh;
+  object-fit: contain;
+}
+
+:global(.trainerPhotoViewTabs) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+:global(.trainerPhotoViewTabs button),
+:global(.trainerNextPageTabs button),
+:global(.trainerNextClientTabs button) {
+  min-height: 44px;
+}
+
+/* The calm workspace preset used a compact 36px tab. Keep all switchers at
+   the shared touch-target size, including on desktop where this preset wins
+   on selector specificity. */
+:global(.trainerNextRoot) :global(.trainerPhotoViewTabs button),
+:global(.trainerNextRoot) :global(.trainerNextPageTabs button),
+:global(.trainerNextRoot) :global(.trainerNextClientTabs button) {
+  min-height: 44px !important;
+}
+
+/* Reminder presets stay compact through wrapping, never by shrinking their
+   pressable area below the app's 44px control standard. */
+:global(.trainerNextRoot) :global(.trainerNotificationOffsets label),
+:global(.trainerNextRoot) :global(.trainerReminderPeriod button) {
+  min-height: 44px !important;
+}
+
+:global(.trainerMessageModal > [data-trainer-modal-header="true"]) {
+  align-items: flex-start;
+}
+
+:global(.trainerMessageModalBody) {
+  align-content: start;
+  padding-bottom: 18px;
+}
+
+:global(.trainerMessageModalBody .trainerMessageModalSend) {
+  position: sticky;
+  bottom: 0;
+  min-height: 46px;
+  margin-top: 2px;
+}
+
+/* Day editors need more horizontal room than a confirmation sheet, while
+   still remaining a true inset modal on every screen size. */
+:global(.trainerProgramDayPanel[data-trainer-modal-surface="true"]),
+:global(.dayEditorModal[data-trainer-modal-surface="true"]) {
+  width: min(980px, calc(100vw - 48px)) !important;
+  max-width: calc(100vw - 48px) !important;
+  height: min(760px, calc(100dvh - 32px)) !important;
+  max-height: min(760px, calc(100dvh - 32px)) !important;
+  border-radius: 28px !important;
+}
+
+/* The day editor is a dense modal: keep its close, copy and delete controls
+   in reach while the exercise list itself scrolls below them. */
+:global(.trainerProgramDayPanelModal .trainerProgramDayModalHeader) {
+  z-index: 4 !important;
+  background: #fbfafc !important;
+}
+
+:global(.trainerProgramDayPanelModal .trainerProgramDayModalHeader button) {
+  width: var(--trainer-control-touch) !important;
+  min-width: var(--trainer-control-touch) !important;
+  height: var(--trainer-control-touch) !important;
+}
+
+:global(.trainerProgramDayPanelModal .trainerProgramBreadcrumb) {
+  position: sticky;
+  z-index: 3;
+  top: 58px;
+  background: #fbfafc;
+}
+
+:global(.trainerProgramDayPanelModal .trainerProgramBreadcrumb > aside button) {
+  width: var(--trainer-control-touch) !important;
+  min-width: var(--trainer-control-touch) !important;
+  height: var(--trainer-control-touch) !important;
+}
+
+/* Keep the client snapshot readable instead of forcing four tiny columns. */
+@media (max-width: 699px) {
+  /* `trainerNextRoot` is the mobile scroll container.  Its own padding is
+     what `scrollIntoView()` honours, so reserve the dock before focusing an
+     exercise rather than letting the fixed navigation cover the target. */
+  :global(.trainerNextRoot) {
+    scroll-padding-bottom: calc(var(--trainer-mobile-nav-clearance) + 16px);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextExerciseList) {
+    padding-bottom: calc(var(--trainer-mobile-nav-clearance) + 16px);
+  }
+
+  /* Two icon actions need separate touch targets.  Giving the grid an
+     explicit action column also stops it from painting over the exercise
+     name on 320 px phones. */
+  :global(.trainerNextRoot) :global(.trainerNextExerciseRow) {
+    min-height: 96px;
+    grid-template-columns: 44px 42px minmax(0, 1fr) 92px;
+    column-gap: 6px;
+  }
+
+  /* Reset the older two-column compact rule: all row children must occupy
+     their intended cells, otherwise the actions span the whole row and sit
+     on top of the exercise title. */
+  :global(.trainerNextRoot) :global(.trainerNextExerciseRow > .trainerNextExerciseMove) {
+    grid-column: 1;
+    grid-row: 1;
+    width: 44px;
+    min-width: 44px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 44px);
+    gap: 4px;
+    justify-items: center;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextExerciseRow > .trainerNextExerciseMove > svg) {
+    display: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextExerciseRow > .trainerNextExerciseMove button) {
+    width: 44px;
+    height: 44px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextExerciseRow > .trainerNextExerciseImage) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextExerciseName) {
+    grid-column: 3;
+    grid-row: 1;
+    min-height: 44px;
+    align-self: stretch;
+    scroll-margin-bottom: calc(var(--trainer-mobile-nav-clearance) + 16px);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextExerciseList .trainerNextExerciseActions) {
+    grid-column: 4;
+    grid-row: 1;
+    width: 92px;
+    min-width: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextExerciseList .trainerNextExerciseActions button) {
+    width: 44px;
+    height: 44px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextMobileHeader > button) {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerMessageFilters button) {
+    min-height: 44px;
+  }
+
+  :global(.trainerProgramDayPanel[data-trainer-modal-surface="true"]),
+  :global(.dayEditorModal[data-trainer-modal-surface="true"]) {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    height: calc(100dvh - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    border-radius: 24px !important;
+  }
+
+  :global(.trainerProgramDayPanelModal .trainerProgramBreadcrumb) {
+    top: 56px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientContextActions) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 10px 0 14px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientContextActions button) {
+    min-width: 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border: 1px solid #e4deec;
+    border-radius: 13px;
+    color: var(--tn-muted);
+    background: #fff;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 720;
+    line-height: 1.15;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientContextActions button.active) {
+    border-color: #d8ccec;
+    color: var(--tn-purple-strong);
+    background: var(--tn-purple-soft);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary article) {
+    min-width: 0;
+    min-height: 104px;
+    display: grid;
+    align-content: start;
+    gap: 5px;
+    padding: 12px;
+  }
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article.attention),
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article:last-child:nth-child(3)) {
+  grid-column: 1 / -1;
+}
+
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary strong),
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary small),
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary p) {
+    min-width: 0;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextLibraryActions),
+  :global(.trainerNextRoot) :global(.trainerNextClientSearchRow) {
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 359px) {
+  :global(.trainerNextRoot) :global(.trainerClientWorkSummary) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerPhotoPreviewBody),
+  :global(.trainerNextWorkoutPreviewBody),
+  :global(.trainerMessageModalBody) {
+    padding: 12px;
+  }
+
+  :global(.trainerPhotoViewTabs button) {
+    min-height: 42px;
+    padding: 0 4px;
+    font-size: 11px;
+  }
+}
+
+/* Keep the overview balanced even at the narrowest phone width. */
+:global(.trainerNextRoot) :global(.trainerNextClientName) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 6px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientName h1) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientStatusRow) {
+  display: flex;
+  grid-column: 1;
+  grid-row: 2;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientSubscriptionStatus) {
+  display: inline-flex;
+  flex: 0 1 auto;
+  width: fit-content;
+  max-width: min(100%, 280px);
+  min-width: 0;
+  min-height: 32px;
+  align-items: center;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--tn-green);
+  background: var(--tn-green-soft);
+  font-size: 11px;
+  font-weight: 730;
+  line-height: 1.18;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientSubscriptionStatus:hover),
+:global(.trainerNextRoot) :global(.trainerNextClientSubscriptionStatus:focus-visible) {
+  outline: 2px solid color-mix(in srgb, currentColor 44%, transparent);
+  outline-offset: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientStatusRow .trainerNextClientTaskButton) {
+  grid-column: auto;
+  grid-row: auto;
+  flex: 0 1 154px;
+  min-width: 118px;
+  margin-left: 0;
+  align-self: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article.attention),
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article:last-child:nth-child(3)) {
+  grid-column: 1 / -1;
+  min-height: 104px;
+}
+
+:global(.trainerNextRoot) :global(.trainerClientWorkSummary article p) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Client detail finishing pass.  Older workspace layers share these class
+   names, therefore this final, page-scoped layer keeps the four client tabs
+   on one calm spacing and surface system without affecting other routes. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage) {
+  width: min(100%, 1180px);
+  min-height: auto;
+  margin-inline: auto;
+  padding: 24px 28px 40px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientBackRow) {
+  min-height: 40px;
+  margin-bottom: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientBackRow > button),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientBackRow > div > button) {
+  min-height: 40px;
+  border-radius: 12px;
+  box-shadow: none;
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader) {
+  grid-template-columns: 52px minmax(0, 1fr);
+  min-height: 0;
+  gap: 13px;
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid #efebf3;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader .trainerNextAvatar.large) {
+  width: 52px;
+  height: 52px;
+  flex-basis: 52px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientName) {
+  row-gap: 5px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader h1) {
+  font-size: 21px;
+  letter-spacing: -0.35px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader p),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader > div > strong) {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientSubscriptionStatus) {
+  min-height: 28px;
+  padding: 5px 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTaskButton) {
+  min-height: 38px;
+  padding: 6px 11px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs) {
+  width: fit-content;
+  max-width: 100%;
+  gap: 3px;
+  margin: 0 0 14px;
+  padding: 4px;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button) {
+  min-height: 40px !important;
+  padding: 0 13px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button::after) {
+  display: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button:focus-visible) {
+  outline: 2px solid rgba(143, 122, 200, 0.48);
+  outline-offset: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article) {
+  min-height: 84px;
+  padding: 13px 14px;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article:last-child:nth-child(3)),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article.attention) {
+  grid-column: 1 / -1;
+  min-height: 76px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary strong) {
+  font-size: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientOverview),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientSide),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutPlan),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientBodyProgress),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextNutritionUnified) {
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextResultCard),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextActivityCard) {
+  padding: 16px;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextResultCard h3),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextActivityCard h3) {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextResultCard > div),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextActivityCard > div) {
+  min-height: 36px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextSimplePanel),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionUnifiedSection),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutSchedulePlanner),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutHistoryBlock),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutReviewPanel) {
+  padding: 16px;
+  border: 1px solid #efebf3;
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextPanelTitle),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientBlockHeading),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutSchedulePlanner > header),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutHistoryBlock > header),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutReviewPanel > header) {
+  margin-bottom: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextPanelTitle h2),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientBlockHeading h2),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutSchedulePlanner > header h3),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutHistoryBlock > header h3),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutReviewPanel > header h3) {
+  font-size: 18px;
+}
+
+/* Workout plan and calendar */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutSchedulePlanner) {
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutScheduleBody),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutScheduleCalendar) {
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutScheduleCalendar) {
+  padding: 12px;
+  border-radius: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutScheduleGrid button) {
+  min-height: 44px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutScheduleFooter) {
+  gap: 10px;
+  padding-top: 10px;
+}
+
+/* Nutrition keeps one visible surface per section instead of nested cards. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextNutritionUnified > .trainerNutritionQuickNav) {
+  width: fit-content;
+  max-width: 100%;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextNutritionUnified > .trainerNutritionQuickNav button) {
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage #trainerNutritionPlan.trainerNutritionUnifiedSection) {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCurrentPlan) {
+  padding: 16px;
+  border: 1px solid #efebf3;
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionPeriod) {
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionMetricGrid) {
+  gap: 8px;
+  margin-bottom: 10px;
+  grid-auto-rows: 1fr;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionMetricGrid article) {
+  min-height: 76px;
+  padding: 12px;
+  border-radius: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionAnalyticsMain) {
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionAnalyticsMain .trainerClientAnalyticsCard) {
+  min-height: 250px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart) {
+  min-height: 104px;
+}
+
+/* Photos and measurements use the same compact panel grammar. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientBodyProgress .trainerNextSimplePanel) {
+  margin-top: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs) {
+  gap: 4px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button) {
+  min-height: 38px;
+  padding: 0 11px;
+  border-radius: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoComparePanel) {
+  grid-template-columns: minmax(0, 1fr) 154px 154px;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextPhotoGrid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 260px));
+  justify-content: start;
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextPhotoGrid figure),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoCompareGrid figure) {
+  gap: 6px;
+  padding: 6px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextPhotoGrid figure button),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextPhotoGrid figure img),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoCompareGrid figure img) {
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoMediaPlaceholder) {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  place-content: center;
+  justify-items: center;
+  gap: 7px;
+  border-radius: 10px;
+  color: #8a8493;
+  background: #f5f2f7;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoMediaPlaceholder svg) {
+  color: var(--tn-purple);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoMediaPlaceholder small) {
+  font-size: 11px;
+}
+
+/* The preview sheet has a much wider content area than the gallery. Keep an
+   unavailable angle as a compact portrait placeholder instead of allowing it
+   to expand the dialog beyond its image viewport. */
+:global(.trainerNextRoot) :global(.trainerPhotoPreviewImage .trainerPhotoMediaPlaceholder) {
+  width: auto;
+  height: min(52dvh, 520px);
+  max-width: 100%;
+  max-height: 52dvh;
+  justify-self: center;
+  align-self: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed > div) {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  background: #fbfafc;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed article) {
+  min-height: 72px;
+  padding: 12px;
+  border: 0;
+  border-right: 1px solid #efebf3;
+  border-radius: 0;
+  background: transparent;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed article:last-child) {
+  border-right: 0;
+}
+
+@media (min-width: 700px) and (max-width: 1099px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage) {
+    padding: 20px 20px 32px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionAnalyticsMain) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionMetricGrid),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed > div) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed article:nth-child(2)) {
+    border-right: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoComparePanel) {
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 0.48fr) minmax(140px, 0.48fr);
+  }
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage) {
+    padding: 14px 14px calc(92px + env(safe-area-inset-bottom));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientBackRow) {
+    margin-bottom: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader) {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 11px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader .trainerNextAvatar.large) {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextNutritionUnified > .trainerNutritionQuickNav) {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextNutritionUnified > .trainerNutritionQuickNav button) {
+    flex: 1 0 auto;
+    min-height: 42px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientSide),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionMetricGrid) {
+    gap: 8px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article) {
+    min-height: 78px;
+    padding: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextSimplePanel),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionUnifiedSection),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerWorkoutSchedulePlanner),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutHistoryBlock),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutReviewPanel) {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoComparePanel) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoComparePanel > div) {
+    grid-column: 1 / -1;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextPhotoGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed > div) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed article) {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid #efebf3;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed article:last-child) {
+    border-bottom: 0;
+  }
+}
+
+/* Final visual states for the client profile: one calm lavender system across tabs and controls. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button.active),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button[aria-pressed="true"]) {
+  border-color: #8f7ac8;
+  background: #8f7ac8;
+  color: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionPeriodButtons button.active),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionPeriodButtons button[aria-pressed="true"]),
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button.active),
+:global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button[aria-pressed="true"]) {
+  border-color: #8f7ac8;
+  background: #eee8fa;
+  color: #806bb6;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(124px, 1fr));
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button) {
+  min-width: 124px;
+  min-height: 40px;
+  border-color: #d8cdef;
+  background: #ffffff;
+  color: #806bb6;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button.active),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button[aria-pressed="true"]) {
+  border-color: #8f7ac8;
+  background: #eee8fa;
+  box-shadow: inset 0 0 0 1px rgba(143, 122, 200, 0.12);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTaskButton) {
+  align-items: center;
+  line-height: 1.12;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTaskButton > span) {
+  line-height: 1.12;
+  text-align: left;
+  white-space: normal;
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button) {
+    min-width: 0;
+    padding: 0 8px;
+  }
+}
+
+/* Shared two-way sub-navigation for client overview, nutrition and body progress. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientOverview) {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button) {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: #6f6977;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 740;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button.active),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button[aria-pressed="true"]) {
+  border-color: #d8cdef;
+  background: #eee8fa;
+  color: #806bb6;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button:focus-visible) {
+  outline: 2px solid rgba(143, 122, 200, 0.48);
+  outline-offset: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarTabs) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded) {
+  margin: 0;
+  border-color: #e5dfeb;
+  background: #f5f2f7;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded button) {
+  min-height: 54px;
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded button.active),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded button[aria-pressed="true"]) {
+  border-color: #d8cdef;
+  background: #eee8fa;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientNotifications) {
+  display: grid;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel) {
+  order: -1;
+  margin: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:first-child > span),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor > span),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription header span) {
+  display: block;
+  margin-bottom: 4px;
+  color: #806bb6;
+  font-size: 11px;
+  font-weight: 780;
+  letter-spacing: .04em;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:first-child > strong) {
+  display: block;
+  color: #28262e;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:first-child > p) {
+  margin: 5px 0 0;
+  color: #7b7682;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Calendar month navigation is a primary control, not a tiny utility. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:last-child) {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: min(100%, 536px);
+  justify-content: space-between;
+  gap: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:last-child > button) {
+  display: grid;
+  width: 52px;
+  height: 44px;
+  flex: 0 0 52px;
+  place-items: center;
+  border: 1px solid #ded6eb;
+  border-radius: 14px;
+  color: #806bb6;
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:last-child > b) {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: #28262e;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.subscriptionRange) {
+  border-color: #d8cdef;
+  background: #f4f0fb;
+  color: #806bb6;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionStart),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionEnd) {
+  border-color: #8f7ac8;
+  background: #8f7ac8;
+  color: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionStart b),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionEnd b) {
+  color: inherit;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerSubscriptionCalendarDayLabel) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerSubscriptionCalendarRangeMark) {
+  font-size: 0.78em;
+  font-weight: 800;
+  line-height: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button:disabled) {
+  cursor: default;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.subscription) {
+  border-color: #8f7ac8;
+  background: #eee8fa;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.plannedWorkout) {
+  border-color: #9d89d3;
+  background: #e4daf6;
+  color: #6e59a9;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.pastWorkout) {
+  border-color: #aab3c7;
+  background: #aab3c7;
+  color: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.pastWorkout .trainerNotificationDayBadges i) {
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.plannedWorkout) {
+  border-color: #9d89d3;
+  background: #e4daf6;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.pastWorkout) {
+  border-color: #aab3c7;
+  background: #aab3c7;
+}
+
+/* Calendar legends are reference information, not secondary helper text.
+   Keep them quiet, but give the labels enough contrast and size to be
+   readable at a glance under the schedule. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend) {
+  gap: 12px 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend span) {
+  gap: 7px;
+  color: #5f596b;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i) {
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(95, 89, 107, 0.18);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields) {
+  display: grid;
+  gap: 12px;
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid #e9e4ee;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  color: #7b7682;
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange b) {
+  color: #28262e;
+  font-weight: 720;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange i) {
+  margin-left: auto;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 720;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange i.positive) {
+  color: #297b50;
+  background: #e8f6ee;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange i.warning) {
+  color: #9a6515;
+  background: #fff4df;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange i.negative) {
+  color: #b04c55;
+  background: #fbe9eb;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange i.neutral) {
+  color: #625d6a;
+  background: #f0edf2;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionInputs) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionInputs label) {
+  display: grid;
+  gap: 7px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionInputs small) {
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionInputs input) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 13px;
+  border: 1px solid #e5dfeb;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #28262e;
+  font: inherit;
+  font-size: 16px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > span) {
+  color: #625d6a;
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > span b) {
+  color: #28262e;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > label) {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #625d6a;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > label small) {
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > button) {
+  margin-left: auto;
+}
+
+/* Subscription uses the same calendar shell as the workout schedule.  A
+   saved subscription is deliberately view-only: the purple range is only a
+   selection affordance while a trainer is changing the period. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified > header > strong.positive) {
+  border-color: #d5e8dd;
+  color: #337554;
+  background: #f1f9f4;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified > header > strong.warning) {
+  border-color: #f0dfba;
+  color: #9a6515;
+  background: #fff8ea;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified > header > strong.negative) {
+  border-color: #f0d9dd;
+  color: #b04c55;
+  background: #fff7f8;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified > header > strong.neutral) {
+  border-color: #e2dfe6;
+  color: #625d6a;
+  background: #f5f3f6;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified .trainerWorkoutScheduleCalendar) {
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified .trainerWorkoutScheduleGrid button) {
+  min-height: 50px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified .trainerWorkoutScheduleGrid button.pastWorkout:disabled) {
+  border-color: #aab3c7;
+  color: #ffffff;
+  background: #aab3c7;
+  cursor: default;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified .trainerWorkoutScheduleGrid button.pastWorkout:disabled .trainerNotificationDayBadges i) {
+  color: #667088;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionSummary) {
+  margin-top: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionSummary footer > span + span) {
+  padding-left: 10px;
+  border-left: 1px solid #e9e4ee;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionEdit),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionCancel) {
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid #d9cdec;
+  border-radius: 11px;
+  color: #806bb6;
+  background: #ffffff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionCancel) {
+  margin-left: auto;
+  border-color: #e5dfeb;
+  color: #625d6a;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > .trainerCalendarSubscriptionEdit) {
+  margin-left: auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription) {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #efebf3;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor h2),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription h2) {
+  margin: 0;
+  color: #28262e;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor p),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription header p) {
+  margin: -5px 0 0;
+  color: #7b7682;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor > strong) {
+  color: #806bb6;
+  font-size: 14px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor > small) {
+  color: #7b7682;
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription > header) {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription > header > i) {
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionGrid) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionGrid label) {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionGrid small) {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 680;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionGrid input) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid #e5dfeb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #28262e;
+  font: inherit;
+  font-size: 13px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionSummary) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 11px;
+  background: #f5f2f7;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionSummary strong) {
+  color: #28262e;
+  font-size: 13px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionSummary label) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #5f5967;
+  font-size: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription footer) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextNutritionUnified > .trainerClientSectionTabs) {
+  grid-column: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiarySection) {
+  display: grid;
+  gap: 14px;
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs) {
+    gap: 4px;
+    padding: 4px;
+    border-radius: 14px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button) {
+    min-height: 40px;
+    padding: 0 8px;
+    font-size: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded button) {
+    min-height: 44px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionGrid) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionSummary) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription footer > button) {
+    width: 100%;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionInputs) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange i) {
+    margin-left: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > button) {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* Nutrition history always stays on one time axis.  The number of columns is
+   set from the selected period, so long periods become denser rather than
+   wrapping into a second visual row. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart) {
+  --nutrition-chart-days: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--nutrition-chart-days), minmax(0, 1fr));
+  align-items: end;
+  column-gap: clamp(3px, 0.65vw, 8px);
+  min-height: 212px;
+  margin-top: 0;
+  padding: 12px 10px 10px;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart > div) {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: minmax(126px, 1fr) 18px 15px;
+  align-items: end;
+  gap: 4px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart > div > span) {
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  min-height: 126px;
+  padding: 0 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart > div > span > i) {
+  min-width: 0;
+  border-radius: 8px 8px 2px 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart b),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart small) {
+  display: block;
+  min-width: 0;
+  font-size: clamp(9px, 0.9vw, 12px);
+  line-height: 1.15;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="compact"] > div) {
+  grid-template-rows: minmax(126px, 1fr) 14px 13px;
+  gap: 3px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="compact"] b),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="compact"] small) {
+  font-size: clamp(8px, 0.75vw, 10px);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="dense"] > div) {
+  grid-template-rows: minmax(126px, 1fr) 13px;
+  gap: 3px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="dense"] b) {
+  display: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="dense"] small) {
+  font-size: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="dense"] > div:nth-child(3n + 1) small) {
+  font-size: clamp(8px, 0.8vw, 10px);
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart) {
+    min-height: 168px;
+    column-gap: 3px;
+    padding: 9px 7px 8px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart > div) {
+    grid-template-rows: minmax(88px, 1fr) 15px 12px;
+    gap: 3px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart > div > span) {
+    min-height: 88px;
+    padding: 0 1px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="compact"] > div) {
+    grid-template-rows: minmax(88px, 1fr) 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart[data-density="compact"] b) {
+    display: none;
+  }
+}
+
+/* Keep all client actions where their context is visible: inside the profile
+   card, rather than split between the profile and the top toolbar. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader) {
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions) {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  align-self: start;
+  justify-self: end;
+  width: min(610px, 100%);
+  margin-top: 8px;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions > button) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  height: 48px;
+  padding: 6px 9px;
+  border-radius: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions .trainerNextClientTaskButton) {
+  grid-column: auto;
+  grid-row: auto;
+  margin: 0;
+  gap: 7px;
+  text-align: left;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions .trainerNextClientTaskButton > span) {
+  line-height: 1.05;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderUtilityButton) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border: 1px solid #ded6eb;
+  border-radius: 12px;
+  color: #5f5968;
+  background: #ffffff;
+  box-shadow: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderUtilityButton:hover) {
+  border-color: #d6caee;
+  color: #806bb6;
+  background: #f7f3fc;
+}
+
+@media (max-width: 899px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader) {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions) {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    width: 100%;
+    justify-self: stretch;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions > button) {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader) {
+    grid-template-columns: 46px minmax(0, 1fr);
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions) {
+    gap: 6px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderActions > button) {
+    min-height: 42px;
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderUtilityButton span) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Subscription badge names the subscription itself and uses the matching
+   state colour instead of the generic client "active" indicator. */
+:global(.trainerNextRoot) :global(.trainerNextClientSubscriptionStatus.is-inactive) {
+  color: #ad5662;
+  background: #fceff0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientSubscriptionStatus.is-ending) {
+  color: #9b6b1f;
+  background: #fff4dd;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientSubscriptionStatus.is-frozen) {
+  color: #65606d;
+  background: #f0eef3;
+}
+
+/* Variant A: one calm client workspace. Primary navigation spans the client
+   card on larger screens, while frequent actions stay compact in the header.
+   Secondary navigation is rendered by the active workspace only. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA) {
+  gap: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActions) {
+  grid-template-columns: minmax(140px, 1.2fr) repeat(2, minmax(120px, 1fr));
+  width: min(480px, 100%);
+}
+
+@media (min-width: 900px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientTabs) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+    margin: 0;
+    gap: 4px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientTabs > button) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 899px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActions) {
+    grid-template-columns: minmax(138px, 1.25fr) repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActions) {
+    grid-template-columns: minmax(124px, 1.25fr) repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+}

@@ -1,11 +1,13 @@
 import {
   Bell,
   CalendarDays,
-  Camera,
   ChevronRight,
   ClipboardList,
+  Dumbbell,
   LogOut,
   MessageCircle,
+  Ruler,
+  Scale,
   UserRound,
   Utensils
 } from "lucide-react";
@@ -35,13 +37,17 @@ export default function ProfileCabinetActionGrid({
   showClientOnlyActions,
   latestPhotoText,
   latestMeasurementText,
+  weightText,
   nutritionText,
   historyText,
   onOpenBodyControl,
+  onOpenWeight = () => {},
   onOpenNutrition,
   onOpenCalendar,
   onOpenAccount,
   onOpenQuestionnaire,
+  workoutModeLabel = "Индивидуальный план от тренера",
+  onOpenWorkoutMode = () => {},
   onOpenNotifications,
   onOpenFeedback,
   onLogout
@@ -74,10 +80,12 @@ export default function ProfileCabinetActionGrid({
         <section className={styles.groupSection} aria-label="Здоровье и план">
           <h2>ЗДОРОВЬЕ И ПЛАН</h2>
           <div className={styles.group}>
-            <ActionRow kind="body-control" icon={Camera} title="Фото и замеры" note={bodyControlNote} onClick={onOpenBodyControl} />
-            <ActionRow kind="nutrition" icon={Utensils} title="КБЖУ" note={nutritionText} onClick={onOpenNutrition} />
-            <ActionRow kind="workout-journal" icon={CalendarDays} title="Календарь и история" note={historyText} onClick={onOpenCalendar} />
+            <ActionRow kind="weight" icon={Scale} title="Вес" note={weightText} onClick={onOpenWeight} />
+            <ActionRow kind="body-control" icon={Ruler} title="Замеры тела и фото" note={bodyControlNote} onClick={onOpenBodyControl} />
+            <ActionRow kind="nutrition" icon={Utensils} title="Цели питания" note={nutritionText} onClick={onOpenNutrition} />
+            <ActionRow kind="workout-journal" icon={CalendarDays} title="Расписание и история" note={historyText} onClick={onOpenCalendar} />
             <ActionRow kind="questionnaire" icon={ClipboardList} title="Анкета" note="Цель, возраст и активность" onClick={onOpenQuestionnaire} />
+            <ActionRow kind="workout-mode" icon={Dumbbell} title="Режим тренировок" note={workoutModeLabel} onClick={onOpenWorkoutMode} />
           </div>
         </section>
       )}

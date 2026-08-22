@@ -5,6 +5,8 @@ import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/tr
 
 function TrainerE2EHarness({ ProgramManagerView }) {
   const APP_VERSION = appConfig?.APP_VERSION || "v0";
+  const includeProgramAssignmentHistory = new URLSearchParams(window.location.search).get("programAssignments") === "1";
+  const includeBasicWorkoutHistory = new URLSearchParams(window.location.search).get("basicHistory") === "1";
   const [mode, setMode] = useState("dashboard");
   const [activeSection, setActiveSection] = useState("dashboard");
   const [activeClientTab, setActiveClientTab] = useState("overview");
@@ -22,6 +24,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   const programImportInputRef = useRef(null);
   const [selectedClient, setSelectedClient] = useState({
     id: "client_e2e",
+    role: "client",
     name: "Germes",
     email: "germes@example.com",
     goalDescription: "Рекомпозиция",
@@ -29,13 +32,30 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     assignedProgramName: "tren+",
     assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
     assignedWorkoutCount: 4,
+    firstSetupCompleted: true,
+    trainerSetupChecklist: {
+      completedSteps: {
+        subscription: true,
+        program: true,
+        nutrition: true,
+        notifications: true
+      },
+      completedAt: "2026-06-10T10:00:00.000Z"
+    },
     workoutCalendar: {
       enabled: true,
       scheduledDates: ["2026-06-15", "2026-06-18", "2026-07-20"],
       plannedWorkouts: [
         { workoutId: "e2e_day_1", order: 1, date: "2026-06-15", status: "completed" },
         { workoutId: "e2e_day_2", order: 2, date: "2026-06-18", status: "missed" },
-        { workoutId: "e2e_day_3", order: 3, date: "2026-07-20", status: "planned" }
+        { workoutId: "e2e_day_3", order: 3, date: "2026-07-20", status: "planned" },
+        ...(includeBasicWorkoutHistory ? [{
+          workoutId: "e2e_basic_day_1",
+          order: 4,
+          date: "2026-06-04",
+          status: "completed",
+          assignedProgramUpdatedAt: "basic:client-plan"
+        }] : [])
       ],
       reminderEnabled: true,
       reminderOffsetsHours: [24, 3],
@@ -61,7 +81,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramId: "program_tren_plus",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
-        { name: "Жим ногами", sets: [{ reps: 12, weight: 90 }, { reps: 12, weight: 90 }] }
+        { name: "Жим ногами", sets: [{ reps: 12, weight: 90 }, { reps: 12, weight: 90 }] },
+        { name: "Тяга нижнего блока", sets: [{ reps: 12, weight: 35 }] }
       ]
     },
     {
@@ -76,7 +97,29 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       exercises: [
         { name: "Жим ногами", sets: [{ reps: 12, weight: 70 }, { reps: 12, weight: 70 }] }
       ]
-    }
+    },
+    ...(new URLSearchParams(window.location.search).get("completedHistoryVersionMismatch") === "1" ? [{
+      id: "history_completed_id_mismatch",
+      workoutId: "e2e_day_3",
+      workoutName: "Тренировка 3",
+      date: "2026-07-08T18:00:00.000Z",
+      completedAt: "2026-07-08T18:00:00.000Z",
+      // This represents a completion written before an assignment marker was
+      // refreshed. The immutable workoutId remains the source of truth.
+      assignedProgramUpdatedAt: "previous-assignment",
+      exercises: [{ name: "Жим ногами", sets: [{ reps: 12, weight: 70 }] }]
+    }] : []),
+    ...(includeBasicWorkoutHistory ? [{
+      id: "history_basic_1",
+      workoutId: "e2e_basic_day_1",
+      workoutName: "Базовая тренировка",
+      date: "2026-05-20T18:00:00.000Z",
+      completedAt: "2026-05-20T18:00:00.000Z",
+      source: "basic",
+      assignedProgramId: "basic_client_plan",
+      assignedProgramUpdatedAt: "basic:client-plan",
+      exercises: [{ name: "Приседания", sets: [{ reps: 10, weight: 40 }] }]
+    }] : [])
   ];
   const measurements = [
     { id: "m2", date: "2026-06-16", weight: 88.8, values: { weight: 88.8, belly: 88, chest: 104 } },
@@ -93,6 +136,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       scheduledDate: "2026-06-15",
       assignedProgramId: "program_tren_plus",
       assignedProgramName: "tren+",
+      assignedProgramAddedAt: "2026-06-10T10:00:00.000Z",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
         { id: "e1", name: "Жим ногами", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "90" }, { reps: "12", weight: "90" }] },
@@ -105,6 +149,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       scheduledDate: "2026-06-18",
       assignedProgramId: "program_tren_plus",
       assignedProgramName: "tren+",
+      assignedProgramAddedAt: "2026-06-10T10:00:00.000Z",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
         { id: "e3", name: "Жим лёжа с гантелями", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "20" }] }
@@ -117,12 +162,66 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       status: "planned",
       assignedProgramId: "program_tren_plus",
       assignedProgramName: "tren+",
+      assignedProgramAddedAt: "2026-06-10T10:00:00.000Z",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
-        { id: "e4", name: "Жим ногами", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "70" }, { reps: "12", weight: "70" }] }
+        { name: "Жим ногами", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "70" }, { reps: "12", weight: "70" }] }
       ]
-    }
+    },
+    ...(includeProgramAssignmentHistory ? [{
+      id: "e2e_future_day_1",
+      name: "Будущая тренировка",
+      scheduledDate: "2026-08-03",
+      status: "planned",
+      assignedProgramId: "program_support",
+      assignedProgramName: "Поддержка",
+      assignedProgramAddedAt: "2026-07-25T10:00:00.000Z",
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
+      exercises: [
+        { id: "e_future_1", name: "Тяга верхнего блока", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "30" }] }
+      ]
+    }] : [])
   ]);
+  const archivedWorkouts = [
+    {
+      id: "e2e_archived_day_1",
+      name: "Тренировка 1",
+      scheduledDate: "2026-06-08",
+      status: "completed",
+      assignedProgramId: "program_previous",
+      assignedProgramName: "Предыдущая программа",
+      assignedProgramAddedAt: "2026-05-01T10:00:00.000Z",
+      assignedProgramUpdatedAt: "2026-05-01T10:00:00.000Z",
+      exercises: [
+        { id: "archive_e1", name: "Разгибание ног", rest: "90 сек", sets: [{ reps: "12", weight: "35" }] }
+      ]
+    },
+    {
+      id: "e2e_archived_day_2",
+      name: "Тренировка 2",
+      scheduledDate: "2026-06-11",
+      status: "completed",
+      assignedProgramId: "program_previous",
+      assignedProgramName: "Предыдущая программа",
+      assignedProgramAddedAt: "2026-05-01T10:00:00.000Z",
+      assignedProgramUpdatedAt: "2026-05-01T10:00:00.000Z",
+      exercises: [
+        { id: "archive_e2", name: "Тяга верхнего блока", rest: "90 сек", sets: [{ reps: "12", weight: "30" }] }
+      ]
+    },
+    ...(includeBasicWorkoutHistory ? [{
+      id: "e2e_basic_day_1",
+      name: "Базовая тренировка",
+      scheduledDate: "2026-05-20",
+      status: "completed",
+      source: "basic",
+      assignedProgramId: "basic_client_plan",
+      assignedProgramName: "Базовый план клиента",
+      assignedProgramAddedAt: "2026-05-10T10:00:00.000Z",
+      assignedProgramUpdatedAt: "basic:client-plan",
+      exercises: [{ id: "basic_e1", name: "Приседания", rest: "90 сек", sets: [{ reps: "10", weight: "40" }] }]
+    }] : [])
+  ];
   const clientSummaries = {
     client_e2e: {
       assignedProgramId: "program_tren_plus",
@@ -191,6 +290,29 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       ? { ...workout, exercises: (workout.exercises || []).filter((exercise) => exercise.id !== sourceExercise.id) }
       : workout));
 
+    return true;
+  }
+
+  function removeHarnessExercise(workoutId, exerciseId, exerciseIndex) {
+    const hasExerciseId = exerciseId !== undefined && exerciseId !== null && String(exerciseId).trim() !== "";
+    const hasExerciseIndex = Number.isInteger(Number(exerciseIndex)) && Number(exerciseIndex) >= 0;
+    if (!workoutId || (!hasExerciseId && !hasExerciseIndex)) return false;
+
+    setWorkouts((current) => current.map((workout) => workout.id === workoutId
+      ? {
+          ...workout,
+          exercises: (workout.exercises || []).filter((exercise, index) => (
+            hasExerciseId ? exercise.id !== exerciseId : index !== Number(exerciseIndex)
+          ))
+        }
+      : workout));
+
+    return true;
+  }
+
+  function removeHarnessDay(workoutId) {
+    if (!workoutId) return false;
+    setWorkouts((current) => current.filter((workout) => workout.id !== workoutId));
     return true;
   }
 
@@ -322,6 +444,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         setActiveSection("clients");
       }}
       onCreateClient={() => {}}
+      onCreateTask={() => {}}
       createClientState={{
         open: false,
         name: "",
@@ -377,6 +500,13 @@ function TrainerE2EHarness({ ProgramManagerView }) {
             });
         return true;
       }}
+      onSaveClientSetupProgress={(step, _client, checklist) => ({
+        ...checklist,
+        completedSteps: {
+          ...(checklist?.completedSteps || {}),
+          [step]: true
+        }
+      })}
       onTestNotification={() => true}
       onConnectTelegram={() => {}}
       onOpenTelegramChat={() => {}}
@@ -429,28 +559,96 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         return true;
       }}
       workouts={workouts}
+      archivedWorkouts={archivedWorkouts}
       exerciseLibrary={workouts.flatMap((workout) => workout.exercises)}
       programTemplates={programTemplates}
       selectedProgramId={selectedProgramId}
       onSelectProgram={setSelectedProgramId}
-      onAssignProgram={() => true}
+      onAssignProgram={() => {
+        const assignedAt = new Date().toISOString();
+        const template = programTemplates.find((item) => item.id === selectedProgramId) || programTemplates[0];
+        const assignmentWorkouts = [1, 2, 3].map((day) => ({
+          id: `assigned_${Date.now()}_${day}`,
+          name: `Тренировка ${day}`,
+          status: "planned",
+          assignedProgramId: template?.id || "program_tren_plus",
+          assignedProgramName: template?.name || "Новая программа",
+          assignedProgramAddedAt: assignedAt,
+          assignedProgramUpdatedAt: assignedAt,
+          exercises: [{
+            id: `assigned_exercise_${day}`,
+            name: "Жим ногами",
+            requiresWeight: true,
+            rest: "90 сек",
+            sets: [{ reps: "12", weight: "50" }]
+          }]
+        }));
+        setWorkouts((current) => [...current, ...assignmentWorkouts]);
+        return {
+          assignmentKey: `time:${assignedAt}`,
+          assignedAt,
+          programId: template?.id || "program_tren_plus"
+        };
+      }}
+      onArchiveProgramAssignment={(assignment) => {
+        setWorkouts((current) => current.filter((workout) => (
+          workout.assignedProgramAddedAt !== assignment.assignedAt ||
+          workout.assignedProgramId !== assignment.programId
+        )));
+        return true;
+      }}
+      onDeleteProgramAssignment={(assignment) => {
+        setWorkouts((current) => current.filter((workout) => (
+          workout.assignedProgramAddedAt !== assignment.assignedAt ||
+          workout.assignedProgramId !== assignment.programId
+        )));
+        return true;
+      }}
       onOpenProgramManager={() => setProgramManagerOpen(true)}
       activeWorkoutTab={activeWorkoutTab}
       onWorkoutTabChange={setActiveWorkoutTab}
-      onSaveWorkoutSchedule={(dates) => {
+      onSaveWorkoutSchedule={(dates, assignmentWorkouts = []) => {
+        const assignmentWorkoutIds = new Set(assignmentWorkouts.map((workout) => workout.id));
         setSelectedClient((current) => ({
           ...current,
           workoutCalendar: {
             ...(current.workoutCalendar || {}),
-            scheduledDates: dates,
-            monthlyTrainingDates: dates,
+            scheduledDates: [...new Set([...(current.workoutCalendar?.scheduledDates || []), ...dates])].sort(),
+            monthlyTrainingDates: [...new Set([...(current.workoutCalendar?.monthlyTrainingDates || []), ...dates])].sort(),
+            plannedWorkouts: [
+              ...(current.workoutCalendar?.plannedWorkouts || []).filter((item) => !assignmentWorkoutIds.has(item.workoutId)),
+              ...assignmentWorkouts.map((workout, index) => ({
+                workoutId: workout.id,
+                order: index + 1,
+                date: dates[index],
+                status: "planned",
+                assignedProgramAddedAt: workout.assignedProgramAddedAt,
+                assignedProgramUpdatedAt: workout.assignedProgramUpdatedAt
+              }))
+            ],
             updatedAt: new Date().toISOString()
           }
+        }));
+        setWorkouts((current) => current.map((workout) => {
+          const index = assignmentWorkouts.findIndex((item) => item.id === workout.id);
+          return index >= 0 ? {
+            ...workout,
+            scheduledDate: dates[index],
+            plannedDate: dates[index],
+            scheduleOrder: index + 1,
+            status: "planned"
+          } : workout;
         }));
         return true;
       }}
       programStatus=""
-      onUpdateWorkout={() => {}}
+      onUpdateWorkout={(workoutId, patch) => {
+        if (!workoutId || !patch || typeof patch !== "object") return false;
+        setWorkouts((current) => current.map((workout) => workout.id === workoutId
+          ? { ...workout, ...patch }
+          : workout));
+        return true;
+      }}
       onUpdateExercise={() => {}}
       onSaveExerciseProgressAdjustment={({ workoutId, exerciseId, patch }) => {
         setWorkouts((current) => current.map((workout) => workout.id === workoutId
@@ -469,13 +667,13 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       onAddExercise={addHarnessExercise}
       onUpdateLibraryExercise={updateHarnessLibraryExercise}
       onRemoveLibraryExercise={removeHarnessLibraryExercise}
-      onRemoveExercise={() => {}}
+      onRemoveExercise={removeHarnessExercise}
       onDuplicateExercise={() => {}}
       onMoveExercise={() => {}}
       onUploadExerciseVideo={() => {}}
       onAddDay={() => {}}
       onDuplicateDay={() => {}}
-      onRemoveDay={() => {}}
+      onRemoveDay={removeHarnessDay}
       onSaveWorkouts={() => true}
       onLogout={() => {}}
     />

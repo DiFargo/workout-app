@@ -14,6 +14,7 @@
   color: #28262e;
   background: #f7f6f8;
   font-family: var(--font-family-compact-ui);
+  scroll-padding-block-end: calc(148px + env(safe-area-inset-bottom, 0px));
   scrollbar-width: none;
 }
 
@@ -27,7 +28,7 @@
   /* This padding is inside the fixed-height shell: it reserves space for the
      dock only after the content genuinely overflows, so short pages do not
      gain an empty scroll range. */
-  padding: 0 0 calc(108px + env(safe-area-inset-bottom, 0px));
+  padding: 0 0 calc(148px + env(safe-area-inset-bottom, 0px));
 }
 
 .measurements,

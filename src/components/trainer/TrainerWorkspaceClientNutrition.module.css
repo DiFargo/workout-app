@@ -1,4 +1,8 @@
 /* Nutrition client view follows the reading order instead of a desktop sidebar. */
+:local(.scope) {
+  min-width: 0;
+}
+
 :global(.trainerNextRoot) :global(.trainerNextNutrition.trainerNextNutritionUnified) {
   grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
@@ -32,8 +36,41 @@
   background: var(--tn-purple-soft);
 }
 
+/* The nutrition plan is a trainer's primary action in this card, not a quiet metadata link. */
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta .trainerNutritionPlanEditButton) {
+  min-width: 206px;
+  min-height: 46px;
+  margin-left: auto;
+  padding: 0 18px;
+  border: 1px solid #cfc1ec;
+  border-radius: 14px;
+  color: #6f59a7;
+  background: #eee8fa;
+  box-shadow: 0 7px 16px rgba(101, 78, 152, 0.1);
+  font-size: 14px;
+  font-weight: 760;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta .trainerNutritionPlanEditButton:hover) {
+  border-color: #bba9e1;
+  color: #5f4a98;
+  background: #e5dcf7;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta .trainerNutritionPlanEditButton:focus-visible) {
+  outline: 2px solid rgba(128, 107, 182, 0.45);
+  outline-offset: 2px;
+}
+
 @media (max-width: 560px) {
   :global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionQuickNav) {
     grid-template-columns: 1fr;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta .trainerNutritionPlanEditButton) {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
   }
 }

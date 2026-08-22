@@ -112,7 +112,8 @@
   .workoutCard:focus-visible,
   .startButton:focus-visible,
   .workoutNav > button:focus-visible,
-  .emptyState > button:focus-visible {
+  .emptyState > button:focus-visible,
+  .completionActions > button:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
@@ -182,6 +183,147 @@
     border: 0;
     border-radius: var(--radius-pill);
     cursor: pointer;
+  }
+
+  .cloudSaveNotice {
+    display: grid;
+    width: min(100%, var(--content-max-width));
+    margin: var(--space-2) auto 0;
+    padding: var(--space-3) var(--space-4);
+    gap: 0.1875rem;
+    color: #6d5360;
+    background: #fff8ec;
+    border: 1px solid #f3dfbc;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  .cloudSaveNotice strong {
+    font-size: var(--font-size-sm);
+  }
+
+  .cloudSaveNotice span {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+
+  .completionState {
+    display: grid;
+    justify-items: center;
+    min-height: 0;
+    padding: var(--space-6) var(--space-5) var(--space-5);
+    gap: var(--space-3);
+    text-align: center;
+    background: linear-gradient(145deg, var(--color-surface), #f8f4ff);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+  }
+
+  .completionIcon {
+    display: grid;
+    width: 3.5rem;
+    height: 3.5rem;
+    place-items: center;
+    color: #fff;
+    font-size: 1.75rem;
+    font-weight: 800;
+    background: var(--color-accent);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0.75rem 1.5rem rgba(143, 122, 200, 0.28);
+  }
+
+  .completionEyebrow {
+    padding: 0.35rem 0.6rem;
+    color: var(--color-accent-strong);
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    background: #f2edfb;
+    border-radius: var(--radius-pill);
+  }
+
+  .completionCopy {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .completionState h2,
+  .completionState p {
+    margin: 0;
+  }
+
+  .completionSummary {
+    display: grid;
+    width: min(100%, 18rem);
+    padding: 0.75rem 1rem;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label value"
+      "detail value";
+    align-items: center;
+    color: var(--color-text);
+    text-align: left;
+    background: #f7f5fa;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+  }
+
+  .completionSummary span {
+    grid-area: label;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .completionSummary strong {
+    grid-area: value;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .completionSummary small {
+    grid-area: detail;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .completionState h2 {
+    color: var(--color-text);
+    font-size: var(--font-size-lg);
+  }
+
+  .completionState p {
+    max-width: 25rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.45;
+  }
+
+  .completionActions {
+    display: grid;
+    width: min(100%, 20rem);
+    margin-top: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .completionActions > button {
+    min-height: 3rem;
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-accent-contrast);
+    font-weight: var(--font-weight-semibold);
+    background: var(--color-accent);
+    border: 0;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+  }
+
+  .completionActions > .secondaryCompletionAction {
+    color: var(--color-accent-strong);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
   }
 
   .workoutCard {
@@ -2495,9 +2637,11 @@
    stays fixed outside them. */
 :global(:root[data-app-theme="warm-light"]) .page.page.deckMode {
   width: min(402px, 100vw);
-  height: 100dvh;
-  min-height: 100dvh;
-  max-height: 100dvh;
+  /* Keep the deck within the same capped iPhone canvas as the client shell.
+     A raw 100dvh here lets tall desktop viewports place the CTA behind dock. */
+  height: var(--client-shell-height, min(874px, 100dvh));
+  min-height: var(--client-shell-min-height, min(874px, 100dvh));
+  max-height: var(--client-shell-max-height, min(874px, 100dvh));
   padding: 0 16px 96px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -2518,7 +2662,9 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .deckMode .hero.hero {
-  width: 100%;
+  /* This header is fixed, so a percentage would resolve against the desktop
+     viewport rather than the centered client shell. */
+  width: var(--client-page-header-width, min(402px, 100vw));
   margin: 0;
 }
 
@@ -2544,6 +2690,75 @@
   grid-template-rows: minmax(0, 1fr);
   align-content: stretch;
   align-self: stretch;
+}
+
+:global(:root[data-app-theme="warm-light"]) .deckMode .workoutDeck.completedDeck {
+  height: auto;
+  min-height: 0;
+  grid-template-rows: auto;
+  align-content: start;
+  align-self: start;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionState.completionState {
+  padding: 24px 20px 20px;
+  gap: 14px;
+  background: #ffffff;
+  border-color: #efebf3;
+  border-radius: 24px;
+  box-shadow: 0 12px 26px rgba(72, 63, 87, 0.08);
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionEyebrow.completionEyebrow {
+  padding: 6px 10px;
+  color: #806bb6;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  background: #f4effb;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionIcon.completionIcon {
+  width: 56px;
+  height: 56px;
+  color: #ffffff;
+  font-size: 28px;
+  background: linear-gradient(145deg, #9b87d0, #806bb6);
+  box-shadow: 0 12px 24px rgba(128, 107, 182, 0.22);
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionState.completionState h2 {
+  font-size: 24px;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionState.completionState p {
+  max-width: 18rem;
+  font-size: 14px;
+  line-height: 1.42;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionSummary.completionSummary {
+  width: min(100%, 18.5rem);
+  padding: 12px 14px;
+  background: #f7f5fa;
+  border-color: #efebf3;
+  border-radius: 16px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionSummary.completionSummary strong {
+  color: #28262e;
+  font-size: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionActions.completionActions {
+  width: 100%;
+  margin-top: 2px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .completionActions.completionActions > button {
+  min-height: 52px;
+  border-radius: 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .deckMode .featuredCard.featuredCard {
@@ -2634,5 +2849,29 @@
     min-height: 100svh;
     max-height: none;
     overflow: visible;
+  }
+}
+
+/* A deck is a primary client screen, not a phone card placed in a wide
+   desktop canvas. Keep the compact composition on phones, then let the
+   existing adaptive client shell provide the workspace width on tablet and
+   desktop. */
+@media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .page.page.deckMode {
+    width: 100%;
+    max-width: none;
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .deckMode .workoutDeck.workoutDeck,
+  :global(:root[data-app-theme="warm-light"]) .deckMode .featuredCard.featuredCard,
+  :global(:root[data-app-theme="warm-light"]) .deckMode .cloudSaveNotice.cloudSaveNotice {
+    width: 100%;
+    max-width: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .deckMode .cardBody.cardBody {
+    border-radius: 28px;
   }
 }

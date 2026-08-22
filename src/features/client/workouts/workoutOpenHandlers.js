@@ -1,5 +1,6 @@
 import { getWorkoutReadinessOption } from "../../../domain/workoutPresentation";
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
+import { syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule";
 import { safeReadJsonStorage } from "../../../utils/storageSafety";
 import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
 import { doc, writeBatch } from "firebase/firestore";
@@ -17,7 +18,10 @@ export function createWorkoutOpenHandlers({
   db,
   user,
   plan,
+  history,
   basicWorkoutQuiz,
+  aiNutritionProfile,
+  aiNutritionProfileDraft,
   workoutDraftRestorePrompt,
   loadHistory,
   loadWorkoutsFromFirebase,
@@ -54,9 +58,12 @@ export function createWorkoutOpenHandlers({
   setShowWorkoutSavedCard,
   setWorkoutDraftRestorePrompt
 }) {
-  function applyBasicWorkoutPlan() {
+  async function applyBasicWorkoutPlan(quizOverride = basicWorkoutQuiz) {
     const currentUser = auth.currentUser || user;
-    const nextPlan = buildBasicWorkoutPlanFromQuiz(basicWorkoutQuiz);
+    const nextPlan = buildBasicWorkoutPlanFromQuiz(quizOverride, undefined, {
+      profile: aiNutritionProfile || aiNutritionProfileDraft,
+      history
+    });
     const nextPlanState = {
       ...nextPlan,
       source: "basic",
@@ -68,22 +75,40 @@ export function createWorkoutOpenHandlers({
       remember: true,
       updatedAt: new Date().toISOString()
     };
+    const nextWorkoutCalendar = syncWorkoutCalendarWithPlan({
+      ...(user?.workoutCalendar || {}),
+      scheduledDates: (nextPlanState.workouts || []).map((workout) => workout.scheduledDate || workout.plannedDate || ""),
+      monthlyTrainingDates: (nextPlanState.workouts || []).map((workout) => workout.scheduledDate || workout.plannedDate || ""),
+      plannedWorkouts: []
+    }, nextPlanState.workouts, nextWorkoutModePreference.updatedAt, currentUser?.uid || "");
+    if (!currentUser?.uid) {
+      return { cloudSaved: false, error: new Error("basic_plan_user_missing") };
+    }
 
-    setPlan(nextPlanState);
-    setWorkoutModePreference?.(nextWorkoutModePreference);
-    setWorkoutModeRemember?.(true);
-    if (currentUser?.uid) {
-      safeWriteUserJsonStorage(BASIC_WORKOUT_PLAN_STORAGE_KEY || STORAGE_KEY, currentUser.uid, nextPlanState);
-      safeWriteUserJsonStorage(STORAGE_KEY, currentUser.uid, nextPlanState);
-      if (WORKOUT_MODE_STORAGE_KEY) {
-        safeWriteUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, nextWorkoutModePreference);
-      }
-      if (db) {
-        const basicPlanBatch = writeBatch(db);
-        const userRef = doc(db, "users", currentUser.uid);
+    if (!db) {
+      return { cloudSaved: false, error: new Error("basic_plan_database_unavailable") };
+    }
 
-        for (const [workoutIndex, workout] of (nextPlanState.workouts || []).entries()) {
-          basicPlanBatch.set(doc(db, "users", currentUser.uid, "workouts", workout.id), {
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      return { cloudSaved: false, offline: true };
+    }
+
+    try {
+      const basicPlanBatch = writeBatch(db);
+      const userRef = doc(db, "users", currentUser.uid);
+      const nextBasicWorkoutIds = new Set((nextPlanState.workouts || []).map((workout) => workout.id));
+      const previousBasicWorkouts = plan?.source === "basic" && Array.isArray(plan?.workouts)
+        ? plan.workouts
+        : [];
+
+      previousBasicWorkouts.forEach((workout) => {
+        if (workout?.id && !nextBasicWorkoutIds.has(workout.id)) {
+          basicPlanBatch.delete(doc(db, "users", currentUser.uid, "workouts", workout.id));
+        }
+      });
+
+      for (const [workoutIndex, workout] of (nextPlanState.workouts || []).entries()) {
+        basicPlanBatch.set(doc(db, "users", currentUser.uid, "workouts", workout.id), {
             id: workout.id,
             source: "basic",
             name: workout.name || `День ${workoutIndex + 1}`,
@@ -112,33 +137,50 @@ export function createWorkoutOpenHandlers({
               sets: (exercise.sets || []).map((set) => ({
                 ...(set?.id ? { id: set.id } : {}),
                 reps: set?.reps ?? "",
-                weight: set?.weight ?? ""
+                weight: set?.weight ?? "",
+                ...(Number(set?.durationSeconds) > 0 ? { durationSeconds: Number(set.durationSeconds) } : {}),
+                ...(set?.startingWeightSource ? { startingWeightSource: set.startingWeightSource } : {}),
+                ...(set?.startingWeightConfirmed ? { startingWeightConfirmed: true } : {})
               }))
             }))
-          }, { merge: true });
-        }
-
-        basicPlanBatch.set(userRef, {
-          basicWorkoutPlan: nextPlanState,
-          workoutModePreference: nextWorkoutModePreference,
-          updatedAt: nextWorkoutModePreference.updatedAt
         }, { merge: true });
-
-        basicPlanBatch.commit().catch((error) => {
-          console.warn("Basic workout mode sync error", error);
-        });
       }
+
+      basicPlanBatch.set(userRef, {
+        basicWorkoutPlan: nextPlanState,
+        workoutCalendar: nextWorkoutCalendar,
+        workoutModePreference: nextWorkoutModePreference,
+        updatedAt: nextWorkoutModePreference.updatedAt
+      }, { merge: true });
+
+      await basicPlanBatch.commit();
+    } catch (error) {
+      console.warn("Basic workout mode sync error", error);
+      return {
+        cloudSaved: false,
+        offline: typeof navigator !== "undefined" && navigator.onLine === false,
+        error
+      };
+    }
+
+    setPlan(nextPlanState);
+    setWorkoutModePreference?.(nextWorkoutModePreference);
+    setWorkoutModeRemember?.(true);
+    safeWriteUserJsonStorage(BASIC_WORKOUT_PLAN_STORAGE_KEY || STORAGE_KEY, currentUser.uid, nextPlanState);
+    if (WORKOUT_MODE_STORAGE_KEY) {
+      safeWriteUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, nextWorkoutModePreference);
     }
     setSelectedWorkoutId(null);
     setIndividualWorkoutIndex?.(0);
     setIndividualWorkoutIndexInitialized?.(false);
     setPage(APP_PAGES.WORKOUTS);
+    return { cloudSaved: true };
   }
 
   function openWorkoutWithDraftChoice(id, savedDraft, shouldRestoreDraft, freshPlan = null) {
     const restoredReadiness = shouldRestoreDraft && savedDraft?.selectedReadiness?.id
       ? getWorkoutReadinessOption(savedDraft.selectedReadiness.id)
-      : null;
+      : getWorkoutReadinessOption("good");
     const restoredPostWorkoutFeedback =
       shouldRestoreDraft && savedDraft?.selectedPostWorkoutFeedback?.id
         ? savedDraft.selectedPostWorkoutFeedback

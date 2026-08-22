@@ -1,7 +1,107 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { safeWriteJsonStorage } from "../../../utils/storageSafety";
 import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
+import { getWorkoutExecutionSteps } from "../../../utils/workoutPlanNormalization";
+import {
+  createWorkoutCountdownDeadline,
+  getWorkoutCountdownRemainingSeconds
+} from "./workoutCountdownTimer";
+
+function getSafeCountdownSeconds(value) {
+  const seconds = Number(value);
+  return Number.isFinite(seconds) && seconds > 0 ? Math.ceil(seconds) : 0;
+}
+
+function useWallClockCountdown({
+  completionVibration,
+  running,
+  seconds,
+  setRunning,
+  setSeconds
+}) {
+  const deadlineRef = useRef(0);
+  const lastReportedSecondsRef = useRef(null);
+  const secondsRef = useRef(getSafeCountdownSeconds(seconds));
+
+  useEffect(() => {
+    secondsRef.current = getSafeCountdownSeconds(seconds);
+  }, [seconds]);
+
+  useEffect(() => {
+    if (!running) {
+      deadlineRef.current = 0;
+      lastReportedSecondsRef.current = secondsRef.current;
+      return undefined;
+    }
+
+    const initialSeconds = secondsRef.current;
+    if (!initialSeconds) {
+      setRunning(false);
+      return undefined;
+    }
+
+    const deadline = createWorkoutCountdownDeadline(initialSeconds);
+    deadlineRef.current = deadline;
+    lastReportedSecondsRef.current = initialSeconds;
+    let completed = false;
+
+    const syncCountdown = () => {
+      if (deadlineRef.current !== deadline) return;
+
+      const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadline);
+      secondsRef.current = remainingSeconds;
+      lastReportedSecondsRef.current = remainingSeconds;
+      setSeconds((current) => (current === remainingSeconds ? current : remainingSeconds));
+
+      if (remainingSeconds > 0 || completed) return;
+
+      completed = true;
+      deadlineRef.current = 0;
+      setRunning(false);
+      navigator.vibrate?.(completionVibration === "rest" ? [100, 80, 100] : 120);
+    };
+
+    syncCountdown();
+    const timer = window.setInterval(syncCountdown, 1000);
+    document.addEventListener("visibilitychange", syncCountdown);
+    window.addEventListener("focus", syncCountdown);
+    window.addEventListener("pageshow", syncCountdown);
+    window.addEventListener("pagehide", syncCountdown);
+
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", syncCountdown);
+      window.removeEventListener("focus", syncCountdown);
+      window.removeEventListener("pageshow", syncCountdown);
+      window.removeEventListener("pagehide", syncCountdown);
+
+      if (deadlineRef.current !== deadline) return;
+
+      const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadline);
+      deadlineRef.current = 0;
+      secondsRef.current = remainingSeconds;
+      lastReportedSecondsRef.current = remainingSeconds;
+      setSeconds((current) => (current === remainingSeconds ? current : remainingSeconds));
+    };
+  }, [completionVibration, running, setRunning, setSeconds]);
+
+  useEffect(() => {
+    if (!running || !deadlineRef.current) return;
+
+    const nextSeconds = getSafeCountdownSeconds(seconds);
+    if (nextSeconds === lastReportedSecondsRef.current) return;
+
+    if (!nextSeconds) {
+      deadlineRef.current = 0;
+      setRunning(false);
+      return;
+    }
+
+    deadlineRef.current = createWorkoutCountdownDeadline(nextSeconds);
+    lastReportedSecondsRef.current = nextSeconds;
+  }, [running, seconds, setRunning]);
+}
 
 export function useWorkoutRuntimeEffects({
   auth,
@@ -39,6 +139,22 @@ export function useWorkoutRuntimeEffects({
   setWarmupTimerRunning,
   setWarmupTimerSeconds
 }) {
+  useWallClockCountdown({
+    completionVibration: "warmup",
+    running: warmupTimerRunning,
+    seconds: warmupTimerSeconds,
+    setRunning: setWarmupTimerRunning,
+    setSeconds: setWarmupTimerSeconds
+  });
+
+  useWallClockCountdown({
+    completionVibration: "rest",
+    running: restTimerRunning,
+    seconds: restTimerSeconds,
+    setRunning: setRestTimerRunning,
+    setSeconds: setRestTimerSeconds
+  });
+
   useEffect(() => {
     if (inlineVideoControlsTimerRef.current) {
       window.clearTimeout(inlineVideoControlsTimerRef.current);
@@ -70,44 +186,6 @@ export function useWorkoutRuntimeEffects({
     setInlineVideoControlsVisible,
     setVideoLoadingId
   ]);
-
-  useEffect(() => {
-    if (!warmupTimerRunning) return undefined;
-
-    const timer = window.setInterval(() => {
-      setWarmupTimerSeconds((current) => {
-        if (current <= 1) {
-          window.clearInterval(timer);
-          setWarmupTimerRunning(false);
-          navigator.vibrate?.(120);
-          return 0;
-        }
-
-        return current - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [setWarmupTimerRunning, setWarmupTimerSeconds, warmupTimerRunning]);
-
-  useEffect(() => {
-    if (!restTimerRunning) return undefined;
-
-    const timer = window.setInterval(() => {
-      setRestTimerSeconds((current) => {
-        if (current <= 1) {
-          window.clearInterval(timer);
-          setRestTimerRunning(false);
-          navigator.vibrate?.([100, 80, 100]);
-          return 0;
-        }
-
-        return current - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [restTimerRunning, setRestTimerRunning, setRestTimerSeconds]);
 
   useEffect(() => {
     const currentUser = auth.currentUser || user;
@@ -178,13 +256,25 @@ export function useWorkoutRuntimeEffects({
   useEffect(() => {
     if (!workoutStartedAt || workoutFinishedAt) return undefined;
 
-    const timer = setInterval(() => {
+    const syncElapsedTimer = () => {
+      if (document.visibilityState === "hidden") return;
       const now = Date.now();
       timerTickRef.current = now;
       setTimerTick(now);
-    }, 1000);
+    };
 
-    return () => clearInterval(timer);
+    syncElapsedTimer();
+    const timer = window.setInterval(syncElapsedTimer, 1000);
+    document.addEventListener("visibilitychange", syncElapsedTimer);
+    window.addEventListener("focus", syncElapsedTimer);
+    window.addEventListener("pageshow", syncElapsedTimer);
+
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", syncElapsedTimer);
+      window.removeEventListener("focus", syncElapsedTimer);
+      window.removeEventListener("pageshow", syncElapsedTimer);
+    };
   }, [setTimerTick, timerTickRef, workoutFinishedAt, workoutStartedAt]);
 
   useEffect(() => {
@@ -206,7 +296,7 @@ export function useWorkoutRuntimeEffects({
   useEffect(() => {
     if (!workout) return;
 
-    if (currentExerciseIndex > workout.exercises.length + 1) {
+    if (currentExerciseIndex > getWorkoutExecutionSteps(workout).length + 1) {
       setCurrentExerciseIndex(0);
     }
   }, [currentExerciseIndex, setCurrentExerciseIndex, workout]);

@@ -2,10 +2,6 @@ export function normalizeTelegramUsername(value = "") {
   return String(value || "").trim().replace(/^@+/, "");
 }
 
-export function createTelegramLinkCode() {
-  return Math.random().toString(36).slice(2, 8).toUpperCase();
-}
-
 export function parseTelegramAuthResultFromHash(hashValue = "") {
   try {
     const hash = hashValue || (typeof window !== "undefined" ? window.location.hash : "");

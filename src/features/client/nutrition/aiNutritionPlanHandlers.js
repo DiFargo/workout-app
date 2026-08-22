@@ -3,6 +3,7 @@ import { doc, setDoc } from "firebase/firestore";
 import {
   buildAiNutritionMonthlyPlan
 } from "../../../utils/aiNutritionPlanBuilder";
+import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations";
 import {
   getAiNutritionTrainingDays
 } from "../../../utils/aiNutritionSchedule";
@@ -31,7 +32,8 @@ export function createAiNutritionPlanHandlers({
   setFirstSetupCompletedInCloud,
   setNutrition
 }) {
-  async function saveAiNutritionPlan(profileOverride = aiNutritionProfileDraft) {
+  async function saveAiNutritionPlan(profileOverride = aiNutritionProfileDraft, options = {}) {
+    const completeFirstSetup = options?.completeFirstSetup !== false;
     const profile = {
       name: String(profileOverride.name || "").trim(),
       weight: String(profileOverride.weight || "").trim(),
@@ -43,6 +45,10 @@ export function createAiNutritionPlanHandlers({
       goal: profileOverride.goal || "recomp",
       trainingDays: getAiNutritionTrainingDays(profileOverride)
     };
+
+    if (!getAiNutritionProfileValidation(profile).valid) {
+      return false;
+    }
 
     const nextPlan = buildAiNutritionMonthlyPlan(nutrition, profile, history, aiNutritionSavedPlan);
     const weekOne = nextPlan.weeks?.[0];
@@ -74,9 +80,11 @@ export function createAiNutritionPlanHandlers({
           aiNutritionProfile: profile,
           aiNutritionPlan: nextPlan,
           ...(nextGoals ? { nutritionGoals: nextGoals } : {}),
-          firstSetupCompleted: true,
-          firstSetupCompletedVersion: FIRST_SETUP_REQUIRED_VERSION,
-          firstSetupCompletedAt: new Date().toISOString(),
+          ...(completeFirstSetup ? {
+            firstSetupCompleted: true,
+            firstSetupCompletedVersion: FIRST_SETUP_REQUIRED_VERSION,
+            firstSetupCompletedAt: new Date().toISOString()
+          } : {}),
           updatedAt: new Date().toISOString()
         }, { merge: true });
 
@@ -91,19 +99,23 @@ export function createAiNutritionPlanHandlers({
           }, { merge: true });
         }
 
-        setFirstSetupCompletedInCloud(true);
+        if (completeFirstSetup) {
+          setFirstSetupCompletedInCloud(true);
+        }
 
-        try {
-          localStorage.setItem(
-            FIRST_SETUP_DONE_USER_STORAGE_KEY,
-            `${auth.currentUser.uid}:${FIRST_SETUP_REQUIRED_VERSION}`
-          );
-          localStorage.setItem(
-            `${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${auth.currentUser.uid}`,
-            FIRST_SETUP_REQUIRED_VERSION
-          );
-        } catch {
-          // ignore localStorage errors
+        if (completeFirstSetup) {
+          try {
+            localStorage.setItem(
+              FIRST_SETUP_DONE_USER_STORAGE_KEY,
+              `${auth.currentUser.uid}:${FIRST_SETUP_REQUIRED_VERSION}`
+            );
+            localStorage.setItem(
+              `${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${auth.currentUser.uid}`,
+              FIRST_SETUP_REQUIRED_VERSION
+            );
+          } catch {
+            // ignore localStorage errors
+          }
         }
       } catch (error) {
         console.error("Profile save error", error);
@@ -131,6 +143,7 @@ export function createAiNutritionPlanHandlers({
   function resetAiNutritionPlan() {
     const nextDraft = {
       weight: "",
+      targetWeight: "",
       height: "",
       age: "",
       sex: aiNutritionProfile?.sex || "male",

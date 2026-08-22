@@ -1,4 +1,5 @@
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import { X } from "lucide-react";
 import styles from "./FoodSearchHeader.module.css";
 
 export default function FoodSearchHeader({
@@ -24,17 +25,24 @@ export default function FoodSearchHeader({
   return (
     <ClientPageHeader
       compact
+      embedded
       className={`${styles.root} ${isMyProductsPage ? styles.myProducts : styles.search}`}
+      extensionClassName={styles.searchExtension}
       title={isMyProductsPage ? "Мои продукты" : "Добавить еду"}
       titleTestId="food-search-header-title"
       scope="food-search-header"
       testId="food-search-header"
-      onBack={showCloseButton ? onClose : undefined}
-      backAriaLabel="Закрыть поиск еды"
-      backProps={{
-        "data-css-module-control": "food-search-header",
-        "data-food-search-header-action": "close"
-      }}
+      actions={showCloseButton ? (
+        <button
+          type="button"
+          data-css-module-control="food-search-header"
+          data-food-search-header-action="close"
+          aria-label="Закрыть поиск еды"
+          onClick={onClose}
+        >
+          <X aria-hidden="true" />
+        </button>
+      ) : null}
       rootProps={{
         "data-food-search-header-variant": isMyProductsPage ? "my-products" : "search"
       }}

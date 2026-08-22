@@ -85,6 +85,7 @@ export async function saveCompletedWorkoutToFirebase({
     workoutId: workout.id,
     assignedProgramId: workout.assignedProgramId || plan.assignedProgramId || "",
     assignedProgramName: workout.assignedProgramName || plan.assignedProgramName || "",
+    assignedProgramAddedAt: workout.assignedProgramAddedAt || plan.assignedProgramAddedAt || workout.assignedAt || "",
     assignedProgramUpdatedAt: workout.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || "",
     durationSeconds,
     startedAt: new Date(startedAt).toISOString(),
@@ -101,7 +102,9 @@ export async function saveCompletedWorkoutToFirebase({
       emoji: feedbackOverride.emoji,
       advice: feedbackOverride.advice
     } : null,
-    clientComment: workoutClientComment.trim(),
+    ...(workout.source === "basic" || plan.source === "basic"
+      ? { personalNote: workoutClientComment.trim() }
+      : { clientComment: workoutClientComment.trim() }),
     // Keep the trainer's prescription immutable even when the client changes a set in the run UI.
     plannedSnapshot: {
       workoutId: workout.id,
@@ -113,7 +116,8 @@ export async function saveCompletedWorkoutToFirebase({
         sets: (exercise.sets || []).map((set, index) => ({
           set: index + 1,
           reps: set.targetReps || set.reps || "",
-          weight: set.targetWeight || set.aiOriginalWeight || set.aiSuggestedWeight || ""
+          weight: set.targetWeight || set.aiOriginalWeight || set.aiSuggestedWeight || "",
+          ...(Number(set.durationSeconds) > 0 ? { durationSeconds: Number(set.durationSeconds) } : {})
         }))
       }))
     },
@@ -126,13 +130,15 @@ export async function saveCompletedWorkoutToFirebase({
         const completed = isWorkoutSetCompleted(set);
         const weight = set.enteredWeight || (set.completed ? set.weight : "") || "";
         const enteredReps = set.enteredReps || (set.completed ? set.reps : "") || "";
+        const durationSeconds = Number(set.durationSeconds) > 0 ? Number(set.durationSeconds) : 0;
 
         return {
           set: index + 1,
-          reps: completed ? enteredReps || set.reps || 8 : "",
-          targetReps: set.reps || "",
+          reps: durationSeconds ? "" : completed ? enteredReps || set.reps || 8 : "",
+          targetReps: durationSeconds ? "" : set.reps || "",
           weight,
           completed,
+          ...(durationSeconds ? { durationSeconds, targetDurationSeconds: durationSeconds } : {}),
           aiSuggestedWeight: set.weight || "",
           aiOriginalWeight: set.aiOriginalWeight || "",
           aiReadinessId: set.aiReadinessId || ""
@@ -167,14 +173,19 @@ export async function saveCompletedWorkoutToFirebase({
     const progression = applyWorkoutProgressionToFuturePlan(plan, workout, {
       updatedAt: historyEntry.finishedAt
     });
-    if (
-      progression.changed &&
-      typeof setPlan === "function" &&
-      typeof saveWorkoutsToFirebase === "function"
-    ) {
-      setPlan(progression.plan);
+    const planToPersist = progression.changed ? progression.plan : plan;
+    const shouldPersistFullBasicPlan = plan?.source === "basic" || workout?.source === "basic";
+
+    if (progression.changed && typeof setPlan === "function") {
+      setPlan(planToPersist);
+    }
+
+    if ((progression.changed || shouldPersistFullBasicPlan) && typeof saveWorkoutsToFirebase === "function") {
       try {
-        await saveWorkoutsToFirebase(progression.plan, { silent: true });
+        const saveResult = await saveWorkoutsToFirebase(planToPersist, { silent: true });
+        if (shouldPersistFullBasicPlan && saveResult?.plan?.source === "basic" && typeof setPlan === "function") {
+          setPlan(saveResult.plan);
+        }
       } catch (progressionError) {
         console.warn("Failed to save workout progression update", progressionError);
       }

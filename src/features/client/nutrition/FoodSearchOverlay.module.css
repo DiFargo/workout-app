@@ -19,8 +19,20 @@
   font-family: inherit;
 }
 
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
 .searchScreen {
   position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 390px;
   margin: 6px auto;
@@ -32,6 +44,10 @@
   background-image: var(--gradient-food-search-screen);
   color: var(--color-food-search-screen-text);
   font-family: var(--font-family-compact-ui);
+}
+
+.grabber {
+  display: none;
 }
 
 .searchOverlay::-webkit-scrollbar,
@@ -237,28 +253,63 @@
 :global(:root[data-app-theme="warm-light"]) .searchOverlay,
 :global(:root[data-app-theme="warm-light"]) .productOverlay {
   padding: 0;
-  background: #f7f6f8;
+  background: rgba(40, 38, 46, 0.34);
   color: #28262e;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchOverlay {
+  align-items: flex-end;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchScreen,
 :global(:root[data-app-theme="warm-light"]) .headerLayout,
 :global(:root[data-app-theme="warm-light"]) .productLayout,
 :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
-  width: min(100%, 402px);
+  width: min(calc(100% - 24px), 402px);
   max-width: 402px;
-  height: 100dvh;
-  min-height: 100dvh;
-  max-height: 100dvh;
-  margin: 0 auto;
-  border: 0;
-  border-radius: 0;
+  height: min(820px, calc(100dvh - 24px));
+  min-height: 0;
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
   background: #f7f6f8;
   color: #28262e;
-  box-shadow: none;
+  box-shadow: 0 24px 56px rgba(40, 38, 46, 0.2);
   font-family: var(--font-family-sans);
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchOverlay .searchScreen.headerLayout {
+  width: min(402px, calc(100vw - 32px));
+  height: min(78dvh, 690px);
+  min-height: min(78dvh, 690px);
+  max-height: calc(100dvh - 32px);
+  align-self: flex-end;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #efebf3;
+  border-radius: 28px;
+  background: #f7f6f8;
+  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchOverlay .grabber {
+  width: 36px;
+  height: 5px;
+  min-height: 5px;
+  margin: 10px auto 4px;
+  display: block;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #d3d8db;
+}
+
+:global(:root[data-app-theme="warm-light"]) .modalLayout.searchLayout {
+  padding-top: 14px;
+  padding-bottom: 114px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchScreen,
@@ -273,7 +324,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .myProductsLayout {
-  padding: max(54px, calc(env(safe-area-inset-top) + 38px)) 16px calc(112px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px calc(112px + env(safe-area-inset-bottom, 0px));
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: none;
@@ -287,6 +338,30 @@
   overflow-y: auto;
   scrollbar-gutter: auto;
   -webkit-text-fill-color: #28262e;
+}
+
+@media (max-width: 640px) {
+  :global(:root[data-app-theme="warm-light"]) .searchScreen,
+  :global(:root[data-app-theme="warm-light"]) .headerLayout,
+  :global(:root[data-app-theme="warm-light"]) .productLayout,
+  :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
+    width: 100%;
+    height: calc(100dvh - 14px);
+    max-height: calc(100dvh - 14px);
+    margin: auto 0 0;
+    border: 0;
+    border-radius: 28px 28px 0 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .searchOverlay .searchScreen.headerLayout {
+    width: calc(100vw - 32px);
+    height: min(78dvh, 690px);
+    min-height: min(78dvh, 690px);
+    max-height: calc(100dvh - 32px);
+    margin: 0 auto;
+    border: 1px solid #efebf3;
+    border-radius: 28px;
+  }
 }
 
 @media (min-width: 641px) {

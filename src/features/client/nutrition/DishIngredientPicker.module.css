@@ -527,16 +527,33 @@
 :global(:root[data-app-theme="warm-light"]) .confirmTitle { color: #28262e; -webkit-text-fill-color: #28262e; font-size: 18px; font-weight: 700; }
 
 :global(:root[data-app-theme="warm-light"]) .searchBox {
-  min-height: 50px;
+  min-height: 58px;
+  padding: 0 15px;
+  grid-template-columns: 28px minmax(0, 1fr);
   border: 1px solid #efebf3;
   border-radius: 16px;
-  background: #f5f2f7;
+  background: #ffffff;
   color: #28262e;
   box-shadow: none;
 }
 
+:global(:root[data-app-theme="warm-light"]) .searchBox:focus-within {
+  border-color: #b8a5df;
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.12);
+}
+
 :global(:root[data-app-theme="warm-light"]) .searchIcon { color: #7b7682; -webkit-text-fill-color: #7b7682; }
-:global(:root[data-app-theme="warm-light"]) .searchInput { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .searchInput {
+  min-height: 56px;
+  padding: 0 0 0 3px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #28262e;
+  -webkit-text-fill-color: #28262e;
+  font-weight: 450;
+  box-shadow: none;
+}
 :global(:root[data-app-theme="warm-light"]) .searchInput::placeholder { color: #7b7682; -webkit-text-fill-color: #7b7682; }
 
 :global(:root[data-app-theme="warm-light"]) .results { gap: 6px; }
@@ -561,7 +578,11 @@
 :global(:root[data-app-theme="warm-light"]) .resultTitle { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .resultMeta,
 :global(:root[data-app-theme="warm-light"]) .confirmMeta { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .resultAction { color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .resultAction {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  font-weight: 800;
+}
 :global(:root[data-app-theme="warm-light"]) .manualCard { background: #f5f2f7; }
 :global(:root[data-app-theme="warm-light"]) .empty,
 :global(:root[data-app-theme="warm-light"]) .loading { border-color: #efebf3; background: #f5f2f7; color: #7b7682; -webkit-text-fill-color: #7b7682; }

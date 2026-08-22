@@ -6,6 +6,7 @@ import { getDefaultAdminCalendar } from "../../utils/adminClientCalendar";
 import { getMeasurementTimestampValue } from "../../utils/profileMeasurements";
 import { getTrainerSummaryTimestamp } from "../../utils/trainerSummaryDates";
 import { normalizeExercise, sortWorkoutDays } from "../../utils/workoutPlanNormalization";
+import { isTrainerProgramClientVisible } from "../../utils/trainerProgramLifecycle.js";
 import { filterTrainerCurrentPlanWorkouts } from "./trainerCurrentPlanWorkouts";
 
 const STATUS_LOAD_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0434\u0430\u043d\u043d\u044b\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
@@ -14,7 +15,11 @@ function getDocsAsItems(snapshot) {
   const items = [];
   if (snapshot?.forEach) {
     snapshot.forEach((itemDoc) => {
-      items.push({ id: itemDoc.id, ...itemDoc.data() });
+      // The Firestore document id is the address used by all plan actions.
+      // Some older assignments also contain a stale `id` field in their data;
+      // it must not replace the document id or an edit/delete can target a
+      // different workout with the same legacy id.
+      items.push({ ...itemDoc.data(), id: itemDoc.id });
     });
   }
   return items;
@@ -22,7 +27,7 @@ function getDocsAsItems(snapshot) {
 
 function getSettledDocs(result) {
   return result.status === "fulfilled"
-    ? result.value.docs.map((itemDoc) => ({ id: itemDoc.id, ...itemDoc.data() }))
+    ? result.value.docs.map((itemDoc) => ({ ...itemDoc.data(), id: itemDoc.id }))
     : [];
 }
 
@@ -77,7 +82,7 @@ export function createTrainerClientOverviewLoader({
     }
     setAdminClientLoading(true);
     setAdminClientStatus("");
-    setPlan?.({ workouts: [] });
+    setPlan?.({ workouts: [], archivedWorkouts: [] });
     setAdminClientTasks([]);
     setAdminClientProgressPhotos([]);
     setAdminClientEvents([]);
@@ -124,6 +129,7 @@ export function createTrainerClientOverviewLoader({
       setAdminAllUsersList((prev) => prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item));
 
       let historySnap = null;
+      let historyLoadFailed = false;
       let nutritionSnap = null;
       let measurementsSnap = null;
       let workoutsSnap = null;
@@ -132,6 +138,7 @@ export function createTrainerClientOverviewLoader({
         historySnap = await getDocs(collection(db, "users", client.id, "history"));
       } catch (historyError) {
         console.error("Client history load failed:", historyError);
+        historyLoadFailed = true;
         historySnap = null;
       }
 
@@ -176,7 +183,21 @@ export function createTrainerClientOverviewLoader({
         exercises: (workout.exercises || []).map(normalizeExercise)
       }));
       const clientWorkouts = sortWorkoutDays(
-        filterTrainerCurrentPlanWorkouts(loadedWorkouts, freshClient)
+        filterTrainerCurrentPlanWorkouts(
+          loadedWorkouts.filter((workout) => isTrainerProgramClientVisible({
+            lifecycleStatus: workout.assignedProgramLifecycleStatus || "active"
+          })),
+          freshClient
+        )
+      );
+      const currentWorkoutIds = new Set(
+        clientWorkouts.map((workout) => String(workout?.id || "")).filter(Boolean)
+      );
+      // Older assignments are deliberately kept outside of `plan.workouts`.
+      // Editor mutations only persist that active array, while this archive is
+      // available to the trainer as read-only context.
+      const archivedWorkouts = sortWorkoutDays(
+        loadedWorkouts.filter((workout) => !currentWorkoutIds.has(String(workout?.id || "")))
       );
 
       const clientMeasurements = getDocsAsItems(measurementsSnap);
@@ -225,12 +246,18 @@ export function createTrainerClientOverviewLoader({
         nutritionPlan: freshClient.nutritionPlan || mergedNutritionState.nutritionPlan,
         aiNutritionPlan: freshClient.aiNutritionPlan || mergedNutritionState.aiNutritionPlan
       };
+      // This is intentionally view-only. Do not mirror a transient transport
+      // failure back into the client's Firestore profile.
+      const clientView = {
+        ...fullClientForView,
+        trainerHistoryLoadError: historyLoadFailed
+      };
 
       if (!isCurrentClientRequest()) return;
 
-      setAdminSelectedClient(fullClientForView);
-      setUsersList((prev) => prev.map((item) => item.id === fullClientForView.id ? { ...item, ...fullClientForView } : item));
-      setAdminAllUsersList((prev) => prev.map((item) => item.id === fullClientForView.id ? { ...item, ...fullClientForView } : item));
+      setAdminSelectedClient(clientView);
+      setUsersList((prev) => prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item));
+      setAdminAllUsersList((prev) => prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item));
       await mirrorClientForTrainer(fullClientForView, mergedNutritionState);
 
       setAdminClientHistory(clientHistory);
@@ -264,7 +291,8 @@ export function createTrainerClientOverviewLoader({
         assignedProgramId: fullClientForView.assignedProgramId || "",
         assignedProgramName: fullClientForView.assignedProgramName || "",
         assignedProgramUpdatedAt: fullClientForView.assignedProgramUpdatedAt || fullClientForView.assignedProgramAt || "",
-        workouts: clientWorkouts
+        workouts: clientWorkouts,
+        archivedWorkouts
       });
       await loadAdminTrainingTemplates();
     } catch (error) {

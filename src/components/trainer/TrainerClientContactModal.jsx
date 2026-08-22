@@ -1,4 +1,5 @@
 import { Bell, MessageCircle, X } from "lucide-react";
+import { createPortal } from "react-dom";
 import styles from "./TrainerClientContactModal.module.css";
 
 export default function TrainerClientContactModal({
@@ -8,18 +9,21 @@ export default function TrainerClientContactModal({
   onOpenNotification,
   onRequestClose
 }) {
-  return (
-    <div className={styles.backdrop} role="presentation" onMouseDown={(event) => {
+  const modal = (
+    <div className={styles.backdrop} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => {
       if (event.target === event.currentTarget) onRequestClose();
     }}>
       <section
         className={styles.modal}
         role="dialog"
         aria-modal="true"
+        data-modal-surface="true"
+        data-trainer-modal-surface="true"
+        data-trainer-modal-frame="true"
         aria-labelledby="trainer-client-contact-title"
         data-testid="trainer-client-contact-dialog"
       >
-        <header className={styles.header}>
+        <header className={styles.header} data-trainer-modal-header="true">
           <div>
             <span>СВЯЗЬ С КЛИЕНТОМ</span>
             <h2 id="trainer-client-contact-title">{clientName}</h2>
@@ -30,7 +34,7 @@ export default function TrainerClientContactModal({
           </button>
         </header>
 
-        <div className={styles.options}>
+        <div className={styles.options} data-trainer-modal-content="true">
           <button
             className={styles.option}
             data-testid="trainer-client-contact-telegram"
@@ -58,7 +62,13 @@ export default function TrainerClientContactModal({
             </span>
           </button>
         </div>
+
+        <footer className={styles.footer} data-trainer-modal-footer="true">
+          <button type="button" onClick={onRequestClose}>Отмена</button>
+        </footer>
       </section>
     </div>
   );
+
+  return typeof document === "undefined" ? modal : createPortal(modal, document.body);
 }

@@ -2,61 +2,25 @@ import FirstSetupOnboarding from "../features/auth/FirstSetupOnboarding";
 import { AppSplash, LoginPage } from "../components/auth/AuthScreens";
 import "./AppStartupGate.module.css";
 
-export function getFirstSetupCompletedLocally({
-  isLoggedIn,
-  userId,
-  storageKey,
-  requiredVersion
-}) {
-  if (!isLoggedIn || !userId) return false;
-
-  try {
-    return (
-      localStorage.getItem(storageKey) === `${userId}:${requiredVersion}` ||
-      localStorage.getItem(`${storageKey}:${userId}`) === requiredVersion
-    );
-  } catch {
-    return false;
-  }
+function RoleAccessVerificationScreen({ logout }) {
+  return (
+    <main className="roleAccessGate" role="alert" aria-live="assertive">
+      <section className="roleAccessGateCard">
+        <span>ПРОВЕРКА ДОСТУПА</span>
+        <h1>Не удалось подтвердить роль аккаунта</h1>
+        <p>Данные клиента не открыты. Повторите проверку или войдите в аккаунт заново.</p>
+        <div>
+          <button type="button" className="primary" onClick={() => window.location.reload()}>Повторить</button>
+          <button type="button" onClick={logout}>Выйти</button>
+        </div>
+      </section>
+    </main>
+  );
 }
 
-export function getFirstSetupGateState({
-  isLoggedIn,
-  userId,
-  firstSetupProfileHydrated,
-  currentUserRole,
-  firstSetupCompletedInSession,
-  firstSetupCompletedInCloud,
-  hasRequiredAiNutritionProfileFields,
-  storageKey,
-  requiredVersion
-}) {
-  const firstSetupCompletedLocally = getFirstSetupCompletedLocally({
-    isLoggedIn,
-    userId,
-    storageKey,
-    requiredVersion
-  });
-
-  return {
-    firstSetupStillResolving: Boolean(
-      isLoggedIn &&
-      !firstSetupProfileHydrated
-    ),
-    firstSetupRequiredNow: Boolean(
-      isLoggedIn &&
-      firstSetupProfileHydrated &&
-      currentUserRole === "client" &&
-      !firstSetupCompletedInSession &&
-      !firstSetupCompletedInCloud &&
-      !hasRequiredAiNutritionProfileFields &&
-      !firstSetupCompletedLocally
-    )
-  };
-}
-
-export function renderAppStartupGate({
+export function AppStartupGate({
   appLoading,
+  roleAccessGateState,
   firstSetupStillResolving,
   showFirstSetupOnboarding,
   firstSetupRequiredNow,
@@ -88,6 +52,14 @@ export function renderAppStartupGate({
 }) {
   if (appLoading || firstSetupStillResolving) {
     return <AppSplash />;
+  }
+
+  if (roleAccessGateState === "resolving") {
+    return <AppSplash />;
+  }
+
+  if (roleAccessGateState === "unresolved") {
+    return <RoleAccessVerificationScreen logout={logout} />;
   }
 
   if ((showFirstSetupOnboarding || firstSetupRequiredNow) && isLoggedIn && !appLoading) {

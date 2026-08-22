@@ -1,17 +1,14 @@
-import { ChevronLeft, Package, Plus, Search } from "lucide-react";
+import { ChevronLeft, Package, Search } from "lucide-react";
 import styles from "./FoodSearchBottomBar.module.css";
 
 export default function FoodSearchBottomBar({
-  createChoiceOpen,
   searchTab,
   onBack,
   onSearch,
-  onCreate,
   onMyProducts
 }) {
-  const searchActive = !createChoiceOpen && searchTab !== "my";
-  const createActive = createChoiceOpen;
-  const myProductsActive = !createChoiceOpen && searchTab === "my";
+  const searchActive = searchTab !== "my";
+  const myProductsActive = searchTab === "my";
 
   return (
     <div
@@ -41,18 +38,6 @@ export default function FoodSearchBottomBar({
       >
         <span aria-hidden="true"><Search /></span>
         <strong>Поиск</strong>
-      </button>
-
-      <button
-        type="button"
-        className={`${styles.button} ${createActive ? styles.active : ""}`}
-        data-css-module-control="food-search-bottom-bar-action"
-        data-food-search-action="create"
-        aria-pressed={createActive}
-        onClick={onCreate}
-      >
-        <span aria-hidden="true"><Plus /></span>
-        <strong>Создать</strong>
       </button>
 
       <button

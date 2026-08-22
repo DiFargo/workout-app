@@ -500,14 +500,15 @@
     --color-workout-calendar-planner-action: #806bb6;
     --background-workout-calendar-planned: #f5f2f7;
     --color-workout-calendar-planned: #806bb6;
-    --background-workout-calendar-off-date: #ffffff;
-    --color-workout-calendar-off-date: #7b7682;
+    --color-workout-calendar-off-date-border: #cfdceb;
+    --background-workout-calendar-off-date: #f2f7fc;
+    --color-workout-calendar-off-date: #557da7;
     --color-workout-calendar-selected-border: #8f7ac8;
     --shadow-workout-calendar-selected: 0 0 0 3px rgba(143, 122, 200, 0.14);
     --background-workout-calendar-planned-badge: #f5f2f7;
-    --background-workout-calendar-off-date-badge: #ffffff;
+    --background-workout-calendar-off-date-badge: #e5f0fa;
     --color-workout-calendar-legend-planned: #8f7ac8;
-    --color-workout-calendar-legend-off-date: #7b7682;
+    --color-workout-calendar-legend-off-date: #6d95bf;
     --background-workout-calendar-history-icon: #f5f2f7;
 
     --background-profile-credential-overlay: rgba(48, 39, 61, 0.34);

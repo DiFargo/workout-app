@@ -152,6 +152,10 @@
   font-weight: 500;
 }
 
+.workspaceRoot :global(.trainerNextTrainerCompactIcon) {
+  display: none;
+}
+
 .workspaceRoot :global(.trainerNextAvatar) {
   display: grid;
   width: 38px;
@@ -1125,7 +1129,7 @@
 
 .workspaceRoot :global(.trainerCabinetLogout) {
   display: inline-flex;
-  width: max-content;
+  width: 100%;
   min-height: 46px;
   align-items: center;
   justify-content: center;

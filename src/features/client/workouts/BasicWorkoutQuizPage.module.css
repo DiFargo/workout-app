@@ -22,7 +22,7 @@
   max-width: 402px;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 0 16px calc(110px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px calc(184px + env(safe-area-inset-bottom, 0px));
   overflow: hidden auto;
   background: #f7f6f8;
   color: #28262e;
@@ -30,9 +30,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .topBar.topBar {
-  width: calc(100% + 32px);
   min-height: 0;
-  margin: 0 -16px 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .title.title {
@@ -573,5 +571,1008 @@
   :global(:root[data-app-theme="warm-light"]) .page {
     padding-right: 18px;
     padding-left: 18px;
+  }
+}
+
+/* The quiz is mobile-first, but on a tablet or desktop it should use the
+   available workspace instead of looking like a narrow phone screenshot. */
+@media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .page.page {
+    --layout-client-dock-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    --layout-client-dock-width: min(var(--layout-client-shell-tablet-max), calc(100vw - 48px));
+    width: min(var(--layout-client-shell-tablet-max), calc(100vw - 48px));
+    max-width: var(--layout-client-shell-tablet-max);
+    padding: 0 28px calc(132px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* ClientPageHeader is fixed. When this wide plan sheet opens after a
+     phone-sized screen, its cached frame can otherwise keep the viewport
+     width and shift the title to the right. Keep the header and dock aligned
+     with the plan card on desktop. */
+  :global(:root[data-app-theme="warm-light"]) .topBar.topBar {
+    --client-page-header-width: min(var(--layout-client-shell-tablet-max), calc(100vw - 48px));
+    --client-page-header-left: 50%;
+    --client-page-header-transform: translateX(-50%);
+    width: min(var(--layout-client-shell-tablet-max), calc(100vw - 48px));
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .page :global(nav[aria-label="Основные разделы"]) {
+    width: min(var(--layout-client-shell-tablet-max), calc(100vw - 48px));
+    max-width: var(--layout-client-shell-tablet-max);
+  }
+
+  .wizardCard,
+  .reviewCard,
+  .resultCard {
+    gap: 16px;
+    padding: 24px;
+    border-radius: 26px;
+  }
+
+  .resultCard > p,
+  .reviewCard > p,
+  .wizardCard > p {
+    max-width: 58ch;
+  }
+}
+
+@media (min-width: 980px) {
+  :global(:root[data-app-theme="warm-light"]) .page.page {
+    --layout-client-dock-width: min(var(--layout-client-shell-desktop-max), calc(100vw - 64px));
+    width: min(var(--layout-client-shell-desktop-max), calc(100vw - 64px));
+    max-width: var(--layout-client-shell-desktop-max);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .topBar.topBar {
+    --client-page-header-width: min(var(--layout-client-shell-desktop-max), calc(100vw - 64px));
+    width: min(var(--layout-client-shell-desktop-max), calc(100vw - 64px));
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .page :global(nav[aria-label="Основные разделы"]) {
+    width: min(var(--layout-client-shell-desktop-max), calc(100vw - 64px));
+    max-width: var(--layout-client-shell-desktop-max);
+  }
+}
+
+.wizardCard,
+.reviewCard,
+.resultCard {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #efebf3;
+  border-radius: 22px;
+}
+
+.wizardCard h2,
+.reviewCard h2,
+.resultCard h2 {
+  margin: 0;
+  color: #28262e;
+  font-size: 23px;
+  font-weight: 750;
+  letter-spacing: -0.45px;
+  line-height: 1.12;
+}
+
+.wizardCard > p,
+.reviewCard > p,
+.resultCard > p {
+  margin: 0;
+  color: #7b7682;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+.eyebrow {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.wizardProgress {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.wizardProgress > span {
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 5px;
+  overflow: hidden;
+  background: #efebf3;
+  border-radius: 999px;
+}
+
+.progressTrack i {
+  display: block;
+  height: 100%;
+  background: #8f7ac8;
+  border-radius: inherit;
+  transition: width 180ms ease;
+}
+
+.optionGrid {
+  display: grid;
+  gap: 9px;
+  margin-top: 6px;
+}
+
+.optionButton {
+  width: 100%;
+  min-height: 68px;
+  padding: 13px 14px;
+  display: grid;
+  gap: 4px;
+  color: #28262e;
+  text-align: left;
+  background: #f5f2f7;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.optionButton strong {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.optionButton small {
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.optionButton[data-selected="true"] {
+  background: #f0ecf8;
+  border-color: #8f7ac8;
+  box-shadow: inset 0 0 0 1px #8f7ac8;
+}
+
+.optionButton[data-selected="true"] strong {
+  color: #806bb6;
+}
+
+.twoDayStructure {
+  display: grid;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.twoDayStructureLabel {
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.twoDayStructure .optionGrid {
+  margin-top: 0;
+}
+
+.twoDayStructure .optionButton {
+  min-height: 58px;
+}
+
+.detailsField {
+  display: grid;
+  gap: 7px;
+  margin-top: 2px;
+}
+
+.detailsField > span {
+  color: #7b7682;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.detailsField textarea {
+  width: 100%;
+  min-height: 84px;
+  padding: 12px;
+  resize: vertical;
+  color: #28262e;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.35;
+  background: #f5f2f7;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+}
+
+.detailsField textarea:focus {
+  outline: 2px solid #c2b5e2;
+  outline-offset: 1px;
+}
+
+.wizardActions {
+  display: grid;
+  min-height: 48px;
+  margin-top: 10px;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.primaryButton,
+.nextButton {
+  min-height: 52px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #ffffff;
+  background: #8f7ac8;
+  border: 0;
+  border-radius: 17px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.primaryButton svg {
+  width: 19px;
+  height: 19px;
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+}
+
+.nextButton {
+  width: 100%;
+}
+
+.backButton,
+.secondaryButton {
+  min-height: 44px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: #7b7682;
+  background: transparent;
+  border: 0;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.backButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.backButton:disabled {
+  opacity: 0.55;
+}
+
+/* Keep the full primary action above the mobile dock on the longer
+   restrictions step. The options remain comfortably tappable while the
+   questionnaire uses less vertical space on phone-height viewports. */
+@media (max-width: 699px) and (max-height: 900px) {
+  .wizardCard {
+    gap: 9px;
+    padding: 16px;
+  }
+
+  .wizardProgress {
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+
+  .wizardCard h2 {
+    font-size: 22px;
+  }
+
+  .wizardCard > p {
+    font-size: 13px;
+    line-height: 1.34;
+  }
+
+  .optionGrid {
+    gap: 7px;
+    margin-top: 2px;
+  }
+
+  .optionButton {
+    min-height: 54px;
+    padding: 8px 13px;
+    gap: 2px;
+  }
+
+  .optionButton strong {
+    font-size: 14px;
+  }
+
+  .optionButton small {
+    font-size: 11px;
+    line-height: 1.22;
+  }
+
+  .wizardActions {
+    min-height: 44px;
+    margin-top: 2px;
+    gap: 8px;
+  }
+
+  .primaryButton,
+  .nextButton {
+    min-height: 48px;
+  }
+}
+
+/* The review must keep the primary action visible even when a long answer
+   needs more room. The answers remain editable and scroll inside the card. */
+:global(:root[data-app-theme="warm-light"]) .page.reviewPage {
+  height: 100dvh;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+:global(:root[data-app-theme="warm-light"]) .reviewPage .topBar {
+  flex: 0 0 auto;
+  margin: max(8px, env(safe-area-inset-top, 0px)) 0 10px;
+}
+
+/* The generated-plan action is always available. Schedule details can scroll
+   inside the card, while saving the plan stays above the client dock. */
+:global(:root[data-app-theme="warm-light"]) .page.resultPage {
+  height: 100dvh;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+:global(:root[data-app-theme="warm-light"]) .resultPage .topBar {
+  flex: 0 0 auto;
+  margin: max(8px, env(safe-area-inset-top, 0px)) 0 10px;
+}
+
+.resultPage .resultCard {
+  min-height: 0;
+  flex: 1 1 auto;
+  align-content: start;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.resultPage .resultCard::-webkit-scrollbar {
+  display: none;
+}
+
+.resultActionBar {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 0;
+}
+
+.resultActionBar .primaryButton {
+  width: 100%;
+}
+
+.reviewPage .reviewCard {
+  min-height: 0;
+  flex: 1 1 auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.reviewHeading {
+  display: grid;
+  gap: 5px;
+}
+
+.reviewHeading h2 {
+  font-size: 21px;
+  line-height: 1.08;
+}
+
+.reviewHeading p {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.reviewPage .answerList {
+  min-height: 0;
+  padding: 1px 2px 1px 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 7px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.reviewPage .answerList::-webkit-scrollbar { display: none; }
+
+.reviewPage .answerRow {
+  min-height: 52px;
+  padding: 8px 10px;
+  gap: 3px;
+  border: 1px solid #efebf3;
+  border-radius: 13px;
+}
+
+.reviewPage .answerRow[data-answer-key="planPreferences"] {
+  min-height: 62px;
+  grid-column: 1 / -1;
+}
+
+.reviewPage .answerRow span {
+  font-size: 9px;
+  line-height: 1;
+}
+
+.reviewPage .answerRow strong {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.22;
+}
+
+.reviewActions {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 6px;
+  padding-top: 8px;
+  background: #ffffff;
+  border-top: 1px solid #efebf3;
+}
+
+.reviewActions .primaryButton {
+  width: 100%;
+  min-height: 50px;
+}
+
+.reviewActions .secondaryButton,
+.reviewActions .backButton {
+  min-height: 34px;
+  font-size: 12px;
+}
+
+.reviewActions .errorMessage,
+.reviewActions .safetyNote,
+.reviewActions .placeholderNotice {
+  padding: 8px 10px;
+  font-size: 11px !important;
+  line-height: 1.25;
+}
+
+@media (max-height: 700px) {
+  .reviewHeading p { display: none; }
+
+  .reviewPage .reviewCard {
+    gap: 7px;
+    padding: 12px;
+  }
+
+  .reviewPage .answerRow { min-height: 48px; }
+  .reviewPage .answerRow[data-answer-key="planPreferences"] { min-height: 56px; }
+}
+
+.reviewCard,
+.resultCard {
+  min-height: 440px;
+}
+
+.answerList,
+.planDays {
+  display: grid;
+  gap: 8px;
+}
+
+.answerRow {
+  width: 100%;
+  min-height: 54px;
+  padding: 9px 12px;
+  display: grid;
+  gap: 3px;
+  text-align: left;
+  background: #f5f2f7;
+  border: 0;
+  border-radius: 14px;
+}
+
+.answerRow span,
+.planDay span {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.answerRow strong {
+  color: #28262e;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.errorMessage {
+  padding: 10px 12px;
+  color: #a14f5b !important;
+  background: #fff2f3;
+  border-radius: 13px;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.placeholderNotice {
+  margin: 0;
+  padding: 9px 12px;
+  color: #68636f !important;
+  background: #f5f2f7;
+  border-radius: 13px;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.resultIcon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: #806bb6;
+  background: #f0ecf8;
+  border-radius: 15px;
+}
+
+.resultIcon svg {
+  width: 23px;
+  height: 23px;
+}
+
+.resultStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.resultStats > span {
+  min-height: 59px;
+  padding: 8px 4px;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  background: #f5f2f7;
+  border-radius: 14px;
+}
+
+.resultStats b {
+  color: #806bb6;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.resultStats small,
+.planDay small {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.scheduleSection {
+  display: grid;
+  gap: 8px;
+}
+
+.scheduleHeading {
+  display: grid;
+  gap: 3px;
+  padding: 2px 3px;
+}
+
+.scheduleHeading strong {
+  color: #28262e;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.scheduleHeading span {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.safetyNote,
+.progressionNote {
+  padding: 10px 12px;
+  border-radius: 13px;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.safetyNote {
+  color: #806bb6 !important;
+  background: #f0ecf8;
+}
+
+.progressionNote {
+  color: #68636f !important;
+  background: #f5f2f7;
+}
+
+.planDays {
+  gap: 5px;
+  max-height: none;
+  padding: 0;
+  overflow: visible;
+}
+
+.planStructure {
+  display: grid;
+  gap: 8px;
+}
+
+.microcycleTabs {
+  display: grid;
+  padding: 4px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  background: #f5f2f7;
+  border-radius: 14px;
+}
+
+.microcycleTabs button {
+  min-height: 34px;
+  padding: 0 8px;
+  color: #7b7682;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+}
+
+.microcycleTabs button.activeMicrocycleTab {
+  color: #806bb6;
+  background: #ffffff;
+  box-shadow: 0 1px 5px rgba(60, 48, 82, 0.08);
+}
+
+.microcycleTitle {
+  display: grid;
+  gap: 2px;
+  padding: 2px 3px;
+}
+
+.microcycleTitle strong {
+  color: #28262e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.microcycleTitle small {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.planDay {
+  min-height: 62px;
+  padding: 9px 11px;
+  display: grid;
+  gap: 2px;
+  background: #f5f2f7;
+  border-radius: 13px;
+}
+
+.planDay span {
+  display: block;
+}
+
+.planDay strong {
+  min-width: 0;
+  color: #28262e;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.planDay small {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.generationOverlay {
+  position: fixed;
+  z-index: 30000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(40, 38, 46, 0.28);
+  backdrop-filter: blur(5px);
+}
+
+.generationModal {
+  width: min(100%, 330px);
+  max-height: calc(100dvh - 32px);
+  min-height: 356px;
+  padding: 26px 22px 22px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  color: #28262e;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #efebf3;
+  border-radius: 28px;
+  box-shadow: 0 22px 54px rgba(40, 38, 46, 0.2);
+  overflow: auto;
+}
+
+.generationModal h2 {
+  margin: 0;
+  color: #28262e;
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.45px;
+  line-height: 1.15;
+}
+
+.generationModal p {
+  margin: 0;
+  color: #7b7682;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+.generationIcon {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+  color: #806bb6;
+  background: #f0ecf8;
+  border-radius: 22px;
+  animation: generationPulse 1.4s ease-in-out infinite;
+}
+
+.generationIcon svg {
+  width: 31px;
+  height: 31px;
+}
+
+.generationIcon.generationReadyIcon {
+  color: #ffffff;
+  background: #708d79;
+  animation: none;
+}
+
+.generationReadyLabel {
+  color: #708d79;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.generationProgressSummary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  padding: 2px 0 0;
+  text-align: left;
+}
+
+.generationProgressSummary > div {
+  min-width: 62px;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  padding: 7px 6px;
+  color: #806bb6;
+  background: #f0ecf8;
+  border-radius: 15px;
+}
+
+.generationProgressSummary strong {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.generationProgressSummary span {
+  margin-top: 3px;
+  color: #806bb6;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.generationProgressSummary p {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.32;
+}
+
+.generationProgressSummary p b {
+  color: #28262e;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.generationProgressTrack {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  background: #efebf3;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 1px rgba(71, 55, 99, 0.06);
+}
+
+.generationProgressTrack i {
+  display: block;
+  height: 100%;
+  min-width: 8px;
+  background: linear-gradient(90deg, #806bb6, #9b85d2);
+  border-radius: inherit;
+  box-shadow: 0 2px 6px rgba(128, 107, 182, 0.28);
+  transition: width 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.generationSteps {
+  width: 100%;
+  padding: 3px 0 0;
+  display: grid;
+  gap: 5px;
+  list-style: none;
+  text-align: left;
+}
+
+.generationSteps li {
+  min-height: 29px;
+  display: grid;
+  grid-template-columns: 23px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  color: #9a95a1;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.generationSteps li i {
+  width: 23px;
+  height: 23px;
+  display: grid;
+  flex: 0 0 23px;
+  place-items: center;
+  color: #7b7682;
+  font-size: 11px;
+  font-style: normal;
+  background: #f5f2f7;
+  border-radius: 8px;
+}
+
+.generationSteps li > span {
+  min-width: 0;
+  line-height: 1.22;
+}
+
+.generationSteps li b {
+  color: inherit;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.generationSteps li i svg {
+  width: 14px;
+  height: 14px;
+}
+
+.generationSteps li.generationStepComplete {
+  color: #5c7665;
+}
+
+.generationSteps li.generationStepComplete i {
+  color: #ffffff;
+  background: #708d79;
+}
+
+.generationSteps li.generationStepActive {
+  color: #806bb6;
+}
+
+.generationSteps li.generationStepActive i {
+  color: #806bb6;
+  background: #f0ecf8;
+}
+
+.generationSteps li.generationStepActive i span {
+  width: 9px;
+  height: 9px;
+  display: block;
+  background: currentColor;
+  border-radius: 50%;
+  animation: generationPulse 1s ease-in-out infinite;
+}
+
+@keyframes generationPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: 0.72; }
+}
+
+@media (max-width: 370px) {
+  .wizardCard,
+  .reviewCard,
+  .resultCard {
+    padding: 15px;
+  }
+
+  .wizardCard h2,
+  .reviewCard h2,
+  .resultCard h2 {
+    font-size: 21px;
+  }
+}
+
+@media (max-height: 680px) {
+  .generationModal {
+    min-height: 0;
+    padding: 18px 20px;
+    gap: 7px;
+  }
+
+  .generationIcon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0;
+    border-radius: 18px;
+  }
+
+  .generationIcon svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  .generationSteps {
+    gap: 3px;
+  }
+
+  .generationSteps li {
+    min-height: 26px;
   }
 }

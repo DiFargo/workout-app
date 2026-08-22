@@ -40,9 +40,11 @@ export function useNutritionRuntimeEffects({
       __uid: user.uid,
       updatedAt: new Date().toISOString()
     };
+    const nutritionBackup = { ...localNutrition };
+    delete nutritionBackup.myFoods;
 
     safeWriteUserJsonStorage(nutritionStorageKey, user.uid, localNutrition);
-    addUserLocalBackup(nutritionBackupStorageKey, user.uid, { nutrition: localNutrition }, 12);
+    addUserLocalBackup(nutritionBackupStorageKey, user.uid, { nutrition: nutritionBackup }, 12);
   }, [nutrition, nutritionCloudReady, nutritionBackupStorageKey, nutritionStorageKey, user?.uid]);
 
   useEffect(() => {
@@ -80,11 +82,12 @@ export function useNutritionRuntimeEffects({
             const codes = await detector.detect(barcodeVideoRef.current);
             if (codes.length > 0) {
               const value = codes[0].rawValue || "";
-              setNutritionBarcode(value);
+              const food = await findFoodByBarcode(value);
+              if (stopped) return;
+              setNutritionBarcode("");
               setBarcodeScannerOpen(false);
-
-              const food = findFoodByBarcode(value);
               if (food) addNutritionFoodFromPicker(food);
+              else setBarcodeScannerError("Штрихкод пока не найден. Проверь цифры или найди продукт по названию.");
               return;
             }
           } catch (error) {

@@ -117,13 +117,27 @@ export function validateTrainerWorkoutsForAssignment({ programName = "", templat
   return makeResult(errors);
 }
 
-export function validateTrainerWorkoutScheduleDates(dates = [], workoutCount = 0) {
+export function validateTrainerWorkoutScheduleDates(
+  dates = [],
+  workoutCount = 0,
+  { todayDate, allowedPastDates = [] } = {}
+) {
   const rawDates = (Array.isArray(dates) ? dates : [])
     .map((date) => String(date || "").trim())
     .filter(Boolean);
   const uniqueDates = [...new Set(rawDates)];
   const duplicateDates = rawDates.filter((date, index) => rawDates.indexOf(date) !== index);
   const cleanDates = uniqueDates.filter((date) => DATE_RE.test(date)).sort();
+  const defaultToday = new Date();
+  const localToday = [
+    defaultToday.getFullYear(),
+    String(defaultToday.getMonth() + 1).padStart(2, "0"),
+    String(defaultToday.getDate()).padStart(2, "0")
+  ].join("-");
+  const normalizedToday = DATE_RE.test(String(todayDate || "")) ? String(todayDate) : localToday;
+  const existingPastDates = new Set((Array.isArray(allowedPastDates) ? allowedPastDates : [])
+    .map((date) => String(date || "").trim())
+    .filter((date) => DATE_RE.test(date)));
   const errors = [];
 
   if (!Number.isFinite(Number(workoutCount)) || Number(workoutCount) <= 0) {
@@ -144,6 +158,13 @@ export function validateTrainerWorkoutScheduleDates(dates = [], workoutCount = 0
     errors.push({
       code: "schedule_date_duplicate",
       message: "Каждая тренировка должна быть назначена на отдельную дату."
+    });
+  }
+
+  if (cleanDates.some((date) => date < normalizedToday && !existingPastDates.has(date))) {
+    errors.push({
+      code: "schedule_date_past",
+      message: "Нельзя назначать тренировку на прошедшую дату."
     });
   }
 

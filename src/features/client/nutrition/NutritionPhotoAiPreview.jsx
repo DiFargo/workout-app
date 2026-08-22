@@ -4,6 +4,17 @@ import {
 } from "../../../utils/nutritionFoodPresentation";
 import styles from "./NutritionPhotoAiPreview.module.css";
 
+function getPhotoResultKind(selectedFood = {}, result = "") {
+  const source = String(selectedFood?.source || result || "").toLowerCase();
+  if (selectedFood?.evidenceType === "label" || source.includes("данные с этикетки")) return "label";
+  if (
+    selectedFood?.evidenceType === "estimate" ||
+    selectedFood?.requiresReview === true ||
+    /(?:примерн(?:ая|ую) оценк|ии)/i.test(source)
+  ) return "estimate";
+  return "catalog";
+}
+
 export default function NutritionPhotoAiPreview({
   preview,
   analyzing,
@@ -17,6 +28,18 @@ export default function NutritionPhotoAiPreview({
   if (!preview) {
     return null;
   }
+
+  const resultKind = getPhotoResultKind(selectedFood, result);
+  const resultHeading = resultKind === "label"
+    ? "Данные с этикетки"
+    : resultKind === "estimate"
+      ? "Примерная оценка ИИ"
+      : "Найдено совпадение";
+  const resultDescription = resultKind === "estimate"
+    ? "Проверьте КБЖУ и порцию перед добавлением в дневник"
+    : resultKind === "label"
+      ? "Сверьте данные с упаковкой перед добавлением"
+      : selectedFood?.name || result?.replace(/^ИИ распознал:\s*/i, "").replace(/^Ниже показаны варианты из базы\.?$/i, "") || "Выберите вариант из списка";
 
   return (
     <div
@@ -33,14 +56,12 @@ export default function NutritionPhotoAiPreview({
 
       <div className={styles.content}>
         <div className={styles.heading}>
-          <strong data-css-module-text>{analyzing ? "Анализирую фото" : "Распознано"}</strong>
+          <strong data-css-module-text>{analyzing ? "Анализирую фото" : resultHeading}</strong>
           {confidence && <em className={styles.confidence}>{confidence}</em>}
         </div>
 
         <span className={styles.description} data-css-module-text>
-          {analyzing
-            ? "Анализирую фото и создаю продукт"
-            : selectedFood?.name || result?.replace(/^ИИ распознал:\s*/i, "").replace(/^Ниже показаны варианты из базы\.?$/i, "") || "Выбери вариант из списка"}
+          {analyzing ? "Анализирую фото и создаю продукт" : resultDescription}
         </span>
 
         {candidates.length > 1 && !analyzing && (

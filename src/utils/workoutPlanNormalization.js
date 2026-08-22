@@ -6,7 +6,7 @@ export function makeThreeSets(sets = [], defaultReps = 8) {
 
   const buildSet = (set) => ({
     ...set,
-    reps: set?.reps || defaultReps,
+    reps: Number(set?.durationSeconds) > 0 ? "" : set?.reps || defaultReps,
     weight: set?.weight || "",
     enteredReps: set?.enteredReps || "",
     enteredWeight: set?.enteredWeight || ""
@@ -18,14 +18,103 @@ export function makeThreeSets(sets = [], defaultReps = 8) {
   );
 }
 
+export function makeGroupedWorkoutSets(sets = [], rounds = 3, defaultReps = 8) {
+  const cleanSets = Array.isArray(sets) ? sets : [];
+  const safeRounds = Math.max(1, Number(rounds) || 1);
+
+  return Array.from({ length: safeRounds }, (_, index) => {
+    const sourceSet = cleanSets[index] || cleanSets[0] || {};
+    return {
+      ...sourceSet,
+      reps: Number(sourceSet?.durationSeconds) > 0 ? "" : sourceSet?.reps || defaultReps,
+      weight: sourceSet?.weight || "",
+      enteredReps: sourceSet?.enteredReps || "",
+      enteredWeight: sourceSet?.enteredWeight || ""
+    };
+  });
+}
+
+export function getWorkoutGroupConfig(workout = {}, exercise = {}) {
+  if (exercise?.taskBlockType !== "group") return null;
+
+  if (exercise.taskBlockConfig?.groupMode) {
+    return exercise.taskBlockConfig;
+  }
+
+  return (Array.isArray(workout.taskBlocks) ? workout.taskBlocks : []).find((block) => (
+    block?.type === "group" && block.id === exercise.taskBlockId
+  )) || null;
+}
+
+export function getWorkoutExecutionSteps(workout = {}) {
+  const exercises = Array.isArray(workout.exercises) ? workout.exercises : [];
+  const handledExerciseIds = new Set();
+  const steps = [];
+
+  exercises.forEach((exercise, exerciseIndex) => {
+    const exerciseId = String(exercise?.id || "").trim();
+    if (!exerciseId || handledExerciseIds.has(exerciseId)) return;
+
+    const group = getWorkoutGroupConfig(workout, exercise);
+    if (!group) {
+      handledExerciseIds.add(exerciseId);
+      steps.push({ exerciseId, exerciseIndex, setIndex: null, group: null });
+      return;
+    }
+
+    const groupedExercises = exercises
+      .map((candidate, candidateIndex) => ({
+        exercise: candidate,
+        exerciseIndex: candidateIndex,
+        group: getWorkoutGroupConfig(workout, candidate)
+      }))
+      .filter(({ exercise: candidate, group: candidateGroup }) => (
+        candidateGroup?.id === group.id && candidate?.id
+      ));
+    const groupExercises = Array.isArray(group.exerciseIds) && group.exerciseIds.length
+      ? group.exerciseIds
+          .map((id) => groupedExercises.find(({ exercise: candidate }) => candidate.id === id))
+          .filter(Boolean)
+      : groupedExercises;
+    const rounds = Math.max(1, Number(group.rounds) || 1);
+
+    for (let roundIndex = 0; roundIndex < rounds; roundIndex += 1) {
+      groupExercises.forEach(({ exercise: candidate, exerciseIndex: candidateIndex }, groupExerciseIndex) => {
+        const candidateId = String(candidate.id || "").trim();
+        if (!candidateId) return;
+        steps.push({
+          exerciseId: candidateId,
+          exerciseIndex: candidateIndex,
+          setIndex: roundIndex,
+          group: {
+            ...group,
+            roundIndex,
+            groupExerciseIndex,
+            exerciseCount: groupExercises.length
+          }
+        });
+      });
+    }
+
+    groupExercises.forEach(({ exercise: candidate }) => handledExerciseIds.add(String(candidate.id || "").trim()));
+  });
+
+  return steps;
+}
+
 export function normalizeExercise(exercise) {
   const defaultReps = exercise?.name?.includes("Пресс") ? 15 : 8;
+  const groupRounds = exercise?.taskBlockType === "group"
+    ? Number(exercise?.taskBlockConfig?.rounds)
+    : 0;
 
   return {
     ...exercise,
     usesWeight: exerciseUsesExternalWeight(exercise),
     video: exercise?.video || exercise?.videoUrl || exercise?.videoURL || "",
-    sets: makeThreeSets(exercise?.sets, defaultReps)
+    sets: groupRounds > 0
+      ? makeGroupedWorkoutSets(exercise?.sets, groupRounds, defaultReps)
+      : makeThreeSets(exercise?.sets, defaultReps)
   };
 }
 

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { APP_PAGES } from "./appPages";
 import {
+  loadAdminBaseLibrary,
   loadAdminPanelHub,
   loadAiCoachPage,
   loadBasicWorkoutQuizPage,
@@ -11,8 +12,12 @@ import {
   loadWorkoutPlanPage
 } from "./appRouteLoaders";
 import AccessDeniedScreen from "../components/common/AccessDeniedScreen";
+import AdminWorkspace from "../components/admin/AdminWorkspace";
 import RouteFallback from "./RouteFallback";
+import { BASIC_WORKOUT_EXERCISE_LIBRARY } from "../data/basicWorkoutExerciseLibrary";
+import { BASIC_WORKOUT_PLANS } from "../data/basicWorkoutPlans";
 
+const AdminBaseLibrary = lazy(loadAdminBaseLibrary);
 const AdminPanelHub = lazy(loadAdminPanelHub);
 const AiCoachPage = lazy(loadAiCoachPage);
 const BasicWorkoutQuizPage = lazy(loadBasicWorkoutQuizPage);
@@ -49,6 +54,10 @@ export default function AppRouter({
   onOpenTrainerClients,
   onOpenTrainerPrograms,
   onOpenCabinet,
+  onAdminLogout,
+  onAdminProfileClick,
+  openAdminClientsWithFilter,
+  openAdminBaseLibrary,
   openAdminProgramsOverview,
   history,
   historyLoading,
@@ -89,11 +98,79 @@ export default function AppRouter({
   setAiNutritionAdaptedToday,
   nutrition,
   plan,
+  adminBaseLibraryTab,
+  adminAllUsersList,
+  adminTrainingTemplates,
   user,
   workoutPlanRouteHandlers,
   getCompletedWorkoutSet,
   isWorkoutCompletedByHistory
 }) {
+  if (page === APP_PAGES.ADMIN_LIBRARY) {
+    if (!canUseAdminFeatures()) {
+      return (
+        <AccessDeniedScreen
+          message="Базовая библиотека доступна только администратору."
+          onBack={() => onSetPage(APP_PAGES.MAIN)}
+        />
+      );
+    }
+
+    const adminBaseProgramTemplates = Array.isArray(adminTrainingTemplates)
+      ? adminTrainingTemplates.filter((template) => template?.ownerRole === "admin")
+      : [];
+    const baseProgramTemplates = [
+      ...Object.values(BASIC_WORKOUT_PLANS),
+      ...adminBaseProgramTemplates
+    ];
+    const activeAdminSection = adminBaseLibraryTab === "exercises" ? "exercises" : "programs";
+    const openAdminSection = (sectionId) => {
+      if (sectionId === "overview") {
+        onSetPage(APP_PAGES.ADMIN_PANEL);
+        return;
+      }
+
+      if (sectionId === "users") {
+        if (typeof openAdminClientsWithFilter === "function") {
+          openAdminClientsWithFilter("all");
+        } else {
+          onSetPage(APP_PAGES.ADMIN_USERS);
+        }
+        return;
+      }
+
+      if (sectionId === "programs" || sectionId === "exercises") {
+        if (typeof openAdminBaseLibrary === "function") {
+          openAdminBaseLibrary(sectionId);
+        }
+      }
+    };
+
+    return renderLazyRoute(
+      <AdminWorkspace
+        activeSection={activeAdminSection}
+        adminMeta="Системное управление"
+        adminName={user?.displayName || user?.name || user?.email?.split("@")[0] || ""}
+        adminEmail={user?.email || ""}
+        headerTitle="Базовые программы и упражнения"
+        onLogout={onAdminLogout}
+        onProfileClick={onAdminProfileClick}
+        onSectionChange={openAdminSection}
+        subtitle="Общие программы и упражнения приложения"
+        title="Админка"
+      >
+        <AdminBaseLibrary
+          key={adminBaseLibraryTab}
+          embedded
+          programTemplates={baseProgramTemplates}
+          exercises={BASIC_WORKOUT_EXERCISE_LIBRARY}
+          initialTab={adminBaseLibraryTab}
+          onBack={() => onSetPage(APP_PAGES.ADMIN_PANEL)}
+        />
+      </AdminWorkspace>
+    );
+  }
+
   if (page === APP_PAGES.ADMIN_PANEL) {
     if (!canUseAdminFeatures()) {
       return (
@@ -108,7 +185,13 @@ export default function AppRouter({
       <AdminPanelHub
         canUseAdminFeatures={canUseAdminFeatures}
         setPage={onSetPage}
+        openAdminClientsWithFilter={openAdminClientsWithFilter}
+        openAdminBaseLibrary={openAdminBaseLibrary}
         openAdminProgramsOverview={openAdminProgramsOverview}
+        onLogout={onAdminLogout}
+        onProfileClick={onAdminProfileClick}
+        user={user}
+        adminAllUsersList={adminAllUsersList}
       />
     );
   }
@@ -151,6 +234,8 @@ export default function AppRouter({
         workoutModePreference={workoutModePreference}
         workoutModeRemember={workoutModeRemember}
         basicWorkoutQuiz={basicWorkoutQuiz}
+        startingWeightProfile={aiNutritionProfile || aiNutritionProfileDraft}
+        workoutHistory={history}
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
         onGoBackToMode={() => onSetPage(APP_PAGES.WORKOUT_MODE)}
         onOpenIndividualWorkouts={onOpenIndividualWorkouts}

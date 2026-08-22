@@ -328,8 +328,8 @@
   border-radius: var(--layout-client-dock-radius);
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
-  backdrop-filter: blur(20px) saturate(1.15);
-  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {

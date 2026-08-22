@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Check, CircleAlert, LoaderCircle, Mail, PencilLine, X } from "lucide-react";
 
 function formatContextDate(value) {
@@ -69,20 +70,21 @@ export default function TrainerWorkoutFeedbackReplyModal({
     ))
     : messages;
 
-  return (
-    <div className={styles.backdrop} role="presentation" onMouseDown={(event) => {
+  const modal = (
+    <div className={styles.backdrop} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => {
       if (event.target === event.currentTarget) onRequestClose();
     }}>
-      <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" aria-labelledby="trainer-feedback-reply-title">
-        <header className={styles.header}>
+      <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" data-trainer-modal-surface="true" data-trainer-modal-frame="true" aria-labelledby="trainer-feedback-reply-title">
+        <header className={styles.header} data-trainer-modal-header="true">
           <div>
-            <span>{isReply ? "ОТВЕТ НА КОММЕНТАРИЙ" : sendsBellNotification ? "УВЕДОМЛЕНИЕ В ПРИЛОЖЕНИИ" : "СООБЩЕНИЕ КЛИЕНТУ"}</span>
+            <span>{isReply ? (sendsBellNotification ? "ОТВЕТ В ПРИЛОЖЕНИИ" : "ОТВЕТ НА КОММЕНТАРИЙ") : sendsBellNotification ? "СООБЩЕНИЕ В ПРИЛОЖЕНИИ" : "СООБЩЕНИЕ КЛИЕНТУ"}</span>
             <h2 id="trainer-feedback-reply-title">{isReply ? "Ответ клиенту" : clientName}</h2>
             {isReply ? <p><strong>{clientName}</strong><small>{sourceNote.workoutName || sourceNote.title} · {formatContextDate(sourceNote.date)}</small></p> : null}
           </div>
           <button type="button" onClick={onRequestClose} aria-label="Закрыть"><X size={17} /></button>
         </header>
 
+        <div className={styles.scrollContent} data-trainer-modal-content="true">
         {sourceNote ? (
           <section className={styles.sourceCard}>
             <span>Комментарий клиента</span>
@@ -119,8 +121,8 @@ export default function TrainerWorkoutFeedbackReplyModal({
           />
           <small>Ctrl + Enter — отправить · Enter — новая строка</small>
         </label>
-        {!isReply && sendsBellNotification ? (
-          <p className={styles.deliveryHint}>Клиент увидит это сообщение в колокольчике приложения.</p>
+        {sendsBellNotification ? (
+          <p className={styles.deliveryHint}>Клиент увидит сообщение в приложении, в разделе уведомлений.</p>
         ) : null}
 
         {status ? (
@@ -151,7 +153,9 @@ export default function TrainerWorkoutFeedbackReplyModal({
           </button>
         ) : null}
 
-        <footer className={styles.footer}>
+        </div>
+
+        <footer className={styles.footer} data-trainer-modal-footer="true">
           <button type="button" onClick={onRequestClose}>Отмена</button>
           {sourceNote && onMarkProcessed && !processed ? (
             <button
@@ -166,10 +170,12 @@ export default function TrainerWorkoutFeedbackReplyModal({
           ) : null}
           <button className={styles.sendButton} type="button" disabled={!canSend} onClick={onSubmit}>
             {sending ? <LoaderCircle className={styles.spinner} size={16} /> : <Mail size={16} />}
-            {sending ? "Отправляется…" : sendsBellNotification ? "Отправить уведомление" : "Отправить"}
+            {sending ? "Отправляется…" : sendsBellNotification ? "Отправить в приложение" : "Отправить"}
           </button>
         </footer>
       </section>
     </div>
   );
+
+  return typeof document === "undefined" ? modal : createPortal(modal, document.body);
 }

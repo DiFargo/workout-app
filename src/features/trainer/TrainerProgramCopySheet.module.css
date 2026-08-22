@@ -2,20 +2,22 @@
   position: fixed;
   inset: 0;
   z-index: 10020;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 12px;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
   background: rgba(35, 40, 68, 0.24);
   backdrop-filter: blur(14px);
 }
 
 .sheet {
-  width: 100%;
-  max-width: 520px;
-  padding: 10px 14px calc(16px + env(safe-area-inset-bottom));
+  width: min(520px, 100%);
+  max-height: min(720px, calc(100dvh - 32px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
   border: 1px solid #efebf3;
-  border-radius: 18px 18px 12px 12px;
+  border-radius: 24px;
   background: #ffffff;
   color: #28262e;
   box-shadow: 0 24px 64px rgba(43, 50, 92, 0.2);
@@ -24,24 +26,56 @@
 .handle {
   width: 38px;
   height: 4px;
-  margin: 0 auto 12px;
+  margin: 0 0 10px;
   border-radius: 999px;
   background: #d8dce8;
 }
 
-.sheet h2 {
-  margin: 0 0 12px;
+.header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid #efebf3;
+}
+
+.header > div {
+  min-width: 0;
+}
+
+.header h2 {
+  margin: 0;
   color: #28262e;
   font-size: 17px;
   font-weight: 800;
-  text-align: center;
+  line-height: 1.25;
+}
+
+.header > button {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #f5f2f7;
+  color: #28262e;
+  cursor: pointer;
 }
 
 .targetList {
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
   display: grid;
   gap: 10px;
-  max-height: min(56vh, 420px);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px 18px;
 }
 
 .targetMonth {
@@ -62,7 +96,7 @@
 
 .targetMonth button,
 .actions button {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 10px;
   border: 1px solid #efebf3;
   border-radius: 10px;
@@ -77,17 +111,28 @@
 }
 
 .actions {
-  margin-top: 13px;
+  flex: 0 0 auto;
   display: flex;
   justify-content: flex-end;
+  padding: 12px 18px max(16px, env(safe-area-inset-bottom));
+  border-top: 1px solid #efebf3;
+  background: #ffffff;
 }
 
-@media (min-width: 761px) {
+@media (max-width: 520px) {
   .backdrop {
-    align-items: center;
+    padding: 12px;
   }
 
   .sheet {
-    border-radius: 18px;
+    max-height: calc(100dvh - 24px);
+    border-radius: 22px;
+  }
+
+  .header,
+  .targetList,
+  .actions {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }

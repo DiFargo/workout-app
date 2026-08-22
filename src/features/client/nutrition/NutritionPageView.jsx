@@ -22,7 +22,7 @@ export default function NutritionPageView({
   return (
     <NutritionPage>
       <NutritionMainContent
-        visible={!pickerOpen}
+        visible
         calendarOpen={calendarOpen}
         headerProps={headerProps}
         calendarProps={calendarProps}

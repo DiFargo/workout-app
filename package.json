@@ -1,19 +1,26 @@
 {
   "name": "workout-app",
   "private": true,
-  "version": "3.0.131",
+  "version": "3.0.495",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:staging": "vite build --mode staging",
-    "build:production": "vite build --mode production",
+    "build": "npm run build:production",
+    "build:staging": "node scripts/build-firebase-artifact.mjs --environment=staging",
+    "build:production": "node scripts/build-firebase-artifact.mjs --environment=production",
+    "import:exercise-catalog": "node scripts/import-free-exercise-catalog.mjs",
+    "build:basic-workout-ai-catalogue": "node scripts/build-basic-workout-ai-catalogue.mjs",
     "test": "node --test tests/*.test.mjs",
-    "test:rules": "set XDG_CONFIG_HOME=.config&& npx --yes --cache ./.npm-cache firebase-tools@15.20.0 emulators:exec --only firestore \"node --test tests/firestore-rules.rules.mjs\"",
-    "test:e2e": "playwright test",
-    "verify": "scripts\\verify.cmd",
+    "test:rules": "node scripts/run-firestore-rules.mjs",
+    "test:e2e": "node ./node_modules/@playwright/test/cli.js test",
+    "verify": "node scripts/verify.mjs --e2e",
+    "verify:core": "node scripts/verify.mjs",
     "check:bundle": "node scripts/check-build-budget.mjs",
+    "check:functions": "node scripts/check-functions-syntax.mjs",
+    "check:firebase-artifact": "node scripts/assert-firebase-deploy.mjs",
     "report:css": "node scripts/report-css-size.mjs",
+    "audit:production": "npm audit --cache ./.npm-cache --omit=dev",
+    "audit:functions": "npm audit --prefix functions --cache ./.npm-cache --omit=dev",
     "lint": "eslint .",
     "lint:critical": "eslint src/utils/clientUx.js src/utils/trainerAttention.js src/utils/trainerNutritionPlan.js tests/client-ux.test.mjs tests/trainer-attention.test.mjs tests/trainer-nutrition-plan.test.mjs tests/security-boundaries.test.mjs tests/firestore-rules.rules.mjs tests/e2e/client-smoke.spec.js tests/e2e/trainer-workspace.spec.js playwright.config.js",
     "preview": "vite preview"
@@ -37,5 +44,9 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
     "vite": "^8.0.10"
+  },
+  "overrides": {
+    "protobufjs": "7.6.5",
+    "websocket-driver": "0.7.5"
   }
 }

@@ -44,19 +44,101 @@
   }
 }
 
-/* The calm client theme keeps the same iPhone canvas on every host viewport. */
-:global(:root[data-app-theme="warm-light"]) .shell.shell {
-  width: min(402px, 100vw);
-  max-width: 402px;
-  height: var(--client-shell-height, min(874px, 100dvh));
-  min-height: var(--client-shell-min-height, min(874px, 100dvh));
-  max-height: var(--client-shell-max-height, min(874px, 100dvh));
-  margin: 0 auto;
-  border-radius: 54px;
+/* Keep the phone canvas on a phone. On larger screens the client workspace,
+   header and dock use one shared centred width. */
+@media (max-width: 699px) {
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell {
+    width: min(402px, 100vw);
+    max-width: 402px;
+    height: var(--client-shell-height, min(874px, 100dvh));
+    min-height: var(--client-shell-min-height, min(874px, 100dvh));
+    max-height: var(--client-shell-max-height, min(874px, 100dvh));
+    margin: 0 auto;
+    border-radius: 54px;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 979px) {
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell {
+    --client-adaptive-shell-width: min(
+      var(--layout-client-shell-tablet-max),
+      calc(100vw - (var(--layout-tablet-gutter) * 2))
+    );
+    --layout-client-dock-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    --layout-client-dock-width: var(--client-adaptive-shell-width);
+    width: var(--client-adaptive-shell-width);
+    max-width: var(--layout-client-shell-tablet-max);
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border-radius: 28px;
+  }
+}
+
+@media (min-width: 980px) {
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell {
+    --client-adaptive-shell-width: min(
+      var(--layout-client-shell-desktop-max),
+      calc(100vw - (var(--layout-client-shell-desktop-gutter) * 2))
+    );
+    --layout-client-dock-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    --layout-client-dock-width: var(--client-adaptive-shell-width);
+    width: var(--client-adaptive-shell-width);
+    max-width: var(--layout-client-shell-desktop-max);
+    height: calc(100dvh - 24px);
+    min-height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: 12px auto;
+    border-radius: 30px;
+  }
+}
+
+@media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell :global([data-client-page-header="true"]) {
+    width: var(--client-adaptive-shell-width);
+    margin: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* An embedded header belongs to the modal sheet, not to the page canvas.
+     Without this reset a modal opened inside a wide client shell inherits the
+     desktop page width and its title/actions are pushed outside the sheet. */
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell :global([role="dialog"] [data-client-page-header="true"]) {
+    width: 100%;
+    margin: 0;
+    left: auto;
+    transform: none;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell :global([data-testid="client-bottom-nav"]),
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell :global([data-testid="client-training-bottom-nav"]) {
+    width: var(--layout-client-dock-width);
+    max-width: var(--layout-client-dock-width);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell :global([data-testid="client-bottom-nav"]) > button,
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell :global([data-testid="client-training-bottom-nav"]) > button {
+    max-width: none;
+  }
 }
 
 @media (max-width: 402px) {
-  :global(:root[data-app-theme="warm-light"]) .shell.shell {
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell {
     border-radius: 0;
+  }
+}
+
+/* In a short landscape viewport the fixed dock must leave enough visible
+   content above it. Keep every navigation target comfortably tappable while
+   reducing the dock's visual footprint for the shared client shells. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :global(:root[data-app-theme="warm-light"]) .shell.shell.shell {
+    --layout-client-dock-bottom: max(6px, env(safe-area-inset-bottom, 0px));
+    --layout-client-dock-height: 64px;
+    --layout-client-dock-button-height: 52px;
+    --layout-client-dock-radius: 22px;
+    --layout-client-dock-button-radius: 16px;
   }
 }

@@ -9,6 +9,18 @@ import {
 } from "../../../utils/nutritionFoodModel";
 import styles from "./DishIngredientPicker.module.css";
 
+function getIngredientSourceLabel(food = {}) {
+  const source = String(food.source || "").trim();
+  const sourceType = String(food.sourceType || "").trim().toLowerCase();
+
+  if (/^моя база$/i.test(source) || sourceType === "personal_catalog") return "Моя база";
+  if (sourceType === "ai_estimate" || food.evidenceType === "estimate" || /(?:оценка\s*ии|openai|ai\s*(?:фото|estimate))/i.test(source)) {
+    return "Примерная оценка ИИ";
+  }
+  if (sourceType === "local_catalog") return source ? `Проверенная база · ${source}` : "Проверенная база";
+  return source || "Общая база";
+}
+
 function buildDishIngredientResults({
   search,
   nutrition,
@@ -37,7 +49,9 @@ function buildDishIngredientResults({
       protein: 0,
       fat: 0,
       carbs: 0,
-      source: "AI/FatSecret",
+      source: "Примерная оценка ИИ",
+      sourceType: "ai_estimate",
+      evidenceType: "estimate",
       icon: getFoodIcon(name)
     }))
   ];
@@ -47,7 +61,10 @@ function buildDishIngredientResults({
 
   allFoods.forEach((food) => {
     const normalizedFood = normalizeNutritionFood(food);
-    const key = normalizedFood.foodId || normalizedFood.id || normalizedFood.name;
+    const barcode = String(normalizedFood.barcode || "").trim();
+    const key = barcode
+      ? `barcode:${barcode}`
+      : `name:${String(normalizedFood.name || "").normalize("NFKC").toLowerCase().trim()}`;
     if (seenFoodIds.has(key)) return;
     seenFoodIds.add(key);
     uniqueFoods.push(normalizedFood);
@@ -154,7 +171,7 @@ export default function DishIngredientPicker({
                 <>
                   {loading ? (
                     <div className={styles.empty} data-testid="dish-ingredient-empty" data-css-module-text="dish-ingredient-picker">
-                      Ищу через AI/FatSecret...
+                      Ищу в общей базе...
                     </div>
                   ) : cleanQuery.length >= 2 ? (
                     <button
@@ -197,7 +214,7 @@ export default function DishIngredientPicker({
                 <>
                   {loading && (
                     <div className={styles.loading} data-testid="dish-ingredient-loading" data-css-module-text="dish-ingredient-picker">
-                      Ищу ещё варианты через AI/FatSecret…
+                      Ищу ещё варианты в общей базе…
                     </div>
                   )}
 
@@ -217,7 +234,7 @@ export default function DishIngredientPicker({
                       <span className={styles.resultIcon} data-css-module-text="dish-ingredient-picker">{food.icon || getFoodIcon(food)}</span>
                       <div className={styles.resultContent}>
                         <strong className={styles.resultTitle} data-css-module-text="dish-ingredient-picker">{food.name}</strong>
-                        <small className={styles.resultMeta} data-css-module-text="dish-ingredient-picker">{food.source || "Продукт"} · {Math.round(Number(food.calories) || 0)} ккал</small>
+                        <small className={styles.resultMeta} data-css-module-text="dish-ingredient-picker">{getIngredientSourceLabel(food)} · {Math.round(Number(food.calories) || 0)} ккал</small>
                       </div>
                       <em className={styles.resultAction} aria-hidden="true" data-css-module-text="dish-ingredient-picker">＋</em>
                     </button>

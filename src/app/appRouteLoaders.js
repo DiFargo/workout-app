@@ -1,4 +1,5 @@
 export const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub");
+export const loadAdminBaseLibrary = () => import("../components/admin/AdminBaseLibrary");
 export const loadAiCoachPage = () => import("../features/client/ai/AiCoachPage");
 export const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
 export const loadMeasurementWizardPage = () => import("../features/client/measurements/MeasurementWizardPage");

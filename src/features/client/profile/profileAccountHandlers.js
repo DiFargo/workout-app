@@ -13,26 +13,18 @@ import { getDefaultLoginAlias } from "../../../utils/clientUx";
 import { uploadStorageFile } from "../../../utils/firebaseStorage";
 
 const googleReauthProvider = new GoogleAuthProvider();
-const PROFILE_UPDATE_EMAIL_FUNCTION_URL = "https://europe-west1-tren-85720.cloudfunctions.net/profileUpdateEmail";
-const PROFILE_UPDATE_LOGIN_FUNCTION_URL = "https://europe-west1-tren-85720.cloudfunctions.net/profileUpdateLogin";
+const PROFILE_UPDATE_EMAIL_ENDPOINT = "/api/profile/update-email";
+const PROFILE_UPDATE_LOGIN_ENDPOINT = "/api/profile/update-login";
 
 function getProfileUpdateEmailEndpoint() {
-  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
-  return hostname === "127.0.0.1" || hostname === "localhost"
-    ? PROFILE_UPDATE_EMAIL_FUNCTION_URL
-    : "/api/profile/update-email";
+  return PROFILE_UPDATE_EMAIL_ENDPOINT;
 }
 
 function getProfileUpdateLoginEndpoint() {
-  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
-  return hostname === "127.0.0.1" || hostname === "localhost"
-    ? PROFILE_UPDATE_LOGIN_FUNCTION_URL
-    : "/api/profile/update-login";
+  return PROFILE_UPDATE_LOGIN_ENDPOINT;
 }
 export function createProfileAccountHandlers({
-  APP_THEMES,
   auth,
-  appTheme,
   db,
   profileAccount,
   profileAccountDraft,
@@ -45,7 +37,6 @@ export function createProfileAccountHandlers({
   profileAvatarCropImageRef,
   profileAvatarCropDragRef,
   profileSettingsModalBodyRef,
-  setAppTheme,
   setProfileAccount,
   setProfileAccountDraft,
   setProfileAccountAvatarFile,
@@ -62,20 +53,6 @@ export function createProfileAccountHandlers({
 }) {
   function refreshPage() {
     window.location.reload();
-  }
-
-  function toggleAppTheme() {
-    const nextTheme = appTheme === APP_THEMES.WARM_LIGHT ? APP_THEMES.DARK_GREEN : APP_THEMES.WARM_LIGHT;
-    setAppTheme(nextTheme);
-
-    const uid = auth.currentUser?.uid;
-    if (!uid) return;
-
-    setDoc(doc(db, "users", uid), {
-      appTheme: nextTheme,
-      appThemePreference: "manual",
-      appThemeUpdatedAt: new Date().toISOString()
-    }, { merge: true }).catch((error) => console.warn("Theme preference sync error", error));
   }
 
   function openProfileAccount() {
@@ -214,7 +191,7 @@ export function createProfileAccountHandlers({
       successMessage = "Данные аккаунта сохранены."
     } = options;
 
-    const displayName = String(nextDraft.displayName || "").trim();
+    const displayName = String(nextDraft.displayName || "").trim().slice(0, 30);
     const currentEmail = String(currentUser.email || profileAccount.email || "").trim().toLowerCase();
     if (!displayName) {
       setProfileAccountStatus("Укажи имя.");
@@ -356,10 +333,11 @@ export function createProfileAccountHandlers({
         throw error;
       }
 
-      await verifiedUser.reload();
-      await verifiedUser.getIdToken(true).catch(() => {});
-
-      const email = String(data.email || verifiedUser.email || nextEmail).trim().toLowerCase();
+      // Do not reload the Firebase user or force a token refresh here. The Admin
+      // SDK has already changed the email and the current token remains valid
+      // until Firebase refreshes it normally. Forcing that refresh can turn a
+      // successful email update into a visible sign-out in the active app.
+      const email = String(data.email || nextEmail).trim().toLowerCase();
       const updatedAt = new Date().toISOString();
       const displayName = data.accountProfile?.displayName || profileAccountDraft.displayName || profileAccount.displayName || verifiedUser.displayName || "";
       const avatarUrl = data.accountProfile?.avatarUrl || profileAccount.avatarUrl || verifiedUser.photoURL || "";
@@ -375,7 +353,7 @@ export function createProfileAccountHandlers({
         email,
         login: accountProfile.login || profileAccount.login || ""
       });
-      setProfileAccountStatus(`Почта изменена на ${email}.`);
+      setProfileAccountStatus(`Почта изменена на ${email}. Вы остаётесь в аккаунте.`);
       return true;
     } catch (error) {
       console.error("Profile email change request failed:", error);
@@ -623,7 +601,6 @@ export function createProfileAccountHandlers({
 
   return {
     refreshPage,
-    toggleAppTheme,
     openProfileAccount,
     openProfileAvatarCrop,
     closeProfileAvatarCrop,

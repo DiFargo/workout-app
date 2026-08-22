@@ -1,7 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./FirstSetupOnboarding.module.css";
+import {
+  ageToCenteredSlider,
+  centeredSliderToAge,
+  getWeightSliderWindow
+} from "./firstSetupMetricScale.js";
 
 import { hasRequiredAiNutritionProfileFields } from "../../utils/profileDefaults";
+
+const MAX_PROFILE_NAME_LENGTH = 30;
 
 const TOTAL_STEPS = 10;
 
@@ -46,8 +53,8 @@ const ONBOARDING_SUBTITLES = [
 ];
 
 const NUMBER_SLIDER_CONFIG = {
-  age: { label: "Возраст", min: 14, max: 80, step: 1, unit: "лет", fallback: 30, marks: ["14", "30", "80"] },
-  weight: { label: "Текущий вес", min: 40, max: 250, step: 0.1, unit: "кг", fallback: 80, marks: ["40", "80", "250"] },
+  age: { label: "Возраст", min: 14, max: 80, step: 1, unit: "лет", fallback: 35, marks: ["14", "35", "80"] },
+  weight: { label: "Текущий вес", min: 40, max: 250, step: 0.1, unit: "кг", fallback: 80 },
   height: { label: "Рост", min: 140, max: 210, step: 1, unit: "см", fallback: 175, marks: ["140", "175", "210"] },
   targetWeight: { label: "Целевой вес", min: 40, max: 250, step: 0.1, unit: "кг", fallback: 75, marks: ["40", "75", "250"] }
 };
@@ -60,7 +67,10 @@ const METRIC_STEP_FIELDS = {
 };
 
 function normalizeNumberValue(value) {
-  const number = Number(String(value || "").replace(",", "."));
+  const rawValue = String(value ?? "").trim();
+  if (!rawValue) return null;
+
+  const number = Number(rawValue.replace(",", "."));
   return Number.isFinite(number) ? number : null;
 }
 
@@ -92,10 +102,38 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
   const numericValue = normalizeNumberValue(value);
   const sliderValue = numericValue ?? safeFallback;
   const rangeValue = Math.min(config.max, Math.max(config.min, sliderValue));
+  const [isWeightSliderDragging, setIsWeightSliderDragging] = useState(false);
+  const [weightWindowCenter, setWeightWindowCenter] = useState(rangeValue);
+
+  useEffect(() => {
+    if (field === "weight" && !isWeightSliderDragging) {
+      setWeightWindowCenter(rangeValue);
+    }
+  }, [field, isWeightSliderDragging, rangeValue]);
+
+  const weightWindow = field === "weight"
+    ? getWeightSliderWindow(weightWindowCenter)
+    : null;
+  const usesCenteredScale = field === "age";
+  const nativeSliderValue = field === "age"
+      ? ageToCenteredSlider(rangeValue)
+      : rangeValue;
+  const nativeSliderMin = weightWindow?.min ?? (usesCenteredScale ? 0 : config.min);
+  const nativeSliderMax = weightWindow?.max ?? (usesCenteredScale ? 100 : config.max);
+  const nativeSliderStep = usesCenteredScale ? 0.01 : config.step;
   const sliderProgress = Math.min(
     100,
-    Math.max(0, ((rangeValue - config.min) / (config.max - config.min)) * 100)
+    Math.max(0, ((nativeSliderValue - nativeSliderMin) / (nativeSliderMax - nativeSliderMin)) * 100)
   );
+
+  function handleRangeChange(event) {
+    const nextNativeValue = Number(event.target.value);
+    const nextValue = field === "age"
+        ? centeredSliderToAge(nextNativeValue)
+        : nextNativeValue;
+
+    onChange(formatNumberValue(nextValue, config.step));
+  }
 
   return (
     <label className="firstSetupMetricSlider" style={{ "--slider-progress": `${sliderProgress}%` }}>
@@ -103,27 +141,39 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
       <strong className="firstSetupMetricValue">{formatNumberValue(sliderValue, config.step)} <small>{config.unit}</small></strong>
       <input
         type="range"
-        min={config.min}
-        max={config.max}
-        step={config.step}
-        value={rangeValue}
-        onChange={(event) => onChange(formatNumberValue(event.target.value, config.step))}
+        min={nativeSliderMin}
+        max={nativeSliderMax}
+        step={nativeSliderStep}
+        value={nativeSliderValue}
+        onChange={handleRangeChange}
+        onPointerDown={() => field === "weight" && setIsWeightSliderDragging(true)}
+        onPointerUp={() => field === "weight" && setIsWeightSliderDragging(false)}
+        onPointerCancel={() => field === "weight" && setIsWeightSliderDragging(false)}
+        onKeyDown={() => field === "weight" && setIsWeightSliderDragging(true)}
+        onKeyUp={() => field === "weight" && setIsWeightSliderDragging(false)}
       />
       <div className="firstSetupMetricTicks" aria-hidden="true">
         {Array.from({ length: 21 }, (_, index) => <i key={index} />)}
       </div>
       <div className="firstSetupMetricMarks" aria-hidden="true">
-        {(config.marks || [config.min, safeFallback, config.max]).map((mark) => <span key={mark}>{mark}</span>)}
+        {(weightWindow
+          ? [weightWindow.min, weightWindow.midpoint, weightWindow.max]
+          : config.marks || [config.min, safeFallback, config.max]
+        ).map((mark, index) => <span key={`${mark}-${index}`}>{formatNumberValue(mark, config.step)}</span>)}
       </div>
       <div className="firstSetupMetricInput">
         <input
           inputMode={config.step < 1 ? "decimal" : "numeric"}
-          type="number"
-          min={config.min}
-          max={config.max}
-          step={config.step}
-          value={value || ""}
-          onChange={(event) => onChange(event.target.value)}
+          type="text"
+          value={value ?? ""}
+          onChange={(event) => {
+            const nextValue = event.target.value;
+            const expression = config.step < 1
+              ? /^\d*(?:[.,]\d*)?$/
+              : /^\d*$/;
+
+            if (expression.test(nextValue)) onChange(nextValue);
+          }}
         />
         <em>{config.unit}</em>
       </div>
@@ -142,6 +192,7 @@ export default function FirstSetupOnboarding({
   onExit
 }) {
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false);
+  const initializedMetricStepsRef = useRef(new Set());
 
   const profileName = String(profileDraft.name || "").trim();
   const numericAge = Number(profileDraft.age);
@@ -170,21 +221,27 @@ export default function FirstSetupOnboarding({
   }
 
   useEffect(() => {
+    if (!open) initializedMetricStepsRef.current.clear();
+  }, [open]);
+
+  useEffect(() => {
     const field = METRIC_STEP_FIELDS[onboardingStep];
-    if (!field || profileDraft[field]) return;
+    const initializationKey = `${onboardingStep}:${field || ""}`;
+    if (!field || initializedMetricStepsRef.current.has(initializationKey)) return;
+
+    initializedMetricStepsRef.current.add(initializationKey);
+    if (normalizeNumberValue(profileDraft[field]) !== null) return;
 
     const fallback = field === "targetWeight"
       ? getSuggestedTargetWeight(profileDraft)
       : NUMBER_SLIDER_CONFIG[field].fallback;
 
-    setProfileDraft((prev) => (
-      prev[field]
-        ? prev
-        : { ...prev, [field]: formatNumberValue(fallback, NUMBER_SLIDER_CONFIG[field].step) }
-    ));
+    setProfileDraft((prev) => ({
+      ...prev,
+      [field]: formatNumberValue(fallback, NUMBER_SLIDER_CONFIG[field].step)
+    }));
   }, [
     onboardingStep,
-    profileDraft,
     setProfileDraft
   ]);
 
@@ -201,8 +258,8 @@ export default function FirstSetupOnboarding({
   if (!open) return null;
 
   return (
-    <div className="firstSetupOverlay">
-      <div className="firstSetupCard">
+    <div className="firstSetupOverlay" data-testid="first-setup-onboarding">
+      <div className="firstSetupCard" data-step={onboardingStep} data-testid="first-setup-card">
         <button
           type="button"
           className="firstSetupExitButton"
@@ -212,8 +269,8 @@ export default function FirstSetupOnboarding({
           ×
         </button>
 
-        <div className="firstSetupProgress">
-          <span>{onboardingStep + 1} / {TOTAL_STEPS}</span>
+        <div className="firstSetupProgress" data-testid="first-setup-progress">
+          <span>Шаг {onboardingStep + 1} из {TOTAL_STEPS}</span>
           <div>
             {Array.from({ length: TOTAL_STEPS }, (_, index) => (
               <i className={index <= onboardingStep ? "active" : ""} key={index} />
@@ -226,7 +283,7 @@ export default function FirstSetupOnboarding({
           <p>{ONBOARDING_SUBTITLES[onboardingStep]}</p>
         </header>
 
-        <div className="firstSetupBody">
+        <div className="firstSetupBody" data-testid="first-setup-body">
           {onboardingStep === 0 && (
             <div className="firstSetupWelcomeVisual" aria-hidden="true">
               <span className="firstSetupClipboard">📋</span>
@@ -269,8 +326,9 @@ export default function FirstSetupOnboarding({
                 type="text"
                 autoComplete="name"
                 enterKeyHint="next"
+                maxLength={MAX_PROFILE_NAME_LENGTH}
                 value={profileDraft.name || ""}
-                onChange={(event) => updateProfileDraft({ name: event.target.value })}
+                onChange={(event) => updateProfileDraft({ name: event.target.value.slice(0, MAX_PROFILE_NAME_LENGTH) })}
                 onKeyDown={handleFieldSubmit}
               />
             </label>
@@ -369,7 +427,7 @@ export default function FirstSetupOnboarding({
           )}
         </div>
 
-        <div className="firstSetupBottom">
+        <div className="firstSetupBottom" data-testid="first-setup-navigation">
           {onboardingStep > 0 && (
             <button
               type="button"

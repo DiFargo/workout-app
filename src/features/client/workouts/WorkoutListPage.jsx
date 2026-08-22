@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Clock3, Paperclip, Settings } from "lucide-react";
+import { Clock3, Settings } from "lucide-react";
 import {
   getProgramHistoryItems,
   getWorkoutCover,
@@ -7,6 +7,7 @@ import {
   WORKOUT_MENU_ITEMS
 } from "../../../domain/workoutPresentation";
 import { sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
+import { getBasicWorkoutExpectedWorkoutCount } from "../../../utils/basicWorkoutPlanBuilder";
 import {
   buildCompletedWorkoutSet,
   getNextUncompletedWorkoutIndex,
@@ -17,10 +18,7 @@ import { safeReadJsonStorage } from "../../../utils/storageSafety";
 import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
 import { WorkoutDraftRestoreDialog } from "../../../components/workout/WorkoutDialogs";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
-import {
-  IndividualWorkoutHistoryDialog,
-  WorkoutModePickerDialog
-} from "./WorkoutListDialogs";
+import { IndividualWorkoutHistoryDialog } from "./WorkoutListDialogs";
 import styles from "./WorkoutListPage.module.css";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 
@@ -37,13 +35,10 @@ export default function WorkoutListPage({
   workoutCalendar = {},
   currentUserId,
   workoutModePreference,
-  workoutModeRemember,
   individualWorkoutIndex,
   individualWorkoutIndexInitialized,
   setIndividualWorkoutIndex,
   setIndividualWorkoutIndexInitialized,
-  workoutModeModalOpen,
-  setWorkoutModeModalOpen,
   workoutHistoryModalOpen,
   setWorkoutHistoryModalOpen,
   workoutDraftRestorePrompt,
@@ -63,8 +58,6 @@ export default function WorkoutListPage({
   openWorkout,
   onOpenBasicMode,
   onOpenBasicSettings,
-  onOpenIndividualWorkouts,
-  onToggleWorkoutModeRemember,
   openCabinetWorkoutHistory,
   handleWorkoutDraftChoice
 }) {
@@ -76,7 +69,7 @@ export default function WorkoutListPage({
   const swipeFrameRef = useRef(null);
 
   const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
-  const isBasicWorkoutMode = workoutModePreference.mode === "basic" || plan.source === "basic";
+  const isBasicWorkoutMode = workoutModePreference.mode === "basic";
   const shouldOpenBasicQuiz = isBasicWorkoutMode && plan.source !== "basic";
   const planWorkouts = isBasicWorkoutMode && plan.source !== "basic" ? [] : plan.workouts || [];
   const sortedWorkouts = sortWorkoutDays(planWorkouts);
@@ -111,9 +104,23 @@ export default function WorkoutListPage({
     isWorkoutCompletedWithSet(workoutItem, completedWorkoutSet, assignmentVersion)
   );
   const completedWorkoutCount = sortedWorkouts.filter(isWorkoutCompleted).length;
+  const expectedBasicWorkoutCount = isBasicWorkoutMode
+    ? getBasicWorkoutExpectedWorkoutCount(plan)
+    : 0;
+  const hasPartialBasicPlanSnapshot = Boolean(
+    expectedBasicWorkoutCount > 0 &&
+    sortedWorkouts.length < expectedBasicWorkoutCount
+  );
   const completedWorkoutProgressPercent = sortedWorkouts.length > 0
     ? Math.min(100, Math.max(0, Math.round((completedWorkoutCount / sortedWorkouts.length) * 100)))
     : 0;
+  const isCurrentPlanCompleted = Boolean(
+    isDeckWorkoutMode &&
+    sortedWorkouts.length > 0 &&
+    completedWorkoutCount === sortedWorkouts.length &&
+    !hasPartialBasicPlanSnapshot
+  );
+  const hasLocalOnlyPlanSave = plan?.cloudSyncState === "local_only";
   const activeIndividualWorkoutCompleted = isWorkoutCompleted(activeIndividualWorkout);
   const activeWorkoutDraft = currentUserId && activeIndividualWorkout?.id
     ? safeReadJsonStorage(getWorkoutDraftKey(currentUserId, activeIndividualWorkout.id), null)
@@ -321,37 +328,76 @@ export default function WorkoutListPage({
               <Settings aria-hidden="true" />
             </button>
           )}
-          <button
-            type="button"
-            className={styles.headerButton}
-            data-testid="workout-mode-button"
-            aria-label="Выбрать режим запуска тренировки"
-            onClick={() => setWorkoutModeModalOpen(true)}
-          >
-            <Paperclip aria-hidden="true" />
-          </button>
           </div>
         )}
       >
       </ClientPageHeader>
 
-      {isDeckWorkoutMode && (
+      {hasLocalOnlyPlanSave ? (
+        <aside className={styles.cloudSaveNotice} role="status" data-testid="workout-plan-cloud-save-notice">
+          <strong>План сохранён на устройстве</strong>
+          <span>Не удалось синхронизировать его с облаком. Проверьте подключение к интернету — тренировки доступны и не потеряются.</span>
+        </aside>
+      ) : null}
+
+      {isDeckWorkoutMode && sortedWorkouts.length > 0 && !isCurrentPlanCompleted && (
         <p className={styles.heroSubtitle} data-testid="workout-list-swipe-hint">
           ‹ Свайпни влево или вправо ›
         </p>
       )}
 
       <div
-        className={`${styles.workoutList} ${isDeckWorkoutMode ? styles.workoutDeck : ""}`}
+        className={`${styles.workoutList} ${isDeckWorkoutMode ? styles.workoutDeck : ""} ${isCurrentPlanCompleted ? styles.completedDeck : ""}`}
         data-testid="workout-list-deck"
       >
         {sortedWorkouts.length === 0 ? (
           <div className={styles.emptyState} data-testid="workout-list-empty-state">
             <div className={styles.emptyIcon}>⏳</div>
-            <h2>Тренировка ещё не назначена</h2>
-            <p>Тренер пока не назначил тебе программу. Как только тренировка появится в твоём профиле, она отобразится здесь.</p>
-            <button type="button" onClick={onGoMain}>Вернуться в меню</button>
+            <h2>{isIndividualWorkoutMode ? "Плана от тренера пока нет" : "Тренировка ещё не назначена"}</h2>
+            <p>
+              {isIndividualWorkoutMode
+                ? "Тренер ещё не назначил программу. Когда она появится, вы увидите её здесь. Базовые тренировки можно выбрать в кабинете."
+                : "Как только тренировка появится в вашем профиле, она отобразится здесь."}
+            </p>
+            <button type="button" onClick={isIndividualWorkoutMode ? onOpenCabinet : onGoMain}>
+              {isIndividualWorkoutMode ? "Открыть кабинет" : "Вернуться в меню"}
+            </button>
           </div>
+        ) : isCurrentPlanCompleted ? (
+          <section className={styles.completionState} data-testid="workout-plan-completed-state">
+            <span className={styles.completionEyebrow}>ПЛАН ЗАВЕРШЁН</span>
+            <div className={styles.completionIcon} aria-hidden="true">✓</div>
+            <div className={styles.completionCopy}>
+              <h2>{isBasicWorkoutMode ? "Базовый план завершён" : "План завершён"}</h2>
+              <p>
+                {isBasicWorkoutMode
+                  ? "Все тренировки выполнены. Новый план можно подготовить, когда будете готовы продолжить."
+                  : "Все тренировки из текущей программы выполнены. История сохранена в приложении."}
+              </p>
+            </div>
+            <div className={styles.completionSummary} aria-label={`Выполнено ${completedWorkoutCount} из ${sortedWorkouts.length} тренировок`}>
+              <span>Выполнено</span>
+              <strong>{completedWorkoutCount} из {sortedWorkouts.length}</strong>
+              <small>тренировок</small>
+            </div>
+            <div className={styles.completionActions}>
+              {isBasicWorkoutMode ? (
+                <button type="button" onClick={onOpenBasicSettings}>Создать следующий план</button>
+              ) : (
+                <button type="button" onClick={() => {
+                  loadHistory();
+                  setWorkoutHistoryModalOpen(true);
+                }}>
+                  Открыть историю
+                </button>
+              )}
+              {!isBasicWorkoutMode ? (
+                <button type="button" className={styles.secondaryCompletionAction} onClick={onOpenCabinet}>
+                  Режим тренировок
+                </button>
+              ) : null}
+            </div>
+          </section>
         ) : isDeckWorkoutMode && activeIndividualWorkout ? (
           (() => {
             const w = activeIndividualWorkout;
@@ -550,19 +596,6 @@ export default function WorkoutListPage({
           onLoadTrainerCabinet: onOpenCabinet
         })}
       </div>
-
-      <WorkoutModePickerDialog
-        open={workoutModeModalOpen}
-        workoutModePreference={workoutModePreference}
-        rememberChoice={workoutModeRemember}
-        onClose={() => setWorkoutModeModalOpen(false)}
-        onOpenBasic={onOpenBasicMode}
-        onOpenIndividual={() => {
-          setWorkoutModeModalOpen(false);
-          onOpenIndividualWorkouts();
-        }}
-        onRememberChoiceChange={onToggleWorkoutModeRemember}
-      />
 
       <IndividualWorkoutHistoryDialog
         open={Boolean(isIndividualWorkoutMode && workoutHistoryModalOpen)}

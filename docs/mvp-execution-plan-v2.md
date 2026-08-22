@@ -90,19 +90,9 @@ Priority: MVP core.
 Run from the repository root:
 
 ```powershell
-npm run lint
-npm run build
-npm run check:bundle
-npm run report:css
-npm test
-npm run test:rules
-npm run test:e2e
-npm audit --omit=dev
-Push-Location functions
-npm audit --omit=dev
-node --check index.js
-Pop-Location
-git diff --check
+npm run verify
 ```
 
 Release only when the package acceptance criteria and this gate are both green.
+The exact checks, staging setup, error reporting, backup rehearsal and rollback
+runbook live in [release-operations.md](release-operations.md).

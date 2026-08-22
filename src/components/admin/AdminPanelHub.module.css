@@ -1,133 +1,255 @@
-:global {
-/* === ADMIN PANEL MENU V87 === */
-
-.adminPanelHubPage {
-  min-height: 100vh;
-  width: min(100%, 560px);
+.root {
+  box-sizing: border-box;
+  width: min(100%, 1100px);
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: max(82px, calc(env(safe-area-inset-top) + 74px)) 16px 34px;
-  background:
-    radial-gradient(circle at top, rgba(255,183,77,.11), transparent 38%),
-    var(--bg);
+  padding: max(26px, calc(env(safe-area-inset-top) + 18px)) 20px calc(42px + env(safe-area-inset-bottom));
+  color: #28262e;
+  background: #f7f6f8;
+  font-family: var(--font-family-sans, inherit);
 }
 
-.adminPanelHubPage .adminFixedMainBack {
-  min-height: 40px;
-  padding-block: 0;
-}
-
-.deniedBack {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.backBtn {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.adminPanelHubHero {
-  text-align: center;
-  margin-bottom: 18px;
-}
-
-.adminPanelHubHero span {
-  display: block;
-  margin-bottom: 8px;
-  color: rgba(255, 183, 77, .86);
-  font-size: 12px;
-  font-weight: 950;
-  letter-spacing: .14em;
-}
-
-.adminPanelHubHero h1 {
-  margin: 0;
-  color: #fff;
-  font-size: 34px;
-  font-weight: 950;
-  letter-spacing: -.04em;
-}
-
-.adminPanelHubHero p {
-  max-width: 360px;
-  margin: 10px auto 0;
-  color: rgba(255,255,255,.52);
-  font-size: 14px;
-  font-weight: 750;
-  line-height: 1.38;
-}
-
-.adminPanelHubGrid {
+.header {
+  min-height: 48px;
+  margin: 0 0 30px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
-.adminPanelHubCard {
-  width: 100%;
-  min-height: 104px;
-  padding: 18px;
-  border-radius: 26px;
-  border: 1px solid rgba(255,255,255,.075);
-  background:
-    linear-gradient(180deg, rgba(24,27,23,.96), rgba(13,15,13,.96));
-  color: #fff;
-  display: grid;
-  grid-template-columns: 46px 1fr;
-  grid-template-rows: auto auto;
-  column-gap: 14px;
-  row-gap: 4px;
-  text-align: left;
-  box-shadow: 0 16px 34px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.035);
+.backButton,
+.accessBadge,
+.sectionCard {
+  font: inherit;
 }
 
-.adminPanelHubCard i {
-  grid-row: 1 / 3;
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
-  background: rgba(255,183,77,.12);
-  display: flex;
+.backButton {
+  min-height: 44px;
+  padding: 8px 12px 8px 8px;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-style: normal;
-  font-size: 23px;
+  gap: 7px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: #5f5968;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.adminPanelHubCard strong {
-  font-size: 18px;
-  font-weight: 950;
-  line-height: 1.15;
+.backButton svg {
+  width: 21px;
+  height: 21px;
+  color: #8f7ac8;
 }
 
-.adminPanelHubCard small {
-  color: rgba(255,255,255,.48);
-  font-size: 13px;
+.backButton:hover { background: #f0edf3; }
+.backButton:active { transform: scale(0.985); }
+.backButton:focus-visible,
+.sectionCard:focus-visible { outline: 2px solid #8f7ac8; outline-offset: 3px; }
+
+.accessBadge {
+  min-height: 34px;
+  padding: 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #e5ddf2;
+  border-radius: 999px;
+  background: #f5f1fa;
+  color: #806bb6;
+  font-size: 12px;
   font-weight: 750;
-  line-height: 1.3;
 }
 
-@media (min-width: 700px) and (max-width: 979px) {
-  .adminPanelHubPage {
-    width: min(720px, calc(100vw - (var(--layout-tablet-gutter) * 2)));
-    min-height: calc(100dvh - 24px);
-    margin: 12px auto;
-    padding: max(86px, calc(env(safe-area-inset-top) + 74px)) 28px 38px;
-    border: 1px solid rgba(255, 255, 255, .08);
-    border-radius: 28px;
-    box-shadow: 0 22px 56px rgba(0, 0, 0, .22);
-  }
-
-  .adminPanelHubGrid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .adminPanelHubCard:last-child {
-    grid-column: 1 / -1;
-  }
+.accessBadge svg {
+  width: 15px;
+  height: 15px;
 }
 
+.hero {
+  margin: 0 0 26px;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  border: 1px solid #efebf3;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #ffffff 0%, #f7f3fc 100%);
+  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.07);
+}
+
+.heroIcon,
+.cardIcon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #806bb6;
+}
+
+.heroIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  background: #eee9f8;
+}
+
+.heroIcon svg { width: 28px; height: 28px; }
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: #8f7ac8;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.sectionHeading h2,
+.deniedCard h1 {
+  margin: 0;
+  color: #28262e;
+  letter-spacing: -0.025em;
+}
+
+.hero h1 { font-size: clamp(26px, 4vw, 34px); line-height: 1.08; }
+
+.heroDescription {
+  max-width: 500px;
+  margin: 9px 0 0;
+  color: #7b7682;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+.sections { margin: 0; }
+
+.sectionHeading { margin: 0 0 12px; }
+.sectionHeading h2 { font-size: 20px; line-height: 1.2; }
+.sectionHeading p { margin: 4px 0 0; color: #7b7682; font-size: 14px; }
+
+.sectionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sectionCard {
+  min-height: 156px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #efebf3;
+  border-radius: 22px;
+  background: #fff;
+  color: #28262e;
+  text-align: left;
+  box-shadow: 0 8px 22px rgba(72, 63, 87, 0.05);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.sectionCard:hover {
+  border-color: #dcd1ef;
+  box-shadow: 0 14px 28px rgba(72, 63, 87, 0.1);
+  transform: translateY(-2px);
+}
+
+.sectionCard:active { transform: scale(0.985); }
+
+.cardIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  background: #f3eff9;
+}
+
+.cardIcon svg { width: 23px; height: 23px; }
+
+.cardCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cardCopy strong { font-size: 16px; font-weight: 800; line-height: 1.2; }
+.cardCopy small { color: #7b7682; font-size: 13px; font-weight: 500; line-height: 1.32; }
+
+.cardChevron {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 19px;
+  height: 19px;
+  color: #8f7ac8;
+}
+
+.accessNote {
+  margin: 20px 0 0;
+  padding: 13px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid #e9e1f4;
+  border-radius: 18px;
+  background: #f5f2f7;
+  color: #6f6878;
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.36;
+}
+
+.accessNote svg { flex: 0 0 auto; width: 18px; height: 18px; color: #8f7ac8; }
+
+.deniedCard {
+  max-width: 480px;
+  margin: 90px auto 0;
+  padding: 28px;
+  text-align: center;
+  border: 1px solid #efebf3;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.07);
+}
+
+.deniedCard > svg { width: 34px; height: 34px; margin-bottom: 12px; color: #8f7ac8; }
+.deniedCard h1 { font-size: 23px; }
+.deniedCard p { margin: 9px 0 0; color: #7b7682; line-height: 1.4; }
+
+@media (max-width: 720px) {
+  .root {
+    width: 100%;
+    padding: max(18px, calc(env(safe-area-inset-top) + 12px)) 16px calc(28px + env(safe-area-inset-bottom));
+  }
+
+  .header { margin-bottom: 22px; }
+  .accessBadge { padding-inline: 9px; }
+  .hero { padding: 20px; border-radius: 24px; }
+  .sectionGrid { grid-template-columns: 1fr; }
+  .sectionCard { min-height: 104px; padding: 15px; flex-direction: row; align-items: center; gap: 12px; }
+  .cardCopy { padding-right: 28px; }
+  .cardChevron { top: 50%; right: 15px; bottom: auto; transform: translateY(-50%); }
+}
+
+@media (max-width: 420px) {
+  .backButton span { display: none; }
+  .backButton { width: 44px; padding: 0; justify-content: center; }
+  .hero { gap: 14px; }
+  .heroIcon { width: 48px; height: 48px; border-radius: 16px; }
+  .heroIcon svg { width: 25px; height: 25px; }
+  .hero h1 { font-size: 25px; }
+  .heroDescription { font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sectionCard { transition: none; }
 }

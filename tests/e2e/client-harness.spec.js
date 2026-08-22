@@ -144,7 +144,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     return {
       viewportWidth: window.innerWidth,
       header: rectOf(document.querySelector('[data-testid="workout-list-header"]')),
-      headerAction: rectOf(document.querySelector('[data-testid="workout-mode-button"]')),
+      headerAction: rectOf(document.querySelector('[data-testid="workout-history-button"]')),
       card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
       cardTop: rectOf(document.querySelector('[data-testid="workout-card-top"]')),
       cardBody: rectOf(document.querySelector('[data-testid="workout-card-body"]')),
@@ -159,8 +159,11 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   });
 
   expect(workoutCardMetric.deckOverflow).toBe("visible");
-  expect(workoutCardMetric.header.right - workoutCardMetric.headerAction.right)
-    .toBe(workoutCardMetric.viewportWidth <= 370 ? 16 : 20);
+  const expectedHeaderInset = workoutCardMetric.viewportWidth <= 370 ? 16 : 20;
+  const actualHeaderInset = workoutCardMetric.header.right - workoutCardMetric.headerAction.right;
+  // Browser sub-pixel rounding can turn a 16px visual gutter into 15px.
+  expect(actualHeaderInset).toBeGreaterThanOrEqual(expectedHeaderInset - 1);
+  expect(actualHeaderInset).toBeLessThanOrEqual(expectedHeaderInset + 1);
   expect(workoutCardMetric.header.bottom).toBeLessThanOrEqual(workoutCardMetric.card.y);
   expect(workoutCardMetric.card.height).toBeGreaterThanOrEqual(372);
   expect(Math.abs(workoutCardMetric.cardBody.height - workoutCardMetric.card.height)).toBeLessThanOrEqual(1);
@@ -169,9 +172,11 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
   expect(workoutCardMetric.cardInfo.bottom).toBeLessThan(workoutCardMetric.startButton.y);
   expect(workoutCardMetric.startButton.bottom).toBeLessThanOrEqual(workoutCardMetric.card.bottom);
   expect(workoutCardMetric.swipeHint.bottom).toBeLessThanOrEqual(workoutCardMetric.card.y);
-  expect(workoutCardMetric.progressPosition).toBe("fixed");
+  // Progress belongs to the workout card, while the shared dock remains fixed.
+  expect(workoutCardMetric.progressPosition).toBe("relative");
+  expect(workoutCardMetric.progress.y).toBeGreaterThanOrEqual(workoutCardMetric.card.y);
+  expect(workoutCardMetric.progress.bottom).toBeLessThanOrEqual(workoutCardMetric.card.bottom + 1);
   expect(workoutCardMetric.progress.bottom).toBeLessThanOrEqual(workoutCardMetric.bottomNav.y);
-  expect(workoutCardMetric.bottomNav.y - workoutCardMetric.progress.bottom).toBeLessThanOrEqual(16);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
@@ -211,11 +216,6 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await expect(page.getByTestId("client-bottom-nav")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
-
-  await page.getByTestId("workout-mode-button").click();
-  await expect(page.getByTestId("workout-mode-dialog")).toBeVisible();
-  await page.getByTestId("workout-mode-dialog-close").click();
-  await expect(page.getByTestId("workout-mode-dialog")).toBeHidden();
 
   await page.getByTestId("workout-history-button").click();
   await expect(page.getByTestId("workout-history-dialog")).toBeVisible();
@@ -269,16 +269,20 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await clickClientNav(page, "client-nav-cabinet");
   await expect(page.getByTestId("client-harness-cabinet")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-title")).toBeVisible();
+  await page.getByTestId("profile-cabinet-action-workout-mode").click();
+  await expect(page.getByTestId("workout-mode-dialog")).toBeVisible();
+  await page.getByTestId("workout-mode-dialog-close").click();
+  await expect(page.getByTestId("client-harness-cabinet")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
 
-test("primary client tabs keep one adaptive shell geometry", async ({ page }, testInfo) => {
+test("primary client tabs keep a shared adaptive width and an on-screen dock", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "One browser covers the responsive viewport matrix.");
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { width: 768, height: 1024, shellWidth: 402, shellHeight: 874 },
-    { width: 1440, height: 900, shellWidth: 402, shellHeight: 874 }
+    { width: 768, height: 1024, shellWidth: 402 },
+    { width: 1440, height: 900, shellWidth: 402 }
   ];
 
   for (const viewport of viewports) {
@@ -323,9 +327,19 @@ test("primary client tabs keep one adaptive shell geometry", async ({ page }, te
 
     const [baseline, ...otherShells] = shellRects;
     expect(baseline.width).toBe(viewport.shellWidth);
-    expect(baseline.height).toBe(viewport.shellHeight);
+    expect(baseline.height).toBeGreaterThanOrEqual(Math.min(874, viewport.height));
+    expect(baseline.height).toBeLessThanOrEqual(viewport.height);
+    expect(baseline.y).toBeGreaterThanOrEqual(0);
+    expect(baseline.y + baseline.height).toBeLessThanOrEqual(viewport.height);
     for (const shellRect of otherShells) {
-      expect(shellRect).toEqual(baseline);
+      expect(shellRect.x).toBe(baseline.x);
+      expect(shellRect.width).toBe(baseline.width);
+      // Profile tabs retain the iPhone canvas while full workflow tabs fill
+      // the available desktop height; both must remain wholly on screen.
+      expect(shellRect.height).toBeGreaterThanOrEqual(Math.min(874, viewport.height));
+      expect(shellRect.height).toBeLessThanOrEqual(viewport.height);
+      expect(shellRect.y).toBeGreaterThanOrEqual(0);
+      expect(shellRect.y + shellRect.height).toBeLessThanOrEqual(viewport.height);
     }
     await expectNoHorizontalOverflow(page);
   }

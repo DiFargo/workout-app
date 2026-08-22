@@ -56,7 +56,8 @@ function getTrainerCompletionKey(item = {}) {
 export function getTrainerCompletedWorkoutCountForAssignment(
   historyList = [],
   assignedProgramUpdatedAt = "",
-  workoutCalendar = {}
+  workoutCalendar = {},
+  workouts = []
 ) {
   const assignmentVersionKey = getTrainerAssignmentVersionKey(assignedProgramUpdatedAt);
   if (!assignmentVersionKey) return 0;
@@ -82,6 +83,21 @@ export function getTrainerCompletedWorkoutCountForAssignment(
       }
     });
   }
+
+  (Array.isArray(workouts) ? workouts : []).forEach((workout) => {
+    const workoutVersionKey = getTrainerAssignmentVersionKey(
+      workout?.assignedProgramUpdatedAt || workout?.assignmentVersion
+    );
+    const status = String(workout?.status || "").trim().toLowerCase();
+    const completionKey = getTrainerCompletionKey(workout);
+    if (
+      completionKey
+      && workoutVersionKey === assignmentVersionKey
+      && ["completed", "completed_off_date"].includes(status)
+    ) {
+      completedWorkoutIds.add(completionKey);
+    }
+  });
 
   return completedWorkoutIds.size;
 }
@@ -324,7 +340,6 @@ export function getClientActivityStatus(summary = {}) {
     nutritionDays >= 5 ||
     measurementDays === null ||
     measurementDays >= 30 ||
-    (Number(summary.activeTrainerTasksCount) || 0) > 0 ||
     summary.workoutFeedbackAttention?.id ||
     summary.programEndingAttention?.id ||
     ["ending", "expired"].includes(summary.subscriptionStatus?.id) ||
@@ -357,12 +372,6 @@ export function getClientAttentionReasons(summary = {}) {
 
   if (measurementDays === null) reasons.push("нет замеров");
   else if (measurementDays >= 30) reasons.push(`нет замера ${measurementDays} ${getTrainerDayWord(measurementDays)}`);
-  const activeTrainerTasksCount = Number(summary.activeTrainerTasksCount) || 0;
-  if (activeTrainerTasksCount > 0) {
-    reasons.push(activeTrainerTasksCount === 1
-      ? "есть активная задача"
-      : `${activeTrainerTasksCount} ${pluralizeRu(activeTrainerTasksCount, "активная задача", "активные задачи", "активных задач")}`);
-  }
   if (summary.workoutFeedbackAttention?.reason) {
     reasons.push(summary.workoutFeedbackAttention.reason.toLowerCase());
   }

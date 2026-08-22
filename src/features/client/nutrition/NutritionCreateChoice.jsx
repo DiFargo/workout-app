@@ -1,4 +1,5 @@
 import { PackagePlus, UtensilsCrossed, X } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import styles from "./NutritionCreateChoice.module.css";
 
 export default function NutritionCreateChoice({
@@ -7,6 +8,54 @@ export default function NutritionCreateChoice({
   onCreateDish,
   onClose
 }) {
+  const returnFocusRef = useRef(null);
+  const wasOpenRef = useRef(false);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    const previousFocus = document.activeElement;
+    returnFocusRef.current = previousFocus instanceof HTMLElement ? previousFocus : null;
+    wasOpenRef.current = true;
+  }, [open]);
+
+  useEffect(() => {
+    if (open || !wasOpenRef.current) return undefined;
+
+    wasOpenRef.current = false;
+    const returnFocus = returnFocusRef.current;
+    if (!returnFocus || !document.contains(returnFocus)) return undefined;
+
+    let restoreTimeout = null;
+    const restoreFrame = window.requestAnimationFrame(() => {
+      restoreTimeout = window.setTimeout(() => {
+        if (document.contains(returnFocus)) {
+          returnFocus.focus({ preventScroll: true });
+        }
+      }, 0);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(restoreFrame);
+      if (restoreTimeout !== null) window.clearTimeout(restoreTimeout);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      onClose?.();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, onClose]);
+
   if (!open) {
     return null;
   }
@@ -19,19 +68,6 @@ export default function NutritionCreateChoice({
       role="presentation"
       onClick={onClose}
     >
-      <button
-        type="button"
-        className={styles.closeButton}
-        data-testid="nutrition-create-choice-close"
-        onClick={(event) => {
-          event.stopPropagation();
-          onClose();
-        }}
-        aria-label="Закрыть"
-      >
-        <X aria-hidden="true" />
-      </button>
-
       <div
         className={styles.sheet}
         role="dialog"
@@ -39,6 +75,16 @@ export default function NutritionCreateChoice({
         aria-labelledby="nutritionCreateChoiceTitle"
         onClick={(event) => event.stopPropagation()}
       >
+        <button
+          type="button"
+          className={styles.closeButton}
+          data-testid="nutrition-create-choice-close"
+          onClick={onClose}
+          aria-label="Закрыть"
+        >
+          <X aria-hidden="true" />
+        </button>
+
         <div className={styles.header}>
           <span className={styles.eyebrow}>Моя база</span>
           <h3 className={styles.title} id="nutritionCreateChoiceTitle">Создать</h3>

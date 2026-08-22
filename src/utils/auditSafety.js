@@ -1,4 +1,6 @@
-export function exerciseUsesExternalWeight(exercise = {}) {
+export function exerciseUsesExternalWeight(exercise) {
+  if (!exercise || typeof exercise !== "object") return false;
+
   if (exercise.requiresWeight === true || exercise.usesWeight === true) return true;
   if (exercise.requiresWeight === false || exercise.usesWeight === false) return false;
 

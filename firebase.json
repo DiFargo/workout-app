@@ -1,6 +1,7 @@
 {
   "hosting": {
     "public": "dist",
+    "predeploy": "node scripts/assert-firebase-deploy.mjs",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -40,6 +41,45 @@
           {
             "key": "Cache-Control",
             "value": "public,max-age=2592000,stale-while-revalidate=604800"
+          }
+        ]
+      },
+      {
+        "source": "/basic-workout/exercise-catalogue.v1.json",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=2592000,immutable"
+          }
+        ]
+      },
+      {
+        "source": "/basic-workout/exercises/catalogue/v1/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=31536000,immutable"
+          }
+        ]
+      },
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "Content-Security-Policy",
+            "value": "base-uri 'self'; object-src 'none'; frame-ancestors 'none'"
           }
         ]
       }
@@ -88,6 +128,13 @@
         }
       },
       {
+        "source": "/api/profile/recover-legacy",
+        "function": {
+          "functionId": "recoverLegacyClientProfile",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "/api/ai-food-photo",
         "function": {
           "functionId": "aiFoodPhoto",
@@ -95,9 +142,23 @@
         }
       },
       {
+        "source": "/api/ai-food-voice",
+        "function": {
+          "functionId": "aiFoodVoice",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "/api/ai-workout-program-import",
         "function": {
           "functionId": "aiWorkoutProgramImport",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/ai-basic-workout-plan",
+        "function": {
+          "functionId": "aiBasicWorkoutPlan",
           "region": "us-central1"
         }
       },
@@ -112,6 +173,27 @@
         "source": "/api/telegram/refresh-avatar",
         "function": {
           "functionId": "telegramRefreshAvatar",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/create-link-code",
+        "function": {
+          "functionId": "telegramCreateLinkCode",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/update-notifications",
+        "function": {
+          "functionId": "telegramUpdateNotifications",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/disconnect",
+        "function": {
+          "functionId": "telegramDisconnect",
           "region": "europe-west1"
         }
       },
@@ -137,9 +219,44 @@
         }
       },
       {
+        "source": "/api/admin/update-user-role",
+        "function": {
+          "functionId": "adminUpdateUserRole",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/admin/assign-client",
+        "function": {
+          "functionId": "adminAssignClient",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/admin/set-user-access",
+        "function": {
+          "functionId": "adminSetUserAccess",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/admin/trainer-invite",
+        "function": {
+          "functionId": "adminManageTrainerInvite",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "/api/trainer/create-invite",
         "function": {
           "functionId": "trainerCreateInvite",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/admin/create-trainer-invite",
+        "function": {
+          "functionId": "adminCreateTrainerInvite",
           "region": "europe-west1"
         }
       },

@@ -1,4 +1,8 @@
 /* Nutrition analytics: compact charts with readable values and balanced spacing. */
+:local(.scope) {
+  min-width: 0;
+}
+
 :global(.trainerNextRoot) :global(.trainerNutritionAnalytics) {
   display: grid;
   gap: 14px;
@@ -83,14 +87,17 @@
 
 :global(.trainerNextRoot) :global(.trainerClientBarChart > div > span > i) {
   display: block;
+  box-sizing: border-box;
   width: 100%;
   min-height: 6px;
   border-radius: 8px 8px 3px 3px;
-  background: var(--tn-purple);
+  border: 1px solid #8f7ac8;
+  background: #eee8fa;
 }
 
 :global(.trainerNextRoot) :global(.trainerClientBarChart > div > span > i.over) {
-  background: #c28b58;
+  border-color: #d59a3f;
+  background: #fff4df;
 }
 
 :global(.trainerNextRoot) :global(.trainerClientBarChart b),
@@ -129,6 +136,7 @@
   height: 126px;
   place-items: center;
   border-radius: 50%;
+  border: 1px solid #d8cdef;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
 }
 
@@ -175,16 +183,19 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #34aa5f;
+  border: 1px solid #54a977;
+  background: #e8f6ee;
   content: "";
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionLegend span.fat::before) {
-  background: #f2a329;
+  border-color: #d59a3f;
+  background: #fff4df;
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionLegend span.carbs::before) {
-  background: #6a43ef;
+  border-color: #8f7ac8;
+  background: #eee8fa;
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionLegend span:last-child) {

@@ -1,10 +1,14 @@
 import TrainerWorkspace from "../../components/trainer/TrainerWorkspace";
 import TrainerClientOverviewModals from "./TrainerClientOverviewModals";
+import AdminTrainerProfileRoute, { isAdminTrainerSelection } from "./AdminTrainerProfileRoute";
 
 export default function TrainerClientsWorkspaceRoute({
   APP_VERSION,
+  embedded = false,
+  adminAllUsersList,
   adminClientEvents,
   adminClientHistory,
+  adminClientLoading,
   adminClientMeasurements,
   adminClientProgressPhotos,
   adminNewTaskDueDate,
@@ -12,16 +16,19 @@ export default function TrainerClientsWorkspaceRoute({
   adminClientStatus,
   adminClientTasks,
   adminClientTelegramMessages,
+  adminClientTab,
   adminExerciseVideoUploadingId,
   adminTaskComposerOpen,
   adminSelectedTemplateId,
   adminTrainingTemplates,
   adminTrainerNote,
-  adminUsersSelectedTab,
+  archiveClientProgramAssignment,
+  restoreClientProgramAssignment,
   assignSavedProgramToClient,
   canUseAdminFeatures,
   clientNutritionDays,
   createAdminClientTask,
+  deleteClientProgramAssignment,
   getAdminClientGoalLabel,
   getClientActivityStatus,
   getClientCardSummary,
@@ -29,14 +36,20 @@ export default function TrainerClientsWorkspaceRoute({
   handleTrainerClientAction,
   logout,
   navigateTrainerNext,
+  onCloseClient,
   openClientTelegramConnection,
+  openAdminBaseLibrary,
+  openAdminClientsWithFilter,
+  openProfileAccount,
   openTelegramChat,
   openTrainerNextClient,
   plan,
   refreshPage,
   saveTrainerClientNutritionPlan,
   saveTrainerClientNotificationSettings,
+  saveTrainerClientSetupProgress,
   loadTrainerSubscriptionNotificationSettings,
+  loadUsers,
   saveTrainerSubscriptionNotificationSettings,
   saveTrainerClientWorkoutSchedule,
   saveWorkoutsToFirebase,
@@ -52,11 +65,17 @@ export default function TrainerClientsWorkspaceRoute({
   sendTrainerClientMessage,
   setAdminClientPageOpen,
   setAdminClientStatus,
+  setAdminClientTab,
+  setAdminAllUsersList,
   setAdminNewTaskDueDate,
   setAdminNewTaskTitle,
   setAdminSelectedTemplateId,
+  setAdminSelectedClient,
   setAdminTaskComposerOpen,
-  setAdminUsersSelectedTab,
+  setTrainerNextSection,
+  setTrainerProgramManagerOpen,
+  setTrainerWorkoutTab,
+  setPage,
   sortWorkoutDays,
   telegramProfile,
   trainerClientSummariesLoading,
@@ -64,9 +83,38 @@ export default function TrainerClientsWorkspaceRoute({
   trainerExerciseLibraryItems,
   trainerNextWorkspaceHandlers,
   trainerNutritionPlanOptions,
+  updateUserTrainerRole,
+  user,
   usersList,
   adminClientPageOpen
 }) {
+  if (isAdminTrainerSelection({ canUseAdminFeatures, selectedClient })) {
+    return (
+      <AdminTrainerProfileRoute
+        adminAllUsersList={adminAllUsersList}
+        adminTrainingTemplates={adminTrainingTemplates}
+        canUseAdminFeatures={canUseAdminFeatures}
+        loadUsers={loadUsers}
+        logout={logout}
+        openAdminBaseLibrary={openAdminBaseLibrary}
+        openAdminClientsWithFilter={openAdminClientsWithFilter}
+        openProfileAccount={openProfileAccount}
+        selectedClient={selectedClient}
+        setAdminClientPageOpen={setAdminClientPageOpen}
+        setAdminClientStatus={setAdminClientStatus}
+        setAdminAllUsersList={setAdminAllUsersList}
+        setAdminSelectedClient={setAdminSelectedClient}
+        setPage={setPage}
+        setTrainerNextSection={setTrainerNextSection}
+        setTrainerProgramManagerOpen={setTrainerProgramManagerOpen}
+        setTrainerWorkoutTab={setTrainerWorkoutTab}
+        updateUserTrainerRole={updateUserTrainerRole}
+        user={user}
+        usersList={usersList}
+      />
+    );
+  }
+
   const trainerNextSummaries = Object.fromEntries(
     usersList.map((client) => {
       const summary = getClientCardSummary(client);
@@ -76,16 +124,29 @@ export default function TrainerClientsWorkspaceRoute({
       }];
     })
   );
-  const trainerNextTab = {
-    training: "workouts",
-    calendarNutrition: "nutrition",
-    telegram: "notifications"
-  }[adminUsersSelectedTab] || adminUsersSelectedTab;
+  // The client-detail tab is intentionally separate from the user-directory
+  // filter. Reusing `adminUsersSelectedTab` here can leave the detail with a
+  // value such as "clients" or "trainers", for which there is no content.
+  // In that case the screen used to render only the header and an empty area.
+  const trainerNextTab = [
+    "overview",
+    "workouts",
+    "exerciseProgress",
+    "nutrition",
+    "bodyProgress",
+    "measurements",
+    "photos",
+    "notifications",
+    "messages"
+  ].includes(adminClientTab)
+    ? adminClientTab
+    : "overview";
 
   return (
     <>
       <TrainerWorkspace
       appVersion={APP_VERSION}
+      embedded={embedded}
       mode={adminClientPageOpen && selectedClient ? "client" : "clients"}
       activeSection="clients"
       onNavigate={navigateTrainerNext}
@@ -95,6 +156,7 @@ export default function TrainerClientsWorkspaceRoute({
       clients={usersList}
       clientSummaries={trainerNextSummaries}
       summariesLoading={trainerClientSummariesLoading}
+      clientLoading={adminClientLoading}
       selectedClient={selectedClient}
       selectedProfile={{
         ...selectedProfile,
@@ -107,9 +169,9 @@ export default function TrainerClientsWorkspaceRoute({
       selectedClientSnapshot={selectedClientSnapshot}
       selectedLastWorkoutReview={selectedLastWorkoutReview}
       activeClientTab={trainerNextTab}
-      onClientTabChange={setAdminUsersSelectedTab}
+      onClientTabChange={setAdminClientTab}
       onOpenClient={openTrainerNextClient}
-      onCloseClient={() => setAdminClientPageOpen(false)}
+      onCloseClient={onCloseClient || (() => setAdminClientPageOpen(false))}
       onCreateClient={getTrainerNextCreateClientState().onOpen}
       createClientState={getTrainerNextCreateClientState()}
       measurements={adminClientMeasurements}
@@ -124,6 +186,7 @@ export default function TrainerClientsWorkspaceRoute({
       onGenerateNutritionPlan={() => setAdminClientStatus("Параметры AI-плана открыты в разделе питания.")}
       onSaveNutritionPlan={saveTrainerClientNutritionPlan}
       onSaveNotifications={saveTrainerClientNotificationSettings}
+      onSaveClientSetupProgress={saveTrainerClientSetupProgress}
       trainerSubscriptionNotificationSettings={trainerSubscriptionNotificationSettings}
       onLoadTrainerSubscriptionNotifications={loadTrainerSubscriptionNotificationSettings}
       onSaveTrainerSubscriptionNotifications={saveTrainerSubscriptionNotificationSettings}
@@ -135,14 +198,19 @@ export default function TrainerClientsWorkspaceRoute({
       onCreateTask={() => setAdminTaskComposerOpen(true)}
       onClientAction={handleTrainerClientAction}
       canDeleteClients={canUseAdminFeatures()}
+      canAdminManageProgramAssignments={canUseAdminFeatures()}
       onResolveExerciseProgress={(payload) => handleTrainerClientAction("resolve_exercise_progress", selectedClient, payload)}
       workouts={sortWorkoutDays(plan.workouts || [])}
+      archivedWorkouts={sortWorkoutDays(plan.archivedWorkouts || [])}
       exerciseLibrary={trainerExerciseLibraryItems}
       programTemplates={adminTrainingTemplates}
       selectedProgramId={adminSelectedTemplateId}
       onSelectProgram={setAdminSelectedTemplateId}
-      onAssignProgram={() => assignSavedProgramToClient(selectedClient?.id, adminSelectedTemplateId)}
-      onSaveWorkoutSchedule={(dates) => saveTrainerClientWorkoutSchedule(dates, selectedClient)}
+      onAssignProgram={(options) => assignSavedProgramToClient(selectedClient?.id, adminSelectedTemplateId, options)}
+      onArchiveProgramAssignment={(assignment) => archiveClientProgramAssignment(selectedClient?.id, assignment)}
+      onRestoreProgramAssignment={(assignment) => restoreClientProgramAssignment(selectedClient?.id, assignment)}
+      onDeleteProgramAssignment={(assignment) => deleteClientProgramAssignment(selectedClient?.id, assignment)}
+      onSaveWorkoutSchedule={(dates, assignmentWorkouts) => saveTrainerClientWorkoutSchedule(dates, selectedClient, assignmentWorkouts)}
       programStatus={adminClientStatus}
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}

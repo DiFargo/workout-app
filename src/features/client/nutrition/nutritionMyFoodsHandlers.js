@@ -13,17 +13,97 @@ import {
   safeWriteUserJsonStorage
 } from "../../../utils/userScopedStorage";
 
+const MY_FOODS_SAVE_DELAY_MS = 180;
+
+function createFallbackSaveQueue() {
+  return {
+    timer: null,
+    uid: "",
+    fullSave: null,
+    changes: new Map()
+  };
+}
+
 export function createNutritionMyFoodsHandlers({
   GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY,
   NUTRITION_BACKUP_STORAGE_KEY,
   NUTRITION_STORAGE_KEY,
   auth,
+  myFoodsSaveQueueRef,
   user,
   showAppError,
   setNutrition,
   setRecentNutritionFoods
 }) {
-  function savePersonalMyFoodsToFirebase(myFoods) {
+  const fallbackSaveQueue = createFallbackSaveQueue();
+
+  function getSaveQueue() {
+    return myFoodsSaveQueueRef?.current || fallbackSaveQueue;
+  }
+
+  function persistPersonalMyFoods(job) {
+    const { uid, myFoods, change } = job;
+    const activeUid = auth.currentUser?.uid || user?.uid;
+    if (!uid || activeUid !== uid) return;
+
+    const backupId = `my_foods_${Date.now()}`;
+    const backup = change?.id && change.food
+      ? {
+          id: backupId,
+          changes: [{ id: change.id, food: change.food }],
+          reason: "before_personal_my_foods_save"
+        }
+      : {
+          id: backupId,
+          myFoods: myFoods || {},
+          reason: "before_personal_my_foods_save"
+        };
+    const payload = change?.id && change.food
+      ? {
+          myFoods: { [change.id]: change.food },
+          updatedAt: new Date().toISOString(),
+          ownerUid: uid
+        }
+      : {
+          myFoods: myFoods || {},
+          updatedAt: new Date().toISOString(),
+          ownerUid: uid
+        };
+
+    addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, backup, 12);
+
+    setDoc(getPersonalMyFoodsDocRef(uid), payload, { merge: true })
+      .then(() => removeUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, backupId))
+      .catch((error) => {
+        console.error("Personal my foods save error", error);
+        showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase", "Моя база сохранена локально.");
+        addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, {
+          ...backup,
+          id: `my_foods_failed_${Date.now()}`,
+          reason: "personal_my_foods_save_failed",
+          error: error.message || String(error)
+        }, 12);
+      });
+  }
+
+  function flushPersonalMyFoodsSaveQueue() {
+    const queue = getSaveQueue();
+    queue.timer = null;
+
+    const fullSave = queue.fullSave;
+    const changes = fullSave ? [] : Array.from(queue.changes.values());
+    queue.fullSave = null;
+    queue.changes.clear();
+
+    if (fullSave) {
+      persistPersonalMyFoods(fullSave);
+      return;
+    }
+
+    changes.forEach(persistPersonalMyFoods);
+  }
+
+  function savePersonalMyFoodsToFirebase(myFoods, change = null) {
     const currentUser = auth.currentUser || user;
     const uid = currentUser?.uid;
 
@@ -32,28 +112,33 @@ export function createNutritionMyFoodsHandlers({
       return;
     }
 
-    const backupId = `my_foods_${Date.now()}`;
-    addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, {
-      id: backupId,
-      myFoods: myFoods || {},
-      reason: "before_personal_my_foods_save"
-    }, 12);
+    const queue = getSaveQueue();
+    if (queue.uid && queue.uid !== uid) {
+      if (queue.timer) clearTimeout(queue.timer);
+      queue.fullSave = null;
+      queue.changes.clear();
+    }
+    queue.uid = uid;
 
-    setDoc(getPersonalMyFoodsDocRef(uid), {
+    const job = {
+      uid,
       myFoods: myFoods || {},
-      updatedAt: new Date().toISOString(),
-      ownerUid: uid
-    }, { merge: true })
-      .then(() => removeUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, backupId))
-      .catch((error) => {
-        console.error("Personal my foods save error", error);
-        showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase", "Моя база сохранена локально.");
-        addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, {
-          myFoods: myFoods || {},
-          reason: "personal_my_foods_save_failed",
-          error: error.message || String(error)
-        }, 12);
-      });
+      change: change?.id && change.food ? change : null
+    };
+
+    if (job.change) {
+      if (queue.fullSave) {
+        queue.fullSave = job;
+      } else {
+        queue.changes.set(job.change.id, job);
+      }
+    } else {
+      queue.fullSave = job;
+      queue.changes.clear();
+    }
+
+    if (queue.timer) clearTimeout(queue.timer);
+    queue.timer = setTimeout(flushPersonalMyFoodsSaveQueue, MY_FOODS_SAVE_DELAY_MS);
   }
 
   function removeMyNutritionFood(foodId, foodName = "") {

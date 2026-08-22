@@ -497,15 +497,29 @@
   inset: 0 0 0 auto;
   display: flex;
   width: 92px;
+  margin: 0;
+  padding: 0;
   align-items: center;
   justify-content: center;
   color: rgba(255, 255, 255, 0.92);
+  font: inherit;
   font-size: 13px;
   font-weight: 900;
   line-height: 1.5;
+  text-align: center;
   background: var(--gradient-workout-history-delete-action);
+  border: 0;
   border-radius: 0 24px 24px 0;
   cursor: pointer;
+}
+
+.deleteAction:focus-visible {
+  outline: 3px solid rgba(143, 122, 200, 0.72);
+  outline-offset: -3px;
+}
+
+.deleteAction:disabled {
+  cursor: wait;
 }
 
 .cardTop {

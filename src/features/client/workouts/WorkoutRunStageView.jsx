@@ -1,5 +1,14 @@
+import { useState } from "react";
+
 import { formatCompactTimer, getExerciseTechniqueHint } from "../../../domain/workoutPresentation";
 import { exerciseUsesExternalWeight } from "../../../utils/auditSafety";
+import { getBasicWorkoutAlternatives } from "../../../utils/basicWorkoutAlternatives";
+import { getTrainerExerciseAlternatives } from "../../../utils/trainerExerciseAlternatives";
+import {
+  applyBasicWorkoutExerciseOverride,
+  getBasicWorkoutExerciseTechniqueHint
+} from "../../../utils/basicWorkoutExercisePresentation";
+import BasicWorkoutExerciseExplainer from "./BasicWorkoutExerciseExplainer";
 import WorkoutExerciseModals from "./WorkoutExerciseModals";
 import WorkoutExerciseSets from "./WorkoutExerciseSets";
 import WorkoutExerciseSupport from "./WorkoutExerciseSupport";
@@ -10,6 +19,7 @@ import WorkoutRestTimer from "./WorkoutRestTimer";
 import { WorkoutStageHeading } from "./WorkoutRunOverlays";
 import { WorkoutWarmupBody, WorkoutWarmupHeader } from "./WorkoutWarmupStage";
 import { buildWorkoutRunStageModel } from "./workoutRunStageModel";
+import { useBasicWorkoutExerciseOverrides } from "./useBasicWorkoutExerciseOverrides";
 import styles from "./WorkoutRunStageView.module.css";
 
 export function WorkoutRunExercisePreview({
@@ -81,6 +91,9 @@ export default function WorkoutRunStageView({
   plan,
   postWorkoutFeedback,
   requestLeaveWorkout,
+  confirmBasicStartingWeightFeedback,
+  replaceBasicWorkoutExercise,
+  replaceTrainerAssignedWorkoutExercise,
   restTimerDuration,
   restTimerRunning,
   restTimerSeconds,
@@ -128,11 +141,13 @@ export default function WorkoutRunStageView({
   workoutStarted,
   setWorkoutClientComment
 }) {
+  const [exerciseSwapOpenId, setExerciseSwapOpenId] = useState("");
   const {
     completedExercisesCount,
-    exercise,
+    exercise: unresolvedExercise,
     exerciseAiWeightAdjustments,
     exerciseVideoFailed,
+    executionSteps,
     finishAdviceText,
     finishPresentation,
     finishProgressText,
@@ -157,6 +172,12 @@ export default function WorkoutRunStageView({
     workoutStarted
   });
 
+  const isBasicWorkout = workout?.source === "basic" || plan?.source === "basic";
+  const basicExerciseOverrides = useBasicWorkoutExerciseOverrides(isBasicWorkout);
+  const exercise = isBasicWorkout && unresolvedExercise
+    ? applyBasicWorkoutExerciseOverride(unresolvedExercise, basicExerciseOverrides)
+    : unresolvedExercise;
+
   if (!exercise && !isFinishSlide && !isStartSlide) {
     return (
       <div className={styles.missingExercise}>
@@ -166,7 +187,104 @@ export default function WorkoutRunStageView({
   }
 
   const isWarmup = exercise?.id === "warmup";
+  const exerciseTechniqueHint = getBasicWorkoutExerciseTechniqueHint(
+    exercise,
+    getExerciseTechniqueHint(exercise?.name)
+  );
+  const exerciseAlternatives = exercise && !isWarmup
+    ? isBasicWorkout
+      ? getBasicWorkoutAlternatives(exercise, workout, plan)
+      : getTrainerExerciseAlternatives(exercise)
+    : [];
+  const firstExerciseSet = exercise?.sets?.[0];
+  const startingWeightCheck = exercise && isBasicWorkout && !isWarmup && exerciseUsesExternalWeight(exercise)
+    && firstExerciseSet?.startingWeightSource === "estimate"
+    && !firstExerciseSet.startingWeightConfirmed
+    ? { awaitingFeedback: Boolean(firstExerciseSet.completed) }
+    : null;
   const hasExerciseVideo = Boolean(!isWarmup && exercise?.video && !exerciseVideoFailed);
+  const groupBlock = exercise?.taskBlockType === "group"
+    ? exercise.taskBlockConfig
+    : exercise?.runtimeGroup || null;
+  const groupExerciseCount = Math.max(
+    Number(exercise?.taskBlockExerciseCount) || 0,
+    Array.isArray(groupBlock?.exerciseIds) ? groupBlock.exerciseIds.length : 0
+  );
+  const groupExercisePosition = Math.min(
+    groupExerciseCount || 1,
+    Math.max(1, Number(exercise?.taskBlockExerciseIndex || 0) + 1)
+  );
+  const groupRound = Number(exercise?.runtimeGroup?.roundIndex);
+  const groupRounds = Math.max(1, Number(groupBlock?.rounds) || 1);
+  const groupProgressLabel = groupBlock
+    ? `${groupBlock.groupMode === "triset" ? "Трисет" : "Суперсет"} · круг ${Number.isFinite(groupRound) ? groupRound + 1 : 1}/${groupRounds} · ${groupExercisePosition}/${groupExerciseCount || 1}`
+    : "";
+  const shouldShowGroupRest = !exercise?.runtimeGroup || (
+    groupExercisePosition >= (groupExerciseCount || 1)
+  );
+  const exerciseVideoFrame = exercise && !isWarmup ? (
+    <WorkoutExerciseVideoFrame
+      exercise={exercise}
+      exerciseVideoFailed={exerciseVideoFailed}
+      fallbackHint={exerciseTechniqueHint}
+      inlinePlayingVideoId={inlinePlayingVideoId}
+      inlineVideoControlsVisible={inlineVideoControlsVisible}
+      onFullscreenVideo={setFullscreenVideo}
+      onInlineVideoPlayFailed={() => {
+        showAppError("load", "Не получилось запустить видео упражнения.");
+      }}
+      onOpenTechnique={(event) => openWorkoutExerciseModal(
+        setExerciseTechniqueOpenId,
+        exercise.id,
+        event.currentTarget
+      )}
+      onRetryVideo={() => {
+        setOpenVideoId(null);
+        setVideoRetryToken((current) => current + 1);
+      }}
+      onVideoCanPlay={() => setVideoLoadingId("")}
+      onVideoEnded={() => {
+        if (inlineVideoControlsTimerRef.current) {
+          window.clearTimeout(inlineVideoControlsTimerRef.current);
+          inlineVideoControlsTimerRef.current = null;
+        }
+        setInlinePlayingVideoId("");
+        setInlineVideoControlsVisible(true);
+      }}
+      onVideoError={() => {
+        endPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video, error: true });
+        if (inlineVideoControlsTimerRef.current) {
+          window.clearTimeout(inlineVideoControlsTimerRef.current);
+          inlineVideoControlsTimerRef.current = null;
+        }
+        setInlinePlayingVideoId("");
+        setInlineVideoControlsVisible(true);
+        setVideoLoadingId("");
+        setOpenVideoId(`error:${exercise.id}`);
+      }}
+      onVideoLoadedMetadata={(event) => {
+        setVideoLoadingId("");
+        endPerformanceCheck(`Video · ${exercise.name}`, {
+          src: exercise.video,
+          duration: Math.round(Number(event.currentTarget.duration) || 0)
+        });
+      }}
+      onVideoLoadStart={() => {
+        setVideoLoadingId(exercise.id);
+        startPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video });
+      }}
+      onVideoPause={() => {
+        setInlinePlayingVideoId("");
+        showInlineVideoControlsTemporarily();
+      }}
+      onVideoPlay={() => {
+        setInlinePlayingVideoId(exercise.id);
+        showInlineVideoControlsTemporarily();
+      }}
+      videoLoadingId={videoLoadingId}
+      videoRetryToken={videoRetryToken}
+    />
+  ) : null;
 
   return (
     <div
@@ -208,6 +326,7 @@ export default function WorkoutRunStageView({
           finishSyncText={finishSyncText}
           goToPreviousExercise={goToPreviousExercise}
           incompleteExerciseNames={incompleteExerciseNames}
+          isBasicWorkout={isBasicWorkout}
           isSaving={isSaving}
           isWorkoutSaved={isWorkoutSaved}
           onClientCommentChange={(event) => setWorkoutClientComment(event.target.value)}
@@ -237,8 +356,8 @@ export default function WorkoutRunStageView({
         <>
           {!isWarmup && (
             <div className={styles.exerciseProgressSlot}>
-              <div className={styles.exerciseMeta} data-testid="workout-exercise-progress">
-                <span className={styles.exerciseProgressText}>{currentExerciseIndex} из {workout.exercises.length}</span>
+              <div className={`${styles.exerciseMeta}${groupProgressLabel ? ` ${styles.groupExerciseMeta}` : ""}`} data-testid="workout-exercise-progress">
+                <span className={styles.exerciseProgressText}>{groupProgressLabel || `${currentExerciseIndex} из ${executionSteps.length}`}</span>
               </div>
             </div>
           )}
@@ -271,67 +390,12 @@ export default function WorkoutRunStageView({
                 stepCount={warmupSteps.length}
               />
             ) : (
-              <WorkoutExerciseVideoFrame
+              <BasicWorkoutExerciseExplainer
                 exercise={exercise}
-                exerciseVideoFailed={exerciseVideoFailed}
-                fallbackHint={getExerciseTechniqueHint(exercise.name)}
-                inlinePlayingVideoId={inlinePlayingVideoId}
-                inlineVideoControlsVisible={inlineVideoControlsVisible}
-                onFullscreenVideo={setFullscreenVideo}
-                onInlineVideoPlayFailed={() => {
-                  showAppError("load", "Не получилось запустить видео упражнения.");
-                }}
-                onOpenTechnique={(event) => openWorkoutExerciseModal(
-                  setExerciseTechniqueOpenId,
-                  exercise.id,
-                  event.currentTarget
-                )}
-                onRetryVideo={() => {
-                  setOpenVideoId(null);
-                  setVideoRetryToken((current) => current + 1);
-                }}
-                onVideoCanPlay={() => setVideoLoadingId("")}
-                onVideoEnded={() => {
-                  if (inlineVideoControlsTimerRef.current) {
-                    window.clearTimeout(inlineVideoControlsTimerRef.current);
-                    inlineVideoControlsTimerRef.current = null;
-                  }
-                  setInlinePlayingVideoId("");
-                  setInlineVideoControlsVisible(true);
-                }}
-                onVideoError={() => {
-                  endPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video, error: true });
-                  if (inlineVideoControlsTimerRef.current) {
-                    window.clearTimeout(inlineVideoControlsTimerRef.current);
-                    inlineVideoControlsTimerRef.current = null;
-                  }
-                  setInlinePlayingVideoId("");
-                  setInlineVideoControlsVisible(true);
-                  setVideoLoadingId("");
-                  setOpenVideoId(`error:${exercise.id}`);
-                }}
-                onVideoLoadedMetadata={(event) => {
-                  setVideoLoadingId("");
-                  endPerformanceCheck(`Video · ${exercise.name}`, {
-                    src: exercise.video,
-                    duration: Math.round(Number(event.currentTarget.duration) || 0)
-                  });
-                }}
-                onVideoLoadStart={() => {
-                  setVideoLoadingId(exercise.id);
-                  startPerformanceCheck(`Video · ${exercise.name}`, { src: exercise.video });
-                }}
-                onVideoPause={() => {
-                  setInlinePlayingVideoId("");
-                  showInlineVideoControlsTemporarily();
-                }}
-                onVideoPlay={() => {
-                  setInlinePlayingVideoId(exercise.id);
-                  showInlineVideoControlsTemporarily();
-                }}
-                videoLoadingId={videoLoadingId}
-                videoRetryToken={videoRetryToken}
-              />
+                onOpenSwap={exerciseAlternatives.length ? () => setExerciseSwapOpenId(exercise.id) : undefined}
+              >
+                {exerciseVideoFrame}
+              </BasicWorkoutExerciseExplainer>
             )}
 
             {isWarmup ? (
@@ -362,6 +426,7 @@ export default function WorkoutRunStageView({
                     onUpdateSet={updateSet}
                     sharedExerciseAiWeightAdjustment={sharedExerciseAiWeightAdjustment}
                     showTitle={false}
+                    visibleSetIndexes={Number.isInteger(exercise.runtimeSetIndex) ? [exercise.runtimeSetIndex] : null}
                   />
 
                   <WorkoutExerciseSupport
@@ -374,24 +439,40 @@ export default function WorkoutRunStageView({
                       exercise.id,
                       event.currentTarget
                     )}
+                    onStartingWeightFeedback={(feedback) => {
+                      confirmBasicStartingWeightFeedback?.(exercise.id, feedback);
+                    }}
                     onToggleHistory={() => setExerciseHistoryOpenId((current) => current === exercise.id ? "" : exercise.id)}
                     readinessVolumeText={workoutReadiness?.volumeText}
+                    startingWeightCheck={startingWeightCheck}
                   />
 
                   <WorkoutExerciseModals
+                    alternatives={exerciseAlternatives}
                     exercise={exercise}
                     noteOpen={exerciseNoteOpenId === exercise.id}
                     onCloseNote={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
+                    onCloseSwap={() => setExerciseSwapOpenId("")}
                     onCloseTechnique={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
+                    onSelectAlternative={(alternative) => {
+                      const didReplace = isBasicWorkout
+                        ? replaceBasicWorkoutExercise?.(exercise.id, alternative)
+                        : replaceTrainerAssignedWorkoutExercise?.(exercise.id, alternative);
+                      if (didReplace) {
+                        setExerciseSwapOpenId("");
+                      }
+                    }}
+                    alternativeSource={isBasicWorkout ? "basic" : "trainer"}
                     onUpdateNote={updateExerciseNote}
-                    techniqueHint={getExerciseTechniqueHint(exercise.name)}
+                    swapOpen={exerciseSwapOpenId === exercise.id}
+                    techniqueHint={exerciseTechniqueHint}
                     techniqueOpen={exerciseTechniqueOpenId === exercise.id}
                   />
                 </div>
               </section>
             )}
 
-            {!isWarmup && (
+            {!isWarmup && shouldShowGroupRest && (
               <WorkoutRestTimer
                 duration={restTimerDuration}
                 running={restTimerRunning}
@@ -409,7 +490,7 @@ export default function WorkoutRunStageView({
                 onCloseNote={() => {}}
                 onCloseTechnique={() => closeWorkoutExerciseModal(setExerciseTechniqueOpenId)}
                 onUpdateNote={updateExerciseNote}
-                techniqueHint={getExerciseTechniqueHint(exercise.name)}
+                techniqueHint={exerciseTechniqueHint}
                 techniqueOpen={exerciseTechniqueOpenId === exercise.id}
               />
             )}
@@ -417,7 +498,7 @@ export default function WorkoutRunStageView({
           </div>
 
           <WorkoutStageActionPanel
-            isLastExercise={currentExerciseIndex >= workout.exercises.length}
+            isLastExercise={currentExerciseIndex >= executionSteps.length}
             isWarmup={isWarmup}
             onNext={goToNextExercise}
             onPrevious={goToPreviousExercise}

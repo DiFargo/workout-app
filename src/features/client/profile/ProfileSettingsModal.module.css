@@ -7,6 +7,8 @@
   display: grid;
   place-items: center;
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
   background: var(--background-profile-modal-overlay);
   backdrop-filter: var(--filter-profile-modal-overlay);
   -webkit-backdrop-filter: var(--filter-profile-modal-overlay);
@@ -28,6 +30,7 @@
   background: var(--background-profile-modal);
   box-shadow: var(--shadow-profile-modal);
   color: var(--color-profile-modal);
+  touch-action: pan-y;
   --gradient-primary: linear-gradient(135deg, #8f7ac8, #806bb6);
 }
 
@@ -62,6 +65,7 @@
   padding: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   scrollbar-width: none;
 }
 

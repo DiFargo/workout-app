@@ -169,10 +169,10 @@
 }
 
 .bodyControlTabs button.active {
-  border-color: var(--color-profile-progress-photos-section-tab-active-border);
-  background: var(--background-profile-progress-photos-section-tab-active);
-  color: var(--color-profile-progress-photos-section-tab-active);
-  box-shadow: var(--shadow-profile-progress-photos-section-tab-active);
+  border-color: #806bb6;
+  background: linear-gradient(135deg, #9a86d3, #806bb6);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(128, 107, 182, 0.3);
 }
 
 .body {

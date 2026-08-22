@@ -40,11 +40,13 @@ export default function AdminWorkoutsNextWorkspace({
   createClientState,
   onNavigate,
   mode,
-  activeSection
+  activeSection,
+  embedded = false
 }) {
   return (
     <TrainerWorkspace
       appVersion={appVersion}
+      embedded={embedded}
       mode={mode}
       activeSection={activeSection}
       onNavigate={onNavigate}

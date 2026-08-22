@@ -6,34 +6,19 @@ import FoodSearchResults from "./FoodSearchResults";
 import NutritionCreateChoice from "./NutritionCreateChoice";
 import NutritionPhotoAiPreview from "./NutritionPhotoAiPreview";
 import NutritionPhotoNotFoundModal from "./NutritionPhotoNotFoundModal";
+import { Package, Plus } from "lucide-react";
 import styles from "./FoodSearchPage.module.css";
 import {
   getSearchHistoryName,
   getShortFoodName
 } from "../../../utils/nutritionFoodPresentation";
 
-const DEFAULT_RECENT_FOODS = [
-  { id: "recent_banana", name: "Банан", icon: "🍌", calories: 89, portion: "100 г" },
-  { id: "recent_flat_white", name: "Флет Уайт", icon: "☕", calories: 45, portion: "100 мл" },
-  { id: "recent_cottage_cake", name: "Творожный торт", icon: "🍰", calories: 260, portion: "100 г" }
-];
-
-const EXTRA_DEFAULT_RECENT_FOODS = [
-  { id: "recent_chicken_breast", name: "Куриная грудка", icon: "🍗", calories: 165, portion: "100 г" },
-  { id: "recent_egg", name: "Яйцо куриное", icon: "🥚", calories: 70, portion: "1 шт" },
-  { id: "recent_oatmeal", name: "Овсянка", icon: "🥣", calories: 389, portion: "100 г" },
-  { id: "recent_buckwheat", name: "Гречка", icon: "🍚", calories: 343, portion: "100 г" },
-  { id: "recent_cottage_cheese", name: "Творог 5%", icon: "🥛", calories: 121, portion: "100 г" },
-  { id: "recent_avocado", name: "Авокадо", icon: "🥑", calories: 160, portion: "100 г" }
-];
-
 function FoodSearchModernLanding({
   recentFoods,
-  onRecentFoodSelect,
-  onSearchReset
+  onRecentFoodSelect
 }) {
   const seenRecentNames = new Set();
-  const recentCards = [...recentFoods, ...DEFAULT_RECENT_FOODS, ...EXTRA_DEFAULT_RECENT_FOODS]
+  const recentCards = (Array.isArray(recentFoods) ? recentFoods : [])
     .filter((food) => {
       const key = String(getSearchHistoryName(food) || food.name || food.id || "")
         .trim()
@@ -60,34 +45,32 @@ function FoodSearchModernLanding({
             <span className={styles.sectionIcon} aria-hidden="true">↺</span>
             Недавние
           </h3>
-          <button
-            type="button"
-            className={styles.clearButton}
-            data-css-module-control="food-search-clear"
-            onClick={onSearchReset}
-          >
-            Очистить
-          </button>
         </div>
 
-        <div className={styles.recentGrid} data-testid="food-search-recent-grid">
-          {recentCards.map((food, index) => {
-            const name = getSearchHistoryName(food) || food.name || "Продукт";
-            return (
-              <button
-                type="button"
-                key={`${food.id || name}_${index}`}
-                className={styles.recentItem}
-                data-food-search-recent-card
-                data-css-module-control="food-search-recent-card"
-                onClick={() => onRecentFoodSelect(food)}
-              >
-                <span className={styles.recentIcon} aria-hidden="true">{food.icon || "🍽️"}</span>
-                <strong className={styles.recentName}>{getShortFoodName(name)}</strong>
-              </button>
-            );
-          })}
-        </div>
+        {recentCards.length > 0 ? (
+          <div className={styles.recentGrid} data-testid="food-search-recent-grid">
+            {recentCards.map((food, index) => {
+              const name = getSearchHistoryName(food) || food.name || "Продукт";
+              return (
+                <button
+                  type="button"
+                  key={`${food.id || name}_${index}`}
+                  className={styles.recentItem}
+                  data-food-search-recent-card
+                  data-css-module-control="food-search-recent-card"
+                  onClick={() => onRecentFoodSelect(food)}
+                >
+                  <span className={styles.recentIcon} aria-hidden="true">{food.icon || "🍽️"}</span>
+                  <strong className={styles.recentName}>{getShortFoodName(name)}</strong>
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <p className={styles.emptyRecent} data-testid="food-search-empty-recents">
+            Добавленные вами продукты появятся здесь.
+          </p>
+        )}
       </section>
 
     </div>
@@ -124,7 +107,6 @@ export default function FoodSearchPage({
   onShowMore,
   onBack,
   onSearchTabSelect,
-  onPhotoSelect,
   onCreateSelect,
   onMyProductsSelect,
   onCreateFood,
@@ -134,7 +116,8 @@ export default function FoodSearchPage({
   onPhotoRetry,
   onPhotoAddManually,
   onPhotoCandidateSelect,
-  onPhotoReset
+  onPhotoReset,
+  modal = false
 }) {
   const isModernSearchHome = (
     searchTab !== "my" &&
@@ -147,80 +130,102 @@ export default function FoodSearchPage({
 
   return (
     <>
-      <FoodSearchInput
-        value={search}
-        onChange={onSearchChange}
-        onReset={onSearchReset}
-        variant={searchTab === "my" ? "my-products" : "search"}
-      />
-
-      <FoodPhotoAiSearchProcess
-        visible={photoAnalyzing && searchTab !== "my" && searchTab !== "recent"}
-      />
-
-      <FoodSearchHistoryNames
-        visible={!isModernSearchHome && !photoAnalyzing && searchTab !== "my" && searchTab !== "recent" && !showRecentFoods && search.trim().length < 2}
-        foods={recentFoods}
-        onSelect={onHistorySelect}
-      />
-
-      {isModernSearchHome ? (
-        <FoodSearchModernLanding
-          recentFoods={recentFoods}
-          onRecentFoodSelect={onRecentFoodSelect}
-          onSearchReset={onSearchReset}
+      <div
+        className={`${styles.content}${modal ? ` ${styles.modalContent}` : ""}`}
+        data-testid={modal ? "food-search-scroll" : undefined}
+      >
+        <FoodSearchInput
+          value={search}
+          onChange={onSearchChange}
+          onReset={onSearchReset}
+          variant={searchTab === "my" ? "my-products" : "search"}
         />
-      ) : (
-        <FoodSearchResults
-          search={search}
-          searchTab={searchTab}
-          photoAnalyzing={photoAnalyzing}
-          fatSecretError={fatSecretError}
-          fatSecretLoading={fatSecretLoading}
-          fallbackSuggestions={fallbackSuggestions}
-          searchResults={searchResults}
-          visibleResults={visibleResults}
-          nutrition={nutrition}
-          onSuggestionSelect={onSuggestionSelect}
-          onMyFoodSelect={onMyFoodSelect}
-          onFoodSelect={onFoodSelect}
-          onShowMore={onShowMore}
-        />
-      )}
 
-      {!createChoiceOpen && searchTab !== "my" && (
+        {searchTab === "my" && !createChoiceOpen && (
+          <button
+            type="button"
+            className={styles.createInMy}
+            data-testid="food-search-create-in-my"
+            data-css-module-control="food-search-create-in-my"
+            onClick={onCreateSelect}
+          >
+            <Plus aria-hidden="true" />
+            <span>
+              <strong>Создать продукт или блюдо</strong>
+              <small>Добавить в «Мою базу»</small>
+            </span>
+          </button>
+        )}
+
+        <FoodPhotoAiSearchProcess
+          visible={photoAnalyzing && searchTab !== "my" && searchTab !== "recent"}
+        />
+
+        <FoodSearchHistoryNames
+          visible={!isModernSearchHome && !photoAnalyzing && searchTab !== "my" && searchTab !== "recent" && !showRecentFoods && search.trim().length < 2}
+          foods={recentFoods}
+          onSelect={onHistorySelect}
+        />
+
+        {isModernSearchHome ? (
+          <FoodSearchModernLanding
+            recentFoods={recentFoods}
+            onRecentFoodSelect={onRecentFoodSelect}
+          />
+        ) : (
+          <FoodSearchResults
+            search={search}
+            searchTab={searchTab}
+            photoAnalyzing={photoAnalyzing}
+            fatSecretError={fatSecretError}
+            fatSecretLoading={fatSecretLoading}
+            fallbackSuggestions={fallbackSuggestions}
+            searchResults={searchResults}
+            visibleResults={visibleResults}
+            nutrition={nutrition}
+            onSuggestionSelect={onSuggestionSelect}
+            onMyFoodSelect={onMyFoodSelect}
+            onFoodSelect={onFoodSelect}
+            onShowMore={onShowMore}
+          />
+        )}
+      </div>
+
+      {!createChoiceOpen && (
         <button
           type="button"
-          className={styles.photoAction}
-          data-testid="food-search-photo-action"
+          className={`${styles.photoAction}${modal ? ` ${styles.modalPhotoAction}` : ""} ${styles.myProductsAction}`}
+          data-testid="food-search-my-products-action"
           data-css-module-scope="food-search-page"
-          data-css-module-control="food-search-photo-action"
-          onClick={onPhotoSelect}
-          aria-label="ИИ поиск по фото"
+          data-css-module-control="food-search-my-products-action"
+          onClick={searchTab === "my" ? onSearchTabSelect : onMyProductsSelect}
+          aria-label={searchTab === "my" ? "Вернуться к поиску" : "Мои продукты"}
         >
-          <span className={styles.photoIcon} aria-hidden="true">📷</span>
+          <span className={styles.photoIcon} aria-hidden="true"><Package /></span>
           <span className={styles.photoCopy}>
-            <strong className={styles.photoTitle}>ИИ поиск по фото</strong>
-            <small className={styles.photoDescription}>Сфотографируйте еду и получите КБЖУ</small>
+            <strong className={styles.photoTitle}>{searchTab === "my" ? "Вернуться к поиску" : "Мои продукты"}</strong>
+            <small className={styles.photoDescription}>
+              {searchTab === "my" ? "Найти продукт в общей базе" : "Ваша личная база продуктов и блюд"}
+            </small>
           </span>
           <em className={styles.photoChevron} aria-hidden="true">›</em>
         </button>
       )}
 
-      <FoodSearchBottomBar
-        createChoiceOpen={createChoiceOpen}
-        searchTab={searchTab}
-        onBack={onBack}
-        onSearch={onSearchTabSelect}
-        onCreate={onCreateSelect}
-        onMyProducts={onMyProductsSelect}
-      />
+      {!modal && (
+        <FoodSearchBottomBar
+          searchTab={searchTab}
+          onBack={onBack}
+          onSearch={onSearchTabSelect}
+          onMyProducts={onMyProductsSelect}
+        />
+      )}
 
       <NutritionCreateChoice
         open={createChoiceOpen}
         onCreateFood={onCreateFood}
         onCreateDish={onCreateDish}
-        onClose={onSearchTabSelect}
+        onClose={searchTab === "my" ? onMyProductsSelect : onSearchTabSelect}
       />
 
       <input

@@ -104,8 +104,8 @@
 
 .globalSubscriptionSettings {
   display: grid;
-  gap: 16px;
-  padding: 20px;
+  gap: 12px;
+  padding: 16px;
   border: 1px solid var(--tn-line, #efebf3);
   border-radius: 22px;
   background: var(--tn-surface, #fff);
@@ -159,6 +159,7 @@
 }
 
 .globalSubscriptionSettings .subscriptionReminderBar label {
+  min-width: 0;
   color: var(--tn-text, #28262e);
   font-size: 12px;
   font-weight: 600;
@@ -166,6 +167,10 @@
 
 .globalSubscriptionSettings .subscriptionReminderBar input:not([type="checkbox"]),
 .globalSubscriptionSettings .subscriptionReminderBar select {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
   min-height: 38px;
   padding: 7px 10px;
   border-color: var(--tn-line, #efebf3);
@@ -182,6 +187,10 @@
   accent-color: var(--tn-purple-strong, #806bb6);
 }
 
+.globalSubscriptionSettings .subscriptionReminderBar input[type="time"] {
+  min-inline-size: 0;
+}
+
 .globalSubscriptionActions {
   display: flex;
   align-items: center;
@@ -196,7 +205,7 @@
 }
 
 .globalSubscriptionActions button {
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 16px;
   border: 1px solid var(--tn-purple-strong, #806bb6);
   border-radius: 13px;
@@ -235,7 +244,21 @@
 .overviewSubscriptionMetrics small,
 .overviewSubscriptionMetrics em { color: #858999; font-size: 8px; font-style: normal; }
 .overviewSubscriptionMetrics strong { font-size: 12px; }
-.overviewSubscription > button { min-height: 36px; padding: 0 13px; border: 1px solid #d8cffd; border-radius: 10px; background: #fff; color: #5930ef; font-weight: 750; cursor: pointer; }
+.overviewSubscription > button {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid #ddd4ea;
+  border-radius: 10px;
+  background: #f8f5fb;
+  color: #725d96;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.overviewSubscription > button:hover {
+  border-color: #d3c8e2;
+  background: #f1ecf8;
+}
 
 .subscriptionModalBackdrop { z-index: 1200; }
 .subscriptionModal {
@@ -250,7 +273,7 @@
 .subscriptionModal > header span { color: #6b47ef; font-size: 9px; font-weight: 800; }
 .subscriptionModal > header h2 { margin: 0; font-size: 21px; }
 .subscriptionModal > header p { margin: 0; color: #858999; font-size: 10px; }
-.subscriptionModalClose { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
+.subscriptionModalClose { position: absolute; z-index: 3; top: 16px; right: 16px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
 .subscriptionModalGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
 .subscriptionModalGrid label { display: grid; gap: 5px; }
 .subscriptionModalGrid small { color: #858999; font-size: 9px; }
@@ -259,7 +282,7 @@
 .subscriptionModalSummary label { display: flex; align-items: center; gap: 7px; font-size: 10px; }
 .subscriptionModal footer { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 .subscriptionModal footer > span { margin-right: auto; }
-.subscriptionModal footer button { min-height: 38px; padding: 0 14px; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
+.subscriptionModal footer button { min-height: 44px; padding: 0 14px; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
 
 .reminderCard :global(.trainerReminderCardHead) {
   min-height: 42px;
@@ -320,6 +343,51 @@
   .subscriptionModal footer { flex-wrap: wrap; }
   .globalSubscriptionActions { align-items: stretch; flex-direction: column; }
   .globalSubscriptionActions > small { margin-right: 0; }
+}
+
+/* The sheet is intentionally narrower than a page.  Two fields per row keep
+   native time controls inside the card while staying compact on phones. */
+@media (max-width: 680px) {
+  .globalSubscriptionSettings .subscriptionReminderBar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    padding: 12px;
+  }
+
+  .globalSubscriptionSettings .subscriptionReminderBar > div {
+    grid-column: 1 / -1;
+  }
+
+  .globalSubscriptionSettings .subscriptionReminderBar label:has(input[type="checkbox"]) {
+    grid-column: auto;
+  }
+
+  /* Keep the final pair compact and balanced while allowing the native time
+     control to shrink inside its own grid column on iOS. */
+  .globalSubscriptionSettings .subscriptionReminderBar label:last-child {
+    grid-column: auto;
+    min-width: 0;
+  }
+
+  .globalSubscriptionSettings .subscriptionReminderBar label:last-child input[type="time"] {
+    display: block;
+    inline-size: 100%;
+    min-width: 0;
+    min-inline-size: 0;
+    max-width: 100%;
+    max-inline-size: 100%;
+    padding-inline: 7px;
+  }
+}
+
+@media (max-width: 360px) {
+  .globalSubscriptionSettings .subscriptionReminderBar {
+    grid-template-columns: 1fr;
+  }
+
+  .globalSubscriptionSettings .subscriptionReminderBar label:has(input[type="checkbox"]) {
+    grid-column: 1 / -1;
+  }
 }
 
 /* Client notification settings follow the shared calm trainer surface. */

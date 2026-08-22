@@ -1,7 +1,14 @@
 import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 
 import { getTrainerClientMirrorPayload } from "../../utils/trainerClientMirror";
-import { buildTrainerUserLists } from "../../utils/trainerUserLists";
+import { buildTrainerUserLists, isCurrentTrainerClient } from "../../utils/trainerUserLists";
+import {
+  mapWithConcurrency,
+  MAX_TRAINER_LINKED_PROFILE_CONCURRENCY
+} from "../../utils/trainerDataReadLimits.js";
+
+// Linked-client mirrors may point to a large client base. Do not turn a single
+// dashboard refresh into an unbounded fan-out of individual profile reads.
 
 function isPermissionDeniedError(error) {
   return error?.code === "permission-denied" || String(error?.message || "").includes("Missing or insufficient permissions");
@@ -99,7 +106,10 @@ export async function loadTrainerUsersWithDeps({
         });
       });
 
-      const linkedProfiles = await Promise.allSettled(linkedClientDocs.map(async (linkedClient) => {
+      const linkedProfiles = await mapWithConcurrency(
+        linkedClientDocs,
+        MAX_TRAINER_LINKED_PROFILE_CONCURRENCY,
+        async (linkedClient) => {
         const clientId = linkedClient.clientId || linkedClient.uid || linkedClient.id;
         if (!clientId) return null;
 
@@ -126,7 +136,8 @@ export async function loadTrainerUsersWithDeps({
           trainerId: linkedClient.trainerId || trainerUid,
           trainerEmail: linkedClient.trainerEmail || trainerEmail
         };
-      }));
+        }
+      );
 
       linkedProfiles.forEach((result) => {
         if (result.status === "fulfilled" && result.value?.id) {
@@ -135,7 +146,11 @@ export async function loadTrainerUsersWithDeps({
       });
     }
 
-    const clients = applyUsers(users);
+    const currentTrainerClients = users.filter((candidate) => isCurrentTrainerClient(candidate, {
+      trainerUid,
+      trainerEmail
+    }));
+    const clients = applyUsers(currentTrainerClients);
     void loadTrainerClientSummaries(clients);
   } catch (err) {
     console.error("Ошибка загрузки пользователей:", err);

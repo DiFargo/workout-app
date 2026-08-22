@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const TRAINER_AUTO_LOAD_PAGES = new Set(["admin", "adminUsers", "adminWorkouts"]);
+const TRAINER_AUTO_LOAD_PAGES = new Set(["admin", "adminPanel", "adminUsers", "adminWorkouts"]);
 
 export function useTrainerAutoLoadEffect({
   currentUserRole,

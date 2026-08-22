@@ -1,4 +1,8 @@
 /* Compact dashboard summary and action filters. */
+:local(.scope) {
+  min-width: 0;
+}
+
 :global(.trainerNextRoot) :global(.trainerNextMetrics) {
   gap: 10px;
   margin-bottom: 18px;
@@ -61,6 +65,486 @@
 
 :global(.trainerNextRoot) :global(.trainerActionCenterCard p) {
   display: none;
+}
+
+/* Standing decisions sit above the day journal and are not acknowledged away. */
+:global(.trainerNextRoot) :global(.trainerImmediateActionsSection) {
+  margin: 18px 0 0;
+  padding: 16px 20px;
+  border: 1px solid #eadbc5;
+  border-radius: 20px;
+  background: #fffaf4;
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsHead) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsHead > div) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsHead span) {
+  display: block;
+  margin-bottom: 4px;
+  color: #9a6719;
+  font-size: 10px;
+  font-weight: 820;
+  letter-spacing: .07em;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsHead h2) {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 18px;
+  font-weight: 760;
+  letter-spacing: -.25px;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsHead p) {
+  margin: 4px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsHead > strong) {
+  min-width: 30px;
+  height: 30px;
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #ead8bc;
+  border-radius: 999px;
+  background: #fff3df;
+  color: #9a6719;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsList) {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsList article) {
+  min-width: 0;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 1px solid #f0e2cf;
+  border-radius: 14px;
+  background: #fff;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsList .trainerNextAvatar.small) {
+  width: 34px;
+  height: 34px;
+  font-size: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsContent) {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsContent > span) {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  color: var(--tn-purple);
+  font-size: 10px;
+  font-weight: 760;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsContent > span svg) {
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsContent > strong),
+:global(.trainerNextRoot) :global(.trainerImmediateActionsContent > small) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsContent > strong) {
+  color: var(--tn-text);
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsContent > small) {
+  color: var(--tn-muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsList button) {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid #ead8bc;
+  border-radius: 10px;
+  background: #fff7eb;
+  color: #9a6719;
+  font-size: 11px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsList button:hover) {
+  background: #fff0da;
+}
+
+:global(.trainerNextRoot) :global(.trainerImmediateActionsList button:focus-visible) {
+  outline: 2px solid rgba(154, 103, 25, .35);
+  outline-offset: 2px;
+}
+
+/* Day journal replaces the old filter-and-queue action centre. */
+:global(.trainerNextRoot) :global(.trainerDailyJournalSection) {
+  margin: 18px 0;
+  padding: 18px 20px;
+  border: 1px solid var(--tn-line);
+  border-radius: 20px;
+  background: var(--tn-surface);
+  box-shadow: none;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead > div) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead > div > span) {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--tn-purple);
+  font-size: 10px;
+  font-weight: 820;
+  letter-spacing: .07em;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead h2) {
+  margin: 0;
+  color: var(--tn-text);
+  font-size: 20px;
+  font-weight: 760;
+  letter-spacing: -.35px;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead p) {
+  max-width: 680px;
+  margin: 5px 0 0;
+  color: var(--tn-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead > strong) {
+  flex: 0 0 auto;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 760;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead > strong.attention) {
+  border-color: #ead8bc;
+  background: #fff8ec;
+  color: #9a6719;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalHead > strong.calm) {
+  border-color: #d8eadf;
+  background: #f2fbf5;
+  color: #237954;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalFilters) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0 4px;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalFilters button) {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid var(--tn-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 730;
+  line-height: 1;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalFilters button span) {
+  min-width: 17px;
+  height: 17px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--tn-surface-soft);
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 780;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalFilters button.active) {
+  border-color: #d8cbed;
+  background: var(--tn-purple-soft);
+  color: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalFilters button.active span) {
+  background: var(--tn-purple-strong);
+  color: #fff;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalFilters button:focus-visible) {
+  outline: 2px solid rgba(143, 122, 200, .48);
+  outline-offset: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalTimeline) {
+  display: grid;
+  max-height: 520px;
+  margin-top: 8px;
+  padding: 0 8px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #c9bde0 transparent;
+  scrollbar-width: thin;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalTimeline::-webkit-scrollbar) {
+  width: 7px;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalTimeline::-webkit-scrollbar-thumb) {
+  border-radius: 999px;
+  background: #c9bde0;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalBoundary) {
+  min-height: 28px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 84px;
+  color: var(--tn-muted);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: .02em;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalBoundary::before) {
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  left: 68px;
+  border: 2px solid var(--tn-surface);
+  border-radius: 50%;
+  background: #b9afcb;
+  box-sizing: border-box;
+  content: "";
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalBoundary.end) {
+  min-height: 34px;
+  color: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalBoundary.end::before) {
+  background: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent) {
+  min-width: 0;
+  min-height: 60px;
+  display: grid;
+  grid-template-columns: 56px 16px 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--tn-line);
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent:last-child) {
+  border-bottom: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent > time) {
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 720;
+  text-align: right;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalLine) {
+  position: relative;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalLine::before) {
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  width: 1px;
+  background: #e6dfef;
+  content: "";
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalLine i) {
+  position: relative;
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--tn-surface);
+  border-radius: 50%;
+  background: #a99dbb;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent.requiresAction .trainerDailyJournalLine i) {
+  background: var(--tn-purple-strong);
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent .trainerNextAvatar.small) {
+  width: 34px;
+  height: 34px;
+  font-size: 11px;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEventContent) {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEventContent > span) {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  color: var(--tn-purple);
+  font-size: 10px;
+  font-weight: 760;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEventContent > span svg) {
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEventContent strong) {
+  overflow: hidden;
+  color: var(--tn-text);
+  font-size: 13px;
+  font-weight: 740;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEventContent small) {
+  overflow: hidden;
+  color: var(--tn-muted);
+  font-size: 11px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent > button) {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid #d9cdec;
+  border-radius: 10px;
+  background: var(--tn-purple-soft);
+  color: var(--tn-purple-strong);
+  font-size: 11px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent > button:hover) {
+  border-color: var(--tn-purple);
+  background: #eee7fa;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalReviewed),
+:global(.trainerNextRoot) :global(.trainerDailyJournalRecorded) {
+  min-width: 88px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 680;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalReviewed) {
+  color: #4e8c69;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEvent.reviewed) {
+  opacity: .72;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEmpty) {
+  min-height: 94px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 7px;
+  color: var(--tn-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerDailyJournalEmpty svg) {
+  color: #4e9a70;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextTrainer) {
@@ -134,5 +618,117 @@
 
   :global(.trainerNextRoot) :global(.trainerClientBarChart > div > span) {
     height: 112px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsSection) {
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsHead) {
+    gap: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsHead h2) {
+    font-size: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsHead p) {
+    display: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsList article) {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 8px;
+    min-height: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsList .trainerNextAvatar.small) {
+    width: 32px;
+    height: 32px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsContent > strong),
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsContent > small) {
+    white-space: normal;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerImmediateActionsList button) {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalSection) {
+    margin: 12px 0;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalHead) {
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalHead h2) {
+    font-size: 17px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalHead p) {
+    display: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalHead > strong) {
+    min-height: 28px;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalFilters) {
+    gap: 6px;
+    padding-top: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalFilters button) {
+    min-height: 30px;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalEvent) {
+    grid-template-columns: 41px 12px 32px minmax(0, 1fr);
+    gap: 7px;
+    min-height: 74px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalTimeline) {
+    max-height: 480px;
+    margin-top: 6px;
+    padding-right: 5px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalBoundary) {
+    padding-left: 65px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalBoundary::before) {
+    left: 51px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalEvent > time) {
+    font-size: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalEventContent strong),
+  :global(.trainerNextRoot) :global(.trainerDailyJournalEventContent small) {
+    white-space: normal;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerDailyJournalEvent > button),
+  :global(.trainerNextRoot) :global(.trainerDailyJournalReviewed),
+  :global(.trainerNextRoot) :global(.trainerDailyJournalRecorded) {
+    grid-column: 4;
+    justify-self: start;
+    min-width: 0;
   }
 }

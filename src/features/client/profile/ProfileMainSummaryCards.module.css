@@ -1,7 +1,7 @@
 .summaryGrid { display: contents; }
 
 .nextCard {
-  --next-action-space: 134px;
+  --next-action-space: 152px;
   box-sizing: border-box;
   width: 100%;
   height: 142px;
@@ -36,19 +36,42 @@
 
 .nextCard h2 {
   position: absolute;
-  top: 50%;
+  top: 51px;
   left: 20px;
-  max-width: calc(100% - var(--next-action-space));
+  right: var(--next-action-space);
+  max-width: none;
+  max-height: 44px;
+  display: -webkit-box;
   margin: 0;
   overflow: hidden;
   color: #28262e;
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 25px;
+  line-height: 22px;
   letter-spacing: -0.35px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transform: translateY(-50%);
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.dayLabel {
+  position: absolute;
+  top: 38px;
+  left: 20px;
+  color: #806bb6;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 15px;
+  letter-spacing: 0.05px;
+}
+
+.nextCard[data-has-day-label="true"] h2 {
+  top: 57px;
+  max-height: 40px;
+  font-size: 19px;
+  line-height: 20px;
 }
 
 .nextMeta {

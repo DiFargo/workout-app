@@ -1,4 +1,5 @@
 import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
+import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations";
 
 export function saveAiBodyMetricsWithDeps({
   auth,
@@ -29,6 +30,8 @@ export function saveAiBodyMetricsWithDeps({
     trainingDays: Array.isArray(aiNutritionProfileDraft.trainingDays) ? aiNutritionProfileDraft.trainingDays : []
   };
 
+  if (!getAiNutritionProfileValidation(nextProfile).valid) return false;
+
   const nextPlan = buildAiNutritionMonthlyPlan(nutrition, nextProfile, history, null);
   const nextWeek = nextPlan?.weeks?.[0] || nextPlan?.start || nutrition.goals;
   const nextMacros = getAiNutritionDayMacros(nextWeek, nextProfile);
@@ -56,6 +59,8 @@ export function saveAiBodyMetricsWithDeps({
   } catch {
     // Local persistence is best effort only.
   }
+
+  return true;
 }
 
 export async function saveProfileNutritionPlanAndCloseWithDeps({

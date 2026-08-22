@@ -3,6 +3,7 @@ import {
   findExerciseLibraryMatch
 } from "../../utils/auditSafety";
 import { appendExerciseSets } from "./trainerExerciseSetUtils";
+import { getTrainerExercisePresentationIdentity } from "./trainerWorkoutEditHelpers";
 
 export function createTrainerMonthExerciseHandlers({
   adminExerciseEditSnapshotRef,
@@ -40,6 +41,7 @@ export function createTrainerMonthExerciseHandlers({
         ...((monthWorkouts.find((workout) => workout.id === workoutId)?.exercises) || []),
         {
           id: newExerciseId,
+          ...getTrainerExercisePresentationIdentity(libraryExercise),
           name: exerciseName,
           video: libraryVideo,
           videoAutoFilledFrom: libraryVideo ? libraryExercise.name : "",
@@ -185,10 +187,15 @@ export function createTrainerMonthExerciseHandlers({
     const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
     const patch = { name };
 
+    if (libraryExercise) {
+      Object.assign(patch, getTrainerExercisePresentationIdentity(libraryExercise));
+      patch.requiresWeight = exerciseUsesExternalWeight(libraryExercise);
+      patch.usesWeight = exerciseUsesExternalWeight(libraryExercise);
+    }
+
     if (libraryVideo && (!exercise.video || exercise.videoAutoFilledFrom)) {
       patch.video = libraryVideo;
       patch.videoAutoFilledFrom = libraryExercise.name;
-      patch.requiresWeight = exerciseUsesExternalWeight(libraryExercise);
     } else if (exercise.videoAutoFilledFrom && !libraryVideo) {
       patch.video = "";
       patch.videoAutoFilledFrom = "";

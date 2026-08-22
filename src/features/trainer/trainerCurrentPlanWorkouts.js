@@ -5,6 +5,12 @@ function getAssignmentVersion(item = {}) {
   ).trim();
 }
 
+function getAssignmentIdentity(item = {}) {
+  return String(
+    item.assignedProgramAddedAt || item.programAssignmentId || item.assignedAt || ""
+  ).trim();
+}
+
 function getProgramId(item = {}) {
   return String(item.assignedProgramId || "").trim();
 }
@@ -15,6 +21,7 @@ function isBasicWorkout(item = {}) {
 
 function getAssignmentTimestamp(item = {}) {
   const candidates = [
+    getAssignmentIdentity(item),
     getAssignmentVersion(item),
     item.assignedAt,
     item.updatedAt,
@@ -36,9 +43,16 @@ function keepLatestAssignmentGroup(workouts = []) {
 
   const groups = new Map();
   workouts.forEach((workout, index) => {
+    const identity = getAssignmentIdentity(workout);
     const version = getAssignmentVersion(workout);
     const programId = getProgramId(workout);
-    const key = version ? `version:${version}` : programId ? `program:${programId}` : "legacy";
+    const key = identity
+      ? `assignment:${identity}`
+      : version
+        ? `version:${version}`
+        : programId
+          ? `program:${programId}`
+          : "legacy";
     const current = groups.get(key) || { items: [], timestamp: 0, lastIndex: index };
     current.items.push(workout);
     current.timestamp = Math.max(current.timestamp, getAssignmentTimestamp(workout));
@@ -56,10 +70,18 @@ function keepLatestAssignmentGroup(workouts = []) {
 
 export function filterTrainerCurrentPlanWorkouts(workouts = [], client = {}) {
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const activeAssignmentIdentity = getAssignmentIdentity(client);
   const activeVersion = String(
     client.assignedProgramUpdatedAt || client.assignedProgramAt || ""
   ).trim();
   const activeProgramId = getProgramId(client);
+
+  if (activeAssignmentIdentity) {
+    const identityMatches = safeWorkouts.filter((workout) => (
+      getAssignmentIdentity(workout) === activeAssignmentIdentity
+    ));
+    if (identityMatches.length) return identityMatches;
+  }
 
   if (activeVersion) {
     const versionMatches = safeWorkouts.filter((workout) => (

@@ -1,8 +1,10 @@
 import { getIdTokenResult } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { fetchAuthorizedWithTimeout } from "../utils/apiClient.js";
 import { normalizeBasicWorkoutPlanState } from "../utils/basicWorkoutPlanBuilder.js";
 import { resolveUserRole } from "../utils/roleAccess.js";
 import { migrateLegacyUserStorage } from "../utils/userScopedStorage.js";
+import { normalizeAppTheme } from "./appTheme.js";
 
 export function getBootstrapWorkoutCalendarDates(calendar = {}) {
   return [...new Set([
@@ -89,7 +91,8 @@ export function resetAuthBootstrapState({
   setProfileMeasurements,
   setRecentNutritionFoods,
   setUser,
-  setIsLoggedIn
+  setIsLoggedIn,
+  setCurrentUserRole
 }) {
   setFirstSetupProfileHydrated(false);
   setFirstSetupCompletedInCloud(false);
@@ -124,6 +127,7 @@ export function resetAuthBootstrapState({
   setPlan({ workouts: [] });
   setProfileMeasurements([]);
   setRecentNutritionFoods([]);
+  setCurrentUserRole(user ? "resolving" : "client");
   setUser(user);
   setIsLoggedIn(Boolean(user));
 }
@@ -148,7 +152,6 @@ export async function loadRemoteUserBootstrapState({
   db,
   isAdmin,
   APP_PAGES,
-  APP_THEMES,
   AI_NUTRITION_PLAN_STORAGE_KEY,
   AI_NUTRITION_PROFILE_STORAGE_KEY,
   CLIENT_LAST_PAGE_STORAGE_KEY,
@@ -180,9 +183,45 @@ export async function loadRemoteUserBootstrapState({
   isCurrentRun
 }) {
   try {
-    const roleDoc = await getDoc(doc(db, "users", user.uid));
+    const userRef = doc(db, "users", user.uid);
+    let roleDoc;
+
+    try {
+      roleDoc = await getDoc(userRef);
+    } catch (error) {
+      // Profiles created before role-based access can contain client data but
+      // have no role. The security rule allows only this owner-only repair.
+      if (error?.code !== "permission-denied" || isAdmin) throw error;
+
+      try {
+        await setDoc(userRef, {
+          role: "client",
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      } catch (directRepairError) {
+        const response = await fetchAuthorizedWithTimeout("/api/profile/recover-legacy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{}"
+        }, 12000);
+        const payload = await response.json().catch(() => ({}));
+
+        if (!response.ok || payload?.ok !== true) {
+          throw directRepairError;
+        }
+      }
+      roleDoc = await getDoc(userRef);
+    }
+
     if (isCurrentRun && !isCurrentRun()) return null;
+    if (!roleDoc.exists()) {
+      throw new Error("role_profile_missing");
+    }
     const roleData = roleDoc.exists() ? roleDoc.data() : {};
+    const storedRole = String(roleData.role || "").trim().toLocaleLowerCase("ru");
+    if (!isAdmin && !["client", "trainer", "admin"].includes(storedRole)) {
+      throw new Error("role_profile_invalid");
+    }
     const remoteProfile = roleData.aiNutritionProfile || roleData.profile || null;
     const remotePlan = roleData.aiNutritionPlan || null;
     const remoteProfileCompleted = hasRequiredAiNutritionProfileFields(remoteProfile);
@@ -249,7 +288,7 @@ export async function loadRemoteUserBootstrapState({
         )
       );
     } else {
-      setPage(APP_PAGES.ADMIN);
+      setPage(resolvedRole === "admin" ? APP_PAGES.ADMIN_PANEL : APP_PAGES.ADMIN);
     }
     setProfileAccount(remoteAccount);
     setProfileAccountDraft({
@@ -261,14 +300,7 @@ export async function loadRemoteUserBootstrapState({
     setWorkoutModeRemember(Boolean(resolvedWorkoutModePreference?.remember));
     safeWriteUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, user.uid, resolvedWorkoutModePreference);
 
-    const isLegacyDefaultDarkTheme =
-      remoteTheme === APP_THEMES.DARK_GREEN && roleData.appThemePreference !== "manual";
-    if (remoteTheme === APP_THEMES.WARM_LIGHT ||
-      (remoteTheme === APP_THEMES.DARK_GREEN && !isLegacyDefaultDarkTheme)) {
-      setAppTheme(remoteTheme);
-    } else if (isLegacyDefaultDarkTheme) {
-      setAppTheme(APP_THEMES.WARM_LIGHT);
-    }
+    setAppTheme(normalizeAppTheme(remoteTheme));
 
     if (remoteProfileCompleted) {
       setAiNutritionProfile(remoteProfile);
@@ -298,16 +330,11 @@ export async function loadRemoteUserBootstrapState({
     return resolvedRole;
   } catch (error) {
     console.error("User role check error", error);
-    const fallbackRole = resolveUserRole({
-      isAdminClaim: isAdmin,
-      role: "",
-      email: user.email || ""
-    });
-    setCurrentUserRole(fallbackRole);
-    if (fallbackRole !== "client") {
-      setPage(APP_PAGES.ADMIN);
-    }
-    return fallbackRole;
+    // Never turn an authenticated account into a client merely because its
+    // role document has not arrived or cannot be verified. A trainer must
+    // see neither client data nor client navigation in this state.
+    setCurrentUserRole("unresolved");
+    return null;
   } finally {
     setFirstSetupProfileHydrated(true);
   }
@@ -467,17 +494,17 @@ export function hydrateCachedUserState({
       cachedWorkoutPlan.workouts.length > 0
       ? normalizeBasicWorkoutPlanState(cachedWorkoutPlan)
       : null;
-    const normalizedBasicWorkoutPlan = (
-      savedWorkoutModePreference?.mode === "basic" ||
-      normalizedLegacyBasicWorkoutPlan?.source === "basic" ||
-      normalizedCachedBasicWorkoutPlan?.source === "basic"
-    )
+    const normalizedBasicWorkoutPlan = savedWorkoutModePreference?.mode === "basic"
       ? (normalizedCachedBasicWorkoutPlan || normalizedLegacyBasicWorkoutPlan)
       : null;
 
     if (normalizedBasicWorkoutPlan?.workouts?.length > 0) {
       setPlan(normalizedBasicWorkoutPlan);
-    } else if (Array.isArray(cachedWorkoutPlan?.workouts) && cachedWorkoutPlan.workouts.length > 0) {
+    } else if (
+      cachedWorkoutPlan?.source !== "basic" &&
+      Array.isArray(cachedWorkoutPlan?.workouts) &&
+      cachedWorkoutPlan.workouts.length > 0
+    ) {
       setPlan(cachedWorkoutPlan);
     }
     const cachedNutrition = safeReadUserJsonStorage(NUTRITION_STORAGE_KEY, user.uid, null);

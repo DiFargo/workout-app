@@ -128,7 +128,10 @@ export default function NutritionDiary({
                             <span className={styles.foodIcon} aria-hidden="true">{item.icon || getFoodIcon(item)}</span>
                             <span className={styles.foodText}>
                               <strong>{item.name}</strong>
-                              <small>{item.amount} г · Б {roundMacro(item.protein)} · Ж {roundMacro(item.fat)} · У {roundMacro(item.carbs)}</small>
+                              <small>
+                                {item.amount} г · Б {roundMacro(item.protein)} · Ж {roundMacro(item.fat)} · У {roundMacro(item.carbs)}
+                                {item.source === "Оценка ИИ" ? " · Оценка ИИ" : ""}
+                              </small>
                             </span>
                             <span className={styles.foodCalories}>
                               <strong>{Math.round(Number(item.calories) || 0)}</strong>

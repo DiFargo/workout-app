@@ -1,4 +1,5 @@
 import { formatIndividualWorkoutHistoryDate } from "../../../utils/workoutHistoryPresentation";
+import { X } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./WorkoutListDialogs.module.css";
 
@@ -35,13 +36,24 @@ export function WorkoutModePickerDialog({
           compact
           embedded
           className={styles.header}
-          title="Режим запуска"
+          title="Режим тренировок"
           titleId="workoutModeModalTitle"
           testId="workout-mode-dialog-header"
           scope="workout-mode-dialog-header"
           onBack={onClose}
           backTestId="workout-mode-dialog-close"
           backAriaLabel="Закрыть выбор режима"
+          actions={(
+            <button
+              type="button"
+              className={styles.modeCloseButton}
+              data-testid="workout-mode-dialog-dismiss"
+              aria-label="Закрыть выбор режима"
+              onClick={onClose}
+            >
+              <X aria-hidden="true" size={22} strokeWidth={2.25} />
+            </button>
+          )}
         />
 
         <div className={styles.options} data-testid="workout-mode-dialog-options">

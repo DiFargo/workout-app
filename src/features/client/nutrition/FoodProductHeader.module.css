@@ -1,6 +1,5 @@
 .flowHeader,
 .hero {
-  width: 100%;
   min-width: 0;
   font-family: var(--font-family-compact-ui);
 }

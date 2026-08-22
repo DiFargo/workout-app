@@ -4,7 +4,7 @@ import {
   getWorkoutWarmupSteps
 } from "../../../domain/workoutPresentation";
 import { hasWorkoutSetEntry, isWorkoutSetCompleted } from "../../../utils/auditSafety";
-import { sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
+import { getWorkoutExecutionSteps, sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
 
 export function buildWorkoutRunStageModel({
   currentExerciseIndex,
@@ -19,8 +19,9 @@ export function buildWorkoutRunStageModel({
   workoutHistorySyncState,
   workoutStarted
 }) {
+  const executionSteps = getWorkoutExecutionSteps(workout);
   const isStartSlide = !workoutStarted;
-  const isFinishSlide = workoutStarted && currentExerciseIndex === workout.exercises.length + 1;
+  const isFinishSlide = workoutStarted && currentExerciseIndex === executionSteps.length + 1;
   const warmupExercise = {
     id: "warmup",
     name: "Разминка",
@@ -29,12 +30,20 @@ export function buildWorkoutRunStageModel({
   };
   const warmupSteps = getWorkoutWarmupSteps(workout);
 
+  const currentStep = currentExerciseIndex > 0 ? executionSteps[currentExerciseIndex - 1] : null;
+  const sourceExercise = currentStep ? workout.exercises[currentStep.exerciseIndex] : null;
   const exercise =
     isStartSlide || isFinishSlide
       ? null
       : currentExerciseIndex === 0
         ? warmupExercise
-        : normalizeExercise(workout.exercises[currentExerciseIndex - 1]);
+        : sourceExercise
+          ? {
+              ...normalizeExercise(sourceExercise),
+              runtimeSetIndex: currentStep.setIndex,
+              runtimeGroup: currentStep.group
+            }
+          : null;
 
   const exerciseVideoFailed = exercise?.id && openVideoId === `error:${exercise.id}`;
   const exerciseAiWeightAdjustments = exercise?.id && exercise.id !== "warmup"
@@ -144,6 +153,7 @@ export function buildWorkoutRunStageModel({
     completedExercisesCount,
     exercise,
     exerciseAiWeightAdjustments,
+    executionSteps,
     exerciseVideoFailed,
     finishAdviceText,
     finishPresentation,

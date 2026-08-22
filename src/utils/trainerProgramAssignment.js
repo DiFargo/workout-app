@@ -24,54 +24,76 @@ function getAssignmentDocSuffix(assignedProgramUpdatedAt = "") {
   return safeSuffix || String(Date.now());
 }
 
-export function buildAssignmentWorkoutDocumentPlan(
+/**
+ * Adds a program after the existing queue instead of replacing it.  We keep
+ * every existing workout document because it may carry a scheduled date,
+ * completion facts, or a client note.
+ */
+export function buildAppendedAssignmentWorkoutDocumentPlan(
   currentWorkoutDocs = [],
   nextWorkouts = [],
   assignedProgramUpdatedAt = ""
 ) {
   const docs = Array.isArray(currentWorkoutDocs) ? currentWorkoutDocs : [];
-  const usedIds = new Set();
-  const protectedWorkoutIds = new Set();
   const suffix = getAssignmentDocSuffix(assignedProgramUpdatedAt);
-
-  docs.forEach((workoutDoc) => {
-    const id = getWorkoutDocId(workoutDoc);
-    if (!id) return;
-    usedIds.add(id);
-    if (isCompletedAssignedWorkoutDoc(getWorkoutDocData(workoutDoc))) {
-      protectedWorkoutIds.add(id);
-    }
-  });
+  const existingWorkouts = docs
+    .map((workoutDoc) => {
+      const id = getWorkoutDocId(workoutDoc);
+      return id ? { ...getWorkoutDocData(workoutDoc), id } : null;
+    })
+    .filter(Boolean);
+  const usedIds = new Set(existingWorkouts.map((workout) => workout.id));
+  const previousCount = existingWorkouts.length;
+  const protectedCount = existingWorkouts.filter(isCompletedAssignedWorkoutDoc).length;
+  const lastOrder = existingWorkouts.reduce((maxOrder, workout, index) => {
+    const value = Number(workout.order ?? workout.sortOrder);
+    return Number.isFinite(value) ? Math.max(maxOrder, value) : Math.max(maxOrder, index + 1);
+  }, 0);
 
   const assignedWorkouts = (Array.isArray(nextWorkouts) ? nextWorkouts : []).map((workoutItem, index) => {
     const originalId = String(workoutItem?.id || `workout_${index + 1}`).trim();
-    let nextId = originalId;
+    const baseId = originalId || `workout_${index + 1}`;
+    // A trainer assignment is an individual copy for this client. Never use
+    // a template day id as its Firebase document id: a previous assignment
+    // may have history under that id even when its old documents are archived.
+    let nextId = `${baseId}_${suffix}`;
+    let counter = 0;
 
-    if (protectedWorkoutIds.has(originalId)) {
-      const baseId = originalId || `workout_${index + 1}`;
-      let counter = 1;
-      nextId = `${baseId}_${suffix}`;
-      while (usedIds.has(nextId)) {
-        counter += 1;
-        nextId = `${baseId}_${suffix}_${counter}`;
-      }
+    while (usedIds.has(nextId)) {
+      counter += 1;
+      nextId = `${baseId}_${suffix}_${counter + 1}`;
     }
 
     usedIds.add(nextId);
-    return nextId === originalId
-      ? workoutItem
-      : { ...workoutItem, id: nextId, originalWorkoutId: originalId };
-  });
-  const nextWorkoutIds = new Set(assignedWorkouts.map((workoutItem) => workoutItem.id));
-  const staleWorkoutDocs = docs.filter((workoutDoc) => {
-    const id = getWorkoutDocId(workoutDoc);
-    return id && !nextWorkoutIds.has(id) && !protectedWorkoutIds.has(id);
+    const nextOrder = lastOrder + index + 1;
+    const workoutTemplate = { ...(workoutItem || {}) };
+    [
+      "status",
+      "completed",
+      "completedAt",
+      "finishedAt",
+      "statusUpdatedAt",
+      "movedToDate",
+      "scheduledDate",
+      "plannedDate"
+    ].forEach((key) => delete workoutTemplate[key]);
+
+    return {
+      ...workoutTemplate,
+      id: nextId,
+      order: nextOrder,
+      sortOrder: nextOrder,
+      originalWorkoutId: originalId,
+      status: "planned",
+      completed: false
+    };
   });
 
   return {
     assignedWorkouts,
-    protectedCount: protectedWorkoutIds.size,
-    protectedWorkoutIds: [...protectedWorkoutIds],
-    staleWorkoutDocs
+    existingWorkouts,
+    previousCount,
+    protectedCount,
+    allWorkouts: [...existingWorkouts, ...assignedWorkouts]
   };
 }

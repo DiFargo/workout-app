@@ -1,23 +1,19 @@
-import { Bell, Mail, Moon, Sun } from "lucide-react";
+import { Bell, Mail } from "lucide-react";
 import styles from "./ProfileAppSettingsSection.module.css";
 
 export default function ProfileAppSettingsSection({
-  isWarmLightTheme,
   email,
   telegramProfile,
-  onToggleTheme,
   onOpenEmail,
   onOpenTelegram,
   onTelegramAvatarError,
   showEmail = true,
   showTelegram = true,
-  showTheme = true,
   showNotifications = false,
   notificationsEnabled = true,
   onToggleNotifications,
   heading,
   variant = "modal",
-  darkThemeLabel = "тёмный стиль",
   disconnectedText = "Нажми, чтобы подключить",
   connectedBadge = "Подключён"
 }) {
@@ -100,25 +96,6 @@ export default function ProfileAppSettingsSection({
           <i className={styles.arrow}>›</i>
         </button>}
 
-        {showTheme && <button
-          type="button"
-          className={styles.themeButton}
-          data-testid="profile-settings-theme"
-          aria-label={isWarmLightTheme ? `Переключить оформление на ${darkThemeLabel}` : "Переключить оформление на светлый стиль"}
-          aria-pressed={isWarmLightTheme}
-          onClick={onToggleTheme}
-        >
-          <span className={styles.themeIcon} aria-hidden="true">
-            {isWarmLightTheme ? <Moon size={18} strokeWidth={2.2} /> : <Sun size={18} strokeWidth={2.2} />}
-          </span>
-          <span className={styles.themeText}>
-            <strong>Оформление</strong>
-            <small>{isWarmLightTheme ? `Переключить на ${darkThemeLabel}` : "Переключить на светлый стиль"}</small>
-          </span>
-          <span className={styles.toggle} aria-hidden="true">
-            <span className={styles.toggleKnob} />
-          </span>
-        </button>}
       </div>
     </section>
   );

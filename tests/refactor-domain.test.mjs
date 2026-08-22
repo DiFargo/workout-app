@@ -15,7 +15,10 @@ import {
   getMeasurementWeightValue,
   inferClientTrainerTaskDestination
 } from "../src/domain/clientInsights.js";
-import { searchLazyNutritionCatalog } from "../src/data/nutrition-catalog/lazyCatalog.js";
+import {
+  findLazyNutritionCatalogByBarcode,
+  searchLazyNutritionCatalog
+} from "../src/data/nutrition-catalog/lazyCatalog.js";
 
 test("compact workout timer handles invalid and long values", () => {
   assert.equal(formatCompactTimer(-10), "0:00");
@@ -75,7 +78,7 @@ test("default workout mode preference returns a fresh object", () => {
   const first = getDefaultWorkoutModePreference();
   const second = getDefaultWorkoutModePreference();
 
-  assert.deepEqual(first, { mode: "", remember: false });
+  assert.deepEqual(first, { mode: "individual", remember: false });
   assert.notEqual(first, second);
 });
 
@@ -127,31 +130,49 @@ test("trainer task destination prefers explicit saved target", () => {
   }), "nutrition");
 });
 
-test("lazy nutrition catalog loads once and returns local matches", async () => {
+test("lazy nutrition catalog keeps the first search lightweight and returns local matches", async () => {
   const originalFetch = globalThis.fetch;
-  const files = {
-    "/nutrition-catalog/foods.compact.json": "public/nutrition-catalog/foods.compact.json",
-    "/nutrition-catalog/alias-prefix-index.json": "public/nutrition-catalog/alias-prefix-index.json",
-    "/nutrition-catalog/alias-exact-index.json": "public/nutrition-catalog/alias-exact-index.json"
-  };
+  const catalogFiles = [
+    "foods.compact.json",
+    "alias-prefix-index.json",
+    "alias-exact-index.json",
+    "search-token-index.json",
+    "barcode-index.json"
+  ];
+  const files = Object.fromEntries(
+    ["reference", "sku"].flatMap((layer) => catalogFiles.map((filename) => [
+      `/nutrition-catalog/${layer}/${filename}`,
+      `public/nutrition-catalog/${layer}/${filename}`
+    ]))
+  );
   let fetchCount = 0;
 
   globalThis.fetch = async (url) => {
     fetchCount += 1;
     const filePath = files[url];
-    assert.ok(filePath, `Unexpected catalog URL: ${url}`);
+    if (!filePath) return { ok: false, status: 404 };
     const data = JSON.parse(await fs.readFile(filePath, "utf8"));
     return { ok: true, json: async () => data };
   };
 
   try {
-    const first = await searchLazyNutritionCatalog("\u043c\u043e\u043b\u043e\u043a\u043e", 8);
-    const second = await searchLazyNutritionCatalog("\u043a\u0435\u0444\u0438\u0440", 8);
+    const first = await searchLazyNutritionCatalog("\u0431\u0430\u043d\u0430\u043d", 8);
+    const second = await searchLazyNutritionCatalog("\u044f\u0431\u043b\u043e\u043a\u043e", 8);
+    const third = await searchLazyNutritionCatalog("\u043c\u043e\u043b\u043e\u043a\u043e", 8);
+    const fourth = await searchLazyNutritionCatalog("\u0433\u043e\u0432\u044f\u0434\u0438\u043d\u0430", 8);
+    const skuFoods = JSON.parse(await fs.readFile("public/nutrition-catalog/sku/foods.compact.json", "utf8"));
+    const barcodeSku = skuFoods.find((food) => food.bc);
+    const scanned = await findLazyNutritionCatalogByBarcode(barcodeSku.bc);
 
-    assert.equal(first.length, 8);
-    assert.match(first[0].name, /\u041c\u043e\u043b\u043e\u043a\u043e/i);
+    assert.ok(first.some((food) => /Bananas, raw/i.test(food.name)));
     assert.ok(second.length > 0);
-    assert.equal(fetchCount, 3);
+    assert.ok(third.some((food) => /^Milk, whole/i.test(food.name)));
+    assert.ok(fourth.some((food) => /^Beef,/i.test(food.name)));
+    assert.equal(scanned?.id, barcodeSku.id);
+    assert.equal(scanned?.barcode, barcodeSku.bc);
+    // Initial search needs only compact foods and the token index for each
+    // layer; the SKU barcode index is fetched separately on demand.
+    assert.equal(fetchCount, 5);
   } finally {
     globalThis.fetch = originalFetch;
   }

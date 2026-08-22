@@ -138,7 +138,7 @@ export default function TrainerExerciseLoadReviewModal({
   }
 
   return (
-    <div className={styles.backdrop} role="presentation" onMouseDown={(event) => {
+    <div className={styles.backdrop} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => {
       if (event.target === event.currentTarget && !savingMode) onClose?.();
     }}>
       <section
@@ -146,11 +146,13 @@ export default function TrainerExerciseLoadReviewModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-trainer-modal-surface="true"
+        data-trainer-modal-frame="true"
         aria-busy={Boolean(savingMode)}
         aria-labelledby="trainer-load-review-title"
         aria-describedby="trainer-load-review-description"
       >
-        <header className={styles.header}>
+        <header className={styles.header} data-trainer-modal-header="true">
           <div>
             <span>РЕШЕНИЕ ТРЕНЕРА</span>
             <h2 id="trainer-load-review-title">Корректировка нагрузки</h2>
@@ -163,6 +165,7 @@ export default function TrainerExerciseLoadReviewModal({
           </button>
         </header>
 
+        <div className={styles.scrollContent} data-trainer-modal-content="true">
         <section className={styles.issueCard}>
           <span className={styles.exerciseIcon}><Dumbbell size={21} /></span>
           <div>
@@ -252,6 +255,10 @@ export default function TrainerExerciseLoadReviewModal({
         </section>
 
         {error ? <p className={styles.error} role="alert"><CircleAlert size={15} />{error}</p> : null}
+        </div>
+        <footer className={styles.footer} data-trainer-modal-footer="true">
+          <button type="button" disabled={Boolean(savingMode)} onClick={onClose}>Закрыть</button>
+        </footer>
       </section>
     </div>
   );

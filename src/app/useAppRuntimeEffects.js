@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
-import { APP_THEMES, normalizeAppTheme } from "./appTheme";
+import { normalizeAppTheme } from "./appTheme";
 import { isTrainerForbiddenClientPage } from "./appNavigation";
 import {
   addUserLocalBackup,
@@ -67,14 +67,8 @@ export function useAppRuntimeEffects({
     return onSnapshot(
       doc(db, "users", user.uid),
       (snapshot) => {
-        const remoteTheme = snapshot.data()?.appTheme;
-        const remoteThemePreference = snapshot.data()?.appThemePreference;
-        if (remoteTheme === APP_THEMES.WARM_LIGHT ||
-          (remoteTheme === APP_THEMES.DARK_GREEN && remoteThemePreference === "manual")) {
-          setAppTheme((currentTheme) => remoteTheme !== currentTheme ? remoteTheme : currentTheme);
-        } else if (remoteTheme === APP_THEMES.DARK_GREEN) {
-          setAppTheme((currentTheme) => currentTheme !== APP_THEMES.WARM_LIGHT ? APP_THEMES.WARM_LIGHT : currentTheme);
-        }
+        const remoteTheme = normalizeAppTheme(snapshot.data()?.appTheme);
+        setAppTheme((currentTheme) => remoteTheme !== currentTheme ? remoteTheme : currentTheme);
         setAppThemeCloudReady(true);
       },
       (error) => console.warn("Theme subscription error", error)

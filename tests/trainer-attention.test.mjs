@@ -77,7 +77,7 @@ test("weekly training pattern waits until planned weekday has passed", () => {
   });
 });
 
-test("active trainer tasks require trainer attention after schedule checks", () => {
+test("active trainer tasks are a client execution status, not trainer attention", () => {
   const now = new Date("2026-06-16T12:00:00");
   const attention = getClientAttentionState(
     {
@@ -96,10 +96,7 @@ test("active trainer tasks require trainer attention after schedule checks", () 
     now
   );
 
-  assert.deepEqual(attention, {
-    type: "task",
-    reason: "2 активные задачи от тренера"
-  });
+  assert.equal(attention, null);
 });
 
 test("workout feedback attention is shown before nutrition checks", () => {
@@ -155,5 +152,28 @@ test("program ending attention is shown before nutrition checks", () => {
   assert.deepEqual(attention, {
     type: "programEnding",
     reason: "До конца программы: 1 тренировка"
+  });
+});
+
+test("stale weighing is described separately from a weight plateau", () => {
+  const now = new Date("2026-06-30T12:00:00");
+  const attention = getClientAttentionState(
+    {
+      assignedProgramId: "program_1",
+      workoutCalendar: { scheduledDates: ["2026-07-01"] }
+    },
+    {
+      assignedProgramId: "program_1",
+      nutritionDays7: 4,
+      lastNutritionAt: "2026-06-30",
+      lastMeasurementAt: "2026-06-08",
+      plateau: { isPlateau: true, days: 22 }
+    },
+    now
+  );
+
+  assert.deepEqual(attention, {
+    type: "measure",
+    reason: "Не взвешивался 22 дня"
   });
 });

@@ -1,9 +1,6 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
-import {
-  createTelegramLinkCode,
-  normalizeTelegramUsername
-} from "../../../utils/telegramProfile";
+import { fetchAuthorized } from "../../../utils/apiClient";
 import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
 
 export function createProfileTelegramHandlers({
@@ -30,12 +27,10 @@ export function createProfileTelegramHandlers({
     setTelegramStatus("Проверяю данные Telegram...");
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
-      const response = await fetch("/api/telegram/login-verify", {
+      const response = await fetchAuthorized("/api/telegram/login-verify", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           telegramUser
@@ -78,12 +73,10 @@ export function createProfileTelegramHandlers({
     telegramAvatarRefreshRef.current = true;
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
-      const response = await fetch("/api/telegram/refresh-avatar", {
+      const response = await fetchAuthorized("/api/telegram/refresh-avatar", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`
+          "Content-Type": "application/json"
         }
       });
       const data = await response.json();
@@ -129,17 +122,23 @@ export function createProfileTelegramHandlers({
       return;
     }
 
-    const code = createTelegramLinkCode();
-    setTelegramLinkCode(code);
     setTelegramLinking(true);
-    setTelegramStatus("Код создан. Открой бота и нажми START.");
+    setTelegramStatus("Создаю безопасный код привязки...");
 
     try {
-      await setDoc(doc(db, "users", auth.currentUser.uid), {
-        telegramLinkCode: code,
-        telegramLinkCodeCreatedAt: new Date().toISOString(),
-        telegramConnected: false
-      }, { merge: true });
+      const response = await fetchAuthorized("/api/telegram/create-link-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok || !data.code) {
+        throw new Error(data.error || "Telegram link code creation failed");
+      }
+
+      const code = String(data.code);
+      setTelegramLinkCode(code);
+      setTelegramStatus("Код создан. Открой бота и нажми START.");
 
       window.open(`https://t.me/${TELEGRAM_BOT_USERNAME}?start=${code}`, "_blank", "noopener,noreferrer");
     } catch (error) {
@@ -206,81 +205,38 @@ export function createProfileTelegramHandlers({
   }
 
   async function saveTelegramConnection() {
-    const username = normalizeTelegramUsername(telegramDraft.username);
-
-    if (!username) {
-      setTelegramStatus("Введи Telegram username.");
-      return;
-    }
-
-    const nextTelegramProfile = {
-      connected: true,
-      username,
-      displayName: telegramDraft.displayName || username,
-      avatarUrl: telegramDraft.avatarUrl || "",
-      chatId: telegramDraft.chatId || "",
-      notificationsEnabled: telegramDraft.notificationsEnabled !== false,
-      connectedAt: new Date().toISOString(),
-      reminderMode: "day_before_workout"
-    };
-
-    setTelegramProfile(nextTelegramProfile);
-    setTelegramDraft(nextTelegramProfile);
-    setTelegramConnectOpen(false);
-    setTelegramStatus("Telegram подключён ✅");
-
-    try {
-      safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegramProfile);
-    } catch {
-      // ignore localStorage errors
-    }
-
-    try {
-      if (auth.currentUser?.uid) {
-        await setDoc(doc(db, "users", auth.currentUser.uid), {
-          telegram: nextTelegramProfile,
-          telegramConnected: true,
-          telegramUsername: username,
-          telegramNotificationsEnabled: nextTelegramProfile.notificationsEnabled
-        }, { merge: true });
-      }
-    } catch (error) {
-      console.error("Telegram save failed:", error);
-      setTelegramStatus("Telegram сохранён локально, но не записался в Firebase.");
-    }
+    await startTelegramBotLink();
   }
 
   async function disconnectTelegram() {
-    const nextTelegramProfile = {
-      connected: false,
-      username: "",
-      displayName: "",
-      avatarUrl: "",
-      chatId: "",
-      notificationsEnabled: telegramDraft.notificationsEnabled !== false
-    };
-
-    setTelegramProfile(nextTelegramProfile);
-    setTelegramDraft(nextTelegramProfile);
-    setTelegramStatus("Telegram отключён.");
-
     try {
-      safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegramProfile);
-    } catch {
-      // ignore localStorage errors
-    }
+      const response = await fetchAuthorized("/api/telegram/disconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Telegram disconnect failed");
+      }
 
-    try {
-      if (auth.currentUser?.uid) {
-        await setDoc(doc(db, "users", auth.currentUser.uid), {
-          telegram: nextTelegramProfile,
-          telegramConnected: false,
-          telegramUsername: "",
-          telegramNotificationsEnabled: false
-        }, { merge: true });
+      const nextTelegramProfile = {
+        connected: false,
+        notificationsEnabled: false,
+        ...(data.telegram || {})
+      };
+      setTelegramProfile(nextTelegramProfile);
+      setTelegramDraft(nextTelegramProfile);
+      setTelegramStatus("Telegram отключён.");
+
+      try {
+        safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegramProfile);
+      } catch {
+        // ignore localStorage errors
       }
     } catch (error) {
       console.error("Telegram disconnect failed:", error);
+      setTelegramStatus("Не получилось отключить Telegram. Попробуй ещё раз.");
     }
   }
 
@@ -311,10 +267,23 @@ export function createProfileTelegramHandlers({
     if (!auth.currentUser?.uid) return;
 
     try {
-      await setDoc(doc(db, "users", auth.currentUser.uid), {
-        telegram: nextTelegramProfile,
-        telegramNotificationsEnabled: notificationsEnabled
-      }, { merge: true });
+      const response = await fetchAuthorized("/api/telegram/update-notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled: notificationsEnabled })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Telegram notifications update failed");
+      }
+
+      const serverTelegram = {
+        ...nextTelegramProfile,
+        ...(data.telegram || {}),
+        notificationsEnabled
+      };
+      setTelegramProfile(serverTelegram);
+      setTelegramDraft(serverTelegram);
     } catch (error) {
       console.error("Telegram notifications update failed:", error);
       setTelegramProfile((current) => {
