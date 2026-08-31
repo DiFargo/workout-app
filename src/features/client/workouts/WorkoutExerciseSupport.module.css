@@ -21,6 +21,12 @@
   gap: 6px;
   border-top: 1px solid #efebf3;
 }
+:global(:root[data-app-theme="warm-light"]) .accessoryOnly.accessoryOnly {
+  height: 50px;
+  min-height: 50px;
+  padding: 0;
+  justify-content: flex-end;
+}
 :global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo {
   min-width: 0;
   max-width: none;

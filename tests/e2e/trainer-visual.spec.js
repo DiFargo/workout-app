@@ -215,11 +215,16 @@ async function openHarnessClient(page) {
 
 async function openExerciseSection(page, name) {
   await openClientTab(page, "Тренировки");
-  const sectionNav = page.getByRole("navigation", { name: "Разделы упражнений клиента" });
-  await expect(sectionNav).toBeVisible();
-  const button = sectionNav.getByRole("button", { name, exact: true });
-  await button.click();
-  await expect(button).toHaveAttribute("aria-pressed", "true");
+  if (name === "Прогресс упражнений") {
+    const button = page.getByRole("button", { name: "Открыть прогресс упражнений", exact: true });
+    await expect(button).toBeVisible();
+    await button.click();
+    await expect(page.getByRole("dialog", { name: "Прогресс упражнений", exact: true })).toBeVisible();
+    return;
+  }
+
+  await closeClientUtilitySheet(page, "Прогресс упражнений");
+  await expect(page.locator(".trainerClientWorkoutPlan")).toBeVisible();
 }
 
 test("trainer visual audit covers dashboard, clients and programs", async ({ page }, testInfo) => {

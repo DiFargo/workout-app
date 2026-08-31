@@ -1,9 +1,9 @@
-import { defaultNutritionState } from "../data/nutritionDefaults";
-import { makeEmptyNutritionDay, todayNutritionKey } from "../domain/nutritionPresentation";
-import { getShortFoodName } from "./nutritionFoodPresentation";
-import { sumNutritionFoods } from "./nutritionFoodTotals";
+import { defaultNutritionState } from "../data/nutritionDefaults.js";
+import { makeEmptyNutritionDay, todayNutritionKey } from "../domain/nutritionPresentation.js";
+import { getShortFoodName } from "./nutritionFoodPresentation.js";
+import { sumNutritionFoods } from "./nutritionFoodTotals.js";
 
-export { sumNutritionFoods } from "./nutritionFoodTotals";
+export { sumNutritionFoods } from "./nutritionFoodTotals.js";
 
 export function getNutritionDayTotals(day = {}, includeCount = false) {
   return sumNutritionFoods(day.foods || [], includeCount);

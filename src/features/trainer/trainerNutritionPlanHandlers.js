@@ -75,10 +75,12 @@ export function createTrainerNutritionPlanHandlers({
         ...prev,
         nutritionGoals: syncedGoals,
         nutritionPlan: nextPlan,
+        ...(nextNutritionState.aiNutritionPlan ? { aiNutritionPlan: nextNutritionState.aiNutritionPlan } : {}),
         nutritionState: {
           ...(prev.nutritionState || {}),
           goals: nextNutritionState.goals,
           nutritionPlan: nextPlan,
+          ...(nextNutritionState.aiNutritionPlan ? { aiNutritionPlan: nextNutritionState.aiNutritionPlan } : {}),
           updatedAt
         }
       } : prev);
@@ -86,10 +88,12 @@ export function createTrainerNutritionPlanHandlers({
         ...client,
         nutritionGoals: syncedGoals,
         nutritionPlan: nextPlan,
+        ...(nextNutritionState.aiNutritionPlan ? { aiNutritionPlan: nextNutritionState.aiNutritionPlan } : {}),
         nutritionState: {
           ...(client.nutritionState || {}),
           goals: nextNutritionState.goals,
           nutritionPlan: nextPlan,
+          ...(nextNutritionState.aiNutritionPlan ? { aiNutritionPlan: nextNutritionState.aiNutritionPlan } : {}),
           updatedAt
         }
       } : client));

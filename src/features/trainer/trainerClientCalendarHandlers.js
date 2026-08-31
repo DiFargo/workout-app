@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
 
 import { buildWorkoutScheduleDraftWithExistingStatuses } from "../../utils/workoutSchedule";
 import { sortWorkoutDays } from "../../utils/workoutPlanNormalization";
@@ -8,6 +8,10 @@ import { fetchAuthorized } from "../../utils/apiClient";
 import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus";
 import { validateTrainerWorkoutScheduleDates } from "../../utils/trainerProgramValidation";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
+import {
+  buildSubscriptionFromTrainerSetupSchedule,
+  getTrainerSetupScheduleDates
+} from "../../utils/trainerSetupSchedule";
 import {
   buildNextTrainerClientSetupChecklist,
   TRAINER_CLIENT_SETUP_STEPS
@@ -114,7 +118,11 @@ export function createTrainerClientCalendarHandlers({
 
     try {
       const trainingDays = Array.isArray(adminCalendarDraft.trainingDays) ? adminCalendarDraft.trainingDays : [];
+      const currentCalendar = client?.workoutCalendar && typeof client.workoutCalendar === "object"
+        ? client.workoutCalendar
+        : {};
       const nextCalendar = {
+        ...currentCalendar,
         enabled: adminCalendarDraft.enabled !== false,
         reminderEnabled: adminCalendarDraft.reminderEnabled !== false,
         reminderOffsetsHours: Array.isArray(adminCalendarDraft.reminderOffsetsHours) && adminCalendarDraft.reminderOffsetsHours.length
@@ -205,17 +213,33 @@ export function createTrainerClientCalendarHandlers({
   async function saveTrainerClientWorkoutSchedule(dates = [], client = adminSelectedClient, assignmentWorkouts = []) {
     const targetClient = client?.id ? client : (adminSelectedClient?.id ? adminSelectedClient : usersList.find((item) => item.id === selectedUserId));
     const clientId = targetClient?.id || selectedUserId;
-    const allWorkouts = sortWorkoutDays(plan.workouts || []);
+    let allWorkouts = sortWorkoutDays(plan.workouts || []);
     const requestedWorkoutIds = new Set((Array.isArray(assignmentWorkouts) ? assignmentWorkouts : [])
       .map((workout) => String(workout?.id || "").trim())
       .filter(Boolean));
-    const workouts = requestedWorkoutIds.size
-      ? allWorkouts.filter((workout) => requestedWorkoutIds.has(String(workout?.id || "").trim()))
-      : allWorkouts;
+    const assignmentKey = String(assignmentWorkouts?.assignmentKey || "").trim();
+    const selectAssignmentWorkouts = (workoutList) => requestedWorkoutIds.size
+      ? workoutList.filter((workout) => requestedWorkoutIds.has(String(workout?.id || "").trim()))
+      : assignmentKey
+        ? workoutList.filter((workout) => String(
+            workout?.assignedProgramAddedAt || workout?.programAssignmentId || ""
+          ).trim() === assignmentKey)
+        : workoutList;
+    let workouts = selectAssignmentWorkouts(allWorkouts);
 
     if (!clientId) {
       setAdminClientStatus(STATUS_SELECT_CLIENT);
       return false;
+    }
+
+    // A program assignment and the first calendar save can happen in the
+    // same wizard flow, before React has received the new workout snapshot.
+    // Fall back to the source documents so the selected assignment is always
+    // scheduled on the first try.
+    if (!workouts.length && assignmentKey) {
+      const workoutsSnapshot = await getDocs(collection(db, "users", clientId, "workouts"));
+      allWorkouts = sortWorkoutDays(workoutsSnapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
+      workouts = selectAssignmentWorkouts(allWorkouts);
     }
 
     if (!workouts.length) {
@@ -243,7 +267,7 @@ export function createTrainerClientCalendarHandlers({
         ...workouts.map((workout) => workout?.scheduledDate || workout?.plannedDate)
       ]
     });
-    const cleanDates = scheduleValidation.cleanDates;
+    const cleanDates = getTrainerSetupScheduleDates(scheduleValidation.cleanDates);
 
     if (!scheduleValidation.ok) {
       setAdminClientStatus(scheduleValidation.message);
@@ -268,6 +292,10 @@ export function createTrainerClientCalendarHandlers({
       updatedAt: nowIso,
       updatedBy: auth.currentUser?.uid || ""
     };
+    const nextSubscription = buildSubscriptionFromTrainerSetupSchedule(
+      targetClient?.subscription || {},
+      cleanDates
+    );
     const scheduledWorkoutsById = new Map(workouts.map((workout, index) => {
       const planned = assignmentPlannedWorkouts[index] || {};
       return [String(workout?.id || "").trim(), {
@@ -302,6 +330,7 @@ export function createTrainerClientCalendarHandlers({
     });
     batch.set(doc(db, "users", clientId), {
       workoutCalendar: nextCalendar,
+      subscription: nextSubscription,
       trainingDays: currentCalendar.trainingDays || targetClient?.trainingDays || [],
       workoutTime: currentCalendar.workoutTime || targetClient?.workoutTime || "",
       updatedAt: nowIso
@@ -309,7 +338,7 @@ export function createTrainerClientCalendarHandlers({
 
     try {
       await batch.commit();
-      const patch = { workoutCalendar: nextCalendar };
+      const patch = { workoutCalendar: nextCalendar, subscription: nextSubscription };
       setPlan((current) => ({
         ...current,
         workouts: sortWorkoutDays(nextWorkouts)

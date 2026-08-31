@@ -1,13 +1,14 @@
 {
   "schemaVersion": "nutrition-catalog-verified-v2",
-  "generatedAt": "2026-08-02T06:40:00.535Z",
-  "productCount": 1570,
-  "minimumRequiredRecords": 1570,
+  "generatedAt": "2026-08-23T21:22:29.156Z",
+  "productCount": 21057,
+  "minimumRequiredRecords": 21057,
   "sourceKinds": [
     "Open Food Facts"
   ],
   "verificationRequirement": "source_record, label_photo_present, or verified, always with evidenceUrl",
   "compactNutritionScale": 1000,
+  "barcodeValidation": "source_numeric_or_gtin",
   "indexes": {
     "exact": "alias-exact-index.json (normalized term -> array of product ids)",
     "prefix": "alias-prefix-index.json (2-7 character token prefix -> array of product ids)",

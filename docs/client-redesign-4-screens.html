@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trainer Next — клиентский редизайн</title>
+  <style>
+    :root {
+      --bg: #f5f3f7;
+      --surface: #ffffff;
+      --surface-soft: #faf8fc;
+      --line: #eae5f0;
+      --ink: #27232f;
+      --muted: #746e7e;
+      --lavender: #806bb6;
+      --lavender-dark: #654f98;
+      --lavender-soft: #f0eafd;
+      --green: #27845f;
+      --green-soft: #e8f5ee;
+      --orange: #a96517;
+      --orange-soft: #fff3e2;
+      --red: #b84f5c;
+      --shadow: 0 18px 46px rgba(45, 31, 69, .14);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: radial-gradient(circle at 50% 0%, #ede8f6 0, var(--bg) 38rem); }
+    .page { max-width: 1800px; margin: 0 auto; padding: 48px 28px 64px; }
+    .intro { max-width: 780px; margin: 0 auto 36px; text-align: center; }
+    .eyebrow { color: var(--lavender-dark); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 8px 0 10px; font-size: clamp(30px, 4vw, 48px); letter-spacing: -.045em; line-height: 1.04; }
+    .intro p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.55; }
+    .gallery { display: grid; grid-template-columns: repeat(4, minmax(300px, 390px)); justify-content: center; gap: 28px; }
+    .phone { position: relative; min-height: 844px; overflow: hidden; border: 10px solid #312b3c; border-radius: 40px; background: var(--bg); box-shadow: var(--shadow); }
+    .phone::before { content: ""; position: absolute; top: 10px; left: 50%; width: 104px; height: 26px; transform: translateX(-50%); border-radius: 999px; background: #312b3c; z-index: 4; }
+    .screen { min-height: 844px; padding: 50px 16px 108px; }
+    .status { display: flex; align-items: center; justify-content: space-between; padding: 0 8px 14px; font-size: 12px; font-weight: 750; }
+    .status span:last-child { letter-spacing: .1em; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+    .title { margin: 0; font-size: 28px; letter-spacing: -.04em; line-height: 1.05; }
+    .subtitle { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+    .round-button, .nav-item, .icon-square { display: grid; place-items: center; }
+    .round-button { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); }
+    .round-button svg, .nav-item svg, .icon-square svg, .inline-icon svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+    .card { border: 1px solid var(--line); border-radius: 24px; background: var(--surface); }
+    .hero-card { padding: 20px; background: linear-gradient(137deg, #896fc3, #7058a9); color: #fff; box-shadow: 0 14px 28px rgba(112, 88, 169, .25); }
+    .hero-card .eyebrow { color: #f5eeff; opacity: .82; }
+    .hero-card h2 { margin: 7px 0 8px; font-size: 27px; letter-spacing: -.04em; }
+    .hero-card p { margin: 0; color: #f4effd; font-size: 14px; }
+    .cta-row { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
+    .primary-button { min-height: 48px; padding: 0 18px; border: 0; border-radius: 16px; background: #fff; color: var(--lavender-dark); font: inherit; font-size: 15px; font-weight: 800; }
+    .duration { font-size: 13px; font-weight: 700; opacity: .9; }
+    .section-title { display: flex; align-items: center; justify-content: space-between; margin: 26px 2px 12px; }
+    .section-title h3 { margin: 0; font-size: 18px; letter-spacing: -.025em; }
+    .section-title button { border: 0; background: none; color: var(--lavender-dark); font: inherit; font-size: 13px; font-weight: 750; }
+    .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .metric { min-height: 100px; padding: 13px 12px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
+    .metric label { display: block; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .metric strong { display: block; margin-top: 10px; font-size: 21px; letter-spacing: -.045em; }
+    .metric span { display: block; margin-top: 3px; color: var(--green); font-size: 11px; font-weight: 750; }
+    .focus-card { display: flex; gap: 13px; padding: 15px; }
+    .icon-square { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 15px; background: var(--lavender-soft); color: var(--lavender-dark); }
+    .focus-card h4, .session h4, .meal h4 { margin: 0; font-size: 15px; letter-spacing: -.015em; }
+    .focus-card p, .session p, .meal p { margin: 4px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .nav { position: absolute; z-index: 3; right: 12px; bottom: 14px; left: 12px; display: grid; grid-template-columns: repeat(4, 1fr); min-height: 74px; padding: 7px; border: 1px solid rgba(234, 229, 240, .9); border-radius: 25px; background: rgba(255, 255, 255, .96); box-shadow: 0 12px 30px rgba(43, 31, 57, .12); backdrop-filter: blur(14px); }
+    .nav-item { gap: 4px; border-radius: 18px; color: var(--muted); font-size: 10px; font-weight: 750; text-align: center; }
+    .nav-item svg { width: 21px; height: 21px; }
+    .nav-item.active { color: var(--lavender-dark); background: var(--lavender-soft); }
+    .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 10px; }
+    .day { display: grid; min-height: 54px; place-items: center; border-radius: 16px; color: var(--muted); font-size: 12px; font-weight: 750; }
+    .day small { display: block; font-size: 10px; font-weight: 650; }
+    .day.active { color: var(--lavender-dark); background: var(--lavender-soft); outline: 1px solid #d7caf2; }
+    .day.done { color: var(--green); background: var(--green-soft); }
+    .session { position: relative; display: flex; gap: 14px; padding: 16px; }
+    .session .session-index { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 14px; background: var(--orange-soft); color: var(--orange); font-size: 13px; font-weight: 850; }
+    .status-pill { position: absolute; top: 16px; right: 16px; padding: 6px 9px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 10px; font-weight: 800; }
+    .progress-line { display: flex; gap: 4px; margin-top: 15px; }
+    .progress-line span { height: 5px; flex: 1; border-radius: 99px; background: #e9e3f0; }
+    .progress-line span.complete { background: var(--lavender); }
+    .link-card { display: flex; align-items: center; justify-content: space-between; padding: 17px; color: var(--ink); }
+    .link-card b { font-size: 14px; }
+    .chevron { color: var(--lavender-dark); font-size: 22px; line-height: 1; }
+    .calories-card { display: flex; align-items: center; gap: 18px; padding: 18px; }
+    .ring { display: grid; width: 112px; height: 112px; flex: 0 0 112px; place-items: center; border-radius: 50%; background: conic-gradient(var(--lavender) 0 74%, #ebe7f1 74% 100%); }
+    .ring::before { content: ""; position: absolute; width: 88px; height: 88px; border-radius: 50%; background: var(--surface); }
+    .ring div { position: relative; z-index: 1; text-align: center; }
+    .ring strong { display: block; font-size: 20px; letter-spacing: -.045em; }
+    .ring small { color: var(--muted); font-size: 10px; font-weight: 700; }
+    .calories-card h3 { margin: 0; font-size: 16px; }
+    .calories-card p { margin: 6px 0 12px; color: var(--muted); font-size: 12px; }
+    .macro { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .macro span { font-size: 11px; font-weight: 750; }
+    .macro b { display: block; margin-top: 3px; font-size: 13px; }
+    .meal { display: flex; align-items: center; gap: 13px; padding: 14px; }
+    .meal .meal-kcal { margin-left: auto; text-align: right; }
+    .meal .meal-kcal strong { display: block; font-size: 14px; }
+    .meal .meal-kcal small { color: var(--muted); font-size: 11px; }
+    .add-food { width: 100%; min-height: 52px; border: 1px dashed #cbbce8; border-radius: 18px; background: var(--surface-soft); color: var(--lavender-dark); font: inherit; font-size: 14px; font-weight: 800; }
+    .chart-card { padding: 17px 15px 10px; }
+    .chart-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .chart-top h3 { margin: 4px 0 0; font-size: 27px; letter-spacing: -.05em; }
+    .trend { display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; border-radius: 999px; background: var(--green-soft); color: var(--green); font-size: 11px; font-weight: 800; }
+    .chart { width: 100%; height: 126px; margin-top: 5px; }
+    .chart path.grid { stroke: #ede9f2; stroke-width: 1; fill: none; }
+    .chart path.line { stroke: var(--lavender); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .chart path.area { fill: url(#area); }
+    .chart circle { fill: var(--surface); stroke: var(--lavender); stroke-width: 3; }
+    .mini-stat { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 15px; }
+    .mini-stat b { display: block; margin-top: 4px; font-size: 17px; letter-spacing: -.025em; }
+    .mini-stat span { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .mini-stat .delta { color: var(--green); font-size: 13px; font-weight: 850; }
+    .photo-card { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px; }
+    .photo { position: relative; min-height: 118px; overflow: hidden; border-radius: 17px; background: linear-gradient(145deg, #e8defa, #cbbbea); }
+    .photo.after { background: linear-gradient(145deg, #dcefe9, #b7d9cb); }
+    .photo::after { content: ""; position: absolute; right: 27%; bottom: 0; width: 44%; height: 80%; border-radius: 48% 48% 18% 18%; background: rgba(255,255,255,.65); }
+    .photo label { position: absolute; z-index: 1; bottom: 8px; left: 9px; padding: 4px 7px; border-radius: 8px; background: rgba(255,255,255,.84); color: var(--ink); font-size: 10px; font-weight: 800; }
+    @media (max-width: 720px) { .page { padding: 28px 16px 42px; } .gallery { grid-template-columns: minmax(300px, 390px); gap: 30px; } .phone { min-height: 812px; } .screen { min-height: 812px; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <div class="eyebrow">Концепт · Client vNext</div>
+      <h1>Спокойный ритм, ясный прогресс</h1>
+      <p>Четыре главных экрана клиента: меньше визуального шума, одна понятная задача на каждом экране и важные цифры всегда под рукой.</p>
+    </header>
+
+    <section class="gallery" aria-label="Макеты главных экранов клиента">
+      <article class="phone" aria-label="Сводка">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●● 5G ▰</span></div>
+          <div class="topline"><div><div class="eyebrow">Понедельник, 31 августа</div><h2 class="title">Добрый вечер, Илья</h2><p class="subtitle">Продолжаем ровно и без перегруза</p></div><button class="round-button" aria-label="Уведомления"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button></div>
+          <section class="hero-card"><div class="eyebrow">Сегодня · 18:30</div><h2>Спина + бицепс</h2><p>6 упражнений · 45 минут · фокус на технике</p><div class="cta-row"><span class="duration">Готовность: высокая</span><button class="primary-button">Начать</button></div></section>
+          <div class="section-title"><h3>Коротко о дне</h3><button>Подробнее</button></div>
+          <section class="metric-grid"><div class="metric"><label>Серия</label><strong>6 дн.</strong><span>+1 сегодня</span></div><div class="metric"><label>Питание</label><strong>74%</strong><span>в плане</span></div><div class="metric"><label>Вес</label><strong>92,5</strong><span>−0,4 кг</span></div></section>
+          <div class="section-title"><h3>Фокус недели</h3></div>
+          <section class="card focus-card"><div class="icon-square"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="8"/></svg></div><div><h4>Держи белок в каждом приёме пищи</h4><p>Осталось добавить 42 г до цели на сегодня.</p></div></section>
+        </div>
+        <nav class="nav" aria-label="Главная навигация"><div class="nav-item active"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-6h6v6"/></svg>Сводка</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 6h4v4H6zM14 14h4v4h-4z"/><path d="m10 8 4 8M8 10l8 4"/></svg>Тренировки</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M7 3v18M17 3v18M3 7h5m8 0h5M3 17h5m8 0h5"/></svg>Питание</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4z"/><path d="M8 7 9 4h6l1 3"/><circle cx="12" cy="13" r="3"/></svg>Прогресс</div></nav>
+      </article>
+
+      <article class="phone" aria-label="Тренировки">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●● 5G ▰</span></div>
+          <div class="topline"><div><div class="eyebrow">Текущая неделя</div><h2 class="title">Тренировки</h2></div><button class="round-button" aria-label="История тренировок"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 7v5l3 2"/></svg></button></div>
+          <section class="card week"><div class="day done"><span>Пн</span><small>25</small></div><div class="day"><span>Вт</span><small>26</small></div><div class="day active"><span>Ср</span><small>27</small></div><div class="day"><span>Чт</span><small>28</small></div><div class="day"><span>Пт</span><small>29</small></div><div class="day"><span>Сб</span><small>30</small></div><div class="day"><span>Вс</span><small>31</small></div></section>
+          <div class="section-title"><h3>Следующая</h3><button>План</button></div>
+          <section class="card session"><div class="session-index">01</div><div><h4>Спина + бицепс</h4><p>6 упражнений · 45 минут</p><div class="progress-line"><span></span><span></span><span></span><span></span><span></span><span></span></div></div><span class="status-pill">Сегодня</span></section>
+          <div class="section-title"><h3>Выполнено</h3><button>Вся история</button></div>
+          <section class="card session"><div class="session-index" style="background:var(--green-soft);color:var(--green)">✓</div><div><h4>Ноги + кор</h4><p>22 подхода · объём 8 832 кг</p><div class="progress-line"><span class="complete"></span><span class="complete"></span><span class="complete"></span><span class="complete"></span><span class="complete"></span><span class="complete"></span></div></div><span class="status-pill">Готово</span></section>
+          <div class="section-title"><h3>Программа</h3></div>
+          <section class="card link-card"><div><b>Сила и рельеф · 3 неделя</b><p class="subtitle">Осталось 9 тренировок</p></div><span class="chevron">›</span></section>
+        </div>
+        <nav class="nav" aria-label="Главная навигация"><div class="nav-item"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-6h6v6"/></svg>Сводка</div><div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M6 6h4v4H6zM14 14h4v4h-4z"/><path d="m10 8 4 8M8 10l8 4"/></svg>Тренировки</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M7 3v18M17 3v18M3 7h5m8 0h5M3 17h5m8 0h5"/></svg>Питание</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4z"/><path d="M8 7 9 4h6l1 3"/><circle cx="12" cy="13" r="3"/></svg>Прогресс</div></nav>
+      </article>
+
+      <article class="phone" aria-label="Питание">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●● 5G ▰</span></div>
+          <div class="topline"><div><div class="eyebrow">Понедельник, 31 августа</div><h2 class="title">Питание</h2></div><button class="round-button" aria-label="Открыть календарь"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button></div>
+          <section class="card calories-card"><div class="ring"><div><strong>1 840</strong><small>из 2 500 ккал</small></div></div><div><h3>Хороший темп</h3><p>До цели осталось 660 ккал</p><div class="macro"><span>Б <b>118 г</b></span><span>Ж <b>61 г</b></span><span>У <b>193 г</b></span></div></div></section>
+          <div class="section-title"><h3>Сегодня</h3><button>Посмотреть всё</button></div>
+          <section class="card meal"><div class="icon-square"><svg viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0V3M16 3v18M16 13h4l-4-4"/></svg></div><div><h4>Завтрак</h4><p>Омлет · овсянка · ягоды</p></div><div class="meal-kcal"><strong>482</strong><small>ккал</small></div></section>
+          <section class="card meal" style="margin-top:10px"><div class="icon-square" style="background:var(--orange-soft);color:var(--orange)"><svg viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0V3M16 3v18M16 13h4l-4-4"/></svg></div><div><h4>Обед</h4><p>Курица · рис · овощи</p></div><div class="meal-kcal"><strong>713</strong><small>ккал</small></div></section>
+          <section class="card meal" style="margin-top:10px"><div class="icon-square" style="background:var(--green-soft);color:var(--green)"><svg viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0V3M16 3v18M16 13h4l-4-4"/></svg></div><div><h4>Перекус</h4><p>Йогурт · банан</p></div><div class="meal-kcal"><strong>241</strong><small>ккал</small></div></section>
+          <div class="section-title"><h3>Добавить</h3></div><button class="add-food">＋ Найти или добавить продукт</button>
+        </div>
+        <nav class="nav" aria-label="Главная навигация"><div class="nav-item"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-6h6v6"/></svg>Сводка</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 6h4v4H6zM14 14h4v4h-4z"/><path d="m10 8 4 8M8 10l8 4"/></svg>Тренировки</div><div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M7 3v18M17 3v18M3 7h5m8 0h5M3 17h5m8 0h5"/></svg>Питание</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4z"/><path d="M8 7 9 4h6l1 3"/><circle cx="12" cy="13" r="3"/></svg>Прогресс</div></nav>
+      </article>
+
+      <article class="phone" aria-label="Прогресс">
+        <div class="screen">
+          <div class="status"><span>9:41</span><span>●●● 5G ▰</span></div>
+          <div class="topline"><div><div class="eyebrow">Последние 30 дней</div><h2 class="title">Прогресс</h2></div><button class="round-button" aria-label="Фильтры"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button></div>
+          <section class="card chart-card"><div class="chart-top"><div><div class="eyebrow">Вес</div><h3>92,5 кг</h3></div><span class="trend">↓ 0,4 кг</span></div><svg class="chart" viewBox="0 0 330 126" role="img" aria-label="Вес плавно снизился за 30 дней"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfd4f5"/><stop offset="1" stop-color="#f8f6fb"/></linearGradient></defs><path class="grid" d="M0 24h330M0 63h330M0 102h330"/><path class="area" d="M5 29 C45 33,52 47,86 45 S124 33,150 51 S195 71,222 64 S269 96,325 89 L325 126 L5 126Z"/><path class="line" d="M5 29 C45 33,52 47,86 45 S124 33,150 51 S195 71,222 64 S269 96,325 89"/><circle cx="325" cy="89" r="5"/></svg></section>
+          <div class="section-title"><h3>Изменения</h3><button>Все замеры</button></div>
+          <section class="card mini-stat"><div><span>Талия</span><b>−2,5 см</b></div><div class="delta">вниз ↓</div></section>
+          <section class="card mini-stat" style="margin-top:10px"><div><span>Грудь</span><b>+1,0 см</b></div><div class="delta">рост ↑</div></section>
+          <div class="section-title"><h3>Фото прогресса</h3><button>Сравнить</button></div>
+          <section class="card photo-card"><div class="photo"><label>01 авг.</label></div><div class="photo after"><label>31 авг.</label></div></section>
+        </div>
+        <nav class="nav" aria-label="Главная навигация"><div class="nav-item"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-6h6v6"/></svg>Сводка</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 6h4v4H6zM14 14h4v4h-4z"/><path d="m10 8 4 8M8 10l8 4"/></svg>Тренировки</div><div class="nav-item"><svg viewBox="0 0 24 24"><path d="M7 3v18M17 3v18M3 7h5m8 0h5M3 17h5m8 0h5"/></svg>Питание</div><div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M4 7h16v12H4z"/><path d="M8 7 9 4h6l1 3"/><circle cx="12" cy="13" r="3"/></svg>Прогресс</div></nav>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

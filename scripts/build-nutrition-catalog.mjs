@@ -34,6 +34,7 @@ const ALLOWED_VERIFICATION_STATUSES = new Set([
   "source_record"
 ]);
 const ALLOWED_RECORD_TYPES = new Set(["sku", "reference_food"]);
+const BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN = "source_numeric_or_gtin";
 
 export class CatalogValidationError extends Error {
   constructor(errors) {
@@ -157,6 +158,12 @@ export function validateGtin(value) {
   }
 
   return (10 - (sum % 10)) % 10 === Number(value.at(-1));
+}
+
+function validateSourceNumericProductCode(value) {
+  return typeof value === "string"
+    && /^\d{8,14}$/.test(value)
+    && !/^(\d)\1+$/.test(value);
 }
 
 export function normalizeSearchText(input = "") {
@@ -306,7 +313,12 @@ function normalizeRecord(record, recordIndex, errors) {
   const barcode = recordType === "sku"
     ? requiredString(record.barcode, `records[${recordIndex}].barcode`, errors)
     : optionalString(record.barcode, "barcode", recordIndex, errors);
-  if (barcode && !validateGtin(barcode)) {
+  const barcodeValidation = optionalString(record.barcodeValidation, "barcodeValidation", recordIndex, errors) || "gtin";
+  if (!["gtin", BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN].includes(barcodeValidation)) {
+    addError(errors, recordIndex, "barcodeValidation", `must be "gtin" or "${BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN}"`);
+  }
+  const acceptsSourceProductCode = barcodeValidation === BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN;
+  if (barcode && !validateGtin(barcode) && !(acceptsSourceProductCode && validateSourceNumericProductCode(barcode))) {
     addError(errors, recordIndex, "barcode", "must be a valid GTIN-8, GTIN-12, GTIN-13, or GTIN-14 string");
   }
 
@@ -384,6 +396,7 @@ function normalizeRecord(record, recordIndex, errors) {
     name,
     brand,
     barcode,
+    barcodeValidation,
     category,
     quantity,
     aliases,
@@ -545,6 +558,9 @@ export function buildNutritionCatalog(input, { minRecords } = {}) {
   });
 
   const sourceKinds = [...new Set(normalizedRecords.map((record) => record.source.kind))].sort(compareStrings);
+  const allowsSourceNumericProductCodes = normalizedRecords.some(
+    (record) => record.barcodeValidation === BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN
+  );
   const generatedAt = isPlainObject(input) && typeof input.generatedAt === "string" && !Number.isNaN(Date.parse(input.generatedAt))
     ? input.generatedAt
     : new Date().toISOString();
@@ -565,6 +581,9 @@ export function buildNutritionCatalog(input, { minRecords } = {}) {
       sourceKinds,
       verificationRequirement: "source_record, label_photo_present, or verified, always with evidenceUrl",
       compactNutritionScale: MACRO_SCALE,
+      ...(allowsSourceNumericProductCodes
+        ? { barcodeValidation: BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN }
+        : {}),
       indexes: {
         exact: "alias-exact-index.json (normalized term -> array of product ids)",
         prefix: `alias-prefix-index.json (${MIN_PREFIX_LENGTH}-${MAX_PREFIX_LENGTH} character token prefix -> array of product ids)`,

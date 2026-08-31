@@ -1,3 +1,5 @@
+import { limitUserDisplayName } from "../../utils/userDisplayName.js";
+
 export function hasSavedWeightMeasurement(measurements) {
   return Array.isArray(measurements) && measurements.some((measurement) => {
     const rawWeight = measurement?.weight;
@@ -86,7 +88,7 @@ export async function submitFirstSetupProfileWithDeps({
     // Local completion marker is best effort only.
   }
 
-  const displayName = String(aiNutritionProfileDraft.name || "").trim();
+  const displayName = limitUserDisplayName(aiNutritionProfileDraft.name);
   if (displayName) {
     setProfileAccount?.((currentAccount) => ({
       ...currentAccount,

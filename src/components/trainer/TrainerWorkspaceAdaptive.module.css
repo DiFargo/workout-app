@@ -60,13 +60,13 @@
   }
 
   .root :global(.trainerNextMain) {
-    margin-left: var(--layout-tablet-rail-width);
+    margin-left: 0;
   }
 
   .root :global(.trainerNextPage) {
     width: 100%;
     max-width: var(--layout-content-max);
-    padding: var(--layout-page-block) var(--layout-tablet-gutter) 40px;
+    padding: var(--layout-page-block) var(--layout-tablet-gutter) var(--trainer-next-desktop-dock-clearance, 140px);
   }
 
   .root :global(.trainerNextDesktopPageHead) {

@@ -31,4 +31,15 @@
     overscroll-behavior-x: none;
     overscroll-behavior-y: none;
   }
+
+  body[data-native-app-ui="true"] :where(*:not(input):not(textarea):not(select):not([contenteditable="true"]):not([contenteditable=""])) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  body[data-native-app-ui="true"] :where(input, textarea, select, [contenteditable="true"], [contenteditable=""]) {
+    -webkit-user-select: text;
+    user-select: text;
+  }
 }

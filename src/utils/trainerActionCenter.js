@@ -1,5 +1,5 @@
 import { getClientTrainerTaskDestination } from "../domain/clientInsights.js";
-import { getClientAttentionState } from "./trainerAttention.js";
+import { getClientAttentionItems, getClientAttentionState } from "./trainerAttention.js";
 import {
   getClientActivityStatus,
   getClientAttentionReasons,
@@ -222,16 +222,17 @@ export function getTrainerActionItemTargetTab(item = {}, groupId = "") {
   if (groupId === "programEndingItems") return "workouts";
   if (groupId === "todayWorkouts" || groupId === "missedWorkouts") return "workouts";
 
-  if (item.summary?.workoutFeedbackAttention?.id) return "messages";
-  if (Number(item.summary?.activeTrainerTasksCount) > 0) return "tasks";
-  if (item.summary?.programEndingAttention?.id) return "workouts";
-
   const type = item.attention?.type || item.type || "";
   if (type === "workout" || type === "program" || type === "programEnding" || type === "noProgram") return "workouts";
   if (type === "nutrition") return "nutrition";
   if (type === "measure") return "bodyProgress";
   if (type === "feedback") return "messages";
   if (type === "task") return "tasks";
+  if (type === "payment") return "calendar";
+
+  if (item.summary?.workoutFeedbackAttention?.id) return "messages";
+  if (Number(item.summary?.activeTrainerTasksCount) > 0) return "tasks";
+  if (item.summary?.programEndingAttention?.id) return "workouts";
   return "overview";
 }
 
@@ -316,6 +317,7 @@ export function buildTrainerClientSnapshot(client = {}, summary = {}, tasks = []
     lastMeasurementAt: summary.lastMeasurementAt || "",
     activeTasksCount: activeTasks.length,
     lastClientComment: String(lastWorkout?.clientComment || summary.workoutFeedbackAttention?.comment || "").trim(),
+    attentionItems: getClientAttentionItems(client, summary),
     primaryAttention: getClientAttentionState(client, summary),
     status: getClientActivityStatus(summary)
   };

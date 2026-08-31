@@ -1,52 +1,47 @@
 .explainer {
   box-sizing: border-box;
   width: 100%;
-  height: 252px;
-  min-height: 252px;
-  max-height: 252px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 64px;
+  grid-template-rows: auto 42px;
   gap: 8px;
 }
 
 .tabs {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin: 0;
-  padding: 12px 0;
+  padding: 0;
   border: 0;
   background: transparent;
 }
 
 .tab {
-  position: relative;
-  flex: 1 1 0;
   min-width: 0;
-  min-height: 0;
+  min-height: 42px;
   margin: 0;
-  padding: 8px 2px;
+  padding: 6px 8px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
   border: 1px solid #efebf3;
-  border-radius: 16px;
+  border-radius: 14px;
   background: #fff;
   color: #7b7682;
   font: inherit;
-  font-size: 9.5px;
+  font-size: 11.5px;
   font-weight: 750;
   line-height: 1.05;
   box-shadow: 0 2px 6px rgba(72, 63, 87, 0.05);
-  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, margin 160ms ease, transform 160ms ease;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .tab svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -73,49 +68,39 @@
 }
 
 .activeTab {
-  width: auto;
-  margin-left: -8px;
-  padding-left: 10px;
   border-color: #ded3f3;
-  border-radius: 0 16px 16px 0;
+  border-radius: 16px;
   background: #eee9f7;
   color: #806bb6;
   box-shadow: 0 4px 10px rgba(72, 63, 87, 0.08);
 }
 
-.activeTab::before {
-  content: "";
-  position: absolute;
-  top: 20%;
-  bottom: 20%;
-  left: 0;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: #8f7ac8;
-}
-
-.referenceContent + .tabs .activeTab {
-  background: #eee9f7;
-}
-
 .content {
   min-width: 0;
-  height: 252px;
+  width: 100%;
+  aspect-ratio: 1.16 / 1;
+  margin-inline: 0;
   overflow: hidden;
 }
 
 .content :global([data-testid="workout-exercise-video-frame"]) {
   width: 100%;
-  height: 252px;
-  min-height: 252px;
-  max-height: 252px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .content :global([data-testid="workout-exercise-video-frame"]) {
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 .referenceCard {
   box-sizing: border-box;
   position: relative;
   width: 100%;
-  height: 252px;
+  height: 100%;
   padding: 15px 15px 12px;
   display: flex;
   flex-direction: column;
@@ -358,32 +343,22 @@
 
 @media (max-width: 350px) {
   .explainer {
-    grid-template-columns: minmax(0, 1fr) 58px;
-    gap: 6px;
+    gap: 7px;
   }
 
   .tabs {
     gap: 6px;
-    padding: 10px 0;
   }
 
-  .activeTab {
-    margin-left: -6px;
-    padding-left: 8px;
+  .tab {
+    min-height: 40px;
+    padding: 6px 5px;
+    gap: 5px;
+    font-size: 11px;
   }
 
-  .referenceCopy h2 {
-    font-size: 14px;
-  }
-}
-
-@media (max-height: 824px) {
-  .explainer,
-  .content,
-  .content :global([data-testid="workout-exercise-video-frame"]),
-  .referenceCard {
-    height: clamp(202px, calc(100dvh - 525px), 252px);
-    min-height: clamp(202px, calc(100dvh - 525px), 252px);
-    max-height: clamp(202px, calc(100dvh - 525px), 252px);
+  .tab svg {
+    width: 17px;
+    height: 17px;
   }
 }

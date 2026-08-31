@@ -2,7 +2,7 @@
   width: min(100%, var(--trainer-content-width, 1320px));
   min-height: calc(100dvh - 96px);
   margin-inline: auto;
-  padding: var(--trainer-page-block, 28px) var(--trainer-page-gutter, 32px) 44px;
+  padding: var(--trainer-page-block, 28px) 0 44px;
   color: var(--trainer-text, #28262e);
 }
 
@@ -113,7 +113,7 @@
 .grid {
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 280px));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   align-items: stretch;
   gap: 18px;
 }
@@ -219,9 +219,8 @@
 .cardSelect {
   width: 100%;
   min-width: 0;
-  min-height: 0;
-  display: flex;
   flex: 1 1 auto;
+  display: flex;
   flex-direction: column;
   padding: 22px 18px 16px;
   border: 0;
@@ -230,6 +229,11 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
+}
+
+.cardSelect:focus-visible {
+  outline: 3px solid rgba(143, 122, 200, .35);
+  outline-offset: -3px;
 }
 
 .card:hover {
@@ -689,7 +693,7 @@
   }
 
   .grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
 

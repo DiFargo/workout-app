@@ -1243,6 +1243,7 @@ export default function ClientE2EHarness() {
       }));
       setHarnessRunRestTimerSeconds(119);
       setHarnessRunRestTimerRunning(true);
+      return true;
     };
     const updateHarnessRunNote = (exerciseId, value) => {
       setHarnessRunWorkout((current) => ({
@@ -1883,11 +1884,11 @@ export default function ClientE2EHarness() {
             initialWeight=""
             saving={harnessQuickWeightSaving}
             onClose={() => setHarnessQuickWeightOpen(false)}
+            onSuccessAcknowledged={() => setHarnessQuickWeightOpen(false)}
             onSave={async () => {
               setHarnessQuickWeightSaving(true);
               await Promise.resolve();
               setHarnessQuickWeightSaving(false);
-              setHarnessQuickWeightOpen(false);
               return true;
             }}
           />
@@ -2156,11 +2157,11 @@ export default function ClientE2EHarness() {
           initialWeight=""
           saving={harnessQuickWeightSaving}
           onClose={() => setHarnessQuickWeightOpen(false)}
+          onSuccessAcknowledged={() => setHarnessQuickWeightOpen(false)}
           onSave={async () => {
             setHarnessQuickWeightSaving(true);
             await Promise.resolve();
             setHarnessQuickWeightSaving(false);
-            setHarnessQuickWeightOpen(false);
             return true;
           }}
         />

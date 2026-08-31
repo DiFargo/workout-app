@@ -5,12 +5,15 @@ export default function WorkoutExerciseModals({
   alternativeSource = "basic",
   alternatives = [],
   exercise,
+  lastExerciseText = "",
   noteOpen,
   onCloseNote,
+  onCloseProgress = () => {},
   onCloseSwap,
   onCloseTechnique,
   onSelectAlternative,
   onUpdateNote,
+  progressOpen = false,
   swapOpen,
   techniqueHint,
   techniqueOpen
@@ -72,6 +75,56 @@ export default function WorkoutExerciseModals({
             >
               Готово
             </button>
+          </section>
+        </div>,
+        document.body
+      )}
+
+      {progressOpen && createPortal(
+        <div
+          className={styles.overlay}
+          data-testid="workout-exercise-progress-modal"
+          data-css-module-scope="workout-exercise-modals"
+          role="presentation"
+          onClick={onCloseProgress}
+          onTouchStart={(event) => event.stopPropagation()}
+          onTouchMove={(event) => event.stopPropagation()}
+          onTouchEnd={(event) => event.stopPropagation()}
+        >
+          <section
+            className={`${styles.modal} ${styles.progressModal}`}
+            role="dialog"
+            aria-modal="true"
+            data-modal-surface="true"
+            aria-labelledby="workoutExerciseProgressTitle"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header>
+              <div>
+                <small>Результаты упражнения</small>
+                <h2 id="workoutExerciseProgressTitle">Прогресс</h2>
+              </div>
+              <button
+                type="button"
+                className={styles.closeButton}
+                data-css-module-control="workout-exercise-modals"
+                onClick={onCloseProgress}
+                aria-label="Закрыть прогресс упражнения"
+              >
+                ×
+              </button>
+            </header>
+            <div className={styles.progressContent}>
+              <strong>{exercise.name}</strong>
+              {lastExerciseText ? (
+                <p>
+                  <span>Последнее выполнение</span>
+                  {lastExerciseText}
+                </p>
+              ) : (
+                <p>Истории выполнения пока нет. Она появится после завершения упражнения.</p>
+              )}
+            </div>
           </section>
         </div>,
         document.body

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getClientAttentionState, pluralizeRu } from "../src/utils/trainerAttention.js";
+import { getClientAttentionItems, getClientAttentionState, pluralizeRu } from "../src/utils/trainerAttention.js";
 
 test("russian day pluralization matches trainer labels", () => {
   assert.equal(pluralizeRu(1, "день", "дня", "дней"), "день");
@@ -125,6 +125,34 @@ test("workout feedback attention is shown before nutrition checks", () => {
     type: "feedback",
     reason: "Клиент сообщил о боли после тренировки"
   });
+});
+
+test("client control exposes every independent issue in priority order", () => {
+  const items = getClientAttentionItems(
+    {
+      assignedProgramId: "program_1",
+      workoutCalendar: { scheduledDates: ["2026-06-17"] }
+    },
+    {
+      assignedProgramId: "program_1",
+      workoutFeedbackAttention: {
+        id: "pain",
+        reason: "Клиент сообщил о боли после тренировки"
+      },
+      nutritionDays7: 0,
+      lastNutritionAt: "2026-06-01",
+      lastMeasurementAt: "2026-05-25",
+      paymentAttention: { id: "overdue", label: "Абонемент требует проверки" }
+    },
+    new Date("2026-06-16T12:00:00")
+  );
+
+  assert.deepEqual(items, [
+    { type: "feedback", reason: "Клиент сообщил о боли после тренировки" },
+    { type: "nutrition", reason: "Нет питания 15 дней" },
+    { type: "measure", reason: "Не взвешивался 22 дня" },
+    { type: "payment", reason: "Абонемент требует проверки" }
+  ]);
 });
 
 test("program ending attention is shown before nutrition checks", () => {

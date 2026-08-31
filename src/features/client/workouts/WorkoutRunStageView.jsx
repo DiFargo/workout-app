@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { formatCompactTimer, getExerciseTechniqueHint } from "../../../domain/workoutPresentation";
 import { exerciseUsesExternalWeight } from "../../../utils/auditSafety";
@@ -22,6 +23,18 @@ import { buildWorkoutRunStageModel } from "./workoutRunStageModel";
 import { useBasicWorkoutExerciseOverrides } from "./useBasicWorkoutExerciseOverrides";
 import styles from "./WorkoutRunStageView.module.css";
 
+function IosExerciseHeader({ title, progressLabel }) {
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div className={styles.iosExerciseHeader} data-testid="workout-ios-exercise-header">
+      <span className={styles.iosExerciseHeaderTitle}>{title}</span>
+      <span className={styles.iosExerciseHeaderProgress}>{progressLabel}</span>
+    </div>,
+    document.body
+  );
+}
+
 export function WorkoutRunExercisePreview({
   children,
   exercise,
@@ -34,7 +47,7 @@ export function WorkoutRunExercisePreview({
   onOpenTechnique = () => {}
 }) {
   return (
-    <div
+      <div
       className={`${styles.deck} ${styles.exerciseDeck}`}
       data-testid="workout-run-stage"
       data-css-module-scope="workout-run-stage"
@@ -59,7 +72,7 @@ export function WorkoutRunExercisePreview({
         </div>
         {children}
       </div>
-    </div>
+      </div>
   );
 }
 
@@ -74,9 +87,6 @@ export default function WorkoutRunStageView({
   goBackToMain,
   goToNextExercise,
   goToPreviousExercise,
-  handleExerciseTouchEnd,
-  handleExerciseTouchMove,
-  handleExerciseTouchStart,
   history,
   inlinePlayingVideoId,
   inlineVideoControlsTimerRef,
@@ -142,6 +152,12 @@ export default function WorkoutRunStageView({
   setWorkoutClientComment
 }) {
   const [exerciseSwapOpenId, setExerciseSwapOpenId] = useState("");
+  const [restTimerExpanded, setRestTimerExpanded] = useState(false);
+  useEffect(() => {
+    if (restTimerSeconds <= 0) {
+      setRestTimerExpanded(false);
+    }
+  }, [restTimerSeconds]);
   const {
     completedExercisesCount,
     exercise: unresolvedExercise,
@@ -219,9 +235,25 @@ export default function WorkoutRunStageView({
   const groupProgressLabel = groupBlock
     ? `${groupBlock.groupMode === "triset" ? "Трисет" : "Суперсет"} · круг ${Number.isFinite(groupRound) ? groupRound + 1 : 1}/${groupRounds} · ${groupExercisePosition}/${groupExerciseCount || 1}`
     : "";
+  const exerciseCount = Math.max(1, executionSteps.length);
+  const exerciseProgressLabel =
+    groupProgressLabel || `${currentExerciseIndex} из ${exerciseCount}`;
   const shouldShowGroupRest = !exercise?.runtimeGroup || (
     groupExercisePosition >= (groupExerciseCount || 1)
   );
+  const openExerciseTechnique = (event) => {
+    openWorkoutExerciseModal(
+      setExerciseTechniqueOpenId,
+      exercise.id,
+      event?.currentTarget
+    );
+  };
+  const handleToggleWorkoutSetCompleted = (exerciseId, setIndex) => {
+    const didStartRestTimer = toggleWorkoutSetCompleted(exerciseId, setIndex);
+    if (didStartRestTimer) {
+      setRestTimerExpanded(true);
+    }
+  };
   const exerciseVideoFrame = exercise && !isWarmup ? (
     <WorkoutExerciseVideoFrame
       exercise={exercise}
@@ -233,11 +265,8 @@ export default function WorkoutRunStageView({
       onInlineVideoPlayFailed={() => {
         showAppError("load", "Не получилось запустить видео упражнения.");
       }}
-      onOpenTechnique={(event) => openWorkoutExerciseModal(
-        setExerciseTechniqueOpenId,
-        exercise.id,
-        event.currentTarget
-      )}
+      onOpenTechnique={openExerciseTechnique}
+      showTechniqueButton={false}
       onRetryVideo={() => {
         setOpenVideoId(null);
         setVideoRetryToken((current) => current + 1);
@@ -287,7 +316,14 @@ export default function WorkoutRunStageView({
   ) : null;
 
   return (
-    <div
+    <>
+      {!isWarmup && !isFinishSlide && !isStartSlide && exercise ? (
+        <IosExerciseHeader
+          title={exercise.name}
+          progressLabel={exerciseProgressLabel}
+        />
+      ) : null}
+      <div
       ref={deckRef}
       className={`${styles.deck} ${
         isWarmup
@@ -299,15 +335,14 @@ export default function WorkoutRunStageView({
       data-testid="workout-run-stage"
       data-css-module-scope="workout-run-stage"
       data-workout-stage={isWarmup ? "warmup" : isFinishSlide ? "finish" : "exercise"}
-      onTouchStart={handleExerciseTouchStart}
-      onTouchMove={handleExerciseTouchMove}
-      onTouchEnd={handleExerciseTouchEnd}
     >
       <WorkoutStageHeading
         exercise={exercise}
         isFinishSlide={isFinishSlide}
         isStartSlide={isStartSlide}
         isWorkoutSaved={isWorkoutSaved}
+        inFlow={!isWarmup && !isFinishSlide}
+        progressLabel={exerciseProgressLabel}
         onOpenTechnique={(event) => openWorkoutExerciseModal(
           setExerciseTechniqueOpenId,
           exercise.id,
@@ -354,14 +389,6 @@ export default function WorkoutRunStageView({
         />
       ) : (
         <>
-          {!isWarmup && (
-            <div className={styles.exerciseProgressSlot}>
-              <div className={`${styles.exerciseMeta}${groupProgressLabel ? ` ${styles.groupExerciseMeta}` : ""}`} data-testid="workout-exercise-progress">
-                <span className={styles.exerciseProgressText}>{groupProgressLabel || `${currentExerciseIndex} из ${executionSteps.length}`}</span>
-              </div>
-            </div>
-          )}
-
           <div
             key={exercise.id}
             className={`${styles.card} ${
@@ -391,8 +418,14 @@ export default function WorkoutRunStageView({
               />
             ) : (
               <BasicWorkoutExerciseExplainer
-                exercise={exercise}
+                onOpenTechnique={openExerciseTechnique}
                 onOpenSwap={exerciseAlternatives.length ? () => setExerciseSwapOpenId(exercise.id) : undefined}
+                onOpenNote={(event) => openWorkoutExerciseModal(
+                  setExerciseNoteOpenId,
+                  exercise.id,
+                  event.currentTarget
+                )}
+                isNoteOpen={exerciseNoteOpenId === exercise.id}
               >
                 {exerciseVideoFrame}
               </BasicWorkoutExerciseExplainer>
@@ -422,7 +455,7 @@ export default function WorkoutRunStageView({
                   <WorkoutExerciseSets
                     exercise={exercise}
                     hasExternalWeight={exerciseUsesExternalWeight(exercise)}
-                    onToggleSetCompleted={toggleWorkoutSetCompleted}
+                    onToggleSetCompleted={handleToggleWorkoutSetCompleted}
                     onUpdateSet={updateSet}
                     sharedExerciseAiWeightAdjustment={sharedExerciseAiWeightAdjustment}
                     showTitle={false}
@@ -445,11 +478,25 @@ export default function WorkoutRunStageView({
                     onToggleHistory={() => setExerciseHistoryOpenId((current) => current === exercise.id ? "" : exercise.id)}
                     readinessVolumeText={workoutReadiness?.volumeText}
                     startingWeightCheck={startingWeightCheck}
+                    showNoteButton={false}
+                    showPreviousInfo={!shouldShowGroupRest}
+                    accessory={shouldShowGroupRest ? (
+                      <WorkoutRestTimer
+                        compact
+                        duration={restTimerDuration}
+                        running={restTimerRunning}
+                        seconds={restTimerSeconds}
+                        onStart={startRestTimer}
+                        onSecondsChange={setRestTimerSeconds}
+                        onRunningChange={setRestTimerRunning}
+                      />
+                    ) : null}
                   />
 
                   <WorkoutExerciseModals
                     alternatives={exerciseAlternatives}
                     exercise={exercise}
+                    lastExerciseText={getLastExerciseText(exercise, lastExerciseResults)}
                     noteOpen={exerciseNoteOpenId === exercise.id}
                     onCloseNote={() => closeWorkoutExerciseModal(setExerciseNoteOpenId)}
                     onCloseSwap={() => setExerciseSwapOpenId("")}
@@ -470,17 +517,6 @@ export default function WorkoutRunStageView({
                   />
                 </div>
               </section>
-            )}
-
-            {!isWarmup && shouldShowGroupRest && (
-              <WorkoutRestTimer
-                duration={restTimerDuration}
-                running={restTimerRunning}
-                seconds={restTimerSeconds}
-                onStart={startRestTimer}
-                onSecondsChange={setRestTimerSeconds}
-                onRunningChange={setRestTimerRunning}
-              />
             )}
 
             {isWarmup && (
@@ -506,6 +542,19 @@ export default function WorkoutRunStageView({
           />
         </>
       )}
-    </div>
+      </div>
+      {restTimerExpanded && restTimerSeconds > 0 ? (
+        <WorkoutRestTimer
+          expanded
+          duration={restTimerDuration}
+          running={restTimerRunning}
+          seconds={restTimerSeconds}
+          onMinimize={() => setRestTimerExpanded(false)}
+          onStart={startRestTimer}
+          onSecondsChange={setRestTimerSeconds}
+          onRunningChange={setRestTimerRunning}
+        />
+      ) : null}
+    </>
   );
 }

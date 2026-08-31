@@ -20,7 +20,6 @@ import {
 } from "../../../utils/userScopedStorage";
 
 export function createProfileProgressHandlers({
-  APP_PAGES,
   MEASUREMENTS_STORAGE_KEY,
   auth,
   db,
@@ -29,24 +28,17 @@ export function createProfileProgressHandlers({
   measurementReplayInProgressRef,
   profileMeasurements,
   profileMeasurementDraft,
-  profileMeasurementReturnTab,
   profileProgressPhotoFiles,
   recordTrainerEvent,
   showAppError,
   setAiNutritionProfile,
   setAiNutritionProfileDraft,
   setClientProgressPhotos,
-  setPage,
-  setProfileActiveTab,
-  setProfileMeasurementDraft,
-  setProfileMeasurementOpen,
   setProfileMeasurementSaving,
   setProfileMeasurements,
   setProfileMeasurementStatus,
-  setProfileMeasurementWizardStep,
   setProfileProgressPhotoFiles,
   setProfileProgressPhotoPreviews,
-  setProfileProgressPhotosModalOpen,
   setProfileProgressPhotoStatus,
   setProfileProgressPhotoUploading
 }) {
@@ -171,8 +163,6 @@ export function createProfileProgressHandlers({
       setProfileProgressPhotoPreviews({ front: "", side: "", back: "" });
       setProfileProgressPhotoStatus("Фото прогресса сохранены.");
       await recordTrainerEvent(uid, "photo", "Клиент добавил фото прогресса");
-      setProfileProgressPhotosModalOpen(false);
-      setProfileProgressPhotoStatus("");
     } catch (error) {
       console.error("Client progress photos upload failed:", error);
       setProfileProgressPhotoStatus("Не получилось загрузить фото. Проверь соединение и попробуй ещё раз.");
@@ -268,28 +258,6 @@ export function createProfileProgressHandlers({
         }));
       }
     };
-    const closeSavedMeasurement = () => {
-      setProfileMeasurementDraft({
-        weight: "",
-        neck: "",
-        shoulders: "",
-        chest: "",
-        biceps: "",
-        forearm: "",
-        wrist: "",
-        belly: "",
-        pelvis: "",
-        thigh: "",
-        calf: "",
-        ankle: "",
-        note: ""
-      });
-      setProfileMeasurementWizardStep(0);
-      setProfileMeasurementOpen(false);
-      setProfileActiveTab(profileMeasurementReturnTab);
-      setPage(APP_PAGES.PROFILE);
-    };
-
     if (isOffline()) {
       setProfileMeasurementSaving(false);
       if (requireCloudSave) {
@@ -299,7 +267,6 @@ export function createProfileProgressHandlers({
 
       applyLocalMeasurement(true);
       setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
-      closeSavedMeasurement();
       return true;
     }
 
@@ -326,7 +293,6 @@ export function createProfileProgressHandlers({
       if (!requireCloudSave && isOffline()) {
         applyLocalMeasurement(true);
         setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
-        closeSavedMeasurement();
         return true;
       }
 
@@ -340,7 +306,6 @@ export function createProfileProgressHandlers({
       setProfileMeasurementSaving(false);
     }
 
-    closeSavedMeasurement();
     return true;
   }
 

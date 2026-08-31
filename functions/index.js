@@ -4750,7 +4750,7 @@ export const aiFoodPhoto = onRequest(
     cors: true
   },
   async (req, res) => {
-    const apiVersion = "aiFoodPhoto-v5";
+    const apiVersion = "aiFoodPhoto-v7";
     if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed", apiVersion });
 
     try {
@@ -4787,54 +4787,57 @@ export const aiFoodPhoto = onRequest(
       }
 
       const systemPrompt = [
-        "You are a food photo nutrition estimation system for a fitness app.",
-        "First decide whether the main visible object is edible food, a drink, a food package, or a nutrition label.",
-        "Furniture, people, animals, household objects and other non-food objects must return isFood=false and ok=false.",
-        "If a readable package nutrition label is visible, extract its exact label data. If plated food is visible, identify the most likely dish and estimate nutrition.",
-        "Package text has priority over common products and local database matches.",
-        "Return name in Russian unless it is a visible brand/package name.",
-        "Keep name short, 2-4 words maximum.",
-        "For packaged food preserve only the visible brand and short product name.",
-        "For homemade or plated food use a short Russian dish name without a brand.",
+        "You are a precise food-package, barcode, and nutrition-label recognition system for a fitness app.",
+        "First decide whether a full barcode or a readable food-package label is visible. This endpoint verifies packaged products; it does not estimate meals from appearance.",
+        "Furniture, people, animals, household objects, loose produce, plated meals and unclear packages must return isFood=false and ok=false unless a full barcode or readable label is visible.",
+        "For a package, inspect evidence in this order: full barcode, visible brand, exact product name, flavour or variant, then the nutrition label.",
+        "Return barcode only when every digit of an 8-14 digit code is clearly visible. Copy digits exactly; never invent, repair, or complete a barcode. Otherwise return an empty string.",
+        "If readable package text is visible, preserve the exact distinguishing words. Never replace a visible product or flavour with a generic category such as yogurt, cheese, bar, or drink.",
+        "If a readable package nutrition label is visible, extract its exact label data. Never estimate nutrition from a photo.",
+        "Package text and the barcode have priority over common products and database-like guesses.",
+        "Return the exact visible product name without translating, shortening, or completing it. Keep the brand in the separate brand field.",
         "Do not use filler words such as Homemade, Fresh, Traditional or long descriptions.",
         "Do not add a brand unless it is clearly visible in the photo.",
         "If the product is TEOS Greek yogurt with cereals and flax fiber, return that exact product meaning, not plain Greek yogurt.",
         "Nutrition values from the label are the highest priority. Only call a result label data when a readable nutrition label was actually visible.",
-        "Always return calories/protein/fat/carbs per 100 grams.",
-        "Never return 0 unless that nutrient is truly zero.",
-        "For homemade or plated food estimate typical nutrition values.",
-        "If food or a food package cannot be identified reliably, return ok=false, an empty name and zero nutrition values.",
+        "Always return calories/protein/fat/carbs per 100 grams only when they are legible on the nutrition label. Never estimate or calculate missing values.",
+        "Never return 0 unless that nutrient is truly zero on the label.",
+        "Use matchConfidence=exact only when the barcode is fully readable or the brand plus exact product and variant are readable. Use partial when only part of a package is readable, and uncertain when the product cannot be identified reliably.",
+        "If a full barcode is readable but no nutrition label is readable, return its digits, use empty name/query and zero nutrition values. The app will search its verified catalog.",
+        "If neither a full barcode nor a readable nutrition label with exact product text is present, return ok=false, an empty name and zero nutrition values.",
         "Never invent a product when the image is unclear or does not contain food.",
-        "Estimate the visible product weight in grams. For a package or label use its serving/net weight or 100 g basis; for plated food estimate the visible mass. If unsure return 100.",
+        "For a package or label use its visible serving/net weight or 100 g basis. If unsure return 100.",
         "If you can read text partially, preserve the exact visible words instead of simplifying.",
         "Return JSON only."
       ].join("\n");
 
       const userPrompt = [
-        "Analyze this food package, nutrition label, or plated food photo.",
-        "Return the best editable food draft for a nutrition diary.",
-        "For labels: extract the visible brand, a short product name and KBJU.",
-        "For plated food: identify the likely dish and estimate KBJU realistically.",
-        'Examples: "Homemade Cottage Cheese Pancakes with Raisins" -> "Сырники с изюмом"; "Chicken with Rice and Vegetables" -> "Курица с рисом"; "Oatmeal with Banana" -> "Овсянка с бананом"; "Greek Yogurt with Cereal" -> "Греческий йогурт".',
+        "Analyze a food package, barcode, or nutrition label photo.",
+        "Return data only when it is directly readable from the photo; do not create an estimated food draft.",
+        "For packages: read the barcode first if it is visible, then the exact brand, product and variant. A barcode with one unclear digit must be returned as an empty string.",
+        "For labels: extract the visible brand, exact short product name and KBJU.",
+        "For loose food or plated dishes without a readable label/barcode, return ok=false and no estimated values.",
         "Prefer OCR label values. Do not replace visible package data with a generic database item.",
         "Return this JSON shape:",
         "{",
         '  "ok": true if food is identified, otherwise false,',
         '  "isFood": true only for edible food, drink, food package or nutrition label,',
-        '  "name": "short Russian product or dish name, 2-4 words",',
+        '  "name": "exact short visible product name or empty string",',
         '  "brand": "brand if visible",',
         '  "query": "search/exact product query",',
+        '  "barcode": "full visible 8-14 digit barcode or empty string",',
+        '  "matchConfidence": "exact|partial|uncertain",',
         '  "calories": number_per_100g,',
         '  "protein": number_per_100g,',
         '  "fat": number_per_100g,',
         '  "carbs": number_per_100g,',
-        '  "estimatedGrams": estimated_visible_weight_in_grams_or_100,',
+        '  "estimatedGrams": visible_serving_weight_in_grams_or_100,',
         '  "portion": "100 г",',
         '  "servingSize": "visible serving size if any",',
         '  "ingredients": ["visible important additives/flavor"],',
         '  "detectedIngredients": ["visible important additives/flavor"],',
         '  "confidence": "high|medium|low",',
-        '  "evidenceType": "label" only for readable label data, otherwise "estimate",',
+        '  "evidenceType": "label" only for a readable nutrition label, otherwise "estimate",',
         '  "labelText": "short exact nutrition-label text or empty string",',
         '  "candidates": [',
         '    {"name":"same exact product", "brand":"brand if visible", "portion":"100 г", "source":"label"}',
@@ -4849,7 +4852,7 @@ export const aiFoodPhoto = onRequest(
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "gpt-4o-mini",
+          model: "gpt-4.1-mini",
           input: [
             {
               role: "system",
@@ -4859,7 +4862,7 @@ export const aiFoodPhoto = onRequest(
               role: "user",
               content: [
                 { type: "input_text", text: `${userPrompt}\nFile name: ${fileName}` },
-                { type: "input_image", image_url: imageUrl }
+                { type: "input_image", image_url: imageUrl, detail: "high" }
               ]
             }
           ],
@@ -4876,6 +4879,8 @@ export const aiFoodPhoto = onRequest(
                   name: { type: "string" },
                   brand: { type: "string" },
                   query: { type: "string" },
+                  barcode: { type: "string" },
+                  matchConfidence: { type: "string", enum: ["exact", "partial", "uncertain"] },
                   calories: { type: "number" },
                   protein: { type: "number" },
                   fat: { type: "number" },
@@ -4908,7 +4913,7 @@ export const aiFoodPhoto = onRequest(
                     }
                   }
                 },
-                required: ["ok", "isFood", "name", "brand", "query", "calories", "protein", "fat", "carbs", "estimatedGrams", "portion", "servingSize", "ingredients", "detectedIngredients", "confidence", "evidenceType", "labelText", "candidates"]
+                required: ["ok", "isFood", "name", "brand", "query", "barcode", "matchConfidence", "calories", "protein", "fat", "carbs", "estimatedGrams", "portion", "servingSize", "ingredients", "detectedIngredients", "confidence", "evidenceType", "labelText", "candidates"]
               }
             }
           },
@@ -4936,36 +4941,32 @@ export const aiFoodPhoto = onRequest(
         return json(res, 500, { ok: false, error: "AI response parse failed", apiVersion });
       }
 
-      const firstAiCandidate = Array.isArray(parsed.candidates) && parsed.candidates.length
-        ? parsed.candidates[0] || {}
-        : {};
-
       const normalizeText = (value = "") => String(value || "").trim();
-      const getPositiveNumber = (primary, fallback, defaultValue = 0) => {
+      const getPositiveNumber = (primary, defaultValue = 0) => {
         const primaryNumber = Number(primary);
         if (Number.isFinite(primaryNumber) && primaryNumber > 0) return primaryNumber;
-        const fallbackNumber = Number(fallback);
-        if (Number.isFinite(fallbackNumber) && fallbackNumber > 0) return fallbackNumber;
         return defaultValue;
       };
 
-      const name = normalizeText(parsed.name || parsed.query || firstAiCandidate.name || firstAiCandidate.query);
-      const query = normalizeText(parsed.query || parsed.name || firstAiCandidate.query || firstAiCandidate.name || name);
-      const brand = normalizeText(parsed.brand || firstAiCandidate.brand);
+      const normalizeBarcode = (value = "") => {
+        const barcode = String(value || "").replace(/\D/g, "");
+        return /^\d{8,14}$/.test(barcode) && !/^(\d)\1+$/.test(barcode) ? barcode : "";
+      };
+      const name = normalizeText(parsed.name);
+      const query = normalizeText(parsed.query || parsed.name);
+      const brand = normalizeText(parsed.brand);
+      const barcode = normalizeBarcode(parsed.barcode);
+      const matchConfidence = ["exact", "partial", "uncertain"].includes(parsed.matchConfidence)
+        ? parsed.matchConfidence
+        : "uncertain";
       const detectedIngredients = Array.isArray(parsed.detectedIngredients)
         ? parsed.detectedIngredients
         : Array.isArray(parsed.ingredients)
           ? parsed.ingredients
           : [];
 
-      const exactName = [brand, name]
-        .filter(Boolean)
-        .join(" ")
-        .replace(/\s+/g, " ")
-        .trim();
-
-      const estimatedGrams = getPositiveNumber(parsed.estimatedGrams, firstAiCandidate.estimatedGrams, 100);
-      const normalizedProductName = String(exactName || name || query || "").trim().toLowerCase();
+      const estimatedGrams = getPositiveNumber(parsed.estimatedGrams, 100);
+      const normalizedProductName = String(name || query || "").trim().toLowerCase();
       const rejectedNames = new Set([
         "продукт не найден",
         "не найдено",
@@ -4974,19 +4975,27 @@ export const aiFoodPhoto = onRequest(
         "food not found",
         "unknown product"
       ]);
-      const recognizedFood = parsed.ok !== false
+      const labelText = normalizeText(parsed.labelText);
+      const labelEvidenceIsReadable = parsed.evidenceType === "label"
+        && labelText.length >= 8
+        && /\d/.test(labelText);
+      const recognizedLabel = parsed.ok !== false
         && parsed.isFood === true
         && Boolean(normalizedProductName)
-        && ![...rejectedNames].some((name) => normalizedProductName.includes(name))
-        && String(parsed.confidence || "").toLowerCase() !== "low";
-      let calories = getPositiveNumber(parsed.calories, firstAiCandidate.calories, 0);
-      let protein = getPositiveNumber(parsed.protein, firstAiCandidate.protein, 0);
-      let fat = getPositiveNumber(parsed.fat, firstAiCandidate.fat, 0);
-      let carbs = getPositiveNumber(parsed.carbs, firstAiCandidate.carbs, 0);
+        && ![...rejectedNames].some((rejectedName) => normalizedProductName.includes(rejectedName))
+        && parsed.matchConfidence === "exact"
+        && String(parsed.confidence || "").toLowerCase() === "high"
+        && labelEvidenceIsReadable;
+      const recognizedFood = Boolean(barcode) || recognizedLabel;
+      const calories = getPositiveNumber(parsed.calories, 0);
+      const protein = getPositiveNumber(parsed.protein, 0);
+      const fat = getPositiveNumber(parsed.fat, 0);
+      const carbs = getPositiveNumber(parsed.carbs, 0);
 
       const hasNutrition = calories > 0 && (protein > 0 || fat > 0 || carbs > 0);
+      const hasVerifiedLabel = recognizedLabel && hasNutrition;
 
-      if (!recognizedFood || !hasNutrition) {
+      if (!recognizedFood || (!barcode && !hasVerifiedLabel)) {
         return json(res, 200, {
           ok: true,
           found: false,
@@ -4999,27 +5008,27 @@ export const aiFoodPhoto = onRequest(
         });
       }
 
-      const productName = exactName || name || query || "Продукт по фото";
-      const labelText = normalizeText(parsed.labelText);
-      const evidenceType = parsed.evidenceType === "label" && labelText
-        ? "label"
-        : "estimate";
+      const productName = hasVerifiedLabel ? (name || query) : "";
+      const evidenceType = hasVerifiedLabel ? "label" : "barcode";
       const product = {
         name: productName,
         query: query || productName,
         brand,
-        calories,
-        protein,
-        fat,
-        carbs,
+        barcode,
+        matchConfidence,
+        calories: hasVerifiedLabel ? calories : 0,
+        protein: hasVerifiedLabel ? protein : 0,
+        fat: hasVerifiedLabel ? fat : 0,
+        carbs: hasVerifiedLabel ? carbs : 0,
         estimatedGrams,
-        portion: parsed.portion || firstAiCandidate.portion || "100 г",
+        portion: parsed.portion || "100 г",
         portionAmount: 100,
-        source: evidenceType === "label" ? "Данные с этикетки" : "Примерная оценка ИИ",
-        sourceType: evidenceType === "label" ? "ai_photo_label" : "ai_estimate",
+        source: evidenceType === "label" ? "Данные с этикетки" : "Штрихкод",
+        sourceType: evidenceType === "label" ? "ai_photo_label" : "barcode",
         evidenceType,
-        requiresReview: evidenceType !== "label",
-        confidence: parsed.confidence || firstAiCandidate.confidence || (recognizedFood ? "medium" : "low")
+        labelText: hasVerifiedLabel ? labelText : "",
+        requiresReview: evidenceType === "label",
+        confidence: hasVerifiedLabel ? "high" : "high"
       };
 
       return json(res, 200, {
@@ -5031,6 +5040,8 @@ export const aiFoodPhoto = onRequest(
         name: product.name,
         query: product.query,
         brand,
+        barcode,
+        matchConfidence,
         calories: product.calories,
         protein: product.protein,
         fat: product.fat,

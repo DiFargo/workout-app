@@ -15,12 +15,12 @@
 
 :global(:root[data-app-theme="warm-light"]) .frame.frame {
   box-sizing: border-box;
-  width: 100%;
-  height: 252px;
-  min-height: 252px;
-  max-height: 252px;
-  aspect-ratio: auto;
-  margin: 0;
+  width: min(100%, clamp(230px, 33dvh, 286px));
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
   padding: 10px;
   overflow: hidden;
   border: 1px solid #efebf3;
@@ -28,10 +28,18 @@
   background: #fff;
   box-shadow: 0 2px 7px rgba(72, 63, 87, 0.07);
 }
+:global(:root[data-app-theme="warm-light"]) :global([data-testid="basic-workout-exercise-explainer"]) .frame.frame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: auto;
+  margin: 0;
+}
 :global(:root[data-app-theme="warm-light"]) .video.video,
 :global(:root[data-app-theme="warm-light"]) .fallbackContent.fallbackContent {
   width: 100%;
-  height: 230px;
+  height: 100%;
   border-radius: 16px;
   background: #28262e;
   object-fit: cover;
@@ -50,16 +58,28 @@
   transform: translate(-50%, -50%) scale(0.96);
 }
 :global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton {
-  width: 44px;
-  min-width: 44px;
-  max-width: 44px;
-  height: 44px;
-  min-height: 44px;
-  max-height: 44px;
-  top: 14px;
-  right: 14px;
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  top: 12px;
+  right: 12px;
   bottom: auto;
-  opacity: 0.45;
+  border-color: rgba(255, 255, 255, 0.92);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #806bb6;
+  opacity: 1;
+  box-shadow: 0 5px 14px rgba(17, 15, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+:global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton > svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.35;
 }
 .techniqueButton {
   min-height: 44px;
@@ -198,6 +218,13 @@
 .fullscreenButton:active {
   opacity: 0.95;
   background: var(--color-workout-video-fullscreen-surface-hover);
+}
+
+:global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton:hover,
+:global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton:active {
+  background: rgba(245, 242, 251, 0.96);
+  opacity: 1;
+  transform: scale(0.96);
 }
 
 .fallbackContent {

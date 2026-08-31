@@ -11,6 +11,7 @@ import {
   normalizeTrainerNextExerciseDefaults
 } from "./trainerWorkoutEditHelpers";
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
+import { sanitizeExerciseSetPatch } from "../../utils/exerciseWeightInput";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
 import {
   patchExerciseInTrainerTemplate,
@@ -113,7 +114,7 @@ export function createTrainerPlanEditorHandlers({
     const constructorMode = args.length >= 5;
     const workoutId = getTrainerNextWorkoutId(args, constructorMode);
     const exerciseId = getTrainerNextExerciseId(args, constructorMode);
-    const patch = getTrainerNextPatch(args, constructorMode);
+    const patch = sanitizeExerciseSetPatch(getTrainerNextPatch(args, constructorMode));
 
     if (!exerciseId || !workoutId || !patch || typeof patch !== "object") return;
 
@@ -286,7 +287,7 @@ export function createTrainerPlanEditorHandlers({
     const workoutId = getTrainerNextWorkoutId(args, constructorMode);
     const exerciseId = getTrainerNextExerciseId(args, constructorMode);
     const setIndex = Number(getTrainerNextExerciseSetIndex(args, constructorMode));
-    const patch = getTrainerNextPatch(args, constructorMode);
+    const patch = sanitizeExerciseSetPatch(getTrainerNextPatch(args, constructorMode));
 
     if (!workoutId || !exerciseId || !Number.isFinite(setIndex) || setIndex < 0 || !patch || typeof patch !== "object") return;
 

@@ -9,9 +9,9 @@ function getVoiceCopy({ analyzing, recording, feedback, hasAddedItems, hasReview
   if (analyzing) {
     return {
       eyebrow: "Голосовой ввод · тест",
-      title: "Анализируем запись",
-      description: "ИИ подбирает позиции из проверенной базы продуктов.",
-      holdLabel: "Анализируем…"
+      title: "Идёт поиск продуктов",
+      description: "Ищем продукты в проверенной базе и уточняем порции.",
+      holdLabel: "Идёт поиск…"
     };
   }
 
@@ -240,7 +240,7 @@ export default function NutritionVoiceModal({
           onClick={toggleCapture}
           disabled={isAnalyzing}
           aria-label={isAnalyzing
-            ? "Анализируем голосовую запись"
+            ? "Идёт поиск продуктов по голосовой записи"
             : hasSearchFailure
               ? "Повторить голосовой поиск"
             : isRecording
@@ -294,7 +294,7 @@ export default function NutritionVoiceModal({
             {isRecording
               ? "Запись идёт. Нажмите кнопку ещё раз, когда закончите. До 1 минуты."
               : isAnalyzing
-                ? "Анализируем запись…"
+                ? "Идёт поиск продуктов…"
                 : "Нажмите, чтобы начать запись"}
           </p>
         </section>

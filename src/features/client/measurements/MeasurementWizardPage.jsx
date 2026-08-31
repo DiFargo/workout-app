@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { APP_VERSION } from "../../../constants/appConfig";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import {
   getProfileMeasurementFields,
   getProfileMeasurementValue,
@@ -55,6 +56,7 @@ export default function MeasurementWizardPage({
   const activeFieldLimits = activeField ? PROFILE_MEASUREMENT_LIMITS[activeField.id] : null;
   const nextMeasurementField = measurementFields[profileMeasurementWizardStep] || null;
   const progressPercent = Math.max(4, Math.round(((profileMeasurementWizardStep + 1) / totalWizardScreens) * 100));
+  const measurementSaved = !profileMeasurementSaving && profileMeasurementStatus.startsWith("Замер сохранён");
 
   const closeMeasurementWizard = () => {
     setMeasurementMode("full");
@@ -341,6 +343,14 @@ export default function MeasurementWizardPage({
             : (!isReviewStep ? "Вперёд →" : (profileMeasurementStatus.startsWith("Замер сохранён") ? "Сохранено ✓" : "Сохранить"))}
         </button>
       </div>
+
+      {measurementSaved ? (
+        <SaveSuccessNotice
+          title="Замеры сохранены"
+          description="Новая запись добавлена в динамику тела."
+          onComplete={closeMeasurementWizard}
+        />
+      ) : null}
     </div>
   );
 }

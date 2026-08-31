@@ -132,58 +132,62 @@ export function getNutritionAttentionReason(summary = {}, now = new Date()) {
   return "";
 }
 
-export function getClientAttentionState(client = {}, summary = {}, now = new Date()) {
+export function getClientAttentionItems(client = {}, summary = {}, now = new Date()) {
   const hasProgram = Boolean(client.assignedProgramId || client.programId || summary.assignedProgramId);
   if (!hasProgram) {
-    return { type: "program", reason: "Не назначена программа тренировок" };
+    return [{ type: "program", reason: "Не назначена программа тренировок" }];
   }
 
+  const items = [];
   const scheduleState = getWorkoutScheduleAttentionState(client, summary, now);
   if (scheduleState.missedCount > 0) {
-    return {
+    items.push({
       type: "workout",
       reason: scheduleState.missedCount === 1
         ? "Не закрыта плановая тренировка"
         : `Не закрыто ${scheduleState.missedCount} плановых тренировок`
-    };
-  }
-
-  const workoutDays = getTrainerAttentionDaysSince(summary.lastWorkoutAt, now);
-  const assignedDays = getTrainerAttentionDaysSince(summary.assignedProgramUpdatedAt || client.assignedProgramUpdatedAt || client.assignedProgramAt, now);
-  if (!scheduleState.hasSchedule && workoutDays !== null && workoutDays >= 7) {
-    return { type: "workout", reason: `Нет тренировок ${workoutDays} ${pluralizeRu(workoutDays, "день", "дня", "дней")}` };
-  }
-  if (!scheduleState.hasSchedule && workoutDays === null && assignedDays !== null && assignedDays >= 7) {
-    return { type: "workout", reason: "Нет тренировок после назначения программы" };
+    });
+  } else {
+    const workoutDays = getTrainerAttentionDaysSince(summary.lastWorkoutAt, now);
+    const assignedDays = getTrainerAttentionDaysSince(summary.assignedProgramUpdatedAt || client.assignedProgramUpdatedAt || client.assignedProgramAt, now);
+    if (!scheduleState.hasSchedule && workoutDays !== null && workoutDays >= 7) {
+      items.push({ type: "workout", reason: `Нет тренировок ${workoutDays} ${pluralizeRu(workoutDays, "день", "дня", "дней")}` });
+    } else if (!scheduleState.hasSchedule && workoutDays === null && assignedDays !== null && assignedDays >= 7) {
+      items.push({ type: "workout", reason: "Нет тренировок после назначения программы" });
+    }
   }
 
   if (summary.workoutFeedbackAttention?.reason) {
-    return { type: "feedback", reason: summary.workoutFeedbackAttention.reason };
+    items.push({ type: "feedback", reason: summary.workoutFeedbackAttention.reason });
   }
 
   if (summary.programEndingAttention?.reason) {
-    return { type: "programEnding", reason: summary.programEndingAttention.reason };
+    items.push({ type: "programEnding", reason: summary.programEndingAttention.reason });
   }
 
   const nutritionReason = getNutritionAttentionReason(summary, now);
-  if (nutritionReason) return { type: "nutrition", reason: nutritionReason };
+  if (nutritionReason) items.push({ type: "nutrition", reason: nutritionReason });
 
   const measurementDays = getTrainerAttentionDaysSince(summary.lastMeasurementAt, now);
   if (measurementDays !== null && measurementDays >= 14) {
-    return {
+    items.push({
       type: "measure",
       reason: `Не взвешивался ${measurementDays} ${pluralizeRu(measurementDays, "день", "дня", "дней")}`
-    };
-  }
-  if (summary.plateau?.isPlateau) {
-    return { type: "measure", reason: `Вес стоит ${summary.plateau.days} ${pluralizeRu(summary.plateau.days, "день", "дня", "дней")}` };
+    });
+  } else if (summary.plateau?.isPlateau) {
+    items.push({ type: "measure", reason: `Вес стоит ${summary.plateau.days} ${pluralizeRu(summary.plateau.days, "день", "дня", "дней")}` });
   }
   if (["overdue", "soon"].includes(summary.paymentAttention?.id)) {
-    return { type: "payment", reason: summary.paymentAttention.label || "Проверь оплату клиента" };
+    items.push({ type: "payment", reason: summary.paymentAttention.label || "Проверь оплату клиента" });
   }
-  if (!summary.lastWorkoutAt && !summary.lastNutritionAt && assignedDays !== null && assignedDays >= 7) {
-    return { type: "activity", reason: "Нет недавней активности" };
+  const assignedDays = getTrainerAttentionDaysSince(summary.assignedProgramUpdatedAt || client.assignedProgramUpdatedAt || client.assignedProgramAt, now);
+  if (!items.length && !summary.lastWorkoutAt && !summary.lastNutritionAt && assignedDays !== null && assignedDays >= 7) {
+    items.push({ type: "activity", reason: "Нет недавней активности" });
   }
 
-  return null;
+  return items;
+}
+
+export function getClientAttentionState(client = {}, summary = {}, now = new Date()) {
+  return getClientAttentionItems(client, summary, now)[0] || null;
 }

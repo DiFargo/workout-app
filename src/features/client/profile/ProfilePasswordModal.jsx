@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfilePasswordModal.module.css";
 
@@ -24,7 +25,12 @@ export default function ProfilePasswordModal({
     nextPassword: false,
     confirmPassword: false
   });
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const canSetPasswordViaGoogle = !hasPasswordProvider && hasGoogleProvider;
+
+  useEffect(() => {
+    if (open) setSaveSuccess(false);
+  }, [open]);
 
   if (!open) return null;
 
@@ -72,7 +78,7 @@ export default function ProfilePasswordModal({
         nextPassword: "",
         confirmPassword: ""
       });
-      onClose();
+      setSaveSuccess(true);
     }
   }
 
@@ -82,7 +88,7 @@ export default function ProfilePasswordModal({
       data-testid="profile-password-overlay"
       data-css-module-scope="profile-password-modal"
       role="presentation"
-      onClick={onClose}
+      onClick={saveSuccess ? undefined : onClose}
     >
       <div
         className={styles.dialog}
@@ -105,6 +111,7 @@ export default function ProfilePasswordModal({
             <ProfileModalCloseButton
               testId="profile-password-close"
               ariaLabel="Закрыть пароль"
+              disabled={saveSuccess}
               onClick={onClose}
             />
           )}
@@ -154,10 +161,10 @@ export default function ProfilePasswordModal({
           </div>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.secondaryButton} data-testid="profile-password-reset" onClick={onSendPasswordReset}>
+            <button type="button" className={styles.secondaryButton} data-testid="profile-password-reset" onClick={onSendPasswordReset} disabled={saveSuccess}>
               Ссылка на почту
             </button>
-            <button type="submit" className={styles.primaryButton} data-testid="profile-password-submit" disabled={saving}>
+            <button type="submit" className={styles.primaryButton} data-testid="profile-password-submit" disabled={saving || saveSuccess}>
               {saving ? "Меняю..." : canSetPasswordViaGoogle ? "Задать пароль" : "Обновить"}
             </button>
           </div>
@@ -167,9 +174,16 @@ export default function ProfilePasswordModal({
           <div className={styles.status} data-testid="profile-password-status">{status}</div>
         )}
 
-        <button type="button" className={styles.secondaryButton} data-testid="profile-password-dismiss" onClick={onClose}>
+        <button type="button" className={styles.secondaryButton} data-testid="profile-password-dismiss" onClick={onClose} disabled={saveSuccess}>
           Закрыть
         </button>
+        {saveSuccess ? (
+          <SaveSuccessNotice
+            title="Пароль изменён"
+            description="Новый пароль уже действует для следующего входа."
+            onComplete={onClose}
+          />
+        ) : null}
       </div>
     </div>
   );

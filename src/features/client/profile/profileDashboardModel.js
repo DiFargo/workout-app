@@ -1,4 +1,6 @@
 import { isWorkoutPlanForMode } from "../../../utils/workoutPlanMode.js";
+import { getWorkoutScheduleCalendarForWorkouts } from "../../../utils/workoutSchedule.js";
+import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
 
 function normalizeDashboardDateKeys(values = []) {
   return [...new Set((Array.isArray(values) ? values : [])
@@ -150,7 +152,6 @@ export function buildProfileDashboardModel(ctx) {
     profileWorkoutCalendarMonth,
     profileWorkoutCalendarSaving,
     profileWorkoutHistoryProgramScope,
-    profileWorkoutScheduledDates,
     safeWriteUserJsonStorage,
     setDoc,
     setProfileWorkoutCalendarData,
@@ -264,13 +265,27 @@ export function buildProfileDashboardModel(ctx) {
       ? plan
       : { workouts: [] };
     const profileCalendarWorkouts = sortWorkoutDays(selectedModePlan.workouts || []);
+    const isTrainerManagedWorkoutSchedule = selectedWorkoutMode === "individual" && (
+      Boolean(selectedModePlan?.assignedProgramId || selectedModePlan?.assignedProgramUpdatedAt) ||
+      profileCalendarWorkouts.some((workout) => (
+        workout?.assignedProgramId ||
+        workout?.assignedProgramUpdatedAt ||
+        workout?.assignedProgramAddedAt ||
+        workout?.programAssignmentId
+      ))
+    );
+    const canEditProfileWorkoutSchedule = !isTrainerManagedWorkoutSchedule;
+    const scopedProfileCalendar = getWorkoutScheduleCalendarForWorkouts(
+      profileWorkoutCalendarData,
+      profileCalendarWorkouts
+    );
     const dashboardScheduledDates = getProfileDashboardScheduleDates(
-      profileWorkoutScheduledDates,
+      scopedProfileCalendar.scheduledDates,
       profileCalendarWorkouts,
       sortWorkoutDays
     );
     const profileCalendarSource = {
-      ...(profileWorkoutCalendarData || {}),
+      ...scopedProfileCalendar,
       scheduledDates: dashboardScheduledDates,
       monthlyTrainingDates: dashboardScheduledDates
     };
@@ -359,7 +374,7 @@ export function buildProfileDashboardModel(ctx) {
         isScheduled: (
           profileWorkoutCalendarEditing
             ? profileWorkoutCalendarDraftDates
-            : profileWorkoutScheduledDates
+            : dashboardScheduledDates
         ).includes(key),
         scheduleEntries: profileWorkoutVisibleEntriesByDate[key] || [],
         workouts: workoutCalendarHistoryByDate[key] || []
@@ -381,7 +396,7 @@ export function buildProfileDashboardModel(ctx) {
     };
     const saveProfileWorkoutCalendar = async () => {
       const uid = auth.currentUser?.uid;
-      if (!uid || profileWorkoutCalendarSaving) return;
+      if (!uid || profileWorkoutCalendarSaving || !canEditProfileWorkoutSchedule) return;
 
       setProfileWorkoutCalendarSaving(true);
       setProfileWorkoutCalendarStatus("");
@@ -470,7 +485,9 @@ export function buildProfileDashboardModel(ctx) {
         : currentGoalId === "maintain"
           ? "Держим форму стабильно"
           : "Рекомпозиция идёт по плану";
-    const greetingName = profileAccount.displayName || telegramProfile.displayName || auth.currentUser?.email?.split("@")?.[0] || "спортсмен";
+    const greetingName = limitUserDisplayName(
+      profileAccount.displayName || telegramProfile.displayName || auth.currentUser?.email?.split("@")?.[0] || "спортсмен"
+    );
     const profileAvatarUrl = profileAccount.avatarUrl || telegramProfile.avatarUrl || auth.currentUser?.photoURL || "";
     const profileStreak = Math.min(30, Math.max(0, totalWorkouts));
     const mainProfileWeight = Number(activeProfile?.weight);
@@ -573,6 +590,8 @@ export function buildProfileDashboardModel(ctx) {
     workoutCalendarHistoryByDate,
     profileCalendarWorkouts,
     profileCalendarSource,
+    profileCalendarScheduledDates: dashboardScheduledDates,
+    canEditProfileWorkoutSchedule,
     profileWorkoutSlots,
     nextWorkoutDate,
     nextWorkoutTitle,

@@ -1,4 +1,5 @@
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
+import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
 
 export default function TrainerProgramExerciseCard({
   adminExerciseVideoUploadingId,
@@ -140,8 +141,8 @@ export default function TrainerProgramExerciseCard({
                 />
                 {exerciseRequiresWeight && (
                   <input
-                    value={set.weight || ""}
-                    onChange={(event) => updateMonthExerciseSet(blockId, weekId, workoutId, exercise.id, setIndex, { weight: event.target.value })}
+                    value={sanitizeExerciseWeightInput(set.weight) || ""}
+                    onChange={(event) => updateMonthExerciseSet(blockId, weekId, workoutId, exercise.id, setIndex, { weight: sanitizeExerciseWeightInput(event.target.value) })}
                     placeholder="60"
                     inputMode="decimal"
                     aria-label={`Вес, подход ${setIndex + 1}`}

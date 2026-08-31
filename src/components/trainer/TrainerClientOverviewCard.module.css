@@ -1,0 +1,348 @@
+.controlNotices {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+}
+
+.controlNotice {
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border: 1px solid #ded1f2;
+  border-radius: 14px;
+  background: linear-gradient(100deg, #faf7ff 0%, #f7f2fd 100%);
+}
+
+.controlNoticeIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #7158b0;
+  background: #eee6fb;
+}
+
+.controlNotice strong {
+  min-width: 0;
+  color: #28262e;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.controlNotice button {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 12px;
+  border: 1px solid #d7c6f1;
+  border-radius: 10px;
+  color: #6548ab;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.controlNotice button:hover {
+  border-color: #bfa9e4;
+  background: #faf7ff;
+}
+
+.keyMetrics {
+  grid-column: 1 / -1;
+}
+
+.keyMetric {
+  min-height: 92px !important;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px !important;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.keyMetric:hover {
+  border-color: #d7c8ed !important;
+  background: #fcfaff !important;
+  box-shadow: 0 9px 22px rgba(79, 56, 115, 0.08) !important;
+  transform: translateY(-1px);
+}
+
+.keyMetricButton {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.keyMetricButton:focus-visible {
+  outline: 2px solid #806bb6;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.keyMetricButton:hover .keyMetricArrow {
+  transform: translateX(2px);
+}
+
+.keyMetricIcon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid !important;
+  place-items: center;
+  padding: 0 !important;
+  border-radius: 14px;
+  color: #7158b0;
+  background: #f2edfb;
+}
+
+.keyMetric:nth-child(2) .keyMetricIcon {
+  color: #5e56bd;
+  background: #eeeffe;
+}
+
+.keyMetric:nth-child(3) .keyMetricIcon {
+  color: #a46e31;
+  background: #fbf4e9;
+}
+
+.keyMetricCopy {
+  min-width: 0;
+}
+
+.keyMetric small {
+  display: block;
+  margin: 0 !important;
+  color: #6d6675;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.keyMetric strong {
+  display: block;
+  margin: 2px 0 0 !important;
+  color: #28262e;
+  font-size: 22px !important;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.keyMetricCopy > span {
+  display: block;
+  margin: 5px 0 0 !important;
+  overflow: hidden;
+  color: #77717f;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.keyMetricArrow {
+  color: #8f7ac8;
+  transition: transform 160ms ease;
+}
+
+@media (min-width: 900px) {
+  .controlNotice {
+    min-height: 64px;
+    padding: 11px 16px;
+    border-radius: 16px;
+  }
+
+  .controlNoticeIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+  }
+
+  .keyMetric {
+    height: 118px;
+    min-height: 118px !important;
+    align-items: flex-start;
+    padding: 16px !important;
+    border-radius: 18px;
+  }
+
+  .keyMetricIcon {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  .keyMetricButton {
+    grid-template-columns: 46px minmax(0, 1fr) auto;
+  }
+
+  .keyMetric small {
+    margin-top: 2px !important;
+  }
+}
+
+.sectionLauncher {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  box-sizing: border-box;
+  padding: 13px 16px;
+  border: 1px solid #ded3ed;
+  border-radius: 16px;
+  color: #28262e;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(56, 39, 82, 0.04);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.sectionLauncher:hover {
+  border-color: #c7b3e8;
+  background: #fcfaff;
+  box-shadow: 0 10px 22px rgba(83, 59, 124, 0.09);
+  transform: translateY(-1px);
+}
+
+.sectionLauncher:focus-visible {
+  outline: 2px solid #806bb6;
+  outline-offset: 2px;
+}
+
+.sectionLauncherIcon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: #7158b0;
+  background: #f2edfb;
+}
+
+.sectionLauncherCopy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.sectionLauncherCopy strong {
+  color: #28262e;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.sectionLauncherCopy small {
+  overflow: hidden;
+  color: #77717f;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sectionLauncherArrow {
+  color: #806bb6;
+}
+
+@media (max-width: 699px) {
+  .controlNotice {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .controlNotice button {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .controlNoticeIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .keyMetric {
+    min-height: 80px !important;
+  }
+
+  .sectionLauncher {
+    min-height: 68px;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    gap: 11px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .sectionLauncherIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+}
+
+/* On phones the summary stays readable as a short vertical list.  Keeping
+   one generous content column prevents two compact cards from splitting
+   every word into individual letters. */
+@media (max-width: 699px) {
+  .keyMetrics {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .keyMetric {
+    min-height: 72px !important;
+    padding: 10px 12px !important;
+    border-radius: 16px;
+  }
+
+  .keyMetricButton {
+    grid-template-columns: 38px minmax(0, 1fr) 16px;
+    gap: 10px;
+  }
+
+  .keyMetricIcon {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    border-radius: 12px;
+  }
+
+  .keyMetric small {
+    margin: 0 !important;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .keyMetric strong {
+    font-size: 20px !important;
+    line-height: 1.05;
+  }
+
+  .keyMetricCopy > span {
+    margin-top: 3px !important;
+    font-size: 10px;
+  }
+}

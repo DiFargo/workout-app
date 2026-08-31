@@ -248,6 +248,8 @@ test("weight reminder opens a focused weight-only modal and saves it", async ({ 
 
   await page.getByTestId("profile-quick-weight-input").fill("88,5");
   await page.getByTestId("profile-quick-weight-submit").click();
+  await expect(page.getByTestId("save-success-notice")).toBeVisible();
+  await expect(page.getByTestId("save-success-notice")).toContainText("Вес сохранён");
   await expect(dialog).toBeHidden();
   await expectNoHorizontalOverflow(page);
 });

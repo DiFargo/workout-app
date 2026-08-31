@@ -319,6 +319,31 @@ export function isReliablePhotoFood(product = {}, response = {}) {
     && hasNutrition;
 }
 
+export function hasVerifiedPhotoBarcode(product = {}) {
+  const barcode = String(product?.barcode || "").replace(/\D/g, "");
+  return /^\d{8,14}$/.test(barcode) && !/^(\d)\1+$/.test(barcode);
+}
+
+export function isVerifiedPhotoLabelFood(product = {}, response = {}) {
+  const evidenceType = String(product?.evidenceType || response?.evidenceType || "")
+    .trim()
+    .toLowerCase();
+  const matchConfidence = String(product?.matchConfidence || response?.matchConfidence || "")
+    .trim()
+    .toLowerCase();
+  const confidence = String(product?.confidence || response?.confidence || "")
+    .trim()
+    .toLowerCase();
+  const labelText = String(product?.labelText || response?.labelText || "").trim();
+
+  return isReliablePhotoFood(product, response)
+    && evidenceType === "label"
+    && matchConfidence === "exact"
+    && confidence === "high"
+    && labelText.length >= 8
+    && /\d/.test(labelText);
+}
+
 function normalizePhotoFoodIdentity(value = "") {
   return String(value || "")
     .toLowerCase()
@@ -330,27 +355,29 @@ function normalizePhotoFoodIdentity(value = "") {
 export function findExistingPhotoFood(foods = [], product = {}) {
   const productName = normalizePhotoFoodIdentity(product.name);
   const productBrand = normalizePhotoFoodIdentity(product.brand);
-  const productFullName = normalizePhotoFoodIdentity([product.brand, product.name].filter(Boolean).join(" "));
   const productBarcode = String(product.barcode || "").replace(/\D/g, "");
-  const identities = new Set([productName, productFullName].filter(Boolean));
+  const matchConfidence = String(product.matchConfidence || "").trim().toLowerCase();
+  const hasExplicitExactMatch = !matchConfidence || matchConfidence === "exact";
 
   return (Array.isArray(foods) ? foods : []).find((food) => {
     const foodBarcode = String(food?.barcode || "").replace(/\D/g, "");
     if (productBarcode && foodBarcode && productBarcode === foodBarcode) return true;
 
-    const foodName = normalizePhotoFoodIdentity(food?.name);
-    const foodFullName = normalizePhotoFoodIdentity([food?.brand, food?.name].filter(Boolean).join(" "));
-    const foodIdentities = [foodName, foodFullName].filter(Boolean);
-    if (foodIdentities.some((identity) => identities.has(identity))) return true;
+    if (!hasExplicitExactMatch) return false;
+
+    // A generic photo label such as "йогурт" must never silently select a
+    // similarly named catalog item. For a text match, require the visible
+    // brand and a literal product-name/alias match.
+    if (!productBrand || !productName) return false;
 
     const foodBrand = normalizePhotoFoodIdentity(food?.brand);
-    return Boolean(
-      productBrand &&
-      foodBrand &&
-      productBrand === foodBrand &&
-      productName &&
-      foodName &&
-      (productName.includes(foodName) || foodName.includes(productName))
-    );
+    if (!foodBrand || foodBrand !== productBrand) return false;
+
+    const foodName = normalizePhotoFoodIdentity(food?.name);
+    const foodAliases = Array.isArray(food?.aliases) ? food.aliases : [];
+    const foodIdentities = [foodName, ...foodAliases.map(normalizePhotoFoodIdentity)]
+      .filter(Boolean);
+
+    return foodIdentities.includes(productName);
   }) || null;
 }

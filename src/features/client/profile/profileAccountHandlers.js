@@ -11,6 +11,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import { getDefaultLoginAlias } from "../../../utils/clientUx";
 import { uploadStorageFile } from "../../../utils/firebaseStorage";
+import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
 
 const googleReauthProvider = new GoogleAuthProvider();
 const PROFILE_UPDATE_EMAIL_ENDPOINT = "/api/profile/update-email";
@@ -59,7 +60,7 @@ export function createProfileAccountHandlers({
     const currentUser = auth.currentUser;
     const currentEmail = profileAccount.email || currentUser?.email || "";
     setProfileAccountDraft({
-      displayName: profileAccount.displayName || currentUser?.displayName || "",
+      displayName: limitUserDisplayName(profileAccount.displayName || currentUser?.displayName || ""),
       email: currentEmail,
       login: profileAccount.login || getDefaultLoginAlias(currentEmail)
     });
@@ -191,7 +192,7 @@ export function createProfileAccountHandlers({
       successMessage = "Данные аккаунта сохранены."
     } = options;
 
-    const displayName = String(nextDraft.displayName || "").trim().slice(0, 30);
+    const displayName = limitUserDisplayName(nextDraft.displayName);
     const currentEmail = String(currentUser.email || profileAccount.email || "").trim().toLowerCase();
     if (!displayName) {
       setProfileAccountStatus("Укажи имя.");
@@ -339,7 +340,9 @@ export function createProfileAccountHandlers({
       // successful email update into a visible sign-out in the active app.
       const email = String(data.email || nextEmail).trim().toLowerCase();
       const updatedAt = new Date().toISOString();
-      const displayName = data.accountProfile?.displayName || profileAccountDraft.displayName || profileAccount.displayName || verifiedUser.displayName || "";
+      const displayName = limitUserDisplayName(
+        data.accountProfile?.displayName || profileAccountDraft.displayName || profileAccount.displayName || verifiedUser.displayName || ""
+      );
       const avatarUrl = data.accountProfile?.avatarUrl || profileAccount.avatarUrl || verifiedUser.photoURL || "";
       const accountProfile = data.accountProfile || {
         displayName,
@@ -398,7 +401,9 @@ export function createProfileAccountHandlers({
       await currentUser.reload();
       const refreshedUser = auth.currentUser;
       const email = String(refreshedUser?.email || currentUser.email || profileAccount.email || "").trim().toLowerCase();
-      const displayName = profileAccountDraft.displayName || profileAccount.displayName || refreshedUser?.displayName || "";
+      const displayName = limitUserDisplayName(
+        profileAccountDraft.displayName || profileAccount.displayName || refreshedUser?.displayName || ""
+      );
       const avatarUrl = profileAccount.avatarUrl || refreshedUser?.photoURL || "";
       const updatedAt = new Date().toISOString();
       const loginAlias = getDefaultLoginAlias(email);
@@ -574,7 +579,7 @@ export function createProfileAccountHandlers({
 
       setProfileAccount(accountProfile);
       setProfileAccountDraft({
-        displayName: accountProfile.displayName || profileAccountDraft.displayName || "",
+        displayName: limitUserDisplayName(accountProfile.displayName || profileAccountDraft.displayName || ""),
         email: accountProfile.email || profileAccountDraft.email || "",
         login
       });

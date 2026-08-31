@@ -43,7 +43,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.workspaceRoot :global(.trainerNextRoot) {
+:global(.trainerNextRoot):local(.workspaceRoot) {
+  /* One desktop column for every workspace destination and the bottom dock. */
+  --trainer-next-page-max-width: 1252px;
+  --trainer-next-page-gutter: 34px;
+  --trainer-next-page-width: min(calc(100% - 68px), var(--trainer-next-page-max-width));
   min-height: 100dvh;
   background: var(--tn-page);
 }
@@ -59,6 +63,82 @@
   background: rgba(255, 255, 255, 0.96);
   border-right: 1px solid var(--tn-line);
   backdrop-filter: blur(18px);
+}
+
+/* Desktop navigation is a compact dock, so the workspace keeps its full width. */
+.workspaceRoot :global(.trainerNextDesktopDock) {
+  position: fixed;
+  z-index: 65;
+  right: auto;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: var(--trainer-next-page-width);
+  max-width: none;
+  padding: 8px 24px;
+  border: 1px solid rgba(224, 216, 238, 0.96);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 34px rgba(40, 38, 46, 0.13);
+  backdrop-filter: blur(20px);
+  transform: translateX(-50%);
+}
+
+.workspaceRoot :global(.trainerNextDesktopDockVersion) {
+  position: absolute;
+  bottom: 12px;
+  left: 20px;
+  color: var(--tn-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.workspaceRoot :global(.trainerNextDesktopDock button) {
+  display: grid;
+  width: min(156px, calc((100% - 72px) / 4));
+  min-width: 112px;
+  min-height: 64px;
+  flex: 0 1 156px;
+  place-items: center;
+  align-content: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 18px;
+  color: var(--tn-muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.workspaceRoot :global(.trainerNextDesktopDock button > span:last-child) {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspaceRoot :global(.trainerNextDesktopDock button:hover) {
+  color: var(--tn-purple-strong);
+  background: var(--tn-purple-soft);
+  transform: translateY(-1px);
+}
+
+.workspaceRoot :global(.trainerNextDesktopDock button[aria-current="page"]),
+.workspaceRoot :global(.trainerNextDesktopDock button.active) {
+  color: #fff;
+  background: var(--tn-purple-strong);
+  box-shadow: 0 7px 16px rgba(128, 107, 182, 0.26);
 }
 
 .workspaceRoot :global(.trainerNextBrand) {
@@ -177,16 +257,17 @@
 }
 
 .workspaceRoot :global(.trainerNextMain) {
+  --trainer-next-desktop-dock-clearance: calc(140px + env(safe-area-inset-bottom));
   min-height: 100dvh;
-  margin-left: 236px;
+  margin-left: 0;
 }
 
 .workspaceRoot :global(.trainerNextPage),
 .workspaceRoot :global(.trainerNextEmbeddedPlan) {
-  width: min(100%, 1320px);
+  width: var(--trainer-next-page-width);
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 32px 34px 48px;
+  padding: 32px 0 var(--trainer-next-desktop-dock-clearance);
 }
 
 .workspaceRoot :global(.trainerNextEmbeddedPlan) {
@@ -994,6 +1075,24 @@
   padding: 20px;
 }
 
+@media (min-width: 700px) {
+  .workspaceRoot :global(.trainerNextClientsStandalone) {
+    border: 1px solid var(--tn-line);
+    border-radius: 22px;
+    background: var(--tn-surface);
+    box-shadow: var(--tn-shadow);
+  }
+}
+
+@media (min-width: 700px) {
+  .workspaceRoot :global(.trainerNextClientsStandalone) {
+    border: 1px solid var(--tn-line);
+    border-radius: 22px;
+    background: var(--tn-surface);
+    box-shadow: var(--tn-shadow);
+  }
+}
+
 .workspaceRoot :global(.trainerNextClientSearchRow) {
   display: flex;
   align-items: stretch;
@@ -1005,14 +1104,30 @@
 }
 
 .workspaceRoot :global(.trainerNextCabinetPage) {
+  display: block;
+  align-content: start;
+}
+
+.workspaceRoot :global(.trainerNextCabinetContent) {
   display: grid;
-  max-width: 980px;
+  width: 100%;
   align-content: start;
   gap: 18px;
+  margin: 0 auto;
 }
 
 .workspaceRoot :global(.trainerNextCabinetPage .trainerNextDesktopPageHead) {
   margin-bottom: 2px;
+}
+
+@media (min-width: 700px) {
+  .workspaceRoot :global(.trainerNextCabinetContent) {
+    padding: 24px;
+    border: 1px solid var(--tn-line);
+    border-radius: 24px;
+    background: var(--tn-surface);
+    box-shadow: var(--tn-shadow);
+  }
 }
 
 .workspaceRoot :global(.trainerCabinetHero) {
@@ -1457,7 +1572,13 @@
 }
 
 .workspaceRoot :global(.trainerNextClientTable) {
+  display: grid;
+  gap: 10px;
   overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .workspaceRoot :global(.trainerNextClientTableHead),
@@ -1471,7 +1592,7 @@
 .workspaceRoot :global(.trainerNextClientTableHead) {
   min-height: 50px;
   padding: 0 22px;
-  border-bottom: 1px solid var(--tn-line);
+  padding-bottom: 2px;
   color: var(--tn-muted);
   font-size: 12px;
   font-weight: 750;
@@ -1483,21 +1604,31 @@
   width: 100%;
   min-height: 82px;
   padding: 13px 22px;
-  border: 0;
-  border-bottom: 1px solid var(--tn-line);
+  border: 1px solid var(--tn-line);
+  border-radius: 16px;
   color: var(--tn-text);
   background: var(--tn-surface);
+  box-shadow: 0 6px 16px rgba(56, 44, 78, 0.045);
   cursor: pointer;
   font-size: 14px;
   text-align: left;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
 
 .workspaceRoot :global(.trainerNextClientTable > button:last-child) {
-  border-bottom: 0;
+  border-bottom: 1px solid var(--tn-line);
 }
 
 .workspaceRoot :global(.trainerNextClientTable > button:hover) {
   background: #ffffff;
+  border-color: #d5c8ef;
+  box-shadow: 0 10px 20px rgba(56, 44, 78, 0.08);
+  transform: translateY(-1px);
+}
+
+.workspaceRoot :global(.trainerNextClientTable > button:focus-visible) {
+  outline: 3px solid rgba(143, 122, 200, .35);
+  outline-offset: 2px;
 }
 
 .workspaceRoot :global(.trainerNextClientIdentity) {
@@ -2437,6 +2568,10 @@
     display: none;
   }
 
+  .workspaceRoot :global(.trainerNextDesktopDock) {
+    display: none;
+  }
+
   .workspaceRoot :global(.trainerNextMain) {
     min-height: 100dvh;
     margin-left: 0;
@@ -2583,7 +2718,7 @@
     gap: 9px;
   }
 
-  .workspaceRoot :global(.trainerNextCabinetPage) {
+  .workspaceRoot :global(.trainerNextCabinetContent) {
     gap: 14px;
   }
 

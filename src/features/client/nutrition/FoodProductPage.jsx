@@ -76,7 +76,6 @@ export default function FoodProductPage({
         topActions={!editPageOpen ? (
           <FoodProductTopActions
             onClose={onBack}
-            onEdit={onOpenEditPage}
           />
         ) : null}
       />
@@ -104,6 +103,7 @@ export default function FoodProductPage({
         roundMacro={roundMacro}
         onAmountChange={onAmountChange}
         onOpenEditPage={onOpenEditPage}
+        onAdd={onAdd}
       />
 
       <FoodEditPage

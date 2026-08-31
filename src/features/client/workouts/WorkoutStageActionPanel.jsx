@@ -48,7 +48,7 @@ export default function WorkoutStageActionPanel({
           data-css-module-control="workout-stage-action-panel"
           onClick={onPrevious}
         >
-          Назад
+          Предыдущее
         </button>
 
         <button
@@ -57,7 +57,7 @@ export default function WorkoutStageActionPanel({
           data-css-module-control="workout-stage-action-panel"
           onClick={onNext}
         >
-          {isLastExercise ? "К итогам" : "Далее"}
+          {isLastExercise ? "Завершить" : "Следующее"}
         </button>
       </div>
     </div>

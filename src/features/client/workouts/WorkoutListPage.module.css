@@ -2838,6 +2838,9 @@
   line-height: 24px;
   text-align: left;
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (display-mode: standalone) {

@@ -10,7 +10,8 @@ export default function FoodProductNutrition({
   getFoodScale,
   roundMacro,
   onAmountChange,
-  onOpenEditPage
+  onOpenEditPage,
+  onAdd
 }) {
   const amountValidation = validateAmount(amount);
   const scale = amountValidation.valid
@@ -32,6 +33,14 @@ export default function FoodProductNutrition({
     }
 
     onAmountChange("");
+  };
+  const confirmAmountFromKeyboard = (event) => {
+    if (event.key !== "Enter" || event.nativeEvent.isComposing) {
+      return;
+    }
+
+    event.preventDefault();
+    onAdd();
   };
 
   return (
@@ -68,6 +77,8 @@ export default function FoodProductNutrition({
               onFocus={clearDefaultAmountOnFocus}
               placeholder={isPortionMode ? "1" : "0"}
               inputMode="decimal"
+              enterKeyHint="done"
+              onKeyDown={confirmAmountFromKeyboard}
               aria-label="Количество продукта"
               aria-invalid={Boolean(amountError)}
               aria-describedby={amountError ? "nutrition-amount-error" : undefined}
@@ -126,7 +137,7 @@ export default function FoodProductNutrition({
           onClick={onOpenEditPage}
         >
           <span className={styles.noteIcon} aria-hidden="true" data-food-product-note-part="icon">▤</span>
-          <span className={styles.noteLabel} data-css-module-text data-food-product-note-part="label">Описание продукта</span>
+          <span className={styles.noteLabel} data-css-module-text data-food-product-note-part="label">Редактировать продукт</span>
           <strong className={styles.noteValue} data-css-module-text>{editNote.trim() || "Не добавлено"}</strong>
           <em className={styles.chevron} aria-hidden="true">›</em>
         </button>

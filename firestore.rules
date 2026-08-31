@@ -445,23 +445,23 @@ service cloud.firestore {
           "updatedAt",
           "completedAt"
         ]) &&
-        request.resource.data.trainerSetupChecklist.version == 1 &&
+        request.resource.data.trainerSetupChecklist.version == 2 &&
         request.resource.data.trainerSetupChecklist.status in ["in_progress", "completed"] &&
         request.resource.data.trainerSetupChecklist.completedSteps is map &&
         request.resource.data.trainerSetupChecklist.completedSteps.keys().hasAll([
-          "subscription",
           "program",
+          "schedule",
           "nutrition",
           "notifications"
         ]) &&
         request.resource.data.trainerSetupChecklist.completedSteps.keys().hasOnly([
-          "subscription",
           "program",
+          "schedule",
           "nutrition",
           "notifications"
         ]) &&
-        request.resource.data.trainerSetupChecklist.completedSteps.subscription is bool &&
         request.resource.data.trainerSetupChecklist.completedSteps.program is bool &&
+        request.resource.data.trainerSetupChecklist.completedSteps.schedule is bool &&
         request.resource.data.trainerSetupChecklist.completedSteps.nutrition is bool &&
         request.resource.data.trainerSetupChecklist.completedSteps.notifications is bool;
     }

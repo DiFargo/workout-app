@@ -12,6 +12,7 @@ export function ProfileWorkoutCalendarContent({
   selectedItems = [],
   scheduledDates = [],
   draftDates = [],
+  canEditSchedule = true,
   editing,
   saving,
   status,
@@ -54,10 +55,12 @@ export function ProfileWorkoutCalendarContent({
           <small className={styles.plannerDescription}>
             {editing
               ? "Нажимай на даты текущего месяца"
+              : !canEditSchedule
+                ? "Расписание ведёт тренер. Статусы обновляются автоматически"
               : `${scheduledThisMonth} дней запланировано`}
           </small>
         </div>
-        {!editing && (
+        {!editing && canEditSchedule && (
           <button className={styles.plannerButton} data-testid="profile-workout-calendar-edit" type="button" onClick={onStartEdit}>
             Изменить
           </button>
@@ -123,7 +126,7 @@ export function ProfileWorkoutCalendarContent({
         <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.shifted}`} />Смещена</span>
       </div>
 
-      {editing && (
+      {editing && canEditSchedule && (
         <div className={styles.editActions} data-testid="profile-workout-calendar-edit-actions">
           <button className={`${styles.actionButton} ${styles.secondaryAction}`} type="button" disabled={saving} onClick={onCancelEdit}>
             Отмена

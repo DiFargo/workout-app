@@ -24,6 +24,7 @@ import {
   getTrainerExerciseAlternatives,
   MAX_TRAINER_EXERCISE_ALTERNATIVES
 } from "../../utils/trainerExerciseAlternatives";
+import { sanitizeExerciseSetPatch, sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
 import { getTrainerExercisePresentationIdentity } from "../../features/trainer/trainerWorkoutEditHelpers";
 
 const DAY_COLORS = Object.freeze(["violet", "blue", "green", "orange", "rose"]);
@@ -52,7 +53,9 @@ function getCompactWorkoutName(workout = {}, index = 0) {
 }
 
 function getSetValue(sets = [], field, fallback = "—") {
-  const values = sets.map((set) => String(set?.[field] ?? "").trim()).filter(Boolean);
+  const values = sets
+    .map((set) => String(field === "weight" ? sanitizeExerciseWeightInput(set?.[field]) ?? "" : set?.[field] ?? "").trim())
+    .filter(Boolean);
   if (!values.length) return fallback;
   const unique = [...new Set(values)];
   return unique.length === 1 ? unique[0] : `${unique[0]}–${unique.at(-1)}`;
@@ -448,7 +451,7 @@ export default function TrainerProgramConstructor({
       activeContext.workout.id,
       exercise.id,
       setIndex,
-      { [field]: value }
+      sanitizeExerciseSetPatch({ [field]: value })
     ));
   }
 
@@ -467,7 +470,7 @@ export default function TrainerProgramConstructor({
       activeContext.workout.id,
       exercise.id,
       targetIndex,
-      patch
+      sanitizeExerciseSetPatch(patch)
     ));
   }
 
@@ -815,7 +818,7 @@ export default function TrainerProgramConstructor({
                             <div className={styles.exerciseMetrics}>
                               <label className={styles.metricField}><span className={styles.metricLabel}>Подходы</span><input className={styles.metricInput} type="number" min="1" max="12" value={Math.max(1, exercise.sets?.length || 0)} onChange={(event) => changeSetCount(exercise, event.target.value)} aria-label={`Подходы: ${exercise.name || "упражнение"}`} /></label>
                               <label className={styles.metricField}><span className={styles.metricLabel}>Повторы</span><input className={styles.metricInput} value={getSetValue(sets, "reps", "")} onChange={(event) => updateAllSets(exercise, "reps", event.target.value)} aria-label={`Повторения: ${exercise.name || "упражнение"}`} /></label>
-                              <label className={styles.metricField}><span className={styles.metricLabel}>Вес</span><span className={styles.metricWithSuffix}><input className={styles.metricInput} disabled={!usesWeight} value={usesWeight ? getSetValue(sets, "weight", "") : "—"} onChange={(event) => updateAllSets(exercise, "weight", event.target.value)} aria-label={`Вес: ${exercise.name || "упражнение"}`} />{usesWeight ? <small>кг</small> : null}</span></label>
+                              <label className={styles.metricField}><span className={styles.metricLabel}>Вес</span><span className={styles.metricWithSuffix}><input className={styles.metricInput} inputMode="decimal" disabled={!usesWeight} value={usesWeight ? getSetValue(sets, "weight", "") : "—"} onChange={(event) => updateAllSets(exercise, "weight", sanitizeExerciseWeightInput(event.target.value))} aria-label={`Вес: ${exercise.name || "упражнение"}`} />{usesWeight ? <small>кг</small> : null}</span></label>
                               <label className={styles.metricField}><span className={styles.metricLabel}>Отдых</span><input className={styles.metricInput} value={exercise.rest || "90 сек"} onChange={(event) => updateExercise(exercise.id, { rest: event.target.value })} aria-label={`Отдых: ${exercise.name || "упражнение"}`} /></label>
                             </div>
                             <div className={styles.exerciseActions}>
@@ -921,7 +924,7 @@ export default function TrainerProgramConstructor({
                                   <div className={styles.setRow} key={`${exercise.id}-set-${setIndex}`}>
                                     <b>{setIndex + 1}</b>
                                     {getEnabledSetFields(exercise).includes("reps") ? <input value={set.reps ?? ""} onChange={(event) => updateSetField(exercise, setIndex, { reps: event.target.value })} aria-label={`Повторения, подход ${setIndex + 1}`} /> : <span />}
-                                    {getEnabledSetFields(exercise).includes("weight") ? <input disabled={!usesWeight} value={usesWeight ? set.weight ?? "" : "—"} onChange={(event) => updateSetField(exercise, setIndex, { weight: event.target.value })} aria-label={`Вес, подход ${setIndex + 1}`} /> : <span />}
+                                    {getEnabledSetFields(exercise).includes("weight") ? <input inputMode="decimal" disabled={!usesWeight} value={usesWeight ? sanitizeExerciseWeightInput(set.weight) ?? "" : "—"} onChange={(event) => updateSetField(exercise, setIndex, { weight: sanitizeExerciseWeightInput(event.target.value) })} aria-label={`Вес, подход ${setIndex + 1}`} /> : <span />}
                                     <button type="button" disabled={sets.length <= 1} onClick={() => onRemoveExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><Trash2 size={14} /></button>
                                     {EXTRA_SET_FIELDS.some(([field]) => getEnabledSetFields(exercise).includes(field)) ? (
                                       <div className={styles.setAdvanced}>

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useBodyScrollLock } from "../../shared/hooks/useBodyScrollLock";
 import workspaceStyles from "./TrainerWorkspaceCalm.module.css";
 import syncStyles from "./TrainerWorkspace.module.css";
 import clientProfileSectionStyles from "./TrainerWorkspaceClientProfileSections.module.css";
@@ -26,6 +27,8 @@ import trainerExerciseLoadReviewStyles from "./TrainerExerciseLoadReviewModal.mo
 import TrainerProgramAssignmentAdjustmentModal from "./TrainerProgramAssignmentAdjustmentModal";
 import TrainerWorkoutReviewDecisionModal from "./TrainerWorkoutReviewDecisionModal";
 import TrainerClientProgressDashboard from "./TrainerClientProgressDashboard";
+import clientOverviewStyles from "./TrainerClientOverviewCard.module.css";
+import SaveSuccessNotice from "../../shared/ui/SaveSuccessNotice";
 import trainerClientWorkoutPlanStyles from "./TrainerClientWorkoutPlan.module.css";
 import trainerClientExercisesTabsStyles from "./TrainerClientExercisesTabs.module.css";
 import trainerClientMessagesStyles from "./TrainerClientMessages.module.css";
@@ -38,6 +41,7 @@ import {
   getExerciseActualProgress
 } from "../../utils/exerciseProgress.js";
 import { buildClientWorkoutsFromTemplate } from "../../utils/workoutPlanNormalization.js";
+import { sanitizeExerciseSetPatch, sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput.js";
 import {
   findTrainerExerciseProgressTarget,
   getTrainerExerciseProgressReviewedKeys,
@@ -63,8 +67,10 @@ import {
 import {
   buildPlannedWorkoutSlots,
   buildWorkoutScheduleCalendarEntries,
+  getWorkoutScheduleCalendarForWorkouts,
   toWorkoutDateKey
 } from "../../utils/workoutSchedule.js";
+import { buildTrainerAiNutritionPlanDraft } from "../../utils/trainerNutritionPlan.js";
 import {
   buildTrainerClientProgramTimeline,
   isTrainerClientBasicWorkout
@@ -77,13 +83,13 @@ import {
   getClientAttentionState,
   getTrainerAttentionDaysSince as getLocalDaysSince
 } from "../../utils/trainerAttention.js";
+import { buildTrainerClientProgressDashboard } from "../../utils/trainerClientProgressDashboard.js";
 import {
   buildTrainerClientListItems,
   buildTrainerWorkoutReview,
   getTrainerActionItemTargetTab
 } from "../../utils/trainerActionCenter.js";
 import {
-  Activity,
   ArrowLeft,
   Archive,
   BarChart3,
@@ -91,7 +97,9 @@ import {
   CalendarDays,
   Camera,
   Check,
+  CircleAlert,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   ChevronUp,
   ClipboardList,
@@ -126,7 +134,7 @@ import {
 const TrainerDailyJournal = lazy(() => import("./TrainerDailyJournal"));
 
 const NAV_ITEMS = [
-  { id: "dashboard", label: "Обзор", mobileLabel: "Дашборд", icon: Home },
+  { id: "dashboard", label: "Главная", mobileLabel: "Главная", icon: Home },
   { id: "clients", label: "Клиенты", icon: Users },
   { id: "nutrition", label: "Питание", icon: Utensils },
   { id: "workouts", label: "Программы", icon: Dumbbell },
@@ -137,7 +145,7 @@ export function TrainerProgramConstructorStyleScope({ children }) {
   return <>{children(trainerProgramConstructorStyles)}</>;
 }
 const DESKTOP_NAV_ITEMS = [
-  { id: "dashboard", label: "Обзор", icon: Home },
+  { id: "dashboard", label: "Главная", icon: Home },
   { id: "clients", label: "Клиенты", icon: Users },
   { id: "workouts", label: "Программы", icon: Dumbbell },
   { id: "more", label: "Кабинет", icon: User }
@@ -199,7 +207,7 @@ function normalizeNutritionPresetId(value = "custom") {
 }
 
 const CLIENT_TABS = [
-  { id: "overview", label: "Обзор" },
+  { id: "overview", label: "Сводка" },
   { id: "exercises", label: "Тренировки", target: "workouts" },
   { id: "nutrition", label: "Питание" },
   { id: "bodyProgress", label: "Фото и замеры" }
@@ -511,16 +519,6 @@ function pluralize(number, one, few, many) {
   return many;
 }
 
-function getInitials(client = {}) {
-  return String(client.name || client.displayName || client.email || "К")
-    .split(/[\s@._-]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
-
 function getAvatar(client = {}) {
   return client.avatarUrl || client.photoURL || client.telegramAvatarUrl || client.telegram?.avatarUrl || "";
 }
@@ -529,7 +527,7 @@ function TrainerAvatar({ client, size = "medium" }) {
   const image = getAvatar(client);
   return (
     <span className={`trainerNextAvatar ${size}`}>
-      {image ? <img src={image} alt="" /> : getInitials(client)}
+      {image ? <img src={image} alt="" /> : <User className="trainerNextAvatarPlaceholder" aria-hidden="true" />}
     </span>
   );
 }
@@ -576,23 +574,6 @@ function TrainerConfirmDialog({
         </footer>
       </section>
     </div>
-  );
-}
-
-function Sparkline({ tone = "green", values = [2, 3, 3, 5, 4, 7, 8] }) {
-  const safeValues = values.length > 1 ? values : [0, 1];
-  const min = Math.min(...safeValues);
-  const max = Math.max(...safeValues);
-  const points = safeValues.map((value, index) => {
-    const x = (index / (safeValues.length - 1)) * 92 + 4;
-    const y = 30 - ((value - min) / Math.max(1, max - min)) * 24;
-    return `${x},${y}`;
-  }).join(" ");
-
-  return (
-    <svg className={`trainerNextSparkline ${tone}`} viewBox="0 0 100 34" aria-hidden="true">
-      <polyline points={points} fill="none" vectorEffect="non-scaling-stroke" />
-    </svg>
   );
 }
 
@@ -658,7 +639,7 @@ function getClientStatusAction(item = {}) {
   };
 }
 
-function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion }) {
+function TrainerNavigation({ activeSection, onNavigate, appVersion }) {
   const desktopItems = DESKTOP_NAV_ITEMS;
   const mobileItems = NAV_ITEMS.filter((item) => ["dashboard", "clients", "workouts", "more"].includes(item.id));
 
@@ -686,11 +667,17 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
 
   return (
     <>
-      <aside className="trainerNextSidebar">
-        <div className="trainerNextBrand"><strong>T</strong><span>Tren</span></div>
-        {appVersion ? <span className="trainerNextVersion">{appVersion}</span> : null}
-        <nav>{desktopItems.map((item) => renderButton(item))}</nav>
-      </aside>
+      <nav className="trainerNextDesktopDock" aria-label="Основное меню тренера">
+        {appVersion ? (
+          <span
+            className="trainerNextDesktopDockVersion"
+            aria-label={`Версия приложения ${appVersion}`}
+          >
+            {appVersion}
+          </span>
+        ) : null}
+        {desktopItems.map((item) => renderButton(item))}
+      </nav>
 
       <nav className="trainerNextMobileNav" aria-label="Разделы тренера">
         {mobileItems.map((item) => renderButton(item, true))}
@@ -707,9 +694,31 @@ function TrainerNavigation({ activeSection, onNavigate, trainerName, trainerAvat
   );
 }
 
+function TrainerModalScrollLock() {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return undefined;
+
+    const syncModalState = () => {
+      setModalOpen(Boolean(document.querySelector('[data-trainer-modal-backdrop="true"]')));
+    };
+    const observer = new MutationObserver(syncModalState);
+
+    syncModalState();
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useBodyScrollLock(modalOpen, { lockHtml: true });
+  return null;
+}
+
 export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion, children }) {
   return (
     <div className={`trainerNextRoot ${workspaceStyles.workspaceRoot} ${cabinetStyles.scope} ${adaptiveStyles.root} ${responsiveStyles.scope} ${modalSystemStyles.scope} ${clientProfileSectionStyles.scope} ${programEditorStyles.scope} ${nutritionDiaryStyles.scope} ${clientWorkoutPlanStyles.scope} ${clientViewsStyles.scope} ${nutritionAnalyticsStyles.scope} ${clientNutritionStyles.scope} ${exerciseProgressStyles.scope} ${dashboardStyles.scope}`}>
+      <TrainerModalScrollLock />
       <TrainerNavigation
         activeSection={activeSection}
         onNavigate={onNavigate}
@@ -723,27 +732,6 @@ export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAv
         aria-hidden="true"
       />
     </div>
-  );
-}
-
-function DashboardMetric({ label, value, detail, tone, icon: Icon, values, onClick }) {
-  return (
-    <button
-      className="trainerNextMetric trainerNextMetricAction"
-      type="button"
-      onClick={onClick}
-      aria-label={`Открыть: ${label}`}
-    >
-      <div className="trainerNextMetricHead">
-        <span>{label}</span>
-        {Icon ? <Icon size={17} strokeWidth={1.7} /> : null}
-      </div>
-      <strong>{value}</strong>
-      <div className={`trainerNextMetricFoot ${tone || ""}`}>
-        <small>{detail}</small>
-        {values ? <Sparkline tone={tone} values={values} /> : null}
-      </div>
-    </button>
   );
 }
 
@@ -774,7 +762,7 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
           ? Math.max(0, Math.min(100, Math.round(weeklyProgressScore)))
           : null;
         return (
-          <button type="button" key={client.id} onClick={() => onOpenClient(client, statusAction.targetTab)}>
+          <button type="button" key={client.id} onClick={() => onOpenClient(client, "overview")}>
             <span className="trainerNextClientIdentity">
               <TrainerAvatar client={client} size="small" />
               <span>
@@ -880,38 +868,7 @@ function getTrainerMessageAction(client = {}, summary = {}, fallbackReason = "")
   };
 }
 
-function TrainerDashboard({
-  clients,
-  clientSummaries,
-  actionCenter,
-  trainerName,
-  onOpenClient,
-  onOpenClients,
-  onOpenPrograms
-}) {
-  const completed = clients.reduce((sum, client) => sum + (Number(clientSummaries[client.id]?.workouts7) || 0), 0);
-  const progressValues = clients
-    .map((client) => Number(clientSummaries[client.id]?.programCompletionPercent))
-    .filter(Number.isFinite);
-  const averageProgress = progressValues.length
-    ? Math.round(progressValues.reduce((sum, value) => sum + value, 0) / progressValues.length)
-    : 0;
-  const clientCount = clients.length;
-  const attentionCount = clients.filter((client) => {
-    const summary = clientSummaries[client.id] || {};
-    return Boolean(getClientAttentionState(client, summary));
-  }).length;
-  const activeCount = Math.max(0, clientCount - attentionCount);
-  const activePercent = clientCount ? Math.round((activeCount / clientCount) * 100) : 0;
-  const clientsWithRecentData = clients.filter((client) => {
-    const summary = clientSummaries[client.id] || {};
-    return summary.lastWorkoutAt || summary.lastNutritionAt || summary.lastMeasurementAt;
-  }).length;
-  const completedDetail = completed
-    ? `за 7 дней · ${clientsWithRecentData || clientCount} кл.`
-    : "нет за 7 дней";
-  const progressValue = progressValues.length ? `${averageProgress > 0 ? "+" : ""}${averageProgress}%` : "—";
-  const progressDetail = progressValues.length ? "по назначенным программам" : "нет данных по программам";
+function TrainerDashboard({ actionCenter, trainerName, onOpenClient }) {
 
   return (
     <div className="trainerNextPage trainerNextDashboard">
@@ -925,10 +882,6 @@ function TrainerDashboard({
         <div><h1>Обзор</h1><p>Общая картина по всем клиентам</p></div>
       </div>
 
-      <div className="trainerNextSectionTitle">
-        <h2>Обзор</h2>
-      </div>
-
       <Suspense fallback={null}>
         <TrainerDailyJournal
           actionCenter={actionCenter}
@@ -938,12 +891,6 @@ function TrainerDashboard({
         />
       </Suspense>
 
-      <section className="trainerNextMetrics">
-        <DashboardMetric label="Клиенты" value={clientCount} detail={clientCount ? `${activeCount} активных` : "клиенты не загружены"} icon={Users} onClick={onOpenClients} />
-        <DashboardMetric label="Активные" value={activeCount} detail={`${activePercent}% базы`} tone="green" icon={Activity} values={[2, 3, 4, 5, 4, 4.5, 8]} onClick={onOpenClients} />
-        <DashboardMetric label="Завершено" value={completed} detail={completedDetail} tone="purple" icon={Dumbbell} values={[1, 2, 2, 3, 2.5, 5, 4, 8]} onClick={onOpenPrograms} />
-        <DashboardMetric label="Прогресс" value={progressValue} detail={progressDetail} tone="green" icon={TrendingUp} values={[2, 2, 3.5, 3, 5, 4.3, 7]} onClick={onOpenClients} />
-      </section>
     </div>
   );
 }
@@ -1169,28 +1116,7 @@ export function ClientSubscriptionCard({ client, onSave, onSaved, open: controll
   );
 }
 
-function ClientSectionTabs({ label, value, onChange, items = [], className = "" }) {
-  return (
-    <nav className={`trainerClientSectionTabs ${className}`.trim()} aria-label={label}>
-      {items.map((item) => {
-        const active = item.id === value;
-        return (
-          <button
-            type="button"
-            key={item.id}
-            className={active ? "active" : ""}
-            aria-pressed={active}
-            onClick={() => onChange(item.id)}
-          >
-            {item.label}
-          </button>
-        );
-      })}
-    </nav>
-  );
-}
-
-function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onSaved, editing, onEdit, onCancel }) {
+function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onSaved, editing, onEdit, onCancel, showEditAction = true, showStatus = true }) {
   const subscription = client?.subscription || {};
   const status = getSubscriptionStatus({ ...subscription, ...draft }, new Date());
   const [saving, setSaving] = useState(false);
@@ -1233,12 +1159,12 @@ function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onS
         <div className="trainerCalendarSubscriptionRange" aria-live="polite">
           <span>Начало: <b>{formatSubscriptionDate(draft.startDate)}</b></span>
           <span>Окончание: <b>{formatSubscriptionDate(draft.endDate)}</b></span>
-          <i className={status.tone}>{status.label}</i>
+          {showStatus ? <i className={status.tone}>{status.label}</i> : null}
         </div>
         <footer>
           <span>Осталось: <b>{remainingSessions}</b> тренировок</span>
           {draft.frozen ? <span>Заморожен</span> : null}
-          <button type="button" className="trainerCalendarSubscriptionEdit" onClick={onEdit}>Изменить абонемент</button>
+          {showEditAction ? <button type="button" className="trainerCalendarSubscriptionEdit" onClick={onEdit}>Изменить абонемент</button> : null}
         </footer>
       </section>
     );
@@ -1249,7 +1175,7 @@ function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onS
       <div className="trainerCalendarSubscriptionRange" aria-live="polite">
         <span>Начало: <b>{draft.startDate ? formatSubscriptionDate(draft.startDate) : "выберите на календаре"}</b></span>
         <span>Окончание: <b>{draft.endDate ? formatSubscriptionDate(draft.endDate) : "выберите на календаре"}</b></span>
-        <i className={status.tone}>{status.label}</i>
+        {showStatus ? <i className={status.tone}>{status.label}</i> : null}
       </div>
       <div className="trainerCalendarSubscriptionInputs">
         <label><small>Куплено тренировок</small><input type="number" min="0" value={draft.purchasedSessions} onFocus={(event) => event.target.select()} onChange={(event) => onChange((current) => ({ ...current, purchasedSessions: Math.max(0, Number(event.target.value) || 0) }))} /></label>
@@ -1266,79 +1192,72 @@ function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onS
   );
 }
 
+function ClientSectionLaunchButton({ icon: Icon, title, description, onClick }) {
+  return (
+    <button type="button" className={clientOverviewStyles.sectionLauncher} onClick={onClick}>
+      <span className={clientOverviewStyles.sectionLauncherIcon}><Icon size={22} /></span>
+      <span className={clientOverviewStyles.sectionLauncherCopy}>
+        <strong>{title}</strong>
+        <small>{description}</small>
+      </span>
+      <ChevronRight className={clientOverviewStyles.sectionLauncherArrow} size={20} />
+    </button>
+  );
+}
+
 function ClientOverview({
   client,
-  profile,
-  summary,
   snapshot,
   workoutReview,
   measurements,
   history,
   nutritionDays,
   nutritionGoals,
-  photos,
-  workouts,
-  status,
-  onSaveSubscription,
-  onSubscriptionSaved,
-  onSaveNotifications,
-  onTestNotification,
-  onConnectTelegram,
-  initialSection = "overview",
-  onSectionChange
+  onTabChange,
+  onOpenCalendar,
+  onOpenTasks,
+  onOpenFeedback,
+  onOpenMessage,
+  onOpenExerciseProgress
 }) {
-  const [section, setSection] = useState(initialSection);
-  useEffect(() => {
-    setSection(initialSection);
-  }, [initialSection]);
-
-  function selectSection(nextSection) {
-    setSection(nextSection);
-    onSectionChange?.(nextSection);
-  }
   return (
-    <div className="trainerNextClientOverview">
-      <ClientSectionTabs
-        label="Разделы обзора клиента"
-        value={section}
-        onChange={selectSection}
-        items={[
-          { id: "overview", label: "Сводка" },
-          { id: "calendar", label: "Календарь" }
-        ]}
+    <div className="trainerNextClientOverview trainerClientTabContent">
+      <ClientOverviewAttention
+        snapshot={snapshot}
+        workoutReview={workoutReview}
+        history={history}
+        onTabChange={onTabChange}
+        onOpenCalendar={onOpenCalendar}
+        onOpenTasks={onOpenTasks}
+        onOpenFeedback={onOpenFeedback}
+        onOpenMessage={onOpenMessage}
       />
-      {section === "overview" ? (
-        <>
-          <ClientWorkSummary snapshot={snapshot} workoutReview={workoutReview} />
-          <TrainerClientProgressDashboard
-            key={client?.id || "client-progress"}
-            measurements={measurements}
-            history={history}
-            nutritionDays={nutritionDays}
-            nutritionGoals={nutritionGoals}
-          />
-        </>
-      ) : (
-        <ClientNotifications
-          key={`overview-calendar-${client?.id || "client"}`}
-          client={client}
-          workouts={workouts}
-          history={history}
-          measurements={measurements}
-          photos={photos}
-          status={status}
-          onSave={onSaveNotifications}
-          onTest={onTestNotification}
-          onConnectTelegram={onConnectTelegram}
-          onSaveSubscription={onSaveSubscription}
-          onSubscriptionSaved={onSubscriptionSaved}
-        />
-      )}
+      <ClientWorkSummary
+        snapshot={snapshot}
+        workoutReview={workoutReview}
+        measurements={measurements}
+        nutritionDays={nutritionDays}
+        nutritionGoals={nutritionGoals}
+        onTabChange={onTabChange}
+      />
+      <TrainerClientProgressDashboard
+        key={client?.id || "client-progress"}
+        measurements={measurements}
+        history={history}
+        nutritionDays={nutritionDays}
+        nutritionGoals={nutritionGoals}
+      />
+      <ClientSectionLaunchButton
+        icon={BarChart3}
+        title="Открыть прогресс упражнений"
+        description="Сравнения нагрузки, адаптация и решения по упражнениям"
+        onClick={onOpenExerciseProgress}
+      />
     </div>
   );
 }
 
-function ClientMeasurements({ measurements = [] }) {
+function ClientMeasurements({ measurements = [], separated = false }) {
   const [expanded, setExpanded] = useState(false);
   const safeMeasurements = (Array.isArray(measurements) ? measurements : []).filter((item) => item && typeof item === "object");
   const sortedMeasurements = safeMeasurements
@@ -1419,7 +1338,7 @@ function ClientMeasurements({ measurements = [] }) {
   });
 
   return (
-    <section className="trainerNextSimplePanel">
+    <section className={`trainerNextSimplePanel${separated ? " trainerClientMeasurementsSection" : ""}`}>
       <div className="trainerNextPanelTitle trainerMeasurementPanelTitle">
         <div><h2>Замеры</h2><p>Последние изменения параметров тела</p></div>
         {latest ? (
@@ -1664,19 +1583,10 @@ function ClientPhotos({ photos }) {
 }
 
 function ClientBodyProgress({ measurements, photos }) {
-  const [section, setSection] = useState("photos");
   return (
-    <div className="trainerClientBodyProgress">
-      <ClientSectionTabs
-        label="Разделы фото и замеров"
-        value={section}
-        onChange={setSection}
-        items={[
-          { id: "photos", label: "Фото" },
-          { id: "measurements", label: "Замеры" }
-        ]}
-      />
-      {section === "photos" ? <ClientPhotos photos={photos} /> : <ClientMeasurements measurements={measurements} />}
+    <div className="trainerClientBodyProgress trainerClientTabContent">
+      <ClientPhotos photos={photos} />
+      <ClientMeasurements measurements={measurements} separated />
     </div>
   );
 }
@@ -1881,50 +1791,7 @@ function ClientMessages({
 }
 
 function getTrainerWorkoutScheduleCalendar(client = {}, workouts = []) {
-  const calendar = client?.workoutCalendar || {};
-  const safeWorkouts = Array.isArray(workouts) ? workouts : [];
-  const workoutsById = new Map(
-    safeWorkouts
-      .map((workout) => [String(workout?.id || "").trim(), workout])
-      .filter(([workoutId]) => Boolean(workoutId))
-  );
-  const assignmentVersions = new Set(
-    safeWorkouts
-      .map((workout) => String(workout?.assignedProgramUpdatedAt || "").trim())
-      .filter(Boolean)
-  );
-  const plannedWorkouts = (Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [])
-    .filter((item) => {
-      const workoutId = String(item?.workoutId || "").trim();
-      const workout = workoutsById.get(workoutId);
-      if (!workout) return false;
-      const assignmentId = String(workout?.assignedProgramAddedAt || workout?.programAssignmentId || "").trim();
-      const calendarAssignmentId = String(item?.assignedProgramAddedAt || item?.programAssignmentId || "").trim();
-      return !assignmentId || assignmentId === calendarAssignmentId;
-    });
-  const legacyPlannedWorkouts = plannedWorkouts.length
-    ? plannedWorkouts
-    : (Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [])
-      .filter((item) => {
-        const workoutId = String(item?.workoutId || "").trim();
-        const assignmentVersion = String(item?.assignedProgramUpdatedAt || item?.assignmentVersion || "").trim();
-        return !workoutId && Boolean(assignmentVersion) && assignmentVersions.has(assignmentVersion);
-      });
-  const scheduledDates = legacyPlannedWorkouts
-    .map((item) => item?.date)
-    .filter(Boolean);
-  const workoutDates = safeWorkouts
-    .map((workout) => workout?.scheduledDate || workout?.plannedDate)
-    .filter(Boolean);
-  const assignmentVersion = [...assignmentVersions][0] || "";
-
-  return {
-    ...calendar,
-    assignedProgramUpdatedAt: assignmentVersion,
-    plannedWorkouts: legacyPlannedWorkouts,
-    scheduledDates: scheduledDates.length ? scheduledDates : workoutDates,
-    monthlyTrainingDates: scheduledDates.length ? scheduledDates : workoutDates
-  };
+  return getWorkoutScheduleCalendarForWorkouts(client?.workoutCalendar || {}, workouts);
 }
 
 function getWorkoutScheduleInitialDates(client = {}, workouts = []) {
@@ -2017,15 +1884,25 @@ function WorkoutSchedulePlanner({
   history = [],
   completedWorkoutIds = [],
   onSaveSchedule,
+  onSaveSubscription,
   status,
   startEditing = false,
   onSaved
 }) {
+  const subscription = client?.subscription || {};
   const requiredCount = workouts.length;
   const [selectedDates, setSelectedDates] = useState(() => getWorkoutScheduleInitialDates(client, workouts));
   const [monthKey, setMonthKey] = useState(() => getLocalDateKey().slice(0, 7));
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(Boolean(startEditing));
+  const [editingSubscription, setEditingSubscription] = useState(false);
+  const [subscriptionDraft, setSubscriptionDraft] = useState(() => ({
+    startDate: subscription.startDate || "",
+    endDate: subscription.endDate || "",
+    purchasedSessions: Math.max(0, Number(subscription.purchasedSessions ?? subscription.totalSessions) || 0),
+    usedSessions: Math.max(0, Number(subscription.usedSessions) || 0),
+    frozen: subscription.frozen === true
+  }));
   const calendar = getTrainerWorkoutScheduleCalendar(client, workouts);
   const completedWorkoutIdSet = new Set([
     ...(Array.isArray(history) ? history : []).map((entry) => String(entry?.workoutId || "").trim()),
@@ -2040,11 +1917,26 @@ function WorkoutSchedulePlanner({
   const completedCount = slots.filter((slot) => slot.isCompleted).length;
   const missedCount = slots.filter((slot) => slot.isMissed).length;
   const isProgramCompleted = requiredCount > 0 && completedCount >= requiredCount;
+  const visibleSubscription = editingSubscription
+    ? { ...subscription, ...subscriptionDraft }
+    : subscription;
+  const hasSubscriptionDetails = Boolean(
+    visibleSubscription.startDate ||
+    visibleSubscription.endDate ||
+    visibleSubscription.purchasedSessions !== undefined ||
+    visibleSubscription.totalSessions !== undefined ||
+    visibleSubscription.usedSessions !== undefined
+  );
+  const subscriptionStatus = hasSubscriptionDetails
+    ? getSubscriptionStatus(visibleSubscription, new Date())
+    : null;
   const todayKey = getLocalDateKey();
   const selectedSet = new Set(selectedDates);
   const monthDays = getCalendarMonthDays(monthKey);
   const selectedOrder = Object.fromEntries(selectedDates.map((date, index) => [date, index + 1]));
   const datesComplete = requiredCount > 0 && selectedDates.length === requiredCount;
+  const subscriptionRangeStart = subscriptionDraft.startDate || "";
+  const subscriptionRangeEnd = subscriptionDraft.endDate || "";
   const scheduleEntries = buildWorkoutScheduleCalendarEntries(slots)
     .filter((entry) => !isProgramCompleted || ["completed", "completed_off_date"].includes(entry.status));
   const savedEntriesByDate = scheduleEntries.reduce((result, entry) => {
@@ -2075,6 +1967,25 @@ function WorkoutSchedulePlanner({
     visibleEntriesByDate[date] = [...(visibleEntriesByDate[date] || []), ...entries];
   });
 
+  useEffect(() => {
+    if (editingSubscription) return;
+    setSubscriptionDraft({
+      startDate: subscription.startDate || "",
+      endDate: subscription.endDate || "",
+      purchasedSessions: Math.max(0, Number(subscription.purchasedSessions ?? subscription.totalSessions) || 0),
+      usedSessions: Math.max(0, Number(subscription.usedSessions) || 0),
+      frozen: subscription.frozen === true
+    });
+  }, [
+    editingSubscription,
+    subscription.endDate,
+    subscription.frozen,
+    subscription.purchasedSessions,
+    subscription.startDate,
+    subscription.totalSessions,
+    subscription.usedSessions
+  ]);
+
   function shiftMonth(delta) {
     const [year, month] = monthKey.split("-").map(Number);
     const next = new Date(year, month - 1 + delta, 1);
@@ -2092,9 +2003,42 @@ function WorkoutSchedulePlanner({
     });
   }
 
+  function selectSubscriptionDate(dateKey) {
+    if (!editingSubscription || saving) return;
+    setSubscriptionDraft((current) => {
+      if (!current.startDate || current.endDate) {
+        return { ...current, startDate: dateKey, endDate: "" };
+      }
+      if (dateKey < current.startDate) {
+        return { ...current, startDate: dateKey, endDate: current.startDate };
+      }
+      return { ...current, endDate: dateKey };
+    });
+  }
+
+  function startSubscriptionEditing() {
+    if (!onSaveSubscription || saving) return;
+    setSelectedDates(getWorkoutScheduleInitialDates(client, workouts));
+    setEditing(false);
+    setEditingSubscription(true);
+  }
+
+  function cancelSubscriptionEditing() {
+    if (saving) return;
+    setSubscriptionDraft({
+      startDate: subscription.startDate || "",
+      endDate: subscription.endDate || "",
+      purchasedSessions: Math.max(0, Number(subscription.purchasedSessions ?? subscription.totalSessions) || 0),
+      usedSessions: Math.max(0, Number(subscription.usedSessions) || 0),
+      frozen: subscription.frozen === true
+    });
+    setEditingSubscription(false);
+  }
+
   async function saveSchedule() {
     if (isProgramCompleted) return;
     if (!editing) {
+      setEditingSubscription(false);
       setEditing(true);
       return;
     }
@@ -2125,18 +2069,17 @@ function WorkoutSchedulePlanner({
       : datesComplete
         ? "Сохранить даты"
         : `Выберите ещё ${remainingDatesToSelect} ${pluralize(remainingDatesToSelect, "дату", "даты", "дат")}`;
+  const scheduleDescription = isProgramCompleted
+    ? "Программа завершена. Показаны только фактические даты выполнения тренировок."
+    : `Выберите ровно ${requiredCount || 0} ${pluralize(requiredCount, "дату", "даты", "дат")} под назначенную программу. Порядок дат становится порядком тренировок №1, №2 и дальше.`;
 
   return (
-    <section className={`trainerClientAnalyticsCard trainerWorkoutSchedulePlanner ${editing ? "editing" : ""} ${isProgramCompleted ? "completedProgram" : ""}`}>
+    <section className={`trainerClientAnalyticsCard trainerWorkoutSchedulePlanner ${editing ? "editing" : ""} ${editingSubscription ? "subscriptionEditing" : ""} ${isProgramCompleted ? "completedProgram" : ""}`}>
       <header>
         <div>
           <span>РАСПИСАНИЕ ПРОГРАММЫ</span>
           <h3>Даты тренировок клиента</h3>
-          <p>{isProgramCompleted
-            ? "Программа завершена. Показаны только фактические даты выполнения тренировок."
-            : `Выберите ровно ${requiredCount || 0} ${pluralize(requiredCount, "дату", "даты", "дат")} под назначенную программу. Порядок дат становится порядком тренировок №1, №2 и дальше.`}</p>
         </div>
-        <strong className={datesComplete ? "ready" : ""}>{isProgramCompleted ? completedCount : selectedDates.length}/{requiredCount || 0}<small>{isProgramCompleted ? "выполнено" : "выбрано"}</small></strong>
       </header>
 
       <div className="trainerWorkoutScheduleBody">
@@ -2156,6 +2099,10 @@ function WorkoutSchedulePlanner({
               const entries = visibleEntriesByDate[day.key] || [];
               const statusClass = getWorkoutScheduleCalendarStatus(entries);
               const entryLabel = entries.map((entry) => `№${entry.order}`).join(", ");
+              const subscriptionRange = editingSubscription && Boolean(subscriptionRangeStart) && day.key >= subscriptionRangeStart && (!subscriptionRangeEnd || day.key <= subscriptionRangeEnd);
+              const subscriptionStart = editingSubscription && day.key === subscriptionRangeStart;
+              const subscriptionEnd = editingSubscription && Boolean(subscriptionRangeEnd) && day.key === subscriptionRangeEnd;
+              const canEditScheduleDay = selected || (!isPastDate && (!requiredCount || selectedDates.length < requiredCount));
               return (
                 <button
                   type="button"
@@ -2165,12 +2112,15 @@ function WorkoutSchedulePlanner({
                     isPastDate ? "pastDate" : "",
                     selected ? "selected" : "",
                     entries.length ? "hasWorkout" : "",
-                    statusClass
+                    statusClass,
+                    subscriptionRange ? "subscriptionRange" : "",
+                    subscriptionStart ? "subscriptionStart" : "",
+                    subscriptionEnd ? "subscriptionEnd" : ""
                   ].filter(Boolean).join(" ")}
                   key={day.key}
-                  onClick={() => toggleDate(day.key)}
-                  disabled={!editing || (!selected && (isPastDate || (requiredCount > 0 && selectedDates.length >= requiredCount)))}
-                  title={getWorkoutScheduleCalendarTitle(day.key, entries)}
+                  onClick={() => editingSubscription ? selectSubscriptionDate(day.key) : toggleDate(day.key)}
+                  disabled={editingSubscription ? false : !editing || !canEditScheduleDay}
+                  title={editingSubscription ? `Выбрать ${formatSubscriptionDate(day.key)} для абонемента` : getWorkoutScheduleCalendarTitle(day.key, entries)}
                 >
                   <b>{day.label}</b>
                   {entries.length ? <i>{entryLabel}</i> : selected ? <i>№{selectedOrder[day.key]}</i> : null}
@@ -2178,15 +2128,13 @@ function WorkoutSchedulePlanner({
               );
             })}
           </div>
-          <div className="trainerWorkoutScheduleLegend" aria-label="Легенда статусов расписания">
-            {isProgramCompleted ? <span><i className="completedProgram" />Фактическая дата выполнения</span> : <>
-              <span><i className="planned" />Плановая дата</span>
-              <span><i className="completed" />В срок</span>
-              <span><i className="completedOffDate" />Выполнено в другой день</span>
-              <span><i className="missed" />Пропущена</span>
-              <span><i className="shifted" />Смещена</span>
-              <span><i className="pastCompleted" />Прошлая тренировка</span>
-            </>}
+          <div className="trainerWorkoutScheduleLegend trainerWorkoutScheduleStats trainerWorkoutScheduleCalendarStatusLegend" aria-label="Статусы тренировок">
+            <span className="is-planned">Плановая дата</span>
+            <span className="is-completed">В срок</span>
+            <span className="is-completedOffDate">Выполнено в другой день</span>
+            <span className="is-missed">Пропущена</span>
+            <span className="is-shifted">Смещена</span>
+            <span className="is-pastCompleted">Прошлая тренировка</span>
           </div>
         </div>
 
@@ -2194,39 +2142,90 @@ function WorkoutSchedulePlanner({
       </div>
 
       <div className="trainerWorkoutScheduleFooter">
-        <div>
-          <span>Выполнено: <b>{completedCount}</b></span>
-          {!isProgramCompleted ? <span>Пропущено: <b>{missedCount}</b></span> : null}
-          <span>Не в свой день: <b>{slots.filter((slot) => slot.isCompletedOffDate).length}</b></span>
-        </div>
-        {!isProgramCompleted ? (
-          <div className="trainerWorkoutScheduleActions">
-            {editing ? (
-              <button
-                type="button"
-                className="trainerWorkoutScheduleCancel"
-                disabled={saving}
-                onClick={cancelScheduleEditing}
-              >
-                Отменить
-              </button>
-            ) : null}
-            <button
-              type="button"
-              className={`trainerNextPrimary trainerWorkoutScheduleAction ${editing ? "is-editing" : "is-idle"} ${editing && datesComplete ? "is-ready" : ""}`}
-              disabled={(editing && !datesComplete) || saving || !requiredCount}
-              onClick={saveSchedule}
-            >
-              {editing && datesComplete ? <Check size={16} /> : <CalendarDays size={16} />}
-              {scheduleActionLabel}
-            </button>
+        <section className="trainerWorkoutScheduleSection">
+          <div className="trainerWorkoutScheduleContent">
+            <header>
+              <h4>Расписание тренировок</h4>
+              <p>{scheduleDescription}</p>
+            </header>
+            <div className="trainerWorkoutScheduleSummaryStats" aria-label="Сводка по расписанию">
+              <span className="is-completed"><i />Выполнено: <b>{completedCount}</b></span>
+              {!isProgramCompleted ? <span className="is-missed"><i />Пропущено: <b>{missedCount}</b></span> : null}
+              <span className="is-off-date"><i />Не в свой день: <b>{slots.filter((slot) => slot.isCompletedOffDate).length}</b></span>
+            </div>
           </div>
-        ) : null}
+          <div className="trainerWorkoutScheduleControls">
+            <strong className={datesComplete ? "ready" : ""}>{isProgramCompleted ? completedCount : selectedDates.length}/{requiredCount || 0}<small>{isProgramCompleted ? "выполнено" : "выбрано"}</small></strong>
+            {!isProgramCompleted && !editingSubscription ? (
+              <div className="trainerWorkoutScheduleActions trainerWorkoutScheduleScheduleActions">
+                {editing ? (
+                  <button
+                    type="button"
+                    className="trainerWorkoutScheduleCancel"
+                    disabled={saving}
+                    onClick={cancelScheduleEditing}
+                  >
+                    Отменить
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  className={`trainerNextPrimary trainerWorkoutScheduleAction ${editing ? "is-editing" : "is-idle"} ${editing && datesComplete ? "is-ready" : ""}`}
+                  disabled={(editing && !datesComplete) || saving || !requiredCount}
+                  onClick={saveSchedule}
+                >
+                  {editing && datesComplete ? <Check size={16} /> : <CalendarDays size={16} />}
+                  {scheduleActionLabel}
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </section>
+
+        <section className={`trainerWorkoutSubscriptionSection ${editingSubscription || !onSaveSubscription ? "is-editing" : ""}`}>
+          <div className="trainerWorkoutSubscriptionContent">
+            <header>
+              <h4>Абонемент клиента</h4>
+              <p>Период и количество занятий связаны с календарём тренировок клиента.</p>
+            </header>
+            {onSaveSubscription ? (
+              <ClientCalendarSubscriptionFields
+                client={client}
+                draft={subscriptionDraft}
+                onChange={setSubscriptionDraft}
+                onSave={onSaveSubscription}
+                onSaved={async () => setEditingSubscription(false)}
+                editing={editingSubscription}
+                onEdit={startSubscriptionEditing}
+                onCancel={cancelSubscriptionEditing}
+                showEditAction={false}
+                showStatus={false}
+              />
+            ) : null}
+          </div>
+          {!editingSubscription ? (
+            <div className="trainerWorkoutSubscriptionSectionActions">
+              <aside className={`trainerWorkoutScheduleSubscription is-${subscriptionStatus?.id || "unconfigured"}`} aria-label="Абонемент клиента">
+                <span>АБОНЕМЕНТ</span>
+                <b>{subscriptionStatus?.label || "Не настроен"}</b>
+                <small>{hasSubscriptionDetails
+                  ? `${subscriptionStatus.remainingSessions} ${pluralize(subscriptionStatus.remainingSessions, "занятие", "занятия", "занятий")} осталось`
+                  : "не настроен"}</small>
+              </aside>
+              {onSaveSubscription ? (
+                <button
+                  type="button"
+                  className="trainerWorkoutScheduleSubscriptionAction"
+                  onClick={startSubscriptionEditing}
+                >
+                  <CalendarDays size={16} />Изменить абонемент
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+        </section>
       </div>
       {editing && !datesComplete && requiredCount > 0 ? <p className="trainerWorkoutScheduleHint">Нужно выбрать {requiredCount} {pluralize(requiredCount, "дату", "даты", "дат")}, сейчас выбрано {selectedDates.length}.</p> : null}
-      {!editing && requiredCount > 0 ? <p className="trainerWorkoutScheduleHint">{isProgramCompleted
-        ? "После завершения программы расписание и фактические даты не изменяются."
-        : "Чтобы изменить дни тренировок, нажмите «Изменить даты»."}</p> : null}
       {status ? <p className="trainerNextProgramStatus">{status}</p> : null}
     </section>
   );
@@ -2290,7 +2289,7 @@ function TrainerProgramScheduleModal({
   );
 }
 
-function ClientWorkoutHistoryBlock({ history = [] }) {
+function ClientWorkoutHistoryBlock({ history = [], showAll = false }) {
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const sortedHistory = [...history]
     .sort((a, b) => {
@@ -2298,8 +2297,8 @@ function ClientWorkoutHistoryBlock({ history = [] }) {
       const dateB = getWorkoutHistoryDate(b)?.getTime() || 0;
       return dateB - dateA;
     });
-  const visibleHistory = sortedHistory.slice(0, 3);
-  const olderHistory = sortedHistory.slice(3);
+  const visibleHistory = showAll ? sortedHistory : sortedHistory.slice(0, 3);
+  const olderHistory = showAll ? [] : sortedHistory.slice(3);
 
   useEffect(() => {
     if (!historyModalOpen || typeof document === "undefined") return undefined;
@@ -2324,8 +2323,10 @@ function ClientWorkoutHistoryBlock({ history = [] }) {
       <header>
         <div>
           <span>ИСТОРИЯ ТРЕНИРОВОК</span>
-          <h3>Последние тренировки клиента</h3>
-          <p>Короткая лента выполненных тренировок по этой программе и всем сохранённым записям клиента.</p>
+          <h3>{showAll ? "История тренировок клиента" : "Последние тренировки клиента"}</h3>
+          <p>{showAll
+            ? "Все сохранённые тренировки клиента — от новых к более ранним."
+            : "Короткая лента выполненных тренировок по этой программе и всем сохранённым записям клиента."}</p>
         </div>
         <strong>{history.length}<small>записей</small></strong>
       </header>
@@ -2348,7 +2349,7 @@ function ClientWorkoutHistoryBlock({ history = [] }) {
             );
           })}
         </div>
-        {olderHistory.length ? (
+        {!showAll && olderHistory.length ? (
           <button className="trainerClientHistoryMoreButton" type="button" onClick={() => setHistoryModalOpen(true)}>
             Показать ещё {olderHistory.length} записей <ChevronRight size={14} aria-hidden="true" />
           </button>
@@ -2359,7 +2360,7 @@ function ClientWorkoutHistoryBlock({ history = [] }) {
       )}
     </section>
 
-    {historyModalOpen ? (
+    {!showAll && historyModalOpen ? (
       <div className="trainerClientModalBackdrop trainerWorkoutHistoryModalBackdrop" data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setHistoryModalOpen(false)}>
         <section className="trainerWorkoutHistoryModal" role="dialog" aria-modal="true" data-modal-surface="true" data-trainer-modal-surface="true" data-trainer-modal-frame="true" aria-labelledby="trainer-workout-history-modal-title" onMouseDown={(event) => event.stopPropagation()}>
           <header data-trainer-modal-header="true">
@@ -2474,6 +2475,7 @@ function ClientWorkoutPlan({
   onArchiveProgramAssignment,
   onRestoreProgramAssignment,
   onSaveWorkoutSchedule,
+  onSaveSubscription,
   programStatus,
   adjustmentRequest,
   reviewEvents = [],
@@ -2494,11 +2496,12 @@ function ClientWorkoutPlan({
   const [programAssignmentSaving, setProgramAssignmentSaving] = useState(false);
   const [programAssignmentStatus, setProgramAssignmentStatus] = useState("");
   const [showBasicWorkoutHistory, setShowBasicWorkoutHistory] = useState(false);
-  const [isAssignmentHistoryExpanded, setIsAssignmentHistoryExpanded] = useState(false);
+  const [programHistoryOpen, setProgramHistoryOpen] = useState(false);
   const [scheduleAssignmentRequest, setScheduleAssignmentRequest] = useState(null);
+  const [workoutInsightsOpen, setWorkoutInsightsOpen] = useState(false);
 
   useEffect(() => {
-    if ((!editorOpen && !reviewDecisionOpen && !assignmentReviewOpen && !programAssignmentConfirm && !scheduleAssignmentRequest) || typeof document === "undefined") return undefined;
+    if ((!editorOpen && !reviewDecisionOpen && !assignmentReviewOpen && !programAssignmentConfirm && !scheduleAssignmentRequest && !workoutInsightsOpen && !programHistoryOpen) || typeof document === "undefined") return undefined;
 
     const scrollY = window.scrollY || window.pageYOffset || 0;
     const previousBodyStyle = {
@@ -2520,7 +2523,7 @@ function ClientWorkoutPlan({
       document.body.style.width = previousBodyStyle.width;
       window.scrollTo(0, scrollY);
     };
-  }, [assignmentReviewOpen, editorOpen, programAssignmentConfirm, reviewDecisionOpen, scheduleAssignmentRequest]);
+  }, [assignmentReviewOpen, editorOpen, programAssignmentConfirm, programHistoryOpen, reviewDecisionOpen, scheduleAssignmentRequest, workoutInsightsOpen]);
 
   const trainerWorkouts = useMemo(
     () => (Array.isArray(workouts) ? workouts : []).filter((workout) => !isTrainerClientBasicWorkout(workout)),
@@ -2797,10 +2800,24 @@ function ClientWorkoutPlan({
       <section className={trainerClientWorkoutPlanStyles.programCard}>
         <header className={trainerClientWorkoutPlanStyles.programHeader}>
           <span><ClipboardList size={19} /></span>
-          <div>
+          <div className={trainerClientWorkoutPlanStyles.programHeaderCopy}>
             <h2>Программа тренировок клиента</h2>
             <p>Текущий план, следующее назначение и история клиента.</p>
           </div>
+          {programTimeline.length || hasBasicProgramHistory ? (
+            <button
+              className={trainerClientWorkoutPlanStyles.programHistoryButton}
+              type="button"
+              onClick={() => setProgramHistoryOpen(true)}
+            >
+              <ClipboardList size={16} />
+              <span className={trainerClientWorkoutPlanStyles.programHistoryButtonFullLabel}>
+                {programTimeline.length ? `История программ · ${programTimeline.length}` : "История программ"}
+              </span>
+              <span className={trainerClientWorkoutPlanStyles.programHistoryButtonShortLabel}>История</span>
+              <ChevronRight className={trainerClientWorkoutPlanStyles.programHistoryButtonChevron} size={15} aria-hidden="true" />
+            </button>
+          ) : null}
         </header>
 
         <div className={trainerClientWorkoutPlanStyles.programGrid}>
@@ -2849,26 +2866,27 @@ function ClientWorkoutPlan({
             </div>
           </div>
         </div>
-        {programTimeline.length || hasBasicProgramHistory ? (
-          <section className={trainerClientWorkoutPlanStyles.assignmentHistory} aria-label="История назначенных программ">
-            <header className={trainerClientWorkoutPlanStyles.assignmentHistoryHeader}>
+        {selectedTemplate && selectedProgramId !== client?.assignedProgramId
+          ? <small className={trainerClientWorkoutPlanStyles.hint}>Будет назначена программа «{selectedTemplate.name || "Без названия"}».</small>
+          : null}
+        {programStatus ? <p className={trainerClientWorkoutPlanStyles.status}>{programStatus}</p> : null}
+      </section>
+
+      {programHistoryOpen ? (
+        <TrainerClientUtilitySheet
+          title="История программ"
+          eyebrow="Программы клиента"
+          variant="wide"
+          onRequestClose={() => setProgramHistoryOpen(false)}
+        >
+          <section className={trainerClientWorkoutPlanStyles.programHistoryModal} aria-label="История назначенных программ">
+            <header className={trainerClientWorkoutPlanStyles.programHistoryModalHeader}>
               <div>
                 <span>ИСТОРИЯ НАЗНАЧЕНИЙ</span>
                 <h3>Прошлые и будущие программы</h3>
+                <p>Назначения тренера и самостоятельные планы клиента.</p>
               </div>
-              <div className={trainerClientWorkoutPlanStyles.assignmentHistoryControls}>
-                <button
-                  className={trainerClientWorkoutPlanStyles.assignmentHistoryExpandButton}
-                  type="button"
-                  onClick={() => setIsAssignmentHistoryExpanded((value) => !value)}
-                  aria-expanded={isAssignmentHistoryExpanded}
-                >
-                  {isAssignmentHistoryExpanded
-                    ? "Скрыть историю"
-                    : programTimeline.length
-                      ? `История программ · ${programTimeline.length}`
-                      : "История программ"}
-                </button>
+              {hasBasicProgramHistory ? (
                 <label className={trainerClientWorkoutPlanStyles.assignmentHistoryToggle}>
                   <input
                     type="checkbox"
@@ -2879,11 +2897,10 @@ function ClientWorkoutPlan({
                   <span aria-hidden="true" />
                   <b>Базовые тренировки</b>
                 </label>
-              </div>
+              ) : null}
             </header>
-            {isAssignmentHistoryExpanded ? (
-              <div className={trainerClientWorkoutPlanStyles.assignmentHistoryList}>
-                {programTimeline.length ? programTimeline.map((assignment) => {
+            <div className={trainerClientWorkoutPlanStyles.assignmentHistoryList}>
+              {programTimeline.length ? programTimeline.map((assignment) => {
                 const isFuture = assignment.status === "future";
                 const isCurrent = assignment.status === "current";
                 const statusLabel = assignment.status === "past"
@@ -2940,17 +2957,12 @@ function ClientWorkoutPlan({
                 );
               }) : (
                 <p className={trainerClientWorkoutPlanStyles.assignmentHistoryEmpty}>Назначений тренера пока нет. Включите базовые тренировки, чтобы посмотреть самостоятельный план клиента.</p>
-                )}
-              </div>
-            ) : null}
+              )}
+            </div>
             {programAssignmentStatus ? <p className={trainerClientWorkoutPlanStyles.assignmentActionStatus} role="status">{programAssignmentStatus}</p> : null}
           </section>
-        ) : null}
-        {selectedTemplate && selectedProgramId !== client?.assignedProgramId
-          ? <small className={trainerClientWorkoutPlanStyles.hint}>Будет назначена программа «{selectedTemplate.name || "Без названия"}».</small>
-          : null}
-        {programStatus ? <p className={trainerClientWorkoutPlanStyles.status}>{programStatus}</p> : null}
-      </section>
+        </TrainerClientUtilitySheet>
+      ) : null}
 
       <WorkoutSchedulePlanner
         key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
@@ -2960,6 +2972,7 @@ function ClientWorkoutPlan({
         history={history}
         completedWorkoutIds={scheduleCompletedWorkoutIds}
         onSaveSchedule={onSaveWorkoutSchedule}
+        onSaveSubscription={onSaveSubscription}
         status={programStatus}
       />
 
@@ -2974,16 +2987,39 @@ function ClientWorkoutPlan({
         />
       ) : null}
 
-      <div className={`trainerClientWorkoutInsightsRow${visibleWorkoutReview ? "" : " single"}`}>
-        <ClientWorkoutHistoryBlock history={history} />
-        <ClientWorkoutReviewPanel
-          review={visibleWorkoutReview}
-          onAdjustNextWorkout={() => {
-            setReviewStatus("");
-            setReviewDecisionOpen(true);
-          }}
-        />
-      </div>
+      <ClientSectionLaunchButton
+        icon={ClipboardList}
+        title="Открыть разбор и историю тренировок"
+        description={visibleWorkoutReview
+          ? "Последняя тренировка, комментарий клиента и все сохранённые записи"
+          : "Все сохранённые тренировки клиента в одном месте"}
+        onClick={() => setWorkoutInsightsOpen(true)}
+      />
+
+      {workoutInsightsOpen ? (
+        <TrainerClientUtilitySheet
+          title="Разбор и история тренировок"
+          eyebrow="Тренировки клиента"
+          variant="wide"
+          onRequestClose={() => setWorkoutInsightsOpen(false)}
+        >
+          <div className="trainerClientWorkoutInsightsSheet">
+            {visibleWorkoutReview ? (
+              <ClientWorkoutReviewPanel
+                review={visibleWorkoutReview}
+                onAdjustNextWorkout={() => {
+                  setReviewStatus("");
+                  setWorkoutInsightsOpen(false);
+                  setReviewDecisionOpen(true);
+                }}
+              />
+            ) : (
+              <div className="trainerNextEmpty">Разбор появится после первой завершённой тренировки клиента.</div>
+            )}
+            <ClientWorkoutHistoryBlock history={history} showAll />
+          </div>
+        </TrainerClientUtilitySheet>
+      ) : null}
 
       {reviewDecisionOpen ? (
         <TrainerWorkoutReviewDecisionModal
@@ -3084,7 +3120,7 @@ function ClientExerciseProgress({
 }) {
   const [filter, setFilter] = useState("priority");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [expandedExercise, setExpandedExercise] = useState("");
+  const [historyItem, setHistoryItem] = useState(null);
   const [decisionItem, setDecisionItem] = useState(null);
   const [locallyReviewedKeys, setLocallyReviewedKeys] = useState(() => new Set());
   const { allExerciseProgress } = getExerciseProgressData(history);
@@ -3123,10 +3159,10 @@ function ClientExerciseProgress({
     { id: "all", label: "Все", count: exerciseProgress.length }
   ];
   const displayedExerciseProgress = (() => {
-    if (filter === "progress") return exerciseProgress.filter((item) => item.status === "progress").slice(0, 8);
-    if (filter === "regression") return priorityProgress.slice(0, 8);
-    if (filter === "all") return exerciseProgress.slice(0, 12);
-    return priorityProgress.slice(0, 8);
+    if (filter === "progress") return exerciseProgress.filter((item) => item.status === "progress");
+    if (filter === "regression") return priorityProgress;
+    if (filter === "all") return exerciseProgress;
+    return priorityProgress;
   })();
   const focusText = (() => {
     if (!exerciseProgress.length) return "Появится после двух заполненных тренировок по одному упражнению.";
@@ -3204,9 +3240,9 @@ function ClientExerciseProgress({
                   {" → "}
                   {item.current.bestWeight || "—"} кг × {item.current.averageReps} × {item.current.sets}
                 </strong>
-                <div className={workspaceFeatureStyles.actions}>
-                  <button type="button" onClick={() => setExpandedExercise((current) => current === item.name ? "" : item.name)}>
-                    <History size={15} />{expandedExercise === item.name ? "Скрыть историю" : "Открыть историю"}
+                <div className={`${workspaceFeatureStyles.actions} trainerExerciseProgressActions`}>
+                  <button type="button" onClick={() => setHistoryItem(item)}>
+                    <History size={15} />Открыть историю
                   </button>
                   {!item.reviewed ? (
                     <button type="button" onClick={() => setDecisionItem(item)}><SlidersHorizontal size={15} />Скорректировать нагрузку</button>
@@ -3214,27 +3250,6 @@ function ClientExerciseProgress({
                 </div>
               </div>
               <small className={`trainerExerciseProgressCardNote ${item.tone}`}>{item.explanation}</small>
-              {expandedExercise === item.name ? (
-                <div className={workspaceFeatureStyles.history}>
-                  <div className="trainerExerciseProgressContext">
-                    <small>{item.current.weightConventionLabel}. {item.current.e1rmFormula}{item.current.e1rmLowConfidence ? ". При большом числе повторений оценка менее точна." : "."}</small>
-                    {item.current.loadChangedByClient ? <small className="warning">⚠️ Клиент самостоятельно изменил рабочий вес.</small> : null}
-                    {item.current.clientComment ? <small>Комментарий клиента: «{item.current.clientComment}»</small> : null}
-                    {item.current.painReported ? <small className="negative">⚠️ В комментарии упоминается боль или травма — проверьте нагрузку.</small> : null}
-                  </div>
-                  {item.sessions.map((session) => (
-                    <div key={`${item.name}_${session.date.toISOString()}`}>
-                      <strong>{formatCompactDate(session.date)} — выполнено</strong>
-                      {(session.actualSets || []).map((set, index) => (
-                        <small key={`${session.date.toISOString()}_${index}`}>
-                          {index + 1}. План: {session.plannedSets?.[index]?.weight || "—"} кг × {session.plannedSets?.[index]?.reps || "—"} · Факт: {set.weight || "—"} кг × {set.reps || "—"}
-                          {set.rpe ? ` · RPE ${set.rpe}` : ""}{set.rir ? ` · RIR ${set.rir}` : ""} · объём {set.volume || 0} кг
-                        </small>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              ) : null}
             </div>
           </article>
         ))}
@@ -3251,7 +3266,66 @@ function ClientExerciseProgress({
           onSaveAdjustment={onSaveAdjustment}
         />
       ) : null}
+      {historyItem ? <ExerciseProgressHistoryModal item={historyItem} onClose={() => setHistoryItem(null)} /> : null}
     </section>
+  );
+}
+
+function ExerciseProgressHistoryModal({ item, onClose }) {
+  useBodyScrollLock(true, { lockHtml: true });
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") onClose?.();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="trainerExerciseProgressHistoryModalBackdrop" data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => {
+      if (event.target === event.currentTarget) onClose?.();
+    }}>
+      <section className="trainerExerciseProgressHistoryModal" role="dialog" aria-modal="true" aria-labelledby="trainer-exercise-history-title">
+        <header>
+          <div>
+            <span>ИСТОРИЯ УПРАЖНЕНИЯ</span>
+            <h2 id="trainer-exercise-history-title">{item?.name || "Упражнение"}</h2>
+            <p>Выполненные подходы и сравнение последних тренировок.</p>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Закрыть историю"><X size={18} /></button>
+        </header>
+        <div className="trainerExerciseProgressHistoryModalBody">
+          <section className="trainerExerciseProgressHistorySummary">
+            <span><small>Предыдущая тренировка</small><strong>{item?.previous?.bestWeight || "—"} кг × {item?.previous?.averageReps || "—"} × {item?.previous?.sets || "—"}</strong></span>
+            <span><small>Последняя тренировка</small><strong>{item?.current?.bestWeight || "—"} кг × {item?.current?.averageReps || "—"} × {item?.current?.sets || "—"}</strong></span>
+          </section>
+          <section className="trainerExerciseProgressHistoryContext">
+            <small>{item?.current?.weightConventionLabel}. {item?.current?.e1rmFormula}{item?.current?.e1rmLowConfidence ? ". При большом числе повторений оценка менее точна." : "."}</small>
+            {item?.current?.loadChangedByClient ? <small className="warning">⚠️ Клиент самостоятельно изменил рабочий вес.</small> : null}
+            {item?.current?.clientComment ? <small>Комментарий клиента: «{item.current.clientComment}»</small> : null}
+            {item?.current?.painReported ? <small className="negative">⚠️ В комментарии упоминается боль или травма — проверьте нагрузку.</small> : null}
+          </section>
+          <section className="trainerExerciseProgressHistorySessions">
+            {item?.sessions?.map((session, sessionIndex) => (
+              <article key={`${item.name}_${session.date?.toISOString?.() || sessionIndex}`}>
+                <strong>{formatCompactDate(session.date)} · выполнено</strong>
+                {(session.actualSets || []).map((set, index) => (
+                  <small key={`${sessionIndex}_${index}`}>
+                    {index + 1}. План: {session.plannedSets?.[index]?.weight || "—"} кг × {session.plannedSets?.[index]?.reps || "—"} · Факт: {set.weight || "—"} кг × {set.reps || "—"}
+                    {set.rpe ? ` · RPE ${set.rpe}` : ""}{set.rir ? ` · RIR ${set.rir}` : ""} · объём {set.volume || 0} кг
+                  </small>
+                ))}
+              </article>
+            ))}
+            {!item?.sessions?.length ? <div className="trainerNextEmpty">История выполнения пока недоступна.</div> : null}
+          </section>
+        </div>
+        <footer><button type="button" onClick={onClose}>Закрыть</button></footer>
+      </section>
+    </div>
   );
 }
 
@@ -3401,28 +3475,105 @@ function NutritionAnalytics({ nutritionDays, target }) {
 
 function NutritionDiary({ nutritionDays }) {
   const [activeDay, setActiveDay] = useState(0);
+  const [calendarMonth, setCalendarMonth] = useState("");
   const visibleDays = nutritionDays.slice(0, 30);
   const day = visibleDays[activeDay] || visibleDays[0] || { foods: [], totals: {} };
   const foods = day.foods || day.items || [];
   const totals = day.totals || {};
+  const calendarEntries = visibleDays.flatMap((item, index) => {
+    const date = getWorkspaceDate(item.date);
+    if (!date) return [];
+    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const dateKey = `${monthKey}-${String(date.getDate()).padStart(2, "0")}`;
+    return [{
+      item,
+      index,
+      date,
+      monthKey,
+      dateKey,
+      calories: Math.round(Number(item.totals?.calories) || 0)
+    }];
+  });
+  const entriesByDate = new Map(calendarEntries.map((entry) => [entry.dateKey, entry]));
+  const availableMonths = [...new Set(calendarEntries.map((entry) => entry.monthKey))].sort((left, right) => right.localeCompare(left));
+  const activeDate = getWorkspaceDate(day.date);
+  const activeMonthKey = activeDate
+    ? `${activeDate.getFullYear()}-${String(activeDate.getMonth() + 1).padStart(2, "0")}`
+    : "";
+  const displayedMonthKey = availableMonths.includes(calendarMonth)
+    ? calendarMonth
+    : activeMonthKey || availableMonths[0] || "";
+  const displayedMonthIndex = availableMonths.indexOf(displayedMonthKey);
+  const [displayedYear, displayedMonth] = displayedMonthKey.split("-").map(Number);
+  const daysInDisplayedMonth = displayedMonthKey ? new Date(displayedYear, displayedMonth, 0).getDate() : 0;
+  const firstWeekday = displayedMonthKey ? (new Date(displayedYear, displayedMonth - 1, 1).getDay() + 6) % 7 : 0;
+  const trailingCells = displayedMonthKey ? (7 - (firstWeekday + daysInDisplayedMonth) % 7) % 7 : 0;
+  const calendarCells = displayedMonthKey
+    ? [
+      ...Array.from({ length: firstWeekday }, () => null),
+      ...Array.from({ length: daysInDisplayedMonth }, (_, index) => {
+        const dayNumber = index + 1;
+        const dateKey = `${displayedMonthKey}-${String(dayNumber).padStart(2, "0")}`;
+        return { dayNumber, dateKey, entry: entriesByDate.get(dateKey) || null };
+      }),
+      ...Array.from({ length: trailingCells }, () => null)
+    ]
+    : [];
+  const calendarTitle = displayedMonthKey
+    ? new Date(displayedYear, displayedMonth - 1, 1)
+      .toLocaleDateString("ru-RU", { month: "long", year: "numeric" })
+      .replace(/^./, (letter) => letter.toUpperCase())
+    : "Нет записей";
 
   return (
     <div className="trainerNutritionDiary">
-      <aside>
-        {visibleDays.map((item, index) => {
-          const date = getWorkspaceDate(item.date);
-          const dayNumber = date ? date.getDate() : index + 1;
-          const dateLabel = date
-            ? date.toLocaleDateString("ru-RU", { day: "numeric", month: "long" })
-            : `День ${dayNumber}`;
-          const calories = Math.round(Number(item.totals?.calories) || 0);
-          return (
-            <button type="button" className={activeDay === index ? "active" : ""} aria-label={`${dateLabel}: ${calories} ккал`} aria-pressed={activeDay === index} key={item.date || index} onClick={() => setActiveDay(index)} title={`${dateLabel}: ${calories} ккал`}>
-              <strong>{dayNumber}</strong>
-              <small>{calories || "—"}</small>
-            </button>
-          );
-        })}
+      <aside aria-label="Календарь дневника питания">
+        <div className="trainerNutritionDiaryCalendarHeader">
+          <button
+            type="button"
+            aria-label="Предыдущий месяц"
+            disabled={displayedMonthIndex < 0 || displayedMonthIndex >= availableMonths.length - 1}
+            onClick={() => setCalendarMonth(availableMonths[displayedMonthIndex + 1] || displayedMonthKey)}
+          ><ChevronLeft size={18} /></button>
+          <strong>{calendarTitle}</strong>
+          <button
+            type="button"
+            aria-label="Следующий месяц"
+            disabled={displayedMonthIndex <= 0}
+            onClick={() => setCalendarMonth(availableMonths[displayedMonthIndex - 1] || displayedMonthKey)}
+          ><ChevronRight size={18} /></button>
+        </div>
+        <div className="trainerNutritionDiaryWeekdays" aria-hidden="true">
+          {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((weekday) => <span key={weekday}>{weekday}</span>)}
+        </div>
+        <div className="trainerNutritionDiaryCalendarGrid">
+          {calendarCells.map((cell, index) => {
+            if (!cell) return <span className="trainerNutritionDiaryCalendarEmpty" aria-hidden="true" key={`empty_${index}`} />;
+            const { entry, dayNumber } = cell;
+            const dateLabel = new Date(displayedYear, displayedMonth - 1, dayNumber).toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+            const isActive = entry?.index === activeDay;
+            return (
+              <button
+                type="button"
+                className={`${isActive ? "active " : ""}${entry ? "has-entry" : "is-empty"}`}
+                aria-label={entry ? `${dateLabel}: ${entry.calories} ккал` : `${dateLabel}: нет записи`}
+                aria-pressed={isActive}
+                disabled={!entry}
+                key={cell.dateKey}
+                onClick={() => {
+                  if (!entry) return;
+                  setActiveDay(entry.index);
+                  setCalendarMonth(entry.monthKey);
+                }}
+                title={entry ? `${dateLabel}: ${entry.calories} ккал` : "Нет записи"}
+              >
+                <strong>{dayNumber}</strong>
+                {entry ? <small>{entry.calories || "—"}</small> : null}
+              </button>
+            );
+          })}
+        </div>
+        <p className="trainerNutritionDiaryCalendarHint">В ячейке указаны съеденные ккал. Нажмите на дату, чтобы открыть записи.</p>
       </aside>
       <section className="trainerNextMealPanel">
         <div className="trainerNutritionDiaryHead">
@@ -3449,7 +3600,7 @@ function NutritionDiary({ nutritionDays }) {
   );
 }
 
-function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGeneratePlan, status }) {
+function NutritionPlan({ client, profile = {}, history = [], nutritionDays = [], goals, planOptions = [], onSavePlan, onGeneratePlan, status }) {
   const currentPlan = client?.nutritionPlan || null;
   const presetOptions = Array.isArray(planOptions) && planOptions.length
     ? planOptions
@@ -3475,6 +3626,11 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
     ...initialDraft,
     presetId: initialPreset
   }));
+  const [preparedAiPlan, setPreparedAiPlan] = useState(null);
+  const [aiStatus, setAiStatus] = useState("");
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const isIndividualPreset = preset === "custom";
+  useBodyScrollLock(editing, { lockHtml: true });
   const visiblePlan = editing ? draft : {
     name: currentPlan?.name || draft.name,
     goal: currentPlan?.goal || draft.goal,
@@ -3488,6 +3644,8 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
 
   function selectPreset(value) {
     const normalizedValue = normalizeNutritionPresetId(value);
+    setPreparedAiPlan(null);
+    setAiStatus("");
     setPreset(normalizedValue);
     if (presetMap[normalizedValue]) {
       setDraft((current) => ({
@@ -3502,16 +3660,46 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
 
   async function savePlan() {
     setSaving(true);
-    const saved = await onSavePlan?.({ ...draft, presetId: draft.presetId || preset });
-    setSaving(false);
-    if (saved !== false) setEditing(false);
+    try {
+      const saved = await onSavePlan?.({
+        ...draft,
+        presetId: draft.presetId || preset,
+        ...(preparedAiPlan ? { aiNutritionPlan: preparedAiPlan } : {})
+      });
+      if (saved !== false) setSaveSuccess(true);
+    } catch (error) {
+      console.error("Trainer AI nutrition plan save error:", error);
+      setAiStatus("Не удалось сохранить план. Проверьте соединение и повторите попытку.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function prepareAiPlan() {
+    const prepared = buildTrainerAiNutritionPlanDraft({
+      client,
+      profile,
+      history,
+      nutritionDays,
+      nutritionGoals: goals
+    });
+    setAiStatus(prepared.message || "");
+    onGeneratePlan?.(prepared);
+    if (!prepared.ok) return;
+
+    setPreset("custom");
+    setDraft((current) => ({ ...current, ...prepared.planDraft }));
+    setPreparedAiPlan(prepared.aiNutritionPlan);
   }
 
   function closePlanEditor() {
+    if (saving || saveSuccess) return;
     const nextDraft = buildDraft();
     const nextPreset = presetMap[nextDraft.presetId] ? nextDraft.presetId : "custom";
     setPreset(nextPreset);
     setDraft({ ...nextDraft, presetId: nextPreset });
+    setPreparedAiPlan(null);
+    setAiStatus("");
     setEditing(false);
   }
 
@@ -3548,15 +3736,15 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
       </section>
 
       {editing ? (
-      <div className="trainerNextModalBackdrop" data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && !saving && closePlanEditor()}>
+      <div className="trainerNextModalBackdrop" data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && !saving && !saveSuccess && closePlanEditor()}>
       <section className="trainerNutritionPlanModal" role="dialog" aria-modal="true" data-modal-surface="true" data-trainer-modal-surface="true" data-trainer-modal-frame="true" aria-labelledby="trainer-nutrition-plan-modal-title">
         <header data-trainer-modal-header="true">
           <div>
             <span>ПЛАН ПИТАНИЯ КЛИЕНТА</span>
             <h2 id="trainer-nutrition-plan-modal-title">Изменить план</h2>
-            <p>Сохранится после подтверждения.</p>
+            <p>Готовый вариант фиксирует название и КБЖУ. Для изменения выберите «Индивидуальные значения».</p>
           </div>
-          <button className="trainerNextModalClose" type="button" onClick={closePlanEditor} disabled={saving} aria-label="Закрыть редактор плана"><X size={20} /></button>
+          <button className="trainerNextModalClose" type="button" onClick={closePlanEditor} disabled={saving || saveSuccess} aria-label="Закрыть редактор плана"><X size={20} /></button>
         </header>
         <div className="trainerNutritionPlanModalBody" data-trainer-modal-content="true">
         <section className="trainerClientAssignment">
@@ -3573,13 +3761,23 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
                 <option key={item.id} value={normalizeNutritionPresetId(item.id)}>{item.name} · {item.calories} ккал · Б {item.protein} · Ж {item.fat} · У {item.carbs}</option>
               ))}
             </select>
-            <small className="trainerNutritionPresetPreview">
-              {Number(draft.calories) || 0} ккал · Б {Number(draft.protein) || 0} · Ж {Number(draft.fat) || 0} · У {Number(draft.carbs) || 0}
-            </small>
           </label>
-          <label><span>Название плана</span><input value={draft.name} onChange={(event) => { setPreset("custom"); setDraft((current) => ({ ...current, name: event.target.value, presetId: "custom" })); }} /></label>
-          <label><span>Цель клиента</span><input value={draft.goal} placeholder="Например, рекомпозиция" onChange={(event) => { setPreset("custom"); setDraft((current) => ({ ...current, goal: event.target.value, presetId: "custom" })); }} /></label>
+          <label className={!isIndividualPreset ? "trainerNutritionLockedField" : ""}>
+            <span>Название плана</span>
+            <input
+              value={draft.name}
+              disabled={!isIndividualPreset}
+              aria-describedby={!isIndividualPreset ? "trainer-nutrition-preset-mode" : undefined}
+              onChange={(event) => { setPreparedAiPlan(null); setAiStatus(""); setDraft((current) => ({ ...current, name: event.target.value, presetId: "custom" })); }}
+            />
+          </label>
+          <label><span>Цель клиента</span><input value={draft.goal} placeholder="Например, рекомпозиция" onChange={(event) => { setPreparedAiPlan(null); setAiStatus(""); setDraft((current) => ({ ...current, goal: event.target.value })); }} /></label>
         </div>
+        <p id="trainer-nutrition-preset-mode" className={`trainerNutritionPresetMode${isIndividualPreset ? " isIndividual" : ""}`} role="status">
+          {isIndividualPreset
+            ? "Индивидуальный режим: можно изменить название и дневные цели."
+            : "Готовый вариант: название и дневные цели берутся из шаблона и не редактируются."}
+        </p>
         <div className="trainerNutritionGoalInputs">
           {[
             ["calories", "Калории", "ккал"],
@@ -3587,7 +3785,20 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
             ["fat", "Жиры", "г"],
             ["carbs", "Углеводы", "г"]
           ].map(([key, label, unit]) => (
-            <label key={key}><span>{label}</span><div><input type="number" min="0" value={draft[key]} onChange={(event) => { setPreset("custom"); setDraft((current) => ({ ...current, [key]: event.target.value, presetId: "custom" })); }} /><small>{unit}</small></div></label>
+            <label key={key} className={!isIndividualPreset ? "trainerNutritionLockedField" : ""}>
+              <span>{label}</span>
+              <div>
+                <input
+                  type="number"
+                  min="0"
+                  value={draft[key]}
+                  disabled={!isIndividualPreset}
+                  aria-describedby={!isIndividualPreset ? "trainer-nutrition-preset-mode" : undefined}
+                  onChange={(event) => { setPreparedAiPlan(null); setAiStatus(""); setDraft((current) => ({ ...current, [key]: event.target.value, presetId: "custom" })); }}
+                />
+                <small>{unit}</small>
+              </div>
+            </label>
           ))}
         </div>
         <div className="trainerNutritionValidity">
@@ -3595,23 +3806,33 @@ function NutritionPlan({ client, goals, planOptions = [], onSavePlan, onGenerate
           <label><span>Действует по</span><input type="date" min={draft.validFrom || undefined} value={draft.validTo} onChange={(event) => setDraft((current) => ({ ...current, validTo: event.target.value }))} /></label>
           <small>Период необязателен. Без дат план действует до следующего изменения.</small>
         </div>
-        {status ? <p className="trainerNextProgramStatus">{status}</p> : null}
+        {aiStatus ? <p className="trainerNextProgramStatus" role="status">{aiStatus}</p> : null}
+        {status && status !== aiStatus ? <p className="trainerNextProgramStatus">{status}</p> : null}
       </section>
       </div>
       <footer className="trainerNutritionPlanActions" data-trainer-modal-footer="true">
-        <button className="trainerNextPrimary" type="button" disabled={saving} onClick={savePlan}><Save size={17} />{saving ? "Сохранение..." : "Сохранить"}</button>
-        <button type="button" onClick={closePlanEditor} disabled={saving}>Отмена</button>
-        <button type="button" onClick={onGeneratePlan} disabled={saving}><Sparkles size={17} />Подготовить AI-план</button>
+        <button className="trainerNextPrimary" type="button" disabled={saving || saveSuccess} onClick={savePlan}><Save size={17} />{saving ? "Сохранение..." : saveSuccess ? "План сохранён" : "Сохранить"}</button>
+        <button type="button" onClick={closePlanEditor} disabled={saving || saveSuccess}>Отмена</button>
+        <button type="button" onClick={prepareAiPlan} disabled={saving || saveSuccess}><Sparkles size={17} />Сформировать индивидуальный AI-план</button>
       </footer>
       </section>
+      {saveSuccess ? (
+        <SaveSuccessNotice
+          title="План питания сохранён"
+          description="Новые цели питания уже применены у клиента."
+          onComplete={() => {
+            setSaveSuccess(false);
+            setEditing(false);
+          }}
+        />
+      ) : null}
       </div>
       ) : null}
     </div>
   );
 }
 
-function NutritionView({ client, nutritionDays, goals = {}, planOptions = [], onGeneratePlan, onSavePlan, status }) {
-  const [section, setSection] = useState("nutrition");
+function NutritionView({ client, profile = {}, history = [], nutritionDays, goals = {}, planOptions = [], onGeneratePlan, onSavePlan, status, onOpenDiary }) {
   const target = {
     calories: Number(goals.calories) || 2000,
     protein: Number(goals.protein) || 150,
@@ -3619,60 +3840,48 @@ function NutritionView({ client, nutritionDays, goals = {}, planOptions = [], on
     carbs: Number(goals.carbs) || 200
   };
   return (
-    <div className="trainerNextNutrition trainerNextNutritionUnified">
-      <ClientSectionTabs
-        label="Разделы питания клиента"
-        value={section}
-        onChange={setSection}
-        items={[
-          { id: "nutrition", label: "План" },
-          { id: "diary", label: "Дневник питания" }
-        ]}
-      />
-      {section === "nutrition" ? (
-        <>
-          <section id="trainerNutritionAnalytics" className="trainerNutritionUnifiedSection">
-            <div className="trainerClientBlockHeading">
-              <span><BarChart3 size={19} /></span>
-              <div><h2>Аналитика питания</h2><p>Средние значения считаются по завершённым дням без сегодняшнего дня.</p></div>
-            </div>
-            <NutritionAnalytics nutritionDays={nutritionDays} target={target} />
-          </section>
+    <div className="trainerNextNutrition trainerNextNutritionUnified trainerClientTabContent">
+      <section id="trainerNutritionAnalytics" className="trainerNutritionUnifiedSection">
+        <div className="trainerClientBlockHeading">
+          <span><BarChart3 size={19} /></span>
+          <div><h2>Аналитика питания</h2><p>Средние значения считаются по завершённым дням без сегодняшнего дня.</p></div>
+        </div>
+        <NutritionAnalytics nutritionDays={nutritionDays} target={target} />
+      </section>
 
-          <section id="trainerNutritionPlan" className="trainerNutritionUnifiedSection">
-            <NutritionPlan
-              key={[
-                client?.id || "nutrition-plan",
-                client?.nutritionPlan?.updatedAt || "",
-                client?.nutritionPlan?.presetId || client?.nutritionPlan?.preset || "",
-                client?.nutritionPlan?.calories || goals.calories || "",
-                client?.nutritionPlan?.protein || goals.protein || "",
-                client?.nutritionPlan?.fat || goals.fat || "",
-                client?.nutritionPlan?.carbs || goals.carbs || ""
-              ].join("::")}
-              client={client}
-              goals={goals}
-              planOptions={planOptions}
-              onSavePlan={onSavePlan}
-              onGeneratePlan={onGeneratePlan}
-              status={status}
-            />
-          </section>
-        </>
-      ) : (
-        <section id="trainerNutritionDiary" className="trainerNutritionUnifiedSection trainerNutritionDiarySection">
-          <div className="trainerClientBlockHeading">
-            <span><Eye size={19} /></span>
-            <div><h2>Дневник питания</h2><p>Записи клиента доступны только для просмотра.</p></div>
-          </div>
-          <NutritionDiary nutritionDays={nutritionDays} />
-        </section>
-      )}
+      <section id="trainerNutritionPlan" className="trainerNutritionUnifiedSection">
+        <NutritionPlan
+          key={[
+            client?.id || "nutrition-plan",
+            client?.nutritionPlan?.updatedAt || "",
+            client?.nutritionPlan?.presetId || client?.nutritionPlan?.preset || "",
+            client?.nutritionPlan?.calories || goals.calories || "",
+            client?.nutritionPlan?.protein || goals.protein || "",
+            client?.nutritionPlan?.fat || goals.fat || "",
+            client?.nutritionPlan?.carbs || goals.carbs || ""
+          ].join("::")}
+          client={client}
+          profile={profile}
+          history={history}
+          nutritionDays={nutritionDays}
+          goals={goals}
+          planOptions={planOptions}
+          onSavePlan={onSavePlan}
+          onGeneratePlan={onGeneratePlan}
+          status={status}
+        />
+      </section>
+      <ClientSectionLaunchButton
+        icon={Eye}
+        title="Открыть дневник питания"
+        description="Все записи клиента по дням и приёмам пищи"
+        onClick={onOpenDiary}
+      />
     </div>
   );
 }
 
-function TrainerNutritionPage({ client, nutritionDays, goals, planOptions = [], onGeneratePlan, onSavePlan, status }) {
+function TrainerNutritionPage({ client, profile = {}, history = [], nutritionDays, goals, planOptions = [], onGeneratePlan, onSavePlan, status }) {
   return (
     <div className="trainerNextPage trainerNextNutritionPage">
       <div className="trainerNextDesktopPageHead">
@@ -3683,7 +3892,7 @@ function TrainerNutritionPage({ client, nutritionDays, goals, planOptions = [], 
         <div className="trainerNextMobileTitle">Питание и дневник</div>
         <button type="button" aria-label="Календарь"><CalendarDays size={21} /></button>
       </header>
-      <NutritionView client={client} nutritionDays={nutritionDays} goals={goals} planOptions={planOptions} onGeneratePlan={onGeneratePlan} onSavePlan={onSavePlan} status={status} />
+      <NutritionView client={client} profile={profile} history={history} nutritionDays={nutritionDays} goals={goals} planOptions={planOptions} onGeneratePlan={onGeneratePlan} onSavePlan={onSavePlan} status={status} />
     </div>
   );
 }
@@ -3700,6 +3909,7 @@ function ClientNotifications({
   onConnectTelegram,
   onSaveSubscription,
   onSubscriptionSaved,
+  startSubscriptionEditing = false,
   mode = "calendar"
 }) {
   const showCalendar = true;
@@ -3723,7 +3933,7 @@ function ClientNotifications({
     usedSessions: Math.max(0, Number(subscription.usedSessions) || 0),
     frozen: subscription.frozen === true
   }));
-  const [editingSubscription, setEditingSubscription] = useState(() => !(subscription.startDate && subscription.endDate));
+  const [editingSubscription, setEditingSubscription] = useState(() => startSubscriptionEditing || !(subscription.startDate && subscription.endDate));
   const subscriptionStatus = getSubscriptionStatus({ ...subscription, ...subscriptionDraft }, new Date());
   const subscriptionStatusCopy = subscriptionStatus.id === "active"
     ? "Абонемент активен."
@@ -3777,6 +3987,60 @@ function ClientNotifications({
       });
     return result;
   }, [scheduleSlots]);
+  const subscriptionScheduleEntriesByDate = useMemo(() => {
+    const entriesByDate = new Map();
+    const currentAssignmentVersion = String(
+      scheduleCalendar?.assignedProgramUpdatedAt ||
+      scheduleSlots.find((slot) => slot?.assignedProgramUpdatedAt)?.assignedProgramUpdatedAt ||
+      ""
+    ).trim();
+    const currentWorkoutIds = new Set(scheduleSlots
+      .map((slot) => getTrainerWorkoutKey(slot?.workoutId))
+      .filter(Boolean));
+    const currentWorkoutNames = new Set(scheduleSlots
+      .map((slot) => getTrainerWorkoutKey(slot?.workoutName))
+      .filter(Boolean));
+    const addEntry = (entry) => {
+      if (!entry?.date) return;
+      const entries = entriesByDate.get(entry.date) || [];
+      entries.push(entry);
+      entriesByDate.set(entry.date, entries);
+    };
+
+    // These entries carry the exact plan outcome: planned, on time, completed
+    // on another date, missed, or shifted. The subscription calendar is
+    // read-only, so it must display the saved schedule rather than recalculate
+    // it from generic history dates.
+    buildWorkoutScheduleCalendarEntries(scheduleSlots).forEach(addEntry);
+
+    // Keep older-program sessions visible, but never let an old history row
+    // obscure the state of a workout belonging to the current program.
+    (Array.isArray(history) ? history : []).forEach((item, index) => {
+      const date = toWorkoutDateKey(item?.date || item?.completedAt || item?.finishedAt || item?.createdAt);
+      const workoutId = getTrainerWorkoutKey(item?.workoutId);
+      const workoutName = getTrainerWorkoutKey(item?.workoutName || item?.workout || item?.name);
+      const historyAssignmentVersion = String(item?.assignedProgramUpdatedAt || item?.assignmentVersion || "").trim();
+      const belongsToOlderAssignment = Boolean(
+        currentAssignmentVersion &&
+        historyAssignmentVersion &&
+        historyAssignmentVersion !== currentAssignmentVersion
+      );
+      const belongsToCurrentWorkout = currentWorkoutIds.has(workoutId) || currentWorkoutNames.has(workoutName);
+      if (!date || (!belongsToOlderAssignment && belongsToCurrentWorkout)) return;
+
+      addEntry({
+        id: `past-${workoutId || workoutName || index}-${date}`,
+        date,
+        order: index + 1,
+        workoutId,
+        status: "pastCompleted",
+        pastCompleted: true,
+        title: item?.workoutName || item?.workout || item?.name || "Прошлая тренировка"
+      });
+    });
+
+    return entriesByDate;
+  }, [history, scheduleCalendar, scheduleSlots]);
   const [draft, setDraft] = useState({
     enabled: calendar.reminderEnabled !== false && client?.telegramNotificationsEnabled !== false,
     offsets: Array.isArray(calendar.reminderOffsetsHours) && calendar.reminderOffsetsHours.length
@@ -3963,6 +4227,16 @@ function ClientNotifications({
           // need to see both upcoming sessions and the completed history there.
           const plannedWorkout = plannedWorkoutDates.has(day.key);
           const completedWorkout = completedWorkoutDates.has(day.key);
+          const subscriptionScheduleEntries = section === "subscription"
+            ? subscriptionScheduleEntriesByDate.get(day.key) || []
+            : [];
+          const subscriptionWorkoutStatus = getWorkoutScheduleCalendarStatus(subscriptionScheduleEntries);
+          const subscriptionWorkoutClass = subscriptionWorkoutStatus === "planned"
+            ? "plannedWorkout"
+            : subscriptionWorkoutStatus === "pastCompleted"
+              ? "pastWorkout"
+              : subscriptionWorkoutStatus;
+          const hasSubscriptionWorkout = subscriptionScheduleEntries.length > 0;
           const today = day.key === getLocalDateKey();
           const photoReminder = section === "notifications" && photoReminderDates.has(day.key);
           const measurementReminder = section === "notifications" && measurementReminderDates.has(day.key);
@@ -3977,8 +4251,12 @@ function ClientNotifications({
           const subscriptionRange = section === "subscription" && Boolean(subscriptionDraft.startDate) && day.key >= subscriptionDraft.startDate && (!subscriptionDraft.endDate || day.key <= subscriptionDraft.endDate);
           const completedOrders = completedWorkoutOrdersByDate.get(day.key) || [];
           const labels = [
-            plannedWorkout ? "плановая тренировка" : "",
-            completedWorkout ? "фактическое выполнение" : "",
+            ...(section === "subscription"
+              ? subscriptionScheduleEntries.map((entry) => `тренировка №${entry.order}: ${WORKOUT_SCHEDULE_DAY_STATUS_TEXT[entry.status] || entry.title || ""}`)
+              : [
+                plannedWorkout ? "плановая тренировка" : "",
+                completedWorkout ? "фактическое выполнение" : ""
+              ]),
             subscriptionStart ? "начало абонемента" : "",
             subscriptionEnd ? "окончание абонемента" : "",
             photoReminder ? "фото прогресса" : "",
@@ -3989,8 +4267,8 @@ function ClientNotifications({
               type="button"
               key={day.key}
               className={[
-                plannedWorkout ? "plannedWorkout" : "",
-                completedWorkout ? "pastWorkout" : "",
+                section === "subscription" ? subscriptionWorkoutClass : plannedWorkout ? "plannedWorkout" : "",
+                section === "subscription" ? "" : completedWorkout ? "pastWorkout" : "",
                 subscriptionRange ? "subscriptionRange" : "",
                 editingSubscriptionStart ? "subscriptionStart" : "",
                 editingSubscriptionEnd ? "subscriptionEnd" : "",
@@ -3999,7 +4277,7 @@ function ClientNotifications({
                 photoReminder ? "photoReminder" : "",
                 measurementReminder ? "measurementReminder" : ""
               ].filter(Boolean).join(" ")}
-              aria-pressed={subscriptionRange || plannedWorkout || completedWorkout}
+              aria-pressed={subscriptionRange || (section === "subscription" ? hasSubscriptionWorkout : plannedWorkout || completedWorkout)}
               disabled={section === "notifications" || (section === "subscription" && !editingSubscription)}
               onClick={() => {
                 if (section === "subscription") selectSubscriptionDate(day.key);
@@ -4011,7 +4289,22 @@ function ClientNotifications({
                 {editingSubscriptionStart ? <span className="trainerSubscriptionCalendarRangeMark" aria-hidden="true">«</span> : null}
                 {editingSubscriptionEnd && !editingSubscriptionStart ? <span className="trainerSubscriptionCalendarRangeMark" aria-hidden="true">»</span> : null}
               </b>
-              {labels.length ? (
+              {section === "subscription" && hasSubscriptionWorkout ? (
+                <span className="trainerNotificationDayBadges">
+                  {subscriptionScheduleEntries.slice(0, 3).map((entry) => {
+                    const entryClass = entry.status === "completed_off_date"
+                      ? "completedOffDate"
+                      : entry.status === "pastCompleted"
+                        ? "pastWorkout"
+                        : entry.status;
+                    return (
+                      <i className={entryClass} key={entry.id} title={entry.title}>
+                        {entry.status === "pastCompleted" ? "✓" : `№${entry.order}`}
+                      </i>
+                    );
+                  })}
+                </span>
+              ) : labels.length ? (
                 <span className="trainerNotificationDayBadges">
                   {plannedWorkout ? <i className="workout">Т</i> : null}
                   {completedWorkout ? <i className="pastWorkout">{completedOrders.length ? `№${completedOrders.join(", №")}` : "✓"}</i> : null}
@@ -4037,7 +4330,7 @@ function ClientNotifications({
   );
 
   const calendarEditor = (
-    <section className={`trainerNotificationCalendar trainerClientCalendarPanel ${workspaceFeatureStyles.notificationCalendar} ${section === "subscription" ? "trainerCalendarModeSubscription trainerSubscriptionCalendarUnified" : "trainerCalendarModeNotifications"} ${showNotificationSettings || section === "subscription" ? "trainerWorkoutSchedulePlanner" : ""} ${editingSubscription ? "editing" : ""}`}>
+    <section className={`trainerNotificationCalendar trainerClientCalendarPanel ${workspaceFeatureStyles.notificationCalendar} ${section === "subscription" ? "trainerCalendarModeSubscription trainerSubscriptionCalendarUnified trainerNotificationCalendarUnified" : "trainerCalendarModeNotifications"} ${showNotificationSettings || section === "subscription" ? "trainerWorkoutSchedulePlanner" : ""} ${editingSubscription ? "editing" : ""}`}>
       {showNotificationSettings ? (
         <>
           <header>
@@ -4092,6 +4385,10 @@ function ClientNotifications({
               <div className="trainerNotificationLegend" aria-label="Типы календарных отметок">
                 <span><i className="subscription" />Период абонемента</span>
                 <span><i className="plannedWorkout" />Плановая тренировка</span>
+                <span><i className="completed" />В срок</span>
+                <span><i className="completedOffDate" />Выполнено в другой день</span>
+                <span><i className="missed" />Пропущена</span>
+                <span><i className="shifted" />Смещена</span>
                 <span><i className="pastWorkout" />Прошлая тренировка</span>
               </div>
             </div>
@@ -4284,40 +4581,175 @@ function ClientNotifications({
   );
 }
 
-function ClientWorkSummary({ snapshot, workoutReview }) {
-  if (!snapshot && !workoutReview?.workoutId) return null;
-
-  const completion = snapshot?.assignedWorkoutCount
+function ClientWorkSummary({
+  snapshot,
+  workoutReview,
+  measurements = [],
+  nutritionDays = [],
+  nutritionGoals = {},
+  onTabChange
+}) {
+  const sortedMeasurements = (Array.isArray(measurements) ? measurements : [])
+    .slice()
+    .sort((first, second) => (getMeasurementDate(second)?.getTime() || 0) - (getMeasurementDate(first)?.getTime() || 0));
+  const latestMeasurement = sortedMeasurements[0] || null;
+  const latestMeasurementValues = latestMeasurement?.values && typeof latestMeasurement.values === "object"
+    ? Object.values(latestMeasurement.values)
+    : [];
+  const updatedMeasurementCount = latestMeasurementValues.filter((value) => Number.isFinite(Number(value))).length;
+  const nutrition = buildTrainerClientProgressDashboard({
+    nutritionDays,
+    nutritionGoals,
+    days: 180
+  }).nutrition;
+  const workoutCompletion = snapshot?.assignedWorkoutCount
     ? `${snapshot.completedWorkoutCount || 0} из ${snapshot.assignedWorkoutCount}`
     : "нет программы";
-  const statusText = snapshot?.primaryAttention?.reason || snapshot?.status?.label || "Активен";
-  const lastWorkout = snapshot?.lastWorkoutAt ? formatCompactDate(snapshot.lastWorkoutAt) : "нет данных";
-  const lastMeasurement = snapshot?.lastMeasurementAt ? formatCompactDate(snapshot.lastMeasurementAt) : "нет данных";
-  const reviewTitle = workoutReview?.workoutName || "Последняя тренировка";
   const reviewSets = workoutReview?.plannedSetsCount
     ? `${workoutReview.completedSetsCount || 0} из ${workoutReview.plannedSetsCount} подходов`
     : `${workoutReview?.completedSetsCount || 0} подходов`;
+  const cards = [
+    {
+      id: "workout",
+      target: "workouts",
+      icon: CalendarDays,
+      label: "Последняя тренировка",
+      value: snapshot?.lastWorkoutAt ? formatCompactDate(snapshot.lastWorkoutAt) : "Нет данных",
+      detail: workoutReview?.workoutId
+        ? `${workoutReview.completedExercisesCount || 0} упр. · ${reviewSets} · ${workoutReview.volumeKg || 0} кг`
+        : `Программа: ${workoutCompletion}`
+    },
+    {
+      id: "measurements",
+      target: "bodyProgress",
+      icon: Ruler,
+      label: "Последние замеры",
+      value: latestMeasurement ? formatCompactDate(getMeasurementDate(latestMeasurement)) : "Нет данных",
+      detail: latestMeasurement
+        ? updatedMeasurementCount
+          ? `Обновлено показателей: ${updatedMeasurementCount}`
+          : "Добавлена запись замеров"
+        : "Клиент ещё не добавлял замеры"
+    },
+    {
+      id: "nutrition",
+      target: "nutrition",
+      icon: Utensils,
+      label: "Питание",
+      value: Number.isFinite(nutrition.current) ? `${roundTrainerNumber(nutrition.current, 0)}%` : "—",
+      detail: nutrition.trackedDays
+        ? `${nutrition.trackedDays} из ${nutrition.periodDays} завершённых дней`
+        : "Нет завершённых записей"
+    }
+  ];
 
   return (
-    <section className="trainerClientWorkSummary" aria-label="Короткая сводка по клиенту">
-      <article>
-        <span>СОСТОЯНИЕ</span>
-        <strong>{statusText}</strong>
-        <small>Программа: {completion}</small>
-      </article>
-      <article>
-        <span>АКТИВНОСТЬ</span>
-        <strong>{lastWorkout}</strong>
-        <small>Замеры: {lastMeasurement}</small>
-      </article>
-      {workoutReview?.workoutId ? (
-        <article className={workoutReview.needsTrainerReply ? "attention" : ""}>
-          <span>ПОСЛЕДНЯЯ ТРЕНИРОВКА</span>
-          <strong>{reviewTitle}</strong>
-          <small>{workoutReview.completedExercisesCount || 0} упр. · {reviewSets} · {workoutReview.volumeKg || 0} кг</small>
-          {workoutReview.clientComment ? <p>{workoutReview.clientComment}</p> : null}
+    <section className={`trainerClientWorkSummary ${clientOverviewStyles.keyMetrics}`} aria-label="Ключевые показатели клиента">
+      {cards.map(({ id, target, icon: Icon, label, value, detail }) => (
+        <article key={id} className={clientOverviewStyles.keyMetric}>
+          <button
+            type="button"
+            className={clientOverviewStyles.keyMetricButton}
+            onClick={() => onTabChange?.(target)}
+            aria-label={`${label}: ${value}. Открыть раздел`}
+          >
+            <span className={clientOverviewStyles.keyMetricIcon}><Icon size={23} /></span>
+            <span className={clientOverviewStyles.keyMetricCopy}>
+              <small>{label}</small>
+              <strong>{value}</strong>
+              <span>{detail}</span>
+            </span>
+            <ChevronRight className={clientOverviewStyles.keyMetricArrow} size={19} aria-hidden="true" />
+          </button>
         </article>
-      ) : null}
+      ))}
+    </section>
+  );
+}
+
+function ClientOverviewAttention({
+  snapshot,
+  workoutReview,
+  history = [],
+  onTabChange,
+  onOpenCalendar,
+  onOpenTasks,
+  onOpenFeedback,
+  onOpenMessage
+}) {
+  const attentionItems = Array.isArray(snapshot?.attentionItems) && snapshot.attentionItems.length
+    ? snapshot.attentionItems
+    : snapshot?.primaryAttention?.reason
+      ? [snapshot.primaryAttention]
+      : [];
+  const hasAttentionType = (type) => attentionItems.some((item) => item?.type === type);
+  const items = [...attentionItems];
+  if (workoutReview?.needsTrainerReply && !hasAttentionType("feedback")) {
+    items.push({ type: "feedback", reason: "Нужна проверка после тренировки" });
+  }
+  if (Number(snapshot?.activeTasksCount) > 0 && !hasAttentionType("task")) {
+    items.push({
+      type: "task",
+      reason: `Есть активные задания: ${snapshot.activeTasksCount}`
+    });
+  }
+  if (!items.length) return null;
+
+  const actionByType = {
+    program: { target: "workouts", label: "Назначить программу", fallback: "Не назначена программа тренировок" },
+    programEnding: { target: "workouts", label: "Обновить план", fallback: "Заканчивается назначенная программа" },
+    workout: { target: "workouts", label: "Открыть тренировку", fallback: "Не закрыта плановая тренировка" },
+    feedback: { target: "feedback", label: "Открыть сообщение", fallback: "Нужна проверка после тренировки" },
+    nutrition: { target: "nutrition", label: "Открыть питание", fallback: "Нужно проверить дневник питания" },
+    measure: { target: "bodyProgress", label: "Открыть замеры", fallback: "Не обновлялись замеры" },
+    payment: { target: "calendar", label: "Открыть абонемент", fallback: "Нужно проверить абонемент" },
+    task: { target: "tasks", label: "Открыть задания", fallback: "Есть активные задания клиента" },
+    activity: { target: "message", label: "Написать клиенту", fallback: "Нет недавней активности" }
+  };
+  const workoutNotes = getWorkoutNoteItems(history);
+  const feedbackNote = workoutNotes.find((note) => (
+    (workoutReview?.workoutId && note?.workoutId === workoutReview.workoutId)
+    || (workoutReview?.historyId && note?.historyId === workoutReview.historyId)
+  )) || workoutNotes[0] || null;
+
+  function openAttention(action) {
+    if (action.target === "calendar") {
+      onOpenCalendar?.();
+      return;
+    }
+    if (action.target === "tasks") {
+      onOpenTasks?.();
+      return;
+    }
+    if (action.target === "feedback") {
+      if (feedbackNote) {
+        onOpenFeedback?.(feedbackNote);
+        return;
+      }
+      onTabChange?.("messages");
+      return;
+    }
+    if (action.target === "message") {
+      onOpenMessage?.();
+      return;
+    }
+    onTabChange?.(action.target);
+  }
+
+  return (
+    <section className={clientOverviewStyles.controlNotices} aria-label="Контроль клиента">
+      {items.map((attention, index) => {
+        const action = actionByType[attention?.type] || actionByType.activity;
+        const suppliedTitle = String(attention?.reason || "").trim();
+        const title = /контрол.*просроч/i.test(suppliedTitle) ? action.fallback : suppliedTitle || action.fallback;
+        return (
+          <div className={clientOverviewStyles.controlNotice} key={`${attention?.type || "attention"}-${index}`}>
+            <span className={clientOverviewStyles.controlNoticeIcon}><CircleAlert size={22} /></span>
+            <strong>{title}</strong>
+            <button type="button" onClick={() => openAttention(action)}>{action.label}<ChevronRight size={16} /></button>
+          </div>
+        );
+      })}
     </section>
   );
 }
@@ -4395,7 +4827,6 @@ function TrainerClientDetail({
     "messages", "notes"
   ].includes(activeTab) ? activeTab : "overview";
   const exercisesOpen = ["exercises", "workouts", "exerciseProgress", "training"].includes(currentTab);
-  const exerciseSubview = currentTab === "exerciseProgress" ? "progress" : "plan";
   const messagesOpen = ["messages", "notes"].includes(currentTab);
   const clientTelegram = getClientTelegramProfile(client);
   const telegramAvailable = Boolean(clientTelegram.connected && clientTelegram.username && onOpenTelegramChat);
@@ -4448,7 +4879,6 @@ function TrainerClientDetail({
   const [actionsOpen, setActionsOpen] = useState(false);
   const [messageResolvingKey, setMessageResolvingKey] = useState("");
   const [messageResolutionStatus, setMessageResolutionStatus] = useState("");
-  const [overviewSection, setOverviewSection] = useState("overview");
   const [locallyResolvedMessages, setLocallyResolvedMessages] = useState({ clientId: client.id, ids: [] });
   const persistedProcessedNoteIds = useMemo(() => getTrainerClientMessageResolvedIds({
     telegramMessages: messages,
@@ -4629,6 +5059,24 @@ function TrainerClientDetail({
     );
   }, [client.id]);
 
+  useEffect(() => {
+    if (activeTab !== "exerciseProgress") return;
+    setUtilitySheet("exerciseProgress");
+    onTabChange("workouts");
+  }, [activeTab, onTabChange]);
+
+  useEffect(() => {
+    if (activeTab !== "calendar") return;
+    setUtilitySheet("calendar");
+    onTabChange("overview");
+  }, [activeTab, onTabChange]);
+
+  useEffect(() => {
+    if (activeTab !== "tasks") return;
+    setUtilitySheet("tasks");
+    onTabChange("overview");
+  }, [activeTab, onTabChange]);
+
   async function completeSetupStep(step) {
     const previousChecklist = setupChecklist;
     const optimisticChecklist = buildNextTrainerClientSetupChecklist(
@@ -4668,20 +5116,22 @@ function TrainerClientDetail({
     return onSaveNotifications(settings, client);
   }
 
-  async function saveSetupSubscription(settings) {
-    const saved = await saveSubscription(settings);
-    if (saved !== false) {
-      const checklist = await completeSetupStep("subscription");
-      if (checklist === false) return false;
-    }
-    return saved;
-  }
-
   async function assignProgram(options) {
     if (!onAssignProgram) return false;
-    const saved = await onAssignProgram(options);
-    if (saved !== false) {
+    const assignment = await onAssignProgram(options);
+    if (assignment !== false) {
       const checklist = await completeSetupStep("program");
+      if (checklist === false) return false;
+      return { assignment, checklist };
+    }
+    return assignment;
+  }
+
+  async function saveSetupWorkoutSchedule(dates, assignment) {
+    if (!onSaveWorkoutSchedule) return false;
+    const saved = await onSaveWorkoutSchedule(dates, assignment);
+    if (saved !== false) {
+      const checklist = await completeSetupStep("schedule");
       if (checklist === false) return false;
     }
     return saved;
@@ -4748,7 +5198,7 @@ function TrainerClientDetail({
   }
 
   return (
-    <div className={`trainerNextPage trainerNextClientPage trainerNextClientVariantA${exercisesOpen ? " trainerNextClientPageWithWorkoutSwitcher" : ""} ${mobileStyles.clientPageFix}`}>
+    <div className={`trainerNextPage trainerNextClientPage trainerNextClientVariantA ${mobileStyles.clientPageFix}`}>
       <div className={`trainerNextClientBackRow ${mobileStyles.clientToolbarFix}`}>
         <button className="trainerNextClientBackButton" type="button" onClick={onBack} aria-label="Назад к списку клиентов">
           <ArrowLeft size={20} />
@@ -4766,10 +5216,7 @@ function TrainerClientDetail({
               <button
                 className={`trainerNextClientSubscriptionStatus is-${clientSubscriptionBadge.id}`}
                 type="button"
-                onClick={() => {
-                  setOverviewSection("calendar");
-                  onTabChange("overview");
-                }}
+                onClick={() => setUtilitySheet("calendar")}
                 aria-label="Открыть абонемент клиента"
               >
                 {clientSubscriptionBadge.label}
@@ -4779,7 +5226,18 @@ function TrainerClientDetail({
           <p>{profileMetaText}</p>
           <strong>Цель: {client.goalDescription || profile?.goalLabel || "Персональный результат"}</strong>
         </div>
-        <div className="trainerNextClientHeaderActions" aria-label="Действия с клиентом">
+        <div className={`trainerNextClientHeaderActions${setupChecklist.status !== "completed" ? " trainerNextClientHeaderActionsWithSetup" : ""}`} aria-label="Действия с клиентом">
+          {setupChecklist.status !== "completed" ? (
+            <button
+              className="trainerNextClientHeaderUtilityButton trainerNextClientSetupButton"
+              type="button"
+              onClick={() => setSetupWizardOpen(true)}
+              aria-label="Завершить первичную настройку клиента"
+            >
+              <ClipboardList size={17} />
+              <span>Завершить<br />настройку</span>
+            </button>
+          ) : null}
           {onCreateTask ? (
             <button
               className="trainerNextClientTaskButton"
@@ -4811,13 +5269,16 @@ function TrainerClientDetail({
         </div>
       </header>
 
-      <nav className={`trainerNextClientTabs${exercisesOpen ? " trainerNextClientTabsWithWorkoutSwitcher" : ""}`}>
+      <nav className="trainerNextClientTabs">
         {CLIENT_TABS.map((tab) => {
           const active = isClientTabActive(tab);
-          return <button type="button" key={tab.id} className={active ? "active" : ""} aria-pressed={active} onClick={() => {
-            if (tab.id === "overview") setOverviewSection("overview");
-            onTabChange(tab.target || tab.id);
-          }}>{tab.label}</button>;
+          const Icon = CLIENT_TAB_ICONS[tab.id];
+          return (
+            <button type="button" key={tab.id} className={active ? "active" : ""} aria-pressed={active} onClick={() => onTabChange(tab.target || tab.id)}>
+              <Icon size={18} aria-hidden="true" />
+              <span>{tab.label}</span>
+            </button>
+          );
         })}
       </nav>
 
@@ -4830,10 +5291,7 @@ function TrainerClientDetail({
               type="button"
               key={tab.id}
               aria-current={active ? "page" : undefined}
-              onClick={() => {
-                if (tab.id === "overview") setOverviewSection("overview");
-                onTabChange(tab.target || tab.id);
-              }}
+              onClick={() => onTabChange(tab.target || tab.id)}
             >
               <Icon size={21} />
               <span>{tab.label}</span>
@@ -4845,55 +5303,29 @@ function TrainerClientDetail({
       {currentTab === "overview" ? (
         <ClientOverview
           client={client}
-          profile={profile}
-          summary={summary}
           snapshot={snapshot}
           workoutReview={visibleSummaryWorkoutReview}
           measurements={measurements}
           history={history}
           nutritionDays={nutritionDays}
           nutritionGoals={nutritionGoals}
-          photos={photos}
-          workouts={workouts}
-          status={programStatus}
-          onSaveSubscription={saveSubscription}
-          onSubscriptionSaved={() => completeSetupStep("subscription")}
-          onSaveNotifications={saveNotificationSettings}
-          onTestNotification={onTestNotification}
-          onConnectTelegram={onConnectTelegram}
-          initialSection={overviewSection}
-          onSectionChange={setOverviewSection}
+          onTabChange={onTabChange}
+          onOpenCalendar={() => setUtilitySheet("calendar")}
+          onOpenTasks={() => setUtilitySheet("tasks")}
+          onOpenFeedback={openMessageFromNote}
+          onOpenMessage={() => openNewMessage("notification")}
+          onOpenExerciseProgress={() => setUtilitySheet("exerciseProgress")}
         />
       ) : null}
       {exercisesOpen ? (
-        <section className={trainerClientExercisesTabsStyles.section}>
-          <nav className={trainerClientExercisesTabsStyles.switcher} aria-label="Разделы упражнений клиента">
-            <button
-              type="button"
-              className={exerciseSubview === "plan" ? trainerClientExercisesTabsStyles.active : ""}
-              aria-pressed={exerciseSubview === "plan"}
-              onClick={() => onTabChange("workouts")}
-            >
-              Программа
-            </button>
-            <button
-              type="button"
-              className={exerciseSubview === "progress" ? trainerClientExercisesTabsStyles.active : ""}
-              aria-pressed={exerciseSubview === "progress"}
-              onClick={() => onTabChange("exerciseProgress")}
-            >
-              Прогресс
-            </button>
-          </nav>
-
-          {exerciseSubview === "plan" ? (
-            <ClientWorkoutPlan
-              client={client}
-                summary={summary}
-                history={history}
-                workouts={workouts}
-                archivedWorkouts={archivedWorkouts}
-                programTemplates={programTemplates}
+        <section className={`${trainerClientExercisesTabsStyles.section} trainerClientTabContent`}>
+          <ClientWorkoutPlan
+            client={client}
+              summary={summary}
+              history={history}
+              workouts={workouts}
+              archivedWorkouts={archivedWorkouts}
+              programTemplates={programTemplates}
               selectedProgramId={selectedProgramId}
               onSelectProgram={onSelectProgram}
               onAssignProgram={assignProgram}
@@ -4902,6 +5334,7 @@ function TrainerClientDetail({
               onDeleteProgramAssignment={onDeleteProgramAssignment}
               canAdminManageProgramAssignments={canAdminManageProgramAssignments}
               onSaveWorkoutSchedule={onSaveWorkoutSchedule}
+              onSaveSubscription={saveSubscription}
               programStatus={programStatus}
               adjustmentRequest={adjustmentRequest}
               reviewEvents={exerciseProgressReviews}
@@ -4935,23 +5368,12 @@ function TrainerClientDetail({
                 initialWorkoutId: adjustmentRequest?.workoutId || "",
                 onSave: onSaveWorkouts
               }}
-            />
-          ) : (
-            <ClientExerciseProgress
-              key={client?.id || "trainer-client-exercise-progress"}
-              client={client}
-              history={history}
-              workouts={workouts}
-              reviews={exerciseProgressReviews}
-              onResolve={onResolveExerciseProgress}
-              onSaveAdjustment={onSaveExerciseProgressAdjustment}
-            />
-          )}
+          />
         </section>
       ) : null}
-      {currentTab === "nutrition" ? <NutritionView client={client} nutritionDays={nutritionDays} goals={nutritionGoals} planOptions={nutritionPlanOptions} onGeneratePlan={onGeneratePlan} onSavePlan={saveNutritionPlan} status={programStatus} /> : null}
+      {currentTab === "nutrition" ? <NutritionView client={client} profile={profile} history={history} nutritionDays={nutritionDays} goals={nutritionGoals} planOptions={nutritionPlanOptions} onGeneratePlan={onGeneratePlan} onSavePlan={saveNutritionPlan} status={programStatus} onOpenDiary={() => setUtilitySheet("nutritionDiary")} /> : null}
       {["bodyProgress", "measurements", "photos"].includes(currentTab) ? <ClientBodyProgress measurements={measurements} photos={photos} /> : null}
-      {currentTab === "notifications" ? <ClientNotifications key={client.id} client={client} workouts={workouts} history={history} measurements={measurements} photos={photos} status={programStatus} onSave={saveNotificationSettings} onTest={onTestNotification} onConnectTelegram={onConnectTelegram} onSaveSubscription={saveSubscription} onSubscriptionSaved={() => completeSetupStep("subscription")} /> : null}
+      {currentTab === "notifications" ? <ClientNotifications key={client.id} client={client} workouts={workouts} history={history} measurements={measurements} photos={photos} status={programStatus} onSave={saveNotificationSettings} onTest={onTestNotification} onConnectTelegram={onConnectTelegram} onSaveSubscription={saveSubscription} /> : null}
       {messagesOpen ? (
         <ClientMessages
           history={history}
@@ -5010,8 +5432,46 @@ function TrainerClientDetail({
             onTest={onTestNotification}
             onConnectTelegram={onConnectTelegram}
             onSaveSubscription={saveSubscription}
-            onSubscriptionSaved={() => completeSetupStep("subscription")}
           />
+        </TrainerClientUtilitySheet>
+      ) : null}
+
+      {utilitySheet === "calendar" ? (
+        <TrainerClientUtilitySheet title="Календарь тренировок" eyebrow="Расписание и абонемент" variant="wide" onRequestClose={() => setUtilitySheet("")}>
+          <ClientNotifications
+            key={`utility-calendar-${client.id}`}
+            client={client}
+            workouts={workouts}
+            history={history}
+            measurements={measurements}
+            photos={photos}
+            status={programStatus}
+            onSave={saveNotificationSettings}
+            onTest={onTestNotification}
+            onConnectTelegram={onConnectTelegram}
+            onSaveSubscription={saveSubscription}
+            startSubscriptionEditing={false}
+          />
+        </TrainerClientUtilitySheet>
+      ) : null}
+
+      {utilitySheet === "exerciseProgress" ? (
+        <TrainerClientUtilitySheet title="Прогресс упражнений" eyebrow="Тренировки" variant="wide" onRequestClose={() => setUtilitySheet("")}>
+          <ClientExerciseProgress
+            key={client?.id || "trainer-client-exercise-progress"}
+            client={client}
+            history={history}
+            workouts={workouts}
+            reviews={exerciseProgressReviews}
+            onResolve={onResolveExerciseProgress}
+            onSaveAdjustment={onSaveExerciseProgressAdjustment}
+          />
+        </TrainerClientUtilitySheet>
+      ) : null}
+
+      {utilitySheet === "nutritionDiary" ? (
+        <TrainerClientUtilitySheet title="Дневник питания" eyebrow="Питание" variant="wide" onRequestClose={() => setUtilitySheet("")}>
+          <NutritionDiary nutritionDays={nutritionDays} />
         </TrainerClientUtilitySheet>
       ) : null}
 
@@ -5095,9 +5555,10 @@ function TrainerClientDetail({
           programTemplates={programTemplates}
           selectedProgramId={selectedProgramId}
           nutritionGoals={nutritionGoals}
+          nutritionPlanOptions={nutritionPlanOptions}
           onSelectProgram={onSelectProgram}
-          onSaveSubscription={saveSetupSubscription}
           onAssignProgram={assignProgram}
+          onSaveWorkoutSchedule={saveSetupWorkoutSchedule}
           onSaveNutritionPlan={saveNutritionPlan}
           onSaveNotifications={saveNotificationSettings}
           onClose={() => setSetupWizardOpen(false)}
@@ -5606,7 +6067,7 @@ export function TrainerProgramConstructor({
                               <div className="trainerNextSetRow" key={set.id || setIndex}>
                                 <strong>{setIndex + 1}</strong>
                                 <input value={set.reps ?? ""} onChange={(event) => onUpdateExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex, { reps: event.target.value })} />
-                                <input value={set.weight ?? ""} disabled={!requiresWeight} onChange={(event) => onUpdateExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex, { weight: event.target.value })} />
+                                <input inputMode="decimal" value={sanitizeExerciseWeightInput(set.weight) ?? ""} disabled={!requiresWeight} onChange={(event) => onUpdateExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex, sanitizeExerciseSetPatch({ weight: event.target.value }))} />
                                 <button type="button" disabled={sets.length <= 1} onClick={() => onRemoveExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
                               </div>
                             ))}
@@ -5888,10 +6349,11 @@ function TrainerWorkoutEditor({
   }
 
   function updateLibraryEditorSet(setIndex, patch) {
+    const safePatch = sanitizeExerciseSetPatch(patch);
     setLibraryEditorDraft((current) => {
       if (!current) return current;
       const sets = (current.sets?.length ? current.sets : [{ reps: "", weight: "" }]).map((set, index) => (
-        index === setIndex ? { ...set, ...patch } : set
+        index === setIndex ? { ...set, ...safePatch } : set
       ));
       return { ...current, sets };
     });
@@ -6244,7 +6706,7 @@ function TrainerWorkoutEditor({
                             <div className="trainerNextSetRow" key={set.id || setIndex}>
                               <strong>{setIndex + 1}</strong>
                               <input aria-label={`Повторы, подход ${setIndex + 1}`} value={set.reps ?? ""} disabled={selectedWorkoutReadOnly} onChange={(event) => onUpdateExerciseSet(selectedWorkout.id, exercise.id, setIndex, { reps: event.target.value })} />
-                              <input aria-label={`Вес, подход ${setIndex + 1}`} value={set.weight ?? ""} disabled={selectedWorkoutReadOnly || !requiresWeight} onChange={(event) => onUpdateExerciseSet(selectedWorkout.id, exercise.id, setIndex, { weight: event.target.value })} />
+                              <input aria-label={`Вес, подход ${setIndex + 1}`} inputMode="decimal" value={sanitizeExerciseWeightInput(set.weight) ?? ""} disabled={selectedWorkoutReadOnly || !requiresWeight} onChange={(event) => onUpdateExerciseSet(selectedWorkout.id, exercise.id, setIndex, sanitizeExerciseSetPatch({ weight: event.target.value }))} />
                               <button type="button" disabled={selectedWorkoutReadOnly || sets.length <= 1} onClick={() => onRemoveExerciseSet(selectedWorkout.id, exercise.id, setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
                             </div>
                           ))}
@@ -6356,7 +6818,7 @@ function TrainerWorkoutEditor({
                   <div className={exerciseLibraryEditorStyles.setRow} key={set.id || setIndex}>
                     <strong>{setIndex + 1}</strong>
                     <input aria-label={`Повторы, подход ${setIndex + 1}`} value={set.reps ?? ""} onChange={(event) => updateLibraryEditorSet(setIndex, { reps: event.target.value })} disabled={libraryEditorSaving} />
-                    <input aria-label={`Вес, подход ${setIndex + 1}`} value={set.weight ?? ""} disabled={libraryEditorSaving || !(activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true)} onChange={(event) => updateLibraryEditorSet(setIndex, { weight: event.target.value })} />
+                    <input aria-label={`Вес, подход ${setIndex + 1}`} inputMode="decimal" value={sanitizeExerciseWeightInput(set.weight) ?? ""} disabled={libraryEditorSaving || !(activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true)} onChange={(event) => updateLibraryEditorSet(setIndex, { weight: event.target.value })} />
                     <button type="button" disabled={libraryEditorSaving || sets.length <= 1} onClick={() => removeLibraryEditorSet(setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
                   </div>
                 ))}
@@ -6536,53 +6998,55 @@ function TrainerCabinetPage({
           </div>
         </header>
 
-        <div className="trainerNextDesktopPageHead">
-          <div>
-            <h1>Кабинет тренера</h1>
-            <p>Профиль, быстрые действия и рабочие разделы в едином стиле тренерской панели.</p>
+        <div className="trainerNextCabinetContent">
+          <div className="trainerNextDesktopPageHead">
+            <div>
+              <h1>Кабинет тренера</h1>
+              <p>Профиль, быстрые действия и рабочие разделы в едином стиле тренерской панели.</p>
+            </div>
           </div>
+
+          <button className="trainerCabinetHero trainerCabinetProfileButton" type="button" onClick={onOpenTrainerProfile}>
+            <TrainerAvatar client={{ name: trainerName, avatarUrl: trainerAvatar }} size="large" />
+            <div>
+              <span>Тренер</span>
+              <h2>{trainerName || "Тренер"}</h2>
+              <p>Профиль и настройки</p>
+            </div>
+            <ChevronRight className="trainerCabinetHeroChevron" size={21} aria-hidden="true" />
+          </button>
+
+          <section className="trainerCabinetStats" aria-label="Сводка тренера">
+            <article><span>Всего клиентов</span><strong>{clients.length}</strong></article>
+            <article><span>Активных</span><strong>{activeCount}</strong></article>
+            <article><span>Требуют внимания</span><strong>{attentionCount}</strong></article>
+          </section>
+
+          <section className="trainerCabinetWorkspaceLinks" aria-label="Рабочие разделы кабинета">
+            <button type="button" onClick={() => onNavigate?.("library")}>
+              <span className="trainerCabinetWorkspaceIcon"><Dumbbell size={19} /></span>
+              <div className="trainerCabinetWorkspaceCopy"><strong>Мои программы и упражнения</strong><small>Личная библиотека и шаблоны для клиентов</small></div>
+              <ChevronRight size={18} />
+            </button>
+            <button type="button" onClick={() => setOpenSheet("analytics")}>
+              <span className="trainerCabinetWorkspaceIcon"><BarChart3 size={19} /></span>
+              <div className="trainerCabinetWorkspaceCopy"><strong>Аналитика</strong><small>Сводка по активности и рискам клиентов</small></div>
+              <ChevronRight size={18} />
+            </button>
+            <button type="button" onClick={() => setOpenSheet("notifications")}>
+              <span className="trainerCabinetWorkspaceIcon"><Bell size={19} /></span>
+              <div className="trainerCabinetWorkspaceCopy"><strong>Уведомления</strong><small>События и настройки напоминаний</small></div>
+              <ChevronRight size={18} />
+            </button>
+            <button type="button" onClick={onOpenTrainerConnections}>
+              <span className="trainerCabinetWorkspaceIcon"><Mail size={19} /></span>
+              <div className="trainerCabinetWorkspaceCopy"><strong>Подключения</strong><small>Почта и Telegram для доступа и связи</small></div>
+              <ChevronRight size={18} />
+            </button>
+          </section>
+
+          {onLogout ? <button className="trainerCabinetLogout" type="button" onClick={onLogout}><X size={20} />Выйти из аккаунта</button> : null}
         </div>
-
-        <button className="trainerCabinetHero trainerCabinetProfileButton" type="button" onClick={onOpenTrainerProfile}>
-          <TrainerAvatar client={{ name: trainerName, avatarUrl: trainerAvatar }} size="large" />
-          <div>
-            <span>Тренер</span>
-            <h2>{trainerName || "Тренер"}</h2>
-            <p>Профиль и настройки</p>
-          </div>
-          <ChevronRight className="trainerCabinetHeroChevron" size={21} aria-hidden="true" />
-        </button>
-
-        <section className="trainerCabinetStats" aria-label="Сводка тренера">
-          <article><span>Всего клиентов</span><strong>{clients.length}</strong></article>
-          <article><span>Активных</span><strong>{activeCount}</strong></article>
-          <article><span>Требуют внимания</span><strong>{attentionCount}</strong></article>
-        </section>
-
-        <section className="trainerCabinetWorkspaceLinks" aria-label="Рабочие разделы кабинета">
-          <button type="button" onClick={() => onNavigate?.("library")}>
-            <span className="trainerCabinetWorkspaceIcon"><Dumbbell size={19} /></span>
-            <div className="trainerCabinetWorkspaceCopy"><strong>Мои программы и упражнения</strong><small>Личная библиотека и шаблоны для клиентов</small></div>
-            <ChevronRight size={18} />
-          </button>
-          <button type="button" onClick={() => setOpenSheet("analytics")}>
-            <span className="trainerCabinetWorkspaceIcon"><BarChart3 size={19} /></span>
-            <div className="trainerCabinetWorkspaceCopy"><strong>Аналитика</strong><small>Сводка по активности и рискам клиентов</small></div>
-            <ChevronRight size={18} />
-          </button>
-          <button type="button" onClick={() => setOpenSheet("notifications")}>
-            <span className="trainerCabinetWorkspaceIcon"><Bell size={19} /></span>
-            <div className="trainerCabinetWorkspaceCopy"><strong>Уведомления</strong><small>События и настройки напоминаний</small></div>
-            <ChevronRight size={18} />
-          </button>
-          <button type="button" onClick={onOpenTrainerConnections}>
-            <span className="trainerCabinetWorkspaceIcon"><Mail size={19} /></span>
-            <div className="trainerCabinetWorkspaceCopy"><strong>Подключения</strong><small>Почта и Telegram для доступа и связи</small></div>
-            <ChevronRight size={18} />
-          </button>
-        </section>
-
-        {onLogout ? <button className="trainerCabinetLogout" type="button" onClick={onLogout}><X size={20} />Выйти из аккаунта</button> : null}
       </div>
 
       <TrainerCabinetUtilitySheet
@@ -7307,7 +7771,6 @@ export default function TrainerWorkspace({
         counts={counts}
         onOpenClient={onOpenClient}
         onOpenClients={() => onNavigate("clients")}
-        onOpenPrograms={() => onNavigate("workouts")}
         onCreateClient={onCreateClient}
       />
     );
@@ -7425,6 +7888,8 @@ export default function TrainerWorkspace({
     content = (
       <TrainerNutritionPage
         client={selectedClient}
+        profile={selectedProfile}
+        history={history}
         nutritionDays={nutritionDays}
         goals={nutritionGoals}
         planOptions={nutritionPlanOptions}
@@ -7482,6 +7947,7 @@ export default function TrainerWorkspace({
   if (embedded) {
     return (
       <div className={`trainerNextRoot ${workspaceStyles.workspaceRoot} ${cabinetStyles.scope} ${adaptiveStyles.root} ${responsiveStyles.scope} ${modalSystemStyles.scope} ${clientProfileSectionStyles.scope} ${programEditorStyles.scope} ${nutritionDiaryStyles.scope} ${clientWorkoutPlanStyles.scope} ${clientViewsStyles.scope} ${nutritionAnalyticsStyles.scope} ${clientNutritionStyles.scope} ${exerciseProgressStyles.scope} ${dashboardStyles.scope}`}>
+        <TrainerModalScrollLock />
         {content}
         {syncStatus}
       </div>

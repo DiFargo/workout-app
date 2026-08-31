@@ -1,9 +1,12 @@
-import { LOCAL_NUTRITION_SEARCH_LIMIT } from "../data/nutritionDefaults";
+import { LOCAL_NUTRITION_SEARCH_LIMIT } from "../data/nutritionDefaults.js";
+import { nutritionFoodDatabase } from "../data/nutritionFoods.js";
 import {
+  findLazyNutritionCatalogByBarcode,
   findExactLazyNutritionCatalogFoods,
   searchLazyNutritionCatalog
-} from "../data/nutrition-catalog/lazyCatalog";
-import { normalizeNutritionFood } from "./nutritionFoodModel";
+} from "../data/nutrition-catalog/lazyCatalog.js";
+import { normalizeNutritionQuery } from "../data/nutrition-catalog/catalogSearch.js";
+import { normalizeNutritionFood } from "./nutritionFoodModel.js";
 
 export function normalizeLocalCatalogFood(food = {}) {
   const portionAmount = Number(food.defaultGram || food.defaultAmount || 100) || 100;
@@ -41,9 +44,29 @@ export async function searchLocalNutritionFoods(query, limit = LOCAL_NUTRITION_S
   return foods.map(normalizeLocalCatalogFood);
 }
 
+// This compact set ships in the application bundle, unlike the larger lazy
+// catalog. It keeps common searches usable when the connection changes before
+// the catalog chunks can be fetched.
+export function searchBundledNutritionFallbackFoods(query, limit = LOCAL_NUTRITION_SEARCH_LIMIT) {
+  const normalizedQuery = normalizeNutritionQuery(query);
+  if (normalizedQuery.length < 2) return [];
+
+  const normalizedLimit = Math.max(1, Number.parseInt(limit, 10) || LOCAL_NUTRITION_SEARCH_LIMIT);
+  return nutritionFoodDatabase
+    .filter((food) => [food.name, ...(food.aliases || [])]
+      .some((value) => normalizeNutritionQuery(value).includes(normalizedQuery)))
+    .slice(0, normalizedLimit)
+    .map(normalizeLocalCatalogFood);
+}
+
 export async function findExactLocalNutritionFoods(query) {
   const foods = await findExactLazyNutritionCatalogFoods(query);
   return foods.map(normalizeLocalCatalogFood);
+}
+
+export async function findLocalNutritionFoodByBarcode(barcode) {
+  const food = await findLazyNutritionCatalogByBarcode(barcode);
+  return food ? normalizeLocalCatalogFood(food) : null;
 }
 
 export function mergeNutritionFoodResults(primary = [], secondary = [], limit = 40) {

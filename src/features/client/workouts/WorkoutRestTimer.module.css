@@ -40,3 +40,159 @@
 .controls { display: flex; gap: 5px; }
 .controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: #f4f4f8; color: #28262e; font: inherit; font-size: 10px; font-weight: 700; }
 .controls .add { background: #f5f2f7; color: #8f7ac8; }
+
+.compact {
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  flex: 1 1 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.expandedBackdrop {
+  position: fixed;
+  z-index: 240;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  background: rgba(40, 38, 46, 0.34);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.expandedTimer {
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 360px);
+  padding: 32px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  max-height: calc(100dvh - max(48px, env(safe-area-inset-top)) - max(48px, env(safe-area-inset-bottom)));
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 64px rgba(40, 38, 46, 0.25);
+  color: #28262e;
+  text-align: center;
+}
+
+/* The rest timer stays the height of its controls; the blurred backdrop is
+   already the full-screen focus layer. */
+.expandedTimer {
+  height: auto;
+  min-height: 0;
+  align-self: center;
+}
+
+.minimizeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #f5f2f7;
+  color: #28262e;
+}
+
+.minimizeButton svg { width: 22px; height: 22px; }
+
+.expandedLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #7b7682;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.expandedLabel svg { width: 22px; height: 22px; color: #8f7ac8; }
+
+.expandedCountdown {
+  margin-top: 18px;
+  color: #28262e;
+  font-size: clamp(62px, 22vw, 88px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+.expandedTimer p {
+  max-width: 240px;
+  margin: 16px 0 28px;
+  color: #7b7682;
+  font-size: 15px;
+  line-height: 21px;
+}
+
+.expandedControls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 64px;
+  gap: 8px;
+}
+
+.expandedControls button {
+  min-height: 50px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 17px;
+  background: #f5f2f7;
+  color: #28262e;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.expandedControls .expandedPrimary {
+  background: #8f7ac8;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(128, 107, 182, 0.26);
+}
+
+.expandedControls .expandedPrimary.running { background: #806bb6; }
+.expandedPrimary svg { width: 16px; height: 16px; fill: currentColor; }
+
+.keepCompactButton {
+  margin-top: 16px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: #8f7ac8;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 430px) {
+  .expandedBackdrop {
+    place-items: center;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  }
+
+  .expandedTimer {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 28px 18px 20px;
+    max-height: calc(100dvh - max(32px, env(safe-area-inset-top)) - max(32px, env(safe-area-inset-bottom)));
+    border-radius: 28px;
+  }
+}

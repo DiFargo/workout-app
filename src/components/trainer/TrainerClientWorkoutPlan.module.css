@@ -1,25 +1,33 @@
 .programCard {
   display: grid;
-  gap: 12px;
-  padding: 16px;
+  gap: 0;
+  overflow: hidden;
+  padding: 0;
   border: 1px solid #efebf3;
-  border-radius: 18px;
+  border-radius: 24px;
   background: #fff;
+  box-shadow: 0 8px 22px rgba(50, 40, 70, 0.04);
 }
 
 .programHeader {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #efebf3;
+}
+
+.programHeaderCopy {
+  min-width: 0;
 }
 
 .programHeader > span {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 48px;
+  height: 48px;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: 11px;
+  border-radius: 16px;
   background: #f0ebff;
   color: #806bb6;
 }
@@ -27,7 +35,7 @@
 .programHeader h2 {
   margin: 0;
   color: #181b24;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.25;
 }
 
@@ -37,26 +45,70 @@
   font-size: 12px;
 }
 
+.programHistoryButton {
+  align-self: center;
+  display: inline-flex;
+  min-height: 38px;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #6f58af;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.programHistoryButton:hover {
+  border-color: #dfd3f1;
+  background: #f7f3fd;
+  color: #5d4697;
+}
+
+.programHistoryButton:focus-visible {
+  outline: 2px solid rgba(143, 122, 200, .45);
+  outline-offset: 2px;
+}
+
+.programHistoryButtonShortLabel {
+  display: none;
+}
+
 .programGrid {
   display: grid;
-  grid-template-columns: minmax(420px, 1.1fr) minmax(300px, .9fr);
+  grid-template-columns: minmax(420px, 1.05fr) minmax(300px, .95fr);
   align-items: stretch;
-  gap: 10px;
+  gap: 0;
 }
 
 .currentProgram,
 .assignment {
   min-width: 0;
-  padding: 14px;
-  border: 1px solid #e5e6ed;
-  border-radius: 16px;
-  background: #fff;
+  padding: 18px 24px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.currentProgram {
+  display: grid;
+  align-content: center;
+  border-right: 1px solid #efebf3;
 }
 
 .assignment {
-  border-color: #e4d9f1;
-  background: #fbf9ff;
-  box-shadow: 0 1px 2px rgb(83 65 123 / 4%);
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  background: #fff;
 }
 
 .currentMain {
@@ -69,9 +121,9 @@
 .currentProgramTop {
   display: flex;
   min-width: 0;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 10px;
+  gap: 14px;
 }
 
 .currentProgramEditButton {
@@ -100,11 +152,11 @@
 
 .programIcon {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: 11px;
+  border-radius: 14px;
   background: #eee9ff;
   color: #806bb6;
 }
@@ -116,7 +168,7 @@
 .currentInfo > span,
 .assignment > span {
   display: block;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
   color: #8b8374;
   font-size: 10px;
   font-weight: 800;
@@ -128,14 +180,14 @@
   overflow: hidden;
   margin: 0;
   color: #181b24;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .currentInfo p {
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   color: #777b87;
   font-size: 12px;
 }
@@ -179,7 +231,7 @@
   display: grid;
   grid-template-columns: minmax(180px, 1fr) auto;
   gap: 8px;
-  align-items: end;
+  align-items: center;
 }
 
 .selectField {
@@ -189,7 +241,7 @@
 
 .selectField select {
   width: 100%;
-  height: 42px;
+  height: 38px;
   appearance: none;
   padding: 0 38px 0 12px;
   border: 1px solid #dedfe7;
@@ -213,7 +265,7 @@
 .assignButton,
 .editButton {
   display: inline-flex;
-  height: 42px;
+  height: 38px;
   align-items: center;
   justify-content: center;
   gap: 7px;
@@ -241,9 +293,9 @@
 /* The assigned-program action is secondary to scheduling a new program. */
 .currentProgramEditButton {
   border-color: #a58bd0;
-  background: #eee7fa;
+  background: #f4effc;
   color: #654b9d;
-  box-shadow: 0 7px 15px rgba(143, 122, 200, 0.14);
+  box-shadow: none;
 }
 
 .currentProgramEditButton:not(:disabled):hover,
@@ -251,7 +303,7 @@
   border-color: #8f7ac8;
   background: #e7ddf6;
   color: #5e4594;
-  box-shadow: 0 9px 18px rgba(143, 122, 200, 0.2);
+  box-shadow: 0 5px 12px rgba(143, 122, 200, 0.12);
 }
 
 .assignButton:disabled {
@@ -274,57 +326,21 @@
   font-size: 11px;
 }
 
-.assignmentHistory {
+.programHistoryModal {
   display: grid;
-  gap: 10px;
-  padding-top: 2px;
-  border-top: 1px solid #eeeaf2;
+  gap: 14px;
 }
 
-.assignmentHistoryHeader {
+.programHistoryModalHeader {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eeeaf2;
 }
 
-.assignmentHistoryControls {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.assignmentHistoryExpandButton {
-  display: inline-flex;
-  min-height: 36px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 12px;
-  border: 1px solid #cfc1e9;
-  border-radius: 999px;
-  background: #f0ebfb;
-  color: #6f58af;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color 160ms ease, border-color 160ms ease;
-}
-
-.assignmentHistoryExpandButton:hover {
-  border-color: #ae98db;
-  background: #e7def8;
-}
-
-.assignmentHistoryExpandButton:focus-visible {
-  outline: 2px solid rgba(143, 122, 200, 0.45);
-  outline-offset: 2px;
-}
-
-.assignmentHistory header > div {
+.programHistoryModalHeader > div {
   min-width: 0;
 }
 
@@ -398,7 +414,7 @@
   white-space: nowrap;
 }
 
-.assignmentHistoryHeader > div > span {
+.programHistoryModalHeader > div > span {
   display: block;
   margin-bottom: 1px;
   color: #857d8e;
@@ -407,11 +423,18 @@
   letter-spacing: .035em;
 }
 
-.assignmentHistory h3 {
+.programHistoryModal h3 {
   margin: 0;
   color: #181b24;
   font-size: 14px;
   line-height: 1.25;
+}
+
+.programHistoryModalHeader p {
+  margin: 3px 0 0;
+  color: #777b87;
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .assignmentHistoryInfo p,
@@ -810,6 +833,146 @@
   overflow-x: hidden;
 }
 
+/* The wide editor is used for managing many exercises at once. Keep every
+   control visible while avoiding oversized desktop rows. The mobile layout
+   below intentionally keeps its own touch-friendly dimensions. */
+@media (min-width: 1241px) {
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal) {
+    width: min(94vw, 1680px) !important;
+    max-width: min(94vw, 1680px) !important;
+    height: min(840px, calc(100dvh - 28px)) !important;
+    max-height: calc(100dvh - 28px) !important;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) {
+    min-height: 76px;
+    padding: 14px 20px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerWorkoutEditorModalBody) {
+    padding: 12px 16px 14px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > footer) {
+    min-height: 64px;
+    padding: 10px 20px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWorkoutLayout) {
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWorkoutDays) {
+    gap: 6px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWorkoutDayItem) {
+    min-height: 60px;
+    padding: 8px 10px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWorkoutDaySelect) {
+    gap: 2px;
+    font-size: 12px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWorkoutDaySelect strong) {
+    font-size: 12px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWorkoutDaySelect small) {
+    font-size: 11px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExercisePanel) {
+    padding: 14px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseHead) {
+    min-height: 24px;
+    margin: 6px 0;
+    padding: 0 2px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseRow) {
+    min-height: 68px;
+    padding: 9px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseImage) {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseEditor) {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseFields) {
+    grid-template-columns: minmax(220px, 1fr) 130px 200px 220px;
+    gap: 8px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseFields label.wide),
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextVideoUpload) {
+    grid-column: auto;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseFields input:not([type="checkbox"]):not([type="file"])) {
+    height: 38px;
+    padding: 0 11px;
+    border-radius: 10px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWeightToggle) {
+    min-height: 38px;
+    padding: 0 11px;
+    border-radius: 10px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextVideoUpload) {
+    width: 100%;
+    min-height: 38px;
+    border-radius: 10px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetEditor) {
+    gap: 6px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetEditorHead),
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetRow) {
+    grid-template-columns: 54px minmax(0, 1fr) minmax(0, 1fr) 38px;
+    gap: 8px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetEditorHead) {
+    min-height: 20px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetRow strong),
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetRow input),
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetRow button) {
+    height: 38px;
+    min-height: 38px;
+    border-radius: 10px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextSetRow button) {
+    width: 38px;
+  }
+
+  :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextAddSet) {
+    width: min(100%, 260px);
+    min-height: 38px;
+    margin-top: 2px;
+    border-radius: 10px;
+  }
+}
+
 .editorFooter > p {
   margin: 0 auto 0 0;
   color: #b44d4d;
@@ -844,6 +1007,11 @@
 @media (max-width: 980px) {
   .programGrid {
     grid-template-columns: 1fr;
+  }
+
+  .currentProgram {
+    border-right: 0;
+    border-bottom: 1px solid #efebf3;
   }
 }
 
@@ -981,11 +1149,31 @@
   }
 
   .programCard {
-    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .programHeader {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+
+  .programHeaderCopy {
+    flex: 1 1 min(230px, 100%);
   }
 
   .programHeader p {
     display: none;
+  }
+
+  .programHistoryButton {
+    width: calc(100% - 48px);
+    margin-left: 48px;
+  }
+
+  .currentProgram,
+  .assignment {
+    padding: 15px 16px;
   }
 
   .assignmentRow {
@@ -1014,7 +1202,7 @@
     align-items: start;
   }
 
-  .assignmentHistoryHeader {
+  .programHistoryModalHeader {
     grid-template-columns: 1fr;
     gap: 8px;
   }
@@ -1064,5 +1252,93 @@
   .editButton {
     width: 100%;
     min-width: 0;
+  }
+}
+
+/* The program card is deliberately one column on a phone.  This prevents a
+   long programme name from competing with the edit button or being cut off. */
+@media (max-width: 520px) {
+  .programHeader {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-areas:
+      "icon copy"
+      ". history";
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .programHeader > span {
+    grid-area: icon;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .programHeader h2 {
+    font-size: 19px;
+  }
+
+  .programHeaderCopy {
+    grid-area: copy;
+    display: block;
+    flex: none;
+    min-width: 0;
+  }
+
+  .programHistoryButton {
+    grid-area: history;
+    width: fit-content;
+    min-height: 32px;
+    margin: 0 0 0 auto;
+    padding: 0 8px;
+    justify-self: end;
+    align-self: start;
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  .programHistoryButtonFullLabel,
+  .programHistoryButtonChevron {
+    display: none;
+  }
+
+  .programHistoryButtonShortLabel {
+    display: inline;
+  }
+
+  .currentProgram,
+  .assignment {
+    padding: 14px;
+  }
+
+  .currentProgramTop {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .currentMain,
+  .currentInfo {
+    min-width: 0;
+  }
+
+  .currentInfo h3 {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .currentProgramEditButton,
+  .assignButton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .assignmentRow {
+    gap: 8px;
   }
 }

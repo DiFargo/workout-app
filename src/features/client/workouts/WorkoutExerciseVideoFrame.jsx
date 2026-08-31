@@ -1,4 +1,4 @@
-import { Info } from "lucide-react";
+import { Info, Maximize2 } from "lucide-react";
 import styles from "./WorkoutExerciseVideoFrame.module.css";
 
 export default function WorkoutExerciseVideoFrame({
@@ -10,6 +10,7 @@ export default function WorkoutExerciseVideoFrame({
   onFullscreenVideo,
   onInlineVideoPlayFailed,
   onOpenTechnique,
+  showTechniqueButton = true,
   onRetryVideo,
   onVideoCanPlay,
   onVideoEnded,
@@ -101,7 +102,7 @@ export default function WorkoutExerciseVideoFrame({
             aria-label="Развернуть видео на весь экран"
             title="На весь экран"
           >
-            <span aria-hidden="true">⛶</span>
+            <Maximize2 aria-hidden="true" />
           </button>
         </>
       ) : (
@@ -120,18 +121,20 @@ export default function WorkoutExerciseVideoFrame({
           )}
         </div>
       )}
-      <button
-        type="button"
-        className={styles.techniqueButton}
-        data-css-module-control="workout-exercise-video"
-        onClick={(event) => {
-          event.stopPropagation();
-          onOpenTechnique?.(event);
-        }}
-        aria-label="Показать технику выполнения"
-      >
-        <Info aria-hidden="true" />Техника
-      </button>
+      {showTechniqueButton ? (
+        <button
+          type="button"
+          className={styles.techniqueButton}
+          data-css-module-control="workout-exercise-video"
+          onClick={(event) => {
+            event.stopPropagation();
+            onOpenTechnique?.(event);
+          }}
+          aria-label="Показать технику выполнения"
+        >
+          <Info aria-hidden="true" />Техника
+        </button>
+      ) : null}
     </div>
   );
 }

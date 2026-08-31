@@ -5,10 +5,10 @@ import {
 } from "./catalogSearch.js";
 
 const CATALOG_SOURCES = [
-  { id: "reference", baseUrl: "/nutrition-catalog/reference" },
-  { id: "sku", baseUrl: "/nutrition-catalog/sku" }
+  { id: "sku", baseUrl: "/nutrition-catalog/sku" },
+  { id: "reference", baseUrl: "/nutrition-catalog/reference" }
 ];
-const BARCODE_CATALOG_SOURCES = [...CATALOG_SOURCES].reverse();
+const BARCODE_CATALOG_SOURCES = CATALOG_SOURCES;
 const CORE_SEARCH_CATALOG_FILES = [
   "foods.compact.json",
   "search-token-index.json"
@@ -17,6 +17,7 @@ const EXACT_INDEX_FILE = "alias-exact-index.json";
 const PREFIX_INDEX_FILE = "alias-prefix-index.json";
 const BARCODE_CATALOG_FILE = "barcode-index.json";
 const SEARCH_RESULT_CACHE_LIMIT = 24;
+const CATALOG_REQUEST_TIMEOUT_MS = 6000;
 
 const sourceLoaders = new Map();
 const searchResultCache = new Map();
@@ -38,13 +39,16 @@ function loadCatalogFile(source, filename) {
   const existing = loader.files.get(filename);
   if (existing) return existing;
 
-  const request = fetch(`${source.baseUrl}/${filename}`)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(new DOMException("Timeout", "AbortError")), CATALOG_REQUEST_TIMEOUT_MS);
+  const request = fetch(`${source.baseUrl}/${filename}`, { signal: controller.signal })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Nutrition ${source.id} catalog load failed: ${response.status}`);
       }
       return response.json();
     })
+    .finally(() => clearTimeout(timeoutId))
     .catch((error) => {
       // A transient offline failure must remain retryable on the next search.
       loader.files.delete(filename);
@@ -175,26 +179,12 @@ export async function searchLazyNutritionCatalog(query, limit = 20) {
     let loadedSourceCount = 0;
     let lastError = null;
 
-    // Start both lightweight source loads together. This keeps the first
-    // result complete without serial network latency, while avoiding the much
-    // larger prefix index for the normal complete-word search path.
-    const sourceRequests = new Map(
-      CATALOG_SOURCES.map((source) => [
-        source.id,
-        loadSearchCatalogWithIndexes(source, options).then(
-          (catalog) => ({ catalog }),
-          (error) => ({ error })
-        )
-      ])
-    );
-
-    // Generic reference foods are most useful for broad queries ("banana",
-    // "milk", "beef"); SKU results are retained as the next choices.
+    // The localized SKU catalog is intentionally searched first. The generic
+    // reference layer is fetched only if the focused SKU lookup has no match,
+    // keeping the first mobile search lightweight despite the larger catalog.
     for (const source of CATALOG_SOURCES) {
       try {
-        const outcome = await sourceRequests.get(source.id);
-        if (outcome.error) throw outcome.error;
-        const { catalog } = outcome;
+        const catalog = await loadSearchCatalogWithIndexes(source, options);
         loadedSourceCount += 1;
         const exactIds = exactIdsForQuery(catalog, normalizedQuery);
         const sourceResults = searchLocalizedNutritionCatalog(
@@ -209,6 +199,8 @@ export async function searchLazyNutritionCatalog(query, limit = 20) {
         sourceResults.forEach((food) => {
           (exactIds.has(food.id) ? exact : matches).push(food);
         });
+
+        if (sourceResults.length) break;
 
       } catch (error) {
         lastError = error;
@@ -257,36 +249,25 @@ export async function findExactLazyNutritionCatalogFoods(query) {
   const normalizedQuery = normalizeNutritionQuery(query);
   if (!normalizedQuery || normalizedQuery.length < 2) return [];
 
-  const sourceRequests = new Map(
-    CATALOG_SOURCES.map((source) => [
-      source.id,
-      loadExactCatalog(source).then(
-        (catalog) => ({ catalog }),
-        (error) => ({ error })
-      )
-    ])
-  );
-
   const exactFoods = [];
   let loadedSourceCount = 0;
   let lastError = null;
 
   for (const source of CATALOG_SOURCES) {
-    const outcome = await sourceRequests.get(source.id);
-    if (outcome?.error) {
-      lastError = outcome.error;
-      console.warn(`Nutrition ${source.id} exact catalog lookup unavailable:`, outcome.error);
-      continue;
-    }
-
-    loadedSourceCount += 1;
-    exactFoods.push(
-      ...resolveExactNutritionCatalogFoods(
-        outcome.catalog.foods,
-        outcome.catalog.exactIndex,
+    try {
+      const catalog = await loadExactCatalog(source);
+      loadedSourceCount += 1;
+      const sourceFoods = resolveExactNutritionCatalogFoods(
+        catalog.foods,
+        catalog.exactIndex,
         normalizedQuery
-      )
-    );
+      );
+      exactFoods.push(...sourceFoods);
+      if (sourceFoods.length) break;
+    } catch (error) {
+      lastError = error;
+      console.warn(`Nutrition ${source.id} exact catalog lookup unavailable:`, error);
+    }
   }
 
   if (!loadedSourceCount) {

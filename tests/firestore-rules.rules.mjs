@@ -651,14 +651,14 @@ test("assigned trainer can advance only the client setup checklist", async () =>
   });
 
   const checklist = {
-    version: 1,
+    version: 2,
     status: "in_progress",
-    currentStep: "program",
+    currentStep: "schedule",
     startedAt: "2026-08-13T09:00:00.000Z",
     updatedAt: "2026-08-13T09:01:00.000Z",
     completedSteps: {
-      subscription: true,
-      program: false,
+      program: true,
+      schedule: false,
       nutrition: false,
       notifications: false
     }

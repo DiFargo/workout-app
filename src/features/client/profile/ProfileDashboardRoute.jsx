@@ -273,6 +273,8 @@ export default function ProfileDashboardRoute(ctx) {
     workoutCalendarMonthDate,
     workoutCalendarDays,
     selectedWorkoutCalendarItems,
+    profileCalendarScheduledDates,
+    canEditProfileWorkoutSchedule,
     shiftProfileWorkoutCalendarMonth,
     toggleProfileWorkoutScheduledDate,
     saveProfileWorkoutCalendar,
@@ -419,12 +421,7 @@ export default function ProfileDashboardRoute(ctx) {
   }
 
   async function saveQuickWeight(weight) {
-    const saved = await saveProfileMeasurement({ weight }, { measurementType: "weight_checkin" });
-    if (saved) {
-      setQuickWeightModalOpen(false);
-      setPage(APP_PAGES.MAIN);
-    }
-    return saved;
+    return saveProfileMeasurement({ weight }, { measurementType: "weight_checkin" });
   }
 
   function openProfileWorkoutJournalHistory(workoutId = "", programScope = null) {
@@ -652,6 +649,9 @@ export default function ProfileDashboardRoute(ctx) {
           saving={profileMeasurementSaving}
           onClose={() => setQuickWeightModalOpen(false)}
           onSave={saveQuickWeight}
+          onSuccessAcknowledged={() => {
+            setQuickWeightModalOpen(false);
+          }}
         />
       )}
 
@@ -719,6 +719,10 @@ export default function ProfileDashboardRoute(ctx) {
         })}
         onCompareViewChange={setProfileProgressPhotoCompareView}
         onSave={saveClientProgressPhotos}
+        onSuccessAcknowledged={() => {
+          setProfileProgressPhotosModalOpen(false);
+          setProfileProgressPhotoStatus("");
+        }}
       />
 
       <ProfileWorkoutJournalModal
@@ -733,27 +737,29 @@ export default function ProfileDashboardRoute(ctx) {
           calendarDays: workoutCalendarDays,
           selectedDate: profileWorkoutCalendarDate,
           selectedItems: selectedWorkoutCalendarItems,
-          scheduledDates: profileWorkoutScheduledDates,
+          scheduledDates: profileCalendarScheduledDates,
           draftDates: profileWorkoutCalendarDraftDates,
+          canEditSchedule: canEditProfileWorkoutSchedule,
           editing: profileWorkoutCalendarEditing,
           saving: profileWorkoutCalendarSaving,
           status: profileWorkoutCalendarStatus,
           getTimestampValue,
           onShiftMonth: shiftProfileWorkoutCalendarMonth,
           onStartEdit: () => {
-            setProfileWorkoutCalendarDraftDates(profileWorkoutScheduledDates);
+            if (!canEditProfileWorkoutSchedule) return;
+            setProfileWorkoutCalendarDraftDates(profileCalendarScheduledDates);
             setProfileWorkoutCalendarEditing(true);
             setProfileWorkoutCalendarStatus("");
           },
           onCancelEdit: () => {
-            setProfileWorkoutCalendarDraftDates(profileWorkoutScheduledDates);
+            setProfileWorkoutCalendarDraftDates(profileCalendarScheduledDates);
             setProfileWorkoutCalendarEditing(false);
             setProfileWorkoutCalendarStatus("");
           },
           onSave: saveProfileWorkoutCalendar,
           onDayClick: (day) => {
             setProfileWorkoutCalendarDate(day.key);
-            if (profileWorkoutCalendarEditing && day.isCurrentMonth) {
+            if (canEditProfileWorkoutSchedule && profileWorkoutCalendarEditing && day.isCurrentMonth) {
               toggleProfileWorkoutScheduledDate(day.key);
             }
           },
@@ -818,10 +824,8 @@ export default function ProfileDashboardRoute(ctx) {
             draft={aiNutritionProfileDraft}
             onToggle={() => setProfileBodyMetricsOpen((prev) => !prev)}
             onDraftChange={(field, value) => setAiNutritionProfileDraft((prev) => ({ ...prev, [field]: value }))}
-            onSave={() => {
-              saveAiBodyMetrics();
-              setProfileSettingsModalOpen(false);
-            }}
+            onSave={saveAiBodyMetrics}
+            onSaved={() => setProfileSettingsModalOpen(false)}
           />
         )}
 
@@ -918,6 +922,10 @@ export default function ProfileDashboardRoute(ctx) {
         onClose={() => setProfileNutritionModalOpen(false)}
         onGoalChange={(goalId) => setAiNutritionProfileDraft((prev) => ({ ...prev, goal: goalId }))}
         onSave={saveProfileNutritionPlanAndClose}
+        onSuccessAcknowledged={() => {
+          setProfileNutritionModalOpen(false);
+          setProfileNutritionSaveStatus("");
+        }}
         onShiftWeek={(direction) => selectNutritionDate(shiftNutritionDateKey(nutritionDateKey, direction * 7))}
       />
 

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AtSign, Camera, LockKeyhole, Pencil, UserRound } from "lucide-react";
 import styles from "./ProfileAccountSettingsSection.module.css";
+import { MAX_USER_DISPLAY_NAME_LENGTH } from "../../../utils/userDisplayName.js";
 
-const MAX_DISPLAY_NAME_LENGTH = 30;
+const MAX_DISPLAY_NAME_LENGTH = MAX_USER_DISPLAY_NAME_LENGTH;
 
 export default function ProfileAccountSettingsSection({
   avatarPreview,

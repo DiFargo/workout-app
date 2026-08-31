@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
 import {
   buildTrainerActionCenter,
@@ -104,7 +105,13 @@ test("trainer action items open the relevant client tab", () => {
   assert.equal(getTrainerActionItemTargetTab({}, "todayWorkouts"), "workouts");
   assert.equal(getTrainerActionItemTargetTab({ attention: { type: "measure" } }), "bodyProgress");
   assert.equal(getTrainerActionItemTargetTab({ attention: { type: "nutrition" } }), "nutrition");
+  assert.equal(getTrainerActionItemTargetTab({ attention: { type: "payment" } }), "calendar");
+  assert.equal(getTrainerActionItemTargetTab({ attention: { type: "task" } }), "tasks");
   assert.equal(getTrainerActionItemTargetTab({ attention: { type: "activity" } }), "overview");
+  assert.equal(getTrainerActionItemTargetTab({
+    attention: { type: "workout" },
+    summary: { workoutFeedbackAttention: { id: "feedback" }, activeTrainerTasksCount: 1 }
+  }), "workouts");
 });
 
 test("trainer client list uses every client summary for search, filters and priority", () => {
@@ -215,4 +222,13 @@ test("trainer task draft creates actionable task presets", () => {
   });
 
   assert.equal(buildTrainerTaskDraft("custom", { title: "Check nutrition diary" }).type, "custom");
+});
+
+test("trainer dashboard keeps the focused action flow without generic aggregate stats", async () => {
+  const source = await readFile("src/components/trainer/TrainerWorkspace.jsx", "utf8");
+
+  assert.match(source, /<TrainerDailyJournal/);
+  assert.match(source, /actionCenter=\{actionCenter\}/);
+  assert.doesNotMatch(source, /trainerNextMetrics/);
+  assert.doesNotMatch(source, /DashboardMetric/);
 });

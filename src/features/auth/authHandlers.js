@@ -12,6 +12,7 @@ import {
   mapLoginAuthError,
   validateLoginFields
 } from "../../utils/clientUx";
+import { limitUserDisplayName } from "../../utils/userDisplayName.js";
 import { resolveEmailForLogin } from "./loginResolution";
 
 const googleProvider = new GoogleAuthProvider();
@@ -96,7 +97,7 @@ async function createInvitedUserProfile(db, user, invite) {
   const profile = {
     email,
     loginLower,
-    name: user.displayName || invite.name || email.split("@")[0],
+    name: limitUserDisplayName(user.displayName || invite.name || email.split("@")[0]),
     role: "client",
     active: true,
     createdAt: now,
@@ -127,7 +128,7 @@ async function updateExistingUserProfile(db, user, userSnapshot) {
     email,
     loginLower: currentLoginLower || getDefaultLoginAlias(email),
     updatedAt: new Date().toISOString(),
-    ...(user.displayName ? { name: user.displayName } : {})
+    ...(user.displayName ? { name: limitUserDisplayName(user.displayName) } : {})
   }, { merge: true });
 }
 

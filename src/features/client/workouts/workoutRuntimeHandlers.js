@@ -258,9 +258,13 @@ export function createWorkoutRuntimeHandlers({
       setExerciseValidationMessage("");
       if (isLastExerciseInGroup) {
         startRestTimer(group ? getGroupRestDuration(group) : restTimerDuration);
+        navigator.vibrate?.(45);
+        return true;
       }
       navigator.vibrate?.(45);
     }
+
+    return false;
   }
 
   function toggleWarmupStep(stepIndex) {

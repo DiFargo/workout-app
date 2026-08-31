@@ -2395,6 +2395,12 @@
   padding-top: 16px;
 }
 
+/* Keep the two cards on the photo-and-measurements page visually separate,
+   just like the other client tabs. */
+.workspaceRoot :global(.trainerNextClientPage .trainerClientBodyProgress.trainerClientTabContent) {
+  gap: 16px;
+}
+
 .workspaceRoot :global(.trainerNextProgressChart),
 .workspaceRoot :global(.trainerNextResultCard),
 .workspaceRoot :global(.trainerNextActivityCard),
@@ -2615,13 +2621,18 @@
   justify-content: center;
   gap: 7px;
   padding: 0 13px;
-  border: 1px solid #e4defb;
+  border: 1px solid #d6c8ed;
   border-radius: 999px;
-  background: #fbf9ff;
-  color: var(--tn-purple);
+  background: #eee8fa;
+  color: #6a52a5;
   font-size: 10px;
   font-weight: 800;
   cursor: pointer;
+}
+
+.workspaceRoot :global(.trainerMeasurementPanelTitle button:hover) {
+  border-color: #bca8df;
+  background: #e5dcf6;
 }
 
 
@@ -6989,6 +7000,17 @@
   border: 0;
   border-radius: 8px;
   font-weight: 800;
+}
+
+.workspaceRoot :global(.trainerWorkoutScheduleFooter button.trainerWorkoutScheduleSubscriptionAction) {
+  border: 1px solid #d3c2ec;
+  color: #6d55aa;
+  background: #f8f5fc;
+}
+
+.workspaceRoot :global(.trainerWorkoutScheduleFooter button.trainerWorkoutScheduleSubscriptionAction:hover:not(:disabled)) {
+  border-color: #b9a7df;
+  background: #eee8fa;
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleHint) {

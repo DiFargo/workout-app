@@ -19,11 +19,10 @@
 :global(:root[data-app-theme="warm-light"]) .root {
   position: static;
   z-index: 20;
-  width: 96px;
+  width: 44px;
   height: 44px;
   display: grid;
-  grid-template-columns: repeat(2, 44px);
-  gap: 8px;
+  grid-template-columns: 44px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .action {
@@ -59,11 +58,6 @@
   color: inherit;
   fill: none;
   -webkit-text-fill-color: currentColor;
-}
-
-:global(:root[data-app-theme="warm-light"]) .icon.editIcon {
-  width: 20px;
-  height: 20px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .icon.closeIcon {

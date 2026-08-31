@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Scale } from "lucide-react";
+import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileQuickWeightModal.module.css";
 
@@ -11,16 +12,19 @@ export default function ProfileQuickWeightModal({
   open,
   saving = false,
   onClose,
-  onSave
+  onSave,
+  onSuccessAcknowledged
 }) {
-  const [weight, setWeight] = useState("0");
+  const [weight, setWeight] = useState("");
   const [status, setStatus] = useState("");
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (!open) return;
 
-    setWeight("0");
+    setWeight("");
     setStatus("");
+    setSaveSuccess(false);
   }, [open]);
 
   if (!open) return null;
@@ -45,7 +49,9 @@ export default function ProfileQuickWeightModal({
     setStatus("");
     const saved = await onSave?.(rawWeight);
 
-    if (!saved) {
+    if (saved) {
+      setSaveSuccess(true);
+    } else {
       setStatus("Не удалось сохранить вес. Попробуйте ещё раз.");
     }
   }
@@ -56,7 +62,7 @@ export default function ProfileQuickWeightModal({
       data-testid="profile-quick-weight-overlay"
       data-css-module-scope="profile-quick-weight-modal"
       role="presentation"
-      onClick={saving ? undefined : onClose}
+      onClick={saving || saveSuccess ? undefined : onClose}
     >
       <form
         className={styles.dialog}
@@ -72,7 +78,7 @@ export default function ProfileQuickWeightModal({
           className={styles.closeButton}
           testId="profile-quick-weight-close"
           ariaLabel="Закрыть добавление веса"
-          disabled={saving}
+          disabled={saving || saveSuccess}
           onClick={onClose}
         />
 
@@ -117,10 +123,17 @@ export default function ProfileQuickWeightModal({
           type="submit"
           className={styles.submit}
           data-testid="profile-quick-weight-submit"
-          disabled={saving}
+          disabled={saving || saveSuccess}
         >
-          {saving ? "Сохраняем..." : "Сохранить"}
+          {saving ? "Сохраняем..." : saveSuccess ? "Вес сохранён" : "Сохранить"}
         </button>
+        {saveSuccess ? (
+          <SaveSuccessNotice
+            title="Вес сохранён"
+            description="Новая запись добавлена в динамику веса."
+            onComplete={onSuccessAcknowledged || onClose}
+          />
+        ) : null}
       </form>
     </div>
   );

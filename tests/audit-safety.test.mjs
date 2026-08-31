@@ -11,9 +11,11 @@ import {
   findExistingPhotoFood,
   getMicrocycleWeekNumbers,
   getWorkoutCompletion,
+  hasVerifiedPhotoBarcode,
   hasWorkoutSetEntry,
   isWorkoutSetCompleted,
   isReliablePhotoFood,
+  isVerifiedPhotoLabelFood,
   limitSimilarNutritionFoods,
   mergeNutritionDays,
   rankAndDedupeNutritionFoods
@@ -83,10 +85,45 @@ test("photo analysis rejects non-food and low-confidence drafts", () => {
   ), false);
 });
 
+test("photo search permits only a verified barcode or an exact readable label", () => {
+  const readableLabel = {
+    name: "Йогурт греческий",
+    calories: 90,
+    protein: 8,
+    fat: 2,
+    carbs: 6,
+    confidence: "high",
+    matchConfidence: "exact",
+    evidenceType: "label"
+  };
+
+  assert.equal(hasVerifiedPhotoBarcode({ barcode: "4811234567890" }), true);
+  assert.equal(hasVerifiedPhotoBarcode({ barcode: "4811234" }), false);
+  assert.equal(isVerifiedPhotoLabelFood(readableLabel, {
+    found: true,
+    isFood: true,
+    labelText: "Белки 8 г, жиры 2 г, углеводы 6 г, 90 ккал"
+  }), true);
+  assert.equal(isVerifiedPhotoLabelFood({
+    ...readableLabel,
+    evidenceType: "estimate"
+  }, {
+    found: true,
+    isFood: true,
+    labelText: "Белки 8 г, жиры 2 г, углеводы 6 г, 90 ккал"
+  }), false);
+});
+
 test("photo analysis reuses an exact database product", () => {
   const foods = [
     { id: "rice", name: "Рис варёный", calories: 130 },
-    { id: "teos", name: "Греческий йогурт", brand: "TEOS", barcode: "4811234567890" }
+    {
+      id: "teos",
+      name: "Греческий йогурт",
+      brand: "TEOS",
+      barcode: "4811234567890",
+      aliases: ["Greek yogurt"]
+    }
   ];
 
   assert.equal(
@@ -97,7 +134,23 @@ test("photo analysis reuses an exact database product", () => {
     findExistingPhotoFood(foods, { name: "Другой йогурт", barcode: "4811234567890" })?.id,
     "teos"
   );
+  assert.equal(
+    findExistingPhotoFood(foods, { name: "Другой йогурт", barcode: "4811234567890", matchConfidence: "uncertain" })?.id,
+    "teos"
+  );
   assert.equal(findExistingPhotoFood(foods, { name: "Йогурт с клубникой" }), null);
+  assert.equal(
+    findExistingPhotoFood(foods, { name: "Греческий йогурт", brand: "TEOS", matchConfidence: "partial" }),
+    null
+  );
+  assert.equal(
+    findExistingPhotoFood(foods, { name: "Greek yogurt", brand: "TEOS", matchConfidence: "exact" })?.id,
+    "teos"
+  );
+  assert.equal(
+    findExistingPhotoFood(foods, { name: "Йогурт", brand: "TEOS", matchConfidence: "exact" }),
+    null
+  );
 });
 
 test("bodyweight exercises do not require a weight field", () => {

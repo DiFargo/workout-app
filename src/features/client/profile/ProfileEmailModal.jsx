@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileEmailModal.module.css";
 
@@ -15,6 +16,11 @@ export default function ProfileEmailModal({
   const currentEmail = String(email || "").trim();
   const [nextEmail, setNextEmail] = useState(currentEmail);
   const [currentPassword, setCurrentPassword] = useState("");
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  useEffect(() => {
+    if (open) setSaveSuccess(false);
+  }, [open]);
 
   if (!open) {
     return null;
@@ -25,6 +31,7 @@ export default function ProfileEmailModal({
     const changed = await onRequestEmailChange(nextEmail, { currentPassword });
     if (changed) {
       setCurrentPassword("");
+      setSaveSuccess(true);
     }
   }
 
@@ -34,7 +41,7 @@ export default function ProfileEmailModal({
       data-testid="profile-email-overlay"
       data-css-module-scope="profile-email-modal"
       role="presentation"
-      onClick={onClose}
+      onClick={saveSuccess ? undefined : onClose}
     >
       <div
         className={styles.dialog}
@@ -57,6 +64,7 @@ export default function ProfileEmailModal({
             <ProfileModalCloseButton
               testId="profile-email-close"
               ariaLabel="Закрыть почту"
+              disabled={saveSuccess}
               onClick={onClose}
             />
           )}
@@ -110,7 +118,7 @@ export default function ProfileEmailModal({
             </div>
           </div>
 
-          <button type="submit" className={styles.primaryButton} data-testid="profile-email-submit" disabled={saving}>
+          <button type="submit" className={styles.primaryButton} data-testid="profile-email-submit" disabled={saving || saveSuccess}>
             {saving ? "Проверяю..." : "Авторизовать и привязать"}
           </button>
         </form>
@@ -119,9 +127,16 @@ export default function ProfileEmailModal({
           <div className={styles.status} data-testid="profile-email-status">{status}</div>
         )}
 
-        <button type="button" className={styles.secondaryButton} data-testid="profile-email-dismiss" onClick={onClose}>
+        <button type="button" className={styles.secondaryButton} data-testid="profile-email-dismiss" onClick={onClose} disabled={saveSuccess}>
           Закрыть
         </button>
+        {saveSuccess ? (
+          <SaveSuccessNotice
+            title="Почта изменена"
+            description="Новый адрес привязан к аккаунту и доступен для входа."
+            onComplete={onClose}
+          />
+        ) : null}
       </div>
     </div>
   );

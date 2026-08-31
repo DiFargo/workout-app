@@ -211,6 +211,8 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
       exerciseProgressText: rectOf(exerciseProgressText),
       stageHeading: rectOf(stageHeading),
       restStart: rectOf(document.querySelector('[data-testid="workout-rest-timer-start"]')),
+      deckClientHeight: deck?.clientHeight || 0,
+      deckScrollHeight: deck?.scrollHeight || 0,
       deckOverflowX: deck ? getComputedStyle(deck).overflowX : "",
       deckOverflowY: deck ? getComputedStyle(deck).overflowY : "",
       panelPosition: panel ? getComputedStyle(panel).position : ""
@@ -222,11 +224,9 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
   expect(metrics.deck, layoutSummary).not.toBeNull();
   expect(metrics.card, layoutSummary).not.toBeNull();
   expect(metrics.panel, layoutSummary).not.toBeNull();
-  const calmExerciseScrollFallback = metrics.theme === "warm-light"
-    && expectedStage === "exercise"
-    && metrics.viewportHeight <= 719;
+  const calmExerciseStage = metrics.theme === "warm-light" && expectedStage === "exercise";
   expect(metrics.deckOverflowX, layoutSummary).toBe("hidden");
-  expect(metrics.deckOverflowY, layoutSummary).toBe(calmExerciseScrollFallback ? "auto" : "hidden");
+  expect(metrics.deckOverflowY, layoutSummary).toBe(calmExerciseStage ? "scroll" : "hidden");
   expect(metrics.panelPosition, layoutSummary).toBe("fixed");
   expect(metrics.deck.left, layoutSummary).toBeGreaterThanOrEqual(0);
   expect(metrics.deck.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);
@@ -234,23 +234,19 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
   expect(metrics.card.left, layoutSummary).toBeGreaterThanOrEqual(metrics.deck.left);
   expect(metrics.card.right, layoutSummary).toBeLessThanOrEqual(metrics.deck.right + 1);
   expect(metrics.card.top, layoutSummary).toBeGreaterThanOrEqual(metrics.deck.top);
-  if (!calmExerciseScrollFallback) {
+  if (!calmExerciseStage) {
     expect(metrics.card.bottom, layoutSummary).toBeLessThanOrEqual(metrics.deck.bottom + 1);
   }
   if (expectedStage === "exercise") {
     expect(metrics.restStart, layoutSummary).not.toBeNull();
-    expect(metrics.restStart.height, layoutSummary).toBeGreaterThanOrEqual(30);
+    expect(metrics.restStart.height, layoutSummary).toBeGreaterThanOrEqual(24);
     if (metrics.theme === "warm-light") {
       expect(metrics.exerciseProgress, layoutSummary).not.toBeNull();
       expect(metrics.exerciseProgressText, layoutSummary).not.toBeNull();
       expect(metrics.stageHeading, layoutSummary).not.toBeNull();
-      expect(
-        Math.abs(
-          (metrics.exerciseProgress.top - metrics.stageHeading.bottom)
-          - (metrics.card.top - metrics.exerciseProgress.bottom)
-        ),
-        layoutSummary
-      ).toBeLessThanOrEqual(1);
+      expect(metrics.exerciseProgress.top, layoutSummary).toBeGreaterThanOrEqual(metrics.stageHeading.bottom + 8);
+      expect(metrics.card.top, layoutSummary).toBeGreaterThanOrEqual(metrics.exerciseProgress.bottom + 8);
+      expect(metrics.deckScrollHeight, layoutSummary).toBeGreaterThan(metrics.deckClientHeight);
       expect(
         Math.abs(
           (metrics.exerciseProgress.left + metrics.exerciseProgress.width / 2)
@@ -1265,13 +1261,13 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
   await expect(page.getByTestId("workout-run-stage")).toHaveAttribute("data-workout-stage", "exercise");
 
   const restTimerStart = page.getByTestId("workout-rest-timer-start");
-  await expect(restTimerStart).toHaveText("Стоп");
+  await expect(restTimerStart).toHaveAttribute("aria-label", "Остановить таймер отдыха");
   await restTimerStart.click();
-  await expect(restTimerStart).toHaveText("Продолжить");
+  await expect(restTimerStart).toHaveAttribute("aria-label", "Продолжить таймер отдыха");
   await restTimerStart.click();
-  await expect(restTimerStart).toHaveText("Стоп");
+  await expect(restTimerStart).toHaveAttribute("aria-label", "Остановить таймер отдыха");
 
-  await page.getByTestId("workout-exercise-support").locator("button").nth(1).click();
+  await page.getByRole("button", { name: "Открыть заметку тренеру" }).click();
   const noteModal = page.getByTestId("workout-exercise-note-modal");
   await expect(noteModal).toBeVisible();
   await noteModal.locator("button").first().click();

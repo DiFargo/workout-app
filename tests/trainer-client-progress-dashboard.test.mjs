@@ -71,7 +71,24 @@ test("does not invent progress when comparable records or nutrition targets are 
   assert.equal(result.nutrition.current, null);
 });
 
-test("overview renders four clearly separated progress diagrams", async () => {
+test("does not let an unfinished current nutrition day lower the adherence score", () => {
+  const result = buildTrainerClientProgressDashboard({
+    nutritionDays: [
+      { date: "2026-07-15", totals: { calories: 2300, protein: 180 } },
+      { date: "2026-07-16", totals: { calories: 350, protein: 20 } }
+    ],
+    nutritionGoals: { calories: 2300, protein: 180 },
+    days: 7,
+    now: new Date("2026-07-16T08:00:00.000Z")
+  });
+
+  assert.equal(result.nutrition.points.length, 1);
+  assert.equal(result.nutrition.trackedDays, 1);
+  assert.equal(result.nutrition.periodDays, 6);
+  assert.equal(result.nutrition.average, 100);
+});
+
+test("overview renders selectable real-data progress signals", async () => {
   const component = await readFile(new URL("../src/components/trainer/TrainerClientProgressDashboard.jsx", import.meta.url), "utf8");
   const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
 
@@ -79,6 +96,9 @@ test("overview renders four clearly separated progress diagrams", async () => {
   assert.match(component, /title: "Индекс замеров"/);
   assert.match(component, /title: "Силовые показатели"/);
   assert.match(component, /title: "Питание"/);
+  assert.match(component, /aria-pressed=\{active\}/);
+  assert.match(component, /onSelect=\{setSelectedMetric\}/);
+  assert.match(component, /chartLabel/);
   assert.match(component, /Это контекст, а не причина прогресса/);
   assert.match(workspace, /<TrainerClientProgressDashboard/);
   assert.match(workspace, /nutritionGoals=\{nutritionGoals\}/);

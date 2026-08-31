@@ -231,6 +231,26 @@ test("mobile client invite action sits beside the client search", async () => {
   assert.match(mobileStyles, /trainerNextClientSearchAdd\) \{[\s\S]*?min-width: 132px/);
 });
 
+test("client list cards always open the client overview", async () => {
+  const source = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
+  const clientList = source.match(/function DashboardClientList\([\s\S]*?\n}\n\nfunction getAttentionReason/)?.[0] || "";
+
+  assert.match(clientList, /onClick=\{\(\) => onOpenClient\(client, "overview"\)\}/);
+  assert.doesNotMatch(clientList, /onOpenClient\(client, statusAction\.targetTab\)/);
+});
+
+test("workout schedule keeps subscription editing beside schedule editing", async () => {
+  const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceClientWorkoutPlan.module.css", import.meta.url), "utf8");
+  const schedule = workspace.match(/function WorkoutSchedulePlanner\([\s\S]*?\n}\n\nfunction TrainerProgramScheduleModal/)?.[0] || "";
+
+  assert.match(schedule, /showEditAction=\{false\}/);
+  assert.match(schedule, /className="trainerWorkoutScheduleSubscriptionAction"/);
+  assert.match(schedule, /onClick=\{startSubscriptionEditing\}/);
+  assert.match(styles, /trainerWorkoutScheduleSubscriptionAction\) \{[\s\S]*?background: #eee7fa/);
+  assert.match(styles, /trainerWorkoutScheduleActions\) \{[\s\S]*?flex-direction: row/);
+});
+
 test("trainer editor Back returns directly to the programs overview", async () => {
   const source = await readFile(new URL("../src/features/trainer/TrainerAdminWorkoutsRoute.jsx", import.meta.url), "utf8");
 
@@ -482,26 +502,41 @@ test("nutrition diary uses a compact calendar and compact meal entries", async (
   assert.match(styles, /trainerNutritionPlanModal > \.trainerNutritionPlanActions > button\) \{[\s\S]*?min-height: 44px/);
 });
 
-test("client card unifies workout plan and exercise progress under Exercises", async () => {
+test("client card keeps four main pages and opens exercise progress in a sheet", async () => {
   const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
-  const styles = await readFile(new URL("../src/components/trainer/TrainerClientExercisesTabs.module.css", import.meta.url), "utf8");
+  const responsiveStyles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceResponsivePass.module.css", import.meta.url), "utf8");
   const clientTabs = workspace.match(/const CLIENT_TABS = \[([\s\S]*?)\n\];/)?.[1] || "";
   const exerciseSection = workspace.match(/\{exercisesOpen \? \(([\s\S]*?)\n      \) : null\}/)?.[1] || "";
+  const clientOverview = workspace.match(/function ClientOverview\(\{([\s\S]*?)\n\}\n\nfunction ClientMeasurements/)?.[1] || "";
 
   assert.match(clientTabs, /\{ id: "exercises", label: "Тренировки", target: "workouts" \}/);
   assert.ok(!clientTabs.includes('id: "messages"') && !clientTabs.includes('id: "notifications"'));
   assert.doesNotMatch(clientTabs, /\{ id: "workouts", label: "План тренировок"/);
   assert.doesNotMatch(clientTabs, /\{ id: "exerciseProgress", label: "Прогресс упражнений"/);
   assert.match(workspace, /\["exercises", "workouts", "exerciseProgress", "training"\]\.includes\(currentTab\)/);
-  assert.match(exerciseSection, /aria-label="Разделы упражнений клиента"/);
-  assert.match(exerciseSection, />\s*План тренировок\s*<\/button>/);
-  assert.match(exerciseSection, />\s*Прогресс упражнений\s*<\/button>/);
-  assert.match(exerciseSection, /aria-pressed=\{exerciseSubview === "plan"\}/);
-  assert.match(exerciseSection, /aria-pressed=\{exerciseSubview === "progress"\}/);
   assert.match(exerciseSection, /<ClientWorkoutPlan/);
-  assert.match(exerciseSection, /<ClientExerciseProgress/);
-  assert.match(styles, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
-  assert.match(styles, /\.switcher button\.active/);
+  assert.doesNotMatch(exerciseSection, /title="Открыть прогресс упражнений"/);
+  assert.match(clientOverview, /title="Открыть прогресс упражнений"/);
+  assert.match(clientOverview, /onClick=\{onOpenExerciseProgress\}/);
+  assert.match(workspace, /onOpenExerciseProgress=\{\(\) => setUtilitySheet\("exerciseProgress"\)\}/);
+  assert.match(workspace, /utilitySheet === "exerciseProgress"/);
+  assert.match(workspace, /"Календарь тренировок"/);
+  assert.match(workspace, /onSaveSubscription=\{saveSubscription\}/);
+  assert.match(workspace, /editingSubscription/);
+  assert.match(workspace, /Изменить абонемент/);
+  assert.match(workspace, /utilitySheet === "calendar"/);
+  assert.doesNotMatch(workspace, /setUtilitySheet\("subscription"\)/);
+  assert.doesNotMatch(workspace, /\["calendar", "subscription"\]\.includes\(utilitySheet\)/);
+  assert.doesNotMatch(workspace, /title="Открыть календарь тренировок"/);
+  assert.match(workspace, /utilitySheet === "nutritionDiary"/);
+  assert.match(workspace, /title="Открыть дневник питания"/);
+  assert.match(workspace, /<ClientPhotos photos=\{photos\} \/>\s*<ClientMeasurements measurements=\{measurements\} separated \/>/);
+  assert.match(workspace, /trainerSubscriptionCalendarUnified trainerNotificationCalendarUnified/);
+  assert.match(workspace, /trainerClientTabContent/);
+  assert.match(responsiveStyles, /trainerNextClientVariantA \.trainerNextClientTabs\) \{[\s\S]*?margin: 0 0 16px/);
+  assert.match(responsiveStyles, /trainerClientMeasurementsSection\) \{[\s\S]*?margin-top: 16px/);
+  assert.doesNotMatch(workspace, /ClientSectionTabs/);
+  assert.doesNotMatch(exerciseSection, /Разделы упражнений клиента/);
 });
 
 test("trainer constructor keeps editable names without pencil decorations", async () => {
@@ -582,6 +617,10 @@ test("client workout plan is compact and offers a two-path workout review decisi
   assert.match(layoutStyles, /:local\(\.scope\) \{[\s\S]*?min-width: 0/);
   assert.doesNotMatch(plan, dynamicsLabel);
   assert.doesNotMatch(plan, workoutDynamicsTitle);
+  assert.match(plan, /Открыть разбор и историю тренировок/);
+  assert.match(plan, /title="Разбор и история тренировок"/);
+  assert.match(plan, /<ClientWorkoutReviewPanel[\s\S]*?<ClientWorkoutHistoryBlock history=\{history\} showAll/);
+  assert.match(workspace, /function ClientWorkoutHistoryBlock\(\{ history = \[\], showAll = false \}\)/);
   assert.match(plan, /<TrainerWorkoutReviewDecisionModal/);
   assert.match(plan, /onConfirm=\{\(\) => resolveWorkoutReview\("accepted"\)\}/);
   assert.match(plan, /onEdit=\{openReviewEditor\}/);
@@ -592,7 +631,7 @@ test("client workout plan is compact and offers a two-path workout review decisi
   assert.match(clientActions, /"workout_review"/);
   assert.match(styles, /\.programCard/);
   assert.match(styles, /\.programGrid/);
-  assert.match(styles, /grid-template-columns: minmax\(420px, 1\.05fr\) minmax\(300px, \.95fr\)/);
+  assert.match(styles, /grid-template-columns: minmax\(420px, 1\.(?:05|1)fr\) minmax\(300px, \.(?:95|9)fr\)/);
 });
 
 test("trainer can restore an unfinished archived program assignment", async () => {
@@ -654,6 +693,7 @@ test("program assignment opens a client-specific load review before it replaces 
   assert.match(workspace, /skipConfirmation: true/);
   assert.match(modal, /Корректировка под клиента/);
   assert.match(modal, /Поправка к весам/);
+  assert.match(modal, /type="number"\s*\n\s*min="0"\s*\n\s*step="0\.5"/);
   assert.match(styles, /max-height: calc\(100dvh - 36px\)/);
   assert.match(handlers, /applyTrainerProgramAssignmentLoadAdjustments\(/);
   assert.match(handlers, /assignmentOptions\.skipConfirmation/);
@@ -663,4 +703,8 @@ test("program assignment opens a client-specific load review before it replaces 
   assert.equal(sourceWorkouts[0].exercises[0].sets[0].weight, "40");
   assert.equal(adjustedWorkouts[0].exercises[0].sets[0].weight, "42.5");
   assert.equal(adjustedWorkouts[0].exercises[0].sets[1].weight, "47.5");
+
+  const negativeAdjustment = applyTrainerProgramAssignmentLoadAdjustments(sourceWorkouts, { "жим лёжа": "-2.5" });
+  assert.equal(negativeAdjustment[0].exercises[0].sets[0].weight, "40");
+  assert.equal(negativeAdjustment[0].exercises[0].sets[1].weight, "45");
 });

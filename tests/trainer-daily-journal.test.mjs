@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 import {
   buildTrainerDailyJournal,
   buildTrainerImmediateActions,
@@ -49,7 +50,8 @@ test("standing program decisions are separated from the daily journal", () => {
   assert.equal(journal.items.length, 1);
   assert.equal(journal.items[0].title, "Завершена тренировка «Тренировка 2»");
   assert.equal(immediateActions.length, 1);
-  assert.equal(immediateActions[0].title, "Не назначена программа");
+  assert.equal(immediateActions[0].title, "Нужно настроить клиента");
+  assert.equal(immediateActions[0].actionLabel, "Настроить");
   assert.equal(immediateActions[0].target, "workouts");
 });
 
@@ -102,4 +104,24 @@ test("daily journal filters sort entries by their action state", () => {
   assert.equal(filterTrainerDailyJournalItems(items, "reviewed", reviewedIds).length, 1);
   assert.equal(filterTrainerDailyJournalItems(items, "recorded", reviewedIds).length, 2);
   assert.equal(filterTrainerDailyJournalItems(items, "all", reviewedIds).length, 4);
+});
+
+test("immediate action cards open from the entire card and support keyboard activation", async () => {
+  const source = await readFile("src/components/trainer/TrainerDailyJournal.jsx", "utf8");
+
+  assert.match(source, /className=\{styles\.immediateActionCard\}/);
+  assert.match(source, /role="button"/);
+  assert.match(source, /tabIndex=\{0\}/);
+  assert.match(source, /onClick=\{\(\) => openImmediateAction\(action\)\}/);
+  assert.match(source, /event\.key !== "Enter" && event\.key !== " "/);
+});
+
+test("journal entries remain clickable after an action was reviewed", async () => {
+  const source = await readFile("src/components/trainer/TrainerDailyJournal.jsx", "utf8");
+
+  assert.match(source, /function openTimelineEvent\(event\)/);
+  assert.match(source, /event\.requiresAction && !reviewedIds\.has\(event\.id\)/);
+  assert.match(source, /className=\{`\$\{styles\.dailyJournalEvent\} \$\{styles\.dailyJournalEventClickable\}/);
+  assert.match(source, /onClick=\{\(\) => openTimelineEvent\(event\)\}/);
+  assert.match(source, /dailyJournalReviewed/);
 });

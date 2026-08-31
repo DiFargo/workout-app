@@ -45,6 +45,23 @@ function JournalIcon({ type }) {
   return <Icon size={16} strokeWidth={1.9} aria-hidden="true" />;
 }
 
+const IMMEDIATE_ACTION_PRIORITY = {
+  program: 0,
+  feedback: 1,
+  workout: 2,
+  task: 3,
+  nutrition: 4,
+  measurement: 5,
+  attention: 6
+};
+
+function sortImmediateActions(first, second) {
+  const priorityDifference = (IMMEDIATE_ACTION_PRIORITY[first?.icon] ?? 99) - (IMMEDIATE_ACTION_PRIORITY[second?.icon] ?? 99);
+  if (priorityDifference) return priorityDifference;
+
+  return String(first?.clientName || "").localeCompare(String(second?.clientName || ""), "ru");
+}
+
 function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, renderAvatar, trainerName }) {
   const [reviewedIds, setReviewedIds] = useState(() => readReviewedIds(trainerName, journal.dateKey));
   const [journalFilter, setJournalFilter] = useState("all");
@@ -57,7 +74,7 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
       if (!action?.id || seen.has(action.id) || reviewedIds.has(action.id)) return false;
       seen.add(action.id);
       return true;
-    });
+    }).sort(sortImmediateActions);
   }, [immediateActions, journal.items, reviewedIds]);
   const timelineItems = useMemo(
     () => journal.items.filter((item) => !item.requiresAction || reviewedIds.has(item.id)),
@@ -85,8 +102,8 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
     onOpenClient?.(target.client, target.target || "overview");
   }
 
-  function openEvent(event) {
-    acknowledge(event.id);
+  function openTimelineEvent(event) {
+    if (event.requiresAction && !reviewedIds.has(event.id)) acknowledge(event.id);
     openClient(event);
   }
 
@@ -106,20 +123,32 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
             <div>
               <span>СЕЙЧАС</span>
               <h2>Требуют действия</h2>
-              <p>Незакрытые задачи собраны отдельно, чтобы их можно было быстро обработать.</p>
+              <p>Сначала показаны наиболее важные задачи.</p>
             </div>
             <strong>{actionsNow.length}</strong>
           </header>
           <div className={styles.immediateActionsList}>
             {actionsNow.map((action) => (
-              <article key={action.id}>
+              <article
+                key={action.id}
+                className={styles.immediateActionCard}
+                role="button"
+                tabIndex={0}
+                aria-label={`${action.actionLabel || "Открыть"}: ${action.clientName}. ${action.title}. ${action.detail}`}
+                onClick={() => openImmediateAction(action)}
+                onKeyDown={(event) => {
+                  if (event.key !== "Enter" && event.key !== " ") return;
+                  event.preventDefault();
+                  openImmediateAction(action);
+                }}
+              >
                 {renderAvatar(action.client, "small")}
                 <div className={styles.immediateActionsContent}>
                   <span><JournalIcon type={action.icon} />{action.clientName}</span>
                   <strong>{action.title}</strong>
                   <small>{action.detail}</small>
                 </div>
-                <button type="button" onClick={() => openImmediateAction(action)}>{action.actionLabel || "Открыть"}</button>
+                <span className={styles.immediateActionCta} aria-hidden="true">{action.actionLabel || "Открыть"}</span>
               </article>
             ))}
           </div>
@@ -160,7 +189,19 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
           {filteredItems.map((event) => {
             const reviewed = reviewedIds.has(event.id);
             return (
-              <article className={`${styles.dailyJournalEvent} ${event.requiresAction ? styles.requiresAction : ""} ${reviewed ? styles.reviewed : ""}`} key={event.id}>
+              <article
+                className={`${styles.dailyJournalEvent} ${styles.dailyJournalEventClickable} ${event.requiresAction ? styles.requiresAction : ""} ${reviewed ? styles.reviewed : ""}`}
+                key={event.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Открыть: ${event.clientName}. ${event.title}. ${event.detail}`}
+                onClick={() => openTimelineEvent(event)}
+                onKeyDown={(eventKey) => {
+                  if (eventKey.key !== "Enter" && eventKey.key !== " ") return;
+                  eventKey.preventDefault();
+                  openTimelineEvent(event);
+                }}
+              >
                 <time>{event.timeLabel}</time>
                 <span className={styles.dailyJournalLine} aria-hidden="true"><i /></span>
                 {renderAvatar(event.client, "small")}
@@ -173,7 +214,7 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
                   reviewed ? (
                     <span className={styles.dailyJournalReviewed}><Check size={14} aria-hidden="true" />Проверено</span>
                   ) : (
-                    <button type="button" onClick={() => openEvent(event)}>{event.actionLabel || "Открыть"}</button>
+                    <span className={styles.dailyJournalEventAction} aria-hidden="true">{event.actionLabel || "Открыть"}</span>
                   )
                 ) : <span className={styles.dailyJournalRecorded}>Записано</span>}
               </article>

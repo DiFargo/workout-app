@@ -1,4 +1,4 @@
-import { ChevronLeft, RefreshCw, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, RefreshCw, X } from "lucide-react";
 import styles from "./WorkoutRunOverlays.module.css";
 
 export function WorkoutNotFoundPage({ onBackToMenu }) {
@@ -86,8 +86,14 @@ export function WorkoutStageHeading({
   isStartSlide,
   isWorkoutSaved,
   onOpenSwap,
-  showSwapButton = false
+  showSwapButton = false,
+  inFlow = false,
+  progressLabel = ""
 }) {
+  const exerciseTitle = [exercise?.name, exercise?.title, exercise?.exerciseName]
+    .map((value) => String(value || "").trim())
+    .find(Boolean) || "Упражнение";
+
   if (isStartSlide) {
     return null;
   }
@@ -95,16 +101,24 @@ export function WorkoutStageHeading({
   return (
     <>
       <div
-        className={`${styles.stageTitle} ${showSwapButton ? styles.stageTitleWithSwap : ""}`}
+        className={`${styles.stageTitle} ${showSwapButton ? styles.stageTitleWithSwap : ""} ${inFlow ? styles.stageTitleInFlow : ""}`}
         data-css-module-scope="workout-stage-heading"
       >
-        <span className={styles.stageTitleText}>
-          {isFinishSlide
-            ? isWorkoutSaved
-              ? "Тренировка завершена"
-              : "Итоги тренировки"
-          : exercise?.name}
-        </span>
+        <div className={styles.stageTitleContent}>
+          <span className={styles.stageTitleText}>
+            {isFinishSlide
+              ? isWorkoutSaved
+                ? "Тренировка завершена"
+                : "Итоги тренировки"
+              : exerciseTitle}
+          </span>
+          {inFlow && !isFinishSlide && progressLabel ? (
+            <span className={styles.stageTitleProgress} data-testid="workout-exercise-progress">
+              {progressLabel}
+              <ChevronDown aria-hidden="true" />
+            </span>
+          ) : null}
+        </div>
       </div>
       {showSwapButton && (
         <button

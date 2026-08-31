@@ -1520,11 +1520,51 @@
 }
 
 /* Final visual states for the client profile: one calm lavender system across tabs and controls. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+  gap: 4px;
+  margin: 0 0 16px;
+  padding: 4px;
+  overflow: hidden;
+  border-color: #e0d6f1;
+  border-radius: 16px;
+  background: #f3eef9;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button) {
+  display: inline-flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px !important;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #6e6876;
+  background: transparent;
+  font-weight: 720;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button svg) {
+  flex: 0 0 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button span) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button[aria-pressed="true"]) {
-  border-color: #8f7ac8;
+  border-color: #806bb6;
   background: #8f7ac8;
   color: #ffffff;
+  box-shadow: 0 7px 14px rgba(128, 107, 182, 0.2);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionPeriodButtons button.active),
@@ -1758,10 +1798,59 @@
   color: #6e59a9;
 }
 
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.completed) {
+  border-color: #bde1ca;
+  background: #eef8f1;
+  color: #29724b;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.completedOffDate) {
+  border-color: #b7d9f3;
+  background: #eef7ff;
+  color: #286b9e;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.missed) {
+  border-color: #efd4da;
+  background: #fff6f7;
+  color: #ae535c;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.shifted) {
+  border-color: #ebd8ad;
+  background: #fff9ec;
+  color: #98691c;
+}
+
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.pastWorkout) {
   border-color: #aab3c7;
   background: #aab3c7;
   color: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationDayBadges i.plannedWorkout) {
+  color: #654b9d;
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationDayBadges i.completed) {
+  color: #29724b;
+  background: #d9f0e1;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationDayBadges i.completedOffDate) {
+  color: #286b9e;
+  background: #dbeeff;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationDayBadges i.missed) {
+  color: #ae535c;
+  background: #fae4e7;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationDayBadges i.shifted) {
+  color: #98691c;
+  background: #f8ebca;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.pastWorkout .trainerNotificationDayBadges i) {
@@ -1771,6 +1860,26 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.plannedWorkout) {
   border-color: #9d89d3;
   background: #e4daf6;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.completed) {
+  border-color: #56a473;
+  background: #56a473;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.completedOffDate) {
+  border-color: #3d8bce;
+  background: #3d8bce;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.missed) {
+  border-color: #c36a70;
+  background: #c36a70;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.shifted) {
+  border-color: #bd8a36;
+  background: #bd8a36;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.pastWorkout) {
@@ -2183,8 +2292,10 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart > div > span) {
   box-sizing: border-box;
   width: 100%;
-  height: auto;
-  min-height: 126px;
+  height: 126px;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
   padding: 0 2px;
 }
 
@@ -2241,7 +2352,8 @@
   }
 
   :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCaloriesChart .trainerClientBarChart > div > span) {
-    min-height: 88px;
+    height: 88px;
+    min-height: 0;
     padding: 0 1px;
   }
 
@@ -2390,12 +2502,29 @@
   width: min(480px, 100%);
 }
 
+:global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActionsWithSetup) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(620px, 100%);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientSetupButton) {
+  border-color: #d9ccef;
+  color: #6d55aa;
+  background: #f3eefc;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientSetupButton:hover) {
+  border-color: #bba8df;
+  color: #5f4797;
+  background: #ece4fa;
+}
+
 @media (min-width: 900px) {
   :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientTabs) {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     width: 100%;
-    margin: 0;
+    margin: 0 0 16px;
     gap: 4px;
   }
 
@@ -2405,10 +2534,25 @@
   }
 }
 
+/* The four primary client tabs always need a visible breathing space before
+   their first card. Keep the photo and measurements cards on this same
+   rhythm, without relying on a grid gap that older layout layers override. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientBodyProgress) {
+  gap: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientBodyProgress > .trainerNextSimplePanel.trainerClientMeasurementsSection) {
+  margin-top: 16px;
+}
+
 @media (max-width: 899px) {
   :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActions) {
     grid-template-columns: minmax(138px, 1.25fr) repeat(2, minmax(0, 1fr));
     width: 100%;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActionsWithSetup) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -2416,5 +2560,463 @@
   :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActions) {
     grid-template-columns: minmax(124px, 1.25fr) repeat(2, minmax(0, 1fr));
     gap: 6px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActionsWithSetup) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* On desktop the three status cards are short, equal peers. Keeping them on
+   one line makes the client overview easier to scan without changing the
+   two-column layout used on narrower screens. */
+@media (min-width: 1100px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article) {
+    min-height: 80px;
+    padding: 12px 14px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article:last-child:nth-child(3)),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article.attention) {
+    grid-column: auto;
+    min-height: 80px;
+  }
+}
+
+/* The plan action belongs beside the plan details, not in a tall footer. */
+@media (min-width: 1100px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCurrentPlan) {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px 208px 16px 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCurrentPlan .trainerClientBlockHeading),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCurrentPlan .trainerNutritionCurrentGoals) {
+    margin: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCurrentPlan .trainerNutritionCurrentMeta) {
+    grid-column: auto;
+    gap: 8px 14px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCurrentPlan .trainerNutritionPlanEditButton) {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    width: 164px;
+    min-width: 164px;
+    min-height: 68px;
+    margin: 0;
+    padding: 10px 12px;
+    transform: translateY(-50%);
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* Nutrition diary uses a real month calendar: weekdays and empty dates make
+   the selected record's place in time immediately clear. */
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiary > aside) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #efebf3;
+  border-radius: 18px;
+  background: #f5f2f7;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader) {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+  align-items: center;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader > button) {
+  display: grid;
+  width: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  height: 38px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #e4ddea;
+  border-radius: 11px;
+  color: #806bb6;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader > button:hover:not(:disabled)) {
+  border-color: #cfc1ec;
+  background: #eee8fa;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader > button:disabled) {
+  color: #c5becd;
+  cursor: default;
+  opacity: 0.7;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader > strong) {
+  color: #28262e;
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-align: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryWeekdays),
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid) {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryWeekdays span) {
+  color: #7b7682;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button) {
+  display: grid;
+  min-width: 0;
+  min-height: 58px;
+  align-content: center;
+  justify-items: center;
+  gap: 3px;
+  padding: 5px 2px;
+  border: 1px solid #e9e4ed;
+  border-radius: 12px;
+  color: #28262e;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: center;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.has-entry:hover) {
+  border-color: #cfc1ec;
+  background: #faf8fe;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.is-empty) {
+  border-color: transparent;
+  color: #b4aebc;
+  background: transparent;
+  cursor: default;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.active) {
+  border-color: #8f7ac8;
+  color: #ffffff;
+  background: #8f7ac8;
+  box-shadow: 0 6px 14px rgba(128, 107, 182, 0.2);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button strong) {
+  font-size: 15px;
+  font-weight: 760;
+  line-height: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button small) {
+  color: #7b7682;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.active small) {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarEmpty) {
+  min-height: 58px;
+}
+
+:global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHint) {
+  margin: 0;
+  color: #7b7682;
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiary > aside) {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button),
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarEmpty) {
+    min-height: 48px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button strong) {
+    font-size: 13px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button small) {
+    font-size: 9px;
+  }
+}
+
+/* Desktop overview: profile, navigation and actions share one compact card
+   rhythm. Scoped to the client workspace so program and admin pages keep
+   their existing layouts. */
+@media (min-width: 900px) {
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA) {
+    gap: 16px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeader) {
+    grid-template-columns: 112px minmax(0, 1fr) auto;
+    align-items: center;
+    min-height: 148px;
+    margin-bottom: 14px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 26px rgba(40, 38, 46, 0.04);
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeader .trainerNextAvatar.large) {
+    width: 112px;
+    height: 112px;
+    flex-basis: 112px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeader .trainerNextAvatarPlaceholder) {
+    width: 56px;
+    height: 56px;
+    stroke-width: 1.65;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeader h1) {
+    font-size: 28px;
+    line-height: 1.15;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientSubscriptionStatus) {
+    min-height: 32px;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeader p),
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeader > div > strong) {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActions) {
+    align-self: center;
+    width: min(468px, 100%);
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeaderActions > button) {
+    min-height: 46px;
+    height: 46px;
+    border-radius: 12px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientTabs) {
+    margin: 0 0 14px;
+    padding: 5px;
+    border-radius: 16px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientTabs button) {
+    min-height: 42px !important;
+    border-radius: 11px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientOverview) {
+    gap: 14px;
+    padding-top: 0;
+  }
+}
+
+/* Keep the client list easy to scan: each client is a separate compact card,
+   while the table headings and existing information hierarchy stay intact. */
+@media (min-width: 980px) {
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientsPage .trainerNextClientTable) {
+    display: grid;
+    gap: 10px;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientsPage .trainerNextClientTableHead) {
+    padding-bottom: 2px;
+    border-bottom: 0;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientsPage .trainerNextClientTable > button) {
+    border: 1px solid var(--tn-line);
+    border-radius: 16px;
+    background: var(--tn-surface);
+    box-shadow: 0 6px 16px rgba(56, 44, 78, 0.045);
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientsPage .trainerNextClientTable > button:last-child) {
+    border-bottom: 1px solid var(--tn-line);
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientsPage .trainerNextClientTable > button:hover) {
+    border-color: #d5c8ef;
+    box-shadow: 0 10px 20px rgba(56, 44, 78, 0.08);
+    transform: translateY(-1px);
+  }
+}
+
+/* The four desktop destinations share a single visible column.  The dock
+   deliberately uses that exact width, so its edges always align with the
+   page cards on Overview, Clients, Programs and Cabinet. */
+@media (min-width: 700px) {
+  :global(.trainerNextRoot):local(.scope) {
+    --trainer-next-page-max-width: 1252px;
+    --trainer-next-page-width: min(calc(100% - 68px), var(--trainer-next-page-max-width));
+  }
+
+    :global(.trainerNextRoot):local(.scope) :global(.trainerNextPage) {
+      width: var(--trainer-next-page-width) !important;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+      padding-bottom: var(
+        --trainer-next-desktop-dock-clearance,
+        calc(140px + env(safe-area-inset-bottom))
+      ) !important;
+    }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextDesktopDock) {
+    width: var(--trainer-next-page-width) !important;
+    max-width: none;
+    padding: 8px 24px;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextCabinetContent) {
+    width: 100%;
+  }
+}
+
+/* Mobile client workspace: the bottom navigation is the only primary
+   navigation on phones.  Keep the profile actions readable and reserve
+   enough scroll space so the final action is never hidden behind the dock. */
+@media (max-width: 699px) {
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage) {
+    padding-bottom: calc(var(--trainer-mobile-nav-clearance, 112px) + 54px) !important;
+    scroll-padding-bottom: calc(var(--trainer-mobile-nav-clearance, 112px) + 54px);
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientTabs) {
+    display: none !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeader) {
+    grid-template-columns: 64px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 14px !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeader .trainerNextAvatar.large) {
+    width: 64px !important;
+    height: 64px !important;
+    flex-basis: 64px !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActions) {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr) 42px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    gap: 3px !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActionsWithSetup) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActions > button) {
+    min-width: 0 !important;
+    min-height: 44px !important;
+    height: auto !important;
+    padding: 5px 7px !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActions .trainerNextClientTaskButton) {
+    width: 100% !important;
+    max-width: none !important;
+    justify-content: center;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActions .trainerNextClientTaskButton > span),
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActions .trainerNextClientHeaderUtilityButton > span) {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActions .trainerNextClientActionsButton) {
+    width: 42px !important;
+    justify-self: end;
+    padding: 0 !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNextClientHeaderActions .trainerNextClientActionsButton span) {
+    display: none !important;
+  }
+
+  /* A nutrition chart and its macro summary must use the full sheet width
+     one after another; forcing a desktop two-column grid caused the cards to
+     overlap on phones. */
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNutritionMetricGrid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNutritionAnalyticsMain) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNutritionAnalyticsMain .trainerClientAnalyticsCard),
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNutritionCaloriesChart),
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNutritionBalance) {
+    width: 100% !important;
+    min-width: 0 !important;
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .trainerNutritionDonutRow) {
+    display: grid !important;
+    grid-template-columns: 104px minmax(0, 1fr) !important;
+    align-items: center;
+    gap: 12px !important;
+  }
+
+  :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage .sectionLauncher) {
+    scroll-margin-bottom: calc(var(--trainer-mobile-nav-clearance, 112px) + 26px);
   }
 }

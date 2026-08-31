@@ -1,5 +1,6 @@
 import { exerciseUsesExternalWeight } from "./auditSafety.js";
 import { buildExecutableWorkout } from "./universalWorkoutBlocks.js";
+import { sanitizeExerciseWeightInput } from "./exerciseWeightInput.js";
 
 export function makeThreeSets(sets = [], defaultReps = 8) {
   const cleanSets = Array.isArray(sets) ? sets : [];
@@ -7,7 +8,7 @@ export function makeThreeSets(sets = [], defaultReps = 8) {
   const buildSet = (set) => ({
     ...set,
     reps: Number(set?.durationSeconds) > 0 ? "" : set?.reps || defaultReps,
-    weight: set?.weight || "",
+    weight: sanitizeExerciseWeightInput(set?.weight) || "",
     enteredReps: set?.enteredReps || "",
     enteredWeight: set?.enteredWeight || ""
   });
@@ -27,7 +28,7 @@ export function makeGroupedWorkoutSets(sets = [], rounds = 3, defaultReps = 8) {
     return {
       ...sourceSet,
       reps: Number(sourceSet?.durationSeconds) > 0 ? "" : sourceSet?.reps || defaultReps,
-      weight: sourceSet?.weight || "",
+      weight: sanitizeExerciseWeightInput(sourceSet?.weight) || "",
       enteredReps: sourceSet?.enteredReps || "",
       enteredWeight: sourceSet?.enteredWeight || ""
     };
@@ -195,7 +196,7 @@ export function buildClientWorkoutsFromTemplate(template = {}) {
         ? exercise.sets.map((set) => ({
             ...set,
             reps: set.reps ?? 8,
-            weight: String(set.weight ?? "")
+            weight: String(sanitizeExerciseWeightInput(set.weight) ?? "")
           }))
         : [{ reps: exercise.name?.includes("Пресс") ? 15 : 8, weight: "" }]
     }))

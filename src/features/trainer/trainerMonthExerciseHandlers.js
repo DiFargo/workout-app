@@ -4,6 +4,7 @@ import {
 } from "../../utils/auditSafety";
 import { appendExerciseSets } from "./trainerExerciseSetUtils";
 import { getTrainerExercisePresentationIdentity } from "./trainerWorkoutEditHelpers";
+import { sanitizeExerciseSetPatch } from "../../utils/exerciseWeightInput";
 
 export function createTrainerMonthExerciseHandlers({
   adminExerciseEditSnapshotRef,
@@ -118,6 +119,7 @@ export function createTrainerMonthExerciseHandlers({
   }
 
   function updateMonthExerciseSet(blockId, weekId, workoutId, exerciseId, setIndex, patch) {
+    const safePatch = sanitizeExerciseSetPatch(patch);
     const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
     updateMonthWorkout(blockId, weekId, workoutId, {
       exercises: (sourceWorkout?.exercises || []).map((exercise) => {
@@ -129,7 +131,7 @@ export function createTrainerMonthExerciseHandlers({
 
         nextSets[setIndex] = {
           ...(nextSets[setIndex] || { reps: 8, weight: "" }),
-          ...patch
+          ...safePatch
         };
 
         return {

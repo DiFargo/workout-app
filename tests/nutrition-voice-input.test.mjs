@@ -6,6 +6,7 @@ import {
   resolveExactNutritionCatalogFoods
 } from "../src/data/nutrition-catalog/lazyCatalog.js";
 import { findExactPersonalVoiceFood } from "../src/features/client/nutrition/nutritionVoicePersonalCatalog.js";
+import { resolveOverlappingVoiceBeverageItems } from "../src/features/client/nutrition/nutritionVoiceOverlap.js";
 import {
   extractVoiceMetricAmounts,
   resolveVoiceFoodMetricAmounts
@@ -195,6 +196,24 @@ test("voice entry uses the spoken 500 ml instead of a model-default 100 g", () =
   assert.deepEqual(resolved, [{ grams: 500, amountEstimated: false }]);
 });
 
+test("voice search separates a drink from a separately recognised accompaniment", () => {
+  const items = resolveOverlappingVoiceBeverageItems([
+    { query: "Шарлотка", mealId: "lunch" },
+    { query: "кофе с шарлоткой", mealId: "lunch" }
+  ]);
+
+  assert.deepEqual(items.map((item) => item.query), ["Шарлотка", "кофе"]);
+});
+
+test("voice search keeps one coffee-with-milk entry when milk is duplicated", () => {
+  const items = resolveOverlappingVoiceBeverageItems([
+    { query: "кофе с молоком", mealId: "breakfast" },
+    { query: "молоко", mealId: "breakfast" }
+  ]);
+
+  assert.deepEqual(items.map((item) => item.query), ["кофе с молоком"]);
+});
+
 test("voice entry chooses an exact personal food before the shared catalog or an AI estimate", () => {
   const personalFoods = {
     "my_syrniki_cranberry": {
@@ -296,7 +315,10 @@ test("voice exact lookup loads the exact SKU index before broad search results",
     const matches = await findExactLazyNutritionCatalogFoods("Флэт уайт");
 
     assert.deepEqual(matches.map((food) => food.id), [exactSku.id]);
-    assert.deepEqual(requestedUrls.sort(), Object.keys(catalogFiles).sort());
+    assert.deepEqual(requestedUrls.sort(), [
+      "/nutrition-catalog/sku/foods.compact.json",
+      "/nutrition-catalog/sku/alias-exact-index.json"
+    ].sort());
   } finally {
     globalThis.fetch = originalFetch;
   }

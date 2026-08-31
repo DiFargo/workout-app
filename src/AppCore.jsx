@@ -193,6 +193,7 @@ import { createWorkoutReadinessHandlers } from "./features/client/workouts/worko
 import { createWorkoutRunNavigationHandlers } from "./features/client/workouts/workoutRunNavigationHandlers";
 import { createWorkoutRuntimeHandlers } from "./features/client/workouts/workoutRuntimeHandlers";
 import { createWorkoutPersistenceHandlers } from "./features/client/workouts/workoutPersistenceHandlers";
+import { useClientAssignedWorkoutRefresh } from "./features/client/workouts/useClientAssignedWorkoutRefresh";
 import { useWorkoutRuntimeEffects } from "./features/client/workouts/useWorkoutRuntimeEffects";
 import { saveCompletedWorkoutToFirebase } from "./features/client/workouts/workoutFirebaseSaveHandlers";
 import { createTrainerClientCalendarHandlers } from "./features/trainer/trainerClientCalendarHandlers";
@@ -869,6 +870,30 @@ function AppRuntime() {
     sortWorkoutDays,
     startPerformanceCheck
   }));
+
+  useClientAssignedWorkoutRefresh({
+    db,
+    enabled: currentUserRole === "client",
+    refreshEnabled: currentUserRole === "client" &&
+      !selectedWorkoutId &&
+      workoutModePreference?.mode !== "basic",
+    loadWorkoutsFromFirebase,
+    onWorkoutCalendarChange: (workoutCalendar) => {
+      const calendar = workoutCalendar && typeof workoutCalendar === "object" ? workoutCalendar : {};
+      const scheduledDates = [...new Set([
+        ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
+        ...(Array.isArray(calendar.monthlyTrainingDates) ? calendar.monthlyTrainingDates : []),
+        ...(Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts.map((item) => item?.date) : [])
+      ].filter((dateKey) => typeof dateKey === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dateKey)))].sort();
+
+      setProfileWorkoutCalendarData(calendar);
+      setProfileWorkoutScheduledDates(scheduledDates);
+      if (!profileWorkoutCalendarEditing) {
+        setProfileWorkoutCalendarDraftDates(scheduledDates);
+      }
+    },
+    userId: user?.uid
+  });
 
 
   const {

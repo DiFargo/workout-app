@@ -1,8 +1,11 @@
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useBodyScrollLock } from "../../shared/hooks/useBodyScrollLock";
 import styles from "./TrainerClientUtilitySheet.module.css";
 
 export default function TrainerClientUtilitySheet({ title, eyebrow, children, headerAction, onRequestClose, variant = "" }) {
+  useBodyScrollLock(true, { lockHtml: true });
+
   const sheet = (
     <div className={styles.backdrop} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={onRequestClose}>
       <section
@@ -27,7 +30,7 @@ export default function TrainerClientUtilitySheet({ title, eyebrow, children, he
             </button>
           </div>
         </header>
-        <div className={styles.content} data-trainer-modal-content="true">{children}</div>
+        <div className={`${styles.content} trainerNextRoot`} data-trainer-modal-content="true">{children}</div>
         <footer className={styles.footer} data-trainer-modal-footer="true">
           <button type="button" onClick={onRequestClose}>Закрыть</button>
         </footer>

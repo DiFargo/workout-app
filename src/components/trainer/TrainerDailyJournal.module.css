@@ -7,9 +7,15 @@
 }
 
 .immediateActionsSection {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   border-color: #e1d4f4;
   background: linear-gradient(135deg, #fdfbff 0%, #f8f4ff 100%);
+}
+
+.immediateActionsSection .immediateActionsHead {
+  align-items: center;
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .immediateActionsHead,
@@ -83,20 +89,39 @@
 
 .immediateActionsList {
   display: grid;
-  gap: 8px;
-  margin-top: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
 }
 
-.immediateActionsList article {
+.immediateActionCard {
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  min-height: 68px;
-  padding: 10px 12px;
+  min-height: 76px;
+  padding: 11px 12px;
   border: 1px solid #e5daf5;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #fff;
+  cursor: pointer;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.immediateActionCard:hover {
+  border-color: #cfc0ee;
+  box-shadow: 0 8px 18px rgba(95, 73, 148, .08);
+  transform: translateY(-1px);
+}
+
+.immediateActionCard:focus-visible {
+  outline: 3px solid rgba(143, 122, 200, .35);
+  outline-offset: 2px;
+}
+
+.immediateActionCard:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .immediateActionsList :global(.trainerNextAvatar.small) {
@@ -142,9 +167,12 @@
   white-space: nowrap;
 }
 
-.immediateActionsList button,
-.dailyJournalEvent button {
+.immediateActionCta,
+.dailyJournalEventAction {
+  display: inline-flex;
   min-height: 34px;
+  align-items: center;
+  justify-content: center;
   padding: 0 13px;
   border: 1px solid #d9cdf4;
   border-radius: 10px;
@@ -153,8 +181,21 @@
   font: inherit;
   font-size: 13px;
   font-weight: 800;
-  cursor: pointer;
+  white-space: nowrap;
 }
+
+.immediateActionCta {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0 9px;
+  border-color: transparent;
+  border-radius: 999px;
+  color: #806bb6;
+  background: #f1ebfc;
+  font-size: 11px;
+}
+
+.dailyJournalEventAction { pointer-events: none; }
 
 .dailyJournalFilters {
   display: flex;
@@ -291,6 +332,22 @@
   background: linear-gradient(90deg, rgba(248, 244, 255, .48), transparent 42%);
 }
 
+.dailyJournalEventClickable {
+  cursor: pointer;
+  transition: box-shadow .18s ease, background-color .18s ease;
+}
+
+.dailyJournalEventClickable:hover {
+  box-shadow: inset 3px 0 0 #d9cdf4;
+  background-color: #fcfbfe;
+}
+
+.dailyJournalEventClickable:focus-visible {
+  z-index: 1;
+  outline: 3px solid rgba(143, 122, 200, .35);
+  outline-offset: -3px;
+}
+
 .dailyJournalEvent.reviewed {
   opacity: .72;
 }
@@ -337,13 +394,14 @@
   .attention,
   .calm { padding: 7px 9px; font-size: 11px; }
 
-  .immediateActionsList article {
+  .immediateActionCard {
     grid-template-columns: 36px minmax(0, 1fr);
     min-height: 64px;
     padding: 9px;
   }
 
-  .immediateActionsList button { grid-column: 2; justify-self: start; }
+  .immediateActionsList { grid-template-columns: 1fr; gap: 8px; }
+  .immediateActionCta { grid-column: 2; justify-self: start; }
   .immediateActionsList :global(.trainerNextAvatar.small),
   .dailyJournalEvent :global(.trainerNextAvatar.small) { width: 36px; height: 36px; }
 
@@ -361,7 +419,7 @@
   .dailyJournalLine::before { left: 7px; }
   .dailyJournalLine i { left: 3px; }
 
-  .dailyJournalEvent button,
+  .dailyJournalEventAction,
   .dailyJournalReviewed,
   .dailyJournalRecorded { grid-column: 4; justify-self: start; padding-right: 0; }
 }

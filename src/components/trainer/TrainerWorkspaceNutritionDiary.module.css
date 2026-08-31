@@ -61,6 +61,58 @@
   display: none;
 }
 
+:global(.trainerNextRoot) :global(.trainerNutritionPresetMode) {
+  margin: 2px 0 0;
+  padding: 9px 11px;
+  border: 1px solid #e7ddf5;
+  border-radius: 11px;
+  color: #706783;
+  background: #f8f5fc;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionPlanFields) {
+  align-items: start;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionPlanFields > label) {
+  min-width: 0;
+  align-content: start;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionPlanFields > label > input),
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionPlanFields > label > select) {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPresetMode.isIndividual) {
+  border-color: #d8c9f4;
+  color: #6650a3;
+  background: #f1ebfb;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionLockedField input:disabled) {
+  opacity: 1;
+  color: #746d80;
+  border-color: #eeeaf2;
+  background: #f4f2f6;
+  -webkit-text-fill-color: #746d80;
+  cursor: not-allowed;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionGoalInputs input[type="number"]) {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionGoalInputs input[type="number"]::-webkit-inner-spin-button),
+:global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionGoalInputs input[type="number"]::-webkit-outer-spin-button) {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
 :global(.trainerNextRoot) :global(.trainerNutritionPlanModal > .trainerNutritionPlanActions) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -277,12 +329,57 @@
 }
 
 @media (max-width: 700px) {
+  :global(.trainerNextRoot) :global(.trainerNutritionDiary) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    min-width: 0 !important;
+  }
+
   :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside) {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 10px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryCalendarHeader) {
+    display: grid !important;
+    grid-template-columns: 38px minmax(0, 1fr) 38px !important;
+    align-items: center;
+    gap: 8px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryWeekdays),
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryCalendarGrid) {
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-auto-rows: minmax(46px, auto) !important;
+    gap: 5px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryCalendarGrid > button),
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryCalendarEmpty) {
+    min-height: 46px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryCalendarGrid > button strong) {
+    font-size: 12px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryCalendarGrid > button small) {
+    font-size: 8px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionDiaryCalendarHint) {
+    margin: 8px 0 0 !important;
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
   }
 
   :global(.trainerNextRoot) :global(.trainerNutritionDiary .trainerNextMealPanel) {
-    padding: 16px;
+    padding: 14px !important;
   }
 }
 @media (max-width: 440px) {
@@ -393,4 +490,17 @@
   max-width: 100%;
   padding-inline: 8px;
   font-size: 12px;
+}
+
+@media (max-width: 520px) {
+  :global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerClientAssignment > .trainerClientBlockHeading) {
+    display: none;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionPresetMode) {
+    margin: 8px 0 0;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.3;
+  }
 }

@@ -194,6 +194,65 @@ export function buildWorkoutScheduleCalendarEntries(slots = []) {
   return entries;
 }
 
+// A trainer can replace a client's program while older schedule slots are still
+// stored on the profile. Scope the calendar to the workouts currently visible in
+// the plan so trainer and client never render different program versions.
+export function getWorkoutScheduleCalendarForWorkouts(calendar = {}, workouts = []) {
+  const safeCalendar = calendar && typeof calendar === "object" ? calendar : {};
+  const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const workoutsById = new Map(
+    safeWorkouts
+      .map((workout) => [String(workout?.id || "").trim(), workout])
+      .filter(([workoutId]) => Boolean(workoutId))
+  );
+  const assignmentVersions = new Set(
+    safeWorkouts
+      .map((workout) => String(workout?.assignedProgramUpdatedAt || "").trim())
+      .filter(Boolean)
+  );
+  const allPlannedWorkouts = Array.isArray(safeCalendar.plannedWorkouts)
+    ? safeCalendar.plannedWorkouts
+    : [];
+  const plannedWorkouts = allPlannedWorkouts.filter((item) => {
+    const workoutId = String(item?.workoutId || "").trim();
+    const workout = workoutsById.get(workoutId);
+    if (!workout) return false;
+
+    const assignmentId = String(
+      workout?.assignedProgramAddedAt || workout?.programAssignmentId || ""
+    ).trim();
+    const calendarAssignmentId = String(
+      item?.assignedProgramAddedAt || item?.programAssignmentId || ""
+    ).trim();
+
+    return !assignmentId || assignmentId === calendarAssignmentId;
+  });
+  const scopedPlannedWorkouts = plannedWorkouts.length
+    ? plannedWorkouts
+    : allPlannedWorkouts.filter((item) => {
+        const workoutId = String(item?.workoutId || "").trim();
+        const assignmentVersion = String(
+          item?.assignedProgramUpdatedAt || item?.assignmentVersion || ""
+        ).trim();
+        return !workoutId && Boolean(assignmentVersion) && assignmentVersions.has(assignmentVersion);
+      });
+  const scheduledDates = scopedPlannedWorkouts
+    .map((item) => item?.date)
+    .filter(Boolean);
+  const workoutDates = safeWorkouts
+    .map((workout) => workout?.scheduledDate || workout?.plannedDate)
+    .filter(Boolean);
+  const assignmentVersion = [...assignmentVersions][0] || "";
+
+  return {
+    ...safeCalendar,
+    assignedProgramUpdatedAt: assignmentVersion || safeCalendar.assignedProgramUpdatedAt || "",
+    plannedWorkouts: scopedPlannedWorkouts,
+    scheduledDates: scheduledDates.length ? scheduledDates : workoutDates,
+    monthlyTrainingDates: scheduledDates.length ? scheduledDates : workoutDates
+  };
+}
+
 export function buildWorkoutScheduleDraft(dates = [], workouts = []) {
   const cleanDates = [...new Set((Array.isArray(dates) ? dates : []).map(toWorkoutDateKey).filter(Boolean))].sort();
   return (Array.isArray(workouts) ? workouts : []).map((workout, index) => ({

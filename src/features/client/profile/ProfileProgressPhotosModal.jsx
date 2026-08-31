@@ -1,5 +1,6 @@
 import { Camera } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileProgressPhotosModal.module.css";
 
@@ -35,11 +36,14 @@ export default function ProfileProgressPhotosModal({
   onCompareIdsChange,
   onCompareViewChange,
   onSave,
-  onOpenMeasurements
+  onOpenMeasurements,
+  onSuccessAcknowledged
 }) {
   if (!open) {
     return null;
   }
+
+  const saved = String(status || "").includes("сохранены");
 
   return (
     <div
@@ -47,7 +51,7 @@ export default function ProfileProgressPhotosModal({
       data-css-module-scope="profile-progress-photos"
       data-testid="profile-progress-photos-overlay"
       role="presentation"
-      onClick={() => !uploading && onClose()}
+      onClick={() => !uploading && !saved && onClose()}
     >
       <section
         className={`${styles.dialog}${onOpenMeasurements ? ` ${styles.bodyControlDialog}` : ""}`}
@@ -71,7 +75,7 @@ export default function ProfileProgressPhotosModal({
             <ProfileModalCloseButton
               testId="profile-progress-photos-close"
               ariaLabel="Закрыть фото прогресса"
-              disabled={uploading}
+              disabled={uploading || saved}
               onClick={onClose}
             />
           )}
@@ -249,11 +253,18 @@ export default function ProfileProgressPhotosModal({
           type="button"
           className={styles.saveButton}
           data-testid="profile-progress-photos-save"
-          disabled={uploading || !canSave}
+          disabled={uploading || saved || !canSave}
           onClick={onSave}
         >
-          {uploading ? "Загружаю фото..." : "Сохранить фото"}
+          {uploading ? "Загружаю фото..." : saved ? "Фото сохранены" : "Сохранить фото"}
         </button>
+        {saved ? (
+          <SaveSuccessNotice
+            title="Фото сохранены"
+            description="Новая фотосессия добавлена в историю прогресса."
+            onComplete={onSuccessAcknowledged || onClose}
+          />
+        ) : null}
       </section>
     </div>
   );

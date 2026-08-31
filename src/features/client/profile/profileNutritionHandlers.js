@@ -1,5 +1,5 @@
-import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
-import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations";
+import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage.js";
+import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations.js";
 
 export function saveAiBodyMetricsWithDeps({
   auth,
@@ -68,8 +68,7 @@ export async function saveProfileNutritionPlanAndCloseWithDeps({
   profileNutritionSaveStatus,
   saveAiNutritionPlan,
   showAppError,
-  setProfileNutritionSaveStatus,
-  setProfileNutritionModalOpen
+  setProfileNutritionSaveStatus
 }) {
   if (profileNutritionSaveStatus === "saving" || profileNutritionSaveStatus === "saved") return;
 
@@ -86,48 +85,16 @@ export async function saveProfileNutritionPlanAndCloseWithDeps({
   }
 
   setProfileNutritionSaveStatus("saved");
-
-  window.setTimeout(() => {
-    setProfileNutritionModalOpen(false);
-    setProfileNutritionSaveStatus("");
-  }, 900);
 }
 
 export function createProfileNutritionHandlers(getContext) {
-  function saveAiBodyMetrics() {
+  async function saveAiBodyMetrics() {
     const {
-      AI_NUTRITION_PLAN_STORAGE_KEY,
-      AI_NUTRITION_PROFILE_STORAGE_KEY,
-      aiNutritionProfile,
       aiNutritionProfileDraft,
-      auth,
-      buildAiNutritionMonthlyPlan,
-      defaultNutritionState,
-      getAiNutritionDayMacros,
-      history,
-      nutrition,
-      setAiNutritionProfile,
-      setAiNutritionProfileDraft,
-      setAiNutritionSavedPlan,
-      setNutrition
+      saveAiNutritionPlan
     } = getContext();
 
-    return saveAiBodyMetricsWithDeps({
-      auth,
-      nutrition,
-      history,
-      aiNutritionProfile,
-      aiNutritionProfileDraft,
-      defaultNutritionState,
-      aiNutritionProfileStorageKey: AI_NUTRITION_PROFILE_STORAGE_KEY,
-      aiNutritionPlanStorageKey: AI_NUTRITION_PLAN_STORAGE_KEY,
-      buildAiNutritionMonthlyPlan,
-      getAiNutritionDayMacros,
-      setAiNutritionProfileDraft,
-      setAiNutritionProfile,
-      setAiNutritionSavedPlan,
-      setNutrition
-    });
+    return saveAiNutritionPlan(aiNutritionProfileDraft, { completeFirstSetup: false });
   }
 
   async function saveProfileNutritionPlanAndClose() {
@@ -135,7 +102,6 @@ export function createProfileNutritionHandlers(getContext) {
       aiNutritionProfileDraft,
       profileNutritionSaveStatus,
       saveAiNutritionPlan,
-      setProfileNutritionModalOpen,
       setProfileNutritionSaveStatus,
       showAppError
     } = getContext();
@@ -145,8 +111,7 @@ export function createProfileNutritionHandlers(getContext) {
       profileNutritionSaveStatus,
       saveAiNutritionPlan,
       showAppError,
-      setProfileNutritionSaveStatus,
-      setProfileNutritionModalOpen
+      setProfileNutritionSaveStatus
     });
   }
 

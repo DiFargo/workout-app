@@ -27,6 +27,7 @@ const REQUIRED_ARTIFACTS = [
 ];
 const EXPECTED_SCHEMA_VERSION = "nutrition-catalog-verified-v2";
 const MACRO_SCALE = 1000;
+const BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN = "source_numeric_or_gtin";
 const VALID_RECORD_TYPES = new Set(["sku", "reference_food"]);
 const VALID_VERIFICATION_STATUSES = new Set([
   "verified",
@@ -86,6 +87,16 @@ export function validateGtin(value) {
     sum += Number(value[index]) * (position % 2 === 0 ? 3 : 1);
   }
   return (10 - (sum % 10)) % 10 === Number(value.at(-1));
+}
+
+function validateSourceNumericProductCode(value) {
+  return typeof value === "string"
+    && /^\d{8,14}$/.test(value)
+    && !/^(\d)\1+$/.test(value);
+}
+
+function allowsSourceNumericProductCodes(metadata) {
+  return metadata?.barcodeValidation === BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN;
 }
 
 function collectForbiddenEvidenceMarkers(value, location, issues) {
@@ -177,7 +188,7 @@ function validateSourceAndEvidence(source, verification, location, recordType, i
   collectForbiddenEvidenceMarkers(verification, `${location}.verification`, issues);
 }
 
-function validateFullFoods(fullFoods, expectedRecordType, issues) {
+function validateFullFoods(fullFoods, expectedRecordType, issues, { allowSourceNumericProductCodes = false } = {}) {
   const byId = new Map();
   const barcodes = new Map();
 
@@ -217,12 +228,16 @@ function validateFullFoods(fullFoods, expectedRecordType, issues) {
     validateNumber(food.carbs, `${location}.carbs`, 100, issues);
 
     if (food.recordType === "sku") {
-      if (!validateGtin(food.barcode)) addIssue(issues, `${location}.barcode must be a valid GTIN for a sku`);
+      if (!validateGtin(food.barcode)
+        && !(allowSourceNumericProductCodes && validateSourceNumericProductCode(food.barcode))) {
+        addIssue(issues, `${location}.barcode must be a valid GTIN or source numeric product code for a sku`);
+      }
       if (food.id !== `sku-${food.barcode}`) addIssue(issues, `${location}.id must equal sku-<barcode>`);
     } else if (food.recordType === "reference_food") {
       if (!food.id.startsWith("ref-")) addIssue(issues, `${location}.id must start with ref-`);
-      if (food.barcode && !validateGtin(food.barcode)) {
-        addIssue(issues, `${location}.barcode must be a valid GTIN when supplied for reference_food`);
+      if (food.barcode && !validateGtin(food.barcode)
+        && !(allowSourceNumericProductCodes && validateSourceNumericProductCode(food.barcode))) {
+        addIssue(issues, `${location}.barcode must be a valid GTIN or source numeric product code when supplied for reference_food`);
       }
     }
 
@@ -315,13 +330,16 @@ function validateSetIndex(index, filename, validIds, issues) {
   });
 }
 
-function validateBarcodeIndex(index, validIds, fullBarcodes, issues) {
+function validateBarcodeIndex(index, validIds, fullBarcodes, issues, { allowSourceNumericProductCodes = false } = {}) {
   if (!isPlainObject(index)) {
     addIssue(issues, "barcode-index.json must be an object");
     return;
   }
   Object.entries(index).forEach(([barcode, id]) => {
-    if (!validateGtin(barcode)) addIssue(issues, `barcode-index.json key ${barcode} is not a valid GTIN`);
+    if (!validateGtin(barcode)
+      && !(allowSourceNumericProductCodes && validateSourceNumericProductCode(barcode))) {
+      addIssue(issues, `barcode-index.json key ${barcode} is not a valid GTIN or source numeric product code`);
+    }
     if (!hasNonEmptyString(id) || !validIds.has(id)) {
       addIssue(issues, `barcode-index.json[${JSON.stringify(barcode)}] points to missing id ${id}`);
       return;
@@ -388,6 +406,10 @@ function validateMetadata(metadata, fullFoods, compactFoods, provenance, issues)
   if (metadata.compactNutritionScale !== MACRO_SCALE) {
     addIssue(issues, `catalog.meta.json.compactNutritionScale must be ${MACRO_SCALE}`);
   }
+  if (metadata.barcodeValidation !== undefined
+    && metadata.barcodeValidation !== BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN) {
+    addIssue(issues, `catalog.meta.json.barcodeValidation must be ${BARCODE_VALIDATION_SOURCE_NUMERIC_OR_GTIN} when supplied`);
+  }
   if (!Array.isArray(metadata.sourceKinds) || !metadata.sourceKinds.length
     || metadata.sourceKinds.some((kind) => !hasNonEmptyString(kind))) {
     addIssue(issues, "catalog.meta.json.sourceKinds must be a non-empty array of strings");
@@ -428,13 +450,25 @@ async function inspectCatalogDirectory(directory, { expectedRecordType } = {}) {
     return { issues, report: null };
   }
 
-  const { byId: fullById, barcodes } = validateFullFoods(fullFoods, expectedRecordType, issues);
+  const allowSourceNumericProductCodes = allowsSourceNumericProductCodes(artifacts["catalog.meta.json"]);
+  const { byId: fullById, barcodes } = validateFullFoods(
+    fullFoods,
+    expectedRecordType,
+    issues,
+    { allowSourceNumericProductCodes }
+  );
   validateCompactFoods(compactFoods, fullById, issues);
   validateProvenance(provenance, fullById, issues);
   validateSetIndex(artifacts["alias-exact-index.json"], "alias-exact-index.json", fullById, issues);
   validateSetIndex(artifacts["alias-prefix-index.json"], "alias-prefix-index.json", fullById, issues);
   validateSetIndex(artifacts["search-token-index.json"], "search-token-index.json", fullById, issues);
-  validateBarcodeIndex(artifacts["barcode-index.json"], fullById, barcodes, issues);
+  validateBarcodeIndex(
+    artifacts["barcode-index.json"],
+    fullById,
+    barcodes,
+    issues,
+    { allowSourceNumericProductCodes }
+  );
   validateMetadata(artifacts["catalog.meta.json"], fullFoods, compactFoods, provenance, issues);
 
   const recordTypeCounts = fullFoods.reduce((counts, food) => {

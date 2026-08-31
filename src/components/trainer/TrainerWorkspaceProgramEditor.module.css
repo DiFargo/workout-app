@@ -164,6 +164,28 @@
   opacity: 0.55;
 }
 
+/* On desktop the editor needs density, not unused stage space. */
+@media (min-width: 701px) {
+  :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal) {
+    width: min(1320px, calc(100vw - 40px));
+    height: min(820px, calc(100dvh - 40px));
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > header) {
+    min-height: 72px;
+    padding: 12px 18px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutEditorModalBody) {
+    padding: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > footer) {
+    min-height: 60px;
+    padding: 8px 16px;
+  }
+}
+
 @media (max-width: 700px) {
   :global(.trainerNextRoot) :global(.trainerWorkoutEditorModalBackdrop) {
     align-items: end;

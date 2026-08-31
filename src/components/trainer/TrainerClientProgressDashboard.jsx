@@ -54,24 +54,31 @@ function MiniLineChart({ points, title, baseline = null }) {
   const timestamps = points.map((point) => new Date(point.date).getTime());
   const minTime = Math.min(...timestamps);
   const maxTime = Math.max(...timestamps);
-  const getX = (point, index) => maxTime > minTime
-    ? 14 + ((timestamps[index] - minTime) / (maxTime - minTime)) * 292
-    : 160;
   const getY = (value) => 88 - ((value - min) / Math.max(0.0001, max - min)) * 68;
-  const polyline = points.map((point, index) => `${getX(point, index)},${getY(point.value)}`).join(" ");
+  const renderChart = (width, inset, className) => {
+    const getX = (point, index) => maxTime > minTime
+      ? inset + ((timestamps[index] - minTime) / (maxTime - minTime)) * (width - inset * 2)
+      : width / 2;
+    const polyline = points.map((point, index) => `${getX(point, index)},${getY(point.value)}`).join(" ");
 
-  return (
-    <div className={styles.chartWrap}>
-      <svg viewBox="0 0 320 104" role="img" aria-label={title}>
-        {[20, 54, 88].map((y) => <line key={y} x1="14" x2="306" y1={y} y2={y} className={styles.gridLine} />)}
+    return (
+      <svg className={className} viewBox={`0 0 ${width} 104`} role="img" aria-label={title}>
+        {[20, 54, 88].map((y) => <line key={y} x1={inset} x2={width - inset} y1={y} y2={y} className={styles.gridLine} />)}
         {Number.isFinite(baseline) && baseline >= min && baseline <= max ? (
-          <line x1="14" x2="306" y1={getY(baseline)} y2={getY(baseline)} className={styles.baseline} />
+          <line x1={inset} x2={width - inset} y1={getY(baseline)} y2={getY(baseline)} className={styles.baseline} />
         ) : null}
         {points.length > 1 ? <polyline points={polyline} className={styles.line} /> : null}
         {points.map((point, index) => (
           <circle key={`${point.date?.toISOString?.() || point.date}-${index}`} cx={getX(point, index)} cy={getY(point.value)} r="3.5" className={styles.dot} />
         ))}
       </svg>
+    );
+  };
+
+  return (
+    <div className={styles.chartWrap}>
+      {renderChart(720, 32, styles.desktopChart)}
+      {renderChart(320, 14, styles.mobileChart)}
       <div className={styles.chartDates}>
         <span>{formatChartDate(points[0].date)}</span>
         {points.length > 1 ? <span>{formatChartDate(points.at(-1).date)}</span> : null}
@@ -80,22 +87,22 @@ function MiniLineChart({ points, title, baseline = null }) {
   );
 }
 
-function ProgressCard({ card }) {
+function ProgressSignal({ card, active, onSelect }) {
   const Icon = card.icon;
   return (
-    <article className={`${styles.card} ${styles[card.id]}`}>
-      <header className={styles.cardHeader}>
-        <span className={styles.icon}><Icon size={18} /></span>
-        <div className={styles.cardTitle}><small>{card.eyebrow}</small><h3>{card.title}</h3></div>
-        <span className={`${styles.badge} ${styles[card.badgeTone]}`}>{card.badge}</span>
-      </header>
-      <div className={styles.metricRow}>
-        <strong>{card.metric}</strong>
-        <span>{card.meta}</span>
+    <button
+      type="button"
+      className={`${styles.signal} ${styles[card.id]} ${active ? styles.signalActive : ""}`}
+      aria-pressed={active}
+      onClick={() => onSelect(card.id)}
+    >
+      <span className={styles.signalIcon}><Icon size={18} /></span>
+      <div>
+        <h3>{card.title}</h3>
+        <small>{card.meta}</small>
       </div>
-      <MiniLineChart points={card.points} title={card.chartLabel} baseline={card.baseline} />
-      <p className={styles.explanation}>{card.explanation}</p>
-    </article>
+      <strong className={styles[card.tone]}>{card.value}</strong>
+    </button>
   );
 }
 
@@ -111,6 +118,7 @@ export default function TrainerClientProgressDashboard({
     nutritionDays
   }), [history, measurements, nutritionDays]);
   const [manualPeriod, setManualPeriod] = useState("");
+  const [selectedMetric, setSelectedMetric] = useState("weight");
   const period = manualPeriod || autoPeriod;
   const selectedPeriod = PERIODS.find((item) => item.id === period) || PERIODS[2];
   const dashboard = useMemo(() => buildTrainerClientProgressDashboard({
@@ -132,60 +140,58 @@ export default function TrainerClientProgressDashboard({
   const cards = [
     {
       id: "weight",
-      eyebrow: "МАССА ТЕЛА",
       title: "Вес",
       icon: Scale,
-      metric: Number.isFinite(dashboard.weight.current) ? `${formatNumber(dashboard.weight.current)} кг` : "—",
-      meta: formatSigned(dashboard.weight.delta, " кг"),
-      badge: "Без оценки",
-      badgeTone: "neutral",
+      value: formatSigned(dashboard.weight.delta, " кг"),
+      meta: Number.isFinite(dashboard.weight.current) ? `Сейчас ${formatNumber(dashboard.weight.current)} кг` : "Нет замеров за период",
+      tone: "neutral",
       points: dashboard.weight.points,
-      chartLabel: "Изменение веса клиента",
-      explanation: "Изменение массы показывается без оценки: рост или снижение веса сами по себе не означают прогресс."
+      chartLabel: "Динамика веса",
+      chartTitle: "Изменение веса клиента",
+      chartValue: Number.isFinite(dashboard.weight.current) ? `${formatNumber(dashboard.weight.current)} кг` : "Нет данных",
+      chartBaseline: null
     },
     {
       id: "body",
-      eyebrow: "СОСТАВ ТЕЛА",
       title: "Индекс замеров",
       icon: Ruler,
-      metric: formatSigned(dashboard.body.current),
+      value: formatSigned(dashboard.body.current),
       meta: dashboard.body.contributorCount ? `${dashboard.body.contributorCount} показателей` : "Нет сравнения",
-      badge: bodyTone === "positive" ? "Прогресс" : bodyTone === "negative" ? "Регресс" : "Без динамики",
-      badgeTone: bodyTone,
+      tone: bodyTone,
       points: dashboard.body.points,
-      baseline: 0,
-      chartLabel: "Сводный индекс замеров тела",
-      explanation: "Среднее изменение обхватов: рост плеч, груди, рук и ног идёт в плюс, рост талии — в минус. Вес не включён."
+      chartLabel: "Динамика замеров",
+      chartTitle: "Изменение индекса замеров клиента",
+      chartValue: formatSigned(dashboard.body.current),
+      chartBaseline: 0
     },
     {
       id: "strength",
-      eyebrow: "ТРЕНИРОВКИ",
       title: "Силовые показатели",
       icon: Dumbbell,
-      metric: formatSigned(dashboard.strength.current),
+      value: formatSigned(dashboard.strength.current),
       meta: dashboard.strength.exerciseCount ? `${dashboard.strength.exerciseCount} сопоставимых упр.` : "Нет сравнения",
-      badge: strengthTone === "positive" ? "Рост силы" : strengthTone === "negative" ? "Снижение" : "Без динамики",
-      badgeTone: strengthTone,
+      tone: strengthTone,
       points: dashboard.strength.points,
-      baseline: 0,
-      chartLabel: "Изменение силового индекса клиента",
-      explanation: "Среднее изменение оценочного 1ПМ только по упражнениям, которые клиент выполнил минимум дважды за период."
+      chartLabel: "Динамика силы",
+      chartTitle: "Изменение силовых показателей клиента",
+      chartValue: formatSigned(dashboard.strength.current),
+      chartBaseline: 0
     },
     {
       id: "nutrition",
-      eyebrow: "СОБЛЮДЕНИЕ ПЛАНА",
       title: "Питание",
       icon: Utensils,
-      metric: Number.isFinite(dashboard.nutrition.current) ? `${formatNumber(dashboard.nutrition.current, 0)}%` : "—",
-      meta: dashboard.nutrition.trackedDays ? `${dashboard.nutrition.trackedDays} из ${dashboard.nutrition.periodDays} дней` : "Нет цели или записей",
-      badge: nutritionCoverageLow && dashboard.nutrition.trackedDays ? "Мало данных" : nutritionTone === "positive" ? "План соблюдается" : nutritionTone === "negative" ? "Нужно проверить" : nutritionTone === "warning" ? "Есть отклонения" : "Нет данных",
-      badgeTone: nutritionTone,
+      value: Number.isFinite(dashboard.nutrition.current) ? `${formatNumber(dashboard.nutrition.current, 0)}%` : "—",
+      meta: dashboard.nutrition.trackedDays ? `${dashboard.nutrition.trackedDays} из ${dashboard.nutrition.periodDays} завершённых дней` : "Нет цели или записей",
+      tone: nutritionCoverageLow ? "neutral" : nutritionTone,
       points: dashboard.nutrition.points,
-      baseline: 85,
-      chartLabel: "Соблюдение плана питания клиентом",
-      explanation: "Оценка на 70% учитывает попадание в калории и на 30% — выполнение цели по белку. Это контекст, а не причина прогресса."
+      chartLabel: "Соблюдение питания",
+      chartTitle: "Соблюдение плана питания клиентом",
+      chartValue: Number.isFinite(dashboard.nutrition.current) ? `${formatNumber(dashboard.nutrition.current, 0)}%` : "Нет данных",
+      chartBaseline: 85
     }
   ];
+  const activeCard = cards.find((card) => card.id === selectedMetric) || cards[0];
 
   return (
     <section
@@ -195,8 +201,8 @@ export default function TrainerClientProgressDashboard({
     >
       <header className={styles.dashboardHeader}>
         <div>
-          <h2 id="trainer-client-progress-dashboard-title">Динамика прогресса</h2>
-          <p>Четыре независимые шкалы — значения не смешиваются между собой.</p>
+          <h2 id="trainer-client-progress-dashboard-title">Результат</h2>
+          <p>Вес, замеры, сила и питание — отдельно, на реальных данных клиента.</p>
         </div>
         <div className={styles.periods} aria-label="Период анализа прогресса">
           {PERIODS.map((item) => (
@@ -212,7 +218,26 @@ export default function TrainerClientProgressDashboard({
           ))}
         </div>
       </header>
-      <div className={styles.grid}>{cards.map((card) => <ProgressCard key={card.id} card={card} />)}</div>
+      <div className={styles.resultLayout}>
+        <article className={`${styles.chartPanel} ${styles[activeCard.id]}`}>
+          <div className={styles.chartPanelHead}>
+            <div><span>{activeCard.chartLabel}</span><strong>{activeCard.chartValue}</strong></div>
+            <small>{selectedPeriod.label}</small>
+          </div>
+          <MiniLineChart points={activeCard.points} title={activeCard.chartTitle} baseline={activeCard.chartBaseline} />
+        </article>
+        <div className={styles.signals} aria-label="Показатели для графика">
+          {cards.map((card) => (
+            <ProgressSignal
+              key={card.id}
+              card={card}
+              active={card.id === activeCard.id}
+              onSelect={setSelectedMetric}
+            />
+          ))}
+        </div>
+      </div>
+      <p className={styles.caption}>Изменение веса само по себе не означает прогресс. Оценка питания не включает сегодняшний незавершённый день. Это контекст, а не причина прогресса.</p>
     </section>
   );
 }

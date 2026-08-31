@@ -2,6 +2,7 @@ import { getDefaultNutritionMealByTime } from "../../../domain/nutritionPresenta
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import { findExactLocalNutritionFoods } from "../../../utils/localNutritionCatalog";
 import { normalizeNutritionFood } from "../../../utils/nutritionFoodModel";
+import { resolveOverlappingVoiceBeverageItems } from "./nutritionVoiceOverlap";
 import { getVoiceAveragePortionGrams } from "./nutritionVoicePortions";
 import { findPersonalVoiceFoodCandidates } from "./nutritionVoicePersonalCatalog";
 
@@ -175,7 +176,7 @@ function voiceBlobToBase64(blob) {
 }
 
 function normalizeVoiceItems(items) {
-  return (Array.isArray(items) ? items : [])
+  const normalizedItems = (Array.isArray(items) ? items : [])
     .map((item) => {
       const grams = normalizeVoiceGrams(item?.grams);
       const amountEstimated = Boolean(item?.amountEstimated) || grams === null;
@@ -188,7 +189,9 @@ function normalizeVoiceItems(items) {
         estimatedNutritionPer100g: normalizeVoiceEstimatedNutrition(item?.estimatedNutritionPer100g)
       };
     })
-    .filter((item) => item.query.length >= 2)
+    .filter((item) => item.query.length >= 2);
+
+  return resolveOverlappingVoiceBeverageItems(normalizedItems)
     .slice(0, MAX_VOICE_FOODS);
 }
 
@@ -426,7 +429,7 @@ export function createNutritionVoiceHandlers({
     const abortController = new AbortController();
     nutritionVoiceAbortControllerRef.current = abortController;
     setNutritionVoiceAnalyzing(true);
-    setNutritionVoiceFeedback(source === "audio" ? "ИИ расшифровывает запись…" : "ИИ анализирует…");
+    setNutritionVoiceFeedback(source === "audio" ? "Идёт поиск продуктов по записи…" : "Идёт поиск продуктов…");
     startPerformanceCheck?.("AI voice · total", performancePayload);
 
     try {

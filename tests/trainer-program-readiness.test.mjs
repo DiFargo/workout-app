@@ -36,3 +36,12 @@ test("assignment flow blocks drafts and exposes an explicit prepare action", () 
   assert.match(overview, /Подготовить к назначению/);
   assert.match(workspace, /TRAINER_PROGRAM_STATUSES\.DRAFT/);
 });
+
+test("program library aligns with the workspace and fills the available desktop row", () => {
+  const styles = source("src/features/trainer/TrainerProgramOverviewPage.module.css");
+
+  assert.match(styles, /\.root \{[\s\S]*?padding: var\(--trainer-page-block, 28px\) 0 44px;/);
+  assert.match(styles, /\.grid \{[\s\S]*?grid-template-columns: repeat\(auto-fit, minmax\(min\(100%, 260px\), 1fr\)\);[\s\S]*?align-items: stretch;/);
+  assert.match(styles, /\.card,\n\.createCard \{[\s\S]*?min-height: 320px;/);
+  assert.match(styles, /\.cardStats \{[\s\S]*?margin-top: auto;[\s\S]*?padding-top: 20px;/);
+});

@@ -36,8 +36,8 @@ export default function NutritionPhotoNotFoundModal({
         </button>
 
         <div className={styles.icon} aria-hidden="true">⌕</div>
-        <h3 className={styles.title} id="nutritionPhotoNotFoundTitle">Продукт не распознан</h3>
-        <p className={styles.description}>Попробуй сделать более чёткое фото или добавь данные продукта самостоятельно.</p>
+        <h3 className={styles.title} id="nutritionPhotoNotFoundTitle">Не удалось надёжно распознать продукт</h3>
+        <p className={styles.description}>Чтобы не добавить неверное название или КБЖУ, сфотографируй этикетку или штрихкод крупнее. Либо добавь продукт вручную.</p>
 
         <div className={styles.actions}>
           <button className={styles.actionButton} type="button" onClick={onRetry}>

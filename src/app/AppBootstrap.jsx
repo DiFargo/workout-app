@@ -15,8 +15,38 @@ export default function AppBootstrap({ RuntimeComponent }) {
   useModalFocusTrap();
   useEffect(() => {
     const root = document.documentElement;
+    const body = document.body;
+    const previousTranslate = root.getAttribute("translate");
+    const previousBodyTranslate = body.getAttribute("translate");
     root.classList.add(clientIosThemeStyles.contract);
-    return () => root.classList.remove(clientIosThemeStyles.contract);
+    root.classList.add("notranslate");
+    root.setAttribute("translate", "no");
+    body.setAttribute("translate", "no");
+    body.dataset.nativeAppUi = "true";
+
+    const isEditable = (element) => element instanceof Element && Boolean(
+      element.closest('input, textarea, select, [contenteditable="true"], [contenteditable=""]')
+    );
+    const preventUiCopy = (event) => {
+      if (!isEditable(document.activeElement)) event.preventDefault();
+    };
+    const preventUiContextMenu = (event) => {
+      if (!isEditable(event.target)) event.preventDefault();
+    };
+
+    document.addEventListener("copy", preventUiCopy);
+    document.addEventListener("contextmenu", preventUiContextMenu);
+
+    return () => {
+      root.classList.remove(clientIosThemeStyles.contract, "notranslate");
+      if (previousTranslate === null) root.removeAttribute("translate");
+      else root.setAttribute("translate", previousTranslate);
+      if (previousBodyTranslate === null) body.removeAttribute("translate");
+      else body.setAttribute("translate", previousBodyTranslate);
+      delete body.dataset.nativeAppUi;
+      document.removeEventListener("copy", preventUiCopy);
+      document.removeEventListener("contextmenu", preventUiContextMenu);
+    };
   }, []);
   const showClientHarness = isClientE2EHarnessEnabled();
   const showTrainerHarness = isTrainerE2EHarnessEnabled();

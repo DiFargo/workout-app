@@ -150,6 +150,43 @@
   line-height: 1.45;
 }
 
+.progressModal {
+  gap: 12px;
+}
+
+.progressContent {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--color-workout-exercise-modal-control-border);
+  border-radius: 16px;
+  background: var(--color-workout-exercise-modal-control-surface);
+}
+
+.progressContent strong {
+  color: var(--color-workout-exercise-modal-text);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.progressContent p {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  color: var(--color-workout-exercise-modal-muted);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.progressContent p span {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 .swapModal {
   gap: 10px;
 }

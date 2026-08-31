@@ -131,6 +131,23 @@ test("catalog builder rejects invalid GTINs, estimates, missing provenance, and 
   );
 });
 
+test("catalog builder permits documented numeric source product codes only when explicitly marked", () => {
+  const sourceProductCode = "2000000036894";
+  assert.equal(validateGtin(sourceProductCode), false);
+
+  const record = verifiedSku({
+    barcode: sourceProductCode,
+    name: "Томатный кетчуп",
+    brand: "Тестовая марка"
+  });
+  record.barcodeValidation = "source_numeric_or_gtin";
+
+  const catalog = buildNutritionCatalog({ records: [record] });
+  assert.equal(catalog.artifacts["foods.full.json"][0].barcode, sourceProductCode);
+  assert.equal(catalog.artifacts["barcode-index.json"][sourceProductCode], `sku-${sourceProductCode}`);
+  assert.equal(catalog.artifacts["catalog.meta.json"].barcodeValidation, "source_numeric_or_gtin");
+});
+
 test("catalog builder keeps source-backed reference foods separate from GTIN SKUs", () => {
   const sourceUrl = "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173944/nutrients";
   const catalog = buildNutritionCatalog({

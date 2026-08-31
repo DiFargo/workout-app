@@ -35,8 +35,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     firstSetupCompleted: true,
     trainerSetupChecklist: {
       completedSteps: {
-        subscription: true,
         program: true,
+        schedule: true,
         nutrition: true,
         notifications: true
       },
@@ -426,7 +426,17 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       clientSummaries={clientSummaries}
       counts={{ active: 1, attention: 0 }}
       selectedClient={selectedClient}
-      selectedProfile={{ goalLabel: "Рекомпозиция", weight: 88.8, height: 180, age: 28 }}
+      selectedProfile={{
+        goalLabel: "Рекомпозиция",
+        goal: "recomp",
+        weight: 88.8,
+        targetWeight: 85,
+        height: 180,
+        age: 28,
+        sex: "male",
+        activity: "medium",
+        trainingDays: ["mon", "wed", "fri"]
+      }}
       selectedSummary={clientSummaries.client_e2e}
       activeClientTab={activeClientTab}
       onClientTabChange={(tab) => {

@@ -136,7 +136,7 @@
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressRow) {
   display: grid;
-  grid-template-columns: minmax(220px, 0.86fr) minmax(300px, 1.12fr) minmax(250px, 0.98fr);
+  grid-template-columns: minmax(190px, 0.82fr) minmax(0, 1.18fr);
   align-items: stretch;
   gap: 12px;
   padding: 14px;
@@ -245,23 +245,19 @@
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics small) {
   display: inline-flex;
-  overflow: hidden;
   align-items: center;
   gap: 4px;
   color: var(--tn-muted);
   font-size: 10px;
   font-weight: 620;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.2;
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics b) {
-  overflow: hidden;
   color: var(--tn-text);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 730;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.2;
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em) {
@@ -276,6 +272,7 @@
 :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em.warning) { color: #936a25; }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressResult) {
+  grid-column: 1 / -1;
   display: grid;
   align-content: center;
   gap: 8px;
@@ -411,5 +408,357 @@
 @media (max-width: 440px) {
   :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics) {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1101px) {
+  :global(.trainerNextRoot) :global(.trainerClientExerciseProgress) {
+    gap: 14px;
+    padding: 18px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressRow) {
+    grid-template-columns: minmax(220px, 0.82fr) minmax(0, 1.18fr);
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics > span) {
+    min-height: 76px;
+    align-content: center;
+    gap: 3px;
+    padding: 8px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressResult) {
+    grid-column: 1 / -1;
+    align-content: start;
+    gap: 6px;
+    padding: 10px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressResultHead) {
+    gap: 6px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressActions) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 6px;
+    margin: 0;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressActions > button) {
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    justify-content: center;
+    padding: 0 8px;
+    white-space: nowrap;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressActions > button:only-child) {
+    grid-column: 1 / -1;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModalBackdrop) {
+  position: fixed;
+  z-index: 1300;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(40, 38, 46, 0.42);
+  backdrop-filter: blur(4px);
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal) {
+  width: min(680px, 100%);
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e5dfeb;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #28262e;
+  box-shadow: 0 28px 72px rgba(40, 38, 46, 0.24);
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header) {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 19px 20px 14px;
+  border-bottom: 1px solid #efebf3;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header > div) {
+  min-width: 0;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header span) {
+  display: block;
+  margin-bottom: 4px;
+  color: #806bb6;
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: 0.07em;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header h2) {
+  overflow: hidden;
+  margin: 0;
+  color: #28262e;
+  font-size: 21px;
+  font-weight: 760;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header p) {
+  margin: 5px 0 0;
+  color: #7b7682;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header > button) {
+  display: grid;
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #e4ddea;
+  border-radius: 12px;
+  color: #625d6a;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModalBody) {
+  display: grid;
+  min-height: 0;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySummary) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySummary > span) {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  background: #f5f2f7;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySummary small),
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext small),
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySessions small) {
+  color: #7b7682;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySummary strong) {
+  color: #28262e;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext) {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid #ebe5f1;
+  border-radius: 13px;
+  background: #fbfafe;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext small.warning) { color: #936a25; }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext small.negative) { color: #ae5960; }
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySessions) {
+  display: grid;
+  gap: 8px;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySessions article) {
+  display: grid;
+  gap: 5px;
+  padding: 11px 12px;
+  border: 1px solid #efebf3;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySessions article > strong) {
+  color: #28262e;
+  font-size: 13px;
+  font-weight: 740;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > footer) {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px max(15px, env(safe-area-inset-bottom));
+  border-top: 1px solid #efebf3;
+}
+
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > footer button) {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #cfc1ec;
+  border-radius: 12px;
+  color: #6f59a7;
+  background: #eee8fa;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 740;
+}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModalBackdrop) {
+    padding: 12px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal) {
+    max-height: calc(100dvh - 24px);
+    border-radius: 18px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header),
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModalBody),
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > footer) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySummary) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 699px) {
+  /* Keep each decision readable without turning a single exercise into a
+     screen-long card. */
+  :global(.trainerNextRoot) :global(.trainerClientExerciseProgress) {
+    gap: 10px !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressList) {
+    gap: 8px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressRow) {
+    gap: 8px !important;
+    padding: 10px !important;
+    border-radius: 15px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressName) {
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    gap: 2px 8px !important;
+    padding: 0 !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressExerciseIcon) {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 11px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressName > b) {
+    padding: 3px 6px !important;
+    font-size: 9px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressName > strong) {
+    font-size: 14px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressName > small) {
+    margin-top: 2px !important;
+    font-size: 10px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics) {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics > span) {
+    min-height: 0 !important;
+    gap: 2px !important;
+    padding: 7px !important;
+    border-radius: 10px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics small) {
+    font-size: 9px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics b) {
+    font-size: 11px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em) {
+    font-size: 10px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressResult) {
+    gap: 6px !important;
+    padding: 9px !important;
+    border-radius: 12px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressResultHead > strong) {
+    font-size: 13px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressActions) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressActions > button) {
+    width: auto !important;
+    min-height: 34px !important;
+    padding: 0 7px !important;
+    font-size: 10px !important;
+    white-space: nowrap;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote) {
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+  }
+
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressResultHead) {
+    gap: 6px !important;
   }
 }

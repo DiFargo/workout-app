@@ -19,6 +19,28 @@ function makeTimeoutSignal(timeoutMs = 16000, externalSignal = null) {
   };
 }
 
+function awaitWithAbort(promise, signal) {
+  if (signal?.aborted) {
+    return Promise.reject(signal.reason || new DOMException("Aborted", "AbortError"));
+  }
+
+  return new Promise((resolve, reject) => {
+    const abort = () => reject(signal.reason || new DOMException("Aborted", "AbortError"));
+    signal?.addEventListener("abort", abort, { once: true });
+
+    Promise.resolve(promise).then(
+      (value) => {
+        signal?.removeEventListener("abort", abort);
+        resolve(value);
+      },
+      (error) => {
+        signal?.removeEventListener("abort", abort);
+        reject(error);
+      }
+    );
+  });
+}
+
 async function fetchWithTimeout(url, options = {}, timeoutMs = 16000) {
   const timeout = makeTimeoutSignal(timeoutMs, options.signal);
 
@@ -74,8 +96,18 @@ export async function fetchAuthorized(url, options = {}) {
 }
 
 export async function fetchAuthorizedWithTimeout(url, options = {}, timeoutMs = 16000) {
-  return fetchWithTimeout(url, {
-    ...options,
-    headers: await getAuthorizedApiHeaders(options.headers)
-  }, timeoutMs);
+  // Token refresh can wait on a mobile network switch just as a fetch can.
+  // Start one deadline before it so UI loaders always finish on time.
+  const timeout = makeTimeoutSignal(timeoutMs, options.signal);
+
+  try {
+    const headers = await awaitWithAbort(getAuthorizedApiHeaders(options.headers), timeout.signal);
+    return await fetchWithTimeout(url, {
+      ...options,
+      headers,
+      signal: timeout.signal
+    }, timeoutMs);
+  } finally {
+    timeout.clear();
+  }
 }

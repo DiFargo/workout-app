@@ -15,6 +15,7 @@ import { analyzeExerciseProgress } from "../../utils/exerciseProgress.js";
 import {
   getTrainerProgramAssignmentExercises
 } from "../../utils/trainerProgramAssignmentAdjustment.js";
+import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
 import styles from "./TrainerProgramAssignmentAdjustmentModal.module.css";
 
 function formatWeightRange(item = {}) {
@@ -80,7 +81,7 @@ export default function TrainerProgramAssignmentAdjustmentModal({
   const progressByName = useMemo(() => new Map(
     analyzeExerciseProgress(history).map((item) => [String(item.name || "").normalize("NFKC").toLocaleLowerCase("ru-RU").trim(), item])
   ), [history]);
-  const adjustedCount = Object.values(adjustments).filter((value) => Number.parseFloat(String(value).replace(",", ".")) !== 0).length;
+  const adjustedCount = Object.values(adjustments).filter((value) => Number.parseFloat(String(value).replace(",", ".")) > 0).length;
 
   useEffect(() => {
     const timer = window.setTimeout(() => confirmButtonRef.current?.focus(), 60);
@@ -95,8 +96,9 @@ export default function TrainerProgramAssignmentAdjustmentModal({
   }, [onClose, saving]);
 
   function updateAdjustment(key, value) {
-    if (!/^[-+]?\d*(?:[.,]\d*)?$/.test(value)) return;
-    setAdjustments((current) => ({ ...current, [key]: value }));
+    const nextValue = sanitizeExerciseWeightInput(value);
+    if (!/^\d*(?:[.,]\d*)?$/.test(nextValue)) return;
+    setAdjustments((current) => ({ ...current, [key]: nextValue }));
     setError("");
   }
 
@@ -164,6 +166,9 @@ export default function TrainerProgramAssignmentAdjustmentModal({
                     <label className={styles.adjustment}>
                       <span>Поправка к весам</span>
                       <input
+                        type="number"
+                        min="0"
+                        step="0.5"
                         inputMode="decimal"
                         value={adjustments[exercise.key] ?? ""}
                         onChange={(event) => updateAdjustment(exercise.key, event.target.value)}

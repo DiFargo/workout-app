@@ -15,6 +15,28 @@ async function expectRect(locator, expected) {
   }).toEqual(expected);
 }
 
+async function expectWorkoutTimerReachable(page) {
+  const metrics = await page.getByTestId("workout-run-stage").evaluate(async (deck) => {
+    const timer = document.querySelector('[data-testid="workout-rest-timer"]');
+    const panel = document.querySelector('[data-css-module-scope="workout-stage-action-panel"]');
+
+    deck.scrollTo({ top: deck.scrollHeight });
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    return {
+      clientHeight: deck.clientHeight,
+      scrollHeight: deck.scrollHeight,
+      scrollTop: deck.scrollTop,
+      timerBottom: Math.round(timer?.getBoundingClientRect().bottom || 0),
+      panelTop: Math.round(panel?.getBoundingClientRect().top || 0)
+    };
+  });
+
+  expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight);
+  expect(metrics.scrollTop).toBeGreaterThan(0);
+  expect(metrics.timerBottom).toBeLessThanOrEqual(metrics.panelTop);
+}
+
 async function expectStickyHeaderWhileScrolling(header) {
   const metrics = await header.evaluate(async (node) => {
     const shell = node.closest('[data-css-module-scope="profile-dashboard-shell"]');
@@ -183,14 +205,17 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=exercise&clientHarnessTheme=warm-light");
   await expectRect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" }), { x: 16, y: 8, width: 44, height: 44 });
   await expectRect(page.getByRole("button", { name: "Выйти из тренировки" }), { x: 342, y: 8, width: 44, height: 44 });
-  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 0, y: 8, width: 402, height: 44 });
-  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 60, width: 82, height: 25 });
-  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 93, width: 370, height: 280 });
-  await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 28, y: 106, width: 346, height: 250 });
-  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 386, width: 370, height: 295 });
-  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 423, width: 370, height: 258 });
-  await expectRect(page.getByTestId("workout-rest-timer"), { x: 16, y: 694, width: 370, height: 54 });
+  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 16, y: 64, width: 370, height: 27 });
+  await expect(page.locator('[data-css-module-scope="workout-stage-heading"]')).toHaveText("Жим штанги лёжа");
+  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 99, width: 82, height: 25 });
+  await expect(page.getByTestId("workout-exercise-progress")).toHaveText("1 из 2");
+  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 133, width: 370, height: 370 });
+  await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 27, y: 144, width: 349, height: 349 });
+  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 564, width: 370, height: 249 });
+  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 597, width: 370, height: 216 });
+  await expectRect(page.getByTestId("workout-rest-timer"), { x: 16, y: 822, width: 370, height: 50 });
   await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 797, width: 402, height: 77 });
+  await expectWorkoutTimerReachable(page);
 
   assertNoRuntimeErrors();
 });

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import styles from "./TrainerExerciseLoadReviewModal.module.css";
+import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
 
 function formatDate(value) {
   const date = value ? new Date(`${String(value).slice(0, 10)}T12:00:00`) : null;
@@ -26,7 +27,10 @@ function cloneSets(exercise) {
     ? exercise.sets
     : [{ reps: "", weight: "" }];
 
-  return sets.map((set) => ({ ...set }));
+  return sets.map((set) => ({
+    ...set,
+    weight: sanitizeExerciseWeightInput(set.weight) ?? ""
+  }));
 }
 
 export default function TrainerExerciseLoadReviewModal({
@@ -63,7 +67,9 @@ export default function TrainerExerciseLoadReviewModal({
 
   function updateSet(index, field, value) {
     setSets((current) => current.map((set, setIndex) => (
-      setIndex === index ? { ...set, [field]: value } : set
+      setIndex === index
+        ? { ...set, [field]: field === "weight" ? sanitizeExerciseWeightInput(value) : value }
+        : set
     )));
     setError("");
   }
@@ -122,7 +128,7 @@ export default function TrainerExerciseLoadReviewModal({
           sets: sets.map((set) => ({
             ...set,
             reps: set.reps ?? "",
-            weight: requiresWeight ? (set.weight ?? "") : ""
+            weight: requiresWeight ? (sanitizeExerciseWeightInput(set.weight) ?? "") : ""
           }))
         }
       });

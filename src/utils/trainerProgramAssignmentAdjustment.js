@@ -28,7 +28,7 @@ export function applyTrainerProgramAssignmentLoadAdjustments(workouts = [], adju
   return (Array.isArray(workouts) ? workouts : []).map((workout) => ({
     ...workout,
     exercises: (workout.exercises || []).map((exercise) => {
-      const delta = parseAdjustment(safeAdjustments[normalizeExerciseName(exercise?.name)]);
+      const delta = Math.max(0, parseAdjustment(safeAdjustments[normalizeExerciseName(exercise?.name)]));
       if (!delta || !exerciseUsesWeight(exercise)) return exercise;
 
       return {

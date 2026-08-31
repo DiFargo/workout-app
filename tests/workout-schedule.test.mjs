@@ -5,6 +5,7 @@ import {
   buildWorkoutScheduleCalendarEntries,
   buildWorkoutScheduleDraft,
   buildWorkoutScheduleDraftWithExistingStatuses,
+  getWorkoutScheduleCalendarForWorkouts,
   syncWorkoutCalendarWithPlan
 } from "../src/utils/workoutSchedule.js";
 
@@ -196,4 +197,21 @@ test("workout calendar sync carries current assignment marker to planned workout
   assert.equal(synced.assignedProgramUpdatedAt, "assignment_v2");
   assert.equal(synced.plannedWorkouts[0].assignedProgramUpdatedAt, "assignment_v2");
   assert.equal(synced.plannedWorkouts[0].status, "completed");
+});
+
+test("calendar keeps only slots for the active assigned workout program", () => {
+  const calendar = getWorkoutScheduleCalendarForWorkouts({
+    plannedWorkouts: [
+      { workoutId: "old_1", date: "2026-06-10", assignedProgramAddedAt: "old", status: "missed" },
+      { workoutId: "new_1", date: "2026-06-20", assignedProgramAddedAt: "current", status: "completed" },
+      { workoutId: "new_2", date: "2026-06-22", assignedProgramAddedAt: "current", status: "moved", movedToDate: "2026-06-24" }
+    ]
+  }, [
+    { id: "new_1", assignedProgramUpdatedAt: "assignment_v2", assignedProgramAddedAt: "current" },
+    { id: "new_2", assignedProgramUpdatedAt: "assignment_v2", assignedProgramAddedAt: "current" }
+  ]);
+
+  assert.deepEqual(calendar.plannedWorkouts.map((item) => item.workoutId), ["new_1", "new_2"]);
+  assert.deepEqual(calendar.scheduledDates, ["2026-06-20", "2026-06-22"]);
+  assert.equal(calendar.assignedProgramUpdatedAt, "assignment_v2");
 });

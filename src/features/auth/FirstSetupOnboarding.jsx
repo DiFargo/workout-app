@@ -7,8 +7,9 @@ import {
 } from "./firstSetupMetricScale.js";
 
 import { hasRequiredAiNutritionProfileFields } from "../../utils/profileDefaults";
+import { MAX_USER_DISPLAY_NAME_LENGTH } from "../../utils/userDisplayName.js";
 
-const MAX_PROFILE_NAME_LENGTH = 30;
+const MAX_PROFILE_NAME_LENGTH = MAX_USER_DISPLAY_NAME_LENGTH;
 
 const TOTAL_STEPS = 10;
 

@@ -1,6 +1,7 @@
 import styles from "./WorkoutExerciseSupport.module.css";
 
 export default function WorkoutExerciseSupport({
+  accessory = null,
   exercise,
   exerciseAiWeightAdjustments,
   exerciseHistoryOpenId,
@@ -10,14 +11,15 @@ export default function WorkoutExerciseSupport({
   onToggleHistory,
   readinessVolumeText,
   startingWeightCheck = null,
-  showNoteButton = true
+  showNoteButton = true,
+  showPreviousInfo = true
 }) {
   const needsStartingWeightFeedback = Boolean(startingWeightCheck?.awaitingFeedback);
   const showsStartingWeightHint = Boolean(startingWeightCheck && !needsStartingWeightFeedback);
 
   return (
     <div
-      className={styles.root}
+      className={`${styles.root} ${accessory && !showPreviousInfo && !needsStartingWeightFeedback ? styles.accessoryOnly : ""}`}
       data-testid="workout-exercise-support"
       data-css-module-scope="workout-exercise-support"
     >
@@ -28,7 +30,7 @@ export default function WorkoutExerciseSupport({
           <button type="button" onClick={() => onStartingWeightFeedback?.("just_right")}>Норма</button>
           <button type="button" onClick={() => onStartingWeightFeedback?.("too_hard")}>Тяжело</button>
         </div>
-      ) : (
+      ) : showPreviousInfo ? (
         <button
           type="button"
           className={`${styles.previousInfo} ${showsStartingWeightHint ? styles.startingWeightHint : ""}`}
@@ -42,9 +44,9 @@ export default function WorkoutExerciseSupport({
             <small>План сейчас: {exercise.sets.length} подхода · нажми ещё раз, чтобы свернуть</small>
           )}
         </button>
-      )}
+      ) : null}
 
-      {!needsStartingWeightFeedback && showNoteButton && (
+      {!needsStartingWeightFeedback && (accessory || (showNoteButton && (
         <button
           type="button"
           className={styles.noteButton}
@@ -55,7 +57,7 @@ export default function WorkoutExerciseSupport({
           <span>Заметка тренеру</span>
           <span aria-hidden="true">✎</span>
         </button>
-      )}
+      )))}
 
       {exerciseAiWeightAdjustments.length > 0 && (
         <div className={styles.aiAdjustHint}>

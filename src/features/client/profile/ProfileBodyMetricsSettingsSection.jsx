@@ -1,3 +1,6 @@
+import { useState } from "react";
+
+import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import styles from "./ProfileBodyMetricsSettingsSection.module.css";
 import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations";
 
@@ -77,8 +80,10 @@ export default function ProfileBodyMetricsSettingsSection({
   onToggle,
   onDraftChange,
   onSave,
+  onSaved,
   variant = "modal"
 }) {
+  const [saveStatus, setSaveStatus] = useState("");
   const variantClass = variant === "tab" ? styles.tab : styles.modal;
   const isCollapsible = variant === "tab";
   const expanded = isCollapsible ? open : true;
@@ -90,6 +95,17 @@ export default function ProfileBodyMetricsSettingsSection({
       <small className={styles.description}>{description}</small>
     </div>
   );
+
+  async function handleSave() {
+    if (saveStatus === "saving") return;
+    setSaveStatus("saving");
+    try {
+      const saved = await onSave?.();
+      setSaveStatus(saved === false ? "error" : "saved");
+    } catch {
+      setSaveStatus("error");
+    }
+  }
 
   return (
     <section
@@ -188,12 +204,13 @@ export default function ProfileBodyMetricsSettingsSection({
             type="button"
             className={styles.saveButton}
             data-testid="profile-body-metrics-save"
-            onClick={onSave}
-            disabled={!profileValidation.valid}
+            onClick={handleSave}
+            disabled={!profileValidation.valid || saveStatus === "saving"}
             aria-describedby={!profileValidation.valid ? "profile-body-metrics-hint" : undefined}
           >
-            Сохранить анкету
+            {saveStatus === "saving" ? "Сохранение..." : "Сохранить анкету"}
           </button>
+          {saveStatus === "error" ? <p className={styles.saveStatus} role="alert">Не удалось сохранить анкету. Проверьте соединение и повторите попытку.</p> : null}
           {!profileValidation.valid && (
             <p className={styles.validationHint} id="profile-body-metrics-hint" role="status">
               Для расчёта целей заполни: {profileValidation.missing.join(", ")}.
@@ -201,6 +218,16 @@ export default function ProfileBodyMetricsSettingsSection({
           )}
         </div>
       )}
+      {saveStatus === "saved" ? (
+        <SaveSuccessNotice
+          title="Анкета сохранена"
+          description="Целевой вес и параметры тела обновлены. План питания пересчитан по новым данным."
+          onComplete={() => {
+            setSaveStatus("");
+            onSaved?.();
+          }}
+        />
+      ) : null}
     </section>
   );
 }

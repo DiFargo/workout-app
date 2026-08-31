@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import {
   mergeNutritionFoodResults,
+  searchBundledNutritionFallbackFoods,
   searchLocalNutritionFoods
 } from "../../../utils/localNutritionCatalog";
 import { normalizeNutritionFood } from "../../../utils/nutritionFoodModel";
@@ -39,6 +40,8 @@ export function useNutritionSearchEffects({
     const controller = new AbortController();
     let timer;
     let cancelled = false;
+    const bundledFallbackFoods = searchBundledNutritionFallbackFoods(query);
+    setFatSecretFoods(bundledFallbackFoods);
     setFatSecretLoading(true);
 
     const runSearch = async () => {
@@ -47,12 +50,13 @@ export function useNutritionSearchEffects({
         const localResults = await searchLocalNutritionFoods(query);
         if (cancelled) return;
 
-        setFatSecretFoods(localResults);
+        const combinedLocalResults = mergeNutritionFoodResults(bundledFallbackFoods, localResults);
+        setFatSecretFoods(combinedLocalResults);
         setFatSecretError("");
         setNutritionFallbackSuggestions([]);
         endPerformanceCheck("Local catalog search", { query, results: localResults.length });
 
-        if (localResults.length >= 8) {
+        if (combinedLocalResults.length >= 8) {
           setFatSecretLoading(false);
           return;
         }
@@ -61,7 +65,7 @@ export function useNutritionSearchEffects({
         timer = window.setTimeout(async () => {
           try {
             setFatSecretLoading(true);
-            startPerformanceCheck("Food search · nutrition API", { query, localResults: localResults.length });
+            startPerformanceCheck("Food search · nutrition API", { query, localResults: combinedLocalResults.length });
 
             const response = await fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
               signal: controller.signal
@@ -78,10 +82,13 @@ export function useNutritionSearchEffects({
             setNutritionFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
             endPerformanceCheck("Food search · nutrition API", { query, results: remoteFoods.length });
           } catch (error) {
-            if (error.name !== "AbortError") {
-              console.error(error);
-
-              if (!localResults.length) {
+            if (!controller.signal.aborted) {
+              if (error.name !== "AbortError") {
+                console.error(error);
+              }
+              if (combinedLocalResults.length) {
+                setFatSecretError("Нет соединения. Показаны доступные продукты на устройстве.");
+              } else {
                 setNutritionFallbackSuggestions(["Фото продукта", "Попробуй штрихкод", "Создать продукт"]);
                 setFatSecretError("Локально не найдено. ИИ-поиск временно недоступен.");
                 showAppError(
@@ -97,9 +104,16 @@ export function useNutritionSearchEffects({
           }
         }, localResults.length ? 900 : 250);
       } catch (error) {
-        if (!cancelled && error.name !== "AbortError") {
-          console.error(error);
+        if (!cancelled && !controller.signal.aborted) {
+          if (error.name !== "AbortError") {
+            console.error(error);
+          }
           setFatSecretLoading(false);
+          if (bundledFallbackFoods.length) {
+            setFatSecretFoods(bundledFallbackFoods);
+            setFatSecretError("Нет соединения. Показаны доступные продукты на устройстве.");
+            return;
+          }
           setFatSecretError("Локальный каталог временно недоступен.");
         }
       }
@@ -176,8 +190,10 @@ export function useNutritionSearchEffects({
             setDishIngredientFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
             endPerformanceCheck("Food search · dish ingredient API", { query, results: remoteFoods.length });
           } catch (error) {
-            if (error.name !== "AbortError") {
-              console.error(error);
+            if (!controller.signal.aborted) {
+              if (error.name !== "AbortError") {
+                console.error(error);
+              }
               if (!localResults.length) {
                 setDishIngredientFallbackSuggestions([]);
               }
@@ -189,8 +205,10 @@ export function useNutritionSearchEffects({
           }
         }, localResults.length ? 900 : 250);
       } catch (error) {
-        if (!cancelled && error.name !== "AbortError") {
-          console.error(error);
+        if (!cancelled && !controller.signal.aborted) {
+          if (error.name !== "AbortError") {
+            console.error(error);
+          }
           setDishIngredientLoading(false);
         }
       }

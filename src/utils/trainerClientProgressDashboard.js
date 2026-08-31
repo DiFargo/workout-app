@@ -147,13 +147,18 @@ function buildStrengthIndex(history, range) {
 function buildNutritionAdherence(nutritionDays, nutritionGoals, range) {
   const targetCalories = readNumber(nutritionGoals, ["calories"]);
   const targetProtein = readNumber(nutritionGoals, ["protein"]);
-  if (!(targetCalories > 0)) return { points: [], average: null, trackedDays: 0, periodDays: range.totalDays };
+  // Today's diary is still being filled in. It must not turn into an
+  // artificial calorie/protein deficit and pull the trainer's assessment down.
+  const currentDayStart = new Date(range.end);
+  currentDayStart.setHours(0, 0, 0, 0);
+  const completedPeriodDays = Math.max(0, range.totalDays - 1);
+  if (!(targetCalories > 0)) return { points: [], average: null, trackedDays: 0, periodDays: completedPeriodDays };
 
   const points = uniquePoints((Array.isArray(nutritionDays) ? nutritionDays : []).flatMap((day) => {
     const date = getItemDate(day);
     const calories = readNumber(day, ["totals.calories", "calories"]);
     const protein = readNumber(day, ["totals.protein", "protein"]);
-    if (!inRange(date, range) || !(calories > 0)) return [];
+    if (!inRange(date, range) || date >= currentDayStart || !(calories > 0)) return [];
     const calorieScore = clamp(100 - (Math.abs(calories - targetCalories) / targetCalories) * 100, 0, 100);
     const proteinScore = targetProtein > 0 ? clamp(((protein || 0) / targetProtein) * 100, 0, 100) : null;
     const score = proteinScore === null ? calorieScore : calorieScore * 0.7 + proteinScore * 0.3;
@@ -162,7 +167,7 @@ function buildNutritionAdherence(nutritionDays, nutritionGoals, range) {
   const average = points.length
     ? round(points.reduce((sum, point) => sum + point.value, 0) / points.length)
     : null;
-  return { points, average, trackedDays: points.length, periodDays: range.totalDays };
+  return { points, average, trackedDays: points.length, periodDays: completedPeriodDays };
 }
 
 function getSeriesSummary(points, allowSingle = false) {

@@ -1,7 +1,8 @@
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import {
   findExistingPhotoFood,
-  isReliablePhotoFood
+  hasVerifiedPhotoBarcode,
+  isVerifiedPhotoLabelFood
 } from "../../../utils/auditSafety";
 import {
   getDefaultNutritionSmartUnit,
@@ -13,7 +14,10 @@ import {
   loadNutritionPreferredUnit,
   saveRecentNutritionFood
 } from "../../../utils/nutritionPreferenceStorage";
-import { searchLocalNutritionFoods } from "../../../utils/localNutritionCatalog";
+import {
+  findLocalNutritionFoodByBarcode,
+  searchLocalNutritionFoods
+} from "../../../utils/localNutritionCatalog";
 
 export function createNutritionPhotoAiHandlers({
   fatSecretFoods,
@@ -70,13 +74,32 @@ export function createNutritionPhotoAiHandlers({
 
   async function findExistingNutritionFoodFromPhoto(product = {}) {
     const query = String(product.query || product.name || "").trim();
+    const barcode = String(product.barcode || "").replace(/\D/g, "");
+    const hasVerifiedBarcode = hasVerifiedPhotoBarcode(product);
     const currentFoods = [
       ...Object.values(nutrition.myFoods || {}),
       ...nutritionFoodDatabase,
       ...fatSecretFoods
     ].map(normalizeNutritionFood);
     let existingFood = findExistingPhotoFood(currentFoods, product);
-    if (existingFood || query.length < 2) return existingFood;
+    if (existingFood) return existingFood;
+
+    // A fully readable code is the only product identifier that can safely
+    // bypass confirmation. It is more reliable than a visually similar name.
+    if (hasVerifiedBarcode) {
+      try {
+        existingFood = await findLocalNutritionFoodByBarcode(barcode);
+        if (existingFood) return existingFood;
+      } catch (error) {
+        console.warn("[AI PHOTO] barcode catalog lookup failed", error);
+      }
+
+      // Do not fall back to a model-generated name when a barcode has no
+      // catalog entry: it could silently replace the scanned product.
+      return null;
+    }
+
+    if (query.length < 2) return null;
 
     try {
       const localFoods = await searchLocalNutritionFoods(query, 24);
@@ -145,7 +168,9 @@ export function createNutritionPhotoAiHandlers({
         img.src = imageUrl;
       });
 
-      const maxSide = 1280;
+      // Product labels and barcodes contain small text. Preserve enough detail
+      // for high-fidelity OCR while keeping mobile uploads comfortably bounded.
+      const maxSide = 1600;
       const ratio = Math.min(1, maxSide / Math.max(image.width, image.height));
       const width = Math.max(1, Math.round(image.width * ratio));
       const height = Math.max(1, Math.round(image.height * ratio));
@@ -155,7 +180,7 @@ export function createNutritionPhotoAiHandlers({
       const ctx = canvas.getContext("2d");
       ctx.drawImage(image, 0, 0, width, height);
 
-      return canvas.toDataURL("image/jpeg", 0.82);
+      return canvas.toDataURL("image/jpeg", 0.86);
     } finally {
       URL.revokeObjectURL(imageUrl);
     }
@@ -245,11 +270,12 @@ export function createNutritionPhotoAiHandlers({
         return;
       }
 
-      const product = data.product;
-      const validProduct = isReliablePhotoFood(product, data);
+      const product = data.product || {};
+      const hasVerifiedBarcode = hasVerifiedPhotoBarcode(product);
+      const hasVerifiedLabel = isVerifiedPhotoLabelFood(product, data);
 
-      if (data.found === false || !validProduct) {
-        console.warn("[AI PHOTO] invalid product", { apiVersion: data.apiVersion || "", product });
+      if (data.found === false || (!hasVerifiedBarcode && !hasVerifiedLabel)) {
+        console.warn("[AI PHOTO] unverified product", { apiVersion: data.apiVersion || "", product });
         setNutritionPhotoAiCandidates([]);
         setNutritionPhotoAiConfidence("");
         setNutritionPhotoAiResult("");
@@ -257,6 +283,9 @@ export function createNutritionPhotoAiHandlers({
         return;
       }
 
+      // A barcode is only an identifier: its nutrition must come from the
+      // catalog, never from a photo-model guess. A readable label can open a
+      // reviewable draft only after the strict verification above.
       setNutritionPhotoAiConfidence(getNutritionPhotoAiConfidenceText(product.confidence));
       const existingFood = await findExistingNutritionFoodFromPhoto(product);
       if (existingFood) {
@@ -269,6 +298,14 @@ export function createNutritionPhotoAiHandlers({
         setNutritionCreateChoiceOpen(false);
         saveRecentNutritionFood(existingFood);
         addNutritionFoodFromPicker(existingFood);
+        return;
+      }
+
+      if (!hasVerifiedLabel) {
+        setNutritionPhotoAiCandidates([]);
+        setNutritionPhotoAiConfidence("");
+        setNutritionPhotoAiResult("");
+        setNutritionPhotoNotFoundOpen(true);
         return;
       }
 

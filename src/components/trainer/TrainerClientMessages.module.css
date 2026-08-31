@@ -394,10 +394,66 @@
 }
 
 @media (max-width: 699px) {
+  .panel:not(.embeddedPanel) {
+    gap: 8px;
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .panel.embeddedPanel,
+  .feed {
+    gap: 8px;
+  }
+
+  .panel.embeddedPanel .card,
+  .card {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .cardBody {
+    gap: 6px;
+  }
+
+  .bubble {
+    padding: 8px 10px;
+  }
+
+  .text {
+    font-size: 10px;
+    line-height: 1.32;
+  }
+
+  .messageFooter {
+    gap: 6px;
+  }
+
+  .pendingBadge,
+  .processedBadge {
+    min-height: 18px;
+    padding: 0 7px;
+    font-size: 8px;
+  }
+
+  .reply {
+    min-height: 38px;
+    padding: 0 10px;
+  }
+
   .filters button,
   .resolveAllButton,
   .moreButton {
-    min-height: 44px;
+    min-height: 38px;
+  }
+
+  .panel.embeddedPanel .card {
+    gap: 5px;
+    padding: 9px;
+  }
+
+  .panel.embeddedPanel .card header {
+    gap: 4px;
   }
 }
 

@@ -17,20 +17,83 @@
   min-height: 0;
   max-height: none;
   margin: 0;
-  padding: max(52px, calc(env(safe-area-inset-top, 0px) + 44px)) 16px 87px;
+  /* Leave room for the compact two-line exercise header. */
+  padding: max(76px, calc(env(safe-area-inset-top, 0px) + 68px)) 16px max(98px, calc(env(safe-area-inset-bottom, 0px) + 78px));
   display: flex;
   flex-direction: column;
   gap: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  scrollbar-width: none;
+}
+
+.iosExerciseHeader {
+  display: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck::-webkit-scrollbar {
+  display: none;
+}
+
+/* iOS Safari can hide fixed descendants of this scrolling deck in fullscreen.
+   The title is rendered in a portal, so reserve its space inside the deck. */
+@supports (-webkit-touch-callout: none) {
+  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
+    padding-top: max(76px, calc(env(safe-area-inset-top, 0px) + 68px));
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .iosExerciseHeader {
+    box-sizing: border-box;
+    width: min(calc(100vw - 136px), 258px);
+    min-height: 64px;
+    display: grid;
+    gap: 0;
+    position: fixed;
+    top: max(8px, env(safe-area-inset-top, 0px));
+    left: 50%;
+    z-index: 1200;
+    place-items: center;
+    padding: 3px 0;
+    overflow: hidden;
+    pointer-events: none;
+    color: #28262e;
+    text-align: center;
+    transform: translate3d(-50%, 0, 0);
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .iosExerciseHeaderTitle {
+    max-width: 100%;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+
+  :global(:root[data-app-theme="warm-light"]) .iosExerciseHeaderProgress {
+    color: #8f7ac8;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15px;
+  }
 }
 
 :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard {
   box-sizing: border-box;
   width: 100%;
   max-width: none;
-  height: 610px;
-  min-height: 610px;
-  max-height: 610px;
+  height: auto;
+  min-height: 0;
+  max-height: none;
   margin: 0;
   padding: 0;
   display: flex;
@@ -63,9 +126,9 @@
 :global(:root[data-app-theme="warm-light"]) .exerciseProgressSlot {
   box-sizing: border-box;
   width: 100%;
-  height: 36px;
-  min-height: 36px;
-  padding: 6px 0;
+  height: 38px;
+  min-height: 38px;
+  padding: 4px 0 9px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,12 +161,12 @@
 .planSection {
   box-sizing: border-box;
   width: 100%;
-  height: 249px;
-  margin-top: 9px;
+  height: 252px;
+  margin-top: 3px;
 }
 .planSection > h2 {
   box-sizing: border-box;
-  height: 33px;
+  height: 28px;
   margin: 0;
   padding: 0 4px;
   display: flex;
@@ -116,64 +179,17 @@
 .planCard {
   box-sizing: border-box;
   width: 100%;
-  height: 216px;
+  height: 224px;
   overflow: hidden;
   border: 1px solid #efebf3;
   border-radius: 20px;
   background: #fff;
+  box-shadow: 0 2px 7px rgba(72, 63, 87, 0.05);
 }
 
 :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard > [data-testid="workout-rest-timer"] {
   margin-top: 9px;
   flex: 0 0 50px;
-}
-
-/* Preserve the full exercise flow on phones with a short effective viewport.
-   The deck scrolls only after the compact video and set layout can no longer fit. */
-@media (max-height: 824px) {
-  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
-    padding-bottom: 77px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard {
-    height: min(610px, calc(100dvh - 160px));
-    min-height: min(610px, calc(100dvh - 160px));
-    max-height: min(610px, calc(100dvh - 160px));
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard .planSection {
-    height: clamp(238px, calc(100dvh - 520px), 249px);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard .planCard {
-    height: calc(100% - 33px);
-  }
-}
-
-@media (max-height: 824px) {
-  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck [data-testid="workout-exercise-video-frame"] {
-    height: clamp(202px, calc(100dvh - 525px), 252px);
-    min-height: clamp(202px, calc(100dvh - 525px), 252px);
-    max-height: clamp(202px, calc(100dvh - 525px), 252px);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck [data-testid="workout-exercise-video-frame"] > video,
-  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck [data-testid="workout-exercise-video-frame"] > [data-css-module-scope="workout-exercise-video-fallback"] {
-    height: calc(100% - 30px);
-  }
-}
-
-@media (max-height: 719px) {
-  :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
-    overflow-y: auto;
-    scrollbar-width: none;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard {
-    height: 549px;
-    min-height: 549px;
-    max-height: 549px;
-  }
 }
 
 .missingExercise h3 {

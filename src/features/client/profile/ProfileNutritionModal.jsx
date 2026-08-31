@@ -5,6 +5,7 @@ import {
   getAiNutritionWeekForDate
 } from "../../../utils/aiNutritionSchedule";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileNutritionModal.module.css";
 
@@ -68,13 +69,15 @@ export default function ProfileNutritionModal({
   onClose,
   onGoalChange,
   onSave,
-  onShiftWeek
+  onShiftWeek,
+  onSuccessAcknowledged
 }) {
   if (!open) {
     return null;
   }
 
   const currentGoal = profileDraft.goal || activeProfile?.goal || "recomp";
+  const saved = saveStatus === "saved";
 
   return (
     <div
@@ -82,7 +85,7 @@ export default function ProfileNutritionModal({
       data-css-module-scope="profile-nutrition-modal"
       data-testid="profile-nutrition-overlay"
       role="presentation"
-      onClick={onClose}
+      onClick={saved ? undefined : onClose}
     >
       <div
         className={styles.dialog}
@@ -105,6 +108,7 @@ export default function ProfileNutritionModal({
             <ProfileModalCloseButton
               testId="profile-nutrition-close"
               ariaLabel="Закрыть план питания"
+              disabled={saved}
               onClick={onClose}
             />
           )}
@@ -256,6 +260,13 @@ export default function ProfileNutritionModal({
             </div>
           </div>
         </section>
+        {saved ? (
+          <SaveSuccessNotice
+            title="План питания сохранён"
+            description="Новые цели по калориям и макронутриентам уже применены."
+            onComplete={onSuccessAcknowledged || onClose}
+          />
+        ) : null}
       </div>
     </div>
   );

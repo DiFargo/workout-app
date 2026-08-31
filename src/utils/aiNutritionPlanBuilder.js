@@ -1,26 +1,26 @@
-import { defaultNutritionState } from "../data/nutritionDefaults";
-import { TRAINER_NUTRITION_GOAL_PRESETS } from "../data/nutritionPlanning";
-import { getAiHistoryItems } from "../domain/workoutPresentation";
+import { defaultNutritionState } from "../data/nutritionDefaults.js";
+import { TRAINER_NUTRITION_GOAL_PRESETS } from "../data/nutritionPlanning.js";
+import { getAiHistoryItems } from "../domain/workoutPresentation.js";
 import {
   collectAiNutritionFoodStats,
   getNutritionPersonalBaseline,
   getAiNutritionWeightTrend
-} from "./aiNutritionAnalysis";
+} from "./aiNutritionAnalysis.js";
 import {
   calculateAiNutritionBmr,
   calculateAiNutritionMacros,
   calculateAiNutritionTargetCalorieAdjustment,
   calculatePersonalAiNutritionCalories,
   getAiNutritionActivityMultiplier
-} from "./aiNutritionCalculations";
+} from "./aiNutritionCalculations.js";
 import {
   getAiNutritionActivityLabel,
   getAiNutritionGoalLabel
-} from "./aiNutritionLabels";
+} from "./aiNutritionLabels.js";
 import {
   getAiNutritionDayMacros,
   getAiNutritionTrainingDays
-} from "./aiNutritionSchedule";
+} from "./aiNutritionSchedule.js";
 
 export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile = null, history = [], previousPlan = null) {
   const weight = Number(profile?.weight) || 80;

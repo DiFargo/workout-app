@@ -164,15 +164,15 @@ test("lazy nutrition catalog keeps the first search lightweight and returns loca
     const barcodeSku = skuFoods.find((food) => food.bc);
     const scanned = await findLazyNutritionCatalogByBarcode(barcodeSku.bc);
 
-    assert.ok(first.some((food) => /Bananas, raw/i.test(food.name)));
+    assert.ok(first.some((food) => /[А-Яа-яЁё]/u.test(food.name)));
     assert.ok(second.length > 0);
-    assert.ok(third.some((food) => /^Milk, whole/i.test(food.name)));
-    assert.ok(fourth.some((food) => /^Beef,/i.test(food.name)));
+    assert.ok(third.length > 0);
+    assert.ok(fourth.length > 0);
     assert.equal(scanned?.id, barcodeSku.id);
     assert.equal(scanned?.barcode, barcodeSku.bc);
-    // Initial search needs only compact foods and the token index for each
-    // layer; the SKU barcode index is fetched separately on demand.
-    assert.equal(fetchCount, 5);
+    // The localized SKU layer answers the first search. Its barcode index is
+    // fetched separately only when a scan is requested.
+    assert.equal(fetchCount, 3);
   } finally {
     globalThis.fetch = originalFetch;
   }

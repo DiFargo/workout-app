@@ -378,7 +378,7 @@ export default function TrainerDashboardWorkspaceRoute({
       photos={adminClientProgressPhotos}
       tasks={adminClientTasks}
       trainerNote={adminTrainerNote}
-      onGenerateNutritionPlan={() => setAdminClientStatus("Параметры AI-плана открыты в разделе питания.")}
+      onGenerateNutritionPlan={(prepared) => setAdminClientStatus(prepared?.message || "Не удалось подготовить AI-план.")}
       onSaveNutritionPlan={saveTrainerClientNutritionPlan}
       onSaveNotifications={saveTrainerClientNotificationSettings}
       onSaveClientSetupProgress={saveTrainerClientSetupProgress}

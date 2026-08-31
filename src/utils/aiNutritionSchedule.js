@@ -1,4 +1,4 @@
-import { AI_NUTRITION_WEEK_DAYS } from "../data/nutritionPlanning";
+import { AI_NUTRITION_WEEK_DAYS } from "../data/nutritionPlanning.js";
 
 export function getAiNutritionCurrentWeek(plan) {
   if (!plan?.createdAt) return 1;

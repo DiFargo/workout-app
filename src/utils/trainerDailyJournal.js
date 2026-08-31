@@ -81,9 +81,9 @@ function getAttentionCopy(item = {}) {
   if (type === "noProgram" || !summary.assignedProgramId) {
     return {
       icon: "program",
-      title: "Не назначена программа",
-      detail: "Клиенту нужно назначить план тренировок",
-      actionLabel: "Назначить",
+      title: "Нужно настроить клиента",
+      detail: "Завершите первичную настройку: программа, расписание и питание",
+      actionLabel: "Настроить",
       target: "workouts"
     };
   }

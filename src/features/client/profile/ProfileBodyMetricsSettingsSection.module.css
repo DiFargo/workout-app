@@ -183,6 +183,15 @@
   text-align: center;
 }
 
+.saveStatus {
+  margin: 0;
+  color: var(--color-profile-settings-muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .modal .head {
   min-height: 0;
   padding: 2px 2px 12px;
