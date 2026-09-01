@@ -2,6 +2,7 @@ export const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub
 export const loadAdminBaseLibrary = () => import("../components/admin/AdminBaseLibrary");
 export const loadAiCoachPage = () => import("../features/client/ai/AiCoachPage");
 export const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
+export const loadBasicWorkoutTodayPage = () => import("../features/client/workouts/BasicWorkoutTodayPage");
 export const loadMeasurementWizardPage = () => import("../features/client/measurements/MeasurementWizardPage");
 export const loadWorkoutHistoryPage = () => import("../features/client/workouts/WorkoutHistoryPage");
 export const loadWorkoutListPage = () => import("../features/client/workouts/WorkoutListPage");

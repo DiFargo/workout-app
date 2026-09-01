@@ -16,6 +16,10 @@ import {
   getTrainerProgramAssignmentExercises
 } from "../../utils/trainerProgramAssignmentAdjustment.js";
 import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
+import {
+  buildTrainerClientProgramName,
+  normalizeTrainerClientProgramName
+} from "../../utils/trainerClientProgramName.js";
 import styles from "./TrainerProgramAssignmentAdjustmentModal.module.css";
 
 function formatWeightRange(item = {}) {
@@ -75,6 +79,7 @@ export default function TrainerProgramAssignmentAdjustmentModal({
 }) {
   const confirmButtonRef = useRef(null);
   const [adjustments, setAdjustments] = useState({});
+  const [programName, setProgramName] = useState(() => buildTrainerClientProgramName(template?.name, client));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const programExercises = useMemo(() => getTrainerProgramAssignmentExercises(workouts), [workouts]);
@@ -95,6 +100,10 @@ export default function TrainerProgramAssignmentAdjustmentModal({
     };
   }, [onClose, saving]);
 
+  useEffect(() => {
+    setProgramName(buildTrainerClientProgramName(template?.name, client));
+  }, [client?.email, client?.name, template?.id, template?.name]);
+
   function updateAdjustment(key, value) {
     const nextValue = sanitizeExerciseWeightInput(value);
     if (!/^\d*(?:[.,]\d*)?$/.test(nextValue)) return;
@@ -104,10 +113,18 @@ export default function TrainerProgramAssignmentAdjustmentModal({
 
   async function confirm() {
     if (saving) return;
+    const resolvedProgramName = normalizeTrainerClientProgramName(programName);
+    if (!resolvedProgramName) {
+      setError("Введите название программы для клиента.");
+      return;
+    }
     setSaving(true);
     setError("");
     try {
-      const result = await onConfirm?.(adjustments);
+      const result = await onConfirm?.({
+        loadAdjustments: adjustments,
+        programName: resolvedProgramName
+      });
       if (result === false) throw new Error("program-assignment-failed");
       onClose?.();
     } catch (saveError) {
@@ -143,6 +160,21 @@ export default function TrainerProgramAssignmentAdjustmentModal({
               <p>{programExercises.length} упражнений · шаблон останется без изменений</p>
             </div>
           </section>
+
+          <label className={styles.programNameField}>
+            <span>Название программы для клиента</span>
+            <input
+              value={programName}
+              onChange={(event) => {
+                setProgramName(event.target.value.slice(0, 80));
+                setError("");
+              }}
+              maxLength={80}
+              aria-label="Название программы для клиента"
+              disabled={saving}
+            />
+            <small>Шаблон останется без изменений. Это имя увидит только этот клиент.</small>
+          </label>
 
           <p className={styles.hint}>Поправка применяется только к копии этой программы у клиента и сохраняет разницу весов между днями.</p>
 

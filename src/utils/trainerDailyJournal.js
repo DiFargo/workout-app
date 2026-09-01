@@ -60,7 +60,7 @@ function getAttentionCopy(item = {}) {
   const attention = item.attention || {};
   const type = attention.type || item.type || item.status?.id || "attention";
 
-  if (summary.workoutFeedbackAttention?.id) {
+  if (type === "feedback") {
     return {
       icon: "feedback",
       title: "Нужна проверка после тренировки",
@@ -69,16 +69,16 @@ function getAttentionCopy(item = {}) {
       target: "messages"
     };
   }
-  if (Number(summary.activeTrainerTasksCount) > 0) {
+  if (type === "subscription") {
     return {
-      icon: "task",
-      title: Number(summary.activeTrainerTasksCount) === 1 ? "Есть активная задача" : `Есть активные задачи: ${summary.activeTrainerTasksCount}`,
-      detail: "Ожидается выполнение клиентом",
+      icon: "attention",
+      title: "Нужно проверить абонемент",
+      detail: attention.reason || "У клиента заканчивается абонемент",
       actionLabel: "Открыть",
-      target: "tasks"
+      target: "calendar"
     };
   }
-  if (type === "noProgram" || !summary.assignedProgramId) {
+  if (type === "program" || type === "noProgram" || !summary.assignedProgramId) {
     return {
       icon: "program",
       title: "Нужно настроить клиента",
@@ -132,6 +132,37 @@ function getAttentionCopy(item = {}) {
   };
 }
 
+function getRoutineActivityCopy(item = {}) {
+  const summary = item.summary || {};
+  const feedback = summary.workoutFeedbackAttention || {};
+
+  if (feedback.id && !["pain", "badfeedback"].includes(String(feedback.id).toLowerCase())) {
+    return {
+      icon: "feedback",
+      title: "Комментарий после тренировки",
+      detail: feedback.reason || "Клиент оставил обратную связь по тренировке",
+      target: "messages"
+    };
+  }
+  if (Number(summary.activeTrainerTasksCount) > 0) {
+    return {
+      icon: "task",
+      title: Number(summary.activeTrainerTasksCount) === 1 ? "Есть активная задача" : `Есть активные задачи: ${summary.activeTrainerTasksCount}`,
+      detail: "Ожидается выполнение клиентом",
+      target: "tasks"
+    };
+  }
+  if (summary.programEndingAttention?.id) {
+    return {
+      icon: "program",
+      title: "Программа подходит к завершению",
+      detail: summary.programEndingAttention.reason || "Проверьте следующий план клиента",
+      target: "workouts"
+    };
+  }
+  return null;
+}
+
 function isImmediateTrainerAction(item = {}) {
   const summary = item.summary || {};
   const attention = item.attention || {};
@@ -140,7 +171,7 @@ function isImmediateTrainerAction(item = {}) {
   // A program assignment is a standing decision, not an event of a specific day.
   // Keep it separate from the day journal so that it cannot be accidentally
   // dismissed as a reviewed daily signal.
-  return type === "noProgram" || (!summary.assignedProgramId && item.status?.id === "noProgram");
+  return type === "program" || type === "noProgram" || (!summary.assignedProgramId && item.status?.id === "noProgram");
 }
 
 function sortJournalItems(first, second) {
@@ -155,11 +186,7 @@ function sortJournalItems(first, second) {
  * to the chronological journal of the current day.
  */
 export function buildTrainerImmediateActions(actionCenter = {}) {
-  const source = [
-    ...(Array.isArray(actionCenter?.priorityItems) ? actionCenter.priorityItems : []),
-    ...(Array.isArray(actionCenter?.taskItems) ? actionCenter.taskItems : []),
-    ...(Array.isArray(actionCenter?.items) ? actionCenter.items : [])
-  ];
+  const source = Array.isArray(actionCenter?.priorityItems) ? actionCenter.priorityItems : [];
   const seen = new Set();
 
   return source.reduce((actions, item) => {
@@ -215,10 +242,7 @@ export function buildTrainerDailyJournal(actionCenter = {}, now = Date.now()) {
     });
   });
 
-  const actionItems = [
-    ...(Array.isArray(actionCenter?.priorityItems) ? actionCenter.priorityItems : []),
-    ...(Array.isArray(actionCenter?.taskItems) ? actionCenter.taskItems : [])
-  ];
+  const actionItems = Array.isArray(actionCenter?.priorityItems) ? actionCenter.priorityItems : [];
 
   actionItems.forEach((item) => {
     if (isImmediateTrainerAction(item)) return;
@@ -235,6 +259,25 @@ export function buildTrainerDailyJournal(actionCenter = {}, now = Date.now()) {
       timeLabel: "Сейчас",
       ...copy,
       requiresAction: true
+    });
+  });
+
+  const activityItems = Array.isArray(actionCenter?.activityItems) ? actionCenter.activityItems : [];
+  activityItems.forEach((item) => {
+    const clientId = item.clientId || item.client?.id || "client";
+    const copy = getRoutineActivityCopy(item);
+    if (!copy) return;
+    const id = `activity:${clientId}:${copy.icon}`;
+    if (seen.has(id)) return;
+    seen.add(id);
+    journalItems.push({
+      id,
+      client: item.client,
+      clientName: getClientName(item),
+      timestamp: Number.isFinite(item.lastActivityTimestamp) && item.lastActivityTimestamp > 0 ? item.lastActivityTimestamp : now,
+      timeLabel: "Сейчас",
+      ...copy,
+      requiresAction: false
     });
   });
 

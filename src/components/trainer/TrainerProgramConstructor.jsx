@@ -662,9 +662,9 @@ export default function TrainerProgramConstructor({
       <header className={styles.programBar}>
         <div className={styles.programIcon}><CalendarDays size={25} /></div>
         <label className={styles.programName}>
-          <span>Текущая программа</span>
+          <span>Название программы</span>
           <span className={styles.nameInputRow}>
-            <input value={program?.name || ""} onChange={(event) => onProgramNameChange(event.target.value)} aria-label="Название программы" />
+            <input value={program?.name || ""} onChange={(event) => onProgramNameChange(event.target.value)} aria-label="Название программы" maxLength={80} placeholder="Например, Фулл бади" />
           </span>
         </label>
         {showProgramActions ? (
@@ -709,7 +709,7 @@ export default function TrainerProgramConstructor({
                     <span>{previousDayContext ? `День ${activeDayIndex}` : "Предыдущий"}</span>
                   </button>
                   <div className={styles.dayEditorTitle}>
-                    <span>Текущий тренировочный день</span>
+                    <span>Редактор тренировочного дня</span>
                     <strong id="trainer-program-day-editor-title">День {activeDayIndex + 1} из {workoutContexts.length}</strong>
                   </div>
                   <button
@@ -730,7 +730,7 @@ export default function TrainerProgramConstructor({
                       type="button"
                       className={styles.returnToDaysButton}
                       onClick={() => setIsDayEditorOpen(false)}
-                      aria-label="Вернуться к выбору дней программы"
+                      aria-label="Свернуть тренировочный день"
                     >
       <CalendarDays size={16} />Все дни программы
                     </button>

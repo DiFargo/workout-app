@@ -16,6 +16,14 @@ import {
   resolveBasicWorkoutAiCatalogueExercise
 } from "./basicWorkoutAiCatalogue.js";
 import { buildBasicWorkoutFallbackDraft } from "./basicWorkoutFallbackPlan.js";
+import {
+  buildBasicWorkoutTodayFallbackDraft,
+  getBasicWorkoutTodayCompositionIssues,
+  getBasicWorkoutTodayExerciseTarget,
+  getBasicWorkoutTodayPromptGuidance,
+  getBasicWorkoutTodayTarget,
+  getBasicWorkoutTodayTargets
+} from "./basicWorkoutTodayPlan.js";
 
 admin.initializeApp();
 
@@ -2591,7 +2599,10 @@ function normalizeBasicWorkoutAiProfile(input = {}) {
     days: ["2", "3", "4", "5"],
     duration: ["30", "45", "60", "90"],
     restrictions: ["none", "back", "knees", "shoulders", "other"],
-    twoDayStructure: ["recovery_split", "balanced_full_body"]
+    twoDayStructure: ["recovery_split", "balanced_full_body"],
+    mode: ["plan", "today"],
+    todayTarget: ["chest", "back", "shoulders", "legs", "glutes", "biceps", "triceps", "core", "full_body"],
+    readiness: ["low", "normal", "high"]
   };
 
   const resolveValue = (key, fallback) => {
@@ -2601,6 +2612,16 @@ function normalizeBasicWorkoutAiProfile(input = {}) {
   const registration = input.registration && typeof input.registration === "object"
     ? input.registration
     : {};
+  const rawTodayTargets = Array.isArray(input.todayTargets) && input.todayTargets.length
+    ? input.todayTargets
+    : [input.todayTarget];
+  const todayTargets = [...new Set(rawTodayTargets.map((target) => {
+    const value = String(target || "").trim();
+    return value === "forearms" ? "biceps" : value;
+  }).filter((target) => allowed.todayTarget.includes(target)))];
+  const normalizedTodayTargets = todayTargets.includes("full_body")
+    ? ["full_body"]
+    : todayTargets.slice(0, 3);
   const numberInRange = (value, min, max) => {
     const numeric = Number(String(value || "").replace(",", "."));
     return Number.isFinite(numeric) && numeric >= min && numeric <= max ? numeric : null;
@@ -2612,6 +2633,7 @@ function normalizeBasicWorkoutAiProfile(input = {}) {
     : "recovery_split";
 
   return {
+    mode: resolveValue("mode", "plan"),
     goal: resolveValue("goal", "general_fitness"),
     level: resolveValue("level", "beginner"),
     location: resolveValue("location", "gym"),
@@ -2621,6 +2643,9 @@ function normalizeBasicWorkoutAiProfile(input = {}) {
     restrictionDetails: cleanProgramText(input.restrictionDetails || "", 180),
     twoDayStructure,
     planPreferences: cleanProgramText(input.planPreferences || "", 280),
+    todayTarget: normalizedTodayTargets[0] || resolveValue("todayTarget", "chest"),
+    todayTargets: normalizedTodayTargets.length ? normalizedTodayTargets : [resolveValue("todayTarget", "chest")],
+    readiness: resolveValue("readiness", "normal"),
     registration: {
       weight: numberInRange(registration.weight, 35, 300),
       height: numberInRange(registration.height, 120, 240),
@@ -2944,6 +2969,256 @@ function normalizeAiBasicWorkoutPlan(rawPlan = {}, profile = {}, uid = "") {
   };
 }
 
+function normalizeAiBasicWorkoutTodayPlan(rawPlan = {}, profile = {}, uid = "") {
+  const targets = getBasicWorkoutTodayTargets(profile.todayTargets?.length ? profile.todayTargets : [profile.todayTarget]);
+  const target = targets[0] || getBasicWorkoutTodayTarget(profile.todayTarget);
+  const targetLabel = targets.map((item) => item.label).join(" + ") || target.label;
+  const targetFocus = targets.map((item) => item.focus).join(" · ") || target.focus;
+  const expectedExerciseCount = getBasicWorkoutTodayExerciseTarget(profile);
+  const targetSetCount = profile.readiness === "low"
+    ? 2
+    : getBasicWorkoutSetCount(profile.duration, profile.level);
+  const workout = rawPlan?.workout && typeof rawPlan.workout === "object" ? rawPlan.workout : {};
+  const sourceExercises = Array.isArray(workout.exercises) ? workout.exercises : [];
+
+  if (sourceExercises.length !== expectedExerciseCount) {
+    throw createHttpError(422, "AI did not create the requested number of today-workout exercises");
+  }
+
+  const planId = `basic_today_${Date.now().toString(36)}_${crypto.randomBytes(5).toString("hex")}`;
+  const workoutId = `${planId}_workout`;
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const exercises = orderBasicWorkoutExercises(sourceExercises).map((exercise, index) => (
+    normalizeAiBasicWorkoutExercise(exercise, index, workoutId, targetSetCount)
+  ));
+
+  return {
+    id: planId,
+    name: cleanProgramText(rawPlan.name || `Тренировка на сегодня · ${targetLabel}`, 90)
+      || `Тренировка на сегодня · ${targetLabel}`,
+    description: cleanProgramText(
+      rawPlan.description || `Тренировка с акцентом на ${targetLabel.toLocaleLowerCase("ru")}.`,
+      260
+    ),
+    safetyNote: cleanProgramText(
+      rawPlan.safetyNote || "Останавливайте упражнение при боли и сохраняйте комфортную технику.",
+      280
+    ),
+    durationWeeks: 1,
+    structure: "on_demand",
+    generatedAt: new Date().toISOString(),
+    generatedBy: "ai",
+    todayTarget: target.label,
+    todayTargets: targets.map((item) => item.label),
+    profile: { ...profile, days: "1", requestedBy: String(uid || "") },
+    workouts: [{
+      id: workoutId,
+      name: cleanProgramText(workout.name || targetLabel, 90) || targetLabel,
+      focus: cleanProgramText(workout.focus || targetFocus, 100),
+      weekNumber: 1,
+      weekLabel: "Сегодня",
+      dayNumber: 1,
+      dayLabel: "Сегодня",
+      order: 1,
+      sortOrder: 1,
+      scheduledDate: todayKey,
+      plannedDate: todayKey,
+      exercises
+    }]
+  };
+}
+
+async function respondWithAiBasicWorkoutToday({ res, profile, context, apiVersion }) {
+  const expectedExercises = getBasicWorkoutTodayExerciseTarget(profile);
+  const expectedSets = profile.readiness === "low"
+    ? 2
+    : getBasicWorkoutSetCount(profile.duration, profile.level);
+  const targets = getBasicWorkoutTodayTargets(profile.todayTargets?.length ? profile.todayTargets : [profile.todayTarget]);
+  const target = targets[0] || getBasicWorkoutTodayTarget(profile.todayTarget);
+  const targetLabel = targets.map((item) => item.label).join(" + ") || target.label;
+  const respondWithSafeFallback = (reason) => {
+    try {
+      const fallbackDraft = buildBasicWorkoutTodayFallbackDraft(profile);
+      const fallbackPlan = normalizeAiBasicWorkoutTodayPlan(fallbackDraft, profile, context.uid);
+      console.warn("aiBasicWorkoutPlan today mode using deterministic fallback:", reason);
+      json(res, 200, {
+        ok: true,
+        apiVersion,
+        fallback: true,
+        plan: {
+          ...fallbackPlan,
+          generatedBy: "safe_fallback",
+          generationFallback: true,
+          requiresReview: profile.restrictions !== "none"
+        }
+      });
+      return true;
+    } catch (fallbackError) {
+      console.error("aiBasicWorkoutPlan today fallback error:", fallbackError);
+      return false;
+    }
+  };
+
+  if (profile.restrictions !== "none" && respondWithSafeFallback("restriction_aware_workout")) return;
+
+  try {
+    await enforceRateLimit(context.uid, "ai-basic-workout-today-v1", {
+      limit: 8,
+      windowMs: 10 * 60 * 1000
+    });
+    await enforceRateLimit(context.uid, "ai-basic-workout-today-daily-v1", {
+      limit: 16,
+      windowMs: 24 * 60 * 60 * 1000
+    });
+  } catch (rateLimitError) {
+    if (respondWithSafeFallback("rate_limited")) return;
+    throw rateLimitError;
+  }
+
+  const apiKey = OPENAI_API_KEY.value();
+  if (!apiKey) {
+    if (respondWithSafeFallback("api_key_missing")) return;
+    return json(res, 500, { ok: false, error: "OPENAI_API_KEY is not configured", apiVersion });
+  }
+
+  const systemPrompt = [
+    "You are a careful fitness-workout generator for a Russian-language workout app.",
+    "Create one practical training session for today, not a weekly or multi-week program.",
+    "Use only concise Russian text and the reviewed catalogue names exactly as supplied.",
+    "Do not invent exercises, rename exercises, add supersets, circuits, maximal lifts, forced repetitions, or training through pain.",
+    `Return exactly ${expectedExercises} exercises and exactly ${expectedSets} working sets for every exercise.`,
+    "Use empty strings for working weights. The app calibrates a conservative starting weight separately.",
+    "Every regular set must use the same repetition target. For a timed plank, set reps to 0 and durationSeconds from 20 to 90; other exercises have durationSeconds 0.",
+    getBasicWorkoutTodayPromptGuidance(profile),
+    "Do not diagnose, treat, or rehabilitate injuries. Return only JSON matching the schema."
+  ].join("\n");
+  const userPrompt = [
+    "Create a single workout for today that will be saved directly to the app.",
+    `Selected focus: ${targetLabel}.`,
+    `Time available: ${profile.duration} minutes.`,
+    `Experience: ${profile.level}. Readiness today: ${profile.readiness}.`,
+    `Location: ${profile.location}. Limitation: ${profile.restrictions}.`,
+    `Optional note: ${profile.planPreferences || "none"}.`,
+    "Use only the approved catalogue below. For every exercise return the exact catalogueId and matching canonical Russian name:\n" + getBasicWorkoutAiCatalogueGuidance(profile.location),
+    "Return the workout name by its focus only; the app adds the date context."
+  ].join("\n");
+  const schema = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      name: { type: "string" },
+      description: { type: "string" },
+      safetyNote: { type: "string" },
+      workout: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          name: { type: "string" },
+          focus: { type: "string" },
+          exercises: {
+            type: "array",
+            minItems: expectedExercises,
+            maxItems: expectedExercises,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                catalogueId: { type: "string" },
+                name: { type: "string" },
+                note: { type: "string" },
+                restSeconds: { type: "number" },
+                sets: {
+                  type: "array",
+                  minItems: expectedSets,
+                  maxItems: expectedSets,
+                  items: {
+                    type: "object",
+                    additionalProperties: false,
+                    properties: {
+                      reps: { type: "number" },
+                      weight: { type: "string" },
+                      durationSeconds: { type: "number" }
+                    },
+                    required: ["reps", "weight", "durationSeconds"]
+                  }
+                }
+              },
+              required: ["catalogueId", "name", "note", "restSeconds", "sets"]
+            }
+          }
+        },
+        required: ["name", "focus", "exercises"]
+      }
+    },
+    required: ["name", "description", "safetyNote", "workout"]
+  };
+
+  try {
+    const openAiResponse = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        input: [
+          { role: "system", content: [{ type: "input_text", text: systemPrompt }] },
+          { role: "user", content: [{ type: "input_text", text: userPrompt }] }
+        ],
+        text: { format: { type: "json_schema", name: "basic_workout_today", schema } },
+        max_output_tokens: 2800
+      })
+    });
+    const raw = await openAiResponse.text();
+
+    if (!openAiResponse.ok) {
+      console.error("OpenAI aiBasicWorkoutPlan today error:", raw);
+      if (respondWithSafeFallback("initial_request_failed")) return;
+      return json(res, 502, { ok: false, error: "OpenAI request failed", message: "ИИ сейчас не смог составить тренировку. Попробуйте ещё раз.", apiVersion });
+    }
+
+    let parsed = null;
+    try {
+      const responseData = JSON.parse(raw);
+      const outputText = responseData.output_text
+        || responseData.output?.flatMap((item) => item.content || []).find((item) => item.type === "output_text")?.text
+        || "";
+      parsed = JSON.parse(outputText);
+    } catch (parseError) {
+      console.error("aiBasicWorkoutPlan today parse error:", parseError, raw);
+      parsed = extractJsonObject(raw);
+    }
+
+    if (!parsed) {
+      if (respondWithSafeFallback("parse_failed")) return;
+      return json(res, 502, { ok: false, error: "AI response parse failed", message: "ИИ вернул ответ без тренировки. Попробуйте ещё раз.", apiVersion });
+    }
+
+    const workoutDraft = parsed.workout || {};
+    const catalogueIssues = getBasicWorkoutAiCatalogueIssues({ weeks: [{ workouts: [workoutDraft] }] }, profile.location);
+    const compositionIssues = getBasicWorkoutTodayCompositionIssues(workoutDraft, profile);
+    const issues = [...new Set([...catalogueIssues, ...compositionIssues])];
+    if (issues.length) {
+      console.warn("aiBasicWorkoutPlan today validation failed:", issues);
+      if (respondWithSafeFallback("catalogue_or_focus_validation_failed")) return;
+      throw createHttpError(422, "AI did not create a valid today workout");
+    }
+
+    return json(res, 200, { ok: true, apiVersion, plan: normalizeAiBasicWorkoutTodayPlan(parsed, profile, context.uid) });
+  } catch (error) {
+    console.error("aiBasicWorkoutPlan today error:", error);
+    if (respondWithSafeFallback("normalization_failed")) return;
+    const status = getHttpErrorStatus(error, 502);
+    return json(res, status, {
+      ok: false,
+      error: "ai_basic_workout_today_failed",
+      message: status === 422 ? "ИИ не смог подобрать безопасную тренировку. Попробуйте ещё раз." : error.message || "Не удалось составить тренировку.",
+      apiVersion
+    });
+  }
+}
+
 export const aiBasicWorkoutPlan = onRequest(
   {
     region: "us-central1",
@@ -2953,7 +3228,7 @@ export const aiBasicWorkoutPlan = onRequest(
     cors: true
   },
   async (req, res) => {
-    const apiVersion = "aiBasicWorkoutPlan-v17";
+    const apiVersion = "aiBasicWorkoutPlan-v18";
     if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed", apiVersion });
 
     try {
@@ -2961,6 +3236,9 @@ export const aiBasicWorkoutPlan = onRequest(
       // App Check, and rate limiting here; a paid membership is not required.
       const context = await requireAuthenticatedUser(req);
       const profile = normalizeBasicWorkoutAiProfile(req.body?.profile || {});
+      if (profile.mode === "today") {
+        return respondWithAiBasicWorkoutToday({ res, profile, context, apiVersion });
+      }
       const expectedWorkoutDays = Number(profile.days) || 3;
       const expectedExercisesPerWorkout = getBasicWorkoutExerciseTarget(profile.duration);
       const expectedSetsPerExercise = getBasicWorkoutSetCount(profile.duration, profile.level);

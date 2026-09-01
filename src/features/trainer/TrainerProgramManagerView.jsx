@@ -489,10 +489,17 @@ export default function TrainerProgramManagerView({
             onMouseDown={(event) => event.stopPropagation()}
           >
             <header className={styles.editorModalHeader} data-trainer-modal-header="true">
-              <div>
-                <span>РЕДАКТОР ПРОГРАММЫ</span>
-                <h2 id="trainer-program-editor-modal-title">{normalizedMonthProgram?.name || "Программа тренировок"}</h2>
-              </div>
+              <label className={styles.editorProgramNameField}>
+                <span id="trainer-program-editor-modal-title">РЕДАКТОР ПРОГРАММЫ</span>
+                <input
+                  value={normalizedMonthProgram?.name || ""}
+                  onChange={(event) => updateMonthProgramName(event.target.value.slice(0, 80))}
+                  maxLength={80}
+                  placeholder="Название программы"
+                  aria-label="Название программы"
+                  disabled={isEditorSaveInProgress}
+                />
+              </label>
               <button className={styles.editorModalClose} type="button" onClick={closeEditor} disabled={isEditorSaveInProgress} aria-label="Закрыть редактор программы">
                 <X size={20} />
               </button>

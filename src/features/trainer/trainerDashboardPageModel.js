@@ -39,16 +39,21 @@ export function buildTrainerDashboardPageModel({
   const trainerProblemClients = trainerDashboardSummary.problemClients;
   const trainerAiFocusItems = trainerDashboardSummary.focusItems;
   const trainerRecentEvents = trainerDashboardSummary.recentEvents;
+  const trainerDashboardItemsByClientId = new Map(
+    trainerDashboardSummary.summaryItems.map((item) => [item.client.id, item])
+  );
 
   const filteredUsers = usersList.filter((client) => {
     const profile = getAdminClientProfile(client);
     const goal = String(profile?.goal || "").toLowerCase();
-    const status = getClientActivityStatus(getDashboardClientSummary(client));
+    const dashboardItem = trainerDashboardItemsByClientId.get(client.id);
+    const status = dashboardItem?.status || getClientActivityStatus(getDashboardClientSummary(client));
+    const activityStatus = dashboardItem?.activityStatus || getClientActivityStatus(getDashboardClientSummary(client));
 
     if (adminClientFilter === "all") return true;
-    if (adminClientFilter === "active") return status.id === "active";
-    if (adminClientFilter === "attention") return ["attention", "noProgram"].includes(status.id);
-    if (adminClientFilter === "inactive") return status.id === "lost";
+    if (adminClientFilter === "active") return status.id === "active" && activityStatus.id === "active";
+    if (adminClientFilter === "attention") return status.id !== "active";
+    if (adminClientFilter === "inactive") return activityStatus.id === "lost";
     return goal === adminClientFilter;
   });
 
@@ -74,7 +79,7 @@ export function buildTrainerDashboardPageModel({
   const aiWeek = getAiNutritionWeekForDate(aiPlan) || aiPlan?.weeks?.[0] || null;
   const { maxCalories, maxProtein, maxWeight } = getAdminClientChartScales(clientNutritionDays, weightPoints);
   const averageAiScore = getAdminAverageNutritionScore(clientNutritionDays);
-  const attentionCount = trainerStatusCounts.attention + trainerStatusCounts.lost + trainerStatusCounts.noProgram;
+  const attentionCount = trainerStatusCounts.critical;
   const adminGreetingName = telegramProfile.displayName || auth.currentUser?.displayName || auth.currentUser?.email?.split("@")?.[0] || "тренер";
   const adminDashboardDate = new Date().toLocaleDateString("ru-RU", {
     day: "numeric",
@@ -87,7 +92,7 @@ export function buildTrainerDashboardPageModel({
       const summary = getDashboardClientSummary(client);
       return [client.id, {
         ...summary,
-        status: getClientActivityStatus(summary)
+        status: trainerDashboardItemsByClientId.get(client.id)?.status || getClientActivityStatus(summary)
       }];
     })
   );

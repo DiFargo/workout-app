@@ -24,6 +24,7 @@ export default function TrainerClientsWorkspaceRoute({
   adminTrainerNote,
   archiveClientProgramAssignment,
   restoreClientProgramAssignment,
+  renameClientProgramAssignment,
   assignSavedProgramToClient,
   canUseAdminFeatures,
   clientNutritionDays,
@@ -207,6 +208,7 @@ export default function TrainerClientsWorkspaceRoute({
       selectedProgramId={adminSelectedTemplateId}
       onSelectProgram={setAdminSelectedTemplateId}
       onAssignProgram={(options) => assignSavedProgramToClient(selectedClient?.id, adminSelectedTemplateId, options)}
+      onRenameProgramAssignment={(assignment, nextName) => renameClientProgramAssignment(selectedClient?.id, assignment, nextName)}
       onArchiveProgramAssignment={(assignment) => archiveClientProgramAssignment(selectedClient?.id, assignment)}
       onRestoreProgramAssignment={(assignment) => restoreClientProgramAssignment(selectedClient?.id, assignment)}
       onDeleteProgramAssignment={(assignment) => deleteClientProgramAssignment(selectedClient?.id, assignment)}

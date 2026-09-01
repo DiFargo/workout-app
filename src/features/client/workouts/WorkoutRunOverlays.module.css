@@ -133,6 +133,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitleInFlow .stageTitleContent {
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -142,12 +144,17 @@
 
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitleInFlow .stageTitleText {
   max-width: 100%;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 20px;
-  white-space: nowrap;
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: clamp(13px, 3.8vw, 15px);
+  font-weight: 700;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+  text-align: center;
+  text-overflow: clip;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitleInFlow .stageTitleProgress {

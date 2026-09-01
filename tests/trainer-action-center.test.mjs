@@ -19,7 +19,7 @@ function dateKeyOffset(offsetDays) {
   return getTrainerSummaryDateKey(date.getTime());
 }
 
-test("trainer action center groups today's work, feedback, tasks and ending programs", () => {
+test("trainer action center keeps routine feedback, tasks and ending programs out of urgent alerts", () => {
   const today = dateKeyOffset(0);
   const clients = [
     {
@@ -68,11 +68,12 @@ test("trainer action center groups today's work, feedback, tasks and ending prog
   assert.deepEqual(center.feedbackItems.map((item) => item.client.id), ["feedback"]);
   assert.deepEqual(center.programEndingItems.map((item) => item.client.id), ["ending"]);
   assert.deepEqual(center.taskItems.map((item) => item.client.id), ["tasks"]);
-  assert.deepEqual(center.priorityItems.map((item) => item.client.id), ["feedback", "ending", "today"]);
+  assert.deepEqual(center.priorityItems, []);
+  assert.deepEqual(center.activityItems.map((item) => item.client.id), ["ending", "feedback", "tasks"]);
   assert.ok(center.quickActions.some((item) => item.id === "createTask"));
 });
 
-test("trainer action center keeps one priority row per client with several signals", () => {
+test("trainer action center does not turn a routine client comment into an urgent row", () => {
   const today = dateKeyOffset(0);
   const clients = [{
     id: "multi",
@@ -95,7 +96,32 @@ test("trainer action center keeps one priority row per client with several signa
   assert.equal(center.todayWorkouts.length, 1);
   assert.equal(center.feedbackItems.length, 1);
   assert.equal(center.taskItems.length, 1);
-  assert.deepEqual(center.priorityItems.map((item) => item.client.id), ["multi"]);
+  assert.deepEqual(center.priorityItems, []);
+  assert.deepEqual(center.activityItems.map((item) => item.client.id), ["multi"]);
+});
+
+test("trainer action center exposes only critical alerts in the priority queue", () => {
+  const client = {
+    id: "critical",
+    name: "Critical client",
+    assignedProgramId: "p1",
+    workoutCalendar: { scheduledDates: ["2026-06-15", "2026-06-16", "2026-06-17"] }
+  };
+  const center = buildTrainerActionCenter([client], {
+    critical: {
+      assignedProgramId: "p1",
+      workoutDateKeysCurrentWeek: [],
+      lastWorkoutAt: "2026-06-10",
+      lastNutritionAt: "2026-06-17",
+      lastMeasurementAt: "2026-06-17",
+      workoutFeedbackAttention: { id: "comment", reason: "client comment" },
+      activeTrainerTasksCount: 1
+    }
+  }, new Date("2026-06-18T12:00:00"));
+
+  assert.deepEqual(center.attentionItems.map((item) => item.client.id), ["critical"]);
+  assert.deepEqual(center.priorityItems.map((item) => item.client.id), ["critical"]);
+  assert.equal(center.priorityItems[0].attention.type, "workout");
 });
 
 test("trainer action items open the relevant client tab", () => {
@@ -139,7 +165,7 @@ test("trainer client list uses every client summary for search, filters and prio
   };
 
   const attentionItems = buildTrainerClientListItems(clients, summaries, { filter: "attention" });
-  assert.deepEqual(attentionItems.map((item) => item.client.id), ["lost", "noProgram"]);
+  assert.deepEqual(attentionItems.map((item) => item.client.id), ["noProgram"]);
 
   const noProgramItems = buildTrainerClientListItems(clients, summaries, { filter: "noProgram" });
   assert.deepEqual(noProgramItems.map((item) => item.client.id), ["noProgram"]);
@@ -151,8 +177,8 @@ test("trainer client list uses every client summary for search, filters and prio
   assert.deepEqual(searchItems.map((item) => item.client.id), ["noProgram"]);
 
   const allItems = buildTrainerClientListItems(clients, summaries);
-  assert.equal(allItems[0].client.id, "lost");
-  assert.equal(allItems.at(-1).client.id, "active");
+  assert.equal(allItems[0].client.id, "noProgram");
+  assert.equal(allItems.at(-1).client.id, "lost");
 });
 
 test("trainer client snapshot keeps top-card facts compact", () => {

@@ -87,6 +87,41 @@
   min-width: 0;
 }
 
+.editorProgramNameField {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.editorProgramNameField input {
+  width: min(520px, 100%);
+  min-height: 34px;
+  padding: 0 0 2px;
+  border: 0;
+  border-bottom: 1px solid #e5e0f6;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--trainer-text);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 760;
+  line-height: 1.15;
+}
+
+.editorProgramNameField input::placeholder {
+  color: #aaa4b1;
+}
+
+.editorProgramNameField:focus-within input {
+  border-bottom-color: #806bb6;
+  box-shadow: 0 2px 0 -1px #806bb6;
+}
+
+.editorProgramNameField input:disabled {
+  cursor: wait;
+}
+
 .editorModalHeader button {
   width: 44px;
   height: 44px;
@@ -332,6 +367,11 @@
     font-size: 16px;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .editorProgramNameField input {
+    min-height: 44px;
+    font-size: 16px;
   }
 
   .editorModalBody {

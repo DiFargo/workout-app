@@ -5,6 +5,7 @@ import {
   loadAdminPanelHub,
   loadAiCoachPage,
   loadBasicWorkoutQuizPage,
+  loadBasicWorkoutTodayPage,
   loadMeasurementWizardPage,
   loadWorkoutHistoryPage,
   loadWorkoutListPage,
@@ -21,6 +22,7 @@ const AdminBaseLibrary = lazy(loadAdminBaseLibrary);
 const AdminPanelHub = lazy(loadAdminPanelHub);
 const AiCoachPage = lazy(loadAiCoachPage);
 const BasicWorkoutQuizPage = lazy(loadBasicWorkoutQuizPage);
+const BasicWorkoutTodayPage = lazy(loadBasicWorkoutTodayPage);
 const MeasurementWizardPage = lazy(loadMeasurementWizardPage);
 const WorkoutHistoryPage = lazy(loadWorkoutHistoryPage);
 const WorkoutListPage = lazy(loadWorkoutListPage);
@@ -234,6 +236,7 @@ export default function AppRouter({
         workoutModePreference={workoutModePreference}
         workoutModeRemember={workoutModeRemember}
         basicWorkoutQuiz={basicWorkoutQuiz}
+        userId={user?.uid || ""}
         startingWeightProfile={aiNutritionProfile || aiNutritionProfileDraft}
         workoutHistory={history}
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
@@ -245,6 +248,30 @@ export default function AppRouter({
         canUseTrainerFeatures={canUseTrainerFeatures}
         onGoMain={onBackToMain}
         onOpenTraining={onOpenTrainingEntry}
+        onOpenNutrition={onOpenNutrition}
+        onOpenCabinet={onOpenCabinet}
+        onOpenTrainerClients={onOpenTrainerClients}
+        onOpenTrainerPrograms={onOpenTrainerPrograms}
+        onLoadTrainerCabinet={onOpenCabinet}
+      />
+    );
+  }
+
+  if (page === APP_PAGES.BASIC_WORKOUT_TODAY) {
+    return renderLazyRoute(
+      <BasicWorkoutTodayPage
+        renderClientMainBottomBar={renderClientMainBottomBar}
+        basicWorkoutQuiz={basicWorkoutQuiz}
+        startingWeightProfile={aiNutritionProfile || aiNutritionProfileDraft}
+        workoutHistory={history}
+        onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
+        onApplyBasicWorkoutPlan={onApplyBasicWorkoutPlan}
+        onOpenLongPlan={() => onSetPage(APP_PAGES.BASIC_WORKOUT_QUIZ)}
+        onGoBackToMode={() => onSetPage(APP_PAGES.WORKOUT_MODE)}
+        onOpenTraining={onOpenTrainingEntry}
+        userId={user?.uid || ""}
+        canUseTrainerFeatures={canUseTrainerFeatures}
+        onGoMain={onBackToMain}
         onOpenNutrition={onOpenNutrition}
         onOpenCabinet={onOpenCabinet}
         onOpenTrainerClients={onOpenTrainerClients}

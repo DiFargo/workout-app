@@ -9,6 +9,7 @@ const SHOULDER_PRESS_PATTERN = /(?:вертикальн(?:ый|ая)\s+жим|ж
 const SHOULDER_ACCESSORY_PATTERN = /(?:отведение\s+рук|разведение\s+рук|тяга\s+каната\s+к\s+лицу)/iu;
 const BICEPS_PATTERN = /(?:сгибани[ея]\s+рук|молотков)/iu;
 const TRICEPS_PATTERN = /(?:разгибани[ея]\s+(?:рук|гантели)|обратные\s+отжимания)/iu;
+const FOREARMS_PATTERN = /(?:сгибани[ея]\s+кист|разгибани[ея]\s+кист|прогулка\s+фермера)/iu;
 const LOWER_ACCESSORY_PATTERN = /(?:разгибани[ея]\s+ног|сгибани[ея]\s+ног|гиперэкстензи|подъ[её]мы\s+на\s+носки)/iu;
 
 function getExerciseName(exercise = {}) {
@@ -30,6 +31,7 @@ export function getBasicWorkoutExerciseCategory(exercise = {}) {
   if (VERTICAL_PULL_PATTERN.test(name)) return "verticalPull";
   if (HORIZONTAL_PULL_PATTERN.test(name)) return "horizontalPull";
   if (SHOULDER_ACCESSORY_PATTERN.test(name)) return "shoulderAccessory";
+  if (FOREARMS_PATTERN.test(name)) return "forearms";
   if (BICEPS_PATTERN.test(name)) return "biceps";
   if (TRICEPS_PATTERN.test(name)) return "triceps";
   if (LOWER_ACCESSORY_PATTERN.test(name)) return "lowerAccessory";

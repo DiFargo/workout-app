@@ -64,3 +64,42 @@ export async function requestBasicWorkoutAiPlan(quiz = {}, startingWeightProfile
 
   return data.plan;
 }
+
+export async function requestBasicWorkoutTodayPlan(preferences = {}, startingWeightProfile = {}) {
+  const todayTargets = Array.isArray(preferences.todayTargets)
+    ? [...new Set(preferences.todayTargets.map((target) => String(target || "").trim()).filter(Boolean))].slice(0, 3)
+    : [String(preferences.todayTarget || "chest")];
+  const response = await fetchAuthorizedWithTimeout("/api/ai-basic-workout-plan", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      profile: {
+        mode: "today",
+        goal: String(preferences.goal || "general_fitness"),
+        level: String(preferences.level || "beginner"),
+        location: String(preferences.location || "gym"),
+        duration: String(preferences.duration || "45"),
+        restrictions: String(preferences.restrictions || "none"),
+        restrictionDetails: String(preferences.restrictionDetails || "").trim().slice(0, 180),
+        planPreferences: String(preferences.planPreferences || "").trim().slice(0, 280),
+        todayTarget: String(todayTargets[0] || "chest"),
+        todayTargets,
+        readiness: String(preferences.readiness || "normal"),
+        registration: getRegistrationProfile(startingWeightProfile)
+      }
+    })
+  }, BASIC_WORKOUT_AI_TIMEOUT_MS);
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok || data.ok === false) {
+    throw getPlanRequestError(response, data);
+  }
+  if (!Array.isArray(data.plan?.workouts) || data.plan.workouts.length !== 1) {
+    throw new Error("ИИ не вернул готовую тренировку. Попробуйте ещё раз.");
+  }
+
+  return data.plan;
+}

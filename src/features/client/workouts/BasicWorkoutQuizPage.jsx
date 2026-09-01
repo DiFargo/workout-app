@@ -1,6 +1,12 @@
-import { useState } from "react";
-import { Check, ChevronLeft, Dumbbell, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, ChevronLeft, Dumbbell, KeyRound, Sparkles } from "lucide-react";
 
+import {
+  createBasicWorkoutLongPlanAccessRecord,
+  getBasicWorkoutLongPlanAccessStorageKey,
+  hasBasicWorkoutLongPlanAccess,
+  isBasicWorkoutLongPlanAccessCode
+} from "../../../utils/basicWorkoutLongPlanAccess";
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
 import {
   applyBasicWorkoutSchedule,
@@ -11,6 +17,7 @@ import {
   normalizeBasicWorkoutScheduleDates
 } from "../../../utils/basicWorkoutSchedule";
 import { shiftProfileWorkoutMonthKey } from "../../../utils/profileWorkoutSchedule";
+import { safeReadJsonStorage, safeWriteJsonStorage } from "../../../utils/storageSafety";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { ProfileWorkoutCalendarContent } from "../profile/ProfileWorkoutCalendarModal";
 import { requestBasicWorkoutAiPlan } from "./basicWorkoutAi";
@@ -195,6 +202,7 @@ function getPlanScheduleDates(plan = {}) {
 export default function BasicWorkoutQuizPage({
   renderClientMainBottomBar,
   basicWorkoutQuiz,
+  userId,
   startingWeightProfile,
   workoutHistory,
   onBasicWorkoutQuizChange,
@@ -216,6 +224,12 @@ export default function BasicWorkoutQuizPage({
   const [planSaveError, setPlanSaveError] = useState("");
   const [isSavingPlan, setIsSavingPlan] = useState(false);
   const [ownPlanNotice, setOwnPlanNotice] = useState("");
+  const accessStorageKey = getBasicWorkoutLongPlanAccessStorageKey(userId);
+  const [isLongPlanUnlocked, setIsLongPlanUnlocked] = useState(() => (
+    hasBasicWorkoutLongPlanAccess(safeReadJsonStorage(accessStorageKey, null))
+  ));
+  const [accessCode, setAccessCode] = useState("");
+  const [accessCodeError, setAccessCodeError] = useState("");
   const [generatedPlan, setGeneratedPlan] = useState(() => (
     Array.isArray(basicWorkoutQuiz?.generatedPlan?.workouts)
       ? basicWorkoutQuiz.generatedPlan
@@ -245,6 +259,31 @@ export default function BasicWorkoutQuizPage({
     draftDates: scheduleDraftDates,
     editing: scheduleEditing
   });
+
+  useEffect(() => {
+    setIsLongPlanUnlocked(hasBasicWorkoutLongPlanAccess(safeReadJsonStorage(accessStorageKey, null)));
+    setAccessCode("");
+    setAccessCodeError("");
+  }, [accessStorageKey]);
+
+  function unlockLongPlan(event) {
+    event.preventDefault();
+    if (!isBasicWorkoutLongPlanAccessCode(accessCode)) {
+      setAccessCodeError("Неверный код. Проверь цифры и попробуй ещё раз.");
+      return;
+    }
+
+    const isStored = safeWriteJsonStorage(
+      accessStorageKey,
+      createBasicWorkoutLongPlanAccessRecord()
+    );
+    if (!isStored) {
+      setAccessCodeError("Не удалось сохранить активацию. Проверь настройки браузера и попробуй ещё раз.");
+      return;
+    }
+    setAccessCodeError("");
+    setIsLongPlanUnlocked(true);
+  }
 
   function updateQuiz(field, value) {
     setGenerationError("");
@@ -412,7 +451,41 @@ export default function BasicWorkoutQuizPage({
         scope="basic-quiz-header"
       />
 
-      {generatedPlan && planPreview ? (
+      {!isLongPlanUnlocked ? (
+        <main className={styles.accessGate}>
+          <section className={styles.accessCard} aria-labelledby="basic-quiz-access-title">
+            <span className={styles.accessIcon} aria-hidden="true"><KeyRound /></span>
+            <span className={styles.eyebrow}>Программа на 4 недели</span>
+            <h2 id="basic-quiz-access-title">Введи код доступа</h2>
+            <p>Код нужен только один раз, чтобы перейти к подбору базовой программы.</p>
+            <form className={styles.accessForm} onSubmit={unlockLongPlan} noValidate>
+              <label className={styles.accessField}>
+                <span>Код доступа</span>
+                <input
+                  aria-describedby="basic-quiz-access-help"
+                  aria-invalid={Boolean(accessCodeError)}
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  maxLength={4}
+                  onChange={(event) => {
+                    setAccessCode(event.target.value.replace(/\D/g, "").slice(0, 4));
+                    setAccessCodeError("");
+                  }}
+                  pattern="[0-9]*"
+                  placeholder="••••"
+                  type="text"
+                  value={accessCode}
+                />
+              </label>
+              <p className={styles.accessHelp} id="basic-quiz-access-help">После активации код больше не понадобится на этом устройстве.</p>
+              {accessCodeError ? <p className={styles.accessError} role="alert">{accessCodeError}</p> : null}
+              <button className={styles.accessButton} type="submit" disabled={accessCode.length !== 4}>
+                Продолжить
+              </button>
+            </form>
+          </section>
+        </main>
+      ) : generatedPlan && planPreview ? (
         <>
         <section className={styles.resultCard} data-testid="basic-quiz-result">
           <div className={styles.resultIcon} aria-hidden="true"><Sparkles /></div>

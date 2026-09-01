@@ -496,7 +496,7 @@ test("trainer summary marks an ending subscription as attention", () => {
   assert.equal(getClientActivityStatus(summary).id, "attention");
 });
 
-test("trainer dashboard summary builds counts, focus and recent events", () => {
+test("trainer dashboard summary counts critical alerts from the shared source of truth", () => {
   const clients = [
     { id: "lost", name: "Lost" },
     { id: "plain", name: "Plain" },
@@ -523,9 +523,10 @@ test("trainer dashboard summary builds counts, focus and recent events", () => {
   assert.equal(dashboard.statusCounts.lost, 1);
   assert.equal(dashboard.statusCounts.noProgram, 1);
   assert.equal(dashboard.statusCounts.active, 1);
+  assert.equal(dashboard.statusCounts.critical, 1);
   assert.equal(dashboard.statusCounts.activeToday, 1);
-  assert.deepEqual(dashboard.problemClients.map((item) => item.client.id), ["lost", "plain"]);
-  assert.equal(dashboard.focusItems[0].client.id, "lost");
+  assert.deepEqual(dashboard.problemClients.map((item) => item.client.id), ["plain"]);
+  assert.equal(dashboard.focusItems[0].client.id, "plain");
   assert.equal(dashboard.focusItems.at(-1).text, "2 тренировок за 7 дней · питание 4/7");
   assert.equal(dashboard.recentEvents[0].clientName, "Lost");
 });

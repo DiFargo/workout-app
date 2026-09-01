@@ -8,7 +8,7 @@ const MANNEQUIN_ASSET_ROOT = new URL("../public/basic-workout/exercises/mannequi
 const CATALOGUE_ASSET_ROOT = new URL("../public/basic-workout/exercises/catalogue/v1/", import.meta.url);
 
 test("every compact-library exercise has an individual illustration", async () => {
-  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 96);
+  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 99);
 
   await Promise.all(
     BASIC_WORKOUT_EXERCISE_LIBRARY.map((exercise) => {

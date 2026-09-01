@@ -1,5 +1,10 @@
 import { getClientTrainerTaskDestination } from "../domain/clientInsights.js";
-import { getClientAttentionItems, getClientAttentionState } from "./trainerAttention.js";
+import {
+  getClientAttentionItems,
+  getClientCriticalAttentionItems,
+  getClientCriticalAttentionState,
+  getClientCriticalAttentionStatus
+} from "./trainerAttention.js";
 import {
   getClientActivityStatus,
   getClientAttentionReasons,
@@ -14,14 +19,16 @@ import {
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const ATTENTION_PRIORITY = {
-  workout: 10,
-  feedback: 20,
-  programEnding: 30,
-  task: 40,
-  nutrition: 50,
-  measure: 60,
-  activity: 70,
-  noProgram: 80,
+  program: 10,
+  workout: 20,
+  feedback: 30,
+  subscription: 40,
+  programEnding: 50,
+  task: 60,
+  nutrition: 70,
+  measure: 80,
+  activity: 90,
+  noProgram: 10,
   active: 100
 };
 
@@ -131,7 +138,8 @@ function getNextWorkoutLabel(client = {}, now = Date.now()) {
 }
 
 function buildActionItem(client = {}, summary = {}, attention = null, now = Date.now()) {
-  const status = getClientActivityStatus(summary);
+  const status = getClientCriticalAttentionStatus(client, summary, now);
+  const activityStatus = getClientActivityStatus(summary);
   const type = attention?.type || status.id || "active";
   return {
     id: `${client.id || "client"}_${type}`,
@@ -140,9 +148,10 @@ function buildActionItem(client = {}, summary = {}, attention = null, now = Date
     clientName: getClientName(client),
     summary,
     status,
+    activityStatus,
     attention,
     type,
-    reason: attention?.reason || getClientAttentionReasons(summary)[0] || "",
+    reason: attention?.reason || "",
     priority: ATTENTION_PRIORITY[type] ?? 90,
     lastActivityTimestamp: getLastActivityTimestamp(summary),
     nextWorkoutLabel: getNextWorkoutLabel(client, now)
@@ -171,7 +180,7 @@ function getUniqueActionItems(items = []) {
 export function buildTrainerActionCenter(clients = [], summaries = {}, now = Date.now()) {
   const items = (Array.isArray(clients) ? clients : []).map((client) => {
     const summary = getTrainerClientSummaryFromMap(client, summaries);
-    return buildActionItem(client, summary, getClientAttentionState(client, summary, now), now);
+    return buildActionItem(client, summary, getClientCriticalAttentionState(client, summary, now), now);
   });
 
   const todayWorkouts = items
@@ -186,20 +195,20 @@ export function buildTrainerActionCenter(clients = [], summaries = {}, now = Dat
     item.attention?.type === "measure" ||
     (Array.isArray(item.summary.recentEvents) && item.summary.recentEvents.some((event) => event.type === "measurement"))
   )).sort(sortActionItems);
-  const inactiveClients = items.filter((item) => item.status.id === "lost" || item.attention?.type === "activity").sort(sortActionItems);
-  const attentionItems = items.filter((item) => item.status.id !== "active" || item.attention).sort(sortActionItems);
-  const priorityItems = getUniqueActionItems([
-    ...todayWorkouts,
-    ...missedWorkouts,
-    ...feedbackItems,
+  const inactiveClients = items.filter((item) => item.activityStatus.id === "lost").sort(sortActionItems);
+  const attentionItems = items.filter((item) => Boolean(item.attention)).sort(sortActionItems);
+  const priorityItems = getUniqueActionItems(attentionItems);
+  const activityItems = getUniqueActionItems([
+    ...feedbackItems.filter((item) => item.attention?.type !== "feedback"),
     ...programEndingItems,
-    ...attentionItems
+    ...taskItems
   ]);
 
   return {
     items,
     attentionItems,
     priorityItems,
+    activityItems,
     todayWorkouts,
     missedWorkouts,
     feedbackItems,
@@ -228,7 +237,7 @@ export function getTrainerActionItemTargetTab(item = {}, groupId = "") {
   if (type === "measure") return "bodyProgress";
   if (type === "feedback") return "messages";
   if (type === "task") return "tasks";
-  if (type === "payment") return "calendar";
+  if (type === "payment" || type === "subscription") return "calendar";
 
   if (item.summary?.workoutFeedbackAttention?.id) return "messages";
   if (Number(item.summary?.activeTrainerTasksCount) > 0) return "tasks";
@@ -246,13 +255,15 @@ export function buildTrainerClientListItems(clients = [], summaries = {}, {
   return (Array.isArray(clients) ? clients : [])
     .map((client) => {
       const summary = getTrainerClientSummaryFromMap(client, summaries);
-      const status = getClientActivityStatus(summary);
-      const attention = getClientAttentionState(client, summary, now);
+      const activityStatus = getClientActivityStatus(summary);
+      const attention = getClientCriticalAttentionState(client, summary, now);
+      const status = getClientCriticalAttentionStatus(client, summary, now);
       const reasons = getClientAttentionReasons(summary);
       return {
         client,
         summary,
         status,
+        activityStatus,
         attention,
         reasons,
         clientName: getClientName(client),
@@ -275,8 +286,8 @@ export function buildTrainerClientListItems(clients = [], summaries = {}, {
       if (searchText && !haystack.includes(searchText)) return false;
       if (filter === "all") return true;
       if (filter === "active") return item.status.id === "active";
-      if (filter === "attention") return item.status.id !== "active" || Boolean(item.attention);
-      if (filter === "inactive") return item.status.id === "lost";
+      if (filter === "attention") return Boolean(item.attention);
+      if (filter === "inactive") return item.activityStatus.id === "lost";
       if (filter === "noProgram") return item.status.id === "noProgram";
       if (filter === "ending") return Boolean(item.summary.programEndingAttention?.id);
       const goal = String(item.client.goal || item.client.profile?.goal || "").toLowerCase();
@@ -318,8 +329,9 @@ export function buildTrainerClientSnapshot(client = {}, summary = {}, tasks = []
     activeTasksCount: activeTasks.length,
     lastClientComment: String(lastWorkout?.clientComment || summary.workoutFeedbackAttention?.comment || "").trim(),
     attentionItems: getClientAttentionItems(client, summary),
-    primaryAttention: getClientAttentionState(client, summary),
-    status: getClientActivityStatus(summary)
+    criticalAttentionItems: getClientCriticalAttentionItems(client, summary),
+    primaryAttention: getClientCriticalAttentionState(client, summary),
+    status: getClientCriticalAttentionStatus(client, summary)
   };
 }
 

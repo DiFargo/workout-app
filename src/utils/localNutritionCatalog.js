@@ -15,7 +15,7 @@ export function normalizeLocalCatalogFood(food = {}) {
   return {
     id: food.id || `local_${String(food.name || "").toLowerCase().replace(/\s+/g, "_")}`,
     foodId: food.id || "",
-    name: food.name || "Продукт",
+    name: food.displayName || food.name || "Продукт",
     aliases: food.aliases || [],
     brand: food.brand || "",
     barcode: food.barcode || "",

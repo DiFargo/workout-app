@@ -45,14 +45,14 @@ test("program overview uses compact cards with a program search and add control"
   assert.match(source, /ProgramCheckIcon size=\{15\}/);
   assert.match(source, /className=\{styles\.selectedMark\} aria-label="Выбрана"/);
   assert.match(source, /label: "Черновик"/);
-  assert.match(source, /label: "Готова"/);
+  assert.match(source, /label: "Готова к назначению"/);
   assert.match(source, /label: "Используется"/);
   assert.match(source, /label: "Архив"/);
   assert.doesNotMatch(source, /<b>•••<\/b>/);
   assert.doesNotMatch(source, /className=\{styles\.headerActions\}/);
   assert.doesNotMatch(source, /ProgramRefreshIcon/);
   assert.match(source, /className=\{styles\.cardSelect\}/);
-  assert.match(source, /className=\{styles\.selectedActions\}/);
+  assert.match(source, /styles\.selectedActions,/);
   assert.match(styles, /\.selectedActions \{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(source, /styles\.statusUsed/);
   assert.match(styles, /\.statusUsed/);
@@ -62,7 +62,7 @@ test("program overview uses compact cards with a program search and add control"
   assert.match(source, /styles\.addButton/);
   assert.doesNotMatch(source, /className=\{styles\.createCard\}/);
   assert.match(styles, /\.toolbar \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\) auto/);
-  assert.match(styles, /grid-template-columns: repeat\(auto-fill, minmax\(230px, 280px\)\)/);
+  assert.match(styles, /grid-template-columns: repeat\(auto-fit, minmax\(min\(100%, 260px\), 1fr\)\)/);
   assert.match(styles, /@media \(max-width: 720px\) \{[\s\S]*?\.grid \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(styles, /grid-template-areas:\s*"title status"\s*"stats stats"/);
   assert.match(styles, /background: #fff/);
@@ -166,7 +166,7 @@ test("trainer program editor keeps mobile back and save actions reachable", asyn
   assert.match(constructor, /className=\{styles\.deleteButton\}[\s\S]*?onClick=\{onDeleteProgram\}/);
   assert.match(constructor, /className=\{styles\.saveButton\}[\s\S]*?onClick=\{\(\) => onSaveProgram\(\)\}/);
   assert.match(manager, /data-trainer-modal-backdrop="true"[\s\S]*?data-trainer-modal-surface="true"/);
-  assert.match(manager, /className=\{styles\.editorModalBack\}[\s\S]*?onClick=\{closeEditor\}/);
+  assert.match(manager, /className=\{styles\.editorModalClose\}[\s\S]*?onClick=\{closeEditor\}/);
   assert.match(manager, /embeddedInModal=\{isEditorModalOpen\}/);
   assert.match(constructor, /isDayEditorOpen && !embeddedInModal \? "true" : undefined/);
   assert.match(manager, /const saved = await saveMonthProgramToLibrary\(\)/);
@@ -248,7 +248,7 @@ test("workout schedule keeps subscription editing beside schedule editing", asyn
   assert.match(schedule, /className="trainerWorkoutScheduleSubscriptionAction"/);
   assert.match(schedule, /onClick=\{startSubscriptionEditing\}/);
   assert.match(styles, /trainerWorkoutScheduleSubscriptionAction\) \{[\s\S]*?background: #eee7fa/);
-  assert.match(styles, /trainerWorkoutScheduleActions\) \{[\s\S]*?flex-direction: row/);
+  assert.match(styles, /trainerWorkoutScheduleActions\) \{[\s\S]*?flex-direction: column/);
 });
 
 test("trainer editor Back returns directly to the programs overview", async () => {
@@ -464,12 +464,10 @@ test("tablet cabinet keeps all summary values and workspace actions in stable gr
   assert.match(cabinetStyles, /trainerCabinetWorkspaceLinks button\) \{[\s\S]*?grid-template-columns: 42px minmax\(0, 1fr\) 18px/);
   assert.match(adaptiveStyles, /trainerNextCabinetPage \.trainerCabinetStats\) \{[\s\S]*?repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(adaptiveStyles, /trainerNextCabinetPage \.trainerCabinetWorkspaceLinks\) \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
-  assert.match(adaptiveStyles, /trainerNextSidebar \.trainerNextTrainerProfile\) \{[\s\S]*?display: none/);
   assert.match(workspace, /aria-label="Кабинет тренера"/);
-  assert.match(workspace, /className="trainerNextTrainerProfile"/);
-  assert.match(workspace, /className="trainerNextTrainerCompactIcon"/);
-  assert.match(adaptiveStyles, /trainerNextSidebar \.trainerNextTrainer > \.trainerNextAvatar\) \{[\s\S]*?display: none/);
-  assert.match(adaptiveStyles, /trainerNextTrainerCompactIcon\) \{[\s\S]*?width: 22px/);
+  assert.match(workspace, /aria-label="Основное меню тренера"/);
+  assert.match(workspace, /className="trainerNextDesktopDock"/);
+  assert.match(workspace, /className="trainerNextMobileNav"/);
   assert.match(adaptiveStyles, /@media \(min-width: 700px\) and \(max-width: 1199px\)/);
   assert.match(calmStyles, /trainerCabinetLogout\) \{[\s\S]*?width: 100%/);
 });
@@ -489,13 +487,14 @@ test("nutrition diary uses a compact calendar and compact meal entries", async (
   const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceNutritionDiary.module.css", import.meta.url), "utf8");
   const diary = workspace.match(/function NutritionDiary\(([\s\S]*?)\n\}\n\nfunction NutritionPlan/)?.[1] || "";
 
-  assert.match(diary, /const dayNumber = date \? date\.getDate\(\) : index \+ 1/);
-  assert.match(diary, /aria-label=\{`\$\{dateLabel\}: \$\{calories\} ккал`\}/);
+  assert.match(diary, /const calendarCells = displayedMonthKey/);
+  assert.match(diary, /const \{ entry, dayNumber \} = cell/);
+  assert.match(diary, /aria-label=\{entry \? `\$\{dateLabel\}: \$\{entry\.calories\} ккал` : `\$\{dateLabel\}: нет записи`\}/);
   assert.match(diary, /<strong>\{dayNumber\}<\/strong>/);
-  assert.match(styles, /trainerNutritionDiary > aside\) \{[\s\S]*?grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);
-  assert.match(styles, /trainerNutritionDiary > aside button\) \{[\s\S]*?min-height: 52px/);
+  assert.match(styles, /trainerNutritionDiaryCalendarGrid\) \{[\s\S]*?grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /trainerNutritionDiaryCalendarGrid > button\)[\s\S]*?min-height: 46px/);
   assert.match(styles, /trainerNutritionDiary \.trainerNextMealList article\) \{[\s\S]*?grid-template-columns: 34px minmax\(0, 1fr\);[\s\S]*?min-height: 0/);
-  assert.match(workspace, /Сохранится после подтверждения/);
+  assert.match(workspace, /Дневник доступен только для просмотра/);
   assert.match(styles, /trainerNutritionPlanModal \.trainerNutritionGoalInputs\),[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(styles, /trainerNutritionPlanModal \.trainerNutritionPlanFields input\),[\s\S]*?min-height: 40px/);
   assert.match(styles, /trainerNutritionPlanModal \.trainerNutritionValidity input\) \{[\s\S]*?box-sizing: border-box;[\s\S]*?max-width: 100%/);

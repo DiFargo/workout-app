@@ -113,6 +113,7 @@ import {
   History,
   Mail,
   MessageSquare,
+  Pencil,
   Plus,
   RefreshCw,
   Repeat2,
@@ -2099,9 +2100,9 @@ function WorkoutSchedulePlanner({
               const entries = visibleEntriesByDate[day.key] || [];
               const statusClass = getWorkoutScheduleCalendarStatus(entries);
               const entryLabel = entries.map((entry) => `№${entry.order}`).join(", ");
-              const subscriptionRange = editingSubscription && Boolean(subscriptionRangeStart) && day.key >= subscriptionRangeStart && (!subscriptionRangeEnd || day.key <= subscriptionRangeEnd);
-              const subscriptionStart = editingSubscription && day.key === subscriptionRangeStart;
-              const subscriptionEnd = editingSubscription && Boolean(subscriptionRangeEnd) && day.key === subscriptionRangeEnd;
+              const subscriptionRange = Boolean(subscriptionRangeStart) && day.key >= subscriptionRangeStart && (!subscriptionRangeEnd || day.key <= subscriptionRangeEnd);
+              const subscriptionStart = Boolean(subscriptionRangeStart) && day.key === subscriptionRangeStart;
+              const subscriptionEnd = Boolean(subscriptionRangeEnd) && day.key === subscriptionRangeEnd;
               const canEditScheduleDay = selected || (!isPastDate && (!requiredCount || selectedDates.length < requiredCount));
               return (
                 <button
@@ -2131,7 +2132,7 @@ function WorkoutSchedulePlanner({
           <div className="trainerWorkoutScheduleLegend trainerWorkoutScheduleStats trainerWorkoutScheduleCalendarStatusLegend" aria-label="Статусы тренировок">
             <span className="is-planned">Плановая дата</span>
             <span className="is-completed">В срок</span>
-            <span className="is-completedOffDate">Выполнено в другой день</span>
+            <span className="is-completedOffDate" aria-label="Выполнено в другой день" title="Выполнено в другой день">В другой день</span>
             <span className="is-missed">Пропущена</span>
             <span className="is-shifted">Смещена</span>
             <span className="is-pastCompleted">Прошлая тренировка</span>
@@ -2472,6 +2473,7 @@ function ClientWorkoutPlan({
   selectedProgramId,
   onSelectProgram,
   onAssignProgram,
+  onRenameProgramAssignment,
   onArchiveProgramAssignment,
   onRestoreProgramAssignment,
   onSaveWorkoutSchedule,
@@ -2495,6 +2497,10 @@ function ClientWorkoutPlan({
   const [programAssignmentConfirm, setProgramAssignmentConfirm] = useState(null);
   const [programAssignmentSaving, setProgramAssignmentSaving] = useState(false);
   const [programAssignmentStatus, setProgramAssignmentStatus] = useState("");
+  const [programNameEditorOpen, setProgramNameEditorOpen] = useState(false);
+  const [programNameDraft, setProgramNameDraft] = useState("");
+  const [programNameSaving, setProgramNameSaving] = useState(false);
+  const [programNameStatus, setProgramNameStatus] = useState("");
   const [showBasicWorkoutHistory, setShowBasicWorkoutHistory] = useState(false);
   const [programHistoryOpen, setProgramHistoryOpen] = useState(false);
   const [scheduleAssignmentRequest, setScheduleAssignmentRequest] = useState(null);
@@ -2641,7 +2647,7 @@ function ClientWorkoutPlan({
   }), [workouts, client?.workoutCalendar, history]);
 
   function closeEditor() {
-    if (editorSaving) return;
+    if (editorSaving || programNameSaving) return;
     setEditorOpen(false);
     setPendingReviewAdjustment(null);
     setEditorStatus("");
@@ -2661,12 +2667,17 @@ function ClientWorkoutPlan({
     setEditorWorkoutId(firstUpcomingWorkout?.id || scheduleWorkouts[0]?.id || "");
     setPendingReviewAdjustment(null);
     setEditorStatus("");
+    setProgramNameDraft(assignedName);
+    setProgramNameStatus("");
+    setProgramNameEditorOpen(false);
     setEditorOpen(true);
   }
 
-  async function confirmProgramAssignment(loadAdjustments) {
+  async function confirmProgramAssignment(assignmentOptions = {}) {
     const result = await onAssignProgram?.({
-      loadAdjustments,
+      ...(assignmentOptions && typeof assignmentOptions === "object" ? assignmentOptions : {
+        loadAdjustments: assignmentOptions
+      }),
       skipConfirmation: true
     });
     if (result === false) return false;
@@ -2677,6 +2688,29 @@ function ClientWorkoutPlan({
       knownAssignmentKeys: trainerProgramTimeline.map((assignment) => assignment.key)
     });
     return true;
+  }
+
+  async function saveClientProgramName(event) {
+    event.preventDefault();
+    const nextName = String(programNameDraft || "").trim();
+    if (!nextName) {
+      setProgramNameStatus("Введите название программы.");
+      return;
+    }
+    if (!assignedProgramAssignment || programNameSaving) return;
+
+    setProgramNameSaving(true);
+    setProgramNameStatus("");
+    try {
+      const result = await onRenameProgramAssignment?.(assignedProgramAssignment, nextName);
+      if (result === false) throw new Error("program-rename-failed");
+      setProgramNameEditorOpen(false);
+    } catch (error) {
+      console.error("Client program rename failed:", error);
+      setProgramNameStatus("Не удалось сохранить название. Проверьте соединение и попробуйте ещё раз.");
+    } finally {
+      setProgramNameSaving(false);
+    }
   }
 
   async function resolveWorkoutReview(decision, targetWorkoutId = "") {
@@ -3073,12 +3107,49 @@ function ClientWorkoutPlan({
         <div className="trainerClientModalBackdrop trainerWorkoutEditorModalBackdrop" data-trainer-modal-backdrop="true" role="dialog" aria-modal="true" aria-label="Редактор программы клиента" onClick={closeEditor}>
           <section className={`trainerWorkoutEditorModal trainerClientProgramEditorModal ${trainerClientWorkoutPlanStyles.editorModal}`} data-trainer-modal-surface="true" data-trainer-modal-frame="true" onClick={(event) => event.stopPropagation()}>
             <header data-trainer-modal-header="true">
-              <div>
+              <div className={trainerClientWorkoutPlanStyles.programEditorHeaderContent}>
                 <span>РЕДАКТОР ПРОГРАММЫ</span>
-                <h2>{assignedName}</h2>
+                <div className={trainerClientWorkoutPlanStyles.programEditorTitleRow}>
+                  <h2>{assignedName}</h2>
+                  <button
+                    className={trainerClientWorkoutPlanStyles.programRenameHeaderButton}
+                    type="button"
+                    onClick={() => {
+                      setProgramNameDraft(assignedName);
+                      setProgramNameStatus("");
+                      setProgramNameEditorOpen(true);
+                    }}
+                    disabled={!onRenameProgramAssignment || programNameSaving}
+                  >
+                    <Pencil size={16} aria-hidden="true" />
+                    <span>Переименовать</span>
+                  </button>
+                </div>
                 <p>Изменения применяются только к будущему плану клиента. Выполненные тренировки и история не меняются.</p>
+                {programNameEditorOpen ? (
+                  <form className={trainerClientWorkoutPlanStyles.programRenameHeaderForm} onSubmit={saveClientProgramName}>
+                    <label>
+                      <span>Название программы клиента</span>
+                      <input
+                        value={programNameDraft}
+                        onChange={(event) => {
+                          setProgramNameDraft(event.target.value.slice(0, 80));
+                          setProgramNameStatus("");
+                        }}
+                        maxLength={80}
+                        autoFocus
+                        disabled={programNameSaving}
+                      />
+                    </label>
+                    <div>
+                      <button type="button" onClick={() => setProgramNameEditorOpen(false)} disabled={programNameSaving}>Отмена</button>
+                      <button type="submit" disabled={programNameSaving}>{programNameSaving ? "Сохраняю…" : "Сохранить"}</button>
+                    </div>
+                    {programNameStatus ? <p role="alert">{programNameStatus}</p> : null}
+                  </form>
+                ) : null}
               </div>
-              <button className="trainerNextModalClose" type="button" onClick={closeEditor} aria-label="Закрыть редактор" disabled={editorSaving}><X size={18} /></button>
+              <button className="trainerNextModalClose" type="button" onClick={closeEditor} aria-label="Закрыть редактор" disabled={editorSaving || programNameSaving}><X size={18} /></button>
             </header>
             <div className="trainerWorkoutEditorModalBody" data-trainer-modal-content="true">
               <TrainerWorkoutEditor
@@ -4242,6 +4313,7 @@ function ClientNotifications({
           const measurementReminder = section === "notifications" && measurementReminderDates.has(day.key);
           const subscriptionStart = day.key === subscriptionDraft.startDate;
           const subscriptionEnd = day.key === subscriptionDraft.endDate;
+          const subscriptionBoundary = section === "subscription" && (subscriptionStart || subscriptionEnd);
           const editingSubscriptionStart = section === "subscription" && editingSubscription && subscriptionStart;
           const editingSubscriptionEnd = section === "subscription" && editingSubscription && subscriptionEnd;
           // The subscription remains visible as a calm range after saving.  The
@@ -4270,6 +4342,7 @@ function ClientNotifications({
                 section === "subscription" ? subscriptionWorkoutClass : plannedWorkout ? "plannedWorkout" : "",
                 section === "subscription" ? "" : completedWorkout ? "pastWorkout" : "",
                 subscriptionRange ? "subscriptionRange" : "",
+                subscriptionBoundary ? "subscriptionBoundary" : "",
                 editingSubscriptionStart ? "subscriptionStart" : "",
                 editingSubscriptionEnd ? "subscriptionEnd" : "",
                 day.currentMonth ? "" : "muted",
@@ -4673,38 +4746,18 @@ function ClientOverviewAttention({
   history = [],
   onTabChange,
   onOpenCalendar,
-  onOpenTasks,
-  onOpenFeedback,
-  onOpenMessage
+  onOpenFeedback
 }) {
-  const attentionItems = Array.isArray(snapshot?.attentionItems) && snapshot.attentionItems.length
-    ? snapshot.attentionItems
-    : snapshot?.primaryAttention?.reason
-      ? [snapshot.primaryAttention]
-      : [];
-  const hasAttentionType = (type) => attentionItems.some((item) => item?.type === type);
-  const items = [...attentionItems];
-  if (workoutReview?.needsTrainerReply && !hasAttentionType("feedback")) {
-    items.push({ type: "feedback", reason: "Нужна проверка после тренировки" });
-  }
-  if (Number(snapshot?.activeTasksCount) > 0 && !hasAttentionType("task")) {
-    items.push({
-      type: "task",
-      reason: `Есть активные задания: ${snapshot.activeTasksCount}`
-    });
-  }
+  const items = Array.isArray(snapshot?.criticalAttentionItems)
+    ? snapshot.criticalAttentionItems
+    : [];
   if (!items.length) return null;
 
   const actionByType = {
     program: { target: "workouts", label: "Назначить программу", fallback: "Не назначена программа тренировок" },
-    programEnding: { target: "workouts", label: "Обновить план", fallback: "Заканчивается назначенная программа" },
-    workout: { target: "workouts", label: "Открыть тренировку", fallback: "Не закрыта плановая тренировка" },
-    feedback: { target: "feedback", label: "Открыть сообщение", fallback: "Нужна проверка после тренировки" },
-    nutrition: { target: "nutrition", label: "Открыть питание", fallback: "Нужно проверить дневник питания" },
-    measure: { target: "bodyProgress", label: "Открыть замеры", fallback: "Не обновлялись замеры" },
-    payment: { target: "calendar", label: "Открыть абонемент", fallback: "Нужно проверить абонемент" },
-    task: { target: "tasks", label: "Открыть задания", fallback: "Есть активные задания клиента" },
-    activity: { target: "message", label: "Написать клиенту", fallback: "Нет недавней активности" }
+    workout: { target: "workouts", label: "Открыть расписание", fallback: "Пропущены плановые тренировки" },
+    feedback: { target: "feedback", label: "Открыть сообщение", fallback: "Нужна проверка самочувствия" },
+    subscription: { target: "calendar", label: "Открыть абонемент", fallback: "Нужно проверить абонемент" }
   };
   const workoutNotes = getWorkoutNoteItems(history);
   const feedbackNote = workoutNotes.find((note) => (
@@ -4717,10 +4770,6 @@ function ClientOverviewAttention({
       onOpenCalendar?.();
       return;
     }
-    if (action.target === "tasks") {
-      onOpenTasks?.();
-      return;
-    }
     if (action.target === "feedback") {
       if (feedbackNote) {
         onOpenFeedback?.(feedbackNote);
@@ -4729,17 +4778,13 @@ function ClientOverviewAttention({
       onTabChange?.("messages");
       return;
     }
-    if (action.target === "message") {
-      onOpenMessage?.();
-      return;
-    }
     onTabChange?.(action.target);
   }
 
   return (
     <section className={clientOverviewStyles.controlNotices} aria-label="Контроль клиента">
       {items.map((attention, index) => {
-        const action = actionByType[attention?.type] || actionByType.activity;
+        const action = actionByType[attention?.type] || actionByType.program;
         const suppliedTitle = String(attention?.reason || "").trim();
         const title = /контрол.*просроч/i.test(suppliedTitle) ? action.fallback : suppliedTitle || action.fallback;
         return (
@@ -4780,6 +4825,7 @@ function TrainerClientDetail({
   selectedProgramId,
   onSelectProgram,
   onAssignProgram,
+  onRenameProgramAssignment,
   onArchiveProgramAssignment,
   onRestoreProgramAssignment,
   onDeleteProgramAssignment,
@@ -5329,6 +5375,7 @@ function TrainerClientDetail({
               selectedProgramId={selectedProgramId}
               onSelectProgram={onSelectProgram}
               onAssignProgram={assignProgram}
+              onRenameProgramAssignment={onRenameProgramAssignment}
               onArchiveProgramAssignment={onArchiveProgramAssignment}
               onRestoreProgramAssignment={onRestoreProgramAssignment}
               onDeleteProgramAssignment={onDeleteProgramAssignment}
@@ -6989,7 +7036,7 @@ function TrainerCabinetPage({
 
   return (
     <>
-      <div className={`trainerNextPage trainerNextCabinetPage ${mobileStyles.cabinetFix}`}>
+      <div className={`trainerNextPage trainerNextCabinetPage ${mobileStyles.cabinetFix}`} role="region" aria-label="Кабинет тренера">
         <header className="trainerNextMobileHeader">
           <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
           <div className="trainerNextMobileTitle">Кабинет</div>
@@ -7687,6 +7734,7 @@ export default function TrainerWorkspace({
   selectedProgramId = "",
   onSelectProgram,
   onAssignProgram,
+  onRenameProgramAssignment,
   onSaveWorkoutSchedule,
   onOpenProgramManager,
   activeWorkoutTab = "plan",
@@ -7807,6 +7855,7 @@ export default function TrainerWorkspace({
         selectedProgramId={selectedProgramId}
         onSelectProgram={onSelectProgram}
         onAssignProgram={onAssignProgram}
+        onRenameProgramAssignment={onRenameProgramAssignment}
         onArchiveProgramAssignment={onArchiveProgramAssignment}
         onRestoreProgramAssignment={onRestoreProgramAssignment}
         onDeleteProgramAssignment={onDeleteProgramAssignment}

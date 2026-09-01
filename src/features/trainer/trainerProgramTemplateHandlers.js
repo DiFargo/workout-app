@@ -35,6 +35,10 @@ import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus.js"
 import { validateTrainerWorkoutsForAssignment } from "../../utils/trainerProgramValidation.js";
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
 import { applyTrainerProgramAssignmentLoadAdjustments } from "../../utils/trainerProgramAssignmentAdjustment.js";
+import {
+  buildTrainerClientProgramName,
+  normalizeTrainerClientProgramName
+} from "../../utils/trainerClientProgramName.js";
 
 const STATUS_TEMPLATE_CREATED = "\u0428\u0430\u0431\u043b\u043e\u043d \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b \u0441\u043e\u0437\u0434\u0430\u043d.";
 const STATUS_TEMPLATE_CREATE_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0441\u043e\u0437\u0434\u0430\u0442\u044c \u0448\u0430\u0431\u043b\u043e\u043d.";
@@ -53,6 +57,7 @@ const STATUS_PROGRAM_ASSIGNMENT_FUTURE_ONLY = "\u0422\u0440\u0435\u043d\u0435\u0
 const STATUS_PROGRAM_ASSIGNMENT_ARCHIVED = "\u0422\u0435\u043a\u0443\u0449\u0430\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0430\u0440\u0445\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u0430.";
 const STATUS_PROGRAM_ASSIGNMENT_RESTORED = "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0435\u043d\u0430 \u0438\u0437 \u0430\u0440\u0445\u0438\u0432\u0430.";
 const STATUS_PROGRAM_ASSIGNMENT_DELETED = "\u041d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u043d\u0430\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0443\u0434\u0430\u043b\u0435\u043d\u0430.";
+const STATUS_PROGRAM_ASSIGNMENT_RENAMED = "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u043e.";
 const STATUS_PROGRAM_ASSIGNMENT_ACTION_FAILED = "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b.";
 const STATUS_SELECT_COPY_CLIENT = "\u0412\u044b\u0431\u0435\u0440\u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0430 \u0434\u043b\u044f \u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f.";
 const STATUS_PROGRAM_COPIED = "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0441\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u0430 \u0434\u0440\u0443\u0433\u043e\u043c\u0443 \u043a\u043b\u0438\u0435\u043d\u0442\u0443.";
@@ -501,6 +506,22 @@ export function createTrainerProgramTemplateHandlers({
         };
       }
 
+      if (action === "rename") {
+        const renamedWorkoutIds = new Set(restoreMetadata.renamedWorkoutIds || []);
+        const assignedProgramName = String(restoreMetadata.assignedProgramName || "").trim();
+        const renameWorkout = (workout) => (
+          matches(workout) && renamedWorkoutIds.has(workout.id)
+            ? { ...workout, assignedProgramName }
+            : workout
+        );
+        return {
+          ...current,
+          ...safeClientPatch,
+          workouts: sortWorkoutDays(visibleWorkouts.map(renameWorkout)),
+          archivedWorkouts: sortWorkoutDays(archivedWorkouts.map(renameWorkout))
+        };
+      }
+
       return {
         ...current,
         ...safeClientPatch,
@@ -508,6 +529,84 @@ export function createTrainerProgramTemplateHandlers({
         archivedWorkouts: sortWorkoutDays(archivedWorkouts.filter((workout) => !matches(workout)))
       };
     });
+  }
+
+  async function renameClientProgramAssignment(clientId = selectedUserId, assignment = {}, nextName = "") {
+    const assignmentKey = String(assignment?.key || "").trim();
+    const assignedProgramName = normalizeTrainerClientProgramName(nextName);
+    if (!clientId || !assignmentKey || !assignedProgramName) {
+      setAdminClientStatus("Введите название программы.");
+      return false;
+    }
+    if (!canChangeProgramAssignment(clientId)) {
+      setAdminClientStatus(STATUS_OWN_PROGRAMS_ONLY);
+      return false;
+    }
+
+    try {
+      const [workoutsSnapshot, historySnapshot, clientSnapshot] = await Promise.all([
+        getDocs(collection(db, "users", clientId, "workouts")),
+        getDocs(collection(db, "users", clientId, "history")),
+        getDoc(doc(db, "users", clientId))
+      ]);
+      const clientProfile = clientSnapshot.exists() ? clientSnapshot.data() : {};
+      const matchedWorkouts = getClientProgramAssignmentSnapshot(workoutsSnapshot.docs, assignmentKey, assignment);
+      if (!matchedWorkouts.length) {
+        setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_NOT_FOUND);
+        return false;
+      }
+
+      const assignmentTimeline = buildTrainerClientProgramTimeline({
+        workouts: getSnapshotEntries(workoutsSnapshot),
+        history: getSnapshotEntries(historySnapshot),
+        clientProfile
+      });
+      const matchedAssignment = assignmentTimeline.find((item) => item.key === assignmentKey);
+      if (!matchedAssignment || !["current", "future"].includes(matchedAssignment.status)) {
+        setAdminClientStatus("Можно переименовать только текущую или будущую программу.");
+        return false;
+      }
+
+      // Completed entries are a historical record. Rename only the remaining
+      // client plan so that past sessions retain the name seen at completion.
+      const completedWorkoutIds = new Set(matchedAssignment.completedWorkoutIds || []);
+      const editableWorkouts = matchedWorkouts.filter((workout) => !completedWorkoutIds.has(workout.id));
+      if (!editableWorkouts.length) {
+        setAdminClientStatus("В этой программе нет будущих тренировок для переименования.");
+        return false;
+      }
+
+      const profileAssignment = getClientProfileProgramAssignment(clientProfile);
+      const clientPatch = profileAssignment?.key === assignmentKey
+        ? { assignedProgramName }
+        : {};
+      const operationCount = editableWorkouts.length + (Object.keys(clientPatch).length ? 1 : 0);
+      if (operationCount > 500) throw getBatchLimitError(operationCount);
+
+      const batch = writeBatch(db);
+      editableWorkouts.forEach((workout) => {
+        batch.set(doc(db, "users", clientId, "workouts", workout.id), { assignedProgramName }, { merge: true });
+      });
+      if (Object.keys(clientPatch).length) {
+        batch.set(doc(db, "users", clientId), clientPatch, { merge: true });
+      }
+      await batch.commit();
+
+      updateProgramAssignmentLocally(clientId, assignmentKey, "rename", clientPatch, "", {
+        assignment,
+        assignedProgramName,
+        renamedWorkoutIds: editableWorkouts.map((workout) => workout.id)
+      });
+      setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_RENAMED);
+      await recordTrainerEvent(clientId, "program", STATUS_PROGRAM_ASSIGNMENT_RENAMED, assignedProgramName);
+      return true;
+    } catch (error) {
+      console.error("Client program assignment rename failed:", error);
+      setAdminClientStatus(error?.code === "workout-assignment-batch-limit"
+        ? error.message
+        : getTrainerActionErrorStatus(error, STATUS_PROGRAM_ASSIGNMENT_ACTION_FAILED));
+      return false;
+    }
   }
 
   async function archiveClientProgramAssignment(clientId = selectedUserId, assignment = {}) {
@@ -771,10 +870,14 @@ export function createTrainerProgramTemplateHandlers({
 
     try {
       const assignedProgramUpdatedAt = new Date().toISOString();
+      const assignedTemplate = {
+        ...template,
+        name: buildTrainerClientProgramName(template.name, client)
+      };
       const templateWorkouts = buildClientWorkoutsFromTemplate(template);
       const programValidation = validateTrainerWorkoutsForAssignment({
-        programName: template.name,
-        template,
+        programName: assignedTemplate.name,
+        template: assignedTemplate,
         workouts: templateWorkouts
       });
 
@@ -784,12 +887,12 @@ export function createTrainerProgramTemplateHandlers({
       }
 
       const confirmed = await showAppConfirm(
-        buildProgramAssignmentConfirmText(template.name, templateWorkouts.length)
+        buildProgramAssignmentConfirmText(assignedTemplate.name, templateWorkouts.length)
       );
       if (!confirmed) return;
 
       const nextWorkoutsDraft = attachAssignedProgramToWorkouts(
-        template,
+        assignedTemplate,
         templateWorkouts,
         assignedProgramUpdatedAt,
         auth.currentUser?.uid || ""
@@ -797,7 +900,7 @@ export function createTrainerProgramTemplateHandlers({
       const assignmentResult = await appendClientAssignedWorkouts(
         clientId,
         nextWorkoutsDraft,
-        template,
+        assignedTemplate,
         assignedProgramUpdatedAt
       );
       const nextWorkouts = assignmentResult.nextWorkouts;
@@ -810,7 +913,7 @@ export function createTrainerProgramTemplateHandlers({
       setAdminSelectedClient((prev) => prev?.id === clientId ? { ...prev, ...clientPatch } : prev);
       setUsersList((prev) => prev.map((item) => item.id === clientId ? { ...item, ...clientPatch } : item));
 
-      setAdminClientStatus(buildProgramAssignmentStatus(template.name, templateWorkouts.length, assignmentResult));
+      setAdminClientStatus(buildProgramAssignmentStatus(assignedTemplate.name, templateWorkouts.length, assignmentResult));
     } catch (error) {
       console.error("Template assign failed:", error);
       setAdminClientStatus(error?.code === "workout-assignment-batch-limit"
@@ -929,13 +1032,21 @@ export function createTrainerProgramTemplateHandlers({
         return false;
       }
 
+      const assignedTemplate = {
+        ...template,
+        name: normalizeTrainerClientProgramName(
+          assignmentOptions.programName,
+          buildTrainerClientProgramName(template.name, client)
+        )
+      };
+
       const templateWorkouts = applyTrainerProgramAssignmentLoadAdjustments(
         buildClientWorkoutsFromTemplate(template),
         assignmentOptions.loadAdjustments
       );
       const programValidation = validateTrainerWorkoutsForAssignment({
-        programName: template.name,
-        template,
+        programName: assignedTemplate.name,
+        template: assignedTemplate,
         workouts: templateWorkouts
       });
 
@@ -946,12 +1057,12 @@ export function createTrainerProgramTemplateHandlers({
 
       const confirmed = assignmentOptions.skipConfirmation
         ? true
-        : await showAppConfirm(buildProgramAssignmentConfirmText(template.name, templateWorkouts.length));
+        : await showAppConfirm(buildProgramAssignmentConfirmText(assignedTemplate.name, templateWorkouts.length));
       if (!confirmed) return false;
 
       const assignedProgramUpdatedAt = new Date().toISOString();
       const nextWorkoutsDraft = attachAssignedProgramToWorkouts(
-        template,
+        assignedTemplate,
         templateWorkouts,
         assignedProgramUpdatedAt,
         auth.currentUser?.uid || ""
@@ -959,13 +1070,13 @@ export function createTrainerProgramTemplateHandlers({
       const assignmentResult = await appendClientAssignedWorkouts(
         clientId,
         nextWorkoutsDraft,
-        template,
+        assignedTemplate,
         assignedProgramUpdatedAt
       );
       const nextWorkouts = assignmentResult.nextWorkouts;
 
       const clientPatch = assignmentResult.clientPatch;
-      setAdminClientStatus(buildProgramAssignmentStatus(template.name, templateWorkouts.length, assignmentResult));
+      setAdminClientStatus(buildProgramAssignmentStatus(assignedTemplate.name, templateWorkouts.length, assignmentResult));
 
       setAdminSelectedClient((prev) => prev?.id === clientId ? { ...prev, ...clientPatch } : prev);
       setUsersList((prev) => prev.map((clientItem) => (
@@ -975,7 +1086,7 @@ export function createTrainerProgramTemplateHandlers({
       if (clientId === selectedUserId || clientId === adminSelectedClient?.id) {
         setPlan({ workouts: sortWorkoutDays(nextWorkouts) });
       }
-      await recordTrainerEvent(clientId, "program", STATUS_EVENT_PROGRAM_ASSIGNED, template.name);
+      await recordTrainerEvent(clientId, "program", STATUS_EVENT_PROGRAM_ASSIGNED, assignedTemplate.name);
       return {
         assignmentKey: `time:${assignedProgramUpdatedAt}`,
         assignedAt: assignedProgramUpdatedAt,
@@ -1026,6 +1137,7 @@ export function createTrainerProgramTemplateHandlers({
     archiveClientProgramAssignment,
     restoreClientProgramAssignment,
     deleteClientProgramAssignment,
+    renameClientProgramAssignment,
     copyCurrentProgramToClient
   };
 }

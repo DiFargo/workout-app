@@ -1535,6 +1535,149 @@
   50% { transform: scale(1.06); opacity: 0.72; }
 }
 
+.accessGate {
+  min-height: calc(100dvh - 178px);
+  display: grid;
+  align-content: center;
+  padding: 28px 0;
+}
+
+.accessCard {
+  display: grid;
+  gap: 12px;
+  padding: 24px 20px;
+  color: #28262e;
+  background: #ffffff;
+  border: 1px solid #efebf3;
+  border-radius: 24px;
+  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.08);
+}
+
+.accessIcon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  color: #806bb6;
+  background: #f0ecf8;
+  border-radius: 16px;
+}
+
+.accessIcon svg {
+  width: 23px;
+  height: 23px;
+  stroke-width: 1.9;
+}
+
+.accessCard > .eyebrow {
+  margin-top: 4px;
+}
+
+.accessCard h2 {
+  margin: 0;
+  color: #28262e;
+  font-size: 25px;
+  font-weight: 780;
+  letter-spacing: -0.6px;
+  line-height: 1.12;
+}
+
+.accessCard > p {
+  margin: -5px 0 4px;
+  color: #7b7682;
+  font-size: 15px;
+  line-height: 1.42;
+}
+
+.accessForm {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.accessField {
+  display: grid;
+  gap: 7px;
+}
+
+.accessField > span {
+  color: #5d5864;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.accessField input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  color: #28262e;
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  background: #f7f6f8;
+  border: 1px solid #dfd8ea;
+  border-radius: 16px;
+  outline: none;
+}
+
+.accessField input::placeholder {
+  color: #b8b2c0;
+  letter-spacing: 0.18em;
+}
+
+.accessField input:focus-visible {
+  border-color: #806bb6;
+  box-shadow: 0 0 0 3px rgba(128, 107, 182, 0.18);
+}
+
+.accessField input[aria-invalid="true"] {
+  border-color: #bd5b68;
+}
+
+.accessHelp,
+.accessError {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.accessHelp {
+  color: #7b7682;
+}
+
+.accessError {
+  color: #a24150;
+  font-weight: 650;
+}
+
+.accessButton {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 4px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 750;
+  background: #806bb6;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(128, 107, 182, 0.22);
+  transition: transform 140ms ease, opacity 140ms ease, box-shadow 140ms ease;
+}
+
+.accessButton:active:not(:disabled) {
+  transform: scale(0.985);
+  box-shadow: 0 4px 9px rgba(128, 107, 182, 0.2);
+}
+
+.accessButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  box-shadow: none;
+}
+
 @media (max-width: 370px) {
   .wizardCard,
   .reviewCard,

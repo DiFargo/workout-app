@@ -130,6 +130,78 @@
   flex: 0 0 auto;
 }
 
+.programEditorHeaderContent {
+  min-width: 0;
+}
+
+.programEditorTitleRow {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.programEditorTitleRow h2 {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton {
+  display: inline-flex;
+  min-height: 40px;
+  width: auto;
+  height: auto;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid #ded3ef;
+  border-radius: 11px;
+  background: #fff;
+  color: #7455a8;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton > span {
+  display: inline;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: normal;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton:hover:not(:disabled),
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton:focus-visible {
+  border-color: #bda9df;
+  background: #f7f3fd;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton:disabled { cursor: not-allowed; opacity: .55; }
+
+.programRenameHeaderForm {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #efebf3;
+}
+
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm label { display: grid; min-width: 0; gap: 5px; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm label > span { display: block; margin: 0; color: #77717d; font-size: 10px; font-weight: 800; letter-spacing: .035em; text-transform: uppercase; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid #ded3ef; border-radius: 11px; outline: 0; background: #fff; color: #252936; font: inherit; font-size: 13px; font-weight: 700; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm input:focus { border-color: #8f7ac8; box-shadow: 0 0 0 3px rgba(143, 122, 200, .12); }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm > div { display: flex; align-items: end; gap: 7px; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button { display: inline-flex; width: auto; height: auto; min-height: 42px; place-items: initial; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #ded3ef; border-radius: 11px; background: #fff; color: #7455a8; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button[type="submit"] { border-color: #806bb6; background: #806bb6; color: #fff; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button:disabled { cursor: wait; opacity: .62; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm p { grid-column: 1 / -1; margin: -2px 0 0; color: #a24f5c; font-size: 11px; }
+
 .emptyProgram {
   display: flex;
   min-height: 92px;
@@ -177,13 +249,11 @@
 }
 
 .currentInfo h3 {
-  overflow: hidden;
   margin: 0;
   color: #181b24;
   font-size: 18px;
   line-height: 1.25;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .currentInfo p {
@@ -1336,6 +1406,34 @@
   .assignButton {
     width: 100%;
     min-width: 0;
+  }
+
+  .currentProgramEditButton {
+    width: 100%;
+    min-width: 0;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .programEditorTitleRow {
+    align-items: flex-start;
+  }
+
+  .programRenameHeaderButton {
+    min-width: 44px;
+    padding: 0 10px;
+  }
+
+  .programRenameHeaderForm {
+    grid-template-columns: 1fr;
+  }
+
+  .programRenameHeaderForm > div {
+    justify-content: stretch;
+  }
+
+  .programRenameHeaderForm > div button {
+    flex: 1 1 0;
   }
 
   .assignmentRow {

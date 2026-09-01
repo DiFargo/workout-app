@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getClientAttentionItems, getClientAttentionState, pluralizeRu } from "../src/utils/trainerAttention.js";
+import {
+  getClientAttentionItems,
+  getClientAttentionState,
+  getClientCriticalAttentionItems,
+  pluralizeRu
+} from "../src/utils/trainerAttention.js";
 
 test("russian day pluralization matches trainer labels", () => {
   assert.equal(pluralizeRu(1, "день", "дня", "дней"), "день");
@@ -99,6 +104,67 @@ test("active trainer tasks are a client execution status, not trainer attention"
   assert.equal(attention, null);
 });
 
+test("overview control only shows three missed workouts, not routine client activity", () => {
+  const client = {
+    assignedProgramId: "program_1",
+    workoutCalendar: {
+      scheduledDates: ["2026-06-15", "2026-06-16", "2026-06-17"]
+    }
+  };
+  const baseSummary = {
+    assignedProgramId: "program_1",
+    workoutDateKeysCurrentWeek: [],
+    activeTrainerTasksCount: 1,
+    workoutFeedbackAttention: {
+      id: "comment",
+      reason: "Есть комментарий клиента после тренировки"
+    },
+    subscriptionStatus: { id: "active", remainingSessions: 4 }
+  };
+
+  assert.deepEqual(
+    getClientCriticalAttentionItems(client, baseSummary, new Date("2026-06-18T12:00:00")),
+    [{
+      type: "workout",
+      missedCount: 3,
+      reason: "Пропущено 3 плановые тренировки"
+    }]
+  );
+
+  assert.deepEqual(
+    getClientCriticalAttentionItems(
+      { ...client, workoutCalendar: { scheduledDates: ["2026-06-16", "2026-06-17"] } },
+      baseSummary,
+      new Date("2026-06-18T12:00:00")
+    ),
+    []
+  );
+});
+
+test("overview control shows only an urgent subscription balance", () => {
+  const client = {
+    assignedProgramId: "program_1",
+    workoutCalendar: { scheduledDates: ["2026-06-20"] }
+  };
+  const now = new Date("2026-06-18T12:00:00");
+
+  assert.deepEqual(
+    getClientCriticalAttentionItems(client, {
+      assignedProgramId: "program_1",
+      subscriptionStatus: { id: "ending", remainingSessions: 1, daysRemaining: 10 }
+    }, now),
+    [{ type: "subscription", reason: "Абонемент: осталась 1 тренировка" }]
+  );
+
+  assert.deepEqual(
+    getClientCriticalAttentionItems(client, {
+      assignedProgramId: "program_1",
+      subscriptionStatus: { id: "ending", remainingSessions: 2, daysRemaining: 10 }
+    }, now),
+    []
+  );
+});
+
 test("workout feedback attention is shown before nutrition checks", () => {
   const now = new Date("2026-06-16T12:00:00");
   const attention = getClientAttentionState(
@@ -153,6 +219,30 @@ test("client control exposes every independent issue in priority order", () => {
     { type: "measure", reason: "Не взвешивался 22 дня" },
     { type: "payment", reason: "Абонемент требует проверки" }
   ]);
+});
+
+test("active subscription suppresses a stale legacy payment control", () => {
+  const items = getClientAttentionItems(
+    {
+      assignedProgramId: "program_1",
+      workoutCalendar: { scheduledDates: ["2026-06-17"] }
+    },
+    {
+      assignedProgramId: "program_1",
+      nutritionDays7: 4,
+      lastNutritionAt: "2026-06-16",
+      subscriptionStatus: {
+        id: "active",
+        startDate: "2026-06-01",
+        endDate: "2026-06-30",
+        purchasedSessions: 8
+      },
+      paymentAttention: { id: "overdue", label: "Абонемент требует проверки" }
+    },
+    new Date("2026-06-16T12:00:00")
+  );
+
+  assert.deepEqual(items, []);
 });
 
 test("program ending attention is shown before nutrition checks", () => {

@@ -14,7 +14,7 @@ import { getBasicWorkoutLibraryExercise } from "../src/utils/basicWorkoutExercis
 import { getBasicWorkoutMannequinIllustrationSource } from "../src/utils/basicWorkoutMannequinIllustration.js";
 
 test("basic workout exercise library covers the main movement groups", () => {
-  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 96);
+  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 99);
   assert.deepEqual(
     BASIC_WORKOUT_EXERCISE_GROUPS.map((group) => group.id),
     [
@@ -31,6 +31,7 @@ test("basic workout exercise library covers the main movement groups", () => {
       "rear_delts",
       "biceps",
       "triceps",
+      "forearms",
       "core",
       "mobility",
       "cardio"

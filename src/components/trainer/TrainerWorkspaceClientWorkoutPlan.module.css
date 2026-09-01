@@ -409,14 +409,14 @@
 /* Subscription edits happen in the same calendar as the programme.  The
    soft range preserves the training statuses; the endpoints make the chosen
    period immediately visible. */
-:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner.subscriptionEditing .trainerWorkoutScheduleGrid button.subscriptionRange) {
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner .trainerWorkoutScheduleGrid button.subscriptionRange) {
   border-color: #d7c8ed;
   color: #725aa9;
   background: #f4effc;
 }
 
-:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner.subscriptionEditing .trainerWorkoutScheduleGrid button.subscriptionStart),
-:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner.subscriptionEditing .trainerWorkoutScheduleGrid button.subscriptionEnd) {
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner .trainerWorkoutScheduleGrid button.subscriptionStart),
+:global(.trainerNextRoot) :global(.trainerWorkoutSchedulePlanner .trainerWorkoutScheduleGrid button.subscriptionEnd) {
   border-color: #8f7ac8;
   color: #ffffff;
   background: #8f7ac8;
@@ -1328,10 +1328,8 @@
     min-height: 28px !important;
     justify-content: center;
     padding: 0 6px !important;
-    overflow: hidden;
     font-size: 9px !important;
     text-align: center;
-    text-overflow: ellipsis;
     white-space: nowrap !important;
   }
 

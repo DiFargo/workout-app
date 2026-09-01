@@ -36,6 +36,7 @@ const ROLE_BY_GROUP = {
   rear_delts: "shoulderAccessory",
   biceps: "biceps",
   triceps: "triceps",
+  forearms: "forearms",
   core: "core"
 };
 
@@ -57,7 +58,7 @@ function toSeconds(value = "") {
 export function buildBasicWorkoutAiCatalogue(library = BASIC_WORKOUT_EXERCISE_LIBRARY) {
   const seenIds = new Set();
   const catalogue = library
-    .filter((exercise) => !DISABLED_AI_IDS.has(exercise.id))
+    .filter((exercise) => exercise.planEligible !== false && !DISABLED_AI_IDS.has(exercise.id))
     .map((exercise) => {
       if (seenIds.has(exercise.id)) throw new Error(`Duplicate basic workout AI catalogue id: ${exercise.id}`);
       seenIds.add(exercise.id);

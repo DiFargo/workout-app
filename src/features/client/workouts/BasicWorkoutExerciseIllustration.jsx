@@ -5,7 +5,7 @@ import {
 } from "../../../utils/basicWorkoutMannequinIllustration.js";
 import styles from "./BasicWorkoutExerciseExplainer.module.css";
 
-export default function BasicWorkoutExerciseIllustration({ exercise, presentation }) {
+export default function BasicWorkoutExerciseIllustration({ exercise, presentation, className = "" }) {
   const sourceCandidates = [
     presentation?.imageUrl,
     exercise?.basicExerciseImageUrl,
@@ -26,7 +26,7 @@ export default function BasicWorkoutExerciseIllustration({ exercise, presentatio
   if (!source) {
     return (
       <div
-        className={styles.exerciseIllustrationFallback}
+        className={`${styles.exerciseIllustrationFallback}${className ? ` ${className}` : ""}`}
         role="img"
         aria-label="Схема мышц пока недоступна"
         data-testid="basic-workout-exercise-illustration-fallback"
@@ -39,7 +39,7 @@ export default function BasicWorkoutExerciseIllustration({ exercise, presentatio
 
   return (
     <img
-      className={styles.exerciseIllustration}
+      className={className || styles.exerciseIllustration}
       src={source}
       alt={`Иллюстрация упражнения: ${presentation?.title || "работающие мышцы"}`}
       data-testid="basic-workout-exercise-illustration"

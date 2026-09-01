@@ -14,7 +14,7 @@ export function normalizeNutritionFood(food) {
   return {
     id: String(foodId),
     foodId: String(foodId),
-    name: food.name || "Продукт",
+    name: food.displayName || food.name || "Продукт",
     portion: food.portion || "100 г",
     calories: parseNutritionNumber(food.calories, 0),
     protein: parseNutritionNumber(food.protein, 0),

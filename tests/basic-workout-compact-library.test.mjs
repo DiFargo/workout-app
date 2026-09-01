@@ -9,11 +9,11 @@ import {
   BASIC_WORKOUT_PLAN_LIBRARY_COUNT
 } from "../src/data/basicWorkoutExerciseLibrary.js";
 
-test("compact client exercise library contains the approved 96 exercises", () => {
-  assert.equal(BASIC_WORKOUT_PLAN_LIBRARY_COUNT, 72);
-  assert.equal(BASIC_WORKOUT_COMPACT_LIBRARY_COUNT, 96);
-  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 96);
-  assert.equal(new Set(BASIC_WORKOUT_EXERCISE_LIBRARY.map((exercise) => exercise.id)).size, 96);
+test("compact client exercise library contains the approved 99 exercises", () => {
+  assert.equal(BASIC_WORKOUT_PLAN_LIBRARY_COUNT, 75);
+  assert.equal(BASIC_WORKOUT_COMPACT_LIBRARY_COUNT, 99);
+  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 99);
+  assert.equal(new Set(BASIC_WORKOUT_EXERCISE_LIBRARY.map((exercise) => exercise.id)).size, 99);
 
   const sectionCounts = Object.fromEntries(
     BASIC_WORKOUT_LIBRARY_SECTIONS.map((section) => [section.id, 0])
@@ -26,14 +26,14 @@ test("compact client exercise library contains the approved 96 exercises", () =>
     sectionCounts[exercise.sectionId] += 1;
   });
 
-  assert.deepEqual(sectionCounts, { strength: 72, mobility: 16, cardio: 8 });
+  assert.deepEqual(sectionCounts, { strength: 75, mobility: 16, cardio: 8 });
 });
 
 test("only the compact strength core stays tagged for basic-plan use", () => {
   const automaticPlanExercises = BASIC_WORKOUT_EXERCISE_LIBRARY.filter((exercise) => exercise.planEligible);
   const manualOnlyExercises = BASIC_WORKOUT_EXERCISE_LIBRARY.filter((exercise) => !exercise.planEligible);
 
-  assert.equal(automaticPlanExercises.length, 72);
+  assert.equal(automaticPlanExercises.length, 75);
   assert.ok(automaticPlanExercises.every((exercise) => exercise.sectionId === "strength"));
   assert.equal(manualOnlyExercises.length, 24);
   assert.ok(manualOnlyExercises.every((exercise) => (

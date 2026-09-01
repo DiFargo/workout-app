@@ -25,6 +25,7 @@ import {
   getTrainerWorkoutActivitySummary
 } from "../../utils/trainerClientSummary";
 import { getClientEffectiveNutritionGoals } from "../../utils/clientNutritionPlan";
+import { getSubscriptionAttentionLabel, getSubscriptionStatus } from "../../utils/clientSubscription";
 import { buildProgressInsight } from "../../utils/progressInsight";
 import { getTrainerSummaryPeriodBounds } from "../../utils/trainerSummaryDates";
 import { MAX_TRAINER_SUMMARY_CONCURRENCY } from "../../utils/trainerDataReadLimits.js";
@@ -158,6 +159,13 @@ export function createTrainerClientSummaryLoader({
         plateau: getClientPlateauInfo(clientMeasurements),
         payment,
         paymentAttention: getClientPaymentAttention(payment),
+        // Keep the persisted subscription alongside the deep summary. Without
+        // it the overview only sees the legacy payment document and can show
+        // a false "check subscription" notice for an active period.
+        subscriptionStatus: getSubscriptionStatus(client.subscription || {}),
+        subscriptionAttentionLabel: client.subscription
+          ? getSubscriptionAttentionLabel(client.subscription)
+          : "",
         activeTrainerTasksCount: getActiveTrainerTasksCount(clientTasks),
         workoutFeedbackAttention: getTrainerWorkoutFeedbackAttention(clientHistory),
         programEndingAttention: getTrainerProgramEndingAttention(assignedWorkoutCount, completedWorkoutCount),

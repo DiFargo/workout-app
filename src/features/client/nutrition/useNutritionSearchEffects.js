@@ -7,6 +7,10 @@ import {
   searchLocalNutritionFoods
 } from "../../../utils/localNutritionCatalog";
 import { normalizeNutritionFood } from "../../../utils/nutritionFoodModel";
+import { awaitNutritionSearchResult } from "../../../utils/nutritionSearchDeadline.js";
+
+const LOCAL_CATALOG_DEADLINE_MS = 1400;
+const REMOTE_SEARCH_DEADLINE_MS = 4500;
 
 export function useNutritionSearchEffects({
   dishIngredientPickerOpen,
@@ -42,12 +46,26 @@ export function useNutritionSearchEffects({
     let cancelled = false;
     const bundledFallbackFoods = searchBundledNutritionFallbackFoods(query);
     setFatSecretFoods(bundledFallbackFoods);
-    setFatSecretLoading(true);
+    // A packaged result is immediately actionable offline. Keep the network
+    // lookup in the background instead of showing a spinner that can appear
+    // frozen while the phone is moving between mobile networks.
+    setFatSecretLoading(bundledFallbackFoods.length === 0);
 
     const runSearch = async () => {
       try {
         startPerformanceCheck("Local catalog search", { query });
-        const localResults = await searchLocalNutritionFoods(query);
+        let localResults = [];
+        try {
+          localResults = await awaitNutritionSearchResult(
+            searchLocalNutritionFoods(query),
+            LOCAL_CATALOG_DEADLINE_MS,
+            "Local nutrition catalog timed out"
+          );
+        } catch (error) {
+          if (!controller.signal.aborted) {
+            console.warn("Local nutrition catalog search timed out:", error);
+          }
+        }
         if (cancelled) return;
 
         const combinedLocalResults = mergeNutritionFoodResults(bundledFallbackFoods, localResults);
@@ -63,13 +81,15 @@ export function useNutritionSearchEffects({
 
         setFatSecretLoading(false);
         timer = window.setTimeout(async () => {
+          let shouldShowRemoteLoading = false;
           try {
-            setFatSecretLoading(true);
+            shouldShowRemoteLoading = combinedLocalResults.length === 0;
+            if (shouldShowRemoteLoading) setFatSecretLoading(true);
             startPerformanceCheck("Food search · nutrition API", { query, localResults: combinedLocalResults.length });
 
             const response = await fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
               signal: controller.signal
-            }, 12000);
+            }, REMOTE_SEARCH_DEADLINE_MS);
 
             if (!response.ok) {
               throw new Error(`Nutrition search API error: ${response.status}`);
@@ -99,7 +119,7 @@ export function useNutritionSearchEffects({
             }
           } finally {
             if (!controller.signal.aborted) {
-              setFatSecretLoading(false);
+              if (shouldShowRemoteLoading) setFatSecretLoading(false);
             }
           }
         }, localResults.length ? 900 : 250);

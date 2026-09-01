@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Workout App — iOS Liquid Glass redesign</title>
+    <style>
+      :root {
+        --canvas: #efecf4;
+        --app-bg: #f7f6f8;
+        --surface: #ffffff;
+        --surface-soft: #f5f2f7;
+        --glass: rgba(255, 255, 255, 0.68);
+        --glass-strong: rgba(255, 255, 255, 0.84);
+        --glass-border: rgba(255, 255, 255, 0.82);
+        --border: #efebf3;
+        --text: #28262e;
+        --text-secondary: #706b78;
+        --text-tertiary: #918b98;
+        --accent: #8f7ac8;
+        --accent-active: #806bb6;
+        --accent-soft: #eee9f8;
+        --green: #2f8c68;
+        --green-soft: #e7f5ef;
+        --orange: #ad6d28;
+        --orange-soft: #fff1df;
+        --red: #bd4f62;
+        --shadow-card: 0 12px 32px rgba(72, 58, 91, 0.08);
+        --shadow-glass: 0 14px 36px rgba(68, 53, 87, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        --radius-card: 22px;
+        --radius-control: 16px;
+        --blur: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--canvas); }
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 8% 8%, rgba(189, 174, 225, 0.55), transparent 30rem),
+          radial-gradient(circle at 92% 18%, rgba(221, 207, 239, 0.66), transparent 34rem),
+          linear-gradient(180deg, #f8f6fb 0%, var(--canvas) 100%);
+      }
+
+      button { font: inherit; }
+      button, a { -webkit-tap-highlight-color: transparent; }
+      button:focus-visible, a:focus-visible { outline: 3px solid rgba(128, 107, 182, 0.48); outline-offset: 3px; }
+      svg { display: block; }
+      .icon { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+      .icon.small { width: 16px; height: 16px; }
+
+      .page { max-width: 1900px; margin: 0 auto; padding: 52px 28px 72px; }
+      .intro { max-width: 930px; margin: 0 auto 36px; text-align: center; }
+      .kicker { color: var(--accent-active); font-size: 12px; font-weight: 780; letter-spacing: 0.12em; text-transform: uppercase; }
+      h1 { margin: 10px 0 14px; font-size: clamp(36px, 5vw, 62px); line-height: 1.02; letter-spacing: -0.058em; }
+      .intro > p { max-width: 720px; margin: 0 auto; color: var(--text-secondary); font-size: 17px; line-height: 1.55; }
+      .principles { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+      .principles span { padding: 8px 11px; border: 1px solid rgba(255,255,255,.8); border-radius: 999px; color: #514a5c; background: rgba(255,255,255,.56); backdrop-filter: blur(14px); font-size: 12px; font-weight: 680; }
+
+      .gallery { display: grid; grid-template-columns: repeat(5, minmax(302px, 354px)); justify-content: center; gap: 24px; align-items: start; }
+      .concept-title { margin: 0 0 10px; color: #5d5765; font-size: 13px; font-weight: 720; text-align: center; }
+      .phone { position: relative; min-height: 852px; overflow: hidden; border: 8px solid #26242a; border-radius: 48px; background: #26242a; box-shadow: 0 30px 70px rgba(52, 42, 63, 0.2), 0 8px 20px rgba(52, 42, 63, 0.1); }
+      .screen { position: relative; min-height: 836px; overflow: hidden; padding: 0 15px 110px; border-radius: 39px; background: var(--app-bg); }
+      .screen::before { content: ""; position: absolute; top: -86px; right: -74px; width: 250px; height: 250px; border-radius: 50%; background: radial-gradient(circle, rgba(175, 153, 219, .42), rgba(210, 197, 233, .12) 58%, transparent 70%); pointer-events: none; }
+      .screen::after { content: ""; position: absolute; left: -80px; bottom: 78px; width: 230px; height: 230px; border-radius: 50%; background: radial-gradient(circle, rgba(236, 219, 239, .72), transparent 68%); pointer-events: none; }
+      .content { position: relative; z-index: 1; }
+
+      .status { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 42px; padding: 10px 8px 0; font-size: 12px; font-weight: 730; }
+      .island { width: 86px; height: 25px; border-radius: 999px; background: #1d1c20; }
+      .status-icons { display: flex; justify-content: flex-end; align-items: center; gap: 5px; font-size: 10px; letter-spacing: .03em; }
+      .header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 72px; padding: 10px 2px 12px; }
+      .overline { color: var(--text-secondary); font-size: 11px; font-weight: 700; letter-spacing: .02em; }
+      .title { margin: 4px 0 0; font-size: 28px; line-height: 1; letter-spacing: -.045em; }
+      .header-actions { display: flex; gap: 8px; }
+
+      .glass-button { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid var(--glass-border); border-radius: 50%; color: var(--text); background: var(--glass); box-shadow: var(--shadow-glass); backdrop-filter: blur(var(--blur)) saturate(135%); -webkit-backdrop-filter: blur(var(--blur)) saturate(135%); cursor: pointer; transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease; }
+      .glass-button:active, .glass-pill:active, .tab:active, .row-button:active { transform: scale(.96); background: rgba(255,255,255,.9); }
+      .glass-button.accent { color: #fff; border-color: rgba(255,255,255,.42); background: rgba(128,107,182,.88); }
+      .glass-pill { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 0 16px; border: 1px solid var(--glass-border); border-radius: 999px; color: var(--text); background: var(--glass-strong); box-shadow: var(--shadow-glass); backdrop-filter: blur(var(--blur)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur)) saturate(140%); font-size: 13px; font-weight: 740; cursor: pointer; transition: transform 160ms ease, background 160ms ease; }
+      .glass-pill.primary { color: #fff; border-color: rgba(255,255,255,.42); background: linear-gradient(135deg, rgba(149,126,205,.94), rgba(118,94,177,.96)); }
+
+      .card { position: relative; overflow: hidden; border: 1px solid rgba(239,235,243,.92); border-radius: var(--radius-card); background: rgba(255,255,255,.92); box-shadow: var(--shadow-card); }
+      .glass-card { border: 1px solid var(--glass-border); background: rgba(255,255,255,.62); box-shadow: var(--shadow-glass); backdrop-filter: blur(var(--blur)) saturate(135%); -webkit-backdrop-filter: blur(var(--blur)) saturate(135%); }
+      .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 24px 4px 10px; }
+      .section-head h3 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -.025em; }
+      .text-button { min-width: 44px; min-height: 44px; margin: -12px -8px -12px 0; padding: 0 8px; border: 0; color: var(--accent-active); background: none; font-size: 12px; font-weight: 730; cursor: pointer; }
+      .muted { color: var(--text-secondary); }
+
+      .hero { min-height: 210px; padding: 18px; color: #fff; background: linear-gradient(142deg, #9c8bd1 0%, #806bb6 58%, #6f5aa4 100%); box-shadow: 0 18px 35px rgba(91, 70, 140, .26); }
+      .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 82% 18%, rgba(255,255,255,.3), transparent 26%), radial-gradient(circle at 94% 90%, rgba(255,255,255,.18), transparent 32%); }
+      .hero > * { position: relative; z-index: 1; }
+      .hero-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .hero-badge { display: inline-flex; align-items: center; min-height: 28px; padding: 0 10px; border: 1px solid rgba(255,255,255,.34); border-radius: 999px; background: rgba(255,255,255,.15); backdrop-filter: blur(12px); font-size: 11px; font-weight: 720; }
+      .hero-time { color: rgba(255,255,255,.8); font-size: 11px; font-weight: 680; }
+      .hero h2 { max-width: 235px; margin: 28px 0 7px; font-size: 29px; line-height: 1.02; letter-spacing: -.045em; }
+      .hero p { margin: 0; color: rgba(255,255,255,.78); font-size: 12px; line-height: 1.4; }
+      .hero-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 20px; }
+      .hero-actions .glass-pill { min-width: 126px; color: #55427d; background: rgba(255,255,255,.88); }
+      .readiness { font-size: 11px; color: rgba(255,255,255,.82); }
+      .readiness strong { display: block; margin-top: 2px; color: #fff; font-size: 13px; }
+
+      .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .metric { min-height: 94px; padding: 13px 11px; }
+      .metric span { color: var(--text-secondary); font-size: 10px; font-weight: 680; }
+      .metric strong { display: block; margin-top: 10px; font-size: 19px; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+      .metric small { display: block; margin-top: 3px; color: var(--green); font-size: 10px; font-weight: 700; }
+      .coach { display: flex; align-items: center; gap: 12px; padding: 14px; }
+      .avatar { display: grid; place-items: center; width: 46px; height: 46px; flex: 0 0 auto; border: 2px solid rgba(255,255,255,.86); border-radius: 50%; color: #fff; background: linear-gradient(145deg, #d0c2ed, #7d69ae); font-size: 13px; font-weight: 760; box-shadow: 0 5px 12px rgba(80,62,112,.16); }
+      .coach h4 { margin: 0; font-size: 14px; }
+      .coach p { margin: 4px 0 0; color: var(--text-secondary); font-size: 11px; line-height: 1.35; }
+      .coach .glass-button { flex: 0 0 44px; margin-left: auto; width: 44px; height: 44px; box-shadow: none; color: var(--accent-active); background: var(--accent-soft); }
+
+      .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 10px; }
+      .day { display: grid; place-items: center; min-height: 55px; border-radius: 15px; color: var(--text-secondary); font-size: 10px; font-weight: 680; }
+      .day b { display: block; color: var(--text); font-size: 12px; }
+      .day.done { color: var(--green); background: var(--green-soft); }
+      .day.active { color: #fff; background: linear-gradient(145deg, #9a84ce, #806bb6); box-shadow: 0 8px 15px rgba(113,89,168,.24); }
+      .day.active b { color: #fff; }
+      .workout-card { padding: 14px; }
+      .workout-head { display: flex; align-items: flex-start; gap: 11px; }
+      .workout-index { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 auto; border-radius: 14px; color: var(--accent-active); background: var(--accent-soft); font-size: 12px; font-weight: 780; }
+      .workout-card h4 { margin: 2px 0 4px; font-size: 15px; }
+      .workout-card p { margin: 0; color: var(--text-secondary); font-size: 11px; }
+      .status-pill { margin-left: auto; padding: 6px 8px; border-radius: 999px; color: var(--green); background: var(--green-soft); font-size: 9px; font-weight: 760; white-space: nowrap; }
+      .progress { display: flex; gap: 4px; margin: 14px 0; }
+      .progress span { height: 5px; flex: 1; border-radius: 99px; background: #e9e4ed; }
+      .progress span.on { background: var(--accent); }
+      .workout-card .glass-pill { width: 100%; color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-active)); box-shadow: 0 8px 18px rgba(111,87,166,.22); }
+      .mini-row { display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 10px 12px; }
+      .mini-row + .mini-row { border-top: 1px solid var(--border); }
+      .mini-icon { display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 auto; border-radius: 13px; color: var(--accent-active); background: var(--accent-soft); }
+      .mini-copy { min-width: 0; flex: 1; }
+      .mini-copy b { display: block; font-size: 13px; }
+      .mini-copy span { display: block; margin-top: 3px; color: var(--text-secondary); font-size: 10px; }
+      .chevron { color: var(--text-tertiary); }
+
+      .date-control { display: flex; align-items: center; justify-content: center; margin: 2px 0 14px; }
+      .date-control .glass-pill { min-width: 164px; box-shadow: 0 9px 22px rgba(69,54,86,.1); }
+      .energy { display: flex; align-items: center; gap: 16px; padding: 16px; }
+      .ring { position: relative; display: grid; place-items: center; width: 104px; height: 104px; flex: 0 0 auto; border-radius: 50%; background: conic-gradient(var(--accent-active) 0 72%, #e9e4ed 72% 100%); }
+      .ring::before { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: rgba(255,255,255,.96); }
+      .ring-content { position: relative; z-index: 1; text-align: center; }
+      .ring strong { display: block; font-size: 18px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+      .ring small { color: var(--text-secondary); font-size: 9px; }
+      .energy h3 { margin: 0; font-size: 16px; }
+      .energy p { margin: 4px 0 10px; color: var(--text-secondary); font-size: 11px; }
+      .macros { display: flex; gap: 11px; }
+      .macros span { color: var(--text-secondary); font-size: 10px; }
+      .macros b { display: block; margin-top: 2px; color: var(--text); font-size: 12px; }
+      .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+      .quick { display: grid; place-items: center; gap: 5px; min-height: 76px; padding: 8px 3px; border: 1px solid var(--glass-border); border-radius: 18px; color: var(--accent-active); background: var(--glass); box-shadow: 0 9px 22px rgba(67,53,84,.08); backdrop-filter: blur(16px); font-size: 9px; font-weight: 700; cursor: pointer; }
+      .quick .mini-icon { width: 34px; height: 34px; background: rgba(238,233,248,.86); }
+      .meal-row { display: flex; align-items: center; gap: 10px; min-height: 66px; padding: 10px 12px; }
+      .meal-row + .meal-row { border-top: 1px solid var(--border); }
+      .meal-row .mini-icon { color: var(--orange); background: var(--orange-soft); }
+      .meal-row .meal-value { margin-left: auto; text-align: right; font-variant-numeric: tabular-nums; }
+      .meal-value b { display: block; font-size: 12px; }
+      .meal-value span { color: var(--text-secondary); font-size: 9px; }
+
+      .chart-card { padding: 15px 14px 10px; }
+      .chart-top { display: flex; justify-content: space-between; gap: 10px; }
+      .chart-label { color: var(--text-secondary); font-size: 10px; font-weight: 680; }
+      .chart-value { margin-top: 3px; font-size: 25px; font-weight: 760; letter-spacing: -.045em; }
+      .delta { align-self: flex-start; padding: 6px 8px; border-radius: 999px; color: var(--green); background: var(--green-soft); font-size: 10px; font-weight: 740; }
+      .chart { width: 100%; height: 125px; margin-top: 4px; overflow: visible; }
+      .grid-line { stroke: #eeeaf1; stroke-width: 1; }
+      .area { fill: url(#chartArea); }
+      .line { fill: none; stroke: var(--accent-active); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .point { fill: #fff; stroke: var(--accent-active); stroke-width: 3; }
+      .measure-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .measure { padding: 13px; }
+      .measure span { color: var(--text-secondary); font-size: 10px; }
+      .measure b { display: block; margin-top: 5px; font-size: 17px; }
+      .measure small { display: block; margin-top: 3px; color: var(--green); font-size: 10px; font-weight: 700; }
+      .measure-cta { display: flex; align-items: center; gap: 11px; padding: 13px; }
+      .measure-cta .mini-icon { width: 44px; height: 44px; border-radius: 15px; }
+      .measure-cta .glass-pill { margin-left: auto; color: #fff; background: var(--accent-active); box-shadow: none; }
+
+      .profile-card { display: flex; align-items: center; gap: 13px; min-height: 94px; padding: 14px; }
+      .profile-avatar { display: grid; place-items: center; width: 58px; height: 58px; flex: 0 0 auto; border: 2px solid rgba(255,255,255,.9); border-radius: 50%; color: #fff; background: linear-gradient(145deg, #c8b9e6, #806bb6); box-shadow: 0 8px 18px rgba(85,65,126,.2); font-size: 17px; font-weight: 770; }
+      .profile-copy { min-width: 0; flex: 1; }
+      .profile-copy h3 { margin: 0; font-size: 17px; letter-spacing: -.025em; }
+      .profile-copy p { margin: 4px 0 0; color: var(--text-secondary); font-size: 10px; }
+      .profile-role { display: inline-flex; align-items: center; min-height: 24px; margin-top: 7px; padding: 0 8px; border-radius: 999px; color: var(--accent-active); background: var(--accent-soft); font-size: 9px; font-weight: 750; }
+      .profile-card .glass-button { flex: 0 0 44px; box-shadow: none; color: var(--accent-active); background: rgba(238,233,248,.9); }
+      .settings-head { margin-top: 17px; margin-bottom: 7px; }
+      .settings-head h3 { color: var(--text-secondary); font-size: 10px; font-weight: 770; letter-spacing: .08em; text-transform: uppercase; }
+      .settings-list { overflow: hidden; border-radius: 19px; }
+      .setting-row { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 53px; padding: 8px 11px; border: 0; color: inherit; background: transparent; text-align: left; cursor: pointer; transition: background 150ms ease, transform 150ms ease; }
+      .setting-row + .setting-row { border-top: 1px solid var(--border); }
+      .setting-row:active { transform: scale(.99); background: var(--surface-soft); }
+      .setting-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto; border-radius: 11px; color: var(--accent-active); background: var(--accent-soft); }
+      .setting-icon.green { color: var(--green); background: var(--green-soft); }
+      .setting-icon.orange { color: var(--orange); background: var(--orange-soft); }
+      .setting-copy { min-width: 0; flex: 1; }
+      .setting-copy b { display: block; font-size: 12px; font-weight: 700; }
+      .setting-copy span { display: block; margin-top: 2px; overflow: hidden; color: var(--text-secondary); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+      .setting-status { color: var(--green); font-size: 9px; font-weight: 730; white-space: nowrap; }
+      .logout-row { min-height: 44px; margin-top: 10px; color: var(--red); background: rgba(255,255,255,.54); }
+      .logout-row .setting-icon { color: var(--red); background: rgba(189,79,98,.1); }
+
+      .tab-bar { position: absolute; z-index: 4; right: 12px; bottom: 12px; left: 12px; display: grid; grid-template-columns: repeat(5, 1fr); min-height: 78px; padding: 7px; border: 1px solid var(--glass-border); border-radius: 27px; background: rgba(255,255,255,.66); box-shadow: var(--shadow-glass); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); }
+      .tab { display: grid; place-items: center; align-content: center; gap: 4px; min-width: 0; min-height: 60px; border: 0; border-radius: 20px; color: var(--text-secondary); background: transparent; font-size: 9px; font-weight: 680; cursor: pointer; transition: transform 150ms ease, background 150ms ease, color 150ms ease; }
+      .tab .icon { width: 20px; height: 20px; }
+      .tab.active { color: var(--accent-active); background: rgba(238,233,248,.9); box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
+
+      .footer-note { max-width: 980px; margin: 38px auto 0; padding: 18px 20px; border: 1px solid rgba(255,255,255,.82); border-radius: 22px; color: #5d5765; background: rgba(255,255,255,.56); box-shadow: 0 12px 30px rgba(67,53,84,.07); backdrop-filter: blur(18px); font-size: 13px; line-height: 1.55; text-align: center; }
+
+      @media (max-width: 1700px) { .gallery { grid-template-columns: repeat(3, minmax(302px, 382px)); } }
+      @media (max-width: 1200px) { .gallery { grid-template-columns: repeat(2, minmax(302px, 382px)); } }
+      @media (max-width: 760px) { .page { padding: 32px 14px 48px; } .intro { margin-bottom: 28px; } .intro > p { font-size: 15px; } .gallery { grid-template-columns: minmax(300px, 390px); gap: 30px; } }
+      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="intro">
+        <div class="kicker">Workout App · iOS Liquid Glass concept</div>
+        <h1>Лёгкое стекло.<br />Сильный фокус.</h1>
+        <p>Макет пяти главных клиентских экранов: знакомая светло-лавандовая система стала глубже, а действия — ближе к нативной iOS-логике.</p>
+        <div class="principles" aria-label="Принципы редизайна">
+          <span>Стекло только для управления</span><span>Контент на спокойных карточках</span><span>Зоны касания 44 px</span><span>Safe area учтена</span>
+        </div>
+      </header>
+
+      <section class="gallery" aria-label="Макеты экранов Workout App">
+        <article aria-label="Экран Сводка">
+          <p class="concept-title">01 · Сводка</p>
+          <div class="phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island" aria-hidden="true"></span><span class="status-icons">●●● 5G ▰</span></div>
+            <header class="header"><div><div class="overline">Понедельник, 1 сентября</div><h2 class="title">Привет, Илья</h2></div><div class="header-actions"><button class="glass-button" aria-label="Уведомления"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button></div></header>
+            <section class="card hero"><div class="hero-top"><span class="hero-badge">Сегодня</span><span class="hero-time">18:30</span></div><h2>Спина + бицепс</h2><p>6 упражнений · около 45 минут</p><div class="hero-actions"><div class="readiness">Готовность<strong>Высокая</strong></div><button class="glass-pill">Начать <svg class="icon small" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></div></section>
+            <div class="section-head"><h3>Сегодня</h3><button class="text-button">Подробнее</button></div>
+            <div class="metrics"><section class="card metric"><span>Активность</span><strong>74%</strong><small>в норме</small></section><section class="card metric"><span>Питание</span><strong>1 840</strong><small>ккал</small></section><section class="card metric"><span>Вес</span><strong>92,5</strong><small>−0,4 кг</small></section></div>
+            <div class="section-head"><h3>Тренер рядом</h3></div>
+            <section class="card glass-card coach"><div class="avatar">АК</div><div><h4>Анна Коваль</h4><p>Добавила комментарий к технике тяги</p></div><button class="glass-button" aria-label="Открыть сообщение тренера"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></button></section>
+          </div><nav class="tab-bar" aria-label="Главная навигация"><button class="tab active" aria-current="page"><svg class="icon" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-6h6v6"/></svg>Сводка</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M6 7h3v10H6zM15 7h3v10h-3zM3 10h3v4H3zM18 10h3v4h-3zM9 11h6v2H9z"/></svg>Тренировки</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg>Питание</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Прогресс</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Кабинет</button></nav></div></div>
+        </article>
+
+        <article aria-label="Экран Тренировки">
+          <p class="concept-title">02 · Тренировки</p>
+          <div class="phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island" aria-hidden="true"></span><span class="status-icons">●●● 5G ▰</span></div>
+            <header class="header"><div><div class="overline">Неделя 3 из 8</div><h2 class="title">Тренировки</h2></div><button class="glass-button" aria-label="История тренировок"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 7v5l3 2"/></svg></button></header>
+            <section class="card glass-card week" aria-label="Календарь тренировок"><div class="day done"><span>Пн</span><b>1</b></div><div class="day"><span>Вт</span><b>2</b></div><div class="day active"><span>Ср</span><b>3</b></div><div class="day"><span>Чт</span><b>4</b></div><div class="day"><span>Пт</span><b>5</b></div><div class="day"><span>Сб</span><b>6</b></div><div class="day"><span>Вс</span><b>7</b></div></section>
+            <div class="section-head"><h3>Следующая тренировка</h3><button class="text-button">План</button></div>
+            <section class="card workout-card"><div class="workout-head"><div class="workout-index">01</div><div><h4>Спина + бицепс</h4><p>6 упражнений · 22 подхода</p></div><span class="status-pill">Сегодня</span></div><div class="progress" aria-label="0 из 6 упражнений"><span></span><span></span><span></span><span></span><span></span><span></span></div><button class="glass-pill primary">Начать тренировку</button></section>
+            <div class="section-head"><h3>Программа</h3><button class="text-button">Все</button></div>
+            <section class="card"><div class="mini-row"><div class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M6 7h3v10H6zM15 7h3v10h-3zM3 10h3v4H3zM18 10h3v4h-3zM9 11h6v2H9z"/></svg></div><div class="mini-copy"><b>Сила и рельеф</b><span>Осталось 9 тренировок</span></div><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div><div class="mini-row"><div class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg></div><div class="mini-copy"><b>История и рекорды</b><span>Последняя: 29 августа</span></div><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></div></section>
+          </div><nav class="tab-bar" aria-label="Главная навигация"><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-6h6v6"/></svg>Сводка</button><button class="tab active" aria-current="page"><svg class="icon" viewBox="0 0 24 24"><path d="M6 7h3v10H6zM15 7h3v10h-3zM3 10h3v4H3zM18 10h3v4h-3zM9 11h6v2H9z"/></svg>Тренировки</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg>Питание</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Прогресс</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Кабинет</button></nav></div></div>
+        </article>
+
+        <article aria-label="Экран Питание">
+          <p class="concept-title">03 · Питание</p>
+          <div class="phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island" aria-hidden="true"></span><span class="status-icons">●●● 5G ▰</span></div>
+            <header class="header"><div><div class="overline">Понедельник</div><h2 class="title">Питание</h2></div><button class="glass-button" aria-label="Открыть календарь"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button></header>
+            <div class="date-control"><button class="glass-pill"><svg class="icon small" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Сегодня <svg class="icon small" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></div>
+            <section class="card glass-card energy"><div class="ring"><div class="ring-content"><strong>1 840</strong><small>из 2 500 ккал</small></div></div><div><h3>Хороший темп</h3><p>Осталось 660 ккал</p><div class="macros"><span>Белки<b>118 г</b></span><span>Жиры<b>61 г</b></span><span>Углеводы<b>193 г</b></span></div></div></section>
+            <div class="section-head"><h3>Быстро добавить</h3></div>
+            <div class="quick-actions"><button class="quick"><span class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span>Поиск</button><button class="quick"><span class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16v12H4zM8 7l1-3h6l1 3"/><circle cx="12" cy="13" r="3"/></svg></span>Фото AI</button><button class="quick"><span class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 18v3M8 21h8M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/></svg></span>Голос</button><button class="quick"><span class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg></span>Моя база</button></div>
+            <div class="section-head"><h3>Приёмы пищи</h3><button class="text-button">Все</button></div>
+            <section class="card"><div class="meal-row"><div class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg></div><div class="mini-copy"><b>Завтрак</b><span>Омлет · овсянка · ягоды</span></div><div class="meal-value"><b>482</b><span>ккал</span></div></div><div class="meal-row"><div class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg></div><div class="mini-copy"><b>Обед</b><span>Курица · рис · овощи</span></div><div class="meal-value"><b>713</b><span>ккал</span></div></div></section>
+          </div><nav class="tab-bar" aria-label="Главная навигация"><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-6h6v6"/></svg>Сводка</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M6 7h3v10H6zM15 7h3v10h-3zM3 10h3v4H3zM18 10h3v4h-3zM9 11h6v2H9z"/></svg>Тренировки</button><button class="tab active" aria-current="page"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg>Питание</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Прогресс</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Кабинет</button></nav></div></div>
+        </article>
+
+        <article aria-label="Экран Прогресс">
+          <p class="concept-title">04 · Прогресс и замеры</p>
+          <div class="phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island" aria-hidden="true"></span><span class="status-icons">●●● 5G ▰</span></div>
+            <header class="header"><div><div class="overline">Последние 30 дней</div><h2 class="title">Прогресс</h2></div><button class="glass-button" aria-label="Настроить период"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button></header>
+            <section class="card chart-card"><div class="chart-top"><div><div class="chart-label">Вес</div><div class="chart-value">92,5 кг</div></div><span class="delta">↓ 0,4 кг</span></div><svg class="chart" viewBox="0 0 320 125" role="img" aria-label="Вес плавно снизился за последние 30 дней"><defs><linearGradient id="chartArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8cdef" stop-opacity=".74"/><stop offset="1" stop-color="#f7f6f8" stop-opacity=".08"/></linearGradient></defs><path class="grid-line" d="M0 25h320M0 62h320M0 99h320"/><path class="area" d="M5 31 C42 33 55 45 86 43 S125 39 151 55 S194 65 220 69 S268 93 315 88 L315 125 L5 125Z"/><path class="line" d="M5 31 C42 33 55 45 86 43 S125 39 151 55 S194 65 220 69 S268 93 315 88"/><circle class="point" cx="315" cy="88" r="5"/></svg></section>
+            <div class="section-head"><h3>Изменения</h3><button class="text-button">12 замеров</button></div>
+            <div class="measure-grid"><section class="card measure"><span>Талия</span><b>91,0 см</b><small>−2,5 см</small></section><section class="card measure"><span>Грудь</span><b>108,0 см</b><small>+1,0 см</small></section><section class="card measure"><span>Бицепс</span><b>39,2 см</b><small>+0,4 см</small></section><section class="card measure"><span>Бедро</span><b>61,5 см</b><small>−0,8 см</small></section></div>
+            <div class="section-head"><h3>Новый замер</h3></div>
+            <section class="card glass-card measure-cta"><div class="mini-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16v10H4zM7 7v4M11 7v3M15 7v4"/></svg></div><div class="mini-copy"><b>Обновить показатели</b><span>Последний замер 7 дней назад</span></div><button class="glass-pill">Начать</button></section>
+          </div><nav class="tab-bar" aria-label="Главная навигация"><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-6h6v6"/></svg>Сводка</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M6 7h3v10H6zM15 7h3v10h-3zM3 10h3v4H3zM18 10h3v4h-3zM9 11h6v2H9z"/></svg>Тренировки</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg>Питание</button><button class="tab active" aria-current="page"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Прогресс</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Кабинет</button></nav></div></div>
+        </article>
+
+        <article aria-label="Экран Кабинет">
+          <p class="concept-title">05 · Кабинет</p>
+          <div class="phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island" aria-hidden="true"></span><span class="status-icons">●●● 5G ▰</span></div>
+            <header class="header"><div><div class="overline">Профиль клиента</div><h2 class="title">Кабинет</h2></div><button class="glass-button" aria-label="Справка"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.3 2.3 0 1 1 3.8 1.8c-.9.7-1.6 1.1-1.6 2.2M12 17h.01"/></svg></button></header>
+            <section class="card glass-card profile-card"><div class="profile-avatar">ИИ</div><div class="profile-copy"><h3>Илья Иванов</h3><p>@ilya · ilya@example.com</p><span class="profile-role">Клиент</span></div><button class="glass-button" aria-label="Открыть профиль и настройки"><svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/></svg></button></section>
+
+            <div class="section-head settings-head"><h3>Здоровье и план</h3></div>
+            <section class="card settings-list">
+              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg></span><span class="setting-copy"><b>Параметры тела</b><span>Вес, цель, рост и активность</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16v10H4zM7 7v4M11 7v3M15 7v4"/></svg></span><span class="setting-copy"><b>Замеры тела и фото</b><span>12 показателей · обновлено 7 дней назад</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon orange"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg></span><span class="setting-copy"><b>Цели питания</b><span>Калории и макронутриенты</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span><span class="setting-copy"><b>Тренировки</b><span>Расписание, история и режим</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+            </section>
+
+            <div class="section-head settings-head"><h3>Приложение</h3></div>
+            <section class="card settings-list">
+              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></span><span class="setting-copy"><b>Почта и Telegram</b><span>Оба аккаунта подключены</span></span><span class="setting-status">Подключено</span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span><span class="setting-copy"><b>Уведомления</b><span>Тренировки и напоминания</span></span><span class="setting-status">Включены</span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon orange"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></span><span class="setting-copy"><b>Ошибка или идея</b><span>Отзыв и предложение</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+            </section>
+            <button class="setting-row glass-card logout-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M14 3h7v18h-7"/></svg></span><span class="setting-copy"><b>Выйти из аккаунта</b></span></button>
+          </div><nav class="tab-bar" aria-label="Главная навигация"><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-6h6v6"/></svg>Сводка</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M6 7h3v10H6zM15 7h3v10h-3zM3 10h3v4H3zM18 10h3v4h-3zM9 11h6v2H9z"/></svg>Тренировки</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg>Питание</button><button class="tab"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Прогресс</button><button class="tab active" aria-current="page"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Кабинет</button></nav></div></div>
+        </article>
+      </section>
+
+      <p class="footer-note">Стеклянные слои используются там, где они помогают ориентации: фиксированная навигация, круглые системные действия, быстрые команды и контекстные CTA. Основные данные остаются на почти непрозрачных карточках — так интерфейс сохраняет контраст и не превращается в визуальный шум.</p>
+    </main>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 import { Info, Maximize2 } from "lucide-react";
+import BasicWorkoutExerciseIllustration from "./BasicWorkoutExerciseIllustration";
 import styles from "./WorkoutExerciseVideoFrame.module.css";
 
 export default function WorkoutExerciseVideoFrame({
@@ -107,18 +108,21 @@ export default function WorkoutExerciseVideoFrame({
         </>
       ) : (
         <div className={styles.fallbackContent} data-css-module-scope="workout-exercise-video-fallback">
-          <strong>{exercise.video ? "Видео техники недоступно" : "Видео появится позже"}</strong>
-          <small>{fallbackHint}</small>
-          {exercise.video && exerciseVideoFailed && (
-            <button
-              type="button"
-              className={styles.retryButton}
-              data-css-module-control="workout-exercise-video"
-              onClick={onRetryVideo}
-            >
-              Повторить загрузку
-            </button>
-          )}
+          <BasicWorkoutExerciseIllustration exercise={exercise} className={styles.fallbackIllustration} />
+          <div className={styles.fallbackCopy}>
+            <strong>{exercise.video ? "Видео техники недоступно" : "Видео появится позже"}</strong>
+            <small>{fallbackHint}</small>
+            {exercise.video && exerciseVideoFailed && (
+              <button
+                type="button"
+                className={styles.retryButton}
+                data-css-module-control="workout-exercise-video"
+                onClick={onRetryVideo}
+              >
+                Повторить загрузку
+              </button>
+            )}
+          </div>
         </div>
       )}
       {showTechniqueButton ? (

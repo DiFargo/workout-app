@@ -1883,6 +1883,7 @@ function AppRuntime() {
     archiveClientProgramAssignment,
     restoreClientProgramAssignment,
     deleteClientProgramAssignment,
+    renameClientProgramAssignment,
     copyCurrentProgramToClient
   } = createTrainerProgramTemplateHandlers({
     db,
@@ -2813,6 +2814,7 @@ function AppRuntime() {
     deckRef,
     deleteAdminClientTask,
     deleteClientProgramAssignment,
+    renameClientProgramAssignment,
     deleteClientEverywhereFromAdminPanel,
     deleteSelectedAdminClientHistory,
     disconnectTelegram,

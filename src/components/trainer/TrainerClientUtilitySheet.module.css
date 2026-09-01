@@ -799,14 +799,25 @@
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.subscriptionRange) {
-  border-color: #d2c1ec;
+  border-color: #c6b2e5;
   color: #806bb6;
-  background: #faf8ff;
+  background: #f0eafb;
+  box-shadow: inset 0 -3px 0 #b89fdd;
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.plannedWorkout.subscriptionRange) {
   border-color: #b9a7df;
   background: #eee8fa;
+  box-shadow: inset 0 -3px 0 #a98ed4;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.subscriptionBoundary) {
+  border-color: #9e84cc;
+  box-shadow: inset 0 -3px 0 #8f7ac8;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.subscriptionBoundary b) {
+  font-weight: 800;
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.pastWorkout) {
@@ -890,6 +901,177 @@
   color: #7b7682;
   font-size: 12px;
   line-height: 1.4;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields) {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid #e8e1f0;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px 14px;
+  color: #7b7682;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange b) {
+  color: #28262e;
+  font-weight: 750;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange i) {
+  margin-left: auto;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 750;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange i.positive) {
+  color: #297b50;
+  background: #e8f6ee;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange i.warning) {
+  color: #9a6515;
+  background: #fff4df;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange i.negative) {
+  color: #b04c55;
+  background: #fbe9eb;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-top: 12px;
+  border-top: 1px solid #eee9f3;
+  color: #625d6a;
+  font-size: 13px;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > span b) {
+  color: #28262e;
+  font-weight: 750;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs label) {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs label small) {
+  color: #625d6a;
+  font-size: 12px;
+  font-weight: 720;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs input) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #ded4ea;
+  border-radius: 12px;
+  color: #28262e;
+  background: #fbfaff;
+  font: inherit;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  outline: none;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs input:focus) {
+  border-color: #9d83cb;
+  box-shadow: 0 0 0 3px rgba(143, 122, 200, .16);
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionEdit),
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionCancel) {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 0 14px;
+  border: 1px solid #d7c8ed;
+  border-radius: 12px;
+  color: #6b53a3;
+  background: #f4effc;
+  box-shadow: 0 4px 10px rgba(89, 65, 128, .08);
+  font: inherit;
+  font-weight: 720;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > label) {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 7px;
+  color: #625d6a;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > label input) {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #806bb6;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > label small) {
+  font-size: 13px;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerNextPrimary) {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 1px solid #806bb6;
+  border-radius: 12px;
+  color: #ffffff;
+  background: #806bb6;
+  box-shadow: 0 7px 15px rgba(112, 86, 164, .2);
+  font: inherit;
+  font-weight: 750;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerNextPrimary:hover:not(:disabled)) {
+  border-color: #7059a7;
+  background: #7059a7;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerNextPrimary:disabled) {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionEdit:hover:not(:disabled)),
+.content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionCancel:hover:not(:disabled)) {
+  border-color: #bfa8df;
+  background: #ece4f9;
 }
 
 @media (max-width: 699px) {
@@ -983,5 +1165,33 @@
     min-height: 40px;
     padding: 4px 2px;
     border-radius: 10px;
+  }
+
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange i) {
+    margin-left: 0;
+  }
+
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > span),
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > label),
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > strong) {
+    grid-column: 1 / -1;
+  }
+
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerCalendarSubscriptionEdit),
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerCalendarSubscriptionCancel),
+  .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerNextPrimary) {
+    width: 100%;
+    margin-left: 0;
   }
 }

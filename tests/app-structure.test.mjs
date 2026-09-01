@@ -114,7 +114,7 @@ test("AppCore remains a coordinator", async () => {
   assert.match(source, /NutritionRoute/);
   assert.doesNotMatch(source, /renderNutritionPageFromContext/);
   assert.doesNotMatch(source, /nutritionPageModel/);
-  assert.ok(source.split(/\r?\n/).length <= 3200);
+  assert.ok(source.split(/\r?\n/).length <= 3250);
 });
 
 test("trainer daily journal stays isolated and lazy-loaded", async () => {

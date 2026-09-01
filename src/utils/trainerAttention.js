@@ -132,6 +132,64 @@ export function getNutritionAttentionReason(summary = {}, now = new Date()) {
   return "";
 }
 
+function hasCurrentSubscriptionPeriod(summary = {}) {
+  const subscription = summary.subscriptionStatus || {};
+  return ["active", "renewed"].includes(subscription.id) && Boolean(
+    subscription.startDate ||
+    subscription.endDate ||
+    Number(subscription.purchasedSessions) > 0
+  );
+}
+
+// The overview is intentionally quieter than the broader trainer activity
+// feed. It is reserved for situations where the trainer should intervene
+// now, rather than routine client activity such as a normal comment or an
+// open task.
+export function getClientCriticalAttentionItems(client = {}, summary = {}, now = new Date()) {
+  const hasProgram = Boolean(client.assignedProgramId || client.programId || summary.assignedProgramId);
+  if (!hasProgram) {
+    return [{ type: "program", reason: "Не назначена программа тренировок" }];
+  }
+
+  const items = [];
+  const scheduleState = getWorkoutScheduleAttentionState(client, summary, now);
+  if (scheduleState.missedCount >= 3) {
+    items.push({
+      type: "workout",
+      missedCount: scheduleState.missedCount,
+      reason: `Пропущено ${scheduleState.missedCount} ${pluralizeRu(scheduleState.missedCount, "плановая тренировка", "плановые тренировки", "плановых тренировок")}`
+    });
+  }
+
+  const feedback = summary.workoutFeedbackAttention || {};
+  if (["pain", "badfeedback"].includes(String(feedback.id || "").toLowerCase()) && feedback.reason) {
+    items.push({ type: "feedback", reason: feedback.reason });
+  }
+
+  const subscription = summary.subscriptionStatus || {};
+  const remainingSessions = Number(subscription.remainingSessions);
+  if (subscription.id === "expired") {
+    items.push({ type: "subscription", reason: "Абонемент закончился" });
+  } else if (remainingSessions === 1) {
+    items.push({ type: "subscription", reason: "Абонемент: осталась 1 тренировка" });
+  } else if (subscription.id === "ending" && Number(subscription.daysRemaining) === 0) {
+    items.push({ type: "subscription", reason: "Абонемент заканчивается сегодня" });
+  }
+
+  return items;
+}
+
+export function getClientCriticalAttentionState(client = {}, summary = {}, now = new Date()) {
+  return getClientCriticalAttentionItems(client, summary, now)[0] || null;
+}
+
+export function getClientCriticalAttentionStatus(client = {}, summary = {}, now = new Date()) {
+  const attention = getClientCriticalAttentionState(client, summary, now);
+  if (!attention) return { id: "active", label: "Активный" };
+  if (attention.type === "program") return { id: "noProgram", label: "Без программы" };
+  return { id: "attention", label: "Требует внимания" };
+}
+
 export function getClientAttentionItems(client = {}, summary = {}, now = new Date()) {
   const hasProgram = Boolean(client.assignedProgramId || client.programId || summary.assignedProgramId);
   if (!hasProgram) {
@@ -177,7 +235,10 @@ export function getClientAttentionItems(client = {}, summary = {}, now = new Dat
   } else if (summary.plateau?.isPlateau) {
     items.push({ type: "measure", reason: `Вес стоит ${summary.plateau.days} ${pluralizeRu(summary.plateau.days, "день", "дня", "дней")}` });
   }
-  if (["overdue", "soon"].includes(summary.paymentAttention?.id)) {
+  // The saved subscription is the source of truth for the calendar.  A stale
+  // legacy payment control must not ask a trainer to verify an already active
+  // subscription.
+  if (!hasCurrentSubscriptionPeriod(summary) && ["overdue", "soon"].includes(summary.paymentAttention?.id)) {
     items.push({ type: "payment", reason: summary.paymentAttention.label || "Проверь оплату клиента" });
   }
   const assignedDays = getTrainerAttentionDaysSince(summary.assignedProgramUpdatedAt || client.assignedProgramUpdatedAt || client.assignedProgramAt, now);

@@ -1,6 +1,7 @@
 import {
   loadAiCoachPage,
   loadBasicWorkoutQuizPage,
+  loadBasicWorkoutTodayPage,
   loadMeasurementWizardPage,
   loadWorkoutHistoryPage,
   loadWorkoutListPage,
@@ -12,6 +13,7 @@ import { preloadClientTerminalRouteChunks } from "./appTerminalRouteLoaders";
 export const preloadClientWorkoutEntryRoutes = () => Promise.allSettled([
   loadWorkoutModePage(),
   loadWorkoutListPage(),
+  loadBasicWorkoutTodayPage(),
   loadBasicWorkoutQuizPage()
 ]);
 

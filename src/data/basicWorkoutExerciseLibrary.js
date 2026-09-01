@@ -30,6 +30,7 @@ export const BASIC_WORKOUT_EXERCISE_GROUPS = [
   { id: "rear_delts", title: "Плечи · задняя дельта", shortTitle: "Плечи" },
   { id: "biceps", title: "Руки · бицепс", shortTitle: "Бицепс" },
   { id: "triceps", title: "Руки · трицепс", shortTitle: "Трицепс" },
+  { id: "forearms", title: "Руки · предплечья и хват", shortTitle: "Предплечья" },
   { id: "core", title: "Кор · стабилизация и пресс", shortTitle: "Пресс" },
   ...BASIC_WORKOUT_COMPACT_EXTRA_GROUPS
 ];
@@ -114,6 +115,10 @@ const BASIC_WORKOUT_PLAN_EXERCISE_LIBRARY = [
   { id: "overhead_cable_extension", name: "Разгибание рук из-за головы в кроссовере", groupId: "triceps", aliases: ["верхний блок на трицепс"], equipment: "Кроссовер", locations: ["gym"], rest: "60 сек", requiresWeight: true, note: "Встаньте устойчиво и держите локти направленными вперёд." },
   { id: "bench_dip", name: "Обратные отжимания от скамьи", groupId: "triceps", aliases: ["отжимания от скамьи на трицепс"], equipment: "Скамья", locations: ["gym", "home"], rest: "60 сек", requiresWeight: false, note: "Работайте только в комфортной для плеч глубине." },
 
+  { id: "db_wrist_curl", illustrationId: "db_curl", name: "Сгибание кистей с гантелями", groupId: "forearms", aliases: ["сгибания кистей", "wrist curl"], equipment: "Гантели", locations: ["gym", "home"], rest: "45 сек", requiresWeight: true, note: "Опирайте предплечья и двигайте только кистями без рывка." },
+  { id: "db_reverse_wrist_curl", illustrationId: "db_curl", name: "Разгибание кистей с гантелями", groupId: "forearms", aliases: ["разгибания кистей", "reverse wrist curl"], equipment: "Гантели", locations: ["gym", "home"], rest: "45 сек", requiresWeight: true, note: "Используйте лёгкий вес и удерживайте предплечья неподвижно." },
+  { id: "farmer_carry", illustrationId: "hammer_curl", name: "Прогулка фермера с гантелями", groupId: "forearms", aliases: ["фермерская прогулка", "farmer carry"], equipment: "Гантели", locations: ["gym", "home"], rest: "60 сек", requiresWeight: true, note: "Держите корпус ровно, плечи опущенными и идите спокойным шагом." },
+
   { id: "cable_crunch", name: "Скручивания в кроссовере", groupId: "core", aliases: ["скручивания на блоке"], equipment: "Кроссовер", locations: ["gym"], rest: "45 сек", requiresWeight: true, note: "Скручивайте корпус, а не тяните рукоять руками." },
   { id: "floor_crunch", name: "Скручивания лёжа", groupId: "core", aliases: ["пресс", "обычные скручивания"], equipment: "Собственный вес", locations: ["gym", "home"], rest: "45 сек", requiresWeight: false, note: "Не тяните шею руками и выдыхайте в верхней точке." },
   { id: "reverse_crunch", name: "Обратные скручивания", groupId: "core", aliases: ["скручивания с подъёмом таза"], equipment: "Собственный вес", locations: ["gym", "home"], rest: "45 сек", requiresWeight: false, note: "Подкручивайте таз плавно, не раскачиваясь ногами." },
@@ -139,5 +144,5 @@ export const BASIC_WORKOUT_LIBRARY_SOURCE = {
   name: "Внутренняя проверенная база базовых планов",
   url: "",
   accessedAt: "2026-08-06",
-  note: "В библиотеке 96 понятных упражнений: 72 силовых для готовых и ИИ-планов, 16 для мобильности и 8 для кардио. ИИ использует отдельный проверенный поднабор силовых упражнений. Полный справочник из 873 упражнений хранится скрытым резервом и не попадает в базовые планы."
+  note: "В библиотеке 99 понятных упражнений: 75 силовых для готовых и ИИ-планов, 16 для мобильности и 8 для кардио. ИИ использует отдельный проверенный поднабор силовых упражнений. Полный справочник из 873 упражнений хранится скрытым резервом и не попадает в базовые планы."
 };

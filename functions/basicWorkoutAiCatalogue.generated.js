@@ -285,6 +285,44 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
     "note": "Отводите таз назад и не округляйте поясницу."
   },
   {
+    "id": "db_reverse_wrist_curl",
+    "name": "Разгибание кистей с гантелями",
+    "aliases": [
+      "разгибания кистей",
+      "reverse wrist curl"
+    ],
+    "groupId": "forearms",
+    "movementRole": "forearms",
+    "equipment": "Гантели",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "restSeconds": 45,
+    "durationSeconds": 0,
+    "note": "Используйте лёгкий вес и удерживайте предплечья неподвижно."
+  },
+  {
+    "id": "db_wrist_curl",
+    "name": "Сгибание кистей с гантелями",
+    "aliases": [
+      "сгибания кистей",
+      "wrist curl"
+    ],
+    "groupId": "forearms",
+    "movementRole": "forearms",
+    "equipment": "Гантели",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "restSeconds": 45,
+    "durationSeconds": 0,
+    "note": "Опирайте предплечья и двигайте только кистями без рывка."
+  },
+  {
     "id": "dead_bug",
     "name": "Упражнение «мёртвый жук»",
     "aliases": [
@@ -320,6 +358,25 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Ведите канат к уровню лица, разводя концы в стороны."
+  },
+  {
+    "id": "farmer_carry",
+    "name": "Прогулка фермера с гантелями",
+    "aliases": [
+      "фермерская прогулка",
+      "farmer carry"
+    ],
+    "groupId": "forearms",
+    "movementRole": "forearms",
+    "equipment": "Гантели",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "restSeconds": 60,
+    "durationSeconds": 0,
+    "note": "Держите корпус ровно, плечи опущенными и идите спокойным шагом."
   },
   {
     "id": "floor_crunch",

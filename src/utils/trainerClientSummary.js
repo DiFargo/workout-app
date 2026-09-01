@@ -1,5 +1,9 @@
 import { sumNutritionFoods } from "./nutritionFoodTotals.js";
-import { pluralizeRu } from "./trainerAttention.js";
+import {
+  getClientCriticalAttentionItems,
+  getClientCriticalAttentionStatus,
+  pluralizeRu
+} from "./trainerAttention.js";
 import { getClientPaymentAttention } from "../domain/clientInsights.js";
 import { getMeasurementTimestampValue } from "./profileMeasurements.js";
 import { getSubscriptionAttentionLabel, getSubscriptionStatus } from "./clientSubscription.js";
@@ -329,6 +333,13 @@ export function getClientActivityStatus(summary = {}) {
   const workoutDays = getTrainerSummaryDaysSince(summary.lastWorkoutAt);
   const nutritionDays = getTrainerSummaryDaysSince(summary.lastNutritionAt);
   const measurementDays = getTrainerSummaryDaysSince(summary.lastMeasurementAt);
+  const currentSubscription = summary.subscriptionStatus || {};
+  const hasCurrentSubscriptionPeriod = ["active", "renewed"].includes(currentSubscription.id) && Boolean(
+    currentSubscription.startDate ||
+    currentSubscription.endDate ||
+    Number(currentSubscription.purchasedSessions) > 0
+  );
+  const paymentNeedsAttention = !hasCurrentSubscriptionPeriod && ["overdue", "soon"].includes(summary.paymentAttention?.id);
 
   if (workoutDays !== null && workoutDays >= 14) {
     return { id: "lost", label: "Пропал" };
@@ -344,7 +355,7 @@ export function getClientActivityStatus(summary = {}) {
     summary.programEndingAttention?.id ||
     ["ending", "expired"].includes(summary.subscriptionStatus?.id) ||
     summary.plateau?.isPlateau ||
-    ["overdue", "soon"].includes(summary.paymentAttention?.id)
+    paymentNeedsAttention
   ) {
     return { id: "attention", label: "Требует внимания" };
   }
@@ -363,6 +374,12 @@ export function getClientAttentionReasons(summary = {}) {
   const workoutDays = getTrainerSummaryDaysSince(summary.lastWorkoutAt);
   const nutritionDays = getTrainerSummaryDaysSince(summary.lastNutritionAt);
   const measurementDays = getTrainerSummaryDaysSince(summary.lastMeasurementAt);
+  const currentSubscription = summary.subscriptionStatus || {};
+  const hasCurrentSubscriptionPeriod = ["active", "renewed"].includes(currentSubscription.id) && Boolean(
+    currentSubscription.startDate ||
+    currentSubscription.endDate ||
+    Number(currentSubscription.purchasedSessions) > 0
+  );
 
   if (workoutDays === null) reasons.push("нет данных о тренировках");
   else if (workoutDays >= 7) reasons.push(`нет тренировок ${workoutDays} ${getTrainerDayWord(workoutDays)}`);
@@ -382,7 +399,7 @@ export function getClientAttentionReasons(summary = {}) {
     reasons.push(summary.subscriptionAttentionLabel || summary.subscriptionStatus.label.toLowerCase());
   }
   if (summary.plateau?.isPlateau) reasons.push(`вес стоит ${summary.plateau.days} ${getTrainerDayWord(summary.plateau.days)}`);
-  if (["overdue", "soon"].includes(summary.paymentAttention?.id)) {
+  if (!hasCurrentSubscriptionPeriod && ["overdue", "soon"].includes(summary.paymentAttention?.id)) {
     reasons.push(summary.paymentAttention.label.toLowerCase());
   }
 
@@ -519,7 +536,9 @@ export function buildTrainerDashboardSummary(clients = [], summaries = {}) {
     return {
       client,
       summary,
-      status: getClientActivityStatus(summary),
+      activityStatus: getClientActivityStatus(summary),
+      criticalAttentionItems: getClientCriticalAttentionItems(client, summary),
+      status: getClientCriticalAttentionStatus(client, summary),
       reasons: getClientAttentionReasons(summary)
     };
   });
@@ -527,16 +546,20 @@ export function buildTrainerDashboardSummary(clients = [], summaries = {}) {
   const statusCounts = summaryItems.reduce(
     (counts, item) => ({
       ...counts,
-      [item.status.id]: (counts[item.status.id] || 0) + 1,
-      activeToday: counts.activeToday + (getTrainerSummaryDaysSince(item.summary.lastWorkoutAt) === 0 ? 1 : 0),
-      plateau: counts.plateau + (item.summary.plateau?.isPlateau ? 1 : 0),
-      payment: counts.payment + (["overdue", "soon"].includes(item.summary.paymentAttention?.id) ? 1 : 0)
-    }),
-    { active: 0, attention: 0, lost: 0, noProgram: 0, activeToday: 0, plateau: 0, payment: 0 }
+        active: counts.active + (item.status.id === "active" && item.activityStatus.id === "active" ? 1 : 0),
+        attention: counts.attention + (item.status.id === "attention" ? 1 : 0),
+        noProgram: counts.noProgram + (item.status.id === "noProgram" ? 1 : 0),
+        lost: counts.lost + (item.activityStatus.id === "lost" ? 1 : 0),
+        activeToday: counts.activeToday + (getTrainerSummaryDaysSince(item.summary.lastWorkoutAt) === 0 ? 1 : 0),
+        plateau: counts.plateau + (item.summary.plateau?.isPlateau ? 1 : 0),
+        payment: counts.payment + (item.criticalAttentionItems.some((attention) => attention.type === "subscription") ? 1 : 0),
+        critical: counts.critical + (item.criticalAttentionItems.length ? 1 : 0)
+      }),
+    { active: 0, attention: 0, lost: 0, noProgram: 0, activeToday: 0, plateau: 0, payment: 0, critical: 0 }
   );
 
   const problemClients = summaryItems
-    .filter((item) => item.status.id !== "active")
+    .filter((item) => item.criticalAttentionItems.length > 0)
     .sort((first, second) => {
       const priority = { lost: 0, noProgram: 1, attention: 2 };
       return (priority[first.status.id] ?? 3) - (priority[second.status.id] ?? 3);
