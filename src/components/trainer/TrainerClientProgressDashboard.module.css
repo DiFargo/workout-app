@@ -483,3 +483,15 @@
 }
 
 :global(html[data-trainer-variant="v2"]) .dashboard {padding:14px;border-radius:16px;box-shadow:none}
+
+:global(html[data-trainer-variant="v2"]) .resultLayout {display:flex;flex-direction:column;gap:12px}
+:global(html[data-trainer-variant="v2"]) .signals {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+:global(html[data-trainer-variant="v2"]) .signal {padding:10px;min-width:0;min-height:60px}
+:global(html[data-trainer-variant="v2"]) .signalIcon {display:none}
+:global(html[data-trainer-variant="v2"]) .signal {grid-template-columns:minmax(0,1fr) auto}
+:global(html[data-trainer-variant="v2"]) .dashboardHeader {flex-wrap:wrap}
+:global(html[data-trainer-variant="v2"]) .dashboardHeader p {font-size:12px}
+:global(html[data-trainer-variant="v2"]) .periods {gap:3px;background:#efeff4;padding:3px;border-radius:10px}
+:global(html[data-trainer-variant="v2"]) .periods button {padding:6px 9px;border:0;background:transparent}
+:global(html[data-trainer-variant="v2"]) .periods button.active {background:#fff}
+:global(html[data-trainer-variant="v2"]) .chartPanel {width:100%;box-sizing:border-box;background:white}

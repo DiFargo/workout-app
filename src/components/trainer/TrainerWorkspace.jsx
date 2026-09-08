@@ -1,5 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { isTrainerV2Path } from "../../app/cssVariant";
+import TrainerClientDisclosure from "./TrainerClientDisclosure";
 import { useBodyScrollLock } from "../../shared/hooks/useBodyScrollLock";
 import workspaceStyles from "./TrainerWorkspaceCalm.module.css";
 import syncStyles from "./TrainerWorkspace.module.css";
@@ -1248,6 +1250,11 @@ function ClientOverview({
         nutritionDays={nutritionDays}
         nutritionGoals={nutritionGoals}
       />
+      {isTrainerV2Path(window.location.pathname) ? <aside className="trainerClientOverviewTools">
+        <h2>Работа с клиентом</h2>
+        <ClientSectionLaunchButton icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
+        <ClientSectionLaunchButton icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
+      </aside> : null}
       <ClientSectionLaunchButton
         icon={BarChart3}
         title="Открыть прогресс упражнений"
@@ -1258,7 +1265,7 @@ function ClientOverview({
   );
 }
 
-function ClientMeasurements({ measurements = [], separated = false }) {
+function ClientMeasurements({ measurements = [], separated = false, detailed = false }) {
   const [expanded, setExpanded] = useState(false);
   const safeMeasurements = (Array.isArray(measurements) ? measurements : []).filter((item) => item && typeof item === "object");
   const sortedMeasurements = safeMeasurements
@@ -1337,6 +1344,30 @@ function ClientMeasurements({ measurements = [], separated = false }) {
     const delta = getMeasurementDelta(current, previousValue);
     return { field, current, delta };
   });
+
+  if (isTrainerV2Path(window.location.pathname) && !detailed) {
+    return (
+      <section className="trainerNextSimplePanel trainerClientMeasurementsSection">
+        <div className="trainerNextPanelTitle"><div><h2>Замеры</h2><p>{latest ? `Последний замер: ${formatCompactDate(latestDate)}` : "Клиент ещё не добавил замеры"}</p></div></div>
+        {latest ? <>
+          <table className="trainerClientMeasurementTable">
+            <thead><tr><th>Показатель</th><th>Сейчас</th><th>Изменение</th></tr></thead>
+            <tbody>{(expanded ? measurementRows : measurementRows.filter(({ field }) => ["weight", "belly", "chest", "pelvis"].includes(field.id))).map(({ field, current, delta }) => (
+              <tr key={field.id}><th scope="row">{field.label}</th><td>{formatMeasurementValue(current, field.unit)}</td><td>{formatSignedDelta(delta, field.unit)}</td></tr>
+            ))}</tbody>
+          </table>
+          <button type="button" className="trainerClientTextAction" onClick={() => setExpanded((value) => !value)}>{expanded ? "Свернуть замеры" : `Все показатели · ${measurementRows.length}`}</button>
+          <p className="trainerClientMeasurementNote">{previous ? `Изменение относительно ${formatCompactDate(getMeasurementDate(previous))}.` : "Для сравнения нужен ещё один замер."}</p>
+          <TrainerClientDisclosure title="Подробная динамика и выводы">
+            <ClientMeasurements measurements={measurements} detailed />
+          </TrainerClientDisclosure>
+          <TrainerClientDisclosure title="История замеров">
+            <div className="trainerMeasurementTimeline">{sortedMeasurements.map((item, index) => <article key={item.id || index}><time>{formatCompactDate(getMeasurementDate(item))}</time><strong>{formatMeasurementValue(getMeasurementFieldValue(item, weightField), "кг")}</strong><span>Талия {formatMeasurementValue(getMeasurementFieldValue(item, bellyField), "см")}</span></article>)}</div>
+          </TrainerClientDisclosure>
+        </> : <div className="trainerNextEmpty">Замеры появятся после заполнения клиентом.</div>}
+      </section>
+    );
+  }
 
   return (
     <section className={`trainerNextSimplePanel${separated ? " trainerClientMeasurementsSection" : ""}`}>
@@ -1457,6 +1488,7 @@ function ClientMeasurements({ measurements = [], separated = false }) {
 }
 
 function ClientPhotos({ photos }) {
+  const isV2 = isTrainerV2Path(window.location.pathname);
   const photoViews = [
     { id: "front", label: "Спереди", key: "frontUrl" },
     { id: "side", label: "Сбоку", key: "sideUrl" },
@@ -1510,7 +1542,8 @@ function ClientPhotos({ photos }) {
     );
   };
   const activePhoto = sortedPhotos.find((photo, index) => getPhotoId(photo, index) === openPhotoId);
-  const comparePhotos = compareIds.map((id) => sortedPhotos.find((photo, index) => getPhotoId(photo, index) === id)).filter(Boolean);
+  const effectiveCompareIds = compareIds.map((id, index) => id || (isV2 && sortedPhotos[index] ? getPhotoId(sortedPhotos[index], index) : ""));
+  const comparePhotos = effectiveCompareIds.map((id) => sortedPhotos.find((photo, index) => getPhotoId(photo, index) === id)).filter(Boolean);
 
   return (
     <section className="trainerNextSimplePanel">
@@ -1527,28 +1560,31 @@ function ClientPhotos({ photos }) {
             <strong>Сравнить фотосессии</strong>
             <p>Выберите две даты и ракурс для крупного сравнения.</p>
           </div>
-          <select aria-label="Первая фотосессия для сравнения" value={compareIds[0]} onChange={(event) => setCompareIds([event.target.value, compareIds[1]])}>
+          <select aria-label="Первая фотосессия для сравнения" value={effectiveCompareIds[0]} onChange={(event) => setCompareIds([event.target.value, effectiveCompareIds[1]])}>
             <option value="">Первая дата</option>
             {sortedPhotos.map((photo, index) => <option value={getPhotoId(photo, index)} key={`a-${getPhotoId(photo, index)}`}>{formatCompactDate(photo.date || photo.createdAt)}</option>)}
           </select>
-          <select aria-label="Вторая фотосессия для сравнения" value={compareIds[1]} onChange={(event) => setCompareIds([compareIds[0], event.target.value])}>
+          <select aria-label="Вторая фотосессия для сравнения" value={effectiveCompareIds[1]} onChange={(event) => setCompareIds([effectiveCompareIds[0], event.target.value])}>
             <option value="">Вторая дата</option>
             {sortedPhotos.map((photo, index) => <option value={getPhotoId(photo, index)} key={`b-${getPhotoId(photo, index)}`}>{formatCompactDate(photo.date || photo.createdAt)}</option>)}
           </select>
         </div>
       ) : null}
 
-      {comparePhotos.length === 2 ? (
+      {(comparePhotos.length === 2 || (isV2 && comparePhotos.length > 0)) ? (
         <div className="trainerPhotoCompareGrid">
-          {comparePhotos.map((photo) => (
-            <figure key={`compare-${photo.id || photo.createdAt}`}>
-              {renderPhotoMedia(photo, sortedPhotos.indexOf(photo))}
+          {comparePhotos.map((photo, index) => (
+            <figure key={`compare-${index}-${getPhotoId(photo, sortedPhotos.indexOf(photo))}`}>
+              {isV2 ? <button type="button" onClick={() => setOpenPhotoId(getPhotoId(photo, sortedPhotos.indexOf(photo)))} aria-label={`Открыть сравниваемое фото: ${formatCompactDate(photo.date || photo.createdAt)}`}>
+                {renderPhotoMedia(photo, sortedPhotos.indexOf(photo))}
+              </button> : renderPhotoMedia(photo, sortedPhotos.indexOf(photo))}
               <figcaption>{formatCompactDate(photo.date || photo.createdAt)}</figcaption>
             </figure>
           ))}
         </div>
       ) : null}
 
+      <TrainerClientDisclosure title={`Все фотосессии · ${sortedPhotos.length}`}>
       <div className="trainerNextPhotoGrid">
         {sortedPhotos.map((photo, index) => (
           <figure key={getPhotoId(photo, index)}>
@@ -1560,6 +1596,8 @@ function ClientPhotos({ photos }) {
         ))}
         {!sortedPhotos.length ? <div className="trainerNextEmpty">Фото прогресса пока не добавлены.</div> : null}
       </div>
+
+      </TrainerClientDisclosure>
 
       {activePhoto ? (
         <div className="trainerClientModalBackdrop" data-trainer-modal-backdrop="true" role="presentation" onClick={() => setOpenPhotoId("")}>
@@ -2889,6 +2927,7 @@ function ClientWorkoutPlan({
             </div>
           )}
 
+          <TrainerClientDisclosure title="Назначить другую программу" className="trainerClientAssignmentDisclosure">
           <div className={trainerClientWorkoutPlanStyles.assignment}>
               <span>Назначить программу</span>
             <div className={trainerClientWorkoutPlanStyles.assignmentRow}>
@@ -2906,6 +2945,7 @@ function ClientWorkoutPlan({
               </button>
             </div>
           </div>
+          </TrainerClientDisclosure>
         </div>
         {selectedTemplate && selectedProgramId !== client?.assignedProgramId
           ? <small className={trainerClientWorkoutPlanStyles.hint}>Будет назначена программа «{selectedTemplate.name || "Без названия"}».</small>
@@ -3005,6 +3045,16 @@ function ClientWorkoutPlan({
         </TrainerClientUtilitySheet>
       ) : null}
 
+      {isTrainerV2Path(window.location.pathname) && scheduleWorkouts.length ? (
+        <section className="trainerClientWorkoutList" aria-label="Тренировки программы">
+          <header><h2>Тренировки программы</h2><span>{assignedProgramCompletion}% выполнено</span></header>
+          <progress max="100" value={assignedProgramCompletion} aria-label="Выполнение программы" />
+          {scheduleWorkouts.map((workout, index) => <TrainerClientDisclosure key={workout.id || index} title={`${index + 1}. ${workout.name || workout.title || "Тренировка"}`}>
+            <ul>{(workout.exercises || []).map((exercise, exerciseIndex) => <li key={exercise.id || exerciseIndex}>{exercise.name || exercise.exerciseName || "Упражнение"}</li>)}</ul>
+            <button type="button" className="trainerClientTextAction" onClick={() => { setEditorWorkoutId(workout.id); setEditorStatus(""); setEditorOpen(true); }}>Открыть тренировку</button>
+          </TrainerClientDisclosure>)}
+        </section>
+      ) : null}
       <WorkoutSchedulePlanner
         key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
         client={client}
@@ -5298,7 +5348,7 @@ function TrainerClientDetail({
               onClick={() => setUtilitySheet("tasks")}
             >
               <ClipboardList size={17} />
-              <span>Задания<br />клиенту</span>
+              <span>Задания<br /> клиенту</span>
             </button>
           ) : null}
           <button

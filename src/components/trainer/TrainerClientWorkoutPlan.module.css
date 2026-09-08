@@ -1453,3 +1453,22 @@
  :global(html[data-trainer-variant="v2"]) .currentProgram,
  :global(html[data-trainer-variant="v2"]) .assignment {padding:14px}
 }
+
+:global(html[data-trainer-variant="v2"]) .programGrid {grid-template-columns:minmax(0,1fr)!important}
+:global(html[data-trainer-variant="v2"]) .currentProgram {border-right:0!important}
+:global(html[data-trainer-variant="v2"]) .currentProgramTop {flex-wrap:wrap;align-items:center}
+:global(html[data-trainer-variant="v2"]) .programHeader {padding:16px!important;flex-wrap:wrap}
+:global(html[data-trainer-variant="v2"]) .programHeader > span {display:none}
+:global(html[data-trainer-variant="v2"]) .programHeader h2 {font-size:18px!important}
+:global(html[data-trainer-variant="v2"]) .programCard {border-radius:16px;box-shadow:none}
+:global(html[data-trainer-variant="v2"]) .assignment {padding:6px 0 12px!important}
+:global(html[data-trainer-variant="v2"]) .assignmentRow {flex-wrap:wrap}
+:global(html[data-trainer-variant="v2"]) .programHistoryButton {margin-left:0}
+
+:global(html[data-trainer-variant="v2"]) .programHeaderCopy {margin:0!important;padding:0!important;width:auto!important;flex:1}
+:global(html[data-trainer-variant="v2"]) .programHeader {display:flex!important;align-items:center!important;gap:8px!important}
+:global(html[data-trainer-variant="v2"]) .programHistoryButton {font-size:12px!important;padding:6px 0!important;min-height:36px!important}
+@media(max-width:699px) {
+ :global(html[data-trainer-variant="v2"]) .programHeaderCopy {flex-basis:100%}
+ :global(html[data-trainer-variant="v2"]) .programHeader h2 {font-size:18px!important}
+}

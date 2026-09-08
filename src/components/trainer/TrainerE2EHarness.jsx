@@ -484,7 +484,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       nutritionDays={nutritionDays}
       nutritionGoals={{ calories: 2300, protein: 180, fat: 70, carbs: 235 }}
       nutritionPlanOptions={nutritionPlanOptions}
-      photos={[{ id: "p1", date: "2026-06-01", frontUrl: "" }]}
+      photos={new URLSearchParams(window.location.search).has("photoCompare") ? [{ id: "p2", date: "2026-06-16", frontUrl: "" }, { id: "p1", date: "2026-06-01", frontUrl: "" }] : [{ id: "p1", date: "2026-06-01", frontUrl: "" }]}
       tasks={[{
         id: "task_e2e",
         title: "Заполнить дневник самочувствия",
