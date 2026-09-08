@@ -1,3 +1,4 @@
+import { isTrainerV2Path } from "../../app/cssVariant.js";
 import { useRef, useState } from "react";
 import TrainerWorkspace, { TrainerShell } from "./TrainerWorkspace";
 import * as appConfig from "../../constants/appConfig";
@@ -69,7 +70,10 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     telegram: { connected: true, username: "germes" },
     telegramNotificationsEnabled: true
   });
-  const clients = [selectedClient];
+  const layoutPreview = new URLSearchParams(window.location.search).get("layoutPreview") === "1";
+  const clients = layoutPreview ? [selectedClient, ...[
+    "Анна Константинопольская", "Михаил", "Александра Иванова", "Дмитрий", "Екатерина"
+  ].map((name, index) => ({ ...selectedClient, id: `layout_client_${index}`, name }))] : [selectedClient];
   const history = [
     {
       id: "history_1",
@@ -238,6 +242,9 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       workoutDateKeysCurrentWeek: ["2026-06-15"]
     }
   };
+  if (layoutPreview) {
+    clients.slice(1).forEach(client => { clientSummaries[client.id] = { ...clientSummaries.client_e2e }; });
+  }
   const programTemplates = [
     { id: "program_tren_plus", name: "tren+", workoutsCount: 4 },
     { id: "program_support", name: "Поддержка", workoutsCount: 3 }
@@ -350,7 +357,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
             </div>
           </div>
           <header className="trainerNextMobileHeader">
-            <div className="trainerNextMobileTitle">{programLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
+            <div className="trainerNextMobileTitle">{programLibraryTab === "editor" ? "Редактор программы" : isTrainerV2Path(window.location.pathname) ? "Программы" : "Библиотека программ"}</div>
           </header>
           {programLibraryTab !== "editor" ? <div className="trainerNextPageTabs">
             <button type="button" className="active" aria-pressed="true">Программы</button>
@@ -423,6 +430,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       onRefresh={() => {}}
       trainerName="Beta"
       clients={clients}
+      summariesLoading={new URLSearchParams(window.location.search).get("syncPreview") === "1"}
       clientSummaries={clientSummaries}
       counts={{ active: 1, attention: 0 }}
       selectedClient={selectedClient}

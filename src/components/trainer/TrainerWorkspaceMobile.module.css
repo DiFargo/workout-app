@@ -2785,3 +2785,6 @@
     background: #fffafa;
   }
 }
+
+/* V2 uses the client spacing and surface system. */
+:global(html[data-trainer-variant="v2"] body) .mobileDockGuard { display: none !important; }

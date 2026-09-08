@@ -1,3 +1,4 @@
+import { isTrainerV2Path } from "../../app/cssVariant.js";
 import { TrainerShell } from "../../components/trainer/TrainerWorkspace";
 import AdminWorkspace from "../../components/admin/AdminWorkspace";
 import { ChevronLeft } from "lucide-react";
@@ -602,7 +603,7 @@ export default function TrainerAdminWorkoutsRoute({
               <ChevronLeft size={22} />
             </button>
           ) : <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />}
-          <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Библиотека программ"}</div>
+          <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : isTrainerV2Path(window.location.pathname) ? "Программы" : "Библиотека программ"}</div>
           <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
         </header>
         {adminProgramLibraryTab !== "editor" ? (

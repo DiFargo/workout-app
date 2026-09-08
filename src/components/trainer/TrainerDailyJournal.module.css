@@ -437,3 +437,35 @@
 :global(html[data-trainer-variant="v2"]) .dailyJournalEventAction{color:#3c6faa}
 :global(html[data-trainer-variant="v2"]) .dailyJournalFilters button strong{background:#efeff4;color:#636366}
 :global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active strong{background:#3f73b8;color:#fff}
+
+/* V2 uses the client spacing and surface system. */
+:global(html[data-trainer-variant="v2"] body) .immediateActionsSection { padding: 16px; margin-bottom: 12px; background: #fff !important; border-color: rgba(60,60,67,.12); }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalSection { padding: 16px; border-color: rgba(60,60,67,.12); }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalHead { flex-wrap: wrap; gap: 10px; padding-bottom: 12px; border-color: rgba(60,60,67,.12); }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalHead > div { flex: 1 1 220px; min-width: 0; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalHead h2, :global(html[data-trainer-variant="v2"] body) .immediateActionsHead h2 { font-size: 20px; line-height: 1.2; margin: 5px 0; letter-spacing: -.4px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalHead p, :global(html[data-trainer-variant="v2"] body) .immediateActionsHead p { font-size: 13px; line-height: 1.4; }
+:global(html[data-trainer-variant="v2"] body) .attention, :global(html[data-trainer-variant="v2"] body) .calm { padding: 5px 9px; font-size: 11px; font-weight: 600; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters { gap: 6px; margin: 12px 0; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button { min-height: 44px; padding: 0 10px; font-size: 12px; gap: 5px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button span { color: #636366; background: #e8e8ed; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button.active span { color: #fff; background: #3f73b8; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalTimeline { max-height: none; overflow: visible; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary { position: relative; color: #8e8e93; font-size: 11px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary::before, :global(html[data-trainer-variant="v2"] body) .dailyJournalLine::before { background: #d1d1d6; }
+:global(html[data-trainer-variant="v2"] body) .immediateActionCard { padding: 12px; border-color: rgba(60,60,67,.12); min-height: 0; }
+:global(html[data-trainer-variant="v2"] body) .immediateActionsContent span, :global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent span { color: #3c6faa; font-size: 11px; }
+:global(html[data-trainer-variant="v2"] body) .immediateActionsContent strong { font-size: 15px; white-space: normal; }
+:global(html[data-trainer-variant="v2"] body) .immediateActionCta { background: #eef3fa; color: #3c6faa; border: 0; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent strong { font-size: 14px; line-height: 1.35; white-space: normal; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent small { font-size: 12px; line-height: 1.35; white-space: normal; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEventAction { background: #efeff4; color: #636366; font-size: 10px; }
+@media(max-width:699px) {
+:global(html[data-trainer-variant="v2"] body) .immediateActionsList { grid-template-columns: minmax(0,1fr); }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEvent { grid-template-columns: 36px 8px 28px minmax(0,1fr); gap: 6px; padding-block: 10px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEvent time { font-size: 10px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEvent :global(.trainerNextAvatar) { width: 28px !important; height: 28px !important; min-width: 28px !important; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEventAction { grid-column: 4; justify-self: start; min-height: 20px; padding: 2px 6px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary { padding-left: 84px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary::before { left: 45px; }
+}

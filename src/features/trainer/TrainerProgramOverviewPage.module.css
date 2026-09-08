@@ -903,3 +903,38 @@
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .formatBadge {background:#efeff4;border-color:transparent;color:#636366}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .statusBadge {color:#237a42;background:#edf8f0;border-color:transparent}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer {background:#fff;border-color:rgba(60,60,67,.12)}
+
+/* V2 uses the client spacing and surface system. */
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .root { min-height: 0; padding: 0 0 16px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .section { padding: 0 ; border: 0 ; background: transparent ; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .toolbar { grid-template-columns: minmax(0,1fr) auto; gap: 8px; margin-bottom: 14px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField { min-width: 0; min-height: 46px; padding: 0 12px; gap: 8px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField input { min-width: 0 ; padding: 0 ; background: transparent ; border: 0 ; border-radius: 0 ; box-shadow: none ; font-size: 14px; font-weight: 400; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .addButton { min-height: 46px; padding: 0 12px; font-size: 13px; font-weight: 600; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .grid { gap: 12px; align-items: start; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card { height: auto ; min-height: 0 ; box-shadow: none ; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect { flex: none; padding: 14px ; gap: 12px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle { grid-template-columns: 36px minmax(0,1fr); gap: 10px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle > i { width: 36px; height: 36px; border-radius: 10px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle strong { font-size: 16px; line-height: 1.25; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle p { margin-top: 4px; font-size: 12px; line-height: 1.4; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats { width: 100%; margin: 0; padding-top: 0; gap: 8px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats span { min-height: 44px ; height: auto ; padding: 8px 10px; grid-template-columns: 18px minmax(0,1fr); }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats b { font-size: 16px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats small { font-size: 11px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer { position: static ; width: 100%; padding: 0 ; margin: 0 ; border: 0 ; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .statusBadge { font-size: 11px; padding: 5px 9px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions { padding: 10px 14px; margin: 0; gap: 8px; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions button { min-height: 44px; font-size: 12px; }
+@media(max-width:699px) {
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .grid { grid-template-columns: minmax(0,1fr) ; }
+}
+
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect {display:flex;flex-direction:column;align-items:stretch}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer {align-self:stretch;justify-self:stretch}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle p {display:-webkit-box;-webkit-line-clamp:2;line-clamp:2}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .statusBadge {max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
+@media(max-width:370px) {
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .toolbar {grid-template-columns:minmax(0,1fr)}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .addButton {justify-self:end;min-height:44px}
+}

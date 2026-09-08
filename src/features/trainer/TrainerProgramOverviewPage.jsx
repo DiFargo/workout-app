@@ -155,7 +155,7 @@ export default function TrainerProgramOverviewPage({
 
         {isNextWorkspace ? (
           <div className={styles.toolbar} onClick={(event) => event.stopPropagation()}>
-            <label className={styles.searchField}>
+            <label className={styles.searchField} data-trainer-program-search>
               <ProgramSearchIcon size={20} aria-hidden="true" />
               <input
                 type="search"

@@ -1,4 +1,4 @@
-# Trainer style comparison — 3.0.707
+# Trainer style comparison — 3.0.708
 
 - Existing interface: https://tren-85720.web.app/
 - Temporary comparison interface: https://tren-85720.web.app/v2
@@ -42,3 +42,19 @@ The comparison release is limited to presentation and is checked separately.
 Target: Firebase Hosting only, project `tren-85720`. The production artifact
 marker is verified before upload. Firestore Rules, Functions and stored data
 are outside this deployment.
+
+## Responsive refinement — 3.0.708
+
+Acceptance checklist:
+- [x] V2 matches the client shell widths, 20px phone gutters (16px at 320px), sticky headers and 70px bottom navigation including the default safe-area space.
+- [x] Single vertical scroll owner; last cards remain above navigation.
+- [x] Client cards use one phone column, two tablet columns, and desktop table columns; long names wrap without overlapping statistics.
+- [x] Program cards, search, cabinet and sync sheet use compact calm-blue surfaces.
+- [x] Original URL and all existing data/actions remain available; no persistence or access changes.
+- [x] 680 unit tests pass; ESLint has zero errors and 36 existing warnings.
+- [x] Focused browser coverage: 16 checks pass across 320, 375, 430, 600, 768, 1024 and 1366px plus short landscape. Eight duplicate project cases are intentionally skipped. The final 1024px case hit Chromium ERR_NO_BUFFER_SPACE before app load and passed in an isolated rerun.
+- [x] Production build, bundle budget and production artifact validation pass.
+
+The adaptive harness adds long names, enough clients to scroll, and a sync preview;
+it is test-only and does not add demo users to Firebase. Constructor styles no
+longer require local `!important` overrides; existing source-contract tests pass.

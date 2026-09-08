@@ -23479,3 +23479,16 @@
   min-width: 44px;
   min-height: 44px;
 }
+
+/* V2 uses the client spacing and surface system. */
+:global(html[data-trainer-variant="v2"] body) .overlay { padding: 20px; background: rgba(28,28,30,.3); }
+:global(html[data-trainer-variant="v2"] body) .overlayCard { width: min(380px,100%); max-height: calc(100dvh - 40px); overflow-y: auto; padding: 28px 20px 20px; border-radius: 22px; border-color: rgba(60,60,67,.12); color: #1c1c1e; }
+:global(html[data-trainer-variant="v2"] body) .overlayCard strong { font-size: 22px; line-height: 1.2; }
+:global(html[data-trainer-variant="v2"] body) .overlayCard p { font-size: 13px; font-weight: 400; color: #636366; }
+:global(html[data-trainer-variant="v2"] body) .spinner { border-color: #e8edf4; border-top-color: #3f73b8; width: 34px; height: 34px; }
+:global(html[data-trainer-variant="v2"] body) .eyebrow, :global(html[data-trainer-variant="v2"] body) .progressMeta b { color: #3c6faa; }
+:global(html[data-trainer-variant="v2"] body) .progressTrack { background: #efeff4; height: 6px; }
+:global(html[data-trainer-variant="v2"] body) .progressTrack i { background: #3f73b8; box-shadow: none; }
+:global(html[data-trainer-variant="v2"] body) .backgroundButton { background: #3f73b8; min-height: 46px; font-weight: 600; border-radius: 12px; }
+:global(html[data-trainer-variant="v2"] body) .close { background: #efeff4; color: #636366; width: 44px; height: 44px; }
+:global(html[data-trainer-variant="v2"] body) .toast { border-color: rgba(60,60,67,.12); background: #fff; color: #1c1c1e; }
