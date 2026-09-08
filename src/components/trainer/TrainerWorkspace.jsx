@@ -4444,7 +4444,7 @@ function ClientNotifications({
                         : entry.status;
                     return (
                       <i className={entryClass} key={entry.id} title={entry.title}>
-                        {entry.status === "pastCompleted" ? "✓" : `№${entry.order}`}
+                        {isTrainerV2Path(window.location.pathname) ? `${({ completed: "✓", completed_off_date: "↗", missed: "!", shifted: "↪", pastCompleted: "✓", planned: "○" })[entry.status] || "○"} №${entry.order}` : entry.status === "pastCompleted" ? "✓" : `№${entry.order}`}
                       </i>
                     );
                   })}
@@ -4466,11 +4466,11 @@ function ClientNotifications({
 
   const notificationCalendarLegend = (
     <div className="trainerNotificationLegend" aria-label="Типы напоминаний">
-      <span><i className="subscription" />Период абонемента</span>
-      <span><i className="plannedWorkout" />Плановая тренировка</span>
-      <span><i className="pastWorkout" />Прошлая тренировка</span>
-      <span><i className="photo" />Фото</span>
-      <span><i className="measurement" />Замеры</span>
+      <span><i aria-hidden="true" className="subscription">{isTrainerV2Path(window.location.pathname) ? "―" : ""}</i>Период абонемента</span>
+      <span><i aria-hidden="true" className="plannedWorkout">{isTrainerV2Path(window.location.pathname) ? "○" : ""}</i>Плановая тренировка</span>
+      <span><i aria-hidden="true" className="pastWorkout">{isTrainerV2Path(window.location.pathname) ? "✓" : ""}</i>Прошлая тренировка</span>
+      <span><i aria-hidden="true" className="photo">{isTrainerV2Path(window.location.pathname) ? "Ф" : ""}</i>Фото</span>
+      <span><i aria-hidden="true" className="measurement">{isTrainerV2Path(window.location.pathname) ? "З" : ""}</i>Замеры</span>
     </div>
   );
 
@@ -4528,13 +4528,13 @@ function ClientNotifications({
               </div>
               {renderCalendarDays("trainerNotificationCalendarGrid trainerWorkoutScheduleGrid")}
               <div className="trainerNotificationLegend" aria-label="Типы календарных отметок">
-                <span><i className="subscription" />Период абонемента</span>
-                <span><i className="plannedWorkout" />Плановая тренировка</span>
-                <span><i className="completed" />В срок</span>
-                <span><i className="completedOffDate" />Выполнено в другой день</span>
-                <span><i className="missed" />Пропущена</span>
-                <span><i className="shifted" />Смещена</span>
-                <span><i className="pastWorkout" />Прошлая тренировка</span>
+                <span><i aria-hidden="true" className="subscription">{isTrainerV2Path(window.location.pathname) ? "―" : ""}</i>Период абонемента</span>
+                <span><i aria-hidden="true" className="plannedWorkout">{isTrainerV2Path(window.location.pathname) ? "○" : ""}</i>Плановая тренировка</span>
+                <span><i aria-hidden="true" className="completed">{isTrainerV2Path(window.location.pathname) ? "✓" : ""}</i>В срок</span>
+                <span><i aria-hidden="true" className="completedOffDate">{isTrainerV2Path(window.location.pathname) ? "↗" : ""}</i>Выполнено в другой день</span>
+                <span><i aria-hidden="true" className="missed">{isTrainerV2Path(window.location.pathname) ? "!" : ""}</i>Пропущена</span>
+                <span><i aria-hidden="true" className="shifted">{isTrainerV2Path(window.location.pathname) ? "↪" : ""}</i>Смещена</span>
+                <span><i aria-hidden="true" className="pastWorkout">{isTrainerV2Path(window.location.pathname) ? "✓" : ""}</i>Прошлая тренировка</span>
               </div>
             </div>
           </div>

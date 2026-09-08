@@ -130,3 +130,8 @@ Reviewed with ui-ux-pro-max (grouping, hierarchy, touch targets) and emil-design
 | Mixed labels and tiny avatar | Larger avatar, shorter headings, consistent controls | Match the calm iOS interface |
 
 Acceptance: all 11 user comments addressed across overview, workouts, nutrition and photos/measurements. Protected handlers and original route preserved. Eight viewport checks (320–1920), task/calendar/message sheets, program editor, photo comparison, sparse states and 680 unit tests verified. Explicit layout checks cover metric height, section gaps and completed workout identity. Screenshots also inspected below the fold for calendar, nutrition and measurements.
+
+
+## 3.0.715 — readable calendar legend
+
+Replaced indistinguishable dots with status symbols and semantic colours in the subscription calendar. Actual day badges carry the same symbols alongside workout numbers. Removed inherited text hiding, separated date and badge layout, and separated subscription range from workout statuses. Verified the calendar sheet and legend at 393, 768 and 1366 px, JSX lint, production build and artifact guards.

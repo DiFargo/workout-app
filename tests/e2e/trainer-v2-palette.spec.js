@@ -62,6 +62,14 @@ for (const width of [393,768,1366]) {
       const dialog=page.getByRole('dialog',{name:title,exact:true});
       await expect(dialog).toBeVisible();
       await assertPalette(page);
+      if (title === 'Календарь тренировок') {
+        const marks = dialog.locator('.trainerNotificationLegend i');
+        expect(await marks.allTextContents()).toEqual(['―','○','✓','↗','!','↪','✓']);
+        for (const mark of await marks.all()) {
+          expect(await mark.evaluate(el => getComputedStyle(el).textIndent)).toBe('0px');
+          expect(await mark.evaluate(el => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(14);
+        }
+      }
       const box=await dialog.boundingBox();
       expect(box.x).toBeGreaterThanOrEqual(0);
       expect(box.x+box.width).toBeLessThanOrEqual(width+1);
