@@ -3064,8 +3064,8 @@ function ClientWorkoutPlan({
       ) : null}
       <ClientSectionLaunchButton
         icon={ClipboardList}
-        title="Открыть разбор и историю тренировок"
-        description={visibleWorkoutReview
+        title={isTrainerV2Path(window.location.pathname) ? "История тренировок" : "Открыть разбор и историю тренировок"}
+        description={isTrainerV2Path(window.location.pathname) ? "Все завершённые тренировки клиента" : visibleWorkoutReview
           ? "Последняя тренировка, комментарий клиента и все сохранённые записи"
           : "Все сохранённые тренировки клиента в одном месте"}
         onClick={() => setWorkoutInsightsOpen(true)}
@@ -3100,13 +3100,13 @@ function ClientWorkoutPlan({
 
       {workoutInsightsOpen ? (
         <TrainerClientUtilitySheet
-          title="Разбор и история тренировок"
+          title={isTrainerV2Path(window.location.pathname) ? "История тренировок" : "Разбор и история тренировок"}
           eyebrow="Тренировки клиента"
           variant="wide"
           onRequestClose={() => setWorkoutInsightsOpen(false)}
         >
           <div className="trainerClientWorkoutInsightsSheet">
-            {visibleWorkoutReview ? (
+            {!isTrainerV2Path(window.location.pathname) && (visibleWorkoutReview ? (
               <ClientWorkoutReviewPanel
                 review={visibleWorkoutReview}
                 onAdjustNextWorkout={() => {
@@ -3117,7 +3117,7 @@ function ClientWorkoutPlan({
               />
             ) : (
               <div className="trainerNextEmpty">Разбор появится после первой завершённой тренировки клиента.</div>
-            )}
+            ))}
             <ClientWorkoutHistoryBlock history={history} showAll />
           </div>
         </TrainerClientUtilitySheet>

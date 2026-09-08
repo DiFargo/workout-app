@@ -72,6 +72,11 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.getByRole('button', { name: 'Все показатели · 12' }).click();
     await expect(page.locator('.trainerClientMeasurementTable tbody tr')).toHaveCount(12);
     await tab('Тренировки');
+    await page.getByRole('button', { name: 'История тренировок Все завершённые тренировки клиента', exact: true }).click();
+    const historySheet = page.getByRole('dialog', { name: 'История тренировок', exact: true });
+    await expect(historySheet.locator('.trainerClientWorkoutHistoryBlock')).toBeVisible();
+    await expect(historySheet.getByText('РАЗБОР ТРЕНИРОВКИ', { exact: true })).toHaveCount(0);
+    await historySheet.getByRole('button', { name: 'Закрыть: История тренировок', exact: true }).click();
     const assign = page.getByLabel('Назначить программу клиенту');
     await expect(assign).toBeHidden();
     await page.locator('.trainerClientAssignmentDisclosure > summary').click();
