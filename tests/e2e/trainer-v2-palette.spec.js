@@ -49,8 +49,8 @@ for (const width of [393,768,1366]) {
       await assertPalette(page);
       const header=await page.locator('.trainerNextClientHeader').boundingBox();
       const root=await page.locator('#root .trainerNextRoot').first().boundingBox();
-      expect(header.x-root.x).toBeLessThanOrEqual(20);
-      expect(root.width-header.width).toBeLessThanOrEqual(40);
+      expect(header.x-root.x).toBeLessThanOrEqual(width > 760 ? 24 : 16);
+      expect(root.width-header.width).toBeLessThanOrEqual(width > 760 ? 48 : 32);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
       await page.screenshot({path:`artifacts/trainer-complete-${width}-${name}.png`,animations:'disabled'});
     }

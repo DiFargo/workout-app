@@ -1,3 +1,4 @@
+import { isTrainerV2Path } from "../../app/cssVariant";
 import { useMemo, useState } from "react";
 import { Dumbbell, Ruler, Scale, Utensils } from "lucide-react";
 import {
@@ -98,7 +99,7 @@ function ProgressSignal({ card, active, onSelect }) {
     >
       <span className={styles.signalIcon}><Icon size={18} /></span>
       <div>
-        <h3>{card.title}</h3>
+        <h3>{isTrainerV2Path(window.location.pathname) ? ({ weight: "Вес", body: "Замеры", strength: "Сила", nutrition: "Питание" }[card.id] || card.title) : card.title}</h3>
         <small>{card.meta}</small>
       </div>
       <strong className={styles[card.tone]}>{card.value}</strong>

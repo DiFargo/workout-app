@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { isTrainerV2Path } from "../../app/cssVariant";
-import TrainerClientDisclosure from "./TrainerClientDisclosure";
+import TrainerClientDisclosure, { TrainerClientColumn } from "./TrainerClientDisclosure";
 import { useBodyScrollLock } from "../../shared/hooks/useBodyScrollLock";
 import workspaceStyles from "./TrainerWorkspaceCalm.module.css";
 import syncStyles from "./TrainerWorkspace.module.css";
@@ -2876,6 +2876,7 @@ function ClientWorkoutPlan({
 
   return (
     <div className="trainerClientWorkoutPlan">
+      <TrainerClientColumn>
       <section className={trainerClientWorkoutPlanStyles.programCard}>
         <header className={trainerClientWorkoutPlanStyles.programHeader}>
           <span><ClipboardList size={19} /></span>
@@ -3055,6 +3056,15 @@ function ClientWorkoutPlan({
           </TrainerClientDisclosure>)}
         </section>
       ) : null}
+      <ClientSectionLaunchButton
+        icon={ClipboardList}
+        title="Открыть разбор и историю тренировок"
+        description={visibleWorkoutReview
+          ? "Последняя тренировка, комментарий клиента и все сохранённые записи"
+          : "Все сохранённые тренировки клиента в одном месте"}
+        onClick={() => setWorkoutInsightsOpen(true)}
+      />
+      </TrainerClientColumn>
       <WorkoutSchedulePlanner
         key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
         client={client}
@@ -3078,14 +3088,7 @@ function ClientWorkoutPlan({
         />
       ) : null}
 
-      <ClientSectionLaunchButton
-        icon={ClipboardList}
-        title="Открыть разбор и историю тренировок"
-        description={visibleWorkoutReview
-          ? "Последняя тренировка, комментарий клиента и все сохранённые записи"
-          : "Все сохранённые тренировки клиента в одном месте"}
-        onClick={() => setWorkoutInsightsOpen(true)}
-      />
+
 
       {workoutInsightsOpen ? (
         <TrainerClientUtilitySheet
@@ -5403,6 +5406,13 @@ function TrainerClientDetail({
         })}
       </nav>
 
+      {isTrainerV2Path(window.location.pathname) ? (
+        <div className="trainerClientPageHeading">
+          <div><h2>{exercisesOpen ? "Тренировки" : currentTab === "nutrition" ? "Питание" : ["bodyProgress", "measurements", "photos"].includes(currentTab) ? "Фото и замеры" : "Сводка"}</h2>
+          <p>{exercisesOpen ? "Текущая программа и расписание занятий" : currentTab === "nutrition" ? "Дневник, цели и соблюдение плана" : ["bodyProgress", "measurements", "photos"].includes(currentTab) ? "Сравнение дат и изменение показателей" : "Динамика и текущие задачи клиента"}</p></div>
+          {currentTab === "nutrition" ? <button type="button" onClick={() => setUtilitySheet("nutritionDiary")}>Дневник</button> : null}
+        </div>
+      ) : null}
       {currentTab === "overview" ? (
         <ClientOverview
           client={client}

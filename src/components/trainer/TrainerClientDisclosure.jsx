@@ -10,3 +10,9 @@ export default function TrainerClientDisclosure({ title, children, className = "
     </details>
   );
 }
+
+export function TrainerClientColumn({ children }) {
+  return isTrainerV2Path(window.location.pathname)
+    ? <div className="trainerClientMainColumn">{children}</div>
+    : children;
+}

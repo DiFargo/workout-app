@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { failOnRuntimeErrors } from './runtime-errors.js';
 
-for (const width of [320, 393, 768, 1366]) {
+for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
   test(`approved client workspace preserves tools at ${width}px`, async ({ page }, info) => {
     test.skip(info.project.name !== 'desktop-chromium', 'Explicit viewport coverage.');
     await page.setViewportSize({ width, height: 852 });
@@ -21,7 +21,23 @@ for (const width of [320, 393, 768, 1366]) {
       await tab(name);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
       const header = await page.locator('.trainerNextClientHeader').boundingBox();
-      expect(header.height).toBeLessThan(width >= 980 ? 140 : 180);
+      expect(header.height).toBeLessThan(width >= 761 ? 140 : 180);
+      for (const child of await page.locator('.trainerNextClientHeader > *').all()) {
+        const box = await child.boundingBox();
+        expect(box.x).toBeGreaterThanOrEqual(header.x);
+        expect(box.x + box.width).toBeLessThanOrEqual(header.x + header.width);
+      }
+      if (width <= 760) {
+        const dock = await page.locator('.trainerNextClientMobileNav').boundingBox();
+        expect(dock.x).toBeGreaterThanOrEqual(0);
+        expect(dock.x + dock.width).toBeLessThanOrEqual(width);
+        expect(dock.y + dock.height).toBeLessThanOrEqual(852);
+      }
+      if (name === 'Тренировки') {
+        const program = await page.locator('.trainerClientMainColumn > section').first().boundingBox();
+        const list = await page.locator('.trainerClientWorkoutList').boundingBox();
+        expect(list.y - program.y - program.height).toBeLessThanOrEqual(20);
+      }
       await page.screenshot({ path: `artifacts/client-four-runtime-${width}-${name}.png` });
     }
     await expect(page.locator('.trainerPhotoCompareGrid figure')).toHaveCount(2);
