@@ -1628,3 +1628,9 @@
   color: var(--trainer-v2-accent, #5e4594);
   box-shadow: 0 9px 18px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.2);
 }
+
+
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerWorkoutScheduleGrid button.subscriptionRange) {background:#e5effb!important;box-shadow:inset 0 -4px 0 #3f73b8!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerWorkoutScheduleGrid button.subscriptionStart),
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerWorkoutScheduleGrid button.subscriptionEnd) {background:#3f73b8!important;color:white!important;box-shadow:inset 0 -4px 0 #204c85!important;}
+

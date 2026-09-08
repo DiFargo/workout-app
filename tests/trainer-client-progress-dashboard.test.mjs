@@ -84,7 +84,7 @@ test("does not let an unfinished current nutrition day lower the adherence score
 
   assert.equal(result.nutrition.points.length, 1);
   assert.equal(result.nutrition.trackedDays, 1);
-  assert.equal(result.nutrition.periodDays, 6);
+  assert.equal(result.nutrition.periodDays, 7);
   assert.equal(result.nutrition.average, 100);
 });
 
@@ -120,4 +120,15 @@ test("automatically selects the longest accumulated data period and keeps week f
     nutritionDays: [{ date: "2026-02-01" }, { date: "2026-07-01" }],
     now: new Date("2026-07-01T12:00:00.000Z")
   }), "6m");
+});
+
+test("weekly comparison includes the same weekday a week ago and excludes older records", () => {
+  const result = buildTrainerClientProgressDashboard({ days: 7, now: new Date(2026, 8, 8, 12),
+    measurements: [{date: new Date(2026, 7, 31, 12), weight: 90}, {date: new Date(2026, 8, 1, 12), weight: 92}, {date: new Date(2026, 8, 8, 9), weight: 92.5}],
+    nutritionGoals: {calories: 2500}, nutritionDays: [{date: new Date(2026, 8, 1, 12), totals: {calories: 2500}}, {date: new Date(2026, 8, 8, 9), totals: {calories: 1000}}]
+  });
+  assert.equal(result.weight.points.length, 2);
+  assert.equal(result.weight.delta, 0.5);
+  assert.equal(result.nutrition.periodDays, 7);
+  assert.equal(result.nutrition.trackedDays, 1);
 });

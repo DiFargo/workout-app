@@ -230,3 +230,17 @@
  :global(html[data-trainer-variant="v2"]) .embeddedHeader {grid-template-columns:36px minmax(0,1fr);gap:10px;padding:12px}
  :global(html[data-trainer-variant="v2"]) .createButton {grid-column:1 / -1;justify-self:stretch}
 }
+
+
+:global(html[data-trainer-variant="v2"] body) .panel.embedded {border:0!important;background:transparent!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .embeddedHeader {padding:0 0 16px!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .summaryText strong {font-size:15px!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .summaryText small {font-size:13px!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .createButton {font-size:14px!important;min-height:44px!important;padding:10px 12px!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .list {grid-template-columns:1fr!important;padding:0!important;gap:0!important;border-radius:14px!important;overflow:hidden!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .list article {padding:14px!important;border:0!important;border-bottom:1px solid #eeeef2!important;border-radius:0!important;opacity:1!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .taskText strong {font-size:15px!important;white-space:normal!important;}
+:global(html[data-trainer-variant="v2"] body) .embedded .taskText small {font-size:12px!important;color:#636366!important;}
+.groupTitle {font-size:13px;font-weight:600;color:#636366;margin:18px 4px 8px;}
+@media(max-width:600px){:global(html[data-trainer-variant="v2"] body) .embedded .embeddedHeader {grid-template-columns:36px 1fr!important;} :global(html[data-trainer-variant="v2"] body) .embedded .createButton {grid-column:1/-1!important;width:100%!important;}}
+

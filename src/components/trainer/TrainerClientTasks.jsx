@@ -1,4 +1,4 @@
-import { Check, ChevronDown, ClipboardList, Plus } from "lucide-react";
+import { Circle, Check, ChevronDown, ClipboardList, Plus } from "lucide-react";
 import styles from "./TrainerClientTasks.module.css";
 
 function getTaskDate(value) {
@@ -52,16 +52,16 @@ export default function TrainerClientTasks({ tasks = [], embedded = false, onCre
     : safeTasks.length
       ? "Активных заданий сейчас нет"
       : "Назначений пока нет";
-  const taskList = (
+  const renderTasks = (items) => (
     <div className={styles.list}>
-      {safeTasks.length ? safeTasks.map((task, index) => {
+      {items.length ? items.map((task, index) => {
         const completed = isTaskCompleted(task);
         const taskDate = task.dueDate || task.createdAt || task.date;
         const dateLabel = task.dueDate ? `до ${formatTaskDate(taskDate)}` : formatTaskDate(taskDate);
 
         return (
           <article key={task.id || index} className={completed ? styles.completed : ""}>
-            <span className={styles.statusIcon} aria-hidden="true"><Check size={14} /></span>
+            <span className={styles.statusIcon} aria-hidden="true">{completed ? <Check size={14} /> : <Circle size={14} />}</span>
             <span className={styles.taskText}>
               <strong>{task.title || task.text || "Задание"}</strong>
               <small>{completed ? "Выполнено" : "Активно"} · {dateLabel}</small>
@@ -73,6 +73,8 @@ export default function TrainerClientTasks({ tasks = [], embedded = false, onCre
       )}
     </div>
   );
+
+  const taskList = renderTasks(safeTasks);
 
   if (embedded) {
     return (
@@ -88,7 +90,9 @@ export default function TrainerClientTasks({ tasks = [], embedded = false, onCre
             <span>Назначить задание</span>
           </button>
         </header>
-        {taskList}
+        <h3 className={styles.groupTitle}>Активные · {activeCount}</h3>
+        {activeCount ? renderTasks(safeTasks.filter(task => !isTaskCompleted(task))) : <p className={styles.empty}>Все задания выполнены. Новое можно назначить кнопкой выше.</p>}
+        {safeTasks.some(isTaskCompleted) ? <><h3 className={styles.groupTitle}>Выполненные · {safeTasks.length - activeCount}</h3>{renderTasks(safeTasks.filter(isTaskCompleted))}</> : null}
       </section>
     );
   }

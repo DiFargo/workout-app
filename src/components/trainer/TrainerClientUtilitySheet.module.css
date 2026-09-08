@@ -1206,3 +1206,29 @@
  :global(html[data-trainer-variant="v2"] body) .title {font-size:20px}
  :global(html[data-trainer-variant="v2"] body) .footer {padding:10px 14px!important}
 }
+
+/* Compact iOS sheets; explicit scope also survives portal modal defaults. */
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet {width:min(760px,100%)!important;max-height:calc(100dvh - 32px)!important;border-radius:22px!important;background:#f2f2f7!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;box-shadow:0 16px 60px #0003!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .header {padding:16px 20px!important;background:#f2f2f7!important;gap:12px!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .title {font-size:22px!important;line-height:1.25!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .eyebrow {font-size:11px!important;color:#636366!important;font-weight:600!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .content {padding:16px!important;background:#f2f2f7!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .footer {padding:8px 16px max(8px,env(safe-area-inset-bottom))!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .footer button,
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .headerAction button {min-height:44px!important;padding:8px 12px!important;border:0!important;box-shadow:none!important;font-size:14px!important;border-radius:10px!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .close {width:44px!important;height:44px!important;background:#e8e8ed!important;}
+@media(max-width:600px){
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet {max-height:calc(100dvh - 24px)!important;border-radius:18px!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .header {padding:12px!important;flex-wrap:wrap!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .content {padding:12px!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .title {font-size:20px!important;}
+}
+
+
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .content :global(.trainerNotificationCalendarGrid button.subscriptionRange) {background:#e5effb!important;box-shadow:inset 0 -4px 0 #3f73b8!important;opacity:1!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .content :global(.trainerNotificationCalendarGrid button.subscriptionBoundary) {background:#cbdff7!important;box-shadow:inset 0 -4px 0 #204c85!important;}
+
+@media(max-width:600px){
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .header {position:relative!important;padding-right:60px!important;}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet .close {position:absolute!important;right:10px!important;top:10px!important;}
+}

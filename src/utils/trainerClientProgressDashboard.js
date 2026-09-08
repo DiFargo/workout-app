@@ -70,7 +70,7 @@ function getPeriodRange(days, now) {
   end.setHours(23, 59, 59, 999);
   const totalDays = Math.max(1, Number(days) || 90);
   const start = new Date(end);
-  start.setDate(start.getDate() - (totalDays - 1));
+  start.setDate(start.getDate() - totalDays);
   start.setHours(0, 0, 0, 0);
   return { start, end, totalDays };
 }
@@ -151,7 +151,7 @@ function buildNutritionAdherence(nutritionDays, nutritionGoals, range) {
   // artificial calorie/protein deficit and pull the trainer's assessment down.
   const currentDayStart = new Date(range.end);
   currentDayStart.setHours(0, 0, 0, 0);
-  const completedPeriodDays = Math.max(0, range.totalDays - 1);
+  const completedPeriodDays = range.totalDays;
   if (!(targetCalories > 0)) return { points: [], average: null, trackedDays: 0, periodDays: completedPeriodDays };
 
   const points = uniquePoints((Array.isArray(nutritionDays) ? nutritionDays : []).flatMap((day) => {

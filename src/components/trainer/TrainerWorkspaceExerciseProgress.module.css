@@ -762,3 +762,24 @@
     gap: 6px !important;
   }
 }
+
+
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerClientExerciseProgress) {padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;gap:16px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeading) {display:block!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeadingIcon) {display:none!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeading h3) {font-size:17px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressRow) {display:grid!important;grid-template-columns:1fr!important;gap:14px!important;padding:16px!important;border:0!important;border-radius:14px!important;background:white!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressName) {display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressExerciseIcon) {display:none!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressName strong) {font-size:18px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics) {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;background:#f2f2f7!important;border-radius:10px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics > span) {min-width:0!important;padding:12px!important;border:0!important;border-radius:0!important;background:transparent!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics b) {font-size:14px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics small) {font-size:12px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressResult) {padding:0!important;border:0!important;background:transparent!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressResultHead) {display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressActions) {display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressActions button) {min-height:44px!important;font-size:13px!important;padding:8px 12px!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressCardNote) {font-size:13px!important;line-height:1.5!important;}
+@media(max-width:450px){:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics > span) {padding:8px!important;} :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeader) {flex-wrap:wrap!important;}}
+

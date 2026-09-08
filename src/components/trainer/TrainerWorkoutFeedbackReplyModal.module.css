@@ -99,3 +99,27 @@
   .footer button { flex: 1; }
   .footer .markProcessedButton { flex-basis: 100%; order: -1; }
 }
+
+
+:global(html[data-trainer-variant="v2"] body) .modal.modal {width:min(640px,100%)!important;max-height:calc(100dvh - 24px)!important;border-radius:22px!important;background:#f2f2f7!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .header {padding:18px 20px!important;background:#f2f2f7!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .header h2 {font-size:22px!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .header span,
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard > span {color:#636366!important;font-size:12px!important;font-weight:600!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .header p strong {font-size:15px!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .header p small {font-size:12px!important;color:#636366!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .scrollContent {padding:4px 0 16px!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard {background:white!important;border:0!important;border-radius:12px!important;padding:14px!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard blockquote {font-size:15px!important;margin:6px 0 0!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .replyField > span {font-size:14px!important;font-weight:600!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal textarea {font-size:16px!important;line-height:1.5!important;min-height:140px!important;border:1px solid #d1d1d6!important;border-radius:12px!important;padding:12px!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal textarea:focus {outline:2px solid #3f73b8!important;outline-offset:2px!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .deliveryHint,
+:global(html[data-trainer-variant="v2"] body) .modal.modal .replyField small {font-size:12px!important;color:#636366!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .footer {padding:12px 18px!important;gap:8px!important;flex-wrap:wrap!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .footer button,
+:global(html[data-trainer-variant="v2"] body) .modal.modal .adjustButton {min-height:44px!important;font-size:14px!important;padding:10px 12px!important;box-shadow:none!important;border-radius:10px!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sendButton {background:#3f73b8!important;color:white!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sendButton:disabled {background:#e5e5ea!important;color:#636366!important;}
+@media(max-width:600px){:global(html[data-trainer-variant="v2"] body) .modal.modal .footer button {flex:1 1 auto!important;} :global(html[data-trainer-variant="v2"] body) .modal.modal .footer .sendButton {width:100%!important;}}
+
