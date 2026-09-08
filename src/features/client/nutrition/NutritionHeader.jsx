@@ -1,14 +1,17 @@
-import { CalendarDays, Search } from "lucide-react";
 import { todayNutritionKey } from "../../../domain/nutritionPresentation";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import weeklyCalendarStyles from "../../../shared/ui/WeeklyCalendar.module.css";
 import styles from "./NutritionHeader.module.css";
+
+function formatWeekdayLabel(label) {
+  const value = String(label || "").toLocaleLowerCase("ru-RU");
+  return value ? `${value[0].toLocaleUpperCase("ru-RU")}${value.slice(1)}` : "";
+}
 
 export default function NutritionHeader({
   weekDates,
   nutrition,
   nutritionDateKey,
-  onOpenSearch,
-  onOpenCalendar,
   onSelectDate
 }) {
   return (
@@ -23,39 +26,9 @@ export default function NutritionHeader({
         testId="nutrition-header"
         scope="nutrition-header"
         barPart="title-row"
-        actions={(
-          <div className={styles.actions} data-nutrition-header-part="actions">
-            <button
-              className={styles.action}
-              type="button"
-              onClick={onOpenSearch}
-              aria-label="Поиск еды"
-              title="Поиск еды"
-              data-testid="nutrition-header-search"
-              data-nutrition-header-action="search"
-            >
-              <Search className={styles.icon} aria-hidden="true" data-nutrition-header-icon />
-            </button>
-            <button
-              className={styles.action}
-              type="button"
-              onClick={onOpenCalendar}
-              aria-label="Календарь"
-              title="Календарь"
-              data-testid="nutrition-header-calendar"
-              data-nutrition-header-action="calendar"
-            >
-              <CalendarDays
-                className={`${styles.icon} ${styles.calendarIcon}`}
-                aria-hidden="true"
-                data-nutrition-header-icon
-              />
-            </button>
-          </div>
-        )}
       />
 
-      <div className={styles.week} data-nutrition-header-part="week">
+      <div className={`${styles.week} ${weeklyCalendarStyles.root}`} data-week-calendar="nutrition" data-nutrition-header-part="week">
         {weekDates.map((day) => {
           const dayHasFood = Boolean(nutrition.days?.[day.key]?.foods?.length);
           const isSelectedDay = day.key === nutritionDateKey;
@@ -79,12 +52,13 @@ export default function NutritionHeader({
               data-selected={isSelectedDay}
               data-has-food={dayHasFood}
               data-today={isTodayDay}
+              data-week-calendar-day
             >
               <span className={styles.dot} aria-hidden="true" data-nutrition-header-part="day-dot" />
-              <small className={styles.dayLabel} data-nutrition-header-part="day-label">
-                {day.label}
+              <small className={styles.dayLabel} data-week-calendar-label data-nutrition-header-part="day-label">
+                {formatWeekdayLabel(day.label)}
               </small>
-              <span className={styles.dateNumber}>{day.date.getDate()}</span>
+              <span className={styles.dateNumber} data-week-calendar-number>{day.date.getDate()}</span>
             </button>
           );
         })}

@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workout — iPhone native concept</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #eef0f4;
+      --page: #f2f2f7;
+      --surface: #ffffff;
+      --surface-raised: rgba(255, 255, 255, .88);
+      --text: #1c1c1e;
+      --secondary: #6c6c70;
+      --tertiary: #8e8e93;
+      --separator: rgba(60, 60, 67, .16);
+      --fill: rgba(120, 120, 128, .12);
+      --fill-strong: rgba(120, 120, 128, .2);
+      --blue: #007aff;
+      --blue-soft: #e5f1ff;
+      --green: #34c759;
+      --green-deep: #208a3b;
+      --green-soft: #e5f7e9;
+      --orange: #ff9500;
+      --orange-soft: #fff1db;
+      --pink: #ff2d55;
+      --pink-soft: #ffe8ee;
+      --purple: #af52de;
+      --purple-soft: #f5e9ff;
+      --shadow: 0 18px 42px rgba(28, 28, 30, .12);
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+      --ease-ios: cubic-bezier(.32, .72, 0, 1);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--canvas); }
+    body { min-width: 320px; margin: 0; background: var(--canvas); color: var(--text); -webkit-font-smoothing: antialiased; }
+    button { border: 0; color: inherit; font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 3px solid rgba(0, 122, 255, .42); outline-offset: 3px; }
+    .icon { width: 22px; height: 22px; display: block; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.85; }
+    .icon--sm { width: 18px; height: 18px; }
+    .icon--xs { width: 15px; height: 15px; }
+
+    .sprite { width: 0; height: 0; position: absolute; overflow: hidden; }
+    .brief { width: min(1280px, calc(100% - 48px)); margin: 0 auto; padding: 46px 0 26px; display: flex; align-items: end; justify-content: space-between; gap: 28px; }
+    .brief__eyebrow { margin: 0 0 7px; color: var(--blue); font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+    .brief h1 { max-width: 700px; margin: 0; color: #000; font-size: clamp(32px, 4vw, 52px); font-weight: 760; letter-spacing: -.055em; line-height: .98; }
+    .brief p { max-width: 370px; margin: 0 0 3px; color: var(--secondary); font-size: 15px; line-height: 1.45; }
+    .specs { width: min(1280px, calc(100% - 48px)); margin: 0 auto 24px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .specs::-webkit-scrollbar { display: none; }
+    .spec { min-height: 34px; padding: 0 12px; display: inline-flex; align-items: center; flex: 0 0 auto; border: 1px solid rgba(60, 60, 67, .1); border-radius: 999px; background: rgba(255, 255, 255, .7); color: var(--secondary); font-size: 12px; font-weight: 600; }
+    .spec svg { margin-right: 6px; color: var(--blue); }
+
+    .switcher { width: min(1280px, calc(100% - 48px)); margin: 0 auto 26px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .switcher::-webkit-scrollbar { display: none; }
+    .switcher button { min-height: 42px; padding: 0 14px; display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto; border-radius: 12px; background: transparent; color: var(--secondary); font-size: 13px; font-weight: 650; transition: color 160ms var(--ease-out), background 160ms var(--ease-out), transform 120ms var(--ease-out); }
+    .switcher button[aria-selected="true"] { background: var(--surface); color: var(--blue); box-shadow: 0 2px 9px rgba(28, 28, 30, .08); }
+    .switcher button:active, .tap:active, .tab:active { transform: scale(.975); }
+
+    .phones { width: min(1280px, calc(100% - 48px)); margin: 0 auto 50px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; align-items: start; }
+    .phone { min-width: 0; aspect-ratio: 9 / 19.35; position: relative; overflow: hidden; border: 7px solid #111113; border-radius: 39px; background: var(--page); box-shadow: var(--shadow); transition: opacity 180ms var(--ease-out), transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out); }
+    @media (hover: hover) and (pointer: fine) { .phone:hover { transform: translateY(-5px); box-shadow: 0 24px 54px rgba(28, 28, 30, .16); } }
+    .dynamic-island { width: 35%; height: 22px; position: absolute; z-index: 5; top: 7px; left: 50%; border-radius: 999px; background: #111113; transform: translateX(-50%); }
+    .status { height: 47px; padding: 14px 19px 0; display: flex; align-items: center; justify-content: space-between; color: #000; font-size: 10px; font-weight: 750; letter-spacing: -.01em; }
+    .status__icons { display: flex; align-items: center; gap: 4px; }
+    .status__icons i { width: 3px; border-radius: 2px; background: currentColor; }
+    .status__icons i:nth-child(1) { height: 4px; }.status__icons i:nth-child(2) { height: 6px; }.status__icons i:nth-child(3) { height: 8px; }.status__icons i:nth-child(4) { height: 10px; }
+    .battery { width: 15px; height: 8px; margin-left: 3px; border: 1.5px solid currentColor; border-radius: 2px; position: relative; }.battery::after { width: 1.5px; height: 4px; position: absolute; right: -3px; top: 1px; border-radius: 0 1px 1px 0; background: currentColor; content: ""; }.battery::before { width: 9px; height: 4px; position: absolute; left: 2px; top: 1px; border-radius: 1px; background: currentColor; content: ""; }
+    .screen { height: calc(100% - 47px); padding: 7px 12px 93px; overflow: hidden auto; scrollbar-width: none; background: var(--page); }
+    .screen::-webkit-scrollbar { display: none; }
+    .nav { min-height: 38px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .nav h2 { margin: 0; color: #000; font-size: 28px; font-weight: 760; letter-spacing: -.055em; line-height: 1; }
+    .nav__action { min-width: 38px; min-height: 38px; display: grid; place-items: center; border-radius: 50%; background: transparent; color: var(--blue); }
+    .nav__action .avatar { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: #d7ecff; color: #1478bd; font-size: 12px; font-weight: 750; }
+    .day-caption { margin: 1px 4px 10px; color: var(--secondary); font-size: 12px; }
+    .section-title { margin: 20px 4px 8px; color: var(--secondary); font-size: 12px; font-weight: 650; }
+    .section-title--row { display: flex; align-items: center; justify-content: space-between; }.section-title button { color: var(--blue); background: transparent; font-size: 12px; font-weight: 600; }
+    .group { overflow: hidden; border-radius: 14px; background: var(--surface); }
+    .row { min-height: 54px; padding: 8px 11px; display: flex; align-items: center; gap: 10px; position: relative; text-align: left; width: 100%; background: var(--surface); }
+    .row + .row::before { height: 1px; position: absolute; top: 0; left: 55px; right: 0; background: var(--separator); content: ""; }
+    .row__icon { width: 32px; height: 32px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 9px; background: var(--blue-soft); color: var(--blue); }
+    .row__icon--green { background: var(--green-soft); color: var(--green-deep); }.row__icon--orange { background: var(--orange-soft); color: #c87800; }.row__icon--pink { background: var(--pink-soft); color: var(--pink); }.row__icon--purple { background: var(--purple-soft); color: var(--purple); }
+    .row__copy { min-width: 0; flex: 1; }.row__copy strong { display: block; overflow: hidden; color: var(--text); font-size: 13px; font-weight: 680; line-height: 17px; text-overflow: ellipsis; white-space: nowrap; }.row__copy small { display: block; margin-top: 1px; overflow: hidden; color: var(--secondary); font-size: 11px; line-height: 14px; text-overflow: ellipsis; white-space: nowrap; }
+    .row__meta { color: var(--secondary); font-size: 11px; font-weight: 560; white-space: nowrap; }.chev { color: #c7c7cc; }.row__chev { margin-left: 2px; color: #c7c7cc; }
+
+    .welcome { margin: 0 4px 12px; }.welcome p { margin: 0 0 2px; color: var(--secondary); font-size: 12px; }.welcome h3 { margin: 0; color: #000; font-size: 22px; font-weight: 750; letter-spacing: -.045em; }
+    .activity-card { min-height: 150px; padding: 15px; display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 12px; border-radius: 20px; background: #1c1c1e; color: #fff; }
+    .activity-card__rings { width: 104px; height: 104px; display: grid; place-items: center; position: relative; }.ring { position: absolute; border-radius: 50%; transform: rotate(-90deg); }.ring--outer { width: 104px; height: 104px; background: conic-gradient(var(--pink) 0 77%, rgba(255,255,255,.14) 77%); }.ring--middle { width: 82px; height: 82px; background: conic-gradient(var(--green) 0 62%, rgba(255,255,255,.14) 62%); }.ring--inner { width: 60px; height: 60px; background: conic-gradient(var(--orange) 0 46%, rgba(255,255,255,.14) 46%); }.ring::after { position: absolute; inset: 6px; border-radius: 50%; background: #1c1c1e; content: ""; }
+    .activity-card__copy small { display: block; color: rgba(255,255,255,.62); font-size: 10px; }.activity-card__copy strong { display: block; margin: 2px 0 10px; font-size: 20px; letter-spacing: -.045em; }.activity-card__copy p { margin: 0; color: rgba(255,255,255,.72); font-size: 11px; line-height: 15px; }.activity-legend { margin-top: 9px; display: flex; gap: 5px; }.activity-legend i { width: 7px; height: 7px; border-radius: 50%; }.activity-legend i:nth-child(1) { background: var(--pink); }.activity-legend i:nth-child(2) { background: var(--green); }.activity-legend i:nth-child(3) { background: var(--orange); }
+    .focus-card { padding: 14px; border-radius: 18px; background: var(--surface); }.focus-card__top { display: flex; align-items: center; justify-content: space-between; }.focus-card small { color: var(--secondary); font-size: 10px; }.focus-card h4 { margin: 3px 0 2px; color: #000; font-size: 16px; letter-spacing: -.035em; }.focus-card p { margin: 0; color: var(--secondary); font-size: 11px; }.focus-card__pill { min-height: 25px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 999px; background: var(--orange-soft); color: #a55d00; font-size: 10px; font-weight: 700; }.focus-card__action { width: 100%; min-height: 40px; margin-top: 12px; border-radius: 11px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 700; box-shadow: 0 5px 12px rgba(0,122,255,.18); }
+
+    .week { margin: 0 -1px 12px; padding: 8px 3px; display: grid; grid-template-columns: repeat(7, 1fr); border-radius: 16px; background: var(--surface); }.week__day { min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: var(--secondary); font-size: 9px; font-weight: 650; }.week__day b { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; color: var(--text); font-size: 12px; }.week__day.active { color: var(--blue); }.week__day.active b { background: var(--blue); color: #fff; }.week__day.done b { background: var(--green-soft); color: var(--green-deep); }.week__dot { width: 3px; height: 3px; border-radius: 50%; background: var(--orange); }
+    .training-hero { overflow: hidden; border-radius: 20px; background: var(--surface); }.training-hero__art { height: 76px; padding: 12px; display: flex; align-items: flex-end; justify-content: space-between; background: linear-gradient(135deg, #e8f5ff, #d7ecff); color: #1175bc; }.training-hero__art svg { width: 52px; height: 52px; stroke-width: 1.5; }.training-hero__art span { min-height: 24px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 999px; background: rgba(255,255,255,.72); font-size: 10px; font-weight: 700; }.training-hero__body { padding: 13px; }.training-hero__body small { color: var(--blue); font-size: 10px; font-weight: 750; letter-spacing: .045em; text-transform: uppercase; }.training-hero__body h4 { margin: 3px 0; color: #000; font-size: 16px; letter-spacing: -.035em; }.training-hero__body p { margin: 0; color: var(--secondary); font-size: 11px; }.set-progress { margin: 10px 0 0; display: flex; gap: 4px; }.set-progress i { height: 4px; flex: 1; border-radius: 999px; background: var(--fill-strong); }.set-progress i.done { background: var(--green); }.training-hero__body button { width: 100%; min-height: 42px; margin-top: 12px; border-radius: 12px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 700; }
+
+    .date-strip { padding: 7px 5px; display: grid; grid-template-columns: repeat(7, 1fr); border-radius: 16px; background: var(--surface); }.date-strip span { min-height: 45px; display: grid; place-items: center; align-content: center; gap: 2px; color: var(--secondary); font-size: 9px; font-weight: 650; }.date-strip b { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; color: var(--text); font-size: 12px; }.date-strip .today b { background: var(--blue); color: #fff; }
+    .calorie-card { min-height: 137px; padding: 15px; display: grid; grid-template-columns: 95px 1fr; align-items: center; gap: 11px; border-radius: 20px; background: var(--surface); }.calorie-ring { width: 91px; height: 91px; padding: 8px; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--orange) 0 63%, #f0f0f5 63%); }.calorie-ring__inside { width: 75px; height: 75px; display: grid; place-items: center; align-content: center; border-radius: 50%; background: #fff; }.calorie-ring strong { color: #000; font-size: 18px; letter-spacing: -.04em; }.calorie-ring small { color: var(--secondary); font-size: 8px; }.calorie-copy h4 { margin: 0; color: #000; font-size: 16px; letter-spacing: -.035em; }.calorie-copy p { margin: 4px 0 11px; color: var(--secondary); font-size: 11px; }.macro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }.macro-grid span { color: var(--secondary); font-size: 8px; }.macro-grid b { display: block; margin-top: 2px; color: var(--text); font-size: 10px; }
+    .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }.quick-actions button { min-height: 68px; padding: 7px 2px; display: grid; place-items: center; align-content: center; gap: 5px; border-radius: 14px; background: var(--surface); color: var(--text); font-size: 9px; font-weight: 650; }.quick-actions span { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 9px; background: var(--blue-soft); color: var(--blue); }
+
+    .metric-card { padding: 15px; border-radius: 20px; background: var(--surface); }.metric-card__top { display: flex; align-items: start; justify-content: space-between; }.metric-card__top small { color: var(--secondary); font-size: 11px; }.metric-card__top strong { display: block; margin-top: 2px; color: #000; font-size: 28px; letter-spacing: -.06em; }.metric-change { min-height: 25px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 999px; background: var(--green-soft); color: var(--green-deep); font-size: 10px; font-weight: 750; }.chart { width: 100%; height: 86px; margin-top: 7px; overflow: visible; }.chart__grid { stroke: #e7e7ec; stroke-width: 1; }.chart__line { fill: none; stroke: var(--blue); stroke-linecap: round; stroke-linejoin: round; stroke-width: 3; }.chart__area { fill: url(#chartFill); opacity: .3; }.chart__point { fill: #fff; stroke: var(--blue); stroke-width: 3; }.segmented { padding: 2px; display: grid; grid-template-columns: repeat(3, 1fr); border-radius: 9px; background: var(--fill); }.segmented button { min-height: 28px; border-radius: 7px; background: transparent; color: var(--secondary); font-size: 10px; font-weight: 650; }.segmented button.active { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+    .record-card { padding: 12px; display: flex; align-items: center; gap: 10px; border-radius: 16px; background: #1c1c1e; color: #fff; }.record-card__badge { width: 35px; height: 35px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 11px; background: rgba(255,149,0,.2); color: var(--orange); }.record-card small { display: block; color: rgba(255,255,255,.62); font-size: 10px; }.record-card strong { display: block; margin-top: 2px; font-size: 12px; }
+
+    .profile-card { padding: 14px; display: flex; align-items: center; gap: 10px; border-radius: 18px; background: var(--surface); }.profile-card__avatar { width: 47px; height: 47px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; background: linear-gradient(135deg, #d7ecff, #bfdefa); color: #187abf; font-size: 19px; font-weight: 740; }.profile-card strong { display: block; font-size: 15px; letter-spacing: -.02em; }.profile-card small { display: block; margin-top: 2px; color: var(--secondary); font-size: 11px; }.profile-card button { width: 34px; height: 34px; margin-left: auto; display: grid; place-items: center; border-radius: 50%; background: var(--fill); color: var(--blue); }
+    .notice { padding: 11px 12px; display: flex; align-items: center; gap: 8px; border-radius: 14px; background: var(--blue-soft); color: #135e9e; font-size: 11px; line-height: 14px; }.notice svg { flex: 0 0 auto; }
+
+    .tabbar { min-height: 72px; padding: 7px 7px calc(7px + env(safe-area-inset-bottom)); position: absolute; z-index: 4; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid rgba(60,60,67,.12); background: rgba(249,249,249,.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .tab { min-width: 0; min-height: 49px; display: grid; place-items: center; align-content: center; gap: 2px; background: transparent; color: var(--secondary); }.tab svg { width: 20px; height: 20px; stroke-width: 1.8; }.tab span { overflow: hidden; max-width: 100%; font-size: 8px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }.tab.active { color: var(--blue); }
+    .home-indicator { width: 34%; height: 4px; position: absolute; z-index: 6; bottom: 3px; left: 33%; border-radius: 999px; background: #000; opacity: .9; }
+    .tabbar + .home-indicator { display: none; }
+
+    .native-sheet { width: min(390px, calc(100% - 32px)); padding: 16px 0 20px; position: fixed; z-index: 10; right: 16px; bottom: 16px; display: none; border-radius: 22px; background: rgba(255,255,255,.96); box-shadow: 0 18px 48px rgba(28,28,30,.2); backdrop-filter: blur(20px); }.native-sheet[data-open="true"] { display: block; animation: sheet-in 260ms var(--ease-ios); }.native-sheet__handle { width: 34px; height: 4px; margin: 0 auto 13px; border-radius: 999px; background: #c7c7cc; }.native-sheet h3 { margin: 0 18px 4px; font-size: 18px; letter-spacing: -.035em; }.native-sheet p { margin: 0 18px 13px; color: var(--secondary); font-size: 13px; line-height: 18px; }.native-sheet__actions { padding: 0 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }.native-sheet__actions button { min-height: 44px; border-radius: 12px; background: var(--fill); color: var(--blue); font-size: 14px; font-weight: 650; }.native-sheet__actions button:last-child { background: var(--blue); color: #fff; }
+    @keyframes sheet-in { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media (max-width: 1060px) { .phones { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 720px) { .brief { width: min(100% - 32px, 520px); padding-top: 28px; display: block; }.brief p { margin-top: 15px; }.specs, .switcher, .phones { width: min(100% - 32px, 420px); }.phones { display: block; margin-bottom: 32px; }.phone { display: none; width: 100%; max-width: 420px; margin: 0 auto; }.phone[data-visible="true"] { display: block; }.native-sheet { width: calc(100% - 32px); }.screen { padding-right: 15px; padding-left: 15px; } }
+  </style>
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-7h6v7"/></symbol>
+      <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M5 9 3.5 7.5M9 5 7.5 3.5M19 15l1.5 1.5M15 19l1.5 1.5M7 13l-2 2 4 4 2-2m4-10 2-2 4 4-2 2"/></symbol>
+      <symbol id="i-fork" viewBox="0 0 24 24"><path d="M5 3v7M8 3v7M5 7h3M6.5 10v11M15 3v18M15 3c4 0 4 7 0 7"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+      <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4.2 3.4-6.3 8-6.3s7.2 2.1 8 6.3"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></symbol>
+      <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3"/></symbol>
+      <symbol id="i-mic" viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="12" rx="4"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></symbol>
+      <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.8 7-7.1 0-3.1-1.9-5.3-4.2-7.2.1 2.2-.8 3.7-2.2 4.8C12.8 8.5 10.4 5.8 8 4c.2 3-3 4.8-3 8.4C5 18.2 8.1 22 12 22Z"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></symbol>
+      <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="m8 12-2 9 6-3 6 3-2-9M9.7 8 11 9.3 14.3 6"/></symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="brief">
+    <div>
+      <p class="brief__eyebrow">Workout · iPhone native concept</p>
+      <h1>Спокойный, понятный и по‑настоящему iOS.</h1>
+    </div>
+    <p>Макет меняет визуальный язык, но сохраняет текущие механики: тренировочные планы, переносы, питание, прогресс и кабинет.</p>
+  </header>
+
+  <div class="specs" aria-label="Принципы макета">
+    <span class="spec"><svg class="icon icon--xs"><use href="#i-home"/></svg>5 главных вкладок</span>
+    <span class="spec"><svg class="icon icon--xs"><use href="#i-info"/></svg>safe areas и 44 pt targets</span>
+    <span class="spec"><svg class="icon icon--xs"><use href="#i-sliders"/></svg>системные цвета iOS</span>
+    <span class="spec"><svg class="icon icon--xs"><use href="#i-calendar"/></svg>механика расписания сохранена</span>
+  </div>
+
+  <nav class="switcher" aria-label="Экран макета">
+    <button type="button" data-screen-button="home" aria-selected="true"><svg class="icon icon--sm"><use href="#i-home"/></svg>Сегодня</button>
+    <button type="button" data-screen-button="workouts" aria-selected="false"><svg class="icon icon--sm"><use href="#i-dumbbell"/></svg>Тренировки</button>
+    <button type="button" data-screen-button="nutrition" aria-selected="false"><svg class="icon icon--sm"><use href="#i-fork"/></svg>Питание</button>
+    <button type="button" data-screen-button="progress" aria-selected="false"><svg class="icon icon--sm"><use href="#i-chart"/></svg>Прогресс</button>
+    <button type="button" data-screen-button="profile" aria-selected="false"><svg class="icon icon--sm"><use href="#i-person"/></svg>Кабинет</button>
+  </nav>
+
+  <main class="phones" aria-label="Пять главных экранов Workout">
+    <article class="phone" data-screen="home" data-visible="true" aria-label="Экран Сегодня">
+      <div class="dynamic-island"></div>
+      <div class="status"><span>9:41</span><span class="status__icons"><i></i><i></i><i></i><i></i><span class="battery"></span></span></div>
+      <div class="screen">
+        <div class="nav"><h2>Сегодня</h2><button class="nav__action tap" aria-label="Уведомления"><svg class="icon"><use href="#i-bell"/></svg></button></div>
+        <div class="welcome"><p>Суббота, 6 сентября</p><h3>Доброе утро, Test</h3></div>
+        <section class="activity-card" aria-label="Активность за сегодня">
+          <div class="activity-card__rings" aria-hidden="true"><i class="ring ring--outer"></i><i class="ring ring--middle"></i><i class="ring ring--inner"></i></div>
+          <div class="activity-card__copy"><small>Активность</small><strong>В ритме</strong><p>12 мин тренировки<br>и питание под контролем.</p><span class="activity-legend"><i></i><i></i><i></i></span></div>
+        </section>
+        <p class="section-title">Следующее</p>
+        <section class="focus-card">
+          <div class="focus-card__top"><div><small>ТРЕНИРОВКА · 19:00</small><h4>Ноги + спина</h4><p>6 упражнений · 18 подходов</p></div><span class="focus-card__pill">Готово</span></div>
+          <button class="tap" type="button">Открыть тренировку</button>
+        </section>
+        <p class="section-title">На сегодня</p>
+        <section class="group">
+          <button class="row tap" type="button"><span class="row__icon row__icon--orange"><svg class="icon icon--sm"><use href="#i-fork"/></svg></span><span class="row__copy"><strong>Питание</strong><small>1 732 из 2 100 ккал</small></span><span class="row__meta">82%</span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap" type="button"><span class="row__icon row__icon--green"><svg class="icon icon--sm"><use href="#i-target"/></svg></span><span class="row__copy"><strong>Контроль веса</strong><small>Следующее взвешивание завтра</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+        </section>
+      </div>
+      <nav class="tabbar" aria-label="Главная навигация"><button class="tab active"><svg class="icon"><use href="#i-home"/></svg><span>Сегодня</span></button><button class="tab"><svg class="icon"><use href="#i-dumbbell"/></svg><span>Тренировки</span></button><button class="tab"><svg class="icon"><use href="#i-fork"/></svg><span>Питание</span></button><button class="tab"><svg class="icon"><use href="#i-chart"/></svg><span>Прогресс</span></button><button class="tab"><svg class="icon"><use href="#i-person"/></svg><span>Кабинет</span></button></nav>
+    </article>
+
+    <article class="phone" data-screen="workouts" data-visible="true" aria-label="Экран Тренировки">
+      <div class="dynamic-island"></div>
+      <div class="status"><span>9:41</span><span class="status__icons"><i></i><i></i><i></i><i></i><span class="battery"></span></span></div>
+      <div class="screen">
+        <div class="nav"><h2>Тренировки</h2><button class="nav__action tap" aria-label="Открыть расписание"><svg class="icon"><use href="#i-calendar"/></svg></button></div>
+        <div class="week" aria-label="Неделя"><span class="week__day done">Пн<b>1</b></span><span class="week__day">Вт<b>2</b></span><span class="week__day">Ср<b>3</b></span><span class="week__day active">Чт<b>4</b><i class="week__dot"></i></span><span class="week__day">Пт<b>5</b></span><span class="week__day">Сб<b>6</b></span><span class="week__day">Вс<b>7</b></span></div>
+        <p class="section-title section-title--row"><span>Сегодня</span><button type="button" data-open-sheet>Перенести</button></p>
+        <section class="training-hero">
+          <div class="training-hero__art"><svg class="icon"><use href="#i-dumbbell"/></svg><span>19:00</span></div>
+          <div class="training-hero__body"><small>ТРЕНИРОВКА 2 ИЗ 8</small><h4>Ноги + спина</h4><p>6 упражнений · 18 подходов</p><div class="set-progress" aria-label="Три из шести упражнений выполнено"><i class="done"></i><i class="done"></i><i class="done"></i><i></i><i></i><i></i></div><button class="tap" type="button">Продолжить тренировку</button></div>
+        </section>
+        <p class="section-title">Программа</p>
+        <section class="group">
+          <button class="row tap" type="button"><span class="row__icon"><svg class="icon icon--sm"><use href="#i-calendar"/></svg></span><span class="row__copy"><strong>Расписание и программа</strong><small>8 тренировок · можно изменить дни</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap" type="button"><span class="row__icon row__icon--purple"><svg class="icon icon--sm"><use href="#i-award"/></svg></span><span class="row__copy"><strong>История и рекорды</strong><small>12 тренировок выполнено</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+        </section>
+        <p class="section-title">Логика расписания</p>
+        <div class="notice"><svg class="icon icon--sm"><use href="#i-info"/></svg><span>При переносе следующая незавершённая тренировка сохраняет порядок программы.</span></div>
+      </div>
+      <nav class="tabbar" aria-label="Главная навигация"><button class="tab"><svg class="icon"><use href="#i-home"/></svg><span>Сегодня</span></button><button class="tab active"><svg class="icon"><use href="#i-dumbbell"/></svg><span>Тренировки</span></button><button class="tab"><svg class="icon"><use href="#i-fork"/></svg><span>Питание</span></button><button class="tab"><svg class="icon"><use href="#i-chart"/></svg><span>Прогресс</span></button><button class="tab"><svg class="icon"><use href="#i-person"/></svg><span>Кабинет</span></button></nav>
+    </article>
+
+    <article class="phone" data-screen="nutrition" data-visible="true" aria-label="Экран Питание">
+      <div class="dynamic-island"></div>
+      <div class="status"><span>9:41</span><span class="status__icons"><i></i><i></i><i></i><i></i><span class="battery"></span></span></div>
+      <div class="screen">
+        <div class="nav"><h2>Питание</h2><button class="nav__action tap" aria-label="Календарь питания"><svg class="icon"><use href="#i-calendar"/></svg></button></div>
+        <div class="date-strip"><span>Пн<b>1</b></span><span>Вт<b>2</b></span><span>Ср<b>3</b></span><span>Чт<b>4</b></span><span>Пт<b>5</b></span><span class="today">Сб<b>6</b></span><span>Вс<b>7</b></span></div>
+        <p class="section-title">Дневник</p>
+        <section class="calorie-card">
+          <div class="calorie-ring"><span class="calorie-ring__inside"><strong>1 732</strong><small>из 2 100 ккал</small></span></div>
+          <div class="calorie-copy"><h4>Хороший темп</h4><p>Осталось 368 ккал</p><div class="macro-grid"><span>Белки<b>108 г</b></span><span>Жиры<b>55 г</b></span><span>Углеводы<b>196 г</b></span></div></div>
+        </section>
+        <p class="section-title">Добавить</p>
+        <div class="quick-actions"><button class="tap"><span><svg class="icon icon--sm"><use href="#i-plus"/></svg></span>Еду</button><button class="tap"><span><svg class="icon icon--sm"><use href="#i-camera"/></svg></span>Фото AI</button><button class="tap"><span><svg class="icon icon--sm"><use href="#i-mic"/></svg></span>Голос</button><button class="tap"><span><svg class="icon icon--sm"><use href="#i-calendar"/></svg></span>Календарь</button></div>
+        <p class="section-title">Приёмы пищи</p>
+        <section class="group">
+          <button class="row tap"><span class="row__icon row__icon--orange"><svg class="icon icon--sm"><use href="#i-fork"/></svg></span><span class="row__copy"><strong>Завтрак</strong><small>472 ккал · 08:15</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap"><span class="row__icon row__icon--orange"><svg class="icon icon--sm"><use href="#i-fork"/></svg></span><span class="row__copy"><strong>Обед</strong><small>680 ккал · 13:00</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap"><span class="row__icon row__icon--orange"><svg class="icon icon--sm"><use href="#i-fork"/></svg></span><span class="row__copy"><strong>Ужин</strong><small>Добавить приём пищи</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+        </section>
+      </div>
+      <nav class="tabbar" aria-label="Главная навигация"><button class="tab"><svg class="icon"><use href="#i-home"/></svg><span>Сегодня</span></button><button class="tab"><svg class="icon"><use href="#i-dumbbell"/></svg><span>Тренировки</span></button><button class="tab active"><svg class="icon"><use href="#i-fork"/></svg><span>Питание</span></button><button class="tab"><svg class="icon"><use href="#i-chart"/></svg><span>Прогресс</span></button><button class="tab"><svg class="icon"><use href="#i-person"/></svg><span>Кабинет</span></button></nav>
+    </article>
+
+    <article class="phone" data-screen="progress" data-visible="true" aria-label="Экран Прогресс">
+      <div class="dynamic-island"></div>
+      <div class="status"><span>9:41</span><span class="status__icons"><i></i><i></i><i></i><i></i><span class="battery"></span></span></div>
+      <div class="screen">
+        <div class="nav"><h2>Прогресс</h2><button class="nav__action tap" aria-label="Настройки прогресса"><svg class="icon"><use href="#i-sliders"/></svg></button></div>
+        <div class="segmented" aria-label="Период"><button class="active">Неделя</button><button>Месяц</button><button>Год</button></div>
+        <p class="section-title">Вес</p>
+        <section class="metric-card">
+          <div class="metric-card__top"><span><small>Текущий вес</small><strong>81,4 кг</strong></span><span class="metric-change">↓ 2,4 кг</span></div>
+          <svg class="chart" viewBox="0 0 260 86" role="img" aria-label="Вес снижается в течение недели"><defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#007aff"/><stop offset="1" stop-color="#007aff" stop-opacity="0"/></linearGradient></defs><path class="chart__grid" d="M0 15H260M0 43H260M0 71H260"/><path class="chart__area" d="M5 18 C37 23,51 20,77 31 S116 40,139 44 S183 54,204 58 S235 65,255 69 V86 H5Z"/><path class="chart__line" d="M5 18 C37 23,51 20,77 31 S116 40,139 44 S183 54,204 58 S235 65,255 69"/><circle class="chart__point" cx="255" cy="69" r="4"/></svg>
+        </section>
+        <p class="section-title">Достижения</p>
+        <section class="record-card"><span class="record-card__badge"><svg class="icon"><use href="#i-award"/></svg></span><span><small>НОВЫЙ РЕКОРД</small><strong>Жим гантелей · 22 кг</strong></span></section>
+        <p class="section-title">Контроль тела</p>
+        <section class="group">
+          <button class="row tap"><span class="row__icon row__icon--pink"><svg class="icon icon--sm"><use href="#i-camera"/></svg></span><span class="row__copy"><strong>Фото прогресса</strong><small>Следующее фото через 6 дней</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap"><span class="row__icon row__icon--green"><svg class="icon icon--sm"><use href="#i-target"/></svg></span><span class="row__copy"><strong>Замеры тела</strong><small>12 параметров · последние сегодня</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+        </section>
+      </div>
+      <nav class="tabbar" aria-label="Главная навигация"><button class="tab"><svg class="icon"><use href="#i-home"/></svg><span>Сегодня</span></button><button class="tab"><svg class="icon"><use href="#i-dumbbell"/></svg><span>Тренировки</span></button><button class="tab"><svg class="icon"><use href="#i-fork"/></svg><span>Питание</span></button><button class="tab active"><svg class="icon"><use href="#i-chart"/></svg><span>Прогресс</span></button><button class="tab"><svg class="icon"><use href="#i-person"/></svg><span>Кабинет</span></button></nav>
+    </article>
+
+    <article class="phone" data-screen="profile" data-visible="true" aria-label="Экран Кабинет">
+      <div class="dynamic-island"></div>
+      <div class="status"><span>9:41</span><span class="status__icons"><i></i><i></i><i></i><i></i><span class="battery"></span></span></div>
+      <div class="screen">
+        <div class="nav"><h2>Кабинет</h2><button class="nav__action tap" aria-label="Уведомления"><svg class="icon"><use href="#i-bell"/></svg></button></div>
+        <section class="profile-card"><span class="profile-card__avatar">T</span><span><strong>Test</strong><small>test@invite.tren-85720.app</small></span><button class="tap" aria-label="Изменить профиль"><svg class="icon icon--sm"><use href="#i-sliders"/></svg></button></section>
+        <p class="section-title">План и здоровье</p>
+        <section class="group">
+          <button class="row tap"><span class="row__icon"><svg class="icon icon--sm"><use href="#i-target"/></svg></span><span class="row__copy"><strong>Параметры тела</strong><small>Вес, цель, рост и активность</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap"><span class="row__icon row__icon--orange"><svg class="icon icon--sm"><use href="#i-fork"/></svg></span><span class="row__copy"><strong>Цели питания</strong><small>2 100 ккал · рекомпозиция</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap"><span class="row__icon row__icon--green"><svg class="icon icon--sm"><use href="#i-calendar"/></svg></span><span class="row__copy"><strong>Расписание тренировок</strong><small>Вы выбираете дни, тренер видит изменения</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+        </section>
+        <p class="section-title">Приложение</p>
+        <section class="group">
+          <button class="row tap"><span class="row__icon row__icon--purple"><svg class="icon icon--sm"><use href="#i-bell"/></svg></span><span class="row__copy"><strong>Уведомления</strong><small>Напоминания и сообщения</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+          <button class="row tap"><span class="row__icon row__icon--pink"><svg class="icon icon--sm"><use href="#i-info"/></svg></span><span class="row__copy"><strong>Помощь и обратная связь</strong><small>Ошибка, идея или рекомендация</small></span><svg class="icon icon--sm row__chev"><use href="#i-chev"/></svg></button>
+        </section>
+      </div>
+      <nav class="tabbar" aria-label="Главная навигация"><button class="tab"><svg class="icon"><use href="#i-home"/></svg><span>Сегодня</span></button><button class="tab"><svg class="icon"><use href="#i-dumbbell"/></svg><span>Тренировки</span></button><button class="tab"><svg class="icon"><use href="#i-fork"/></svg><span>Питание</span></button><button class="tab"><svg class="icon"><use href="#i-chart"/></svg><span>Прогресс</span></button><button class="tab active"><svg class="icon"><use href="#i-person"/></svg><span>Кабинет</span></button></nav>
+    </article>
+  </main>
+
+  <section class="native-sheet" data-native-sheet aria-labelledby="sheet-title" aria-modal="true" role="dialog">
+    <div class="native-sheet__handle"></div><h3 id="sheet-title">Перенести тренировку?</h3><p>Вы выбираете новую дату. Если день уже занят, следующие незавершённые тренировки сдвинутся, сохраняя порядок программы.</p>
+    <div class="native-sheet__actions"><button type="button" data-close-sheet>Отмена</button><button type="button" data-close-sheet>Выбрать дату</button></div>
+  </section>
+
+  <script>
+    const phones = [...document.querySelectorAll("[data-screen]")];
+    const buttons = [...document.querySelectorAll("[data-screen-button]")];
+    const sheet = document.querySelector("[data-native-sheet]");
+    const selectScreen = (screen) => {
+      buttons.forEach((button) => button.setAttribute("aria-selected", String(button.dataset.screenButton === screen)));
+      phones.forEach((phone) => phone.dataset.visible = String(phone.dataset.screen === screen));
+    };
+    buttons.forEach((button) => button.addEventListener("click", () => selectScreen(button.dataset.screenButton)));
+    document.querySelectorAll("[data-open-sheet]").forEach((button) => button.addEventListener("click", () => { sheet.dataset.open = "true"; }));
+    document.querySelectorAll("[data-close-sheet]").forEach((button) => button.addEventListener("click", () => { sheet.dataset.open = "false"; }));
+    window.addEventListener("keydown", (event) => { if (event.key === "Escape") sheet.dataset.open = "false"; });
+  </script>
+</body>
+</html>

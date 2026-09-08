@@ -16,15 +16,16 @@ test("first setup updates the account name before opening the client home screen
   let account = { displayName: "test15", email: "test@example.com" };
   let accountDraft = { displayName: "test15", email: "test@example.com" };
   let page = "";
+  let savedName = "";
 
   await submitFirstSetupProfileWithDeps({
     APP_PAGES: { MAIN: "main" },
     user: { uid: "client-1" },
-    aiNutritionProfileDraft: { name: "Илья" },
+    aiNutritionProfileDraft: { name: "илья" },
     firstSetupDoneUserStorageKey: "first-setup",
     firstSetupRequiredVersion: "v2",
     hasRequiredAiNutritionProfileFields: () => true,
-    saveAiNutritionPlan: async () => true,
+    saveAiNutritionPlan: async (profile) => { savedName = profile.name; return true; },
     showAppError: () => {},
     setFirstSetupCompletedInSession: () => {},
     setFirstSetupSaveStatus: () => {},
@@ -36,6 +37,7 @@ test("first setup updates the account name before opening the client home screen
   });
 
   assert.equal(account.displayName, "Илья");
+  assert.equal(savedName, "Илья");
   assert.equal(accountDraft.displayName, "Илья");
   assert.equal(page, "main");
 });

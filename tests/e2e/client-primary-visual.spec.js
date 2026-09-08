@@ -59,6 +59,8 @@ async function expectCrispProfileModal(page, overlayTestId, dialogTestId, closeT
 
   await expect(overlay).toHaveCSS("backdrop-filter", "none");
   await expect(dialog).toHaveAttribute("data-modal-surface", "true");
+  await expect(dialog).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(dialog).toHaveCSS("backdrop-filter", "none");
   await expect(dialog).toHaveCSS("filter", "none");
   await expect(close).toHaveAttribute("data-profile-modal-close", "true");
   await expect(close).toHaveCSS("width", "44px");
@@ -114,13 +116,13 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
     : page.getByTestId("profile-cabinet-title");
   await expect(title).toBeVisible();
   if (mode === "main") {
-    await expect(title).toHaveText("Главная");
+    await expect(title).toHaveText("Сегодня");
     await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
     await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
     const version = page.getByTestId("profile-dashboard-version");
     await expect(version).toBeVisible();
     await expect(version).toHaveText(/^v\.?3\.0\.\d+$/);
-    await expect(version).toHaveCSS("position", "static");
+    await expect(version).toHaveCSS("position", "fixed");
     await expect(version).toHaveCSS("pointer-events", "none");
   } else {
     await expect(title).toHaveText("Кабинет");
@@ -363,7 +365,7 @@ async function expectCabinetContent(page) {
   await expect(page.getByTestId("profile-cabinet-action-account")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account-icon")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-logout")).toBeVisible();
-  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(7);
+  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(5);
 }
 
 async function expectContentAboveBottomNav(page) {
@@ -472,6 +474,33 @@ test("client main bottom bar stays scoped and adaptive across supported and lega
     }
   }
 
+  assertNoRuntimeErrors();
+});
+
+test("progress photos body control uses the compact opaque sheet", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1&clientCabinetModal=photos&clientPhotosTabbed=1");
+  await clickClientCabinetNav(page);
+
+  const dialog = page.getByTestId("profile-progress-photos-dialog");
+  const tabs = page.getByTestId("profile-progress-photos-section-tabs");
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(page.getByTestId("profile-progress-photos-header").getByRole("heading")).toHaveText("Фото прогресса");
+  await expect(tabs.getByRole("tab").first()).toHaveText("Фото");
+  await expect(tabs.getByRole("tab").first()).toHaveCSS("background-image", "none");
+  await expect(tabs.getByRole("tab").nth(1)).toHaveText("Замеры");
+  await expect(page.getByTestId("profile-progress-photo-step")).toHaveCount(3);
+  await expectTapTargets(page, [
+    '[data-testid="profile-progress-photos-close"]',
+    '[data-testid="profile-progress-photos-section-tabs"] button',
+    '[data-testid="profile-progress-photo-step"] em',
+    '[data-testid="profile-progress-photos-compare-toggle"]',
+    '[data-testid="profile-progress-photos-save"]'
+  ], 44);
+  await expectNoHorizontalOverflow(page);
+  await attachScreenshot(page, testInfo, "progress-photos-body-control.png");
   assertNoRuntimeErrors();
 });
 
@@ -807,6 +836,44 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   assertNoRuntimeErrors();
 });
 
+test("client cabinet opens separate account connections and notification settings", async ({ page }) => {
+  test.setTimeout(60_000);
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+
+  await page.goto("/?clientHarness=1");
+  await expect(page.getByTestId("profile-main-title")).toHaveText("Сегодня", { timeout: 30_000 });
+  await expectNoHorizontalOverflow(page);
+  await clickClientCabinetNav(page);
+
+  const refreshButton = page.getByTestId("profile-cabinet-refresh");
+  await expect(refreshButton).toHaveAttribute("aria-label", "Обновить данные");
+  await expect(refreshButton.locator("svg")).toHaveClass(/lucide-refresh-cw/);
+
+  await page.getByTestId("profile-cabinet-action-account").click();
+  await expect(page.getByTestId("profile-settings-dialog")).toHaveAttribute("data-profile-settings-section", "connections");
+  await expect(page.getByTestId("profile-settings-dialog")).toHaveAttribute("data-cabinet-sheet", "true");
+  await expect(page.getByTestId("profile-settings-email")).toContainText("ilya@example.com");
+  await expect(page.getByTestId("profile-settings-telegram")).toContainText("@harness_coach");
+  await expect(page.getByTestId("profile-settings-notifications-toggle")).toHaveCount(0);
+  await expectTapTargets(page, [
+    '[data-testid="profile-settings-email"]',
+    '[data-testid="profile-settings-telegram"]'
+  ]);
+  await expectNoHorizontalOverflow(page);
+
+  await page.getByTestId("profile-settings-email").click();
+  await expect(page.getByTestId("profile-email-dialog")).toBeVisible();
+  await page.getByTestId("profile-email-close").click();
+  await page.getByTestId("profile-settings-close").click();
+  await page.getByTestId("profile-cabinet-action-notifications").click();
+  await expect(page.getByTestId("profile-settings-dialog")).toHaveAttribute("data-profile-settings-section", "settings");
+  await expect(page.getByTestId("profile-settings-notifications-toggle")).toBeVisible();
+  await expect(page.getByTestId("profile-settings-email")).toHaveCount(0);
+  await expect(page.getByTestId("profile-settings-telegram")).toHaveCount(0);
+
+  assertNoRuntimeErrors();
+});
+
 test("client measurement summary and fullscreen wizard stay adaptive", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const isCompactMobile = testInfo.project.name === "mobile-chromium";
@@ -817,12 +884,16 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
 
   await page.goto("/?clientHarness=1&clientHarnessPage=measurementPanel");
   await expect(page.getByTestId("profile-measurement-panel")).toBeVisible();
-  await expect(page.getByTestId("profile-measurement-dashboard")).toBeVisible();
-  await expect(page.getByTestId("profile-measurement-last-value")).toHaveCount(6);
+  await expect(page.getByTestId("profile-progress-weight-card")).toBeVisible();
+  await expect(page.getByTestId("profile-progress-weight-delta")).toContainText("−1,3 кг");
+  await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveCount(2);
+  await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["90,1", "88,8"]);
+  await expect(page.getByTestId("profile-progress-measurement-card")).toHaveCount(4);
   await expect(page.getByTestId("profile-measurement-start")).toBeVisible();
   await expectTapTargets(page, ['[data-testid="profile-measurement-start"]']);
   await expectNoHorizontalOverflow(page);
   if (isCompactMobile) {
+    await page.getByTestId("profile-measurement-start").scrollIntoViewIfNeeded();
     const panelFit = await page.getByTestId("profile-measurement-panel").evaluate((panel) => {
       const start = panel.querySelector('[data-testid="profile-measurement-start"]');
       const panelRect = panel.getBoundingClientRect();
@@ -876,7 +947,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   }
   await attachScreenshot(page, testInfo, "client-measurement-wizard-intro.png");
 
-  await page.getByTestId("measurement-wizard-navigation").getByRole("button", { name: "Полный замер →" }).click();
+  await page.getByTestId("measurement-wizard-navigation").getByRole("button", { name: "Полный замер" }).click();
   await expect(page.getByTestId("measurement-wizard-measurement")).toBeVisible();
   await expect(page.getByTestId("measurement-wizard-measurement").locator("input[data-css-module-control]")).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -1023,29 +1094,29 @@ test("client first setup visual audit covers selected choices", async ({ page },
 
   await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=1");
   await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
-  await expect(page.locator(".firstSetupOverlay")).toBeVisible();
-  await expect(page.locator(".firstSetupSexGrid button[aria-pressed='true']")).toHaveCount(1);
-  await expectTapTargets(page, [".firstSetupSexGrid button", ".firstSetupPrimary", ".firstSetupSecondary"]);
+  await expect(page.locator("[class*='_firstSetupOverlay_']")).toBeVisible();
+  await expect(page.locator("[class*='_firstSetupSexGrid_'] button[aria-pressed='true']")).toHaveCount(1);
+  await expectTapTargets(page, ["[class*='_firstSetupSexGrid_'] button", "[class*='_firstSetupPrimary_']", "[class*='_firstSetupSecondary_']"]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-first-setup-sex.png");
 
   await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=6");
   await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
-  await expect(page.locator(".firstSetupOverlay")).toBeVisible();
-  await expect(page.locator(".firstSetupActivityList button[aria-pressed='true']")).toHaveCount(1);
-  await expectTapTargets(page, [".firstSetupActivityList button", ".firstSetupPrimary", ".firstSetupSecondary"]);
+  await expect(page.locator("[class*='_firstSetupOverlay_']")).toBeVisible();
+  await expect(page.locator("[class*='_firstSetupActivityList_'] button[aria-pressed='true']")).toHaveCount(1);
+  await expectTapTargets(page, ["[class*='_firstSetupActivityList_'] button", "[class*='_firstSetupPrimary_']", "[class*='_firstSetupSecondary_']"]);
   await expectNoHorizontalOverflow(page);
 
   await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=7");
   await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
-  await expect(page.locator(".firstSetupOverlay")).toBeVisible();
-  await expect(page.locator(".firstSetupGoalGrid button[aria-pressed='true']")).toHaveCount(1);
-  await expectTapTargets(page, [".firstSetupGoalGrid button", ".firstSetupPrimary", ".firstSetupSecondary"]);
+  await expect(page.locator("[class*='_firstSetupOverlay_']")).toBeVisible();
+  await expect(page.locator("[class*='_firstSetupGoalGrid_'] button[aria-pressed='true']")).toHaveCount(1);
+  await expectTapTargets(page, ["[class*='_firstSetupGoalGrid_'] button", "[class*='_firstSetupPrimary_']", "[class*='_firstSetupSecondary_']"]);
   await expectNoHorizontalOverflow(page);
 
-  await page.locator(".firstSetupGoalGrid button").first().click();
-  await expect(page.locator(".firstSetupGoalGrid button[aria-pressed='true']")).toHaveCount(1);
-  await expect(page.locator(".firstSetupGoalGrid button").first()).toHaveAttribute("aria-pressed", "true");
+  await page.locator("[class*='_firstSetupGoalGrid_'] button").first().click();
+  await expect(page.locator("[class*='_firstSetupGoalGrid_'] button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.locator("[class*='_firstSetupGoalGrid_'] button").first()).toHaveAttribute("aria-pressed", "true");
   assertNoRuntimeErrors();
 });
 
@@ -1079,7 +1150,7 @@ test("client first setup keeps the app shell on every onboarding step", async ({
     expect(layout.cardTop).toBeGreaterThanOrEqual(0);
     expect(layout.cardBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
     expect(layout.navigationBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
-    expect(layout.cardBackground).toBe("rgb(247, 246, 248)");
+    expect(layout.cardBackground).toBe("rgb(242, 242, 247)");
     expect(layout.cardDisplay).toBe("flex");
   }
 

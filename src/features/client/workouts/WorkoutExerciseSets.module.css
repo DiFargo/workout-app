@@ -39,7 +39,7 @@
   background: transparent;
   box-shadow: none;
 }
-:global(html[data-app-theme="warm-light"]) .row.row + .row.row { border-top: 1px solid #efebf3; }
+:global(html[data-app-theme="warm-light"]) .row.row + .row.row { border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12)); }
 :global(html[data-app-theme="warm-light"]) .number.number {
   width: 34px;
   min-width: 34px;
@@ -53,12 +53,12 @@
   left: 8px;
   top: 12px;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #8f7ac8;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #3f73b8);
   font-size: 13px;
   font-weight: 700;
 }
-:global(html[data-app-theme="warm-light"]) .completed .number.number { background: #8f7ac8; color: #fff; }
+:global(html[data-app-theme="warm-light"]) .completed .number.number { background: var(--apple-action, #3f73b8); color: #fff; }
 :global(html[data-app-theme="warm-light"]) .plan.plan {
   width: 100%;
   height: 38px;
@@ -67,15 +67,15 @@
   justify-content: center;
   gap: 0;
 }
-:global(html[data-app-theme="warm-light"]) .reps.reps { color: #7b7682; font-size: 9.5px; font-weight: 600; line-height: 15px; }
+:global(html[data-app-theme="warm-light"]) .reps.reps { color: var(--apple-secondary, #636366); font-size: 9.5px; font-weight: 600; line-height: 15px; }
 :global(html[data-app-theme="warm-light"]) .startingWeightLabel.startingWeightLabel {
   margin-left: 5px;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   font-size: 8px;
   font-style: normal;
   font-weight: 750;
 }
-:global(html[data-app-theme="warm-light"]) .weight.weight { color: #28262e; font-size: 15px; font-weight: 700; line-height: 20px; }
+:global(html[data-app-theme="warm-light"]) .weight.weight { color: var(--apple-text, #1c1c1e); font-size: 15px; font-weight: 700; line-height: 20px; }
 :global(html[data-app-theme="warm-light"]) .actions.actions { position: static; width: auto; height: auto; display: contents; }
 :global(html[data-app-theme="warm-light"]) .root.root .editButton.editButton {
   width: 38px;
@@ -91,7 +91,7 @@
   left: 42px;
   border: 0;
   background: transparent;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
 }
 :global(html[data-app-theme="warm-light"]) .editButton.editButton svg { width: 17px; height: 17px; }
 :global(html[data-app-theme="warm-light"]) .completeButton.completeButton {
@@ -106,13 +106,13 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  border: 1.5px solid #e5def1;
+  border: 1.5px solid #d7eadf;
   border-radius: 50%;
   background: #fff;
-  color: #d5c9ec;
+  color: var(--color-workout-set-complete);
   cursor: pointer;
 }
-:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { border-color: #8f7ac8; background: #8f7ac8; color: #fff; }
+:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { border-color: var(--apple-action, #3f73b8); background: var(--apple-action, #3f73b8); color: #fff; }
 
 @media (max-height: 824px) {
   :global(html[data-app-theme="warm-light"]) .root.root,
@@ -378,10 +378,10 @@
   max-height: 42px;
   margin: 0;
   padding: 0;
-  border: 1px solid #ddd3f0;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 12px;
-  background: #f5f2fb;
-  color: #806bb6;
+  background: var(--apple-blue-tint, #eef3fa);
+  color: var(--apple-blue-pressed, #3565a3);
   box-shadow: none;
   display: grid;
   place-items: center;
@@ -390,8 +390,8 @@
 
 :global(html[data-app-theme="warm-light"]) .root .timerButton.timerButtonActive {
   color: #ffffff;
-  background: #8f7ac8;
-  border-color: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
+  border-color: var(--apple-action, #3f73b8);
 }
 
 :global(html[data-app-theme="warm-light"]) .timerButton svg {
@@ -713,35 +713,35 @@
 :global(html[data-app-theme="warm-light"]) .modalBackdrop.modalBackdrop {
   padding: max(12px, env(safe-area-inset-top, 0px)) 16px max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
   place-items: end center;
-  background: rgba(40, 38, 46, 0.24);
+  background: rgba(27, 35, 31, 0.24);
   backdrop-filter: blur(12px);
 }
 
 :global(html[data-app-theme="warm-light"]) .modal.modal {
   width: min(370px, 100%);
   padding: 16px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 24px;
-  box-shadow: 0 18px 52px rgba(40, 38, 46, 0.18);
+  box-shadow: 0 18px 52px rgba(27, 35, 31, 0.18);
 }
 
 :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader span {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 9px;
   font-weight: 650;
 }
 
 :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader strong {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 20px;
   font-weight: 700;
 }
 
 :global(html[data-app-theme="warm-light"]) .modal.modal .closeButton.closeButton {
-  color: #28262e;
-  background: #f5f2f7;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #efeff4);
   border: 0;
   border-radius: 14px;
   box-shadow: none;
@@ -757,13 +757,13 @@
 }
 
 :global(html[data-app-theme="warm-light"]) .wheelField.wheelField > span {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   font-weight: 600;
 }
 
 :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker {
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
   border-radius: 16px;
   -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
   mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
@@ -771,18 +771,18 @@
 
 :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker::before,
 :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker::after {
-  background: #efebf3;
+  background: var(--apple-separator, rgba(60,60,67,.12));
 }
 
 :global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 19px;
   font-weight: 550;
   text-shadow: none;
 }
 
 :global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption.active {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: rgba(255, 255, 255, 0.8);
   box-shadow: none;
   font-size: 22px;
@@ -795,7 +795,7 @@
   min-height: 48px;
   margin-top: 12px;
   color: #ffffff;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   border-radius: 17px;
   box-shadow: none;
   font-size: 14px;

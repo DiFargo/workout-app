@@ -6,9 +6,9 @@
   display: grid;
   place-items: center;
   padding: max(12px, env(safe-area-inset-top, 0px)) 12px max(12px, env(safe-area-inset-bottom, 0px));
-  background: var(--background-profile-nutrition-modal-overlay);
-  backdrop-filter: var(--filter-profile-nutrition-modal-overlay);
-  -webkit-backdrop-filter: var(--filter-profile-nutrition-modal-overlay);
+  background: rgba(28, 28, 30, 0.28);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .dialog {
@@ -27,8 +27,20 @@
   background: var(--background-profile-nutrition-modal);
   color: var(--color-profile-nutrition-modal-text);
   box-shadow: var(--shadow-profile-nutrition-modal);
-  --gradient-primary: linear-gradient(135deg, #8f7ac8, #806bb6);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  --gradient-primary: var(--apple-action, #3f73b8);
 }
+
+.dialog button { font-family: inherit; }
+.header.header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+.dialog.dialog[data-cabinet-sheet="true"] .closeButton[data-profile-modal-close="true"] {
+  border: 0;
+  color: var(--apple-secondary, #636366);
+  background: var(--apple-surface-muted, #efeff4);
+  box-shadow: none;
+}
+.dialog .closeButton:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 0; }
 
 .header {
   position: relative;
@@ -39,13 +51,14 @@
   position: relative;
   width: 100%;
   min-width: 0;
+  min-height: 0;
   height: auto;
   max-height: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 12px;
   overflow: hidden auto;
   border: 0;
   border-radius: 0;
@@ -64,22 +77,22 @@
   min-height: 0;
   height: auto;
   margin: 0;
-  border: 1px solid var(--color-profile-nutrition-modal-card-border);
-  border-radius: 19px;
-  background: var(--background-profile-nutrition-modal-card);
-  color: var(--color-profile-nutrition-modal-card-text);
-  box-shadow: var(--shadow-profile-nutrition-modal-card);
+  border: 0;
+  border-radius: 18px;
+  background: var(--apple-surface, #fff);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: none;
 }
 
 .calendarCard {
-  order: 1;
+  order: 2;
   padding: 0;
   overflow: visible;
 }
 
 .goalCard {
-  order: 2;
-  padding: 12px;
+  order: 1;
+  padding: 16px;
   overflow: visible;
 }
 
@@ -104,10 +117,10 @@
   height: 44px;
   min-height: 44px;
   padding: 0;
-  border: 1px solid var(--color-profile-nutrition-modal-calendar-control-border);
+  border: 0;
   border-radius: 11px;
-  background: var(--background-profile-nutrition-modal-calendar-control);
-  color: var(--color-profile-nutrition-modal-calendar-control);
+  background: transparent;
+  color: var(--apple-blue, #3c6faa);
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
@@ -115,11 +128,11 @@
 
 .calendarTitle strong {
   min-width: 0;
-  color: var(--color-profile-nutrition-modal-calendar-heading);
+  color: var(--apple-text, #1c1c1e);
   font-size: 13px;
-  font-weight: 950;
+  font-weight: 600;
   text-align: center;
-  text-transform: capitalize;
+  line-height: 1.35;
 }
 
 .monthGrid {
@@ -132,51 +145,50 @@
   min-height: 14px;
   display: grid;
   place-items: center;
-  color: var(--color-profile-nutrition-modal-weekday);
-  font-size: 9px;
-  font-weight: 900;
+  color: var(--apple-secondary, #636366);
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .day {
   position: relative;
   width: 100%;
   min-width: 0;
-  height: 54px;
-  min-height: 54px;
+  height: 64px;
+  min-height: 64px;
   padding: 4px 3px;
   overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr auto;
   align-items: center;
-  border: 1px solid var(--color-profile-nutrition-modal-day-border);
-  border-radius: 11px;
-  background: var(--background-profile-nutrition-modal-day);
-  color: var(--color-profile-nutrition-modal-day-text);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
   cursor: default;
   user-select: none;
 }
 
 .day.today {
-  border-color: var(--color-profile-nutrition-modal-day-today-border);
+  border-color: var(--apple-blue, #3c6faa);
 }
 
 .day.activeDay {
-  border-color: var(--color-profile-nutrition-modal-day-active-border);
-  background: var(--background-profile-nutrition-modal-day-active);
-  box-shadow: var(--shadow-profile-nutrition-modal-day-active);
+  border-color: var(--apple-blue, #3c6faa);
+  background: var(--apple-blue-tint, #edf2f9);
+  box-shadow: none;
 }
 
 .day.planned {
-  border-color: var(--color-profile-nutrition-modal-day-planned-border);
-  background: var(--background-profile-nutrition-modal-day-planned);
+  background: var(--apple-surface-muted, #efeff4);
 }
 
 .day.planned > strong {
-  color: var(--color-profile-nutrition-modal-day-planned-value);
+  color: var(--apple-secondary, #636366);
 }
 
 .day.planned > small {
-  color: var(--color-profile-nutrition-modal-day-planned-label);
+  color: var(--apple-secondary, #636366);
 }
 
 .day > span,
@@ -189,27 +201,27 @@
 
 .day > span {
   justify-self: start;
-  color: var(--color-profile-nutrition-modal-day-index);
-  font-size: 9px;
-  font-weight: 950;
+  color: var(--apple-secondary, #636366);
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .day > strong {
   align-self: end;
-  color: var(--color-profile-nutrition-modal-day-value);
-  font-size: 11px;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 12px;
   line-height: 1;
-  font-weight: 950;
+  font-weight: 600;
 }
 
 .day > small,
 .day > em {
   align-self: end;
-  color: var(--color-profile-nutrition-modal-day-label);
-  font-size: 8px;
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
   line-height: 1;
   font-style: normal;
-  font-weight: 850;
+  font-weight: 400;
 }
 
 .day > i {
@@ -221,11 +233,11 @@
 .calorieFill {
   left: 0;
   right: 0;
-  background: var(--background-profile-nutrition-modal-calorie-fill);
+  background: rgba(63, 115, 184, 0.12);
 }
 
 .day.highCalories .calorieFill {
-  background: var(--background-profile-nutrition-modal-calorie-over-fill);
+  background: rgba(181, 106, 48, 0.13);
 }
 
 .legend {
@@ -242,12 +254,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--color-profile-nutrition-modal-legend-border);
+  border: 0;
   border-radius: 999px;
-  background: var(--background-profile-nutrition-modal-legend);
-  color: var(--color-profile-nutrition-modal-legend-text);
-  font-size: 9px;
-  font-weight: 900;
+  background: transparent;
+  color: var(--apple-secondary, #636366);
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .legend i {
@@ -257,25 +269,25 @@
 }
 
 .factLegend {
-  background: var(--background-profile-nutrition-modal-legend-fact);
+  background: var(--apple-blue, #3c6faa);
 }
 
 .planLegend {
-  border: 1px solid var(--color-profile-nutrition-modal-legend-plan);
+  border: 1px solid var(--apple-secondary, #636366);
   background: transparent;
 }
 
 .logged {
   margin: 6px 0 0;
-  color: var(--color-profile-nutrition-modal-logged);
-  font-size: 10px;
-  font-weight: 850;
+  color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 400;
   line-height: 1.5;
 }
 
 .inlinePlan {
   display: grid;
-  gap: 9px;
+  gap: 12px;
 }
 
 .planHeader {
@@ -285,17 +297,10 @@
   gap: 12px;
 }
 
-.planHeader span {
-  color: var(--color-profile-nutrition-modal-plan-eyebrow);
-  font-size: 10px;
-  font-weight: 950;
-  letter-spacing: 0.06em;
-}
-
 .planHeader strong {
-  color: var(--color-profile-nutrition-modal-plan-value);
-  font-size: 12px;
-  font-weight: 900;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .goalPicker {
@@ -306,85 +311,83 @@
 }
 
 .goalPicker button {
-  min-height: 44px;
-  border: 1px solid var(--color-profile-nutrition-modal-option-border);
-  border-radius: 14px;
-  background: var(--background-profile-nutrition-modal-option);
-  color: var(--color-profile-nutrition-modal-option);
-  font-size: 12px;
-  font-weight: 900;
+  min-height: 46px;
+  padding: 10px 4px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .goalPicker button.activeGoal {
-  border-color: var(--color-profile-nutrition-modal-option-active-border);
-  background: var(--background-profile-nutrition-modal-option-active);
-  color: var(--color-profile-nutrition-modal-option-active);
+  border-color: var(--apple-blue, #3c6faa);
+  background: var(--apple-blue-tint, #edf2f9);
+  color: var(--apple-blue, #3c6faa);
 }
 
 .goalHint {
   margin: 0;
-  padding: 9px 11px;
-  border: 1px solid var(--color-profile-nutrition-modal-hint-border);
-  border-radius: 13px;
-  background: var(--background-profile-nutrition-modal-hint);
-  color: var(--color-profile-nutrition-modal-hint);
-  font-size: 10px;
-  font-weight: 850;
-  line-height: 1.35;
+  padding: 0;
+  border: 0;
+  color: var(--apple-secondary, #636366);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
 }
 
 .macroGrid {
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 5px;
 }
 
 .macroGrid > div {
   min-height: 50px;
   padding: 7px 3px;
-  border: 1px solid var(--color-profile-nutrition-modal-macro-border);
-  border-radius: 12px;
-  background: var(--background-profile-nutrition-modal-macro);
-  color: var(--color-profile-nutrition-modal-card-text);
+  border: 0;
+  border-radius: 10px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
   text-align: center;
 }
 
 .macroGrid span {
   display: block;
-  color: var(--color-profile-nutrition-modal-macro-label);
-  font-size: 8px;
-  font-weight: 900;
+  color: var(--apple-secondary, #636366);
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .macroGrid strong {
   display: block;
   margin-top: 4px;
-  color: var(--color-profile-nutrition-modal-macro-value);
-  font-size: 11px;
-  font-weight: 700;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1.05;
 }
 
 .saveButton {
   width: 100%;
-  min-height: 44px;
+  min-height: 50px;
   padding: 0 13px;
-  border: 1px solid var(--color-profile-nutrition-modal-save-border);
+  border: 0;
   border-radius: 14px;
-  background: var(--background-profile-nutrition-modal-save);
-  color: var(--color-profile-nutrition-modal-save);
-  font-size: 13px;
-  font-weight: 950;
-  box-shadow: var(--shadow-profile-nutrition-modal-save);
+  background: var(--apple-action, #3f73b8);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: none;
   cursor: pointer;
 }
 
 .saveButton[data-save-state="saved"] {
-  border-color: transparent;
-  background: var(--background-profile-nutrition-modal-save-success);
-  color: var(--color-profile-nutrition-modal-save-success);
+  background: var(--apple-action, #3f73b8);
+  color: #fff;
   opacity: 1;
 }
 
@@ -399,7 +402,7 @@
 .calendarTitle button:focus-visible,
 .goalPicker button:focus-visible,
 .saveButton:focus-visible {
-  outline: 2px solid var(--color-profile-nutrition-modal-focus);
+  outline: 2px solid var(--apple-blue, #3c6faa);
   outline-offset: 2px;
 }
 
@@ -416,7 +419,7 @@
   }
 
   .day {
-    height: 47px;
-    min-height: 47px;
+    height: 58px;
+    min-height: 58px;
   }
 }

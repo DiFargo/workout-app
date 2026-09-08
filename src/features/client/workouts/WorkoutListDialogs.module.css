@@ -7,8 +7,8 @@
   display: grid;
   place-items: center;
   background: var(--background-workout-list-dialog-overlay);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .dialog {
@@ -45,10 +45,10 @@
 }
 
 .closeButton {
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
-  min-height: 38px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
   border: 1px solid var(--color-workout-list-dialog-control-border);
   border-radius: 13px;
@@ -151,8 +151,282 @@
   width: min(100%, 370px);
   max-height: min(680px, calc(100dvh - 28px));
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr);
   overflow: hidden;
+}
+
+.planDialog {
+  width: min(100%, 390px);
+  max-height: min(720px, calc(100dvh - 28px));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.programDialog {
+  width: min(100%, 390px);
+  max-height: min(740px, calc(100dvh - 28px));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.planSummary {
+  min-height: 64px;
+  margin-bottom: 10px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border-radius: 17px;
+  background: var(--background-workout-list-dialog-active);
+}
+
+.planSummaryIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--color-workout-list-dialog-icon);
+  background: var(--background-workout-list-dialog-icon);
+}
+
+.planSummaryIcon svg,
+.planOrder svg,
+.historyIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.planSummary strong,
+.planSummary small,
+.planCopy strong,
+.planCopy small {
+  display: block;
+}
+
+.planSummary strong {
+  font-size: 14px;
+}
+
+.planSummary small,
+.planCopy small {
+  margin-top: 4px;
+  color: var(--color-workout-list-dialog-muted);
+  font-size: 10px;
+}
+
+.planList {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.planItem {
+  width: 100%;
+  min-height: 68px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-workout-history-item-border);
+  border-radius: 16px;
+  color: var(--color-workout-history-item-text);
+  background: var(--background-workout-history-item);
+  text-align: left;
+}
+
+.planItemActive {
+  border-color: var(--color-workout-list-dialog-active-border);
+  background: var(--background-workout-list-dialog-active);
+}
+
+.planItemCompleted {
+  opacity: 0.58;
+}
+
+.planOrder {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--color-workout-list-dialog-icon);
+  background: var(--background-workout-list-dialog-icon);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.planCopy {
+  min-width: 0;
+}
+
+.planCopy strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.planStatus {
+  color: var(--color-workout-list-dialog-icon);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.planItem > svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-workout-list-dialog-muted);
+}
+
+.programList {
+  min-height: 0;
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.programWorkout {
+  overflow: hidden;
+  border: 1px solid var(--color-workout-history-item-border);
+  border-radius: 17px;
+  background: var(--background-workout-history-item);
+}
+
+.programWorkoutExpanded {
+  border-color: var(--color-workout-list-dialog-active-border);
+}
+
+.programWorkoutHeader {
+  width: 100%;
+  min-height: 68px;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  color: var(--color-workout-history-item-text);
+  background: transparent;
+  text-align: left;
+}
+
+.programWorkoutHeader > svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-workout-list-dialog-muted);
+  transition: transform 180ms ease;
+}
+
+.programWorkoutHeader[aria-expanded="true"] > svg {
+  transform: rotate(90deg);
+}
+
+.exerciseList {
+  margin: 0;
+  padding: 4px 10px 10px;
+  display: grid;
+  gap: 2px;
+  list-style: none;
+}
+
+.exerciseList li {
+  min-height: 46px;
+  padding: 7px 4px;
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid var(--color-workout-history-item-border);
+}
+
+.exerciseList li > span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--color-workout-list-dialog-icon);
+  background: var(--background-workout-list-dialog-icon);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.exerciseList li > div {
+  min-width: 0;
+}
+
+.exerciseList strong,
+.exerciseList small {
+  display: block;
+}
+
+.exerciseList strong {
+  overflow: hidden;
+  color: var(--color-workout-history-item-text);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exerciseList small {
+  margin-top: 3px;
+  color: var(--color-workout-list-dialog-muted);
+  font-size: 9px;
+}
+
+.exerciseEmpty {
+  display: block !important;
+  min-height: 0 !important;
+  color: var(--color-workout-list-dialog-muted);
+  font-size: 10px;
+  text-align: center;
+}
+
+.historyStats {
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.historyStats span {
+  min-height: 58px;
+  padding: 9px 6px;
+  display: grid;
+  place-content: center;
+  border-radius: 15px;
+  background: var(--background-workout-list-dialog-active);
+  text-align: center;
+}
+
+.historyStats strong,
+.historyStats small {
+  display: block;
+}
+
+.historyStats strong {
+  font-size: 15px;
+}
+
+.historyStats small {
+  margin-top: 3px;
+  color: var(--color-workout-list-dialog-muted);
+  font-size: 9px;
 }
 
 .historyList {
@@ -246,29 +520,29 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  min-height: 40px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* Calm iOS sheets shared by the workout entry screens. */
 :global(:root[data-app-theme="warm-light"]) .overlay.overlay {
   padding: max(12px, env(safe-area-inset-top, 0px)) 16px max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
   place-items: end center;
-  background: rgba(40, 38, 46, 0.24);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(27, 35, 31, 0.24);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .dialog.dialog {
   width: min(370px, 100%);
   padding: 16px;
-  color: #28262e;
-  background: #ffffff;
-  border: 1px solid #efebf3;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f2f2f7);
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 24px;
-  box-shadow: 0 18px 52px rgba(40, 38, 46, 0.18);
+  box-shadow: 0 18px 52px rgba(27, 35, 31, 0.18);
 }
 
 :global(:root[data-app-theme="warm-light"]) .header.header {
@@ -287,7 +561,7 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: rgba(123, 118, 130, 0.1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -300,14 +574,14 @@
 
 :global(:root[data-app-theme="warm-light"]) .eyebrow.eyebrow {
   margin-bottom: 2px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 9px;
   font-weight: 650;
   letter-spacing: 0.15px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .title.title {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 20px;
   font-weight: 700;
   line-height: 25px;
@@ -319,8 +593,8 @@
   height: 40px;
   min-height: 40px;
   padding: 0;
-  color: #28262e;
-  background: #f5f2f7;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #efeff4);
   border: 0;
   border-radius: 14px;
   font-size: 23px;
@@ -342,21 +616,21 @@
   padding: 11px 12px;
   grid-template-columns: 44px minmax(0, 1fr) 20px;
   gap: 11px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: #ffffff;
   border: 1px solid transparent;
   border-radius: 18px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .option.optionActive {
-  background: #f5f2f7;
-  border-color: #efebf3;
+  background: var(--apple-surface-muted, #efeff4);
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionIcon.optionIcon {
   width: 44px;
   height: 44px;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   background: #ffffff;
   border-radius: 14px;
   font-size: 16px;
@@ -364,21 +638,21 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionTitle.optionTitle {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 14px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionDescription.optionDescription {
   margin-top: 3px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   font-weight: 500;
   line-height: 14px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionIndicator.optionIndicator {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 20px;
 }
 
@@ -386,7 +660,7 @@
   min-height: 48px;
   margin-top: 10px;
   padding: 0 12px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   background: #ffffff;
   border: 0;
   border-radius: 16px;
@@ -395,12 +669,70 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .rememberInput.rememberInput {
-  accent-color: #8f7ac8;
+  accent-color: var(--apple-action, #3f73b8);
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyDialog.historyDialog {
   width: min(370px, 100%);
   max-height: min(700px, calc(100dvh - 32px));
+}
+
+:global(:root[data-app-theme="warm-light"]) .planDialog.planDialog {
+  width: min(390px, 100%);
+  max-height: min(720px, calc(100dvh - 32px));
+}
+
+:global(:root[data-app-theme="warm-light"]) .programDialog.programDialog {
+  width: min(390px, 100%);
+  max-height: min(740px, calc(100dvh - 32px));
+}
+
+:global(:root[data-app-theme="warm-light"]) .planSummary.planSummary,
+:global(:root[data-app-theme="warm-light"]) .historyStats span {
+  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #efeff4);
+}
+
+:global(:root[data-app-theme="warm-light"]) .planSummaryIcon.planSummaryIcon,
+:global(:root[data-app-theme="warm-light"]) .planOrder.planOrder {
+  color: var(--apple-action, #3f73b8);
+  background: #ffffff;
+}
+
+:global(:root[data-app-theme="warm-light"]) .planItem.planItem {
+  color: var(--apple-text, #1c1c1e);
+  background: #ffffff;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
+}
+
+:global(:root[data-app-theme="warm-light"]) .planItem.planItemActive {
+  background: var(--apple-surface-muted, #efeff4);
+  border-color: rgba(47, 125, 104, 0.42);
+}
+
+:global(:root[data-app-theme="warm-light"]) .programWorkout.programWorkout {
+  color: var(--apple-text, #1c1c1e);
+  background: #ffffff;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
+}
+
+:global(:root[data-app-theme="warm-light"]) .programWorkout.programWorkoutExpanded {
+  border-color: rgba(47, 125, 104, 0.42);
+  background: #fafbf9;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseList li {
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
+}
+
+:global(:root[data-app-theme="warm-light"]) .planSummary small,
+:global(:root[data-app-theme="warm-light"]) .planCopy small,
+:global(:root[data-app-theme="warm-light"]) .historyStats small {
+  color: var(--apple-secondary, #636366);
+}
+
+:global(:root[data-app-theme="warm-light"]) .planStatus.planStatus {
+  color: var(--apple-blue-pressed, #3565a3);
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyList.historyList {
@@ -410,27 +742,27 @@
 :global(:root[data-app-theme="warm-light"]) .historyItem.historyItem {
   min-height: 62px;
   padding: 9px 10px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: #ffffff;
   border: 0;
   border-radius: 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyIcon.historyIcon {
-  color: #8f7ac8;
-  background: #f5f2f7;
+  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #efeff4);
   border-radius: 13px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyTitle.historyTitle {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 12px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyMeta.historyMeta,
 :global(:root[data-app-theme="warm-light"]) .historyMessage.historyMessage {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   font-weight: 500;
 }
@@ -439,7 +771,7 @@
   min-height: 48px;
   margin-top: 10px;
   color: #ffffff;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   border: 0;
   border-radius: 17px;
   font-size: 13px;
@@ -450,4 +782,40 @@
   :global(:root[data-app-theme="warm-light"]) .overlay.overlay {
     place-items: center;
   }
+}
+
+/* Mode selection shares the calm cabinet-sheet treatment without changing other workout dialogs. */
+:global(:root[data-app-theme="warm-light"]) .modeOverlay.overlay { background: rgba(28,28,30,.28); }
+.modeDialog.dialog {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+}
+.modeDialog .header.header { width: 100%; margin: 0 0 12px; border-bottom: 0 !important; }
+.modeDialog .header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+.modeDialog button { font-family: inherit; }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .options { gap: 8px; }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .option {
+  padding: 14px; min-height: 80px; gap: 12px;
+  grid-template-columns: 34px minmax(0,1fr) 18px; border-radius: 18px;
+}
+:global(:root[data-app-theme="warm-light"]) .modeDialog .optionActive { background: var(--apple-blue-tint,#edf2f9); border-color: var(--apple-blue,#3c6faa); }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .optionIcon { width: 34px; height: 34px; border-radius: 10px; background: var(--apple-blue-tint,#edf2f9); }
+.modeDialog .optionIcon svg { width: 20px; height: 20px; stroke-width: 1.8; }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .optionTitle { font-size: 15px; font-weight: 600; line-height: 1.35; }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .optionDescription { font-size: 12px; font-weight: 400; line-height: 1.4; }
+.modeDialog .optionIndicator svg { width: 18px; height: 18px; }
+.modeDialog .optionActive .optionIndicator { color: var(--apple-blue,#3c6faa); }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .remember { min-height: 50px; font-size: 14px; font-weight: 400; border-radius: 14px; }
+.modeDialog .remember:focus-within { outline: 2px solid var(--apple-blue,#3c6faa); outline-offset: 2px; }
+@media (max-width: 699px) {
+  :global(:root[data-app-theme="warm-light"]) .modeOverlay.overlay {
+    padding: max(14px,env(safe-area-inset-top)) 12px max(14px,env(safe-area-inset-bottom));
+    place-items: end center;
+  }
+  :global(:root[data-app-theme="warm-light"] body) .modeDialog.dialog[data-cabinet-sheet="true"] {
+    position: relative; width: min(402px, 100%); max-width: 402px;
+    max-height: calc(100dvh - max(14px,env(safe-area-inset-top)) - max(14px,env(safe-area-inset-bottom)));
+    padding: 16px; border-radius: 28px;
+  }
+  .modeDialog::before { content: none; }
 }

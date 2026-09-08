@@ -1,7 +1,5 @@
-import { ChevronRight, Utensils } from "lucide-react";
+import { ChevronRight, Plus, Trash2, Utensils, X } from "lucide-react";
 import styles from "./NutritionDiary.module.css";
-
-const MEAL_TIMES = ["08:00", "13:00", "19:00"];
 
 export default function NutritionDiary({
   nutritionZoukExpanded,
@@ -35,7 +33,7 @@ export default function NutritionDiary({
           aria-expanded={nutritionZoukExpanded}
           aria-haspopup="dialog"
         >
-          <span className={styles.titleText}>Дневник</span>
+          <span className={styles.titleText}>Приёмы пищи</span>
           <ChevronRight aria-hidden="true" />
         </button>
       </section>
@@ -44,20 +42,23 @@ export default function NutritionDiary({
         <div
           className={styles.modalOverlay}
           data-testid="nutrition-diary-modal"
-          role="dialog"
-          aria-modal="true"
-          data-modal-surface="true"
-          aria-label="Дневник питания"
+          role="presentation"
         >
           <button
             type="button"
-            className={styles.modalBackdrop}
+            className={styles.modalBackdrop} data-modal-backdrop="true"
             onClick={onCloseZouk}
             aria-label="Закрыть список продуктов"
           />
-          <section className={styles.modalSheet}>
+          <section
+            className={styles.modalSheet}
+            role="dialog"
+            aria-modal="true"
+            data-modal-surface="true"
+            aria-label="Дневник питания"
+          >
             <header className={styles.modalHeader}>
-              <span className={styles.diaryIcon} aria-hidden="true">🍽️</span>
+              <span className={styles.diaryIcon} aria-hidden="true"><Utensils /></span>
               <div>
                 <small>Продукты за день</small>
                 <h2>Дневник питания</h2>
@@ -69,7 +70,7 @@ export default function NutritionDiary({
                 onClick={onCloseZouk}
                 aria-label="Закрыть"
               >
-                ×
+                <X aria-hidden="true" />
               </button>
             </header>
 
@@ -81,7 +82,7 @@ export default function NutritionDiary({
                 return (
                   <div className={styles.mealGroup} key={meal.id}>
                     <div className={styles.mealHeading}>
-                      <span className={styles.mealIcon} aria-hidden="true">{meal.icon}</span>
+                      <span className={styles.mealIcon} aria-hidden="true"><Utensils /></span>
                       <div>
                         <strong>{meal.name}</strong>
                         <small>{foods.length ? `${foods.length} шт · ${Math.round(stats.calories)} ккал` : "продуктов нет"}</small>
@@ -93,7 +94,7 @@ export default function NutritionDiary({
                         onClick={() => onAddMealFood(meal.id)}
                         aria-label={`Добавить продукт: ${meal.name}`}
                       >
-                        +
+                        <Plus aria-hidden="true" />
                       </button>
                     </div>
 
@@ -105,7 +106,7 @@ export default function NutritionDiary({
                             key={item.id}
                           >
                             <div className={styles.deleteBackground}>
-                              <span aria-hidden="true">×</span>
+                              <span aria-hidden="true"><Trash2 /></span>
                             </div>
 
                             <button
@@ -159,9 +160,10 @@ export default function NutritionDiary({
       )}
 
       <section className={styles.mealList} data-testid="nutrition-diary-list">
-        {nutritionMeals.slice(0, 3).map((meal, mealIndex) => {
+        {nutritionMeals.slice(0, 3).map((meal) => {
           const stats = mealStats[meal.id] || { calories: 0, count: 0 };
           const hasFoods = stats.count > 0;
+          const mealFoods = (nutritionToday.foods || []).filter((food) => food.mealId === meal.id);
 
           return (
             <div
@@ -184,15 +186,14 @@ export default function NutritionDiary({
                     }
                   }}
                 />
-                <div className={styles.mealIcon}><Utensils aria-hidden="true" /></div>
                 <div className={styles.mealTitle}>
                   <strong>{meal.name}</strong>
-                  <span>{hasFoods ? `${stats.count} шт · ${Math.round(stats.calories)} ккал` : "Не добавлено"}</span>
+                  <span>{hasFoods ? mealFoods.map((food) => food.name).filter(Boolean).join(", ") || `${stats.count} продуктов` : "Не добавлено"}</span>
                 </div>
                 <div className={styles.mealCalories}>
-                  <strong>{MEAL_TIMES[mealIndex]}</strong>
-                  <ChevronRight aria-hidden="true" />
+                  <strong>{hasFoods ? Math.round(stats.calories) : "—"}</strong>
                 </div>
+                <button type="button" className={styles.mealAddButton} aria-label={`Добавить еду: ${meal.name}`} onClick={() => onAddMealFood(meal.id)}><Plus aria-hidden="true" /></button>
               </div>
             </div>
           );

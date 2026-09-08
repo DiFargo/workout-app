@@ -59,7 +59,7 @@ export default function AdminTrainerInviteModal({
 
   const modal = (
     <div
-      className={styles.backdrop}
+      className={styles.backdrop} data-modal-backdrop="true"
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !isSubmitting) onClose?.();

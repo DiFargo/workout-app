@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   buildCompletedWorkoutSet,
+  getCurrentAssignmentHistoryItems,
   getNextUncompletedWorkoutIndex,
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
@@ -35,6 +36,69 @@ test("next uncompleted workout index skips completed and manual completed days",
   ];
 
   assert.equal(getNextUncompletedWorkoutIndex(workouts, completed, "v1"), 2);
+});
+
+test("completion from the same durable assignment survives a changed queue version", () => {
+  const workouts = [
+    { id: "day-1", assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1" },
+    { id: "day-2", assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1" },
+    { id: "day-3", assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1" }
+  ];
+  const completed = buildCompletedWorkoutSet([
+    {
+      workoutId: "day-1",
+      assignedProgramId: "program-1",
+      assignedProgramAddedAt: "assignment-1",
+      assignedProgramUpdatedAt: "older-queue-version"
+    },
+    {
+      workoutId: "day-2",
+      assignedProgramId: "program-1",
+      assignedProgramAddedAt: "assignment-1",
+      assignmentVersion: "older-queue-version"
+    }
+  ], "current-queue-version", {}, workouts);
+
+  assert.equal(getNextUncompletedWorkoutIndex(workouts, completed, "current-queue-version"), 2);
+});
+
+test("history modal keeps completions from the same durable assignment", () => {
+  const workouts = [
+    { id: "day-1", assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1" },
+    { id: "day-2", assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1" }
+  ];
+  const currentHistory = getCurrentAssignmentHistoryItems([
+    {
+      workoutId: "day-1",
+      assignedProgramId: "program-1",
+      assignedProgramAddedAt: "assignment-1",
+      assignedProgramUpdatedAt: "older-queue-version"
+    },
+    {
+      workoutId: "day-2",
+      assignedProgramId: "program-1",
+      assignedProgramAddedAt: "old-assignment",
+      assignedProgramUpdatedAt: "older-queue-version"
+    }
+  ], "current-queue-version", workouts);
+
+  assert.deepEqual(currentHistory.map((item) => item.workoutId), ["day-1"]);
+});
+
+test("completion from an older assignment with the same workout id is ignored", () => {
+  const workouts = [
+    { id: "day-1", assignedProgramId: "program-1", assignedProgramAddedAt: "new-assignment" }
+  ];
+  const completed = buildCompletedWorkoutSet([
+    {
+      workoutId: "day-1",
+      assignedProgramId: "program-1",
+      assignedProgramAddedAt: "old-assignment",
+      assignedProgramUpdatedAt: "old-version"
+    }
+  ], "new-version", {}, workouts);
+
+  assert.equal(isWorkoutCompletedWithSet(workouts[0], completed, "new-version"), false);
 });
 
 test("client completion count includes trainer calendar completed statuses", () => {

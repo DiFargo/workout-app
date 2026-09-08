@@ -54,7 +54,7 @@ function AdminClientAssignmentSheet({
   };
 
   return (
-    <div className={styles.overlay} role="presentation" onMouseDown={close}>
+    <div className={styles.overlay} data-modal-backdrop="true" role="presentation" onMouseDown={close}>
       <section
         aria-describedby="admin-client-assignment-description"
         aria-labelledby="admin-client-assignment-title"

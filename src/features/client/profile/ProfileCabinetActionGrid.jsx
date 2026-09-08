@@ -1,113 +1,31 @@
-import {
-  Bell,
-  CalendarDays,
-  ChevronRight,
-  ClipboardList,
-  Dumbbell,
-  LogOut,
-  MessageCircle,
-  Ruler,
-  Scale,
-  UserRound,
-  Utensils
-} from "lucide-react";
+import { Bell, CalendarDays, ChevronRight, ClipboardList, Dumbbell, Link2, MessageCircle, Settings2, Utensils } from "lucide-react";
 import styles from "./ProfileCabinetActionGrid.module.css";
 
-function ActionRow({ kind, icon: Icon, title, note, onClick, warm = false }) {
-  return (
-    <button
-      type="button"
-      className={styles.row}
-      data-testid={`profile-cabinet-action-${kind}`}
-      onClick={onClick}
-    >
-      <span className={`${styles.icon}${warm ? ` ${styles.warm}` : ""}`} data-testid={`profile-cabinet-action-${kind}-icon`}>
-        <Icon aria-hidden="true" />
-      </span>
-      <span className={styles.text}>
-        <strong data-testid={`profile-cabinet-action-${kind}-title`}>{title}</strong>
-        <small>{note}</small>
-      </span>
-      <ChevronRight className={styles.chevron} aria-hidden="true" />
+function ActionRow({ kind, icon: Icon, title, note, status, onClick }) {
+  return <div className={styles.rowWrap}>
+    <button type="button" className={styles.row} data-testid={`profile-cabinet-action-${kind}`} onClick={onClick}>
+      <span className={styles.icon}><Icon aria-hidden="true" /></span>
+      <span className={styles.text}><strong>{title}</strong><small>{note}</small></span>
+      {status ? <span className={styles.status}>{status}</span> : null}<ChevronRight className={styles.chevron} aria-hidden="true" />
     </button>
-  );
+  </div>;
 }
 
-export default function ProfileCabinetActionGrid({
-  showClientOnlyActions,
-  latestPhotoText,
-  latestMeasurementText,
-  weightText,
-  nutritionText,
-  historyText,
-  onOpenBodyControl,
-  onOpenWeight = () => {},
-  onOpenNutrition,
-  onOpenCalendar,
-  onOpenAccount,
-  onOpenQuestionnaire,
-  workoutModeLabel = "Индивидуальный план от тренера",
-  onOpenWorkoutMode = () => {},
-  onOpenNotifications,
-  onOpenFeedback,
-  onLogout
-}) {
-  const bodyControlNote = latestMeasurementText && latestMeasurementText !== "Замеров пока нет"
-    ? `Последний замер ${latestMeasurementText}`
-    : latestPhotoText;
-
-  return (
-    <div
-      className={`${styles.root}${showClientOnlyActions ? "" : ` ${styles.trainer}`}`}
-      data-css-module-scope="profile-cabinet-action-grid"
-      data-testid="profile-cabinet-action-grid"
-    >
-      <section className={styles.profileSection} aria-label="Профиль">
-        <h2>ПРОФИЛЬ</h2>
-        <button type="button" className={styles.account} data-testid="profile-cabinet-action-account" onClick={onOpenAccount}>
-          <span className={styles.profileIcon} data-testid="profile-cabinet-action-account-icon" aria-hidden="true">
-            <UserRound />
-          </span>
-          <span className={styles.accountText}>
-            <strong data-testid="profile-cabinet-action-account-title">Профиль и настройки</strong>
-            <small>Логин и пароль</small>
-          </span>
-          <ChevronRight className={styles.chevron} aria-hidden="true" />
-        </button>
-      </section>
-
-      {showClientOnlyActions && (
-        <section className={styles.groupSection} aria-label="Здоровье и план">
-          <h2>ЗДОРОВЬЕ И ПЛАН</h2>
-          <div className={styles.group}>
-            <ActionRow kind="weight" icon={Scale} title="Вес" note={weightText} onClick={onOpenWeight} />
-            <ActionRow kind="body-control" icon={Ruler} title="Замеры тела и фото" note={bodyControlNote} onClick={onOpenBodyControl} />
-            <ActionRow kind="nutrition" icon={Utensils} title="Цели питания" note={nutritionText} onClick={onOpenNutrition} />
-            <ActionRow kind="workout-journal" icon={CalendarDays} title="Расписание и история" note={historyText} onClick={onOpenCalendar} />
-            <ActionRow kind="questionnaire" icon={ClipboardList} title="Анкета" note="Цель, возраст и активность" onClick={onOpenQuestionnaire} />
-            <ActionRow kind="workout-mode" icon={Dumbbell} title="Режим тренировок" note={workoutModeLabel} onClick={onOpenWorkoutMode} />
-          </div>
-        </section>
-      )}
-
-      <section className={styles.groupSection} aria-label="Приложение">
-        <h2>ПРИЛОЖЕНИЕ</h2>
-        <div className={styles.group}>
-          {showClientOnlyActions && <ActionRow kind="notifications" icon={Bell} title="Уведомления" note="Тренировки и напоминания" onClick={onOpenNotifications} />}
-          <ActionRow kind="feedback" icon={MessageCircle} title="Ошибка или идея" note="Отзыв и предложение" onClick={onOpenFeedback} warm />
-        </div>
-        {onLogout && (
-          <button
-            type="button"
-            className={styles.logoutButton}
-            data-testid="profile-cabinet-logout"
-            onClick={onLogout}
-          >
-            <LogOut aria-hidden="true" />
-            Выйти из аккаунта
-          </button>
-        )}
-      </section>
-    </div>
-  );
+export default function ProfileCabinetActionGrid({ showClientOnlyActions, avatarUrl, displayName, email, telegramUsername, onOpenNutrition, onOpenCalendar, onOpenAccount, onOpenConnections, onOpenQuestionnaire, workoutModeLabel, onOpenWorkoutMode, onOpenNotifications, onOpenFeedback, onLogout }) {
+  const initials = String(displayName || "Клиент").trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+  return <div className={`${styles.root}${showClientOnlyActions ? "" : ` ${styles.trainer}`}`} data-testid="profile-cabinet-action-grid">
+    <section className={styles.profileCard}><span className={styles.avatar}>{avatarUrl ? <img src={avatarUrl} alt="" /> : initials}</span><span className={styles.profileCopy}><strong>{displayName || "Клиент"}</strong><small>{telegramUsername ? `@${telegramUsername.replace(/^@/, "")} · ` : ""}{email}</small><em>{showClientOnlyActions ? workoutModeLabel?.includes("Базовые") ? "Базовый план" : "Индивидуальный план" : "Кабинет тренера"}</em></span><button type="button" className={styles.edit} onClick={onOpenAccount} aria-label="Редактировать профиль" title="Редактировать профиль"><Settings2 aria-hidden="true" /></button></section>
+    {showClientOnlyActions && <section className={styles.section}><h2>Мой план</h2><div className={styles.group}>
+      <ActionRow kind="questionnaire" icon={ClipboardList} title="Параметры тела" onClick={onOpenQuestionnaire} />
+      <ActionRow kind="nutrition" icon={Utensils} title="Цели питания" onClick={onOpenNutrition} />
+      <ActionRow kind="workout-journal" icon={CalendarDays} title="Расписание тренировок" onClick={onOpenCalendar} />
+      <ActionRow kind="workout-mode" icon={Dumbbell} title="Режим тренировок" status={workoutModeLabel?.includes("Базовые") ? "Базовый" : "С тренером"} onClick={onOpenWorkoutMode} />
+    </div><p className={styles.note}>Дни занятий выбираете вы. {workoutModeLabel?.includes("Базовые") ? "Программа сохраняет порядок тренировок." : "Тренер может скорректировать расписание."}</p></section>}
+    <section className={styles.section}><h2>Приложение</h2><div className={styles.group}>
+      <ActionRow kind="notifications" icon={Bell} title="Уведомления" note="Настройка напоминаний" onClick={onOpenNotifications} />
+      <ActionRow kind="account" icon={Link2} title="Подключение аккаунтов" note="Почта и Telegram" onClick={onOpenConnections} />
+      <ActionRow kind="feedback" icon={MessageCircle} title="Помощь и обратная связь" onClick={onOpenFeedback} />
+    </div></section>
+    {onLogout ? <button type="button" className={styles.logout} data-testid="profile-cabinet-logout" onClick={onLogout}>Выйти из аккаунта</button> : null}
+  </div>;
 }

@@ -15,7 +15,7 @@
     touch-action: pan-y;
     color: var(--color-text);
     font-family: var(--font-family-sans);
-    background: var(--color-background);
+    background: var(--ios-canvas-background, var(--color-background));
   }
 
   .basicMode {
@@ -28,7 +28,7 @@
   }
 
   .individualMode {
-    --render-accent: #8f7ac8;
+    --render-accent: var(--apple-action, #3f73b8);
   }
 
   .hero {
@@ -158,6 +158,13 @@
     border-radius: var(--radius-pill);
   }
 
+  .emptyIcon svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    color: var(--color-accent-strong);
+    stroke-width: 2;
+  }
+
   .emptyState h2,
   .emptyState p {
     margin: 0;
@@ -231,7 +238,7 @@
     font-weight: 800;
     background: var(--color-accent);
     border-radius: var(--radius-pill);
-    box-shadow: 0 0.75rem 1.5rem rgba(143, 122, 200, 0.28);
+    box-shadow: 0 0.75rem 1.5rem rgba(47, 125, 104, 0.28);
   }
 
   .completionEyebrow {
@@ -572,7 +579,7 @@
     gap: var(--space-2);
     font-weight: var(--font-weight-semibold);
     background: rgba(255, 255, 255, 0.82);
-    border: 1px solid rgba(143, 122, 200, 0.1);
+    border: 1px solid rgba(47, 125, 104, 0.1);
     border-radius: var(--radius-md);
   }
 
@@ -648,9 +655,9 @@
     min-height: 4rem;
     color: #fff;
     font-size: 1rem;
-    background: linear-gradient(110deg, #927ac6, #806bb6);
+    background: linear-gradient(110deg, #927ac6, var(--apple-blue-pressed, #3565a3));
     border-radius: 1.15rem;
-    box-shadow: 0 0.55rem 1.5rem rgba(143, 122, 200, 0.25);
+    box-shadow: 0 0.55rem 1.5rem rgba(47, 125, 104, 0.25);
   }
 
   .completedStartButton {
@@ -807,15 +814,15 @@
       justify-content: stretch;
       justify-items: stretch;
       row-gap: 0.25rem;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       overflow: hidden;
       background:
         radial-gradient(circle at 50% -12%, rgba(156, 136, 210, 0.055), transparent 34%),
-        linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
-      border: 0.0625rem solid #efebf3;
+        linear-gradient(180deg, #ffffff 0%, var(--apple-canvas, #f2f2f7) 100%);
+      border: 0.0625rem solid var(--apple-separator, rgba(60,60,67,.12));
       border-radius: 1.5rem;
       box-shadow:
-        0 1.375rem 3.625rem rgba(72, 63, 87, 0.1),
+        0 1.375rem 3.625rem rgba(27, 35, 31, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -837,8 +844,8 @@
       max-width: 100%;
       min-height: 0;
       margin: 0;
-      color: #28262e;
-      -webkit-text-fill-color: #7b7682;
+      color: var(--apple-text, #1c1c1e);
+      -webkit-text-fill-color: var(--apple-secondary, #636366);
       font-size: 1.5rem;
       font-weight: 850;
       line-height: 1.08;
@@ -863,11 +870,11 @@
       min-width: 2.75rem;
       height: 2.75rem;
       min-height: 2.75rem;
-      color: #7b7682;
+      color: var(--apple-secondary, #636366);
       background: rgba(255, 255, 255, 0.96);
-      border-color: #efebf3;
+      border-color: var(--apple-separator, rgba(60,60,67,.12));
       border-radius: 1rem;
-      box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
+      box-shadow: 0 0.75rem 1.75rem rgba(27, 35, 31, 0.1);
     }
 
     .individualMode .workoutDeck {
@@ -938,14 +945,14 @@
       padding: 0 0.875rem;
       align-items: center;
       justify-content: center;
-      color: #8f7ac8;
+      color: var(--apple-action, #3f73b8);
       font-size: 0.625rem;
       font-weight: 700;
       line-height: 1;
       white-space: nowrap;
       overflow: visible;
       background: #f2f1fd;
-      border: 0.0625rem solid #efebf3;
+      border: 0.0625rem solid var(--apple-separator, rgba(60,60,67,.12));
       border-radius: 1.125rem;
       backdrop-filter: none;
     }
@@ -960,7 +967,7 @@
       grid-row: 2;
       overflow: hidden;
       background:
-        radial-gradient(circle at 47% 51%, rgba(143, 122, 200, 0.12) 0 18%, rgba(143, 122, 200, 0.06) 19% 29%, transparent 30%),
+        radial-gradient(circle at 47% 51%, rgba(47, 125, 104, 0.12) 0 18%, rgba(47, 125, 104, 0.06) 19% 29%, transparent 30%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.94) 58%, rgba(255, 255, 255, 0.98) 100%);
       border: 0.0625rem solid rgba(235, 230, 241, 0.92);
       border-radius: 1.9375rem;
@@ -979,9 +986,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #c4b8e3 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #c4b8e3 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #8f7ac8 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #a9d2c3 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #a9d2c3 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, var(--apple-action, #3f73b8) 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -1008,7 +1015,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       overflow: hidden;
     }
 
@@ -1017,7 +1024,7 @@
       width: 14.6875rem;
       max-width: 14.6875rem;
       margin: 0;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       font-size: 4rem;
       font-weight: 950;
       line-height: 0.98;
@@ -1029,9 +1036,9 @@
       width: 5.5rem;
       height: 0.4375rem;
       margin: 1.5rem 0 2.375rem;
-      background: linear-gradient(90deg, #8f7ac8, #806bb6);
+      background: linear-gradient(90deg, var(--apple-action, #3f73b8), var(--apple-blue-pressed, #3565a3));
       border-radius: var(--radius-pill);
-      box-shadow: 0 0.5rem 1.25rem rgba(143, 122, 200, 0.18);
+      box-shadow: 0 0.5rem 1.25rem rgba(47, 125, 104, 0.18);
     }
 
     .individualMode .workoutStats {
@@ -1051,7 +1058,7 @@
       grid-template-columns: 3rem minmax(0, 1fr);
       align-items: center;
       gap: 0.8125rem;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       font-size: inherit;
       font-weight: 940;
       line-height: 1.05;
@@ -1070,7 +1077,7 @@
       width: 3rem;
       height: 3rem;
       place-items: center;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       font-size: 1.125rem;
       font-weight: 900;
       line-height: 1;
@@ -1125,9 +1132,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: linear-gradient(135deg, #927ac6, #806bb6);
+      background: linear-gradient(135deg, #927ac6, var(--apple-blue-pressed, #3565a3));
       border-radius: 1.375rem;
-      box-shadow: 0 1.25rem 2.625rem rgba(128, 107, 182, 0.34);
+      box-shadow: 0 1.25rem 2.625rem rgba(40, 110, 91, 0.34);
     }
 
     .individualMode .startButton::before {
@@ -1179,9 +1186,9 @@
       height: 2.5rem;
       padding: 0;
       place-items: center;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       background: #fff;
-      border: 0.0625rem solid #efebf3;
+      border: 0.0625rem solid var(--apple-separator, rgba(60,60,67,.12));
       border-radius: 50%;
     }
 
@@ -1267,8 +1274,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #8f7ac8 0 var(--completed-workouts-progress, 0%),
-        #efebf3 var(--completed-workouts-progress, 0%) 100%
+        var(--apple-action, #3f73b8) 0 var(--completed-workouts-progress, 0%),
+        var(--apple-separator, rgba(60,60,67,.12)) var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1291,10 +1298,10 @@
       gap: 0.25rem;
       overflow: hidden;
       background: rgba(248, 251, 255, 0.92);
-      border: 0.0625rem solid #f7f6f8;
+      border: 0.0625rem solid var(--apple-canvas, #f2f2f7);
       border-radius: 1.25rem;
       box-shadow:
-        0 1.125rem 2.625rem rgba(72, 63, 87, 0.17),
+        0 1.125rem 2.625rem rgba(27, 35, 31, 0.17),
         inset 0 0 0 1px rgba(255, 255, 255, 0.76);
       transform: none;
       pointer-events: auto;
@@ -1314,7 +1321,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.125rem;
-      color: #7b7682;
+      color: var(--apple-secondary, #636366);
       line-height: 1;
       overflow: hidden;
       background: transparent;
@@ -1325,9 +1332,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #806bb6;
-      background: #f7f6f8;
-      border-color: #efebf3;
+      color: var(--apple-blue-pressed, #3565a3);
+      background: var(--apple-canvas, #f2f2f7);
+      border-color: var(--apple-separator, rgba(60,60,67,.12));
       box-shadow: none;
     }
 
@@ -1383,7 +1390,7 @@
       height: 3rem;
       min-height: 3rem;
       align-items: center;
-      color: #7b7682;
+      color: var(--apple-secondary, #636366);
       -webkit-text-fill-color: currentColor;
       font-size: 1.75rem;
       font-weight: 900;
@@ -1398,9 +1405,9 @@
     .individualMode .menuBar {
       padding: 0.4375rem;
       background: rgba(248, 251, 255, 0.94);
-      border-color: #efebf3;
+      border-color: var(--apple-separator, rgba(60,60,67,.12));
       box-shadow:
-        0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
+        0 1.125rem 2.75rem rgba(27, 35, 31, 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -1415,9 +1422,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #8f7ac8;
-      background: #f5f2f7;
-      border-color: #efebf3;
+      color: var(--apple-action, #3f73b8);
+      background: var(--apple-surface-muted, #efeff4);
+      border-color: var(--apple-separator, rgba(60,60,67,.12));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
   }
@@ -1432,7 +1439,7 @@
       padding-left: 24px;
       border: 1px solid var(--color-border);
       border-radius: 28px;
-      box-shadow: 0 1.375rem 3.625rem rgba(72, 63, 87, 0.1);
+      box-shadow: 0 1.375rem 3.625rem rgba(27, 35, 31, 0.1);
     }
 
     .page.basicMode {
@@ -1475,12 +1482,12 @@
       justify-items: stretch;
       row-gap: 0.25rem;
       color: #161924;
-      border: 0.0625rem solid #efebf3;
+      border: 0.0625rem solid var(--apple-separator, rgba(60,60,67,.12));
       border-radius: 1.5rem;
       overflow: hidden;
       background:
-        radial-gradient(circle at 45% -10%, rgba(143, 122, 200, 0.07), transparent 42%),
-        linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
+        radial-gradient(circle at 45% -10%, rgba(47, 125, 104, 0.07), transparent 42%),
+        linear-gradient(180deg, #ffffff 0%, var(--apple-canvas, #f2f2f7) 100%);
     }
 
     .individualMode .hero {
@@ -1504,7 +1511,7 @@
       margin: 0;
       display: flex;
       align-items: center;
-      color: #7b7682;
+      color: var(--apple-secondary, #636366);
       font-size: 1.75rem;
       font-weight: 900;
       line-height: 1.06;
@@ -1533,11 +1540,11 @@
       height: 3rem;
       min-height: 3rem;
       max-height: 3rem;
-      color: #7b7682;
+      color: var(--apple-secondary, #636366);
       background: rgba(255, 255, 255, 0.96);
-      border: 0.0625rem solid #efebf3;
+      border: 0.0625rem solid var(--apple-separator, rgba(60,60,67,.12));
       border-radius: 1rem;
-      box-shadow: 0 0.75rem 1.75rem rgba(72, 63, 87, 0.1);
+      box-shadow: 0 0.75rem 1.75rem rgba(27, 35, 31, 0.1);
       transform: translate(0.0625rem, -0.1875rem);
     }
 
@@ -1616,7 +1623,7 @@
       padding: 0 0.75rem;
       align-items: center;
       justify-content: center;
-      color: #8f7ac8;
+      color: var(--apple-action, #3f73b8);
       font-size: 0.8125rem;
       font-weight: 900;
       line-height: 1;
@@ -1625,7 +1632,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       background: rgba(244, 241, 255, 0.94);
-      border: 1px solid #efebf3;
+      border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
       border-radius: var(--radius-pill);
       backdrop-filter: none;
     }
@@ -1640,7 +1647,7 @@
       grid-row: 2;
       overflow: hidden;
       background:
-        radial-gradient(circle at 47% 51%, rgba(143, 122, 200, 0.12) 0 18%, rgba(143, 122, 200, 0.06) 19% 29%, transparent 30%),
+        radial-gradient(circle at 47% 51%, rgba(47, 125, 104, 0.12) 0 18%, rgba(47, 125, 104, 0.06) 19% 29%, transparent 30%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.94) 58%, rgba(255, 255, 255, 0.98) 100%);
       border: 1px solid rgba(235, 230, 241, 0.92);
       border-radius: 1.5rem;
@@ -1659,9 +1666,9 @@
       content: "";
       pointer-events: none;
       background:
-        radial-gradient(circle at 8% 45%, #fff 0 9px, #c4b8e3 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
-        radial-gradient(circle at 74% 11%, #fff 0 10px, #c4b8e3 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
-        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, #8f7ac8 67% 76%, transparent 76%);
+        radial-gradient(circle at 8% 45%, #fff 0 9px, #a9d2c3 10px 17px, rgba(185, 169, 229, 0.18) 18px 25px, transparent 26px),
+        radial-gradient(circle at 74% 11%, #fff 0 10px, #a9d2c3 11px 19px, rgba(185, 169, 229, 0.16) 20px 29px, transparent 30px),
+        conic-gradient(from 220deg, transparent 0 14%, rgba(185, 169, 229, 0.2) 14% 67%, var(--apple-action, #3f73b8) 67% 76%, transparent 76%);
       border-radius: 50%;
       mask-image: radial-gradient(circle, transparent 0 calc(50% - 2px), #000 calc(50% - 1px) calc(50% + 2px), transparent calc(50% + 3px));
       opacity: 0.82;
@@ -1688,14 +1695,14 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
     }
 
     .individualMode .workoutTitle {
       display: block;
       max-width: 11.875rem;
       margin: 0;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       font-size: clamp(2.1875rem, 10.2vw, 2.875rem);
       font-weight: 900;
       line-height: 0.98;
@@ -1706,9 +1713,9 @@
       width: 5.125rem;
       height: 0.375rem;
       margin: 1.125rem 0 1.75rem;
-      background: linear-gradient(90deg, #8f7ac8, #806bb6);
+      background: linear-gradient(90deg, var(--apple-action, #3f73b8), var(--apple-blue-pressed, #3565a3));
       border-radius: var(--radius-pill);
-      box-shadow: 0 0.5rem 1.25rem rgba(143, 122, 200, 0.18);
+      box-shadow: 0 0.5rem 1.25rem rgba(47, 125, 104, 0.18);
     }
 
     .individualMode .workoutStats {
@@ -1728,7 +1735,7 @@
       grid-template-columns: 3rem minmax(0, 1fr);
       align-items: center;
       gap: 0.8125rem;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       font-size: inherit;
       font-weight: 900;
       line-height: 1.05;
@@ -1747,7 +1754,7 @@
       width: 2.75rem;
       height: 2.75rem;
       place-items: center;
-      color: #28262e;
+      color: var(--apple-text, #1c1c1e);
       font-size: 1.125rem;
       font-weight: 900;
       line-height: 1;
@@ -1801,9 +1808,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: linear-gradient(135deg, #927ac6, #806bb6);
+      background: linear-gradient(135deg, #927ac6, var(--apple-blue-pressed, #3565a3));
       border-radius: 1.125rem;
-      box-shadow: 0 1.25rem 2.625rem rgba(128, 107, 182, 0.34);
+      box-shadow: 0 1.25rem 2.625rem rgba(40, 110, 91, 0.34);
     }
 
     .individualMode .startButton::before {
@@ -1910,7 +1917,7 @@
       padding: 0 0.25rem 0.5rem;
       align-items: flex-end;
       justify-content: space-between;
-      color: #7b7682;
+      color: var(--apple-secondary, #636366);
       font-size: 0.75rem;
       font-weight: 850;
       line-height: 1;
@@ -1926,8 +1933,8 @@
       height: 0.25rem;
       background: linear-gradient(
         90deg,
-        #8f7ac8 0 var(--completed-workouts-progress, 0%),
-        #efebf3 var(--completed-workouts-progress, 0%) 100%
+        var(--apple-action, #3f73b8) 0 var(--completed-workouts-progress, 0%),
+        var(--apple-separator, rgba(60,60,67,.12)) var(--completed-workouts-progress, 0%) 100%
       );
       border-radius: var(--radius-pill);
     }
@@ -1948,10 +1955,10 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.25rem;
       background: rgba(248, 251, 255, 0.94);
-      border: 1px solid #efebf3;
+      border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
       border-radius: 1.25rem;
       box-shadow:
-        0 1.125rem 2.75rem rgba(72, 63, 87, 0.16),
+        0 1.125rem 2.75rem rgba(27, 35, 31, 0.16),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
       transform: none;
       pointer-events: auto;
@@ -1966,7 +1973,7 @@
       padding: 0.3125rem 0.125rem 0.25rem;
       place-items: center;
       gap: 0.125rem;
-      color: #7b7682;
+      color: var(--apple-secondary, #636366);
       line-height: 0.833rem;
       background: transparent;
       border: 1px solid transparent;
@@ -1976,9 +1983,9 @@
     }
 
     .individualMode .menuBar > button:global(.active) {
-      color: #8f7ac8;
-      background: #f5f2f7;
-      border-color: #efebf3;
+      color: var(--apple-action, #3f73b8);
+      background: var(--apple-surface-muted, #efeff4);
+      border-color: var(--apple-separator, rgba(60,60,67,.12));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
@@ -2086,8 +2093,8 @@
   overflow: hidden auto;
   border: 0;
   border-radius: 0;
-  background: #f7f6f8;
-  color: #28262e;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   scrollbar-width: none;
 }
@@ -2105,7 +2112,7 @@
 :global(:root[data-app-theme="warm-light"]) .pageTitle.pageTitle {
   max-width: calc(100% - 104px);
   margin: 0;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 28px;
   font-weight: 750;
   letter-spacing: -0.75px;
@@ -2123,7 +2130,7 @@
 :global(:root[data-app-theme="warm-light"]) .hero.hero > p {
   max-width: 260px;
   margin: 0;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 12px;
   font-weight: 500;
   line-height: 17px;
@@ -2141,7 +2148,7 @@
 :global(:root[data-app-theme="warm-light"]) .heroSubtitle.heroSubtitle {
   max-width: 100%;
   margin: 0;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 12px;
   font-weight: 500;
   line-height: 17px;
@@ -2153,20 +2160,22 @@
   height: 44px;
   min-height: 44px;
   padding: 0;
-  color: #28262e;
-  background: #e9ebea;
-  border: 0;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--ios-glass-surface, rgba(255, 255, 255, 0.72));
+  border: 1px solid var(--ios-glass-border, rgba(255, 255, 255, 0.84));
   border-radius: 50%;
-  box-shadow: none;
+  box-shadow: var(--ios-glass-shadow, none);
+  backdrop-filter: var(--ios-glass-filter, blur(22px));
+  -webkit-backdrop-filter: var(--ios-glass-filter, blur(22px));
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:hover {
-  background: #e9ebea;
+  background: var(--ios-glass-surface-strong, rgba(255, 255, 255, 0.86));
   transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .headerButton.headerButton:active {
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
   transform: scale(0.97);
 }
 
@@ -2187,15 +2196,15 @@
   padding: 10px;
   grid-template-columns: 58px minmax(0, 1fr) 28px;
   gap: 12px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 20px;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) button.workoutCard.workoutCard:hover {
-  border-color: #efebf3;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
   transform: none;
 }
 
@@ -2203,11 +2212,11 @@
   width: 58px;
   height: 58px;
   border-radius: 16px;
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
 }
 
 :global(:root[data-app-theme="warm-light"]) .listDay.listDay {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0;
@@ -2215,13 +2224,13 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .listName.listName {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 15px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .listArrow.listArrow {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 24px;
 }
 
@@ -2254,10 +2263,10 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 24px;
   background: #ffffff;
-  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+  box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardBody.cardBody::before,
@@ -2306,7 +2315,7 @@
   justify-content: center;
   border: 0;
   border-radius: 13px;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   background: rgba(237, 241, 243, 0.94);
   font-size: 10px;
   font-weight: 700;
@@ -2345,7 +2354,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .syncBadge.syncBadge {
   color: #ffffff;
-  background: #c4b8e3;
+  background: #a9d2c3;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage {
@@ -2354,7 +2363,7 @@
   height: calc(100% - 160px);
   border-radius: 23px 23px 0 0;
   opacity: 1;
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutImage.workoutImage::after {
@@ -2373,12 +2382,12 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback {
-  color: #28262e;
-  background: #f5f2f7;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #efeff4);
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFallback.imageFallback small {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="warm-light"]) .cardInfo.cardInfo {
@@ -2392,14 +2401,14 @@
   height: auto;
   display: grid;
   gap: 7px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   overflow: visible;
   transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .workoutTitle.workoutTitle {
   max-width: 100%;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 22px;
   font-weight: 750;
   letter-spacing: -0.45px;
@@ -2430,8 +2439,8 @@
   justify-content: center;
   gap: 4px;
   overflow: hidden;
-  color: #7b7682;
-  background: #f5f2f7;
+  color: var(--apple-secondary, #636366);
+  background: var(--apple-surface-muted, #efeff4);
   border: 0;
   border-radius: 12px;
   font-size: 9.5px;
@@ -2446,7 +2455,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   background: transparent;
   font-size: 12px;
 }
@@ -2464,7 +2473,7 @@
   display: grid;
   place-items: center;
   color: #ffffff;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   border: 0;
   border-radius: 17px;
   box-shadow: none;
@@ -2492,9 +2501,9 @@
   padding: 28px 22px;
   align-content: center;
   gap: 10px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 24px;
   box-shadow: none;
 }
@@ -2502,18 +2511,18 @@
 :global(:root[data-app-theme="warm-light"]) .emptyIcon.emptyIcon {
   width: 54px;
   height: 54px;
-  color: #8f7ac8;
-  background: #f5f2f7;
+  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #efeff4);
   font-size: 22px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyState.emptyState h2 {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 19px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyState.emptyState p {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 13px;
   line-height: 18px;
 }
@@ -2522,7 +2531,7 @@
   min-height: 48px;
   margin-top: 6px;
   color: #ffffff;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   border-radius: 17px;
 }
 
@@ -2555,7 +2564,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .swipeHint.swipeHint,
 :global(:root[data-app-theme="warm-light"]) .swipeAffordance.swipeAffordance {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0;
@@ -2571,7 +2580,7 @@
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 14px;
   text-transform: none;
 }
@@ -2587,9 +2596,9 @@
   margin: 0;
   padding: 9px 12px 13px;
   align-items: flex-start;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 16px;
   font-size: 10px;
   font-weight: 600;
@@ -2604,8 +2613,8 @@
   border-radius: 2px;
   background: linear-gradient(
     90deg,
-    #8f7ac8 var(--completed-workouts-progress, 0%),
-    #efebf3 var(--completed-workouts-progress, 0%)
+    var(--apple-action, #3f73b8) var(--completed-workouts-progress, 0%),
+    var(--apple-separator, rgba(60,60,67,.12)) var(--completed-workouts-progress, 0%)
   );
 }
 
@@ -2704,14 +2713,14 @@
   padding: 24px 20px 20px;
   gap: 14px;
   background: #ffffff;
-  border-color: #efebf3;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 24px;
-  box-shadow: 0 12px 26px rgba(72, 63, 87, 0.08);
+  box-shadow: 0 12px 26px rgba(27, 35, 31, 0.08);
 }
 
 :global(:root[data-app-theme="warm-light"]) .completionEyebrow.completionEyebrow {
   padding: 6px 10px;
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   font-size: 10px;
   letter-spacing: 0.1em;
   background: #f4effb;
@@ -2722,8 +2731,8 @@
   height: 56px;
   color: #ffffff;
   font-size: 28px;
-  background: linear-gradient(145deg, #9b87d0, #806bb6);
-  box-shadow: 0 12px 24px rgba(128, 107, 182, 0.22);
+  background: linear-gradient(145deg, #9b87d0, var(--apple-blue-pressed, #3565a3));
+  box-shadow: 0 12px 24px rgba(40, 110, 91, 0.22);
 }
 
 :global(:root[data-app-theme="warm-light"]) .completionState.completionState h2 {
@@ -2742,12 +2751,12 @@
   width: min(100%, 18.5rem);
   padding: 12px 14px;
   background: #f7f5fa;
-  border-color: #efebf3;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .completionSummary.completionSummary strong {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 20px;
 }
 
@@ -2774,7 +2783,7 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 24px;
 }
 
@@ -2789,9 +2798,9 @@
   grid-template-areas: "title position";
   align-items: center;
   gap: 10px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   background: #f7f5fa;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 16px;
 }
 
@@ -2804,15 +2813,15 @@
   content: "";
   background: linear-gradient(
     90deg,
-    #8f7ac8 var(--completed-workouts-progress, 0%),
-    #efebf3 var(--completed-workouts-progress, 0%)
+    var(--apple-action, #3f73b8) var(--completed-workouts-progress, 0%),
+    var(--apple-separator, rgba(60,60,67,.12)) var(--completed-workouts-progress, 0%)
   );
   border-radius: 2px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .deckMode .cardProgressPosition {
   min-width: 0;
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   background: #ece6f8;
   border-radius: 11px;
   font-size: 10px;
@@ -2831,7 +2840,7 @@
   grid-area: title;
   justify-self: start;
   max-width: none;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: clamp(18px, 5.6vw, 20px);
   font-weight: 750;
   letter-spacing: -0.3px;
@@ -2860,9 +2869,13 @@
    existing adaptive client shell provide the workspace width on tablet and
    desktop. */
 @media (min-width: 700px) {
+  :global(:root[data-app-theme="warm-light"]) .page.page :global([data-client-bottom-dock="true"]) {
+    bottom: max(12px, calc(100dvh - min(874px, 100dvh) + 12px));
+  }
+
   :global(:root[data-app-theme="warm-light"]) .page.page.deckMode {
-    width: 100%;
-    max-width: none;
+    width: var(--client-adaptive-shell-width, min(402px, 100vw));
+    max-width: var(--client-adaptive-shell-width, 402px);
     padding-right: 28px;
     padding-left: 28px;
   }
@@ -2877,4 +2890,47 @@
   :global(:root[data-app-theme="warm-light"]) .deckMode .cardBody.cardBody {
     border-radius: 28px;
   }
+}
+
+/* iOS system colour semantics: blue moves forward, green confirms completion. */
+:global(:root[data-app-theme="warm-light"]) [data-css-module-scope="workout-list"] {
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-card"] [data-testid="workout-card-body"],
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-empty-state"],
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-plan-completed-state"] {
+  border-color: var(--apple-separator, rgba(60, 60, 67, 0.18)) !important;
+  background-color: var(--apple-surface, #ffffff) !important;
+  box-shadow: none !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-card-status"] {
+  color: var(--apple-blue, #007aff) !important;
+  background: #e9f3ff !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-card"] [data-testid="workout-card-title"],
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-card"] [data-testid="workout-card-info"] {
+  color: var(--apple-text, #1c1c1e) !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-start-button"],
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-empty-state"] button {
+  background: var(--apple-action, #2d78b7) !important;
+  box-shadow: none !important;
+  transition: transform 160ms var(--apple-ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 160ms ease !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-start-button"]:active,
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-empty-state"] button:active {
+  background: var(--apple-action-pressed, #246397) !important;
+  transform: scale(0.98) !important;
+}
+
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-plan-completed-state"] [data-testid="workout-card-status"],
+:global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-card"] [data-testid="workout-card-status"] + [data-testid="workout-card-status"] {
+  color: var(--apple-green, #34c759) !important;
+  background: #eaf8ee !important;
 }

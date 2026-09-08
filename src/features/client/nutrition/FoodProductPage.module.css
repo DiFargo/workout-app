@@ -58,11 +58,11 @@
   width: 100%;
   min-height: 100%;
   margin: 0;
-  padding: 0 0 calc(104px + env(safe-area-inset-bottom, 0px));
+  padding: 0 0 calc(76px + env(safe-area-inset-bottom, 0px));
   display: block;
   overflow: visible;
-  background: #f7f6f8;
-  color: #28262e;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
   font-family: var(--font-family-sans);
   scrollbar-color: transparent transparent;
   -webkit-text-fill-color: currentColor;

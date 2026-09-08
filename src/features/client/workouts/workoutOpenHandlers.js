@@ -3,6 +3,8 @@ import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBu
 import { syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule";
 import { safeReadJsonStorage } from "../../../utils/storageSafety";
 import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
+import { buildCompletedWorkoutSet, getWorkoutAssignmentVersion, isWorkoutCompletedWithSet } from "../../../utils/workoutCompletion";
+import { canResumeWorkoutDraft } from "../../../utils/workoutDraftState";
 import { doc, writeBatch } from "firebase/firestore";
 import {
   clearWorkoutDraft,
@@ -58,7 +60,7 @@ export function createWorkoutOpenHandlers({
   setShowWorkoutSavedCard,
   setWorkoutDraftRestorePrompt
 }) {
-  async function applyBasicWorkoutPlan(quizOverride = basicWorkoutQuiz) {
+  async function applyBasicWorkoutPlan(quizOverride = basicWorkoutQuiz, { startWorkout = false } = {}) {
     const currentUser = auth.currentUser || user;
     const nextPlan = buildBasicWorkoutPlanFromQuiz(quizOverride, undefined, {
       profile: aiNutritionProfile || aiNutritionProfileDraft,
@@ -174,6 +176,10 @@ export function createWorkoutOpenHandlers({
     setIndividualWorkoutIndex?.(0);
     setIndividualWorkoutIndexInitialized?.(false);
     setPage(APP_PAGES.WORKOUTS);
+    if (startWorkout && nextPlanState.workouts?.[0]?.id) {
+      setWorkoutDraftRestorePrompt(null);
+      openWorkoutWithDraftChoice(nextPlanState.workouts[0].id, null, false, nextPlanState);
+    }
     return { cloudSaved: true };
   }
 
@@ -238,6 +244,15 @@ export function createWorkoutOpenHandlers({
     const currentUser = auth.currentUser || user;
     const savedDraft = currentUser?.uid ? safeReadJsonStorage(getWorkoutDraftKey(currentUser.uid, id), null) : null;
     const selectedPlanWorkout = plan.workouts.find((workoutItem) => workoutItem.id === id);
+    const assignmentVersion = getWorkoutAssignmentVersion(plan);
+    const completed = isWorkoutCompletedWithSet(selectedPlanWorkout,
+      buildCompletedWorkoutSet(history, assignmentVersion, {}, plan.workouts), assignmentVersion);
+    if (completed) {
+      if (currentUser?.uid) clearWorkoutDraft(currentUser.uid, id);
+      loadHistory();
+      setPage(APP_PAGES.HISTORY);
+      return;
+    }
     const currentAssignmentVersion =
       selectedPlanWorkout?.assignedProgramUpdatedAt ||
       plan.assignedProgramUpdatedAt ||
@@ -256,10 +271,7 @@ export function createWorkoutOpenHandlers({
       clearWorkoutDraft(currentUser.uid, id);
     }
 
-    const canRestoreDraft =
-      draftMatchesCurrentProgram &&
-      savedDraft?.workoutId === id &&
-      savedDraft?.plan;
+    const canRestoreDraft = canResumeWorkoutDraft(savedDraft, selectedPlanWorkout, currentAssignmentVersion, completed);
 
     if (canRestoreDraft) {
       setWorkoutDraftRestorePrompt({ workoutId: id, savedDraft });
@@ -274,6 +286,17 @@ export function createWorkoutOpenHandlers({
     if (!pendingDraft) return;
 
     setWorkoutDraftRestorePrompt(null);
+    const pendingWorkout = plan.workouts.find((item) => item.id === pendingDraft.workoutId);
+    const assignmentVersion = getWorkoutAssignmentVersion(plan);
+    const completed = isWorkoutCompletedWithSet(pendingWorkout,
+      buildCompletedWorkoutSet(history, assignmentVersion, {}, plan.workouts), assignmentVersion);
+    if (completed) {
+      const currentUser = auth.currentUser || user;
+      if (currentUser?.uid) clearWorkoutDraft(currentUser.uid, pendingDraft.workoutId);
+      loadHistory();
+      setPage(APP_PAGES.HISTORY);
+      return;
+    }
     if (!shouldRestoreDraft) {
       const currentUser = auth.currentUser || user;
       const fallbackPlan = {

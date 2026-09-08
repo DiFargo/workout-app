@@ -106,7 +106,7 @@
   background: var(--color-surface);
   color: var(--color-heading);
   font: inherit;
-  box-shadow: 0 10px 22px rgba(72, 63, 87, 0.06);
+  box-shadow: 0 10px 22px rgba(27, 35, 31, 0.06);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
 }
@@ -162,7 +162,7 @@
   color: var(--color-food-flow-heading);
   font: inherit;
   text-align: left;
-  box-shadow: 0 8px 20px rgba(72, 63, 87, 0.05);
+  box-shadow: 0 8px 20px rgba(27, 35, 31, 0.05);
   cursor: pointer;
 }
 
@@ -400,7 +400,7 @@
     content: "";
     position: absolute;
     inset: -1px;
-    border: 1px solid rgba(143, 122, 200, 0.18);
+    border: 1px solid rgba(47, 125, 104, 0.18);
     border-radius: 10px;
     pointer-events: none;
   }
@@ -450,7 +450,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .landing {
   gap: 14px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionHeader {
@@ -459,14 +459,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionTitle {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 16px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionIcon,
 :global(:root[data-app-theme="warm-light"]) .clearButton {
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
 }
 
 :global(:root[data-app-theme="warm-light"]) .clearButton {
@@ -487,10 +487,10 @@
   max-height: 88px;
   padding: 10px 6px;
   gap: 8px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 18px;
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
@@ -499,33 +499,33 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .recentName {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 11px;
   font-weight: 600;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyRecent {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyRecent {
-  border-color: #efebf3;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
   background: #fff;
 }
 
 :global(:root[data-app-theme="warm-light"]) .createInMy {
   margin-bottom: 12px;
-  border-color: #efebf3;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .createInMy svg {
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
 }
 
 :global(:root[data-app-theme="warm-light"]) .createInMy small {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction {
@@ -542,17 +542,17 @@
   padding: 10px 12px;
   grid-template-columns: 44px minmax(0, 1fr) 18px;
   gap: 11px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 20px;
   outline: 0;
   background: #fff;
-  color: #28262e;
-  box-shadow: 0 8px 28px rgba(72, 63, 87, 0.1);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 8px 28px rgba(27, 35, 31, 0.1);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction::before {
   bottom: calc(-120px - env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(180deg, rgba(243, 244, 243, 0), #f7f6f8 22px, #f7f6f8 100%);
+  background: linear-gradient(180deg, rgba(243, 244, 243, 0), var(--apple-canvas, #f2f2f7) 22px, var(--apple-canvas, #f2f2f7) 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction::after {
@@ -565,23 +565,23 @@
   height: 44px;
   min-height: 44px;
   border-radius: 14px;
-  background: #f5f2f7;
-  color: #8f7ac8;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #3f73b8);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoTitle {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 14px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoDescription {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-weight: 450;
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoChevron {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-weight: 500;
 }
 

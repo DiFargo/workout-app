@@ -1,10 +1,47 @@
 .calendar {
   display: grid;
-  gap: 11px;
+  gap: 12px;
   padding: 12px;
-  border: 1px solid var(--color-workout-calendar-shell-border);
-  border-radius: 16px;
-  background: var(--background-workout-calendar-shell);
+  border: 0;
+  border-radius: 18px;
+  background: #ffffff;
+  --color-workout-calendar-heading: var(--apple-text, #1c1c1e);
+  --color-workout-calendar-weekday: var(--apple-secondary, #636366);
+  --color-workout-calendar-planner-muted: var(--apple-secondary, #636366);
+  --color-workout-calendar-details-muted: var(--apple-secondary, #636366);
+  --color-workout-calendar-details-heading: var(--apple-text, #1c1c1e);
+  --color-workout-calendar-day: var(--apple-text, #1c1c1e);
+  --color-workout-calendar-day-border: transparent;
+  --background-workout-calendar-day: var(--apple-surface-muted, #efeff4);
+  --color-workout-calendar-planned: var(--apple-blue, #3c6faa);
+  --color-workout-calendar-planned-border: transparent;
+  --background-workout-calendar-planned: var(--apple-blue-tint, #edf2f9);
+  --background-workout-calendar-planned-badge: transparent;
+  --color-workout-calendar-completed: var(--apple-success, #237a42);
+  --color-workout-calendar-completed-border: transparent;
+  --background-workout-calendar-completed: #edf7ef;
+  --background-workout-calendar-completed-badge: transparent;
+  --color-workout-calendar-off-date: var(--apple-blue, #3c6faa);
+  --color-workout-calendar-off-date-border: transparent;
+  --background-workout-calendar-off-date: var(--apple-blue-tint, #edf2f9);
+  --background-workout-calendar-off-date-badge: transparent;
+  --color-workout-calendar-missed: #b42318;
+  --color-workout-calendar-missed-border: transparent;
+  --background-workout-calendar-missed: #fff3f2;
+  --background-workout-calendar-missed-badge: transparent;
+  --color-workout-calendar-shifted: #946215;
+  --color-workout-calendar-shifted-border: transparent;
+  --background-workout-calendar-shifted: #fff7e8;
+  --background-workout-calendar-shifted-badge: transparent;
+  --color-workout-calendar-legend-planned: var(--apple-blue, #3c6faa);
+  --color-workout-calendar-legend-completed: var(--apple-success, #237a42);
+  --color-workout-calendar-legend-off-date: #6a89af;
+  --color-workout-calendar-legend-missed: #b42318;
+  --color-workout-calendar-legend-shifted: #946215;
+  --color-workout-calendar-selected-border: var(--apple-blue, #3c6faa);
+  --color-workout-calendar-today-border: var(--apple-blue, #3c6faa);
+  --shadow-workout-calendar-selected: none;
+  --shadow-workout-calendar-today: none;
 }
 
 .navigation {
@@ -17,8 +54,8 @@
 
 .navigationTitle {
   color: var(--color-workout-calendar-heading);
-  font-size: 14px;
-  font-weight: 900;
+  font-size: 16px;
+  font-weight: 600;
   text-align: center;
   text-transform: capitalize;
 }
@@ -28,24 +65,24 @@
   height: 44px;
   min-height: 44px;
   padding: 0;
-  border: 1px solid var(--color-workout-calendar-navigation-border);
+  border: 0;
   border-radius: 999px;
-  background: var(--background-workout-calendar-navigation);
-  color: var(--color-workout-calendar-navigation);
+  background: transparent;
+  color: var(--apple-blue, #3c6faa);
   font-size: 24px;
   line-height: 1;
 }
 
 .planner {
   min-height: 54px;
-  padding: 9px 10px;
+  padding: 0 0 12px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 10px;
-  border: 1px solid var(--color-workout-calendar-planner-border);
-  border-radius: 14px;
-  background: var(--background-workout-calendar-planner);
+  border: 0;
+  border-bottom: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  background: transparent;
 }
 
 .plannerContent {
@@ -59,45 +96,55 @@
 
 .plannerTitle {
   color: var(--color-workout-calendar-heading);
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .plannerDescription {
   margin-top: 3px;
   color: var(--color-workout-calendar-planner-muted);
-  font-size: 9px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .plannerButton {
   min-height: 44px;
   padding: 0 11px;
-  border: 1px solid var(--color-workout-calendar-planner-action-border);
+  border: 0;
   border-radius: 10px;
-  background: var(--background-workout-calendar-planner-action);
-  color: var(--color-workout-calendar-planner-action);
-  font-size: 10px;
-  font-weight: 850;
+  background: var(--apple-blue-tint, #edf2f9);
+  color: var(--apple-blue, #3c6faa);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: normal;
+}
+
+.coordinationNote {
+  margin: -5px 2px 0;
+  color: var(--color-workout-calendar-planner-muted);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .weekdays,
 .grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 5px;
+  gap: 4px;
 }
 
 .weekday {
   padding: 3px 0;
   color: var(--color-workout-calendar-weekday);
-  font-size: 9px;
-  font-weight: 850;
+  font-size: 11px;
+  font-weight: 400;
   text-align: center;
 }
 
 .dayButton {
-  aspect-ratio: 1;
+  min-height: 46px;
   min-width: 0;
-  min-height: 0;
   padding: 0;
   display: grid;
   gap: 2px;
@@ -106,8 +153,8 @@
   border-radius: 10px;
   background: var(--background-workout-calendar-day);
   color: var(--color-workout-calendar-day);
-  font-size: 11px;
-  font-weight: 850;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .dayButton.outside {
@@ -155,6 +202,12 @@
   cursor: pointer;
 }
 
+.dayButton.locked {
+  border-style: dashed;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .dayButton.selected {
   border-color: var(--color-workout-calendar-selected-border);
   box-shadow: var(--shadow-workout-calendar-selected);
@@ -164,15 +217,15 @@
   position: static;
   min-width: 22px;
   min-height: 13px;
-  padding: 1px 5px;
+  padding: 1px 2px;
   display: grid;
   place-items: center;
   border-radius: 999px;
   background: var(--background-workout-calendar-planned-badge);
   color: var(--color-workout-calendar-planned);
-  font-size: 7px;
+  font-size: 9px;
   font-style: normal;
-  font-weight: 950;
+  font-weight: 600;
   line-height: 1.2;
 }
 
@@ -202,8 +255,8 @@
   flex-wrap: wrap;
   gap: 7px 10px;
   color: var(--color-workout-calendar-weekday);
-  font-size: 8px;
-  font-weight: 850;
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .legendItem {
@@ -246,16 +299,16 @@
   min-height: 44px;
   border: 0;
   border-radius: 12px;
-  background: var(--gradient-primary);
-  color: var(--color-workout-calendar-primary);
-  font-size: 11px;
-  font-weight: 900;
+  background: var(--apple-action, #3f73b8);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .secondaryAction {
-  border: 1px solid var(--color-workout-calendar-secondary-border);
-  background: var(--background-workout-calendar-secondary);
-  color: var(--color-workout-calendar-secondary);
+  border: 0;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
 }
 
 .actionButton:disabled {
@@ -280,12 +333,12 @@
 }
 
 .dayDetails {
-  padding: 11px;
+  padding: 12px 0 0;
   display: grid;
   gap: 8px;
-  border: 1px solid var(--color-workout-calendar-details-border);
-  border-radius: 16px;
-  background: var(--background-workout-calendar-details);
+  border: 0;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  background: transparent;
 }
 
 .dayDetailsLabel,
@@ -298,24 +351,24 @@
   margin-top: 5px;
   padding: 4px 7px;
   border-radius: 8px;
-  background: var(--background-workout-calendar-scheduled-badge);
-  color: var(--color-workout-calendar-scheduled-badge);
-  font-size: 9px;
+  background: var(--apple-blue-tint, #edf2f9);
+  color: var(--apple-blue, #3c6faa);
+  font-size: 11px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .dayDetailsLabel {
   margin-bottom: 3px;
   color: var(--color-workout-calendar-details-muted);
-  font-size: 9px;
-  font-weight: 850;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .dayDetailsTitle {
   color: var(--color-workout-calendar-details-heading);
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .historyItem {
@@ -326,9 +379,9 @@
   grid-template-columns: 34px minmax(0, 1fr) 16px;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--color-workout-calendar-history-border);
+  border: 0;
   border-radius: 13px;
-  background: var(--background-workout-calendar-history);
+  background: var(--apple-surface-muted, #efeff4);
   color: var(--color-workout-calendar-history);
   text-align: left;
 }
@@ -339,7 +392,14 @@
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: var(--background-workout-calendar-history-icon);
+  background: var(--apple-blue-tint, #edf2f9);
+}
+
+.historyIcon svg {
+  width: 18px;
+  height: 18px;
+  color: var(--apple-blue-pressed, #3565a3);
+  stroke-width: 2;
 }
 
 .historyContent {
@@ -352,17 +412,17 @@
 }
 
 .historyTitle {
-  overflow: hidden;
+  overflow-wrap: anywhere;
   color: var(--color-workout-calendar-details-heading);
-  font-size: 11px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: normal;
 }
 
 .historyMeta,
 .emptyDay {
   color: var(--color-workout-calendar-details-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .historyMeta {
@@ -379,6 +439,9 @@
   margin: 2px 0;
   text-align: center;
 }
+
+.calendar button:active { opacity: 0.75; }
+.calendar button:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 1px; }
 
 :global(:root[data-app-theme="warm-light"]) .navigationButton,
 :global(:root[data-app-theme="warm-light"]) .planner,

@@ -1,6 +1,8 @@
-import { Clock3, Pause, Play, Square, X } from "lucide-react";
+import { ArrowRight, Clock3, Minimize2 } from "lucide-react";
+import { Pause, Play, Square } from "lucide";
 import { formatCompactTimer } from "../../../domain/workoutPresentation";
 import { useBodyScrollLock } from "../../../shared/hooks/useBodyScrollLock";
+import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import styles from "./WorkoutRestTimer.module.css";
 
 export default function WorkoutRestTimer({
@@ -12,7 +14,10 @@ export default function WorkoutRestTimer({
   onRunningChange,
   compact = false,
   expanded = false,
-  onMinimize
+  onMinimize,
+  showCompletionAction = false,
+  completionActionLabel = "К следующему упражнению",
+  onCompletionAction
 }) {
   useBodyScrollLock(expanded, { lockHtml: true });
 
@@ -23,6 +28,7 @@ export default function WorkoutRestTimer({
     : seconds > 0
       ? "Продолжить таймер отдыха"
       : "Запустить таймер отдыха";
+  const canCompleteRest = Boolean(showCompletionAction && onCompletionAction);
 
   function toggleTimer() {
     if (running) {
@@ -46,15 +52,16 @@ export default function WorkoutRestTimer({
 
   if (expanded) {
     return (
-      <div className={styles.expandedBackdrop} role="dialog" aria-modal="true" aria-label="Таймер отдыха">
-        <section className={styles.expandedTimer} data-testid="workout-rest-timer-expanded">
+      <div className={styles.expandedBackdrop} data-modal-backdrop="true" role="presentation">
+        <section className={styles.expandedTimer} data-testid="workout-rest-timer-expanded" role="dialog" aria-modal="true" aria-label="Таймер отдыха" data-modal-surface="true">
           <button
             type="button"
             className={styles.minimizeButton}
             onClick={onMinimize}
             aria-label="Свернуть таймер отдыха"
+            data-testid="workout-rest-timer-minimize"
           >
-            <X aria-hidden="true" />
+            <Minimize2 aria-hidden="true" />
           </button>
           <div className={styles.expandedLabel}>
             <Clock3 aria-hidden="true" />
@@ -62,22 +69,36 @@ export default function WorkoutRestTimer({
           </div>
           <strong className={styles.expandedCountdown}>{formatCompactTimer(shownSeconds)}</strong>
           <p>{running ? "Отдыхайте перед следующим подходом" : "Таймер на паузе"}</p>
-          <div className={styles.expandedControls} aria-label="Корректировка таймера отдыха">
+          <div className={`${styles.expandedControls} ${canCompleteRest ? styles.withCompletionAction : ""}`} aria-label="Корректировка таймера отдыха">
             <button type="button" onClick={() => changeSeconds(-15)} aria-label="Убавить 15 секунд">−15</button>
             <button
               type="button"
               className={`${styles.expandedPrimary} ${running ? styles.running : ""}`}
               onClick={toggleTimer}
               aria-label={primaryActionAriaLabel}
+              data-emphasis={canCompleteRest ? "secondary" : "primary"}
             >
-              {running ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+              <MorphingIcon icon={running ? Pause : Play} data-icon-state={running ? "pause" : "play"} />
               <span>{primaryActionLabel}</span>
             </button>
             <button type="button" onClick={() => changeSeconds(15)} aria-label="Добавить 15 секунд">+15</button>
           </div>
-          <button type="button" className={styles.keepCompactButton} onClick={onMinimize}>
-            Свернуть таймер
-          </button>
+          {canCompleteRest ? (
+            <button
+              type="button"
+              className={styles.completionAction}
+              data-testid="workout-rest-timer-completion-action"
+              data-emphasis="primary"
+              onClick={onCompletionAction}
+            >
+              <span>{completionActionLabel}</span>
+              <ArrowRight aria-hidden="true" />
+            </button>
+          ) : (
+            <button type="button" className={styles.keepCompactButton} onClick={onMinimize}>
+              Свернуть таймер
+            </button>
+          )}
         </section>
       </div>
     );
@@ -103,7 +124,7 @@ export default function WorkoutRestTimer({
           onClick={toggleTimer}
           aria-label={primaryActionAriaLabel}
         >
-          {running ? <Square aria-hidden="true" /> : <Play aria-hidden="true" />}
+          <MorphingIcon icon={running ? Square : Play} data-icon-state={running ? "stop" : "play"} />
           <span>{primaryActionLabel}</span>
         </button>
         <div className={styles.controls} aria-label="Корректировка таймера отдыха">
@@ -128,7 +149,7 @@ export default function WorkoutRestTimer({
         onClick={toggleTimer}
         aria-label={primaryActionAriaLabel}
       >
-        {running ? <Square aria-hidden="true" /> : <Play aria-hidden="true" />}
+        <MorphingIcon icon={running ? Square : Play} data-icon-state={running ? "stop" : "play"} />
         <span>{primaryActionLabel}</span>
       </button>
       <div className={styles.controls}>

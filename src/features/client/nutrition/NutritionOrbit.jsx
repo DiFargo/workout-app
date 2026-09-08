@@ -1,4 +1,4 @@
-import { Camera, Flame, Mic, Plus, RefreshCw } from "lucide-react";
+import { CalendarDays, Camera, Flame, Mic, Plus, RefreshCw } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./NutritionOrbit.module.css";
 import NutritionVoiceModal from "./NutritionVoiceModal";
@@ -7,6 +7,29 @@ import { isNutritionVoiceSearchFailure } from "./nutritionVoiceFeedback";
 function getNumericText(value) {
   const match = String(value || "").match(/[\d.,]+/);
   return match ? match[0] : "0";
+}
+
+function getNutritionProgressStatus(progress, amount) {
+  if (amount <= 0) return "Дневник пока пуст";
+  if (progress < 25) return "Начало дня";
+  if (progress < 70) return "Хороший темп";
+  if (progress < 90) return "Близко к цели";
+  if (progress < 100) return "Почти у цели";
+  if (progress <= 110) return "Цель достигнута";
+  return "Цель превышена";
+}
+
+function getStreakLabel(days) {
+  const lastTwoDigits = days % 100;
+  const lastDigit = days % 10;
+  const form = lastTwoDigits >= 11 && lastTwoDigits <= 14
+    ? "дней"
+    : lastDigit === 1
+      ? "день"
+      : lastDigit >= 2 && lastDigit <= 4
+        ? "дня"
+        : "дней";
+  return `${days} ${form} подряд`;
 }
 
 function formatSelectedDate(dateKey, title) {
@@ -34,6 +57,7 @@ export default function NutritionOrbit({
   dateKey,
   streakText,
   onAdd,
+  onOpenCalendar,
   onPhotoSearch,
   voiceEnabled = false,
   voiceState = "idle",
@@ -57,6 +81,15 @@ export default function NutritionOrbit({
   const calorieProgress = Math.min(100, Math.max(0, Number(calories.progress) || 0));
   const calorieProgressRounded = Math.round(calorieProgress);
   const streakDays = Number(String(streakText || "").match(/\d+/)?.[0] || 0);
+  const caloriesAmount = Number(getNumericText(calories.amount)) || 0;
+  const caloriesTarget = Number(getNumericText(calories.target)) || 0;
+  const actualCalorieProgress = caloriesTarget > 0
+    ? (caloriesAmount / caloriesTarget) * 100
+    : Number(calories.progress) || 0;
+  const progressStatus = getNutritionProgressStatus(
+    actualCalorieProgress,
+    caloriesAmount
+  );
   const voiceSearchFailed = voiceEnabled
     && voiceState === "idle"
     && isNutritionVoiceSearchFailure(voiceFeedback);
@@ -108,6 +141,32 @@ export default function NutritionOrbit({
 
   function openPhotoSearch() {
     photoSearchInputRef.current?.click();
+  }
+
+  if (voiceEnabled) {
+    const targetCalories = getNumericText(calories.target || "0");
+    return <>
+      <section className={styles.renderEnergy} data-testid="nutrition-orbit">
+        <div className={styles.renderRing} style={{ "--nutrition-progress": `${calorieProgressRounded * 3.6}deg` }}><span><strong>{getNumericText(calories.amount)}</strong><small>из {targetCalories} ккал</small></span></div>
+        <div className={styles.renderCopy}>
+          <div className={styles.renderCopyHead} data-testid="nutrition-energy-heading-row">
+            <p data-testid="nutrition-progress-status" aria-label={progressStatus}>{caloriesAmount > Number(targetCalories) && Number(targetCalories) > 0 ? "Сверх дневной цели" : caloriesAmount > 0 ? "Осталось на сегодня" : "Дневник пока пуст"}</p>
+            <h2>{Math.abs(Number(targetCalories) - caloriesAmount).toLocaleString("ru-RU")} <small>ккал</small></h2>
+          </div>
+          {streakDays > 0 ? <span className={styles.renderStreak} data-testid="nutrition-streak"><Flame aria-hidden="true" />{getStreakLabel(streakDays)}</span> : <p className={styles.emptyHint}>Добавьте первый приём пищи</p>}
+        </div>
+        <div className={styles.renderMacros}>{macros.map((item) => <div key={item.id}><span>{item.label}</span><b>{getNumericText(item.amount)} <small>/ {getNumericText(item.target)} г</small></b><div className={styles.macroTrack}><i style={{width: `${Math.min(100, Math.max(0, Number(item.progress) || 0))}%`}} /></div></div>)}</div>
+      </section>
+      <div className={styles.renderHeading}><h2>Добавить еду</h2></div>
+      <div className={styles.renderQuick}>
+        <button type="button" data-testid="nutrition-orbit-add" aria-label="Добавить еду: продукт" onClick={onAdd}><span><Plus aria-hidden="true" /></span>Продукт</button>
+        <button type="button" data-testid="nutrition-orbit-photo-search" onClick={openPhotoSearch}><span><Camera aria-hidden="true" /></span>Фото AI</button>
+        <button type="button" ref={voiceButtonRef} data-testid="nutrition-orbit-audio-search" onClick={handleVoiceAction}><span>{voiceSearchFailed ? <RefreshCw aria-hidden="true" /> : <Mic aria-hidden="true" />}</span>Голос</button>
+        <button type="button" data-testid="nutrition-orbit-calendar" onClick={onOpenCalendar}><span><CalendarDays aria-hidden="true" /></span>Календарь</button>
+        <input ref={photoSearchInputRef} className={styles.photoSearchInput} data-testid="nutrition-orbit-photo-input" type="file" accept="image/*" capture="environment" onChange={onPhotoSearch}/>
+      </div>
+      <NutritionVoiceModal open={voiceModalOpen} origin={voiceButtonOrigin} voiceState={voiceState} audioLevel={voiceAudioLevel} feedback={voiceFeedback} voiceAddedItems={voiceAddedItems} onClose={closeVoiceModal} onVoiceStart={onVoiceStart} onVoiceEnd={onVoiceEnd} onVoiceAddedItemRemove={onVoiceAddedItemRemove} onVoiceAddedItemUpdate={onVoiceAddedItemUpdate} onVoiceDone={() => { onVoiceDone?.(); closeVoiceModal(); }}/>
+    </>;
   }
 
   return (

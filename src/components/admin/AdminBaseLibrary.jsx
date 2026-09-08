@@ -616,7 +616,7 @@ function ProgramPreviewSheet({ program, onClose }) {
   useModalKeyboard({ containerRef: sheetRef, initialFocusRef: closeButtonRef, onClose });
 
   return (
-    <div className={styles.editOverlay} role="presentation" onMouseDown={(event) => {
+    <div className={styles.editOverlay} data-modal-backdrop="true" role="presentation" onMouseDown={(event) => {
       if (event.target === event.currentTarget) onClose();
     }}>
       <section ref={sheetRef} className={styles.previewSheet} role="dialog" aria-modal="true" aria-labelledby="admin-program-preview-title">
@@ -750,7 +750,7 @@ function ExerciseEditSheet({ exercise, saving, saveError, onClose, onSave }) {
 
   return (
     <div
-      className={styles.editOverlay}
+      className={styles.editOverlay} data-modal-backdrop="true"
       role="presentation"
       onMouseDown={(event) => {
         if (!saving && event.target === event.currentTarget) onClose();

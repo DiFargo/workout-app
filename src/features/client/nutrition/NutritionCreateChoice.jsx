@@ -62,7 +62,7 @@ export default function NutritionCreateChoice({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-css-module-scope="nutrition-create-choice"
       data-testid="nutrition-create-choice"
       role="presentation"
@@ -70,6 +70,7 @@ export default function NutritionCreateChoice({
     >
       <div
         className={styles.sheet}
+        data-modal-surface="true"
         role="dialog"
         aria-modal="true"
         aria-labelledby="nutritionCreateChoiceTitle"

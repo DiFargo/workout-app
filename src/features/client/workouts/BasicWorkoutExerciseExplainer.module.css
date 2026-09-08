@@ -27,15 +27,15 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 14px;
   background: #fff;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font: inherit;
   font-size: 11.5px;
   font-weight: 750;
   line-height: 1.05;
-  box-shadow: 0 2px 6px rgba(72, 63, 87, 0.05);
+  box-shadow: 0 2px 6px rgba(27, 35, 31, 0.05);
   transition: color 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .tab:focus-visible {
-  outline: 2px solid #8f7ac8;
+  outline: 2px solid var(--apple-action, #3f73b8);
   outline-offset: 2px;
 }
 
@@ -71,8 +71,8 @@
   border-color: #ded3f3;
   border-radius: 16px;
   background: #eee9f7;
-  color: #806bb6;
-  box-shadow: 0 4px 10px rgba(72, 63, 87, 0.08);
+  color: var(--apple-blue-pressed, #3565a3);
+  box-shadow: 0 4px 10px rgba(27, 35, 31, 0.08);
 }
 
 .content {
@@ -105,10 +105,10 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 20px;
   background: #fff;
-  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+  box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
 }
 
 .referenceCopy {
@@ -119,7 +119,7 @@
 }
 
 .referenceCopy span {
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.24px;
@@ -129,7 +129,7 @@
 .referenceCopy h2 {
   margin: 0;
   overflow: hidden;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 16px;
   font-weight: 750;
   line-height: 1.16;
@@ -147,19 +147,19 @@
   border: 1px solid rgba(239, 235, 243, 0.9);
   border-radius: 11px;
   background: rgba(255, 255, 255, 0.84);
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   font-weight: 600;
   line-height: 1.34;
 }
 
 .referenceCard p strong {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-weight: 800;
 }
 
 .referenceCard p span {
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   font-weight: 750;
 }
 
@@ -175,7 +175,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(40, 38, 46, 0.16) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(27, 35, 31, 0.16) 100%);
 }
 
 .muscleReferenceCard .exerciseIllustration {
@@ -256,7 +256,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(40, 38, 46, 0.16) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(27, 35, 31, 0.16) 100%);
 }
 
 .equipmentReferenceCard .referenceCopy,

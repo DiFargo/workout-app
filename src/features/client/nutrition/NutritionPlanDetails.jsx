@@ -1,13 +1,25 @@
+import { CalendarDays, CircleCheck, Info, TriangleAlert, X } from "lucide-react";
 import NutritionMacroScoreRing from "./NutritionMacroScoreRing";
 import styles from "./NutritionPlanDetails.module.css";
 
-const CALORIE_PIXELS = Array.from({ length: 25 }, (_, index) => index);
 const BADGE_CLASS_BY_TYPE = {
   good: styles.good,
   warning: styles.warning,
   warn: styles.warning,
   info: styles.info
 };
+
+const BADGE_ICON_BY_TYPE = {
+  good: CircleCheck,
+  warning: TriangleAlert,
+  warn: TriangleAlert,
+  info: Info
+};
+
+function BadgeStatusIcon({ type }) {
+  const Icon = BADGE_ICON_BY_TYPE[type] || Info;
+  return <Icon className={styles.badgeIcon} data-nutrition-plan-part="badge-icon" aria-hidden="true" />;
+}
 
 export default function NutritionPlanDetails({
   isExpanded,
@@ -36,14 +48,15 @@ export default function NutritionPlanDetails({
   return (
     <div
       className={styles.dialog}
-      role="dialog"
-      aria-modal="true"
-      data-modal-surface="true"
-      aria-label="План питания"
+      role="presentation"
       data-nutrition-plan-part="dialog"
     >
       <section
-        className={`${styles.root} ${isCaloriesOverGoal ? styles.overLimit : ""}`}
+        className={`${styles.root} ${styles.modern} ${isCaloriesOverGoal ? styles.overLimit : ""}`}
+        role="dialog"
+        aria-modal="true"
+        data-modal-surface="true"
+        aria-label="План питания"
         data-testid="nutrition-plan-details"
         data-css-module-scope="nutrition-plan-details"
         data-state={isCaloriesOverGoal ? "over-limit" : "within-limit"}
@@ -60,7 +73,7 @@ export default function NutritionPlanDetails({
             onClick={onClose}
             data-testid="nutrition-plan-close"
           >
-            ×
+            <X aria-hidden="true" />
           </button>
         </div>
 
@@ -79,46 +92,28 @@ export default function NutritionPlanDetails({
 
         <div className={styles.body} data-nutrition-plan-part="body">
           <div className={styles.calorieProgress} data-nutrition-plan-part="calorie-progress">
-            <div className={styles.pixelGrid} aria-hidden="true" data-nutrition-plan-part="pixel-grid">
-                  {CALORIE_PIXELS.map((index) => (
-                    <span
-                      key={index}
-                      className={`${styles.pixel} ${index < Math.round((caloriePercent / 100) * 25) ? styles.pixelActive : ""}`}
-                      data-nutrition-plan-pixel={index < Math.round((caloriePercent / 100) * 25) ? "active" : "inactive"}
-                    />
-                  ))}
+            <div className={styles.calorieTopline}>
+              <span>Калории</span>
+              <strong>{caloriePercent}%</strong>
             </div>
-
-            <div className={styles.calorieCopy} data-nutrition-plan-part="calorie-copy">
-              <div className={styles.calorieStats} data-nutrition-plan-part="calorie-stats">
-                <div className={styles.calorieStat} data-nutrition-plan-part="calorie-stat">
-                  <span className={styles.calorieLabel} data-nutrition-plan-text="calorie-label">Осталось</span>
-                  <strong className={styles.calorieValue} data-nutrition-plan-text="calorie-value">{caloriesLeft}</strong>
-                </div>
-                <i className={styles.calorieDivider} aria-hidden="true" data-nutrition-plan-part="calorie-divider" />
-                <div className={styles.calorieStat} data-nutrition-plan-part="calorie-stat">
-                  <span className={styles.calorieLabel} data-nutrition-plan-text="calorie-label">Получено</span>
-                  <strong className={styles.calorieValue} data-nutrition-plan-text="calorie-value">{caloriesConsumed}</strong>
-                </div>
-              </div>
-
-              <div className={styles.calorieFoot} data-nutrition-plan-part="calorie-foot">
-                <span>{caloriePercent}% от РСК</span>
-                <strong>{effectiveGoals.calories} ккал</strong>
-              </div>
+            <progress
+              className={styles.calorieTrack}
+              max="100"
+              value={Math.min(100, Math.max(0, caloriePercent))}
+              aria-label={`Калории: ${caloriesConsumed} из ${effectiveGoals.calories} ккал`}
+              data-over-limit={isCaloriesOverGoal ? "true" : "false"}
+            />
+            <div className={styles.calorieSummary}>
+              <span><strong>{caloriesConsumed}</strong> из {effectiveGoals.calories} ккал</span>
+              <span>Осталось <strong>{caloriesLeft}</strong></span>
             </div>
           </div>
 
           <div className={styles.scoreBlock} data-nutrition-plan-part="score-block">
-            <span className={styles.scoreLabel} data-nutrition-plan-text="score-label">Score питания</span>
+            <span className={styles.scoreLabel} data-nutrition-plan-text="score-label">Баланс дня</span>
             <NutritionMacroScoreRing score={nutritionDay.score} segments={scoreSegments} />
+            <span className={styles.scoreCaption}>по КБЖУ</span>
           </div>
-        </div>
-
-        <div className={styles.macroPercent} data-nutrition-plan-part="macro-percent">
-          <span className={styles.macroPercentItem} data-nutrition-plan-part="macro-percent-item"><i className={styles.macroDot} data-nutrition-plan-part="macro-dot" />Б {proteinPercent}%</span>
-          <span className={styles.macroPercentItem} data-nutrition-plan-part="macro-percent-item"><i className={styles.macroDot} data-nutrition-plan-part="macro-dot" />Ж {fatPercent}%</span>
-          <span className={styles.macroPercentItem} data-nutrition-plan-part="macro-percent-item"><i className={styles.macroDot} data-nutrition-plan-part="macro-dot" />У {carbsPercent}%</span>
         </div>
 
         <div className={styles.macros} data-nutrition-plan-part="macros">
@@ -126,16 +121,22 @@ export default function NutritionPlanDetails({
             <span className={styles.macroLabel} data-nutrition-plan-text="macro-label">Белки</span>
             <strong className={styles.macroValue} data-nutrition-plan-text="macro-value">{roundMacro(nutritionTotals.protein)} г</strong>
             <small className={styles.macroGoal} data-nutrition-plan-text="macro-goal">/ {effectiveGoals.protein} г</small>
+            <progress className={styles.macroTrack} max="100" value={Math.min(100, proteinPercent)} aria-label={`Белки: ${proteinPercent}%`} />
+            <span className={styles.macroPercentText}>{proteinPercent}%</span>
           </div>
           <div className={styles.macro} data-nutrition-plan-part="macro">
             <span className={styles.macroLabel} data-nutrition-plan-text="macro-label">Жиры</span>
             <strong className={styles.macroValue} data-nutrition-plan-text="macro-value">{roundMacro(nutritionTotals.fat)} г</strong>
             <small className={styles.macroGoal} data-nutrition-plan-text="macro-goal">/ {effectiveGoals.fat} г</small>
+            <progress className={styles.macroTrack} max="100" value={Math.min(100, fatPercent)} aria-label={`Жиры: ${fatPercent}%`} />
+            <span className={styles.macroPercentText}>{fatPercent}%</span>
           </div>
           <div className={styles.macro} data-nutrition-plan-part="macro">
             <span className={styles.macroLabel} data-nutrition-plan-text="macro-label">Углеводы</span>
             <strong className={styles.macroValue} data-nutrition-plan-text="macro-value">{roundMacro(nutritionTotals.carbs)} г</strong>
             <small className={styles.macroGoal} data-nutrition-plan-text="macro-goal">/ {effectiveGoals.carbs} г</small>
+            <progress className={styles.macroTrack} max="100" value={Math.min(100, carbsPercent)} aria-label={`Углеводы: ${carbsPercent}%`} />
+            <span className={styles.macroPercentText}>{carbsPercent}%</span>
           </div>
         </div>
 
@@ -152,18 +153,18 @@ export default function NutritionPlanDetails({
               data-nutrition-plan-part="badge"
               data-badge-type={badge.type}
             >
-              <i className={styles.badgeIcon} data-nutrition-plan-part="badge-icon">{badge.icon}</i>{badge.text}
+              <BadgeStatusIcon type={badge.type} />{badge.text}
             </span>
           ))}
           <span className={`${styles.badge} ${styles.info}`} data-nutrition-plan-part="badge" data-badge-type="info">
-            <i className={styles.badgeIcon} data-nutrition-plan-part="badge-icon">📅</i>Неделя {currentWeek}/4
+            <CalendarDays className={styles.badgeIcon} data-nutrition-plan-part="badge-icon" aria-hidden="true" />Неделя {currentWeek}/4
           </span>
         </div>
       </section>
 
       <button
         type="button"
-        className={styles.backdrop}
+        className={styles.backdrop} data-modal-backdrop="true"
         onClick={onClose}
         aria-label="Закрыть план питания по фону"
         data-testid="nutrition-plan-backdrop"

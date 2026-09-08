@@ -235,7 +235,7 @@
   }
 
   html:root[data-app-theme="warm-light"] body #root .adminFocusIcon.clients {
-    background: #f5f2f7;
+    background: #f7f8f5;
     color: #6b55e7;
   }
 
@@ -376,7 +376,7 @@
 
   html:root[data-app-theme="warm-light"] body #root nav.adminV3Nav.adminV3BottomBar.trainerRoleBottomBar > button.active {
     border-color: #ebe8ff;
-    background: linear-gradient(180deg, #f5f3ff 0%, #f5f2f7 100%);
+    background: linear-gradient(180deg, #f5f3ff 0%, #f7f8f5 100%);
     color: #654fe0;
     box-shadow: none;
   }

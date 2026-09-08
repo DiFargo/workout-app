@@ -1,5 +1,5 @@
 .header {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .notificationButton {
@@ -9,11 +9,13 @@
   display: grid;
   place-items: center;
   position: relative;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--ios-glass-border, var(--apple-separator, rgba(60,60,67,.12)));
   border-radius: 16px;
-  background: #fff;
-  color: #28262e;
-  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+  background: var(--ios-glass-surface, #fff);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: var(--ios-glass-shadow, 0 3px 10px rgba(27, 35, 31, 0.08));
+  backdrop-filter: var(--ios-glass-filter, blur(22px));
+  -webkit-backdrop-filter: var(--ios-glass-filter, blur(22px));
   cursor: pointer;
 }
 
@@ -37,5 +39,5 @@
   font-weight: 700;
 }
 
-.notificationButton:active { background: #f5f2f7; transform: scale(0.96); }
-.notificationButton:focus-visible { outline: 3px solid rgba(143, 122, 200, 0.24); outline-offset: 2px; }
+.notificationButton:active { background: var(--apple-surface-muted, #efeff4); transform: scale(0.96); }
+.notificationButton:focus-visible { outline: 3px solid rgba(47, 125, 104, 0.24); outline-offset: 2px; }

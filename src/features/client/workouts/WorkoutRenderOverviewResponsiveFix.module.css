@@ -1,0 +1,28 @@
+.modalOverlay {
+  box-sizing: border-box;
+}
+
+.modal {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.dateField {
+  width: 100%;
+  min-width: 0;
+}
+
+.dateInput {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 50px;
+  min-height: 50px;
+  max-height: 50px;
+  padding: 0 14px;
+  font-size: 16px;
+  line-height: 1.2;
+  color-scheme: light;
+}

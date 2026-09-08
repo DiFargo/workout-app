@@ -1,20 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import HistoryDeleteConfirmDialog from "../workouts/HistoryDeleteConfirmDialog";
-import { buildProfileDashboardModel } from "./profileDashboardModel";
+import { buildProfileDashboardModel, getTimeOfDayGreeting } from "./profileDashboardModel";
 import ProfileAccountSettingsSection from "./ProfileAccountSettingsSection";
 import ProfileAppSettingsSection from "./ProfileAppSettingsSection";
+import ProfileNotificationSettingsSection from "./ProfileNotificationSettingsSection";
 import ProfileAvatarCropModal from "./ProfileAvatarCropModal";
 import ProfileBodyMetricsSettingsSection from "./ProfileBodyMetricsSettingsSection";
 import ProfileCabinetActionGrid from "./ProfileCabinetActionGrid";
 import ProfileEmailModal from "./ProfileEmailModal";
 import ProfileFeedbackModal from "./ProfileFeedbackModal";
 import ProfileCabinetTitleRow from "./ProfileCabinetTitleRow";
-import ProfileHeroCard from "./ProfileHeroCard";
-import ProfileMainMeasurementSnapshot from "./ProfileMainMeasurementSnapshot";
 import ProfileMainRoleActions from "./ProfileMainRoleActions";
 import ProfileQuickWeightModal from "./ProfileQuickWeightModal";
 import ProfileWeightCheckInReminder from "./ProfileWeightCheckInReminder";
-import { ProfileNextWorkoutCard } from "./ProfileMainSummaryCards";
 import ProfileMeasurementWizardPanel from "./ProfileMeasurementWizardPanel";
 import ProfileMeasurementsModal from "./ProfileMeasurementsModal";
 import ProfileNutritionModal from "./ProfileNutritionModal";
@@ -22,11 +20,10 @@ import ProfilePageChrome from "./ProfilePageChrome";
 import {
   ProfileDashboardContent,
   ProfileDashboardShell,
-  ProfileDashboardVersion,
-  ProfileMainHeroStatsShell
+  ProfileDashboardVersion
 } from "./ProfileDashboardShell";
 import ProfilePasswordModal from "./ProfilePasswordModal";
-import ProfileProgressInsightCard from "./ProfileProgressInsightCard";
+import ProfileSummaryDashboard from "./ProfileSummaryDashboard";
 import ProfileProgressPhotosModal from "./ProfileProgressPhotosModal";
 import ProfileSettingsModal from "./ProfileSettingsModal";
 import ProfileSettingsTab from "./ProfileSettingsTab";
@@ -54,6 +51,7 @@ export default function ProfileDashboardRoute(ctx) {
   const [quickWeightModalOpen, setQuickWeightModalOpen] = useState(false);
   const [workoutModePickerOpen, setWorkoutModePickerOpen] = useState(false);
   const dashboardWorkoutModeRefreshRef = useRef("");
+  const nestedSettingsReturnRef = useRef("");
   const {
     AI_NUTRITION_WEEK_DAYS,
     APP_PAGES,
@@ -274,7 +272,9 @@ export default function ProfileDashboardRoute(ctx) {
     workoutCalendarDays,
     selectedWorkoutCalendarItems,
     profileCalendarScheduledDates,
-    canEditProfileWorkoutSchedule,
+    isTrainerManagedWorkoutSchedule,
+    profileWorkoutScheduleRequiredCount,
+    profileWorkoutScheduleLockedDates,
     shiftProfileWorkoutCalendarMonth,
     toggleProfileWorkoutScheduledDate,
     saveProfileWorkoutCalendar,
@@ -287,12 +287,9 @@ export default function ProfileDashboardRoute(ctx) {
     nextTrainingText,
     greetingName,
     profileAvatarUrl,
-    mainMeasurementSeries,
     mainLatestWeight,
     mainWeightChange,
-    mainWeightTrendPeriod,
-    weightCheckIn,
-    progressInsight
+    weightCheckIn
   } = buildProfileDashboardModel({
     AI_NUTRITION_WEEK_DAYS,
     APP_PAGES,
@@ -363,6 +360,9 @@ export default function ProfileDashboardRoute(ctx) {
     user,
     workoutModePreference
   });
+  const todayNutritionTotals = getNutritionDayTotals(
+    nutrition.days?.[todayNutritionKey()] || makeEmptyNutritionDay()
+  );
 
   const clientUid = auth.currentUser?.uid || user?.uid || "";
   const selectedWorkoutMode = workoutModePreference?.mode === "basic" ? "basic" : "individual";
@@ -512,6 +512,13 @@ export default function ProfileDashboardRoute(ctx) {
 
   const profileShellMode = isMainDashboard ? "main" : visibleProfileTab;
   const useLegacyTrainerShell = currentUserRole === "trainer" && !canUseAdminFeatures();
+  const dashboardFirstName = String(greetingName || "").trim().split(/\s+/)[0] || "спортсмен";
+  const dashboardGreeting = `${getTimeOfDayGreeting()}, ${dashboardFirstName}`;
+  const dashboardDateLabel = new Intl.DateTimeFormat("ru-RU", {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  }).format(new Date()).replace(/^./, (letter) => letter.toLocaleUpperCase("ru-RU"));
 
   return (
     <ProfileDashboardShell
@@ -521,9 +528,11 @@ export default function ProfileDashboardRoute(ctx) {
     >
       <ProfilePageChrome
         isMainDashboard={isMainDashboard}
+        activeTab={visibleProfileTab === "measurements" ? "progress" : "cabinet"}
         renderBottomBar={renderClientMainBottomBar}
         showTrainerNotifications={!canUseTrainerFeatures()}
         trainerNotificationCount={trainerNotificationCount}
+        mainTitle="Сегодня"
         onOpenTrainerNotifications={() => {
           if (clientUid) void loadClientTrainerTasks?.(clientUid);
           setProfileTrainerNotificationsOpen(true);
@@ -540,36 +549,21 @@ export default function ProfileDashboardRoute(ctx) {
         legacyTrainer={useLegacyTrainerShell}
         mode={profileShellMode}
       >
-        {visibleProfileTab === "cabinet" && isMainDashboard && (
-          <ProfileMainHeroStatsShell>
-            <ProfileHeroCard
-              telegramProfile={telegramProfile}
-              avatarUrl={profileAvatarUrl}
-              greetingName={greetingName}
-              activeGoalLabel={activeGoalLabel}
-              totalWorkouts={totalWorkouts}
-              targetWeight={activeProfile?.targetWeight}
-              currentWeight={activeProfile?.weight}
-              goalId={activeProfile?.goal}
-            />
-          </ProfileMainHeroStatsShell>
-        )}
-
         {!isMainDashboard && visibleProfileTab === "cabinet" && (
           <ProfileCabinetActionGrid
+            avatarUrl={profileAvatarUrl}
+            displayName={profileAccount?.displayName || activeProfile?.name || user?.displayName || greetingName}
+            email={profileAccount?.email || user?.email || ""}
+            telegramUsername={telegramProfile?.username || ""}
             showClientOnlyActions={!canUseTrainerFeatures()}
-            latestPhotoText={latestClientProgressPhoto
-              ? `Последние: ${new Date(`${latestClientProgressPhoto.date || latestClientProgressPhoto.createdAt?.slice(0, 10)}T12:00:00`).toLocaleDateString("ru-RU")}`
-              : "Добавь первые фото"}
-            latestMeasurementText={latestProfileMeasurement ? formatProfileMeasurementDate(latestProfileMeasurement) : "Замеров пока нет"}
-            weightText={weightCheckIn.cabinetText}
             nutritionText={`${Math.round(profileMacros.calories || nutrition.goals.calories)} ккал · ${activeGoalLabel}`}
-            historyText={history.length ? `${history.length} тренировок сохранено` : "История пока пустая"}
-            onOpenBodyControl={openProfileBodyControlPhotos}
-            onOpenWeight={openQuickWeightModal}
             onOpenNutrition={openProfileNutritionGoals}
             onOpenCalendar={openProfileWorkoutJournalCalendar}
             onOpenAccount={openProfileAccount}
+            onOpenConnections={() => {
+              setProfileSettingsModalSection("connections");
+              setProfileSettingsModalOpen(true);
+            }}
             onOpenQuestionnaire={() => {
               setProfileBodyMetricsOpen(true);
               setProfileSettingsModalSection("profile");
@@ -589,20 +583,35 @@ export default function ProfileDashboardRoute(ctx) {
         )}
 
         {isMainDashboard && (
-          <ProfileNextWorkoutCard
-            title={homeWorkoutAction.title || nextWorkoutTitle}
-            dateText={homeWorkoutAction.dateText || nextWorkoutDate || nextTrainingText}
+          <ProfileSummaryDashboard
+            isBasicPlan={selectedWorkoutMode === "basic"}
+            greetingName={greetingName}
+            greeting={dashboardGreeting}
+            dateLabel={dashboardDateLabel}
+            workoutTitle={homeWorkoutAction.title || nextWorkoutTitle}
+            workoutDate={homeWorkoutAction.dateText || nextWorkoutDate || nextTrainingText}
+            workoutState={homeWorkoutAction.state}
+            isWorkoutToday={homeWorkoutAction.isToday}
+            workoutScheduleStatus={homeWorkoutAction.scheduleStatus}
+            workoutActionLabel={homeWorkoutAction.actionLabel}
             exerciseCount={homeWorkoutAction.exerciseCount ?? nextWorkoutExerciseCount}
-            eyebrow={homeWorkoutAction.eyebrow}
-            actionLabel={homeWorkoutAction.actionLabel}
-            state={homeWorkoutAction.state}
-            onOpen={openTrainingEntry}
-          />
-        )}
-
-        {isMainDashboard && (
-          <ProfileProgressInsightCard
-            progressInsight={progressInsight}
+            totalWorkouts={totalWorkouts}
+            caloriesConsumed={todayNutritionTotals.calories}
+            calorieGoal={profileMacros.calories || nutrition.goals.calories}
+            latestWeight={mainLatestWeight}
+            weightChange={mainWeightChange}
+            trainerNotificationCount={trainerNotificationCount}
+            trainerNotifications={clientTrainerTasks}
+            onOpenWorkout={openTrainingEntry}
+            onOpenNutrition={() => setPage(APP_PAGES.NUTRITION)}
+            onOpenProgress={() => {
+              ctx.setProfileActiveTab("measurements");
+              setPage(APP_PAGES.PROFILE);
+            }}
+            onOpenTrainer={() => {
+              if (clientUid) void loadClientTrainerTasks?.(clientUid);
+              setProfileTrainerNotificationsOpen(true);
+            }}
           />
         )}
 
@@ -613,32 +622,21 @@ export default function ProfileDashboardRoute(ctx) {
           />
         )}
 
-        {isMainDashboard && (
-          <ProfileMainMeasurementSnapshot
-            measurementSeries={mainMeasurementSeries}
-            latestWeight={mainLatestWeight}
-            weightChange={mainWeightChange}
-            weightTrendPeriod={mainWeightTrendPeriod}
-          />
-        )}
-
-        {isMainDashboard && APP_VERSION && (
+        {!isMainDashboard && visibleProfileTab === "cabinet" && APP_VERSION && (
           <ProfileDashboardVersion>{APP_VERSION}</ProfileDashboardVersion>
         )}
 
         <ProfileMeasurementWizardPanel
           visible={visibleProfileTab === "measurements"}
           latestMeasurement={latestProfileMeasurement}
+          measurements={profileMeasurements}
           measurementFields={getProfileMeasurementFields(activeProfile?.goal || "recomp")}
           formatMeasurementDate={formatProfileMeasurementDate}
-          getMeasurementValue={getProfileMeasurementValue}
-          onStart={() => {
-            setProfileMeasurementReturnTab("measurements");
-            setProfileMeasurementOpen(false);
-            setProfileMeasurementWizardStep(0);
-            setProfileMeasurementStatus("");
-            setPage(APP_PAGES.MEASUREMENT_WIZARD);
-          }}
+          totalWorkouts={totalWorkouts}
+          progressPhotos={clientProgressPhotos}
+          onStart={openProfileBodyControlMeasurements}
+          onOpenPhotos={openProfileBodyControlPhotos}
+          onAddWeight={openQuickWeightModal}
         />
       </ProfileDashboardContent>
 
@@ -656,7 +654,7 @@ export default function ProfileDashboardRoute(ctx) {
       )}
 
       <ProfileMeasurementsModal
-        open={profileMeasurementsModalOpen && !isMainDashboard && visibleProfileTab === "cabinet"}
+        open={profileMeasurementsModalOpen && !isMainDashboard && ["cabinet", "measurements"].includes(visibleProfileTab)}
         latestMeasurement={latestProfileMeasurement}
         measurementFields={getProfileMeasurementFields(activeProfile?.goal || "recomp")}
         formatMeasurementDate={formatProfileMeasurementDate}
@@ -665,7 +663,7 @@ export default function ProfileDashboardRoute(ctx) {
         onOpenPhotos={openProfileBodyControlPhotos}
         onStart={() => {
           setProfileMeasurementsModalOpen(false);
-          setProfileMeasurementReturnTab("cabinet");
+          setProfileMeasurementReturnTab(visibleProfileTab === "measurements" ? "measurements" : "cabinet");
           setProfileMeasurementOpen(false);
           setProfileMeasurementWizardStep(0);
           setProfileMeasurementStatus("");
@@ -694,7 +692,7 @@ export default function ProfileDashboardRoute(ctx) {
       />
 
       <ProfileProgressPhotosModal
-        open={profileProgressPhotosModalOpen && !isMainDashboard && visibleProfileTab === "cabinet" && !canUseTrainerFeatures()}
+        open={profileProgressPhotosModalOpen && !isMainDashboard && ["cabinet", "measurements"].includes(visibleProfileTab) && !canUseTrainerFeatures()}
         uploading={profileProgressPhotoUploading}
         latestPhoto={latestClientProgressPhoto}
         photos={clientProgressPhotos}
@@ -739,14 +737,15 @@ export default function ProfileDashboardRoute(ctx) {
           selectedItems: selectedWorkoutCalendarItems,
           scheduledDates: profileCalendarScheduledDates,
           draftDates: profileWorkoutCalendarDraftDates,
-          canEditSchedule: canEditProfileWorkoutSchedule,
+          canEditSchedule: true,
+          isTrainerManaged: isTrainerManagedWorkoutSchedule,
+          scheduleRequiredCount: profileWorkoutScheduleRequiredCount,
           editing: profileWorkoutCalendarEditing,
           saving: profileWorkoutCalendarSaving,
           status: profileWorkoutCalendarStatus,
           getTimestampValue,
           onShiftMonth: shiftProfileWorkoutCalendarMonth,
           onStartEdit: () => {
-            if (!canEditProfileWorkoutSchedule) return;
             setProfileWorkoutCalendarDraftDates(profileCalendarScheduledDates);
             setProfileWorkoutCalendarEditing(true);
             setProfileWorkoutCalendarStatus("");
@@ -759,7 +758,23 @@ export default function ProfileDashboardRoute(ctx) {
           onSave: saveProfileWorkoutCalendar,
           onDayClick: (day) => {
             setProfileWorkoutCalendarDate(day.key);
-            if (canEditProfileWorkoutSchedule && profileWorkoutCalendarEditing && day.isCurrentMonth) {
+            if (profileWorkoutCalendarEditing && day.isCurrentMonth) {
+              if (profileWorkoutScheduleLockedDates.includes(day.key)) {
+                setProfileWorkoutCalendarStatus("Даты выполненных тренировок сохраняются в истории.");
+                return;
+              }
+
+              const isSelected = profileWorkoutCalendarDraftDates.includes(day.key);
+              if (!isSelected && day.key < formatProfileWorkoutDateKey(new Date())) {
+                setProfileWorkoutCalendarStatus("Для новой тренировки выберите сегодняшнюю или будущую дату.");
+                return;
+              }
+
+              if (!isSelected && profileWorkoutScheduleRequiredCount && profileWorkoutCalendarDraftDates.length >= profileWorkoutScheduleRequiredCount) {
+                setProfileWorkoutCalendarStatus("В расписании уже есть дата для каждой тренировки из программы.");
+                return;
+              }
+
               toggleProfileWorkoutScheduledDate(day.key);
             }
           },
@@ -805,6 +820,8 @@ export default function ProfileDashboardRoute(ctx) {
               onChangeLogin={changeProfileLogin}
               onOpenPassword={() => {
                 setProfileAccountStatus("");
+                nestedSettingsReturnRef.current = "account";
+                setProfileSettingsModalOpen(false);
                 setProfilePasswordModalOpen(true);
               }}
               onSave={saveProfileAccount}
@@ -829,25 +846,35 @@ export default function ProfileDashboardRoute(ctx) {
           />
         )}
 
-        {profileSettingsModalSection === "settings" && (
+        {profileSettingsModalSection === "connections" && (
           <ProfileAppSettingsSection
             variant="modal"
             email={profileAccount?.email || user?.email || ""}
             telegramProfile={telegramProfile}
             onOpenEmail={() => {
               setProfileAccountStatus("");
+              nestedSettingsReturnRef.current = "connections";
+              setProfileSettingsModalOpen(false);
               setProfileEmailConnectOpen(true);
             }}
             onOpenTelegram={() => {
               setTelegramStatus("");
+              nestedSettingsReturnRef.current = "connections";
+              setProfileSettingsModalOpen(false);
               setTelegramConnectOpen(true);
             }}
             onTelegramAvatarError={handleTelegramAvatarError}
-            showNotifications
-            notificationsEnabled={telegramProfile.notificationsEnabled !== false}
-            onToggleNotifications={toggleTelegramNotifications}
           />
         )}
+
+        {profileSettingsModalSection === "settings" && (
+          <ProfileNotificationSettingsSection
+            telegramProfile={telegramProfile}
+            onToggleNotifications={toggleTelegramNotifications}
+            onOpenConnections={() => setProfileSettingsModalSection("connections")}
+          />
+        )}
+
       </ProfileSettingsModal>
 
       <ProfileAvatarCropModal
@@ -888,6 +915,7 @@ export default function ProfileDashboardRoute(ctx) {
       />
 
       <ProfileTrainerNotificationsModal
+        isBasicPlan={selectedWorkoutMode === "basic"}
         open={profileTrainerNotificationsOpen && !canUseTrainerFeatures()}
         tasks={clientTrainerTasks}
         activeCount={trainerNotificationCount}
@@ -937,7 +965,14 @@ export default function ProfileDashboardRoute(ctx) {
         linking={telegramLinking}
         status={telegramStatus}
         onAvatarError={handleTelegramAvatarError}
-        onClose={() => setTelegramConnectOpen(false)}
+        onClose={() => {
+          setTelegramConnectOpen(false);
+          if (nestedSettingsReturnRef.current) {
+            setProfileSettingsModalSection(nestedSettingsReturnRef.current);
+            setProfileSettingsModalOpen(true);
+            nestedSettingsReturnRef.current = "";
+          }
+        }}
         onCheckLogin={checkTelegramLoginResult}
         onChangeTelegram={() => {
           setTelegramProfile((prev) => ({ ...prev, connected: false }));
@@ -952,7 +987,14 @@ export default function ProfileDashboardRoute(ctx) {
           email={profileAccount?.email || user?.email || ""}
           saving={profileAccountSaving}
           status={profileAccountStatus}
-          onClose={() => setProfileEmailConnectOpen(false)}
+          onClose={() => {
+            setProfileEmailConnectOpen(false);
+            if (nestedSettingsReturnRef.current) {
+              setProfileSettingsModalSection(nestedSettingsReturnRef.current);
+              setProfileSettingsModalOpen(true);
+              nestedSettingsReturnRef.current = "";
+            }
+          }}
           onRequestEmailChange={requestProfileEmailChange}
         />
       ) : null}
@@ -964,7 +1006,14 @@ export default function ProfileDashboardRoute(ctx) {
           hasGoogleProvider={hasGoogleProvider}
           saving={profileAccountSaving}
           status={profileAccountStatus}
-          onClose={() => setProfilePasswordModalOpen(false)}
+          onClose={() => {
+            setProfilePasswordModalOpen(false);
+            if (nestedSettingsReturnRef.current) {
+              setProfileSettingsModalSection(nestedSettingsReturnRef.current);
+              setProfileSettingsModalOpen(true);
+              nestedSettingsReturnRef.current = "";
+            }
+          }}
           onChangePassword={changeProfilePassword}
           onSendPasswordReset={sendProfilePasswordReset}
         />
@@ -981,10 +1030,12 @@ export default function ProfileDashboardRoute(ctx) {
         onSaveBodyMetrics={saveAiBodyMetrics}
         onOpenEmail={() => {
           setProfileAccountStatus("");
+          nestedSettingsReturnRef.current = "";
           setProfileEmailConnectOpen(true);
         }}
         onOpenTelegram={() => {
           setTelegramStatus("");
+          nestedSettingsReturnRef.current = "";
           setTelegramConnectOpen(true);
         }}
         onTelegramAvatarError={handleTelegramAvatarError}

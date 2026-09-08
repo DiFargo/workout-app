@@ -12,6 +12,12 @@ export function isWorkoutPlanForMode(plan = {}, mode = "individual") {
   return mode === "basic" ? isBasicPlan : !isBasicPlan;
 }
 
+export function hasSavedWorkoutPlanForMode(plan = {}, mode = "individual") {
+  return isWorkoutPlanForMode(plan, mode) &&
+    Array.isArray(plan?.workouts) &&
+    plan.workouts.length > 0;
+}
+
 export function resolveWorkoutPlanMode({
   options = {},
   workoutModePreference = null

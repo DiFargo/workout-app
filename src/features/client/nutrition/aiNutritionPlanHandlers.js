@@ -1,4 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
+import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
 
 import {
   buildAiNutritionMonthlyPlan
@@ -35,7 +36,7 @@ export function createAiNutritionPlanHandlers({
   async function saveAiNutritionPlan(profileOverride = aiNutritionProfileDraft, options = {}) {
     const completeFirstSetup = options?.completeFirstSetup !== false;
     const profile = {
-      name: String(profileOverride.name || "").trim(),
+      name: limitUserDisplayName(profileOverride.name),
       weight: String(profileOverride.weight || "").trim(),
       targetWeight: String(profileOverride.targetWeight || "").trim(),
       height: String(profileOverride.height || "").trim(),

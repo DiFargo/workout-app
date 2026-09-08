@@ -1,4 +1,5 @@
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import { ChevronRight, ClipboardList, Dumbbell } from "lucide-react";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 import styles from "./WorkoutModePage.module.css";
 
@@ -34,21 +35,23 @@ export default function WorkoutModePage({
 
       <section className={styles.cards} data-testid="workout-mode-cards">
         <button className={styles.card} data-testid="workout-mode-card" type="button" onClick={onOpenBasicWorkouts}>
-          <span className={styles.icon}>Б</span>
+          <span className={styles.icon} aria-hidden="true"><Dumbbell /></span>
           <div>
+            <span className={styles.kicker}>Самостоятельно</span>
             <strong>Базовые тренировки</strong>
-            <small>Короткий опрос и готовый план из базы приложения.</small>
+            <small>Тренировка на сегодня или программа на четыре недели.</small>
           </div>
-          <i>›</i>
+          <i aria-hidden="true"><ChevronRight /></i>
         </button>
 
         <button className={[styles.card, styles.premium].join(" ")} data-testid="workout-mode-card" type="button" onClick={onOpenIndividualWorkouts}>
-          <span className={styles.icon}>И</span>
+          <span className={styles.icon} aria-hidden="true"><ClipboardList /></span>
           <div>
+            <span className={styles.kicker}>С тренером</span>
             <strong>Индивидуальный план</strong>
             <small>Тренировки, которые создал и назначил тренер.</small>
           </div>
-          <i>›</i>
+          <i aria-hidden="true"><ChevronRight /></i>
         </button>
       </section>
 

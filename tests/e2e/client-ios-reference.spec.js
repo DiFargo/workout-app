@@ -190,8 +190,8 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveText("Питание");
   await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "20px");
   await expectRect(page.locator('[data-nutrition-header-part="title-row"]'), { x: 20, y: 8, width: 362, height: 44 });
-  await expectRect(page.getByTestId("nutrition-header-search"), { x: 286, y: 8, width: 44, height: 44 });
-  await expectRect(page.getByTestId("nutrition-header-calendar"), { x: 338, y: 8, width: 44, height: 44 });
+  await expect(page.getByTestId("nutrition-header-calendar")).toHaveCount(0);
+  await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
   await expectRect(page.locator('[data-nutrition-header-part="week"]'), { x: 16, y: 64, width: 370, height: 64 });
   await expectRect(page.getByTestId("nutrition-orbit"), { x: 16, y: 140, width: 370, height: 270 });
   await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 16, y: 422, width: 370, height: 35 });

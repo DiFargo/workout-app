@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Clock3, Settings } from "lucide-react";
+import { Check, ChevronRight, Dumbbell, Settings } from "lucide-react";
 import {
   getProgramHistoryItems,
   getWorkoutCover,
@@ -8,17 +8,21 @@ import {
 } from "../../../domain/workoutPresentation";
 import { sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
 import { getBasicWorkoutExpectedWorkoutCount } from "../../../utils/basicWorkoutPlanBuilder";
+import { getWorkoutScheduleCalendarForWorkouts, toWorkoutDateKey } from "../../../utils/workoutSchedule";
 import {
   buildCompletedWorkoutSet,
+  getCurrentAssignmentHistoryItems,
   getNextUncompletedWorkoutIndex,
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
 } from "../../../utils/workoutCompletion";
 import { safeReadJsonStorage } from "../../../utils/storageSafety";
 import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
+import { canResumeWorkoutDraft } from "../../../utils/workoutDraftState";
 import { WorkoutDraftRestoreDialog } from "../../../components/workout/WorkoutDialogs";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
-import { IndividualWorkoutHistoryDialog } from "./WorkoutListDialogs";
+import { IndividualWorkoutHistoryDialog, WorkoutPlanDialog, WorkoutProgramDialog } from "./WorkoutListDialogs";
+import WorkoutRenderOverview from "./WorkoutRenderOverview";
 import styles from "./WorkoutListPage.module.css";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 
@@ -26,6 +30,41 @@ const versionedLocalAsset = (src, version) => {
   if (typeof src !== "string" || !src.startsWith("/")) return src;
   return `${src}${src.includes("?") ? "&" : "?"}v=${encodeURIComponent(version || "")}`;
 };
+
+function getScheduledWorkoutDate(workout, index, calendar = {}) {
+  const plannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
+  const workoutId = String(workout?.id || "").trim();
+  const plannedWorkout = plannedWorkouts.find((item) => (
+    String(item?.workoutId || "").trim() === workoutId ||
+    Number(item?.order) === index + 1 ||
+    Number(item?.index) === index
+  ));
+  const scheduledDates = [
+    ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
+    ...(Array.isArray(calendar.monthlyTrainingDates) ? calendar.monthlyTrainingDates : [])
+  ].map(toWorkoutDateKey).filter(Boolean).sort();
+
+  return toWorkoutDateKey(
+    plannedWorkout?.movedToDate ||
+    workout?.movedToDate ||
+    plannedWorkout?.date ||
+    workout?.scheduledDate ||
+    workout?.plannedDate ||
+    scheduledDates[index]
+  );
+}
+
+function getExercisePlanDetail(exercise = {}) {
+  const sets = Array.isArray(exercise.sets)
+    ? exercise.sets.length
+    : Number(exercise.sets || exercise.approaches) || 0;
+  const firstSet = Array.isArray(exercise.sets) ? exercise.sets[0] : null;
+  const repetitions = firstSet?.reps || firstSet?.repetitions || exercise.reps || exercise.repetitions || "";
+  const parts = [];
+  if (sets) parts.push(`${sets} подх.`);
+  if (repetitions) parts.push(`${repetitions} повт.`);
+  return parts.join(" · ") || "Параметры уточнит тренер";
+}
 
 export default function WorkoutListPage({
   appVersion,
@@ -58,10 +97,13 @@ export default function WorkoutListPage({
   openWorkout,
   onOpenBasicMode,
   onOpenBasicSettings,
-  openCabinetWorkoutHistory,
+  onOpenBasicToday,
+  onRescheduleWorkout,
   handleWorkoutDraftChoice
 }) {
   const [swipeMotion, setSwipeMotion] = useState({ offset: 0, phase: "idle" });
+  const [workoutPlanModalOpen, setWorkoutPlanModalOpen] = useState(false);
+  const [workoutProgramModalOpen, setWorkoutProgramModalOpen] = useState(false);
   const basicQuizRedirectedRef = useRef(false);
   const swipeStartRef = useRef(null);
   const swipeSuppressClickRef = useRef(false);
@@ -73,16 +115,14 @@ export default function WorkoutListPage({
   const shouldOpenBasicQuiz = isBasicWorkoutMode && plan.source !== "basic";
   const planWorkouts = isBasicWorkoutMode && plan.source !== "basic" ? [] : plan.workouts || [];
   const sortedWorkouts = sortWorkoutDays(planWorkouts);
+  const scopedWorkoutCalendar = getWorkoutScheduleCalendarForWorkouts(workoutCalendar, sortedWorkouts);
   const assignmentVersion = getWorkoutAssignmentVersion(plan);
-  const completionHistory = isBasicWorkoutMode && assignmentVersion
-    ? (Array.isArray(history) ? history : []).filter((item) => (
-      String(item?.assignedProgramUpdatedAt || "").trim() === assignmentVersion
-    ))
-    : history;
+  const completionHistory = history;
   const completedWorkoutSet = buildCompletedWorkoutSet(
     completionHistory,
     assignmentVersion,
-    isBasicWorkoutMode ? {} : workoutCalendar
+    isBasicWorkoutMode ? {} : workoutCalendar,
+    sortedWorkouts
   );
   const isDeckWorkoutMode = isIndividualWorkoutMode || isBasicWorkoutMode;
   const nextUncompletedWorkoutIndex = isDeckWorkoutMode
@@ -100,10 +140,34 @@ export default function WorkoutListPage({
       )
     : 0;
   const activeIndividualWorkout = sortedWorkouts[activeWorkoutIndex];
+  const workoutScheduleDates = sortedWorkouts
+    .map((workoutItem, workoutIndex) => getScheduledWorkoutDate(workoutItem, workoutIndex, scopedWorkoutCalendar))
+    .filter(Boolean);
+  const workoutProgramName = String(
+    plan?.assignedProgramName ||
+    plan?.basicPlanName ||
+    plan?.name ||
+    plan?.title ||
+    activeIndividualWorkout?.assignedProgramName ||
+    "Программа тренировок"
+  ).trim();
   const isWorkoutCompleted = (workoutItem) => (
     isWorkoutCompletedWithSet(workoutItem, completedWorkoutSet, assignmentVersion)
   );
   const completedWorkoutCount = sortedWorkouts.filter(isWorkoutCompleted).length;
+  const workoutPlanItems = sortedWorkouts.map((workoutItem, workoutIndex) => ({
+    id: workoutItem?.id || `workout-${workoutIndex}`,
+    index: workoutIndex,
+    name: workoutItem?.name || `Тренировка ${workoutIndex + 1}`,
+    exerciseCount: Array.isArray(workoutItem?.exercises) ? workoutItem.exercises.length : 0,
+    exercises: (Array.isArray(workoutItem?.exercises) ? workoutItem.exercises : []).map((exercise, exerciseIndex) => ({
+      name: exercise?.name || `Упражнение ${exerciseIndex + 1}`,
+      detail: getExercisePlanDetail(exercise)
+    })),
+    date: getScheduledWorkoutDate(workoutItem, workoutIndex, scopedWorkoutCalendar),
+    completed: isWorkoutCompleted(workoutItem),
+    active: workoutIndex === activeWorkoutIndex
+  }));
   const expectedBasicWorkoutCount = isBasicWorkoutMode
     ? getBasicWorkoutExpectedWorkoutCount(plan)
     : 0;
@@ -121,15 +185,49 @@ export default function WorkoutListPage({
     !hasPartialBasicPlanSnapshot
   );
   const hasLocalOnlyPlanSave = plan?.cloudSyncState === "local_only";
-  const activeIndividualWorkoutCompleted = isWorkoutCompleted(activeIndividualWorkout);
-  const activeWorkoutDraft = currentUserId && activeIndividualWorkout?.id
-    ? safeReadJsonStorage(getWorkoutDraftKey(currentUserId, activeIndividualWorkout.id), null)
+  const todayKey = toWorkoutDateKey(new Date());
+  const currentAssignmentHistoryItems = getCurrentAssignmentHistoryItems(history, assignmentVersion, sortedWorkouts);
+  const getWorkoutDraft = (workoutItem) => currentUserId && workoutItem?.id
+    ? safeReadJsonStorage(getWorkoutDraftKey(currentUserId, workoutItem.id), null)
     : null;
-  const activeDraftAssignmentVersion =
-    activeWorkoutDraft?.assignmentVersion ||
-    activeWorkoutDraft?.assignedProgramUpdatedAt ||
-    activeWorkoutDraft?.plan?.assignedProgramUpdatedAt ||
-    "";
+  const draftWorkoutIndex = sortedWorkouts.findIndex((workoutItem) => {
+    const draft = getWorkoutDraft(workoutItem);
+    return canResumeWorkoutDraft(draft, workoutItem, assignmentVersion, isWorkoutCompleted(workoutItem));
+  });
+  const incompleteWorkoutIndexes = sortedWorkouts
+    .map((workoutItem, workoutIndex) => ({ workoutItem, workoutIndex, date: getScheduledWorkoutDate(workoutItem, workoutIndex, scopedWorkoutCalendar) }))
+    .filter(({ workoutItem }) => !isWorkoutCompleted(workoutItem));
+  const todayWorkoutIndex = incompleteWorkoutIndexes.find(({ date }) => date === todayKey)?.workoutIndex ?? -1;
+  const missedWorkoutIndexes = incompleteWorkoutIndexes.filter(({ date }) => date && date < todayKey);
+  const nextFutureWorkoutIndex = incompleteWorkoutIndexes.find(({ date }) => date && date > todayKey)?.workoutIndex ?? -1;
+  const unscheduledWorkoutIndex = incompleteWorkoutIndexes.find(({ date }) => !date)?.workoutIndex ?? -1;
+  const overviewWorkoutIndex = draftWorkoutIndex >= 0
+    ? draftWorkoutIndex
+    : todayWorkoutIndex >= 0
+      ? todayWorkoutIndex
+      : missedWorkoutIndexes[0]?.workoutIndex ?? (
+          individualWorkoutIndexInitialized && unscheduledWorkoutIndex >= 0
+            ? activeWorkoutIndex
+            : nextFutureWorkoutIndex >= 0
+              ? nextFutureWorkoutIndex
+              : unscheduledWorkoutIndex >= 0
+                ? unscheduledWorkoutIndex
+                : activeWorkoutIndex
+        );
+  const overviewWorkout = sortedWorkouts[overviewWorkoutIndex];
+  const overviewWorkoutDate = getScheduledWorkoutDate(overviewWorkout, overviewWorkoutIndex, scopedWorkoutCalendar);
+  const shouldShiftBasicWorkoutToToday = Boolean(
+    isBasicWorkoutMode &&
+    overviewWorkoutDate &&
+    overviewWorkoutDate < todayKey &&
+    !isWorkoutCompleted(overviewWorkout)
+  );
+  const displayedOverviewWorkoutDate = shouldShiftBasicWorkoutToToday ? todayKey : overviewWorkoutDate;
+  const displayedWorkoutScheduleDates = shouldShiftBasicWorkoutToToday
+    ? [...new Set([todayKey, ...workoutScheduleDates.filter((dateKey) => dateKey >= todayKey)])].sort()
+    : workoutScheduleDates;
+  const activeIndividualWorkoutCompleted = isWorkoutCompleted(overviewWorkout);
+  const activeWorkoutDraft = getWorkoutDraft(overviewWorkout);
 
   useEffect(() => {
     if (!shouldOpenBasicQuiz) {
@@ -145,25 +243,28 @@ export default function WorkoutListPage({
     window.clearTimeout(swipeTimerRef.current);
     window.cancelAnimationFrame(swipeFrameRef.current);
   }, []);
-  const hasActiveWorkoutDraft = Boolean(
-    activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id &&
-    (
-      !plan.assignedProgramUpdatedAt ||
-      activeDraftAssignmentVersion === plan.assignedProgramUpdatedAt
-    )
+  const hasActiveWorkoutDraft = canResumeWorkoutDraft(
+    activeWorkoutDraft, overviewWorkout, assignmentVersion, activeIndividualWorkoutCompleted
   );
-  const individualWorkoutProgramScope = {
-    assignedProgramId: plan.assignedProgramId || activeIndividualWorkout?.assignedProgramId || "",
-    assignedProgramName: plan.assignedProgramName || activeIndividualWorkout?.assignedProgramName || "История программы",
-    assignedProgramUpdatedAt: plan.assignedProgramUpdatedAt || activeIndividualWorkout?.assignedProgramUpdatedAt || "",
-    workoutIds: sortedWorkouts.map((workoutItem) => workoutItem.id)
-  };
-  const individualWorkoutHistoryItems = getProgramHistoryItems(history, individualWorkoutProgramScope).slice(0, 12);
-  const activeWorkoutActionLabel = activeIndividualWorkoutCompleted
-    ? "Повторить тренировку"
-    : hasActiveWorkoutDraft
+  const activeWorkoutActionLabel = isWorkoutCompleted(activeIndividualWorkout)
+    ? "Посмотреть результат"
+    : activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id
       ? "Продолжить тренировку"
       : "Начать тренировку";
+  const individualWorkoutHistoryItems = getProgramHistoryItems(currentAssignmentHistoryItems).slice(0, 12);
+  const todayCardState = hasActiveWorkoutDraft
+    ? "draft"
+    : isCurrentPlanCompleted
+      ? "program-complete"
+      : shouldShiftBasicWorkoutToToday
+        ? "shifted"
+        : overviewWorkoutDate === todayKey
+          ? "today"
+          : overviewWorkoutDate && overviewWorkoutDate < todayKey
+            ? "missed"
+            : overviewWorkoutDate && overviewWorkoutDate > todayKey
+              ? "recovery"
+              : "unscheduled";
   const activeWorkoutPendingSync = history.some((item) => (
     item?.pendingSync &&
     item?.workoutId === activeIndividualWorkout?.id &&
@@ -177,8 +278,19 @@ export default function WorkoutListPage({
     const nextWorkout = sortedWorkouts[index];
 
     if (nextWorkout) {
+      if (isWorkoutCompleted(nextWorkout)) {
+        loadHistory();
+        setWorkoutHistoryModalOpen(true);
+        return;
+      }
       openWorkout(nextWorkout.id);
     }
+  }
+
+  function selectWorkoutFromPlan(index) {
+    setIndividualWorkoutIndex(index);
+    setIndividualWorkoutIndexInitialized(true);
+    setWorkoutPlanModalOpen(false);
   }
 
   function moveIndividualWorkout(direction) {
@@ -287,6 +399,54 @@ export default function WorkoutListPage({
     return null;
   }
 
+  if (isDeckWorkoutMode && overviewWorkout) {
+    return <>
+      <WorkoutRenderOverview
+        workout={overviewWorkout}
+        workoutDate={displayedOverviewWorkoutDate}
+        scheduledDates={displayedWorkoutScheduleDates}
+        programName={workoutProgramName}
+        programType={isBasicWorkoutMode ? "basic" : "individual"}
+        index={overviewWorkoutIndex}
+        total={sortedWorkouts.length}
+        completedCount={completedWorkoutCount}
+        todayState={todayCardState}
+        missedCount={isBasicWorkoutMode ? 0 : missedWorkoutIndexes.length}
+        isTrainerMode={isTrainerMode}
+        renderBottomBar={renderClientMainBottomBar}
+        onOpen={() => openWorkoutByIndex(overviewWorkoutIndex)}
+        onViewResult={() => { loadHistory(); setWorkoutHistoryModalOpen(true); }}
+        onReschedule={(dateKey) => onRescheduleWorkout?.({
+          workoutId: overviewWorkout?.id,
+          workoutIndex: overviewWorkoutIndex,
+          dateKey
+        })}
+        onHistory={() => { loadHistory(); setWorkoutHistoryModalOpen(true); }}
+        onPlan={() => setWorkoutPlanModalOpen(true)}
+        onProgram={() => setWorkoutProgramModalOpen(true)}
+        onCreateBasicWorkout={onOpenBasicToday}
+        navigation={{ onGoMain, onOpenTraining, onOpenNutrition, onOpenCabinet, onOpenTrainerClients, onOpenTrainerPrograms, onLoadTrainerCabinet:onOpenCabinet }}
+      />
+      <WorkoutPlanDialog
+        open={workoutPlanModalOpen}
+        programName={workoutProgramName}
+        completedCount={completedWorkoutCount}
+        workouts={workoutPlanItems}
+        onClose={() => setWorkoutPlanModalOpen(false)}
+        onSelectWorkout={selectWorkoutFromPlan}
+      />
+      <WorkoutProgramDialog
+        open={workoutProgramModalOpen}
+        programName={workoutProgramName}
+        completedCount={completedWorkoutCount}
+        workouts={workoutPlanItems}
+        onClose={() => setWorkoutProgramModalOpen(false)}
+      />
+      <IndividualWorkoutHistoryDialog open={Boolean(workoutHistoryModalOpen)} historyLoading={historyLoading} historyItems={individualWorkoutHistoryItems} onClose={() => setWorkoutHistoryModalOpen(false)} />
+      <WorkoutDraftRestoreDialog open={Boolean(workoutDraftRestorePrompt)} blocked={Boolean(workoutReadinessOpen || postWorkoutFeedbackOpen || fullscreenVideo || showFirstSetupOnboarding)} onRestart={() => handleWorkoutDraftChoice(false)} onRestore={() => handleWorkoutDraftChoice(true)} />
+    </>;
+  }
+
   return (
     <div
       className={`${styles.page} ${isIndividualWorkoutMode ? styles.individualMode : styles.basicMode} ${isDeckWorkoutMode ? styles.deckMode : ""} ${adaptiveShellStyles.shell}`}
@@ -296,28 +456,14 @@ export default function WorkoutListPage({
       <ClientPageHeader
         className={styles.hero}
         frameClassName={styles.headerFrame}
-        title={isIndividualWorkoutMode ? "Мой план" : "Тренировки"}
+        title="Тренировки"
         titleAlign="start"
         primary
         titleTestId="workout-list-title"
         testId="workout-list-header"
         scope="workout-list-header"
-        actions={(
+        actions={isBasicWorkoutMode ? (
           <div className={styles.headerActions}>
-          {isIndividualWorkoutMode && (
-            <button
-              type="button"
-              className={styles.headerButton}
-              data-testid="workout-history-button"
-              aria-label="Открыть историю тренировок"
-              onClick={() => {
-                loadHistory();
-                setWorkoutHistoryModalOpen(true);
-              }}
-            >
-              <Clock3 aria-hidden="true" />
-            </button>
-          )}
           {!isIndividualWorkoutMode && isBasicWorkoutMode && (
             <button
               type="button"
@@ -329,7 +475,7 @@ export default function WorkoutListPage({
             </button>
           )}
           </div>
-        )}
+        ) : null}
       >
       </ClientPageHeader>
 
@@ -352,7 +498,7 @@ export default function WorkoutListPage({
       >
         {sortedWorkouts.length === 0 ? (
           <div className={styles.emptyState} data-testid="workout-list-empty-state">
-            <div className={styles.emptyIcon}>⏳</div>
+            <div className={styles.emptyIcon} aria-hidden="true"><Dumbbell /></div>
             <h2>{isIndividualWorkoutMode ? "Плана от тренера пока нет" : "Тренировка ещё не назначена"}</h2>
             <p>
               {isIndividualWorkoutMode
@@ -366,7 +512,7 @@ export default function WorkoutListPage({
         ) : isCurrentPlanCompleted ? (
           <section className={styles.completionState} data-testid="workout-plan-completed-state">
             <span className={styles.completionEyebrow}>ПЛАН ЗАВЕРШЁН</span>
-            <div className={styles.completionIcon} aria-hidden="true">✓</div>
+            <div className={styles.completionIcon} aria-hidden="true"><Check /></div>
             <div className={styles.completionCopy}>
               <h2>{isBasicWorkoutMode ? "Базовый план завершён" : "План завершён"}</h2>
               <p>
@@ -514,6 +660,11 @@ export default function WorkoutListPage({
                           event.preventDefault();
                           return;
                         }
+                        if (completed) {
+                          loadHistory();
+                          setWorkoutHistoryModalOpen(true);
+                          return;
+                        }
                         openWorkoutByIndex(index);
                       }}
                     >
@@ -575,7 +726,7 @@ export default function WorkoutListPage({
                   <span className={styles.listName}>{item.title}</span>
                 </span>
 
-                <span className={styles.listArrow}>›</span>
+                <span className={styles.listArrow} aria-hidden="true"><ChevronRight /></span>
               </button>
             );
           })
@@ -602,7 +753,6 @@ export default function WorkoutListPage({
         historyLoading={historyLoading}
         historyItems={individualWorkoutHistoryItems}
         onClose={() => setWorkoutHistoryModalOpen(false)}
-        onOpenAll={() => openCabinetWorkoutHistory(null, individualWorkoutProgramScope)}
       />
 
       <WorkoutDraftRestoreDialog

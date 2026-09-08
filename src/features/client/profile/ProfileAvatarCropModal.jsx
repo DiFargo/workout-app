@@ -1,4 +1,5 @@
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
+import { Minus, Plus } from "lucide-react";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileAvatarCropModal.module.css";
 
@@ -33,7 +34,7 @@ export default function ProfileAvatarCropModal({
   };
 
   return (
-    <div className={styles.overlay} data-testid="profile-avatar-crop-overlay" role="presentation" onClick={onClose}>
+    <div className={styles.overlay} data-modal-backdrop="true" data-testid="profile-avatar-crop-overlay" role="presentation" onClick={onClose}>
       <section
         className={styles.dialog}
         data-css-module-scope="profile-avatar-crop-modal"
@@ -41,6 +42,7 @@ export default function ProfileAvatarCropModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-cabinet-sheet="true"
         aria-labelledby="profileAvatarCropTitle"
         onClick={(event) => event.stopPropagation()}
       >
@@ -82,7 +84,7 @@ export default function ProfileAvatarCropModal({
         </div>
 
         <label className={styles.zoom} data-testid="profile-avatar-crop-zoom">
-          <span>−</span>
+          <span aria-hidden="true"><Minus /></span>
           <input
             className={styles.range}
             type="range"
@@ -93,7 +95,7 @@ export default function ProfileAvatarCropModal({
             onChange={(event) => onZoomChange(event.target.value)}
             aria-label="Масштаб аватара"
           />
-          <span>＋</span>
+          <span aria-hidden="true"><Plus /></span>
         </label>
 
         <p className={styles.hint}>Перемещай фото пальцем, чтобы лицо оказалось внутри круга.</p>

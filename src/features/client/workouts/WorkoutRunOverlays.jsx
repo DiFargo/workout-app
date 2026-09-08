@@ -114,7 +114,7 @@ export function WorkoutStageHeading({
           </span>
           {inFlow && !isFinishSlide && progressLabel ? (
             <span className={styles.stageTitleProgress} data-testid="workout-exercise-progress">
-              {progressLabel}
+              <span>{progressLabel}</span>
               <ChevronDown aria-hidden="true" />
             </span>
           ) : null}

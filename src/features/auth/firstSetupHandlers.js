@@ -37,7 +37,10 @@ export async function submitFirstSetupProfileWithDeps({
     !hasSavedWeightMeasurement(profileMeasurements) &&
     typeof saveProfileMeasurement === "function"
   );
-  const savedToCloud = await saveAiNutritionPlan(aiNutritionProfileDraft, {
+  const savedToCloud = await saveAiNutritionPlan({
+    ...aiNutritionProfileDraft,
+    name: limitUserDisplayName(aiNutritionProfileDraft.name)
+  }, {
     completeFirstSetup: !requiresInitialWeightSave
   });
 

@@ -38,6 +38,7 @@ export function renderAppRoutePage(ctx) {
     openSavedBasicWorkoutsOrQuiz,
     openBasicWorkoutQuiz,
     openCabinetWorkoutHistory,
+    rescheduleWorkout,
     handleWorkoutDraftChoice
   } = ctx;
 
@@ -74,6 +75,7 @@ export function renderAppRoutePage(ctx) {
     openSavedBasicWorkoutsOrQuiz,
     openBasicWorkoutQuiz,
     openCabinetWorkoutHistory,
+    rescheduleWorkout,
     handleWorkoutDraftChoice
   });
 

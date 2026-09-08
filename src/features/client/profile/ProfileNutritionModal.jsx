@@ -1,5 +1,4 @@
 import { todayNutritionKey } from "../../../domain/nutritionPresentation";
-import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
 import {
   getAiNutritionDayMacros,
   getAiNutritionWeekForDate
@@ -81,7 +80,7 @@ export default function ProfileNutritionModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-css-module-scope="profile-nutrition-modal"
       data-testid="profile-nutrition-overlay"
       role="presentation"
@@ -93,6 +92,7 @@ export default function ProfileNutritionModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-cabinet-sheet="true"
         aria-labelledby="cabinetNutritionModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
@@ -107,6 +107,7 @@ export default function ProfileNutritionModal({
           actions={(
             <ProfileModalCloseButton
               testId="profile-nutrition-close"
+              className={styles.closeButton}
               ariaLabel="Закрыть план питания"
               disabled={saved}
               onClick={onClose}
@@ -120,8 +121,7 @@ export default function ProfileNutritionModal({
           <div className={`${styles.card} ${styles.goalCard}`} data-testid="profile-nutrition-goal-card">
             <div className={styles.inlinePlan}>
               <div className={styles.planHeader}>
-                <span>ВЫБРАТЬ ЦЕЛЬ</span>
-                <strong>{getAiNutritionGoalLabel(currentGoal)}</strong>
+                <strong>Ваша цель</strong>
               </div>
 
               <div className={styles.goalPicker} data-testid="profile-nutrition-goal-picker">
@@ -129,9 +129,9 @@ export default function ProfileNutritionModal({
                   <button
                     key={goal.id}
                     type="button"
-                    className={profileDraft.goal === goal.id ? styles.activeGoal : undefined}
+                    className={currentGoal === goal.id ? styles.activeGoal : undefined}
                     aria-label={`Выбрать цель питания: ${goal.title}`}
-                    aria-pressed={profileDraft.goal === goal.id}
+                    aria-pressed={currentGoal === goal.id}
                     onClick={() => onGoalChange(goal.id)}
                   >
                     {goal.title}
@@ -140,11 +140,12 @@ export default function ProfileNutritionModal({
               </div>
 
               <div className={styles.goalHint}>
-                {getGoalHint(profileDraft.goal)}
+                {getGoalHint(currentGoal)}
               </div>
 
               <div className={styles.macroGrid}>
                 <div><span>Ккал</span><strong>{Math.round(draftMacros.calories || nutritionGoals.calories)}</strong></div>
+                <div><span>Белки</span><strong>{Math.round(draftMacros.protein || nutritionGoals.protein)} г</strong></div>
                 <div><span>Жиры</span><strong>{Math.round(draftMacros.fat || nutritionGoals.fat)} г</strong></div>
                 <div><span>Угл.</span><strong>{Math.round(draftMacros.carbs || nutritionGoals.carbs)} г</strong></div>
               </div>

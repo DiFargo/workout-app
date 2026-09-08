@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { safeWriteJsonStorage } from "../../../utils/storageSafety";
-import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
+import { clearWorkoutDraft, getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
 import { getWorkoutExecutionSteps } from "../../../utils/workoutPlanNormalization";
 import {
   createWorkoutCountdownDeadline,
@@ -107,6 +107,7 @@ export function useWorkoutRuntimeEffects({
   auth,
   currentExerciseIndex,
   inlineVideoControlsTimerRef,
+  isWorkoutSaved,
   plan,
   postWorkoutFeedback,
   restTimerDuration,
@@ -190,7 +191,12 @@ export function useWorkoutRuntimeEffects({
   useEffect(() => {
     const currentUser = auth.currentUser || user;
 
-    if (!currentUser?.uid || !selectedWorkoutId || !workoutStarted) return;
+    if (!currentUser?.uid || !selectedWorkoutId) return;
+    if (isWorkoutSaved) {
+      clearWorkoutDraft(currentUser.uid, selectedWorkoutId);
+      return;
+    }
+    if (!workoutStarted) return;
 
     const draftAssignmentVersion =
       plan.workouts.find((workoutItem) => workoutItem.id === selectedWorkoutId)
@@ -239,6 +245,7 @@ export function useWorkoutRuntimeEffects({
     auth.currentUser,
     user,
     selectedWorkoutId,
+    isWorkoutSaved,
     currentExerciseIndex,
     workoutStarted,
     workoutStartedAt,

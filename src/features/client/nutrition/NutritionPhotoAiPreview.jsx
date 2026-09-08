@@ -2,6 +2,7 @@ import {
   getFoodIcon,
   getShortFoodName
 } from "../../../utils/nutritionFoodPresentation";
+import { X } from "lucide-react";
 import styles from "./NutritionPhotoAiPreview.module.css";
 
 function getPhotoResultKind(selectedFood = {}, result = "") {
@@ -47,6 +48,7 @@ export default function NutritionPhotoAiPreview({
       data-css-module-scope="nutrition-photo-ai-preview"
       data-testid="nutrition-photo-ai-preview"
       data-state={analyzing ? "analyzing" : "result"}
+      aria-busy={analyzing}
       aria-live="polite"
     >
       <div className={styles.image}>
@@ -99,7 +101,7 @@ export default function NutritionPhotoAiPreview({
         onClick={onReset}
         aria-label="Убрать фото"
       >
-        ×
+        <X size={19} strokeWidth={2.2} aria-hidden="true" />
       </button>
     </div>
   );

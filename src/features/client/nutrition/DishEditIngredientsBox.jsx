@@ -1,4 +1,5 @@
 import { parseNutritionNumber } from "../../../utils/nutritionNumbers";
+import { Plus, Trash2 } from "lucide-react";
 import styles from "./DishEditIngredientsBox.module.css";
 
 export default function DishEditIngredientsBox({
@@ -32,7 +33,8 @@ export default function DishEditIngredientsBox({
           data-dish-ingredients-action="add"
           onClick={onOpenIngredientPicker}
         >
-          + ингредиент
+          <Plus aria-hidden="true" />
+          <span>Добавить</span>
         </button>
       </div>
 
@@ -65,7 +67,7 @@ export default function DishEditIngredientsBox({
                 onClick={() => onRemoveIngredient(ingredient.id)}
                 aria-label={`Удалить ${ingredient.name}`}
               >
-                ×
+                <Trash2 aria-hidden="true" />
               </button>
             </div>
           ))}

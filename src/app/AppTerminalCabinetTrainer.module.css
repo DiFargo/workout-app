@@ -914,7 +914,7 @@
 html:root[data-app-theme="warm-light"] body #root .trainerClientHero,
 html:root[data-app-theme="warm-light"] body #root .trainerClientOverviewSection,
 html:root[data-app-theme="warm-light"] body #root .trainerClientKpiGrid > article {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 12px 32px rgba(64, 70, 112, 0.07);
 }
@@ -931,7 +931,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientAiList strong,
 html:root[data-app-theme="warm-light"] body #root .trainerClientProgramSummary strong,
 html:root[data-app-theme="warm-light"] body #root .trainerClientControlRows strong,
 html:root[data-app-theme="warm-light"] body #root .trainerClientActivityList strong {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientHeroCopy p,
@@ -971,14 +971,14 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientAttentionStrip a
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientInlineEditorPanel {
-  border-color: #e7e0f5;
+  border-color: #dceee6;
   background: #ffffff;
   box-shadow: 0 20px 55px rgba(55, 58, 100, 0.16);
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientPhotoRow figure > div {
   border-color: #d9d4fb;
-  background: #f5f2f7;
+  background: #f7f8f5;
   color: #7463dc;
 }
 
@@ -991,13 +991,13 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMacroGrid i b {
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientNoteEditor textarea {
-  border-color: #efebf3;
-  background: #f7f6f8;
-  color: #28262e;
+  border-color: #e0e6e0;
+  background: #f1f3ee;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientNoteEditor button {
-  background: linear-gradient(135deg, #806bb6, #8f7ac8);
+  background: linear-gradient(135deg, #286e5b, #2f7d68);
   color: #fff;
 }
 
@@ -1017,7 +1017,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal {
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header h3 {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header span {
@@ -1026,7 +1026,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal >
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientDashboardModal > header > button {
   border-color: #e3e5ef;
-  background: #f7f6f8;
+  background: #f1f3ee;
   color: #687188;
 }
 

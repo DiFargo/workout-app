@@ -8,13 +8,78 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: 0 16px calc(130px + env(safe-area-inset-bottom, 0px));
-  color: #28262e;
-  background: #f7f6f8;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f2f2f7);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
 .topBar {
   min-height: 0;
+}
+
+.planSwitcher {
+  margin: 0 0 14px;
+  padding: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  background: var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 18px;
+}
+
+.planSwitcher button {
+  min-width: 0;
+  min-height: 58px;
+  padding: 8px 10px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  color: var(--apple-secondary, #636366);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 14px;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.planSwitcher button[aria-current="page"] {
+  color: #664ea2;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(69, 57, 85, 0.09);
+}
+
+.planSwitcher button > svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 2;
+}
+
+.planSwitcher button > span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.planSwitcher strong,
+.planSwitcher small {
+  overflow-wrap: anywhere;
+}
+
+.planSwitcher strong {
+  color: currentColor;
+  font-size: 13px;
+  font-weight: 720;
+  line-height: 1.1;
+}
+
+.planSwitcher small {
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 550;
+  line-height: 1.15;
 }
 
 .content,
@@ -30,7 +95,7 @@
 }
 
 .eyebrow {
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.07em;
@@ -42,7 +107,7 @@
 .resultHeading h2,
 .loadingCard h2 {
   margin: 0;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 25px;
   font-weight: 750;
   letter-spacing: -0.65px;
@@ -53,7 +118,7 @@
 .resultHeading p,
 .loadingCard p {
   margin: 0;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 14px;
   line-height: 1.42;
 }
@@ -66,7 +131,7 @@
 
 .targetHelp {
   margin: -2px 2px 0;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 12px;
   font-weight: 620;
   line-height: 1.35;
@@ -76,8 +141,8 @@
   margin: -2px 0 0;
   padding: 10px 12px;
   color: #625c68;
-  background: #f5f2f7;
-  border: 1px solid #efebf3;
+  background: var(--apple-surface-muted, #efeff4);
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 13px;
   font-size: 13px;
   font-weight: 620;
@@ -99,10 +164,10 @@
   grid-template-rows: minmax(76px, 1fr) auto;
   align-items: stretch;
   overflow: hidden;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   text-align: left;
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 18px;
   box-shadow: 0 2px 8px rgba(63, 54, 75, 0.04);
   cursor: pointer;
@@ -115,19 +180,19 @@
 }
 
 .targetCard:focus-visible,
+.planSwitcher button:focus-visible,
 .chipRow button:focus-visible,
 .segmentedControl button:focus-visible,
 .primaryButton:focus-visible,
-.secondaryButton:focus-visible,
-.longPlanLink:focus-visible {
-  outline: 3px solid rgba(128, 107, 182, 0.35);
+.secondaryButton:focus-visible {
+  outline: 3px solid rgba(40, 110, 91, 0.35);
   outline-offset: 2px;
 }
 
 .targetCard[data-selected="true"] {
   background: #f5f0ff;
-  border-color: #8f7ac8;
-  box-shadow: 0 6px 18px rgba(128, 107, 182, 0.14), inset 0 0 0 1px rgba(143, 122, 200, 0.25);
+  border-color: var(--apple-action, #3f73b8);
+  box-shadow: 0 6px 18px rgba(40, 110, 91, 0.14), inset 0 0 0 1px rgba(47, 125, 104, 0.25);
 }
 
 .targetImage {
@@ -136,7 +201,7 @@
   display: grid;
   place-items: center;
   border-radius: 13px;
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
 }
 
 .targetImage img {
@@ -160,7 +225,7 @@
 
 .targetCopy strong {
   overflow-wrap: anywhere;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 13px;
   font-weight: 720;
   line-height: 1.12;
@@ -168,7 +233,7 @@
 
 .targetCopy small {
   display: none;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   font-weight: 500;
   line-height: 1.2;
@@ -183,7 +248,7 @@
   display: grid;
   place-items: center;
   color: #ffffff;
-  background: #806bb6;
+  background: var(--apple-blue-pressed, #3565a3);
   border-radius: 50%;
 }
 
@@ -198,7 +263,7 @@
 .advancedSettings,
 .selectionHint {
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 20px;
 }
 
@@ -228,7 +293,7 @@
 .locationRow > span svg {
   width: 17px;
   height: 17px;
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
 }
 
 .chipRow {
@@ -246,7 +311,7 @@
   font: inherit;
   font-size: 12px;
   font-weight: 680;
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
   border: 1px solid transparent;
   border-radius: 13px;
   cursor: pointer;
@@ -256,7 +321,7 @@
 .chipRow button[data-selected="true"],
 .segmentedControl button[data-selected="true"] {
   color: #664ea2;
-  background: #eee8fa;
+  background: #e6f2eb;
   border-color: #d6caee;
 }
 
@@ -271,7 +336,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 3px;
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
   border-radius: 15px;
 }
 
@@ -312,7 +377,7 @@
 .advancedSettings summary svg {
   width: 17px;
   height: 17px;
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
 }
 
 .advancedFields {
@@ -327,7 +392,7 @@
 }
 
 .advancedFields label > span {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 12px;
   font-weight: 600;
 }
@@ -337,11 +402,11 @@
   width: 100%;
   min-height: 44px;
   padding: 0 11px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font: inherit;
   font-size: 14px;
-  background: #f5f2f7;
-  border: 1px solid #efebf3;
+  background: var(--apple-surface-muted, #efeff4);
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 12px;
 }
 
@@ -369,13 +434,12 @@
 }
 
 .selectionHint strong {
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   font-size: 13px;
 }
 
 .primaryButton,
-.secondaryButton,
-.longPlanLink {
+.secondaryButton {
   min-height: 52px;
   padding: 0 16px;
   display: inline-flex;
@@ -391,36 +455,28 @@
 
 .primaryButton {
   color: #ffffff;
-  background: #806bb6;
+  background: var(--apple-blue-pressed, #3565a3);
   border: 0;
   border-radius: 17px;
-  box-shadow: 0 9px 18px rgba(128, 107, 182, 0.22);
+  box-shadow: 0 9px 18px rgba(40, 110, 91, 0.22);
 }
 
-.primaryButton:disabled {
+.primaryButton:disabled,
+.secondaryButton:disabled {
   cursor: default;
   opacity: 0.48;
   box-shadow: none;
 }
 
 .primaryButton:not(:disabled):active,
-.secondaryButton:active,
-.longPlanLink:active {
+.secondaryButton:not(:disabled):active {
   transform: scale(0.98);
 }
 
 .primaryButton svg,
-.secondaryButton svg,
-.longPlanLink svg {
+.secondaryButton svg {
   width: 19px;
   height: 19px;
-}
-
-.longPlanLink {
-  min-height: 44px;
-  color: #806bb6;
-  background: transparent;
-  border: 0;
 }
 
 .resultContent {
@@ -455,8 +511,8 @@
   height: 46px;
   display: grid;
   place-items: center;
-  color: #806bb6;
-  background: #eee8fa;
+  color: var(--apple-blue-pressed, #3565a3);
+  background: #e6f2eb;
   border-radius: 15px;
 }
 
@@ -478,26 +534,26 @@
   place-items: center;
   gap: 2px;
   text-align: center;
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
   border-radius: 14px;
 }
 
 .summaryStats strong {
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   font-size: 19px;
   font-weight: 750;
   line-height: 1;
 }
 
 .summaryStats small {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   font-weight: 600;
 }
 
 .statusMessage {
   color: #5e556a;
-  background: #f5f2f7;
+  background: var(--apple-surface-muted, #efeff4);
   border-radius: 13px;
 }
 
@@ -524,7 +580,7 @@
   align-items: center;
   gap: 9px;
   background: #f8f7fa;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 14px;
 }
 
@@ -533,8 +589,8 @@
   height: 28px;
   display: grid;
   place-items: center;
-  color: #806bb6;
-  background: #eee8fa;
+  color: var(--apple-blue-pressed, #3565a3);
+  background: #e6f2eb;
   border-radius: 9px;
   font-size: 12px;
   font-weight: 750;
@@ -552,20 +608,20 @@
 }
 
 .exerciseList strong {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 14px;
   font-weight: 700;
   line-height: 1.17;
 }
 
 .exerciseList small {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 11px;
   line-height: 1.2;
 }
 
 .secondaryButton {
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   background: #ffffff;
   border: 1px solid #d9ceef;
   border-radius: 17px;
@@ -584,7 +640,7 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(40, 38, 46, 0.28);
+  background: rgba(27, 35, 31, 0.28);
   backdrop-filter: blur(5px);
 }
 
@@ -596,9 +652,9 @@
   gap: 10px;
   text-align: center;
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 26px;
-  box-shadow: 0 22px 54px rgba(40, 38, 46, 0.2);
+  box-shadow: 0 22px 54px rgba(27, 35, 31, 0.2);
 }
 
 .loadingCard > span {
@@ -606,8 +662,8 @@
   height: 58px;
   display: grid;
   place-items: center;
-  color: #806bb6;
-  background: #eee8fa;
+  color: var(--apple-blue-pressed, #3565a3);
+  background: #e6f2eb;
   border-radius: 20px;
   animation: pulse 1.15s ease-in-out infinite;
 }

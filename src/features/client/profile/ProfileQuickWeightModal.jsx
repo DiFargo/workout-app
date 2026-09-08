@@ -58,7 +58,7 @@ export default function ProfileQuickWeightModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-testid="profile-quick-weight-overlay"
       data-css-module-scope="profile-quick-weight-modal"
       role="presentation"

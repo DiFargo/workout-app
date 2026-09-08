@@ -224,6 +224,7 @@ const {
         streakText: nutritionStreakText,
         caloriesLeft,
         onAdd: () => openNutritionPicker(),
+        onOpenCalendar: openNutritionCalendar,
         onPhotoSearch: (event) => {
           const file = event.target.files?.[0];
           openNutritionPicker();
@@ -456,7 +457,7 @@ const {
             setShowRecentNutritionFoods(false);
           },
           onRecentFoodSelect: (food) => {
-            setNutritionSearch(food.name.split(" — ")[0]);
+            setNutritionSearch("");
             setNutritionSearchTab("food");
             setShowRecentNutritionFoods(false);
             setNutritionCreateChoiceOpen(false);
@@ -471,6 +472,7 @@ const {
             }
           },
           onMyFoodSelect: (normalizedFood) => {
+            setNutritionSearch("");
             const myFoodId = normalizedFood.id || normalizedFood.foodId;
             const nextAmount = normalizedFood.amountMode === "portion"
               ? (normalizedFood.portionAmount || 100)
@@ -492,7 +494,10 @@ const {
             setNutritionMealMenuOpen(false);
             setShowRecentNutritionFoods(false);
           },
-          onFoodSelect: addNutritionFoodFromPicker,
+          onFoodSelect: (food) => {
+            setNutritionSearch("");
+            addNutritionFoodFromPicker(food);
+          },
           onShowMore: () => setNutritionSearchResultLimit({
             key: nutritionSearchResultKey,
             limit: activeNutritionSearchResultLimit + 8

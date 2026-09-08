@@ -16,7 +16,7 @@ export default function TrainerAdminCreateClientModal({
 }) {
   const modal = (
     <div
-      className={styles.backdrop}
+      className={styles.backdrop} data-modal-backdrop="true"
       data-trainer-modal-backdrop="true"
       role="presentation"
       onMouseDown={(event) => {

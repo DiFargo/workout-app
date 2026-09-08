@@ -1,32 +1,12 @@
-.root {
-  box-sizing: border-box;
-  width: calc(100% - 32px);
-  height: 72px;
-  margin: 16px 16px 0;
-}
-.card {
-  box-sizing: border-box;
-  width: 100%;
-  height: 72px;
-  padding: 10px 14px;
-  display: grid;
-  grid-template-columns: 42px 1fr 20px;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid #efebf3;
-  border-radius: 22px;
-  background: #fff;
-  color: #28262e;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: #f5f2f7; color: #8f7ac8; }
-.icon svg { width: 21px; height: 21px; stroke-width: 2; }
-.title { min-width: 0; display: flex; flex-direction: column; }
-.titleStrong { color: #28262e; font-size: 14px; font-weight: 700; line-height: 19px; }
-.description { max-width: 250px; overflow: hidden; color: #7b7682; font-size: 10px; font-weight: 500; line-height: 15px; text-overflow: ellipsis; white-space: nowrap; }
-.arrow { display: grid; place-items: center; color: #7b7682; }
-.arrow svg { width: 20px; height: 20px; }
-.card:active { background: #ffffff; }
-.overLimit .icon { background: #fff2ec; color: #ae8768; }
+.root { box-sizing:border-box; width:calc(100% - 40px); margin:12px 20px 0; }
+.card { box-sizing:border-box; width:100%; min-height:59px; padding:11px 13px; display:flex; align-items:center; gap:10px; border:0; border-radius:18px; background:var(--apple-surface); color:var(--apple-text); font:inherit; text-align:left; cursor:pointer; }
+.icon { width:34px; height:34px; flex-shrink:0; display:grid; place-items:center; border-radius:10px; background:var(--apple-surface-muted); color:var(--apple-secondary); }
+.icon svg { width:19px; height:19px; }
+.title { display:flex; flex-direction:column; gap:4px; min-width:0; flex:1; }
+.titleStrong { font-size:13px; font-weight:600; }
+.description { color:var(--apple-secondary); font-size:11px; line-height:1.4; }
+.arrow { color:#a5a9ad; }
+.arrow svg { width:16px; height:16px; }
+.card:active { background:var(--apple-surface-muted); }
+.overLimit .icon { background:var(--apple-orange-tint); color:var(--apple-orange); }
+@media(max-width:360px) { .root { width:calc(100% - 30px); margin-inline:15px; } }

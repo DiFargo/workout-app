@@ -2,6 +2,7 @@ import { doc, getDoc } from "firebase/firestore";
 
 import { fetchAuthorized } from "../../../utils/apiClient";
 import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
+import { createTelegramNotificationHandler } from "./profileNotificationHandlers";
 
 export function createProfileTelegramHandlers({
   auth,
@@ -240,70 +241,11 @@ export function createProfileTelegramHandlers({
     }
   }
 
-  async function toggleTelegramNotifications(enabled) {
-    const notificationsEnabled = enabled !== false;
-    const previousNotificationsEnabled = telegramDraft.notificationsEnabled !== false;
-    const nextTelegramProfile = {
-      ...telegramDraft,
-      notificationsEnabled
-    };
-
-    setTelegramProfile((current) => {
-      const nextTelegram = {
-        ...current,
-        notificationsEnabled
-      };
-
-      try {
-        safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, nextTelegram);
-      } catch {
-        // ignore localStorage errors
-      }
-
-      return nextTelegram;
-    });
-    setTelegramDraft((current) => ({ ...current, notificationsEnabled }));
-
-    if (!auth.currentUser?.uid) return;
-
-    try {
-      const response = await fetchAuthorized("/api/telegram/update-notifications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enabled: notificationsEnabled })
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok || !data.ok) {
-        throw new Error(data.error || "Telegram notifications update failed");
-      }
-
-      const serverTelegram = {
-        ...nextTelegramProfile,
-        ...(data.telegram || {}),
-        notificationsEnabled
-      };
-      setTelegramProfile(serverTelegram);
-      setTelegramDraft(serverTelegram);
-    } catch (error) {
-      console.error("Telegram notifications update failed:", error);
-      setTelegramProfile((current) => {
-        const previousTelegram = {
-          ...current,
-          notificationsEnabled: previousNotificationsEnabled
-        };
-
-        try {
-          safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, auth.currentUser?.uid, previousTelegram);
-        } catch {
-          // ignore localStorage errors
-        }
-
-        return previousTelegram;
-      });
-      setTelegramDraft((current) => ({ ...current, notificationsEnabled: previousNotificationsEnabled }));
-      setTelegramStatus("Не получилось сохранить настройку уведомлений.");
-    }
-  }
+  const toggleTelegramNotifications = createTelegramNotificationHandler({
+    auth, telegramDraft, setTelegramProfile, setTelegramDraft, setTelegramStatus,
+    request: fetchAuthorized,
+    writeCache: (uid, profile) => safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, uid, profile)
+  });
 
   return {
     handleTelegramLoginAuth,

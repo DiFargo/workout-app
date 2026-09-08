@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Mail } from "lucide-react";
+import { Check, Mail } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
@@ -37,7 +37,7 @@ export default function ProfileEmailModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-testid="profile-email-overlay"
       data-css-module-scope="profile-email-modal"
       role="presentation"
@@ -49,6 +49,7 @@ export default function ProfileEmailModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-cabinet-sheet="true"
         aria-labelledby="profileEmailManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
@@ -111,7 +112,7 @@ export default function ProfileEmailModal({
           </label>
 
           <div className={styles.preview}>
-            <div className={styles.previewIcon}>✓</div>
+            <div className={styles.previewIcon} aria-hidden="true"><Check /></div>
             <div>
               <strong>Подтверждение входа</strong>
               <span>Для парольного аккаунта нужен текущий пароль. Для Google откроется окно авторизации.</span>

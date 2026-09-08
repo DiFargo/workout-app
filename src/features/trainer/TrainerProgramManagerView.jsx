@@ -470,7 +470,7 @@ export default function TrainerProgramManagerView({
 
       {isEditorModalOpen ? (
         <div
-          className={styles.editorModalBackdrop}
+          className={styles.editorModalBackdrop} data-modal-backdrop="true"
           data-trainer-modal-backdrop="true"
           role="presentation"
           onMouseDown={(event) => {
@@ -522,7 +522,7 @@ export default function TrainerProgramManagerView({
           </section>
           {editorDraftRecovery && !editorExitConfirmOpen ? (
             <div
-              className={styles.editorExitConfirmBackdrop}
+              className={styles.editorExitConfirmBackdrop} data-modal-backdrop="true"
               role="presentation"
               onMouseDown={(event) => event.stopPropagation()}
             >
@@ -552,7 +552,7 @@ export default function TrainerProgramManagerView({
           ) : null}
           {editorExitConfirmOpen ? (
             <div
-              className={styles.editorExitConfirmBackdrop}
+              className={styles.editorExitConfirmBackdrop} data-modal-backdrop="true"
               role="presentation"
               onMouseDown={(event) => event.stopPropagation()}
             >

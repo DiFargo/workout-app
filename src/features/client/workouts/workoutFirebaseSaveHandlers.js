@@ -6,6 +6,7 @@ import {
 } from "../../../utils/offlineSyncStorage";
 import { addUserLocalBackup } from "../../../utils/userScopedStorage";
 import { clearWorkoutDraft } from "../../../utils/workoutDraftStorage";
+import { shiftBasicWorkoutScheduleAfterCompletion } from "../../../utils/basicWorkoutSchedule";
 import {
   getWorkoutCompletion,
   isWorkoutSetCompleted
@@ -18,6 +19,7 @@ export async function saveCompletedWorkoutToFirebase({
   plan,
   workout,
   isSaving,
+  workoutSaveInFlightRef,
   isWorkoutSaved,
   workoutStartedAt,
   workoutReadiness,
@@ -39,7 +41,7 @@ export async function saveCompletedWorkoutToFirebase({
   feedbackOverride = null,
   allowIncomplete = false
 }) {
-  if (!workout || isSaving || isWorkoutSaved) return;
+  if (!workout || isSaving || isWorkoutSaved || workoutSaveInFlightRef?.current) return;
 
   const currentUser = auth.currentUser;
   const hasFilledSet = workout.exercises.some((exercise) =>
@@ -66,7 +68,9 @@ export async function saveCompletedWorkoutToFirebase({
   const finishedAt = Date.now();
   const startedAt = workoutStartedAt || finishedAt;
   const durationSeconds = Math.max(0, Math.floor((finishedAt - startedAt) / 1000));
-  const historySaveId = `workout_${workout.id}_${finishedAt}`;
+  const historySaveId = `workout_${workout.id}_${startedAt}`;
+
+  if (workoutSaveInFlightRef) workoutSaveInFlightRef.current = true;
 
   setWorkoutHistorySyncState("saving");
   setWorkoutFinishedAt(finishedAt);
@@ -173,14 +177,18 @@ export async function saveCompletedWorkoutToFirebase({
     const progression = applyWorkoutProgressionToFuturePlan(plan, workout, {
       updatedAt: historyEntry.finishedAt
     });
-    const planToPersist = progression.changed ? progression.plan : plan;
     const shouldPersistFullBasicPlan = plan?.source === "basic" || workout?.source === "basic";
+    const progressedPlan = progression.changed ? progression.plan : plan;
+    const planToPersist = shouldPersistFullBasicPlan
+      ? shiftBasicWorkoutScheduleAfterCompletion(progressedPlan, workout.id, historyEntry.finishedAt)
+      : progressedPlan;
+    const basicScheduleShifted = planToPersist !== progressedPlan;
 
-    if (progression.changed && typeof setPlan === "function") {
+    if ((progression.changed || basicScheduleShifted) && typeof setPlan === "function") {
       setPlan(planToPersist);
     }
 
-    if ((progression.changed || shouldPersistFullBasicPlan) && typeof saveWorkoutsToFirebase === "function") {
+    if ((progression.changed || basicScheduleShifted || shouldPersistFullBasicPlan) && typeof saveWorkoutsToFirebase === "function") {
       try {
         const saveResult = await saveWorkoutsToFirebase(planToPersist, { silent: true });
         if (shouldPersistFullBasicPlan && saveResult?.plan?.source === "basic" && typeof setPlan === "function") {
@@ -208,6 +216,7 @@ export async function saveCompletedWorkoutToFirebase({
     navigator.vibrate?.([100, 70, 150]);
     showAppError("savedLocal", "Тренировка сохранена локально и будет синхронизирована позже.");
   } finally {
+    if (workoutSaveInFlightRef) workoutSaveInFlightRef.current = false;
     setIsSaving(false);
   }
 }

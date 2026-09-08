@@ -39,7 +39,7 @@ function useProfilePageScrollLock(locked) {
 
 function getProfileSettingsModalTitle(section) {
   if (section === "account") return "Профиль и настройки";
-  if (section === "connections") return "Подключения";
+  if (section === "connections") return "Подключение аккаунтов";
   if (section === "profile") return "Анкета";
   if (section === "settings") return "Уведомления";
   return "Настройки";
@@ -73,7 +73,7 @@ export default function ProfileSettingsModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-testid="profile-settings-overlay"
       data-css-module-scope="profile-settings"
       role="presentation"
@@ -86,6 +86,7 @@ export default function ProfileSettingsModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-cabinet-sheet="true"
         aria-labelledby="cabinetSettingsModalTitle"
         onClick={(event) => event.stopPropagation()}
       >
@@ -99,6 +100,7 @@ export default function ProfileSettingsModal({
           eyebrow="Личный кабинет"
           actions={(
             <ProfileModalCloseButton
+              className={styles.closeButton}
               testId="profile-settings-close"
               ariaLabel={`Закрыть раздел «${getProfileSettingsCloseLabel(section)}»`}
               onClick={onClose}

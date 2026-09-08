@@ -4,8 +4,20 @@ import assert from "node:assert/strict";
 import {
   getProfileDashboardScheduleDates,
   getProfileMeasurementTrendPeriodLabel,
+  getTimeOfDayGreeting,
   getProfileWeightCheckInState
 } from "../src/features/client/profile/profileDashboardModel.js";
+
+test("profile dashboard greeting follows the user's local time", () => {
+  const atHour = (hour) => new Date(2026, 8, 1, hour, 0, 0);
+
+  assert.equal(getTimeOfDayGreeting(atHour(4)), "Доброй ночи");
+  assert.equal(getTimeOfDayGreeting(atHour(5)), "Доброе утро");
+  assert.equal(getTimeOfDayGreeting(atHour(11)), "Доброе утро");
+  assert.equal(getTimeOfDayGreeting(atHour(12)), "Добрый день");
+  assert.equal(getTimeOfDayGreeting(atHour(18)), "Добрый вечер");
+  assert.equal(getTimeOfDayGreeting(atHour(23)), "Доброй ночи");
+});
 
 test("profile dashboard schedule prefers saved calendar dates", () => {
   assert.deepEqual(

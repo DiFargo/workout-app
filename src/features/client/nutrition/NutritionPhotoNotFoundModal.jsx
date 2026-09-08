@@ -1,3 +1,4 @@
+import { Plus, SearchX } from "lucide-react";
 import styles from "./NutritionPhotoNotFoundModal.module.css";
 
 export default function NutritionPhotoNotFoundModal({
@@ -12,7 +13,7 @@ export default function NutritionPhotoNotFoundModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-css-module-scope="nutrition-photo-not-found"
       data-testid="nutrition-photo-not-found-overlay"
       role="presentation"
@@ -35,7 +36,7 @@ export default function NutritionPhotoNotFoundModal({
           ×
         </button>
 
-        <div className={styles.icon} aria-hidden="true">⌕</div>
+        <div className={styles.icon} aria-hidden="true"><SearchX /></div>
         <h3 className={styles.title} id="nutritionPhotoNotFoundTitle">Не удалось надёжно распознать продукт</h3>
         <p className={styles.description}>Чтобы не добавить неверное название или КБЖУ, сфотографируй этикетку или штрихкод крупнее. Либо добавь продукт вручную.</p>
 
@@ -49,7 +50,7 @@ export default function NutritionPhotoNotFoundModal({
             className={`${styles.actionButton} ${styles.primaryAction}`}
             onClick={onAddManually}
           >
-            <span aria-hidden="true">＋</span>
+            <span aria-hidden="true"><Plus /></span>
             Добавить вручную
           </button>
         </div>

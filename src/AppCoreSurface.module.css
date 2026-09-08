@@ -1,27 +1,27 @@
 :global {
 /* COOL LIGHT THEME V353 - specificity cleanup */
 html:root[data-app-theme="warm-light"] {
-  --bg: #f7f6f8;
+  --bg: #f1f3ee;
   --card: #ffffff;
-  --card-2: #f5f2f7;
-  --line: #efebf3;
-  --text: #28262e;
-  --muted: #7b7682;
-  --accent: #8f7ac8;
-  --accent-2: #806bb6;
-  --warm-bg-soft: #f7f6f8;
+  --card-2: #f7f8f5;
+  --line: #e0e6e0;
+  --text: #1b231f;
+  --muted: #67716b;
+  --accent: #2f7d68;
+  --accent-2: #286e5b;
+  --warm-bg-soft: #f1f3ee;
   --warm-card-soft: #ffffff;
-  --warm-card-deep: #f5f2f7;
-  --warm-gold: #8f7ac8;
-  --warm-gold-deep: #806bb6;
-  --warm-gold-soft: rgba(143, 122, 200, 0.13);
-  --warm-yellow: #8f7ac8;
-  --warm-yellow-soft: rgba(143, 122, 200, 0.13);
+  --warm-card-deep: #f7f8f5;
+  --warm-gold: #2f7d68;
+  --warm-gold-deep: #286e5b;
+  --warm-gold-soft: rgba(47, 125, 104, 0.13);
+  --warm-yellow: #2f7d68;
+  --warm-yellow-soft: rgba(47, 125, 104, 0.13);
   --warm-yellow-muted: #8c78c2;
-  --warm-yellow-deep: #806bb6;
-  --food-green: #8f7ac8;
-  --food-text: #28262e;
-  --food-muted: #7b7682;
+  --warm-yellow-deep: #286e5b;
+  --food-green: #2f7d68;
+  --food-text: #1b231f;
+  --food-muted: #67716b;
 }
 
 
@@ -300,7 +300,7 @@ html:root[data-app-theme="warm-light"] body #root .adminDashboardAiList .adminDa
 html:root[data-app-theme="warm-light"] body #root .adminDashboardTimelineButton {
   border-color: #f2eef5;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .adminDashboardTimelineButton time {
@@ -318,11 +318,11 @@ html:root[data-app-theme="warm-light"] body #root .adminDashboardTimelineButton 
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerAttentionHeader span {
-  color: #8f7ac8;
+  color: #2f7d68;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerAttentionHeader h2 {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerAttentionHeader small {
@@ -330,9 +330,9 @@ html:root[data-app-theme="warm-light"] body #root .trainerAttentionHeader small 
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerAttentionCard {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  box-shadow: 0 9px 25px rgba(72, 63, 87, 0.07);
+  box-shadow: 0 9px 25px rgba(27, 35, 31, 0.07);
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerAttentionCard > span:not(.trainerAttentionIcon) {
@@ -340,17 +340,17 @@ html:root[data-app-theme="warm-light"] body #root .trainerAttentionCard > span:n
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerAttentionCard strong {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientReasonList > button {
   border-color: #f0ecf4;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientReasonList > button strong {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .trainerClientReasonList > button small {
@@ -413,32 +413,32 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
 
 
 :root[data-app-theme="warm-light"] .clientCorePage.fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background:
-    radial-gradient(circle at 50% -8%, rgba(143, 122, 200, 0.05), transparent 31%),
-    linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
-  color: #28262e;
+    radial-gradient(circle at 50% -8%, rgba(47, 125, 104, 0.05), transparent 31%),
+    linear-gradient(180deg, #ffffff 0%, #f1f3ee 100%);
+  color: #1b231f;
   box-shadow:
-    0 22px 58px rgba(72, 63, 87, 0.1),
+    0 22px 58px rgba(27, 35, 31, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealCard {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCard,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealCard {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  box-shadow: 0 9px 24px rgba(72, 63, 87, 0.075);
+  box-shadow: 0 9px 24px rgba(27, 35, 31, 0.075);
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol span,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle span,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal span {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderGrid span {
@@ -446,7 +446,7 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderGrid span.isActive {
-  background: #806bb6;
+  background: #286e5b;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealIcon {
@@ -455,40 +455,40 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .mealPlusExact {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #8f7ac8;
-  box-shadow: 0 6px 16px rgba(72, 63, 87, 0.08);
+  color: #2f7d68;
+  box-shadow: 0 6px 16px rgba(27, 35, 31, 0.08);
 }
 
 
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealTitle strong,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .fatMealKcal strong,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition .nutritionCaloriesRenderCol strong {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background:
-    radial-gradient(circle at 50% -8%, rgba(143, 122, 200, 0.05), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
-  color: #28262e;
+    radial-gradient(circle at 50% -8%, rgba(47, 125, 104, 0.05), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f1f3ee 100%);
+  color: #1b231f;
   box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  box-shadow: 0 9px 25px rgba(72, 63, 87, 0.08);
+  box-shadow: 0 9px 25px rgba(27, 35, 31, 0.08);
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchInputWrapPremium input::placeholder {
@@ -496,10 +496,10 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNames {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
-  box-shadow: 0 9px 25px rgba(72, 63, 87, 0.075);
+  color: #1b231f;
+  box-shadow: 0 9px 25px rgba(27, 35, 31, 0.075);
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton {
@@ -510,16 +510,16 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton:active {
-  border-color: #c4b8e3;
-  background: #f5f2f7;
+  border-color: #a9d2c3;
+  background: #f7f8f5;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: rgba(255, 255, 255, 0.97);
   box-shadow:
-    0 -10px 30px rgba(72, 63, 87, 0.11),
+    0 -10px 30px rgba(27, 35, 31, 0.11),
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
@@ -527,20 +527,20 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive button {
   border-color: transparent;
   background: transparent;
-  color: #7b7682;
+  color: #67716b;
   box-shadow: none;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBar button.active,
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive button.active {
   border-color: #e9e3f2;
-  background: #f5f2f7;
-  color: #806bb6;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction {
   border-color: #e9e3f2;
-  background: linear-gradient(145deg, #8f7ac8, #806bb6);
+  background: linear-gradient(145deg, #2f7d68, #286e5b);
   color: #ffffff;
   box-shadow: 0 10px 24px rgba(117, 97, 170, 0.24);
 }
@@ -553,43 +553,43 @@ html:root[data-app-theme="warm-light"] body #root .trainerClientMiniStats > span
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditSegmentRow button {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditSegmentRow button.active {
-  border-color: #c4b8e3;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #a9d2c3;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium {
-  --food-flow-border: #efebf3;
+  --food-flow-border: #e0e6e0;
   --food-flow-card: #ffffff;
-  --food-flow-card-strong: #f7f6f8;
-  --food-flow-muted: #7b7682;
-  --food-flow-text: #28262e;
-  --food-flow-accent: #8f7ac8;
+  --food-flow-card-strong: #f1f3ee;
+  --food-flow-muted: #67716b;
+  --food-flow-text: #1b231f;
+  --food-flow-accent: #2f7d68;
 }
 
 html:root[data-app-theme="warm-light"] .fatFoodSearchOverlay .fatFoodSearchScreenPremium {
   background:
-    radial-gradient(circle at 50% -8%, rgba(143, 122, 200, 0.05), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
-  color: #28262e;
+    radial-gradient(circle at 50% -8%, rgba(47, 125, 104, 0.05), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f1f3ee 100%);
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNamesTitle,
 html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchHistoryNameButton {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditHeroIcon,
 html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditSegmentRow button.active {
-  border-color: #efebf3;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #e0e6e0;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 
@@ -597,31 +597,31 @@ html:root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .foodEditSegm
 html:root[data-app-theme="warm-light"] .appSplash,
 html:root[data-app-theme="warm-light"] .loginPage,
 html:root[data-app-theme="warm-light"] .firstSetupOverlay {
-  background: #f7f6f8;
-  color: #28262e;
+  background: #f1f3ee;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] .splashInner,
 html:root[data-app-theme="warm-light"] .loginCard,
 html:root[data-app-theme="warm-light"] .firstSetupCard {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: rgba(255, 255, 255, 0.94);
-  color: #28262e;
+  color: #1b231f;
   box-shadow:
-    0 20px 60px rgba(72, 63, 87, 0.12),
+    0 20px 60px rgba(27, 35, 31, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.94);
 }
 
 html:root[data-app-theme="warm-light"] .splashMark,
 html:root[data-app-theme="warm-light"] .appLogo {
-  border-color: #efebf3;
-  background: #f5f2f7;
-  color: #8f7ac8;
+  border-color: #e0e6e0;
+  background: #f7f8f5;
+  color: #2f7d68;
   box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] .splashLogo {
-  color: #28262e;
+  color: #1b231f;
   text-shadow: none;
 }
 
@@ -630,40 +630,40 @@ html:root[data-app-theme="warm-light"] .loginHero p,
 html:root[data-app-theme="warm-light"] .loginHint,
 html:root[data-app-theme="warm-light"] .firstSetupStep,
 html:root[data-app-theme="warm-light"] .firstSetupCard p {
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] .splashProgress {
-  border-color: #efebf3;
-  background: #f5f2f7;
+  border-color: #e0e6e0;
+  background: #f7f8f5;
 }
 
 html:root[data-app-theme="warm-light"] .splashProgress span {
-  background: #8f7ac8;
+  background: #2f7d68;
   box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] .splashDots i {
-  background: #c4b8e3;
+  background: #a9d2c3;
 }
 
 html:root[data-app-theme="warm-light"] .loginHero h1,
 html:root[data-app-theme="warm-light"] .loginCard h2,
 html:root[data-app-theme="warm-light"] .firstSetupCard h2 {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] .loginCard input,
 html:root[data-app-theme="warm-light"] .firstSetupInput {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] .loginBtn,
 html:root[data-app-theme="warm-light"] .firstSetupPrimary {
   border-color: transparent;
-  background: linear-gradient(135deg, #8f7ac8, #806bb6);
+  background: linear-gradient(135deg, #2f7d68, #286e5b);
   color: #ffffff;
   box-shadow: 0 12px 26px rgba(117, 97, 170, 0.22);
 }
@@ -672,51 +672,51 @@ html:root[data-app-theme="warm-light"] .firstSetupSecondary,
 html:root[data-app-theme="warm-light"] .firstSetupChoiceGrid button,
 html:root[data-app-theme="warm-light"] .firstSetupGoalGrid button,
 html:root[data-app-theme="warm-light"] .firstSetupDays button {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] .firstSetupChoiceGrid button.active,
 html:root[data-app-theme="warm-light"] .firstSetupGoalGrid button.active,
 html:root[data-app-theme="warm-light"] .firstSetupDays button.active {
-  border-color: #c4b8e3;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #a9d2c3;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 
 /* COOL LIGHT THEME V354 - nested screens */
 html:root[data-app-theme="warm-light"] body #root .app.workoutRunPage {
   background:
-    radial-gradient(circle at 50% -8%, rgba(143, 122, 200, 0.055), transparent 34%),
-    linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
-  color: #28262e;
+    radial-gradient(circle at 50% -8%, rgba(47, 125, 104, 0.055), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f1f3ee 100%);
+  color: #1b231f;
 }
 
 /* Measurements progress-tab shell. Component colors live in colocated CSS Modules. */
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] {
   background:
-    radial-gradient(circle at 50% -8%, rgba(143, 122, 200, 0.05), transparent 32%),
-    linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
+    radial-gradient(circle at 50% -8%, rgba(47, 125, 104, 0.05), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f1f3ee 100%);
 }
 
 html:root[data-app-theme="warm-light"] body #root .profileTabbedPage[data-profile-tab="measurements"] .profileCabinetSection {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
-  box-shadow: 0 12px 32px rgba(72, 63, 87, 0.09);
+  color: #1b231f;
+  box-shadow: 0 12px 32px rgba(27, 35, 31, 0.09);
 }
 
 /* Workout stages */
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage {
-  --accent: #8f7ac8;
-  --accent-2: #806bb6;
+  --accent: #2f7d68;
+  --accent-2: #286e5b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageTitle,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageTitle span {
-  color: #28262e;
+  color: #1b231f;
   text-shadow: none;
 }
 
@@ -724,18 +724,18 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageC
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseCard,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseCard,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishCard {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
-  box-shadow: 0 18px 44px rgba(72, 63, 87, 0.12);
+  color: #1b231f;
+  box-shadow: 0 18px 44px rgba(27, 35, 31, 0.12);
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPlanBadge,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseMeta b,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTrophy {
-  border-color: #efebf3;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #e0e6e0;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPlanWorkout,
@@ -745,11 +745,11 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerci
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTop,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats span,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress > span {
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPlanAccent {
-  background: linear-gradient(90deg, #8f7ac8, #806bb6);
+  background: linear-gradient(90deg, #2f7d68, #286e5b);
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseIntro,
@@ -759,9 +759,9 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupTimer,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTip {
-  border-color: #efebf3;
-  background: #f7f6f8;
-  color: #28262e;
+  border-color: #e0e6e0;
+  background: #f1f3ee;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseIntro strong,
@@ -770,7 +770,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupTimer s
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats strong,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress strong,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete strong {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseIntro p,
@@ -779,69 +779,69 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinish
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress p,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete span,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTip p {
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseIntro > span,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseItem > span:first-child {
-  border-color: #efebf3;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #e0e6e0;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupExerciseItem.completed {
-  border-color: #c4b8e3;
-  background: #f5f2f7;
+  border-color: #a9d2c3;
+  background: #f7f8f5;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupTimerControls button {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #7b7682;
+  color: #67716b;
   box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupTimerControls button.active {
-  border-color: #c4b8e3;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #a9d2c3;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutExerciseSupport .workoutAiAdjustHint {
-  color: #806bb6;
+  color: #286e5b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTop span:first-child {
-  color: #806bb6;
+  color: #286e5b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats > div + div {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageActionPanel,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseActionPanel,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishActionPanel {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: rgba(255, 255, 255, 0.97);
   box-shadow:
-    0 -10px 30px rgba(72, 63, 87, 0.11),
+    0 -10px 30px rgba(27, 35, 31, 0.11),
     inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPreviousButton,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exercisePrevButton {
-  border-color: #efebf3;
-  background: #f5f2f7;
-  color: #7b7682;
-  -webkit-text-fill-color: #7b7682;
+  border-color: #e0e6e0;
+  background: #f7f8f5;
+  color: #67716b;
+  -webkit-text-fill-color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupReadyButton,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseNextButton,
 html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkoutButton {
   border-color: transparent;
-  background: linear-gradient(135deg, #8f7ac8, #806bb6);
+  background: linear-gradient(135deg, #2f7d68, #286e5b);
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
   box-shadow: 0 12px 26px rgba(117, 97, 170, 0.22);
@@ -893,8 +893,8 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
   border: 1px solid #e5e7f0;
   border-radius: 24px;
   background: #ffffff;
-  color: #28262e;
-  box-shadow: 0 18px 50px rgba(72, 63, 87, 0.12);
+  color: #1b231f;
+  box-shadow: 0 18px 50px rgba(27, 35, 31, 0.12);
 }
 
 .firstSetupProgress {
@@ -922,7 +922,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 .firstSetupProgress i.active {
-  background: linear-gradient(90deg, #8f7ac8, #8f7ac8);
+  background: linear-gradient(90deg, #2f7d68, #2f7d68);
 }
 
 .firstSetupHeader {
@@ -933,7 +933,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 
 .firstSetupCard .firstSetupHeader h2 {
   margin: 0;
-  color: #28262e;
+  color: #1b231f;
   font-size: clamp(23px, 6vw, 29px);
   font-weight: 850;
   line-height: 1.08;
@@ -943,7 +943,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 .firstSetupCard .firstSetupHeader p {
   max-width: 310px;
   margin: 10px auto 0;
-  color: #7b7682;
+  color: #67716b;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.45;
@@ -963,7 +963,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
   width: 100%;
   display: grid;
   gap: 8px;
-  color: #7b7682;
+  color: #67716b;
   font-size: 12px;
   font-weight: 650;
 }
@@ -974,11 +974,11 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
   height: 58px;
   min-height: 58px;
   padding: 0 58px 0 15px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 14px;
   outline: none;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: none;
   font-size: 17px;
   font-weight: 750;
@@ -991,7 +991,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 .firstSetupInput:focus {
-  border-color: #c4b8e3;
+  border-color: #a9d2c3;
   box-shadow: 0 0 0 3px rgba(156, 136, 210, 0.1);
 }
 
@@ -1012,7 +1012,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 .firstSetupClipboard {
   inset: 18px 45px 20px;
   border-radius: 38px;
-  background: linear-gradient(145deg, #f5f2f7, #ffffff);
+  background: linear-gradient(145deg, #f7f8f5, #ffffff);
   font-size: 112px;
 }
 
@@ -1048,10 +1048,10 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
   align-items: center;
   justify-content: center;
   gap: 9px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 17px;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
 }
 
 .firstSetupSexGrid button span {
@@ -1075,10 +1075,10 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
   grid-template-columns: 36px minmax(0, 1fr) 20px;
   align-items: center;
   gap: 10px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 14px;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   text-align: left;
 }
 
@@ -1102,7 +1102,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 .firstSetupActivityList small {
-  color: #7b7682;
+  color: #67716b;
   font-size: 11px;
 }
 
@@ -1114,12 +1114,12 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 .firstSetupActivityList button.active {
-  border-color: #8f7ac8;
+  border-color: #2f7d68;
   background: #faf8fb;
 }
 
 .firstSetupActivityList button.active > i {
-  border: 5px solid #8f7ac8;
+  border: 5px solid #2f7d68;
 }
 
 
@@ -1145,10 +1145,10 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
   align-items: center;
   justify-content: center;
   gap: 4px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 15px;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   text-align: center;
 }
 
@@ -1162,23 +1162,23 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 .firstSetupGoalGrid button small {
-  color: #7b7682;
+  color: #67716b;
   font-size: 9.5px;
   line-height: 1.2;
 }
 
 .firstSetupSexGrid button.active,
 .firstSetupGoalGrid button.active {
-  border-color: #8f7ac8;
+  border-color: #2f7d68;
   background: #faf8fb;
-  box-shadow: inset 0 0 0 1px #8f7ac8;
+  box-shadow: inset 0 0 0 1px #2f7d68;
 }
 
 
 .firstSetupReview {
   padding: 8px 14px;
   display: grid;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 16px;
   background: #ffffff;
 }
@@ -1197,20 +1197,20 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 .firstSetupReview > div > span {
-  color: #8f7ac8;
+  color: #2f7d68;
   font-size: 14px;
   text-align: center;
 }
 
 .firstSetupReview small {
-  color: #7b7682;
+  color: #67716b;
   font-size: 11px;
 }
 
 .firstSetupReview strong {
   max-width: 160px;
   overflow: hidden;
-  color: #28262e;
+  color: #1b231f;
   font-size: 12px;
   text-align: right;
   text-overflow: ellipsis;
@@ -1234,14 +1234,14 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 .firstSetupPrimary {
-  background: linear-gradient(135deg, #8f7ac8, #8f7ac8);
+  background: linear-gradient(135deg, #2f7d68, #2f7d68);
   color: #ffffff;
   box-shadow: 0 10px 24px rgba(117, 97, 170, 0.22);
 }
 
 .firstSetupSecondary {
   flex: 0 0 98px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   background: #ffffff;
   color: #5f6679;
 }
@@ -1255,7 +1255,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 :root[data-app-theme="legacy-inactive"] .firstSetupOverlay {
   background:
     radial-gradient(circle at 50% 0%, rgba(156, 136, 210, 0.12), transparent 38%),
-    #28262e;
+    #1b231f;
 }
 
 :root[data-app-theme="legacy-inactive"] .firstSetupCard {
@@ -1302,7 +1302,7 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 
 :root[data-app-theme="legacy-inactive"] .firstSetupInput {
   color: #f5f7f4;
-  caret-color: #c4b8e3;
+  caret-color: #a9d2c3;
 }
 
 :root[data-app-theme="legacy-inactive"] .firstSetupInput::placeholder {
@@ -1312,9 +1312,9 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 :root[data-app-theme="legacy-inactive"] .firstSetupSexGrid button.active,
 :root[data-app-theme="legacy-inactive"] .firstSetupActivityList button.active,
 :root[data-app-theme="legacy-inactive"] .firstSetupGoalGrid button.active {
-  border-color: #c4b8e3;
+  border-color: #a9d2c3;
   background: rgba(156, 136, 210, 0.17);
-  box-shadow: inset 0 0 0 1px rgba(143, 122, 200, 0.65);
+  box-shadow: inset 0 0 0 1px rgba(47, 125, 104, 0.65);
 }
 
 :root[data-app-theme="legacy-inactive"] .firstSetupActivityList button > i {
@@ -1487,23 +1487,23 @@ html:root[data-app-theme="warm-light"] body #root .workoutRunPage .finishWorkout
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  box-shadow: 0 9px 25px rgba(72, 63, 87, 0.075);
+  box-shadow: 0 9px 25px rgba(27, 35, 31, 0.075);
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess strong {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatPhotoAiSearchProcess p {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium .fatSearchBottomBarFive .fatSearchPhotoAction {
   border-color: #e9e3f2;
   background: #eeecfb;
-  color: #806bb6;
+  color: #286e5b;
   box-shadow: 0 8px 20px rgba(117, 97, 170, 0.14);
 }
 
@@ -1613,12 +1613,12 @@ nav[aria-label="Основные разделы"] > button {
 :root[data-app-theme="warm-light"] .profileDashboardPage.clientCorePageMain,
 :root[data-app-theme="warm-light"] .fatSecretPage.nutritionFixedHeaderV3.clientCorePageNutrition,
 :root[data-app-theme="warm-light"] .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background:
-    radial-gradient(circle at 50% -8%, rgba(143, 122, 200, 0.05), transparent 31%),
-    linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
+    radial-gradient(circle at 50% -8%, rgba(47, 125, 104, 0.05), transparent 31%),
+    linear-gradient(180deg, #ffffff 0%, #f1f3ee 100%);
   box-shadow:
-    0 22px 58px rgba(72, 63, 87, 0.1),
+    0 22px 58px rgba(27, 35, 31, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -1677,9 +1677,9 @@ nav[aria-label="Основные разделы"] > button {
 }
 
 :root[data-app-theme="warm-light"] .clientCorePage .clientPageVersionBadge {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: rgba(255, 255, 255, 0.88);
-  color: #7b7682;
+  color: #67716b;
 }
 
 
@@ -1822,7 +1822,7 @@ html body #root .workoutRunPage .warmupBottomPanel.workoutStageActionPanel {
 .clientCorePage button:focus-visible,
 .profileTabbedPage button:focus-visible,
 .progressHubPage button:focus-visible {
-  outline: 3px solid #8f7ac8;
+  outline: 3px solid #2f7d68;
   outline-offset: 2px;
 }
 

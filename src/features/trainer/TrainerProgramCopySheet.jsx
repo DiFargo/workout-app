@@ -12,7 +12,7 @@ export default function TrainerProgramCopySheet({
 
   const sheet = (
     <div
-      className={styles.backdrop}
+      className={styles.backdrop} data-modal-backdrop="true"
       data-trainer-modal-backdrop="true"
       role="presentation"
       onMouseDown={(event) => {

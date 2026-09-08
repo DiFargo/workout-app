@@ -57,9 +57,21 @@
   font-size: 13px;
   font-weight: 950;
   line-height: 1.1;
-  box-shadow: 0 8px 18px rgba(143, 122, 200, 0.08);
+  box-shadow: 0 8px 18px rgba(47, 125, 104, 0.08);
   cursor: pointer;
   -webkit-text-fill-color: currentColor;
+}
+
+.addButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.addButton svg {
+  width: 18px;
+  height: 18px;
 }
 
 .addButton:hover,
@@ -186,6 +198,11 @@
   color: var(--color-text-muted);
 }
 
+.removeButton svg {
+  width: 17px;
+  height: 17px;
+}
+
 .addButton:focus-visible,
 .removeButton:focus-visible {
   outline: 0;
@@ -261,31 +278,46 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  margin-bottom: 10px;
+  margin-bottom: 0;
   padding: 12px;
-  border: 1px solid #efebf3;
-  border-radius: 20px;
+  border: 0;
+  border-radius: 18px;
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .heading strong { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .heading span { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .heading strong { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-size: 16px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .heading span { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .addButton {
   min-height: 44px;
   border: 0;
   border-radius: 14px;
-  background: #f5f2f7;
-  color: #8f7ac8;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #3f73b8);
   box-shadow: none;
   font-weight: 600;
 }
 
-:global(:root[data-app-theme="warm-light"]) .empty { background: #f5f2f7; color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .row { border-color: #efebf3; background: #fff; color: #28262e; }
-:global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: #f5f2f7; color: #8f7ac8; }
+:global(:root[data-app-theme="warm-light"]) .empty { min-height: 0; margin-top: 8px; padding: 0; background: transparent; color: var(--apple-secondary, #636366); text-align: left; justify-content: flex-start; font-weight: 400; line-height: 1.4; }
+:global(:root[data-app-theme="warm-light"]) .row { border-color: var(--apple-separator, rgba(60,60,67,.12)); background: #fff; color: var(--apple-text, #1c1c1e); }
+:global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); }
 :global(:root[data-app-theme="warm-light"]) .name,
-:global(:root[data-app-theme="warm-light"]) .nutrition { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .nutrition small { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .removeButton { border: 0; background: #f5f2f7; color: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .nutrition { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .nutrition small { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .removeButton {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 0;
+  background: #fff1f2;
+  color: #b36e72;
+}
+
+:global(:root[data-app-theme="warm-light"]) .row {
+  grid-template-columns: 32px minmax(0, 1fr) auto 44px;
+  min-height: 64px;
+  padding: 8px;
+}
+:global(:root[data-app-theme="warm-light"]) .row .icon { width: 32px; height: 32px; }

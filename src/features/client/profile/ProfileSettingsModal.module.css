@@ -9,9 +9,9 @@
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: none;
-  background: var(--background-profile-modal-overlay);
-  backdrop-filter: var(--filter-profile-modal-overlay);
-  -webkit-backdrop-filter: var(--filter-profile-modal-overlay);
+  background: rgba(28, 28, 30, 0.28);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .dialog {
@@ -31,7 +31,9 @@
   box-shadow: var(--shadow-profile-modal);
   color: var(--color-profile-modal);
   touch-action: pan-y;
-  --gradient-primary: linear-gradient(135deg, #8f7ac8, #806bb6);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  --gradient-primary: var(--apple-action, #3f73b8);
 }
 
 .compact {
@@ -79,7 +81,20 @@
 
 .profileCompact .body {
   padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
+
+.dialog.dialog[data-cabinet-sheet="true"] .closeButton[data-profile-modal-close="true"] {
+  border: 0;
+  color: var(--apple-secondary, #636366);
+  background: var(--apple-surface-muted, #efeff4);
+  box-shadow: none;
+}
+.dialog .closeButton:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 0; }
+.header.header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+.dialog button, .dialog input, .dialog select { font-family: inherit; }
 
 @media (max-height: 720px) {
   .dialog {

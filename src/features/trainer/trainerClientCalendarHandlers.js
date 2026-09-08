@@ -289,6 +289,8 @@ export function createTrainerClientCalendarHandlers({
       monthlyTrainingDates: [...new Set(plannedWorkouts.map((item) => item?.date).filter(Boolean))].sort(),
       plannedWorkouts,
       ...assignmentInfo,
+      clientScheduleRequiresReview: false,
+      trainerScheduleReviewedAt: nowIso,
       updatedAt: nowIso,
       updatedBy: auth.currentUser?.uid || ""
     };

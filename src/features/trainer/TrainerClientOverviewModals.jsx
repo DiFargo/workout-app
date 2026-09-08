@@ -34,7 +34,7 @@ export default function TrainerClientOverviewModals({
     <>
       {adminTaskComposerOpen && (
         <div
-          className={styles.overlay}
+          className={styles.overlay} data-modal-backdrop="true"
           data-trainer-modal-backdrop="true"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setAdminTaskComposerOpen(false);
@@ -87,7 +87,7 @@ export default function TrainerClientOverviewModals({
 
       {adminPhotoCompareOpen && (
         <div
-          className={styles.overlay}
+          className={styles.overlay} data-modal-backdrop="true"
           data-trainer-modal-backdrop="true"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setAdminPhotoCompareOpen(false);
@@ -152,7 +152,7 @@ export default function TrainerClientOverviewModals({
 
       {adminProgramControlOpen && (
         <div
-          className={styles.overlay}
+          className={styles.overlay} data-modal-backdrop="true"
           data-trainer-modal-backdrop="true"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setAdminProgramControlOpen(false);

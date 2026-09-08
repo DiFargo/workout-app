@@ -327,7 +327,7 @@
   gap: 9px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #8f7ac8 rgba(156, 136, 210, 0.12);
+  scrollbar-color: var(--apple-action, #3f73b8) rgba(156, 136, 210, 0.12);
 }
 
 .reviewGrid > div {
@@ -449,7 +449,7 @@
 .reviewCard,
 .reviewGrid {
   scrollbar-width: thin;
-  scrollbar-color: #8f7ac8 rgba(156, 136, 210, 0.12);
+  scrollbar-color: var(--apple-action, #3f73b8) rgba(156, 136, 210, 0.12);
 }
 
 .reviewCard::-webkit-scrollbar,
@@ -466,7 +466,7 @@
 .reviewCard::-webkit-scrollbar-thumb,
 .reviewGrid::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: linear-gradient(180deg, #c4b8e3, #806bb6);
+  background: linear-gradient(180deg, #a9d2c3, var(--apple-blue-pressed, #3565a3));
 }
 
 @media (max-width: 390px) {
@@ -591,7 +591,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .imageFrame::after {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%, rgba(40, 38, 46, 0.08));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%, rgba(27, 35, 31, 0.08));
 }
 
 :global(:root[data-app-theme="warm-light"]) .image {
@@ -622,23 +622,23 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .rangeHint {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-weight: 500;
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid {
-  scrollbar-color: #8f7ac8 rgba(143, 122, 200, 0.12);
+  scrollbar-color: var(--apple-action, #3f73b8) rgba(47, 125, 104, 0.12);
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-track,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-track {
-  background: rgba(143, 122, 200, 0.12);
+  background: rgba(47, 125, 104, 0.12);
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-thumb,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-thumb {
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation {
@@ -657,7 +657,7 @@
   gap: 10px;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;
@@ -679,13 +679,431 @@
 
 :global(:root[data-app-theme="warm-light"]) .navigation button:first-child {
   border-radius: 24px;
-  background: #f5f2f7;
-  color: #28262e;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation .next {
   border-radius: 17px;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   color: #ffffff;
   box-shadow: none;
+}
+
+/* Opaque iOS body-measurement wizard. */
+:global(:root) .page.page {
+  max-width: 430px;
+  padding: 0 14px calc(86px + env(safe-area-inset-bottom));
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .page .header {
+  margin-bottom: 10px;
+}
+
+.progress {
+  gap: 7px;
+}
+
+.progressMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progressMeta span,
+.progressMeta strong {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.progressMeta span {
+  color: var(--apple-secondary, #636366);
+  font-weight: 550;
+}
+
+.progressMeta strong {
+  overflow: hidden;
+  color: var(--apple-blue, #3c6faa);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 5px;
+  min-height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eae6ef;
+}
+
+.progressTrack > span {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: var(--apple-action, #3f73b8);
+  transition: width 180ms ease-out;
+}
+
+:global(:root) .page .body {
+  gap: 10px;
+}
+
+:global(:root) .page .card {
+  padding: 16px;
+  gap: 12px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 26px;
+  background: #ffffff;
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 14px 38px rgba(27, 35, 31, 0.07);
+}
+
+:global(:root) .page .introVisual {
+  height: min(30vh, 238px);
+  min-height: 176px;
+  flex: 0 1 auto;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 20px;
+  background: var(--apple-surface-muted, #efeff4);
+}
+
+:global(:root) .page .introImage {
+  object-fit: contain;
+  object-position: center;
+}
+
+:global(:root) .page .text h2,
+:global(:root) .page .card h2 {
+  color: var(--apple-text, #1c1c1e);
+  font-size: clamp(25px, 6.5vw, 30px);
+  font-weight: 750;
+  line-height: 1.08;
+  letter-spacing: -0.65px;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .page .text p,
+:global(:root) .page .card p {
+  max-width: 340px;
+  margin-top: 6px;
+  color: var(--apple-secondary, #636366);
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.42;
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+}
+
+:global(:root) .page .tips {
+  margin-top: 0;
+  gap: 7px;
+}
+
+:global(:root) .page .tips span {
+  min-height: 38px;
+  padding: 8px 9px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 13px;
+  background: var(--apple-canvas, #f2f2f7);
+  color: #625d69;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+}
+
+:global(:root) .page .modeChoices {
+  gap: 8px;
+}
+
+:global(:root) .page .modeChoices button {
+  min-height: 84px;
+  padding: 11px;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-content: center;
+  align-items: center;
+  gap: 2px 8px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 17px;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .page .modeChoices button.fullMode {
+  border-color: var(--apple-blue, #3c6faa);
+  background: var(--apple-blue-tint, #eef3fa);
+  color: var(--apple-blue, #3c6faa);
+}
+
+:global(:root) .page .modeChoices button > svg {
+  width: 22px;
+  height: 22px;
+  grid-row: 1 / span 2;
+  color: var(--apple-blue-pressed, #3565a3);
+  stroke-width: 1.9;
+}
+
+:global(:root) .page .modeChoices strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+:global(:root) .page .modeChoices small {
+  margin-top: 1px;
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 450;
+  line-height: 13px;
+}
+
+:global(:root) .page .measurementCard {
+  justify-content: flex-start;
+}
+
+:global(:root) .page .imageFrame {
+  height: min(34vh, 280px);
+  min-height: 210px;
+  flex: 0 1 auto;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 20px;
+  background: var(--apple-surface-muted, #efeff4);
+}
+
+:global(:root) .page .imageFrame::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 65%, rgba(27, 35, 31, 0.05));
+}
+
+:global(:root) .page .image {
+  filter: none;
+  transform: scale(1.08);
+}
+
+:global(:root) .page .imageFrame:is(
+  [data-measurement-zone="biceps"],
+  [data-measurement-zone="forearm"],
+  [data-measurement-zone="wrist"],
+  [data-measurement-zone="thigh"],
+  [data-measurement-zone="calf"],
+  [data-measurement-zone="ankle"]
+) .image {
+  transform: scale(1.18);
+}
+
+:global(:root) .page .input {
+  margin-top: 4px;
+}
+
+.inputLabel {
+  margin: 0 0 6px 3px;
+  display: block;
+  color: var(--apple-secondary, #636366);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+}
+
+:global(:root) .page .input > div {
+  min-height: 68px;
+  padding: 7px;
+  grid-template-columns: minmax(0, 1fr) 60px;
+  border: 1px solid #ded6eb;
+  border-radius: 18px;
+  background: var(--apple-canvas, #f2f2f7);
+}
+
+:global(:root) .page .input input {
+  height: 52px;
+  border-radius: 13px;
+  background: #ffffff;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 30px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .page .input em {
+  min-height: 52px;
+  border-radius: 13px;
+  background: var(--apple-blue-tint, #eef3fa);
+  color: var(--apple-blue, #3c6faa);
+  font-size: 14px;
+  font-weight: 700;
+  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+}
+
+:global(:root) .page .rangeHint {
+  margin-top: -5px;
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 450;
+}
+
+:global(:root) .page .previous {
+  align-self: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: #625d69;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+:global(:root) .page .reviewCard {
+  gap: 10px;
+}
+
+:global(:root) .page .reviewGrid {
+  max-height: none;
+  padding-right: 0;
+  gap: 7px;
+}
+
+:global(:root) .page .reviewGrid > div {
+  min-height: 60px;
+  padding: 10px 11px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 15px;
+  background: var(--apple-canvas, #f2f2f7);
+}
+
+:global(:root) .page .reviewGrid span {
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 550;
+}
+
+:global(:root) .page .reviewGrid strong {
+  margin-top: 4px;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 16px;
+  font-weight: 700;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .page .reviewGrid small {
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 550;
+}
+
+:global(:root) .page .note {
+  margin-top: 2px;
+}
+
+:global(:root) .page .note span {
+  color: #625d69;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+:global(:root) .page .note textarea {
+  min-height: 72px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 15px;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+  font-size: 13px;
+  font-weight: 450;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .page .navigation {
+  width: min(430px, 100vw);
+  max-width: 430px;
+  height: 78px;
+  min-height: 78px;
+  max-height: 78px;
+  padding: 12px 14px 16px;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 8px;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:global(:root) .page .navigation button {
+  min-height: 50px;
+  height: 50px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+:global(:root) .page .navigation button svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  stroke-width: 2;
+}
+
+:global(:root) .page .navigation .next {
+  background: var(--apple-action, #3f73b8);
+  color: #ffffff;
+}
+
+@media (max-width: 370px), (max-height: 720px) {
+  :global(:root) .page.page {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  :global(:root) .page .card {
+    padding: 12px;
+    gap: 9px;
+    border-radius: 22px;
+  }
+
+  :global(:root) .page .introVisual {
+    height: 168px;
+    min-height: 168px;
+  }
+
+  :global(:root) .page .imageFrame {
+    height: min(31vh, 220px);
+    min-height: 178px;
+  }
+
+  :global(:root) .page .tips span {
+    min-height: 34px;
+    padding: 6px;
+  }
+
+  :global(:root) .page .modeChoices button {
+    min-height: 72px;
+    padding: 9px;
+  }
+
+  :global(:root) .page .reviewGrid > div {
+    min-height: 54px;
+    padding: 8px 9px;
+  }
+
+  :global(:root) .page .navigation {
+    width: 100vw;
+    grid-template-columns: 96px minmax(0, 1fr);
+    padding-inline: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressTrack > span {
+    transition: none;
+  }
 }

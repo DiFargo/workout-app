@@ -1,3 +1,4 @@
+import { ChevronRight, ClipboardList } from "lucide-react";
 import styles from "./FoodProductNutrition.module.css";
 
 export default function FoodProductNutrition({
@@ -51,9 +52,9 @@ export default function FoodProductNutrition({
         data-testid="food-product-amount"
         data-amount-mode={isPortionMode ? "portion" : "weight"}
       >
-        <span className={styles.amountLabel} data-css-module-text>
+        <label htmlFor="food-product-amount-input" className={styles.amountLabel} data-css-module-text>
           {isPortionMode ? `${selectedFood.portion || "Порция"}` : "Граммы"}
-        </span>
+        </label>
         <div className={`${styles.amountControls} ${isPortionMode ? styles.portionMode : styles.weightMode}`}>
           {isPortionMode && (
             <button
@@ -72,6 +73,7 @@ export default function FoodProductNutrition({
               className={styles.input}
               data-css-module-control
               data-food-amount-input
+              id="food-product-amount-input"
               value={amount}
               onChange={(event) => onAmountChange(event.target.value)}
               onFocus={clearDefaultAmountOnFocus}
@@ -136,10 +138,12 @@ export default function FoodProductNutrition({
           data-food-product-action="edit-note"
           onClick={onOpenEditPage}
         >
-          <span className={styles.noteIcon} aria-hidden="true" data-food-product-note-part="icon">▤</span>
-          <span className={styles.noteLabel} data-css-module-text data-food-product-note-part="label">Редактировать продукт</span>
-          <strong className={styles.noteValue} data-css-module-text>{editNote.trim() || "Не добавлено"}</strong>
-          <em className={styles.chevron} aria-hidden="true">›</em>
+          <span className={styles.noteIcon} aria-hidden="true" data-food-product-note-part="icon"><ClipboardList /></span>
+          <span className={styles.noteCopy}>
+            <strong className={styles.noteLabel} data-css-module-text data-food-product-note-part="label">Редактировать продукт</strong>
+            <span className={styles.noteValue} data-css-module-text>{editNote.trim() || "Название, БЖУ и описание"}</span>
+          </span>
+          <em className={styles.chevron} aria-hidden="true"><ChevronRight /></em>
         </button>
       </div>
     </>

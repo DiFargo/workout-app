@@ -240,7 +240,8 @@ export default function AppRouter({
         startingWeightProfile={aiNutritionProfile || aiNutritionProfileDraft}
         workoutHistory={history}
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
-        onGoBackToMode={() => onSetPage(APP_PAGES.WORKOUT_MODE)}
+        onOpenToday={() => onSetPage(APP_PAGES.BASIC_WORKOUT_TODAY)}
+        onBackToWorkouts={() => onSetPage(APP_PAGES.WORKOUTS)}
         onOpenIndividualWorkouts={onOpenIndividualWorkouts}
         onOpenBasicWorkouts={onOpenSavedBasicWorkoutsOrQuiz}
         onApplyBasicWorkoutPlan={onApplyBasicWorkoutPlan}
@@ -267,7 +268,7 @@ export default function AppRouter({
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
         onApplyBasicWorkoutPlan={onApplyBasicWorkoutPlan}
         onOpenLongPlan={() => onSetPage(APP_PAGES.BASIC_WORKOUT_QUIZ)}
-        onGoBackToMode={() => onSetPage(APP_PAGES.WORKOUT_MODE)}
+        onBackToWorkouts={() => onSetPage(APP_PAGES.WORKOUTS)}
         onOpenTraining={onOpenTrainingEntry}
         userId={user?.uid || ""}
         canUseTrainerFeatures={canUseTrainerFeatures}

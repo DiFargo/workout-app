@@ -53,26 +53,41 @@ Never break:
 - Bottom Navigation Bars
 - User Roles
 
+### GPT-6 Astra execution mode
+
+This working agreement follows the [official GPT-6 Astra guidance](https://developers.openai.com/api/docs/guides/latest-model) and should be reviewed when that guidance changes.
+
+- Infer ordinary implementation details from the task, prior conversation and repository context; act on a clear request instead of stopping at a plan or a capability answer.
+- Before asking a clarification question, finish all safe, authorized investigation and prepare a concrete option. Ask only when the answer can materially change the result or requires new authority.
+- Within project guidance, an explicit user request controls the requested outcome and scope. System, security and permission constraints still apply.
+- Treat `AGENTS.md`, `.codex-instructions`, selected skills and product documents as active instructions. When they conflict or would pause work, name the exact source and rule that caused it.
+- Use `index.md` and `project_map.md` to narrow context before opening large files. Inspect the target component, its colocated styles, imports and relevant tests rather than loading broad unrelated modules.
+- Keep one acceptance checklist for the requested outcome and verify it against the actual changed surface before declaring completion.
+- Delegate only independent, bounded work that does not edit the same files. The primary agent owns integration, final verification and any change to a shared surface.
+
 ### Required verification before completion
 
-Before finishing any task:
+Choose the smallest meaningful verification that covers the risk. Do not add tests that only restate a reversible implementation detail.
 
-1. Check JSX syntax.
-2. Check all closing tags.
-3. Check CSS syntax.
-4. Verify build passes.
-5. Verify no existing functionality was removed.
-6. Verify requested changes are actually implemented.
+- Documentation-only changes: validate Markdown structure and links, review the diff, and do not change the runtime version.
+- UI-only runtime changes: check JSX and CSS syntax, build, and verify the affected mobile surface at the relevant viewport or with the focused UI test.
+- Isolated domain logic: run its focused test in addition to the build.
+- Firebase, role/access, API, navigation or release changes: run the relevant focused tests and production smoke checks; never infer that a critical flow still works.
+- Before every runtime completion: verify the requested behavior is present and that no protected functionality above was removed.
+
+Once the appropriate checks pass, do not repeat broader checks unless a failure, a later change, or a remaining risk justifies them.
 
 ## UI Design System
 
 ### General Style
 
-The light, lavender iOS interface is the primary and current product design.
+The calm, neutral iOS interface is the primary and current product design.
 
 - Mobile first, fullscreen iOS-like UX.
-- Main palette: background `#F7F6F8`, cards `#FFFFFF`, secondary surface `#F5F2F7`, borders `#EFEBF3`, text `#28262E`, secondary text `#7B7682`, accent `#8F7AC8`, active accent `#806BB6`.
-- Do not restore the former grey-blue, bright-purple, or Premium Dark colours and components.
+- Main palette (approved «Свой ритм» mockup, based on calm-blue): canvas `#F2F2F7`, cards `#FFFFFF`, secondary surface `#EFEFF4`, borders `rgba(60,60,67,.12)`, text `#1C1C1E`, secondary text `#636366`, primary action `#3F73B8`, text/chart accent `#3C6FAA`, success `#237A42`.
+- Current reference: `docs/client-five-main-screens-signature.html`. Keep its compact grouping; never replace real actions or data with mockup examples. Main page headers have no decorative rhythm mark, per the user's latest refinement; preserve functional header actions.
+- Keep accents restrained. Use the primary accent only for the screen's main action or current state; use semantic colours only for a meaningful status.
+- Do not restore the former bright-purple, heavy dark-card or saturated legacy colour systems.
 - Every new page must visually match the current light iOS interface.
 
 ### Design Principles

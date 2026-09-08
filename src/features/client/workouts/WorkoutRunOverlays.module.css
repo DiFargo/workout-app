@@ -49,8 +49,8 @@
   border: 0;
   border-radius: 50%;
   background: rgba(123, 118, 130, 0.1);
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
   box-shadow: none;
   font-size: 0;
   pointer-events: auto;
@@ -87,7 +87,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   transform: translateX(-50%);
   pointer-events: none;
 }
@@ -95,7 +95,7 @@
   max-width: 258px;
   display: block;
   overflow: hidden;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
@@ -162,7 +162,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
@@ -206,11 +206,11 @@
     calc(50% - min(201px, 50vw) + 68px)
   );
   z-index: 103;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 13px;
   background: #fff;
-  color: #806bb6;
-  box-shadow: 0 2px 7px rgba(72, 63, 87, 0.05);
+  color: var(--apple-blue-pressed, #3565a3);
+  box-shadow: 0 2px 7px rgba(27, 35, 31, 0.05);
   line-height: 1;
 }
 :global(:root[data-app-theme="warm-light"]) .swapExerciseButton.swapExerciseButton svg {
@@ -516,8 +516,8 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
-  color: #28262e;
-  background: #f7f6f8;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f2f2f7);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -531,16 +531,16 @@
   align-items: stretch;
   justify-content: center;
   gap: 18px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 24px;
   text-align: center;
 }
 
 :global(:root[data-app-theme="warm-light"]) .notFoundTitle.notFoundTitle {
   padding: 0 18px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -557,7 +557,7 @@
   position: static;
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   border: 0;
   border-radius: 17px;
   box-shadow: none;

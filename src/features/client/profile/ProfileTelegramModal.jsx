@@ -21,7 +21,7 @@ export default function ProfileTelegramModal({
   }
 
   return (
-    <div className={styles.overlay} data-testid="profile-telegram-overlay" role="presentation" onClick={onClose}>
+    <div className={styles.overlay} data-modal-backdrop="true" data-testid="profile-telegram-overlay" role="presentation" onClick={onClose}>
       <div
         className={styles.dialog}
         data-css-module-scope="profile-telegram-modal"
@@ -29,6 +29,7 @@ export default function ProfileTelegramModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-cabinet-sheet="true"
         aria-labelledby="profileTelegramManageTitle"
         onClick={(event) => event.stopPropagation()}
       >

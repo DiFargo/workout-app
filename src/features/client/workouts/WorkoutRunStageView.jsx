@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { formatCompactTimer, getExerciseTechniqueHint } from "../../../domain/workoutPresentation";
-import { exerciseUsesExternalWeight } from "../../../utils/auditSafety";
+import { exerciseUsesExternalWeight, isWorkoutSetCompleted } from "../../../utils/auditSafety";
 import { getBasicWorkoutAlternatives } from "../../../utils/basicWorkoutAlternatives";
 import { getTrainerExerciseAlternatives } from "../../../utils/trainerExerciseAlternatives";
 import {
@@ -86,6 +86,7 @@ export default function WorkoutRunStageView({
   endPerformanceCheck,
   goBackToMain,
   goToNextExercise,
+  goToNextExerciseKeepingRestTimer,
   goToPreviousExercise,
   history,
   inlinePlayingVideoId,
@@ -241,6 +242,18 @@ export default function WorkoutRunStageView({
   const shouldShowGroupRest = !exercise?.runtimeGroup || (
     groupExercisePosition >= (groupExerciseCount || 1)
   );
+  const isCurrentExerciseComplete = Boolean(
+    !isWarmup &&
+    exercise?.sets?.length &&
+    exercise.sets.every(isWorkoutSetCompleted)
+  );
+  const restTimerCompletionLabel = currentExerciseIndex >= executionSteps.length
+    ? "Завершить тренировку"
+    : "К следующему упражнению";
+  const handleRestTimerCompletion = () => {
+    setRestTimerExpanded(false);
+    goToNextExerciseKeepingRestTimer?.();
+  };
   const openExerciseTechnique = (event) => {
     openWorkoutExerciseModal(
       setExerciseTechniqueOpenId,
@@ -553,6 +566,9 @@ export default function WorkoutRunStageView({
           onStart={startRestTimer}
           onSecondsChange={setRestTimerSeconds}
           onRunningChange={setRestTimerRunning}
+          showCompletionAction={isCurrentExerciseComplete && shouldShowGroupRest}
+          completionActionLabel={restTimerCompletionLabel}
+          onCompletionAction={handleRestTimerCompletion}
         />
       ) : null}
     </>

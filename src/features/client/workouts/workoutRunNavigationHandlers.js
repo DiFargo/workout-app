@@ -3,6 +3,7 @@ import { getWorkoutExecutionSteps } from "../../../utils/workoutPlanNormalizatio
 export function createWorkoutRunNavigationHandlers({
   workout,
   workoutStarted,
+  isWorkoutSaved,
   currentExerciseIndex,
   deckRef,
   touchStartY,
@@ -53,19 +54,21 @@ export function createWorkoutRunNavigationHandlers({
     }, 80);
   }
 
-  function resetExerciseMotion(direction) {
+  function resetExerciseMotion(direction, { preserveRestTimer = false } = {}) {
     deckRef.current?.querySelector("video")?.pause();
     setOpenVideoId(null);
     setInlinePlayingVideoId("");
-    setRestTimerRunning(false);
-    setRestTimerSeconds(0);
+    if (!preserveRestTimer) {
+      setRestTimerRunning(false);
+      setRestTimerSeconds(0);
+    }
     setIsWorkoutSaved(false);
     setShowWorkoutSavedCard(false);
     setSwipeDirection(direction);
   }
 
   function goToPreviousExercise() {
-    if (!workout) return;
+    if (!workout || isWorkoutSaved) return;
 
     resetExerciseMotion("down");
 
@@ -83,8 +86,18 @@ export function createWorkoutRunNavigationHandlers({
   }
 
   function goToNextExercise() {
-    if (!workout) return;
+    if (!workout || isWorkoutSaved) return;
 
+    advanceToNextExercise();
+  }
+
+  function goToNextExerciseKeepingRestTimer() {
+    if (!workout || isWorkoutSaved) return;
+
+    advanceToNextExercise(true);
+  }
+
+  function advanceToNextExercise(preserveRestTimer = false) {
     if (
       workoutStarted &&
       currentExerciseIndex > 0 &&
@@ -137,7 +150,7 @@ export function createWorkoutRunNavigationHandlers({
     }
 
     setExerciseValidationMessage("");
-    resetExerciseMotion("up");
+    resetExerciseMotion("up", { preserveRestTimer });
 
     if (!workoutStarted) {
       setWorkoutStarted(true);
@@ -164,6 +177,7 @@ export function createWorkoutRunNavigationHandlers({
     centerExerciseDeck,
     goToPreviousExercise,
     goToNextExercise,
+    goToNextExerciseKeepingRestTimer,
     handleExerciseTouchStart: resetExerciseTouch,
     handleExerciseTouchMove: resetExerciseTouch,
     handleExerciseTouchEnd: resetExerciseTouch

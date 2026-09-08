@@ -7,15 +7,15 @@
   grid-template-columns: 20px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 6px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 20px;
   background: #fff;
-  color: #28262e;
-  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
 }
-.root > svg { width: 18px; height: 18px; color: #8f7ac8; stroke-width: 2.2; }
-.timer { padding: 0; display: flex; flex-direction: column; align-items: flex-start; border: 0; background: transparent; color: #28262e; font: inherit; }
-.timer small { color: #7b7682; font-size: 9.5px; font-weight: 600; line-height: 13px; }
+.root > svg { width: 18px; height: 18px; color: var(--apple-action, #3f73b8); stroke-width: 2.2; }
+.timer { padding: 0; display: flex; flex-direction: column; align-items: flex-start; border: 0; background: transparent; color: var(--apple-text, #1c1c1e); font: inherit; }
+.timer small { color: var(--apple-secondary, #636366); font-size: 9.5px; font-weight: 600; line-height: 13px; }
 .timer strong { font-size: 18px; font-weight: 700; line-height: 21px; }
 .startButton {
   min-width: 59px;
@@ -27,19 +27,19 @@
   gap: 4px;
   border: 0;
   border-radius: 15px;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   color: #fff;
   font: inherit;
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 4px 10px rgba(128, 107, 182, 0.2);
+  box-shadow: 0 4px 10px rgba(40, 110, 91, 0.2);
 }
 .startButton svg { width: 11px; height: 11px; fill: currentColor; stroke-width: 2.6; }
-.startButton.running { background: #806bb6; }
+.startButton.running { background: var(--apple-blue-pressed, #3565a3); }
 .controls { display: flex; gap: 5px; }
-.controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: #f4f4f8; color: #28262e; font: inherit; font-size: 10px; font-weight: 700; }
-.controls .add { background: #f5f2f7; color: #8f7ac8; }
+.controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: #f4f4f8; color: var(--apple-text, #1c1c1e); font: inherit; font-size: 10px; font-weight: 700; }
+.controls .add { background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); }
 
 .compact {
   width: 100%;
@@ -61,9 +61,9 @@
   display: grid;
   place-items: center;
   padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
-  background: rgba(40, 38, 46, 0.34);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(27, 35, 31, 0.34);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .expandedTimer {
@@ -77,11 +77,11 @@
   justify-content: flex-start;
   max-height: calc(100dvh - max(48px, env(safe-area-inset-top)) - max(48px, env(safe-area-inset-bottom)));
   overflow-y: auto;
-  border: 1px solid rgba(255, 255, 255, 0.74);
-  border-radius: 32px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 24px 64px rgba(40, 38, 46, 0.25);
-  color: #28262e;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 25px;
+  background: var(--apple-canvas, #f2f2f7);
+  box-shadow: 0 24px 64px rgba(27, 35, 31, 0.25);
+  color: var(--apple-text, #1c1c1e);
   text-align: center;
 }
 
@@ -104,8 +104,8 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #28262e;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
 }
 
 .minimizeButton svg { width: 22px; height: 22px; }
@@ -114,16 +114,16 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 15px;
   font-weight: 700;
 }
 
-.expandedLabel svg { width: 22px; height: 22px; color: #8f7ac8; }
+.expandedLabel svg { width: 22px; height: 22px; color: var(--apple-action, #3f73b8); }
 
 .expandedCountdown {
   margin-top: 18px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: clamp(62px, 22vw, 88px);
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -133,7 +133,7 @@
 .expandedTimer p {
   max-width: 240px;
   margin: 16px 0 28px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 15px;
   line-height: 21px;
 }
@@ -153,29 +153,66 @@
   justify-content: center;
   gap: 7px;
   border: 0;
-  border-radius: 17px;
-  background: #f5f2f7;
-  color: #28262e;
+  border-radius: 12px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
   font: inherit;
   font-size: 14px;
   font-weight: 700;
 }
 
 .expandedControls .expandedPrimary {
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   color: #fff;
-  box-shadow: 0 8px 18px rgba(128, 107, 182, 0.26);
+  box-shadow: none;
 }
 
-.expandedControls .expandedPrimary.running { background: #806bb6; }
+.expandedControls .expandedPrimary.running { background: var(--apple-blue-pressed, #3565a3); }
 .expandedPrimary svg { width: 16px; height: 16px; fill: currentColor; }
+
+.expandedControls.withCompletionAction .expandedPrimary,
+.expandedControls.withCompletionAction .expandedPrimary.running {
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-surface-muted, #efeff4);
+  box-shadow: none;
+  color: var(--apple-secondary, #636366);
+}
+
+.completionAction {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 16px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--apple-action, #3f73b8);
+  box-shadow: none;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.completionAction svg { width: 18px; height: 18px; }
+
+.minimizeButton:focus-visible,
+.expandedControls button:focus-visible,
+.keepCompactButton:focus-visible,
+.completionAction:focus-visible {
+  outline: 3px solid var(--apple-blue, #3c6faa);
+  outline-offset: 2px;
+}
 
 .keepCompactButton {
   margin-top: 16px;
   padding: 8px 12px;
   border: 0;
   background: transparent;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   font: inherit;
   font-size: 14px;
   font-weight: 700;
@@ -193,6 +230,6 @@
     min-height: 0;
     padding: 28px 18px 20px;
     max-height: calc(100dvh - max(32px, env(safe-area-inset-top)) - max(32px, env(safe-area-inset-bottom)));
-    border-radius: 28px;
+    border-radius: 25px;
   }
 }

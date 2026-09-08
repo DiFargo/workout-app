@@ -19,12 +19,13 @@ export function FoodSearchSurface({
     <div
       className={`${styles.searchOverlay} ${hasHeaderLayout ? "" : styles.fixtureOverlay}`}
       data-css-module-scope="food-search-overlay"
+      data-modal-layer={dialog && onDismiss ? "true" : undefined}
       data-testid={overlayTestId}
     >
       {dialog && onDismiss ? (
         <button
           type="button"
-          className={styles.backdrop}
+          className={styles.backdrop} data-modal-backdrop="true"
           onClick={onDismiss}
           aria-label="Закрыть поиск еды по фону"
           data-food-search-action="dismiss-backdrop"
@@ -90,6 +91,7 @@ export default function FoodSearchOverlay({
   return (
     <div
       className={styles.productOverlay}
+      data-modal-backdrop="true"
       data-css-module-scope="food-product-overlay"
       data-food-product-open="true"
       data-testid="food-search-overlay"

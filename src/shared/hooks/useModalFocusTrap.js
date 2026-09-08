@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { acquireBodyScrollLock } from "./useBodyScrollLock";
+import { guardModalScroll } from "./modalScrollGuard";
 
 export function useModalFocusTrap() {
   useEffect(() => {
@@ -6,8 +8,15 @@ export function useModalFocusTrap() {
     let previousFocus = null;
     let restoreBackground = [];
     let removeKeyHandler = null;
+    let releaseBodyLock = null;
+    let releaseScrollGuard = null;
+    let mutedBackdrops = [];
 
     const deactivateDialog = () => {
+      releaseScrollGuard?.();
+      releaseScrollGuard = null;
+      mutedBackdrops.forEach(element => element.removeAttribute("data-modal-backdrop-muted"));
+      mutedBackdrops = [];
       removeKeyHandler?.();
       removeKeyHandler = null;
       restoreBackground.forEach(({ element, inert, ariaHidden }) => {
@@ -30,13 +39,28 @@ export function useModalFocusTrap() {
         .filter((dialog) => (
           dialog instanceof HTMLElement &&
           !dialog.hidden &&
-          dialog.getAttribute("aria-hidden") !== "true"
+          dialog.getClientRects().length > 0
         ));
       const dialog = dialogs.at(-1) || null;
 
       if (dialog === activeDialog) return;
       deactivateDialog();
-      if (!dialog) return;
+      if (!dialog) {
+        releaseBodyLock?.();
+        releaseBodyLock = null;
+        return;
+      }
+
+      releaseBodyLock ||= acquireBodyScrollLock();
+      releaseScrollGuard = guardModalScroll(dialog);
+
+      const backdropSelector = '[data-modal-backdrop="true"], [data-trainer-modal-backdrop="true"]';
+      const activeBackdrop = dialog.closest(backdropSelector) ||
+        [...(dialog.parentElement?.children || [])].find(element => element.matches(backdropSelector));
+      if (activeBackdrop) {
+        mutedBackdrops = [...document.querySelectorAll(backdropSelector)].filter(element => element !== activeBackdrop);
+        mutedBackdrops.forEach(element => element.setAttribute("data-modal-backdrop-muted", "true"));
+      }
 
       activeDialog = dialog;
       previousFocus = document.activeElement;
@@ -45,7 +69,7 @@ export function useModalFocusTrap() {
       while (current.parentElement && current.parentElement.id !== "root") {
         const parent = current.parentElement;
         [...parent.children].forEach((sibling) => {
-          if (sibling === current || !(sibling instanceof HTMLElement)) return;
+          if (sibling === current || !(sibling instanceof HTMLElement) || sibling.matches('[data-modal-backdrop="true"], [data-trainer-modal-backdrop="true"]')) return;
           restoreBackground.push({
             element: sibling,
             inert: sibling.inert,
@@ -66,6 +90,7 @@ export function useModalFocusTrap() {
       );
 
       window.requestAnimationFrame(() => {
+        if (activeDialog !== dialog || !dialog.isConnected) return;
         const focusTarget = closeButton instanceof HTMLElement ? closeButton : getFocusable()[0] || dialog;
         focusTarget.focus({ preventScroll: true });
       });
@@ -101,6 +126,7 @@ export function useModalFocusTrap() {
     return () => {
       observer.disconnect();
       deactivateDialog();
+      releaseBodyLock?.();
     };
   }, []);
 }

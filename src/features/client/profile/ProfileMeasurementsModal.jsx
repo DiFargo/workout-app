@@ -19,7 +19,7 @@ export default function ProfileMeasurementsModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-css-module-scope="profile-measurements-modal"
       data-testid="profile-measurements-overlay"
       role="presentation"
@@ -39,7 +39,7 @@ export default function ProfileMeasurementsModal({
           embedded
           controlsVariant="workout"
           className={styles.header}
-          title="Замеры тела"
+          title="Замеры тела и фото"
           titleId="profileMeasurementsModalTitle"
           testId="profile-measurements-header"
           scope="profile-measurements-header"

@@ -21,11 +21,12 @@ export function AppSplash() {
   }, []);
 
   return (
-    <main className={styles.appSplash} role="status" aria-label="Загрузка приложения">
+    <main className={styles.appSplash} role="status" aria-label="Загрузка приложения" aria-busy="true">
       <div className={styles.splashInner}>
         <div className={styles.splashMark} aria-hidden="true"><Dumbbell size={34} strokeWidth={2.1} /></div>
         <div className={styles.splashLogo}>GYM</div>
         <div className={styles.splashText}>Загрузка приложения</div>
+        <div className={styles.splashCaption}>Готовим ваши тренировки и прогресс</div>
         <div className={styles.splashProgress}>
           <span />
         </div>
@@ -72,6 +73,7 @@ export function LoginPage({
     <div className={`${styles.loginPage} loginPage`}>
       <div className={`${styles.loginHero} loginHero`}>
         <div className={`${styles.appLogo} appLogo`} aria-hidden="true"><Dumbbell size={30} strokeWidth={2.15} /></div>
+        <span className={styles.loginEyebrow}>Персональные тренировки</span>
         <h1>Workout</h1>
         <p>Доступ к приложению открывает тренер</p>
       </div>

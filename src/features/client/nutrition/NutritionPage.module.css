@@ -14,8 +14,8 @@
   overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
-  color: #28262e;
-  background: #f7f6f8;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--ios-canvas-background, var(--apple-canvas, #f2f2f7));
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -32,7 +32,7 @@
     min-height: min(874px, 100dvh);
     max-height: min(874px, 100dvh);
     border-radius: 54px;
-    box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
+    box-shadow: 0 24px 80px rgba(27, 35, 31, 0.14);
   }
 }
 

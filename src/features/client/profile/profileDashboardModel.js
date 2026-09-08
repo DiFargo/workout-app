@@ -1,6 +1,17 @@
 import { isWorkoutPlanForMode } from "../../../utils/workoutPlanMode.js";
-import { getWorkoutScheduleCalendarForWorkouts } from "../../../utils/workoutSchedule.js";
+import { getWorkoutScheduleCalendarForWorkouts, normalizeWorkoutCalendarSchedule } from "../../../utils/workoutSchedule.js";
 import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
+
+export function getTimeOfDayGreeting(date = new Date()) {
+  const hour = date instanceof Date && Number.isFinite(date.getTime())
+    ? date.getHours()
+    : new Date().getHours();
+
+  if (hour >= 5 && hour < 12) return "Доброе утро";
+  if (hour >= 12 && hour < 18) return "Добрый день";
+  if (hour >= 18 && hour < 23) return "Добрый вечер";
+  return "Доброй ночи";
+}
 
 function normalizeDashboardDateKeys(values = []) {
   return [...new Set((Array.isArray(values) ? values : [])
@@ -294,6 +305,12 @@ export function buildProfileDashboardModel(ctx) {
       calendar: profileCalendarSource,
       history
     });
+    const profileWorkoutScheduleRequiredCount = profileCalendarWorkouts.length;
+    const profileWorkoutScheduleLockedDates = normalizeDashboardDateKeys(
+      profileWorkoutSlots
+        .filter((slot) => slot?.isCompleted)
+        .map((slot) => slot?.plannedDate || slot?.shiftedDate || "")
+    );
     const nextWorkoutSlot = profileWorkoutSlots.find((slot) => !slot.isCompleted) || profileWorkoutSlots[0] || null;
     const nextWorkoutSource = profileCalendarWorkouts.find((workout) => (
       String(workout?.id || "") === String(nextWorkoutSlot?.workoutId || "")
@@ -338,6 +355,14 @@ export function buildProfileDashboardModel(ctx) {
           }
         : {
             state: "ready",
+            isToday: Boolean(nextWorkoutDateKey && nextWorkoutDateKey === formatProfileWorkoutDateKey(new Date())),
+            scheduleStatus: nextWorkoutSlot?.isMissed
+              ? "missed"
+              : !nextWorkoutDateKey
+                ? "unscheduled"
+                : nextWorkoutDateKey === formatProfileWorkoutDateKey(new Date())
+                  ? "today"
+                  : "upcoming",
             eyebrow: nextWorkoutSlot?.isMissed ? "ТРЕНИРОВКА ПЕРЕНЕСЕНА" : "СЛЕДУЮЩАЯ ТРЕНИРОВКА",
             title: nextWorkoutTitle,
             dateText: nextWorkoutDate,
@@ -376,6 +401,7 @@ export function buildProfileDashboardModel(ctx) {
             ? profileWorkoutCalendarDraftDates
             : dashboardScheduledDates
         ).includes(key),
+        isScheduleLocked: profileWorkoutScheduleLockedDates.includes(key),
         scheduleEntries: profileWorkoutVisibleEntriesByDate[key] || [],
         workouts: workoutCalendarHistoryByDate[key] || []
       };
@@ -396,7 +422,17 @@ export function buildProfileDashboardModel(ctx) {
     };
     const saveProfileWorkoutCalendar = async () => {
       const uid = auth.currentUser?.uid;
-      if (!uid || profileWorkoutCalendarSaving || !canEditProfileWorkoutSchedule) return;
+      if (!uid || profileWorkoutCalendarSaving) return;
+
+      const scheduledDates = normalizeDashboardDateKeys([
+        ...profileWorkoutCalendarDraftDates,
+        ...profileWorkoutScheduleLockedDates
+      ]);
+
+      if (profileWorkoutScheduleRequiredCount && scheduledDates.length !== profileWorkoutScheduleRequiredCount) {
+        setProfileWorkoutCalendarStatus("Количество дней должно совпадать с количеством тренировок в программе.");
+        return false;
+      }
 
       setProfileWorkoutCalendarSaving(true);
       setProfileWorkoutCalendarStatus("");
@@ -407,27 +443,64 @@ export function buildProfileDashboardModel(ctx) {
         const currentCalendar = userSnapshot.exists()
           ? userSnapshot.data()?.workoutCalendar || {}
           : {};
-        const scheduledDates = [...new Set(profileWorkoutCalendarDraftDates)].sort();
-        const plannedWorkouts = buildWorkoutScheduleDraft(scheduledDates, profileCalendarWorkouts);
-        const nextCalendar = {
+        const existingPlannedWorkouts = Array.isArray(currentCalendar.plannedWorkouts)
+          ? currentCalendar.plannedWorkouts
+          : [];
+        const plannedWorkouts = buildWorkoutScheduleDraft(scheduledDates, profileCalendarWorkouts)
+          .map((entry, index) => {
+            const existing = existingPlannedWorkouts.find((item) => (
+              String(item?.workoutId || "").trim() === String(entry.workoutId || "").trim() ||
+              Number(item?.order) === index + 1
+            )) || {};
+            const workout = profileCalendarWorkouts[index] || {};
+            const assignmentInfo = {
+              assignedProgramId: existing.assignedProgramId || workout.assignedProgramId || currentCalendar.assignedProgramId || "",
+              assignedProgramName: existing.assignedProgramName || workout.assignedProgramName || currentCalendar.assignedProgramName || "",
+              assignedProgramUpdatedAt: existing.assignedProgramUpdatedAt || workout.assignedProgramUpdatedAt || currentCalendar.assignedProgramUpdatedAt || "",
+              assignedProgramAddedAt: existing.assignedProgramAddedAt || existing.programAssignmentId || workout.assignedProgramAddedAt || workout.programAssignmentId || currentCalendar.assignedProgramAddedAt || ""
+            };
+
+            const isCompleted = ["completed", "completed_off_date"].includes(
+              String(existing.status || "").trim().toLowerCase()
+            ) || Boolean(existing.completedDate);
+
+            return {
+              ...existing,
+              ...entry,
+              ...assignmentInfo,
+              status: isCompleted ? existing.status || "completed" : entry.status,
+              movedToDate: "",
+              statusUpdatedAt: existing.statusUpdatedAt || "",
+              completedDate: existing.completedDate || ""
+            };
+          });
+        const nowIso = new Date().toISOString();
+        const nextCalendar = normalizeWorkoutCalendarSchedule({
           ...currentCalendar,
           scheduledDates,
           monthlyTrainingDates: scheduledDates,
           plannedWorkouts,
-          updatedAt: new Date().toISOString()
-        };
+          scheduleUpdatedBy: "client",
+          clientScheduleUpdatedAt: nowIso,
+          clientScheduleRequiresReview: isTrainerManagedWorkoutSchedule,
+          updatedAt: nowIso
+        }, profileCalendarWorkouts);
 
         await setDoc(userRef, {
           workoutCalendar: nextCalendar,
-          updatedAt: new Date().toISOString()
+          updatedAt: nowIso
         }, { merge: true });
 
-        setProfileWorkoutScheduledDates(scheduledDates);
-        setProfileWorkoutCalendarDraftDates(scheduledDates);
+        setProfileWorkoutScheduledDates(nextCalendar.scheduledDates);
+        setProfileWorkoutCalendarDraftDates(nextCalendar.scheduledDates);
         setProfileWorkoutCalendarData(nextCalendar);
         safeWriteUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, uid, nextCalendar);
         setProfileWorkoutCalendarEditing(false);
-        setProfileWorkoutCalendarStatus("Тренировочные дни сохранены.");
+        setProfileWorkoutCalendarStatus(
+          isTrainerManagedWorkoutSchedule
+            ? "Расписание сохранено. Тренер увидит изменения."
+            : "Тренировочные дни сохранены."
+        );
       } catch (error) {
         console.error("Workout calendar save failed:", error);
         setProfileWorkoutCalendarStatus("Не получилось сохранить дни. Проверь соединение.");
@@ -547,7 +620,7 @@ export function buildProfileDashboardModel(ctx) {
     };
     const progressInsight = buildProgressInsight({
       history,
-      measurements: profileMeasurements,
+      measurements: bodyMeasurements,
       nutrition,
       calorieGoal: Number(profileMacros.calories || nutrition.goals.calories),
       proteinGoal: Number(profileMacros.protein || nutrition.goals.protein),
@@ -592,6 +665,9 @@ export function buildProfileDashboardModel(ctx) {
     profileCalendarSource,
     profileCalendarScheduledDates: dashboardScheduledDates,
     canEditProfileWorkoutSchedule,
+    isTrainerManagedWorkoutSchedule,
+    profileWorkoutScheduleRequiredCount,
+    profileWorkoutScheduleLockedDates,
     profileWorkoutSlots,
     nextWorkoutDate,
     nextWorkoutTitle,

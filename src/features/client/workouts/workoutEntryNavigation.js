@@ -1,13 +1,14 @@
 import {
   safeReadUserJsonStorage,
   safeWriteUserJsonStorage
-} from "../../../utils/userScopedStorage";
+} from "../../../utils/userScopedStorage.js";
 import { doc, setDoc } from "firebase/firestore";
-import { isWorkoutPlanForMode } from "../../../utils/workoutPlanMode";
+import { hasSavedWorkoutPlanForMode, isWorkoutPlanForMode } from "../../../utils/workoutPlanMode.js";
 
 export function createWorkoutEntryNavigation({
   APP_PAGES,
   STORAGE_KEY,
+  BASIC_WORKOUT_PLAN_STORAGE_KEY,
   WORKOUT_MODE_STORAGE_KEY,
   auth,
   db,
@@ -82,14 +83,41 @@ export function createWorkoutEntryNavigation({
 
   function openSavedBasicWorkoutsOrQuiz() {
     saveWorkoutModePreference("basic", workoutModeRemember);
+    const currentUserId = (auth.currentUser || user)?.uid;
+    const cachedBasicPlan = currentUserId && BASIC_WORKOUT_PLAN_STORAGE_KEY
+      ? safeReadUserJsonStorage(BASIC_WORKOUT_PLAN_STORAGE_KEY, currentUserId, null)
+      : null;
+    const availableBasicPlan = hasSavedWorkoutPlanForMode(plan, "basic")
+      ? plan
+      : hasSavedWorkoutPlanForMode(cachedBasicPlan, "basic")
+        ? cachedBasicPlan
+        : null;
+
+    if (availableBasicPlan && availableBasicPlan !== plan) {
+      setPlan(availableBasicPlan);
+    }
     setSelectedWorkoutId(null);
-    setPage(APP_PAGES.BASIC_WORKOUT_TODAY);
+    setIndividualWorkoutIndex(0);
+    setIndividualWorkoutIndexInitialized(false);
+    setPage(availableBasicPlan ? APP_PAGES.WORKOUTS : APP_PAGES.BASIC_WORKOUT_TODAY);
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    });
+
+    if (currentUserId) {
+      loadWorkoutsFromFirebase(currentUserId, {
+        mode: "basic",
+        preserveCurrentPlanOnError: true
+      }).catch((error) => {
+        console.warn("Background basic workouts refresh error", error);
+      });
+    }
   }
 
   function openBasicWorkoutQuiz() {
     saveWorkoutModePreference("basic", workoutModeRemember);
     setSelectedWorkoutId(null);
-    setPage(APP_PAGES.BASIC_WORKOUT_TODAY);
+    setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
   }
 
   function openTrainingEntry() {

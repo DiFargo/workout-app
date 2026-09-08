@@ -1,15 +1,15 @@
 .root {
   --search-input-surface: var(--color-surface);
-  --search-input-text: #28262e;
+  --search-input-text: var(--apple-text, #1c1c1e);
   --search-input-icon: var(--color-heading);
   --search-input-placeholder: #8a8f9e;
-  --search-input-border: #f7f6f8;
+  --search-input-border: var(--apple-canvas, #f2f2f7);
 
   width: 100%;
   align-items: center;
   border: 1px solid var(--search-input-border);
   background: var(--search-input-surface);
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
 }
 
 .search {
@@ -19,11 +19,11 @@
   display: flex;
   gap: 10px;
   border-radius: 15px;
-  box-shadow: 0 10px 24px rgba(72, 63, 87, 0.06);
+  box-shadow: 0 10px 24px rgba(27, 35, 31, 0.06);
 }
 
 .myProducts {
-  --search-input-text: #28262e;
+  --search-input-text: var(--apple-text, #1c1c1e);
 
   min-height: 62px;
   margin: 0 0 18px;
@@ -31,9 +31,9 @@
   display: grid;
   grid-template-columns: 26px minmax(0, 1fr) 38px;
   gap: 9px;
-  border-color: var(--client-card-border, #efebf3);
+  border-color: var(--client-card-border, var(--apple-separator, rgba(60,60,67,.12)));
   border-radius: 17px;
-  box-shadow: 0 10px 28px rgba(72, 63, 87, 0.1);
+  box-shadow: 0 10px 28px rgba(27, 35, 31, 0.1);
 }
 
 .searchIcon {
@@ -160,7 +160,7 @@
 
 @media (max-width: 40rem) {
   .myProducts {
-    border-color: var(--client-border, #efebf3);
+    border-color: var(--client-border, var(--apple-separator, rgba(60,60,67,.12)));
   }
 }
 
@@ -180,10 +180,10 @@
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr) auto;
   gap: 8px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 16px;
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
@@ -192,7 +192,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchIcon {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 20px;
   font-weight: 500;
 }
@@ -200,15 +200,15 @@
 :global(:root[data-app-theme="warm-light"]) .input,
 :global(:root[data-app-theme="warm-light"]) .myProducts .input {
   min-height: 48px;
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
   font-size: 15px;
   font-weight: 450;
 }
 
 :global(:root[data-app-theme="warm-light"]) .input::placeholder {
-  color: #7b7682;
-  -webkit-text-fill-color: #7b7682;
+  color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="warm-light"]) .clearButton {
@@ -217,12 +217,12 @@
   height: 44px;
   min-height: 44px;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #7b7682;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-secondary, #636366);
   font-size: 20px;
 }
 
 .root:focus-within {
-  border-color: #8f7ac8 !important;
-  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.24) !important;
+  border-color: var(--apple-action, #3f73b8) !important;
+  box-shadow: 0 0 0 3px rgba(47, 125, 104, 0.24) !important;
 }

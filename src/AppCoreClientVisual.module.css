@@ -8,7 +8,7 @@
     background:
       radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.075), transparent 36%),
       linear-gradient(180deg, #ffffff 0%, #f5f6fb 100%);
-    color: #28262e;
+    color: #1b231f;
     overflow-x: hidden;
   }
 
@@ -21,7 +21,7 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     --client-action: 52px;
     --client-title-h: 54px;
     --client-title-fz: 30px;
-    --client-title-color: #7b7682;
+    --client-title-color: #67716b;
     --client-border: #dfe4ee;
     --client-card-shadow: 0 18px 48px rgba(36, 43, 66, 0.08);
     width: 100%;
@@ -31,7 +31,7 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     background:
       radial-gradient(circle at 50% -8%, rgba(109, 77, 248, 0.075), transparent 36%),
       linear-gradient(180deg, #ffffff 0%, #f5f6fb 100%);
-    color: #28262e;
+    color: #1b231f;
     overflow-x: hidden;
   }
 
@@ -49,8 +49,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     border: 1px solid #dfe4ee;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.9);
-    color: #7b7682;
-    -webkit-text-fill-color: #7b7682;
+    color: #67716b;
+    -webkit-text-fill-color: #67716b;
     font-size: 12px;
     line-height: 20px;
     font-weight: 900;
@@ -93,8 +93,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     border: 1px solid var(--client-border);
     border-radius: 17px;
     background: rgba(255, 255, 255, 0.94);
-    color: #7b7682;
-    -webkit-text-fill-color: #7b7682;
+    color: #67716b;
+    -webkit-text-fill-color: #67716b;
     box-shadow: 0 16px 36px rgba(36, 43, 66, 0.08);
     display: grid;
     place-items: center;
@@ -125,8 +125,8 @@ html:root[data-app-theme="warm-light"] body #root .fatFoodSearchOverlay .fatFood
     border: 1px solid var(--client-border);
     border-radius: 22px;
     background: #ffffff;
-    color: #28262e;
-    -webkit-text-fill-color: #28262e;
+    color: #1b231f;
+    -webkit-text-fill-color: #1b231f;
     box-shadow: var(--client-card-shadow);
   }
 
@@ -229,7 +229,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     --client-top: 70px;
     --client-title-h: 54px;
     --client-title-fz: 30px;
-    --client-title-color: #7b7682;
+    --client-title-color: #67716b;
     --client-card-shadow: 0 18px 48px rgba(57, 64, 96, 0.1);
     padding-left: var(--client-x);
     padding-right: var(--client-x);
@@ -266,7 +266,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     --render-x: 24px;
     --render-top: 72px;
     --render-title-size: 30px;
-    --render-title-color: #7b7682;
+    --render-title-color: #67716b;
     --render-ink: #161924;
     --render-muted: #71798d;
     --render-accent: #6047f2;
@@ -281,7 +281,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     overflow-x: hidden;
     background:
       radial-gradient(circle at 45% -10%, rgba(111, 79, 255, 0.07), transparent 42%),
-      linear-gradient(180deg, #ffffff 0%, #f7f6f8 100%);
+      linear-gradient(180deg, #ffffff 0%, #f1f3ee 100%);
     color: var(--render-ink);
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
@@ -509,7 +509,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     height: calc(112px + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
     z-index: 35;
-    background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f7f6f8 30%, #f7f6f8 100%);
+    background: linear-gradient(180deg, rgba(246, 247, 252, 0) 0%, #f1f3ee 30%, #f1f3ee 100%);
   }
 }
 
@@ -589,7 +589,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
   html:root[data-app-theme="warm-light"] body #root .profileTabbedPage.clientCorePageCabinet:not(.trainerRolePage) {
     --nutrition-grid-x: 25px;
     --nutrition-grid-title-y: 34px;
-    --nutrition-grid-title-color: #7b7682;
+    --nutrition-grid-title-color: #67716b;
     padding-left: var(--nutrition-grid-x);
     padding-right: var(--nutrition-grid-x);
   }
@@ -602,7 +602,7 @@ html:root[data-app-theme="warm-light"] body #root .profileDashboardPage.profileT
     min-width: 44px;
     padding: 0 6px;
     border-radius: 999px;
-    color: #7b7682;
+    color: #67716b;
     font-size: 12px;
     font-weight: 850;
     line-height: 20px;
@@ -738,8 +738,8 @@ html:root[data-app-theme="warm-light"] body #root .fatSecretPage.nutritionFixedH
    Header, version badge, refresh button, bottom navigation, and gauge drawing are intentionally untouched. */
 @media (max-width: 640px) {
   html:root[data-app-theme="warm-light"] body #root > div.profileDashboardPage.profileDashboardPage.profileTabbedPage.mainDashboardPage.clientCorePage.clientCorePageMain.clientCorePageMain {
-    --main-nutrition-title: #7b7682;
-    --main-nutrition-ink: #28262e;
+    --main-nutrition-title: #67716b;
+    --main-nutrition-ink: #1b231f;
     --main-nutrition-muted: #748096;
     --main-nutrition-soft: #6f778b;
   }

@@ -5,7 +5,9 @@ import { defineBoolean, defineSecret, defineString } from "firebase-functions/pa
 import admin from "firebase-admin";
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
+import { INVITE_PAGE_STYLES, formatInviteAccountLabel } from "./invitePageStyles.js";
 import { getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout } from "./reminderSchedule.js";
+import { isTelegramRemindersEnabled } from "./telegramNotificationPreferences.js";
 import { buildSubscriptionReminderLine, getDueSubscriptionNotifications, resolveSubscriptionNotificationSettings } from "./subscriptionReminders.js";
 import { extractVoiceMetricAmounts, resolveVoiceFoodMetricAmounts } from "./voiceFoodAmounts.js";
 import { getUnsafeVoiceFoodStems, isUnsafeVoiceFoodQuery } from "./voiceFoodSafety.js";
@@ -554,8 +556,8 @@ function escapeHtml(value) {
 }
 
 function renderInviteLinkNoticePageTemplate({ email, login, title, message, statusLabel }) {
-  const accountEmail = escapeHtml(login ? `Логин: ${login}` : email);
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Workout - доступ к приложению</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f4ff;color:#181827;font:16px Arial,sans-serif;padding:20px}.card{width:min(100%,430px);background:#fff;border:1px solid #e4e1f4;border-radius:28px;padding:30px;box-shadow:0 20px 50px #33236b20}.mark{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:#eee9ff;color:#633cff;font-size:27px;font-weight:800}.eyebrow{margin:22px 0 8px;color:#6846ec;font-size:12px;font-weight:800;letter-spacing:.08em}h1{margin:0;font-size:29px;line-height:1.1}p{color:#777386;line-height:1.45}.email{font-weight:700;color:#28243a}.status{margin-top:22px;padding:12px;border-radius:12px;background:#f3f1ff;color:#5536c7;font-size:14px}.login-link{display:block;width:100%;border-radius:15px;margin-top:20px;padding:16px;background:#643cf2;color:#fff;font-size:17px;font-weight:800;text-align:center;text-decoration:none}</style></head><body><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>${title}</h1><p>${message} <span class="email">${accountEmail}</span>.</p><div class="status">${statusLabel}</div><a class="login-link" href="${WORKOUT_APP_URL}">Перейти ко входу</a></main></body></html>`;
+  const accountEmail = escapeHtml(formatInviteAccountLabel({ login, email }));
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Workout - доступ к приложению</title><style>${INVITE_PAGE_STYLES}</style></head><body class="notice"><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>${title}</h1><p>${message} <span class="email">${accountEmail}</span>.</p><div class="status">${statusLabel}</div><a class="login-link" href="${WORKOUT_APP_URL}">Перейти ко входу</a></main></body></html>`;
 }
 
 function renderInviteLinkNoticePage(input) {
@@ -592,10 +594,9 @@ async function isPasswordResetActionActive(actionCode) {
 
 function renderInviteActivationPageTemplate({ actionCode, email, login }) {
   const code = JSON.stringify(String(actionCode || ""));
-  const accountEmail = JSON.stringify(login ? `Логин: ${login}` : String(email || ""));
+  const accountEmail = JSON.stringify(formatInviteAccountLabel({ login, email }));
   const appUrl = JSON.stringify(getWorkoutAppUrl());
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Workout - создание пароля</title><style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f4ff;color:#181827;font:16px Arial,sans-serif;padding:20px}.card{width:min(100%,430px);background:#fff;border:1px solid #e4e1f4;border-radius:28px;padding:30px;box-shadow:0 20px 50px #33236b20}.mark{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:#eee9ff;color:#633cff;font-size:27px;font-weight:800}.eyebrow{margin:22px 0 8px;color:#6846ec;font-size:12px;font-weight:800;letter-spacing:.08em}h1{margin:0;font-size:29px;line-height:1.1}p{color:#777386;line-height:1.45}.email{font-weight:700;color:#28243a}label{display:block;margin-top:24px;font-size:14px;font-weight:700}input{width:100%;margin-top:8px;padding:15px 16px;border:1px solid #dedbea;border-radius:14px;font:17px Arial;outline:none}input:focus{border-color:#6846ec;box-shadow:0 0 0 4px #6846ec17}button,.login-link{width:100%;border:0;border-radius:15px;margin-top:20px;padding:16px;background:#643cf2;color:#fff;font-size:17px;font-weight:800;cursor:pointer;text-align:center;text-decoration:none}button:disabled{opacity:.6;cursor:wait}.login-link{display:none}.login-link.show{display:block}.hint{font-size:13px;margin-top:14px}.status{display:none;margin-top:16px;padding:12px;border-radius:12px;background:#f3f1ff;color:#5536c7;font-size:14px}.status.error{background:#fff0f0;color:#b13b46}.status.show{display:block}</style></head><body><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>Создай пароль</h1><p>Пароль будет привязан к аккаунту <span class="email" id="email"></span>. После сохранения можно войти в Workout.</p><form id="form"><label>Новый пароль<input id="password" type="password" minlength="6" required autocomplete="new-password" placeholder="Минимум 6 символов"></label><label>Повтори пароль<input id="repeat" type="password" minlength="6" required autocomplete="new-password" placeholder="Повтори пароль"></label><button id="submit" type="submit">Сохранить пароль</button></form><div id="status" class="status"></div><a id="login-link" class="login-link" href=${appUrl}>Перейти ко входу</a><p class="hint">Ссылка действует ограниченное время и может быть использована один раз.</p></main><script>const code=${code},email=${accountEmail},apiKey="AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";document.getElementById("email").textContent=email;const form=document.getElementById("form"),status=document.getElementById("status"),button=document.getElementById("submit"),loginLink=document.getElementById("login-link");function show(message,error=false){status.textContent=message;status.className="status show"+(error?" error":"")}form.addEventListener("submit",async e=>{e.preventDefault();const password=document.getElementById("password").value,repeat=document.getElementById("repeat").value;if(password!==repeat)return show("Пароли не совпадают.",true);button.disabled=true;button.textContent="Сохраняю...";try{const r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({oobCode:code,newPassword:password})});if(!r.ok)throw new Error();show("Пароль создан. Теперь можно войти в приложение.");form.hidden=true;loginLink.classList.add("show")}catch{show("Ссылка недействительна или срок её действия истёк. Попроси тренера создать новое приглашение.",true);button.disabled=false;button.textContent="Сохранить пароль"}});</script></body></html>`;
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Workout - создание пароля</title><style>${INVITE_PAGE_STYLES}</style></head><body><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>Создай пароль</h1><p>Пароль будет привязан к аккаунту <span class="email" id="email"></span>. После сохранения можно войти в Workout.</p><form id="form"><label>Новый пароль<input id="password" type="password" minlength="6" required autocomplete="new-password" placeholder="Минимум 6 символов"></label><label>Повтори пароль<input id="repeat" type="password" minlength="6" required autocomplete="new-password" placeholder="Повтори пароль"></label><button id="submit" type="submit">Сохранить пароль</button></form><div id="status" class="status" role="status" aria-live="polite"></div><a id="login-link" class="login-link" href=${appUrl}>Перейти ко входу</a><p class="hint">Ссылка действует ограниченное время и может быть использована один раз.</p></main><script>const code=${code},email=${accountEmail},apiKey="AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";document.getElementById("email").textContent=email;const form=document.getElementById("form"),status=document.getElementById("status"),button=document.getElementById("submit"),loginLink=document.getElementById("login-link");function show(message,error=false){status.textContent=message;status.className="status show"+(error?" error":"")}form.addEventListener("submit",async e=>{e.preventDefault();const password=document.getElementById("password").value,repeat=document.getElementById("repeat").value;if(password!==repeat)return show("Пароли не совпадают.",true);button.disabled=true;button.textContent="Сохраняю...";try{const r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({oobCode:code,newPassword:password})});if(!r.ok)throw new Error();show("Пароль создан. Теперь можно войти в приложение.");form.hidden=true;loginLink.classList.add("show")}catch{show("Ссылка недействительна или срок её действия истёк. Попроси тренера создать новое приглашение.",true);button.disabled=false;button.textContent="Сохранить пароль"}});</script></body></html>`;
 }
 
 function renderInviteActivationPage(input) {
@@ -1704,6 +1705,7 @@ async function getLatestClientResourceDateKey(userRef, collectionName) {
 }
 
 async function sendProgressReminderForUser(userDoc, user, reminder) {
+  if (!isTelegramRemindersEnabled(user)) return { skipped: true };
   const telegram = user.telegram || {};
   const chatId = telegram.chatId || user.telegramChatId || "";
   const telegramUserId = telegram.telegramUserId || user.telegramUserId || "";
@@ -1744,6 +1746,7 @@ async function sendWorkoutReminderForClient(clientId, { test = false, event = nu
   if (!userSnap.exists) throw new Error("User not found");
 
   const user = userSnap.data() || {};
+  if (!test && !isTelegramRemindersEnabled(user)) return { skipped: true };
   const telegram = user.telegram || {};
   const calendar = user.workoutCalendar || {};
   const nextEvent = event || getNextScheduledWorkout(calendar) || {
@@ -1840,6 +1843,7 @@ export const telegramDailyWorkoutReminders = onSchedule(
 
     const jobs = usersSnapshot.docs.map(async (userDoc) => {
       const user = userDoc.data();
+      if (!isTelegramRemindersEnabled(user)) return;
       const calendar = user.workoutCalendar || {};
       const now = new Date();
 

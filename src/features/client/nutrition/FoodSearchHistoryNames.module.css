@@ -92,16 +92,16 @@
 :global(:root[data-app-theme="warm-light"]) .root {
   margin-bottom: 12px;
   padding: 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 20px;
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .title {
   margin-bottom: 9px;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 15px;
   font-weight: 650;
   text-transform: none;
@@ -117,17 +117,17 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .button + .button {
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 0;
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span {
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
   font-size: 14px;
   font-weight: 500;
 }

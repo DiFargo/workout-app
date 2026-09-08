@@ -2,13 +2,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("profile saves show a green confirmation before closing their current screen", async () => {
-  const [notice, measurements, measurementHandlers, photos, questionnaire] = await Promise.all([
+test("profile saves show a clear confirmation before closing their current screen", async () => {
+  const [notice, measurements, measurementHandlers, photos, questionnaire, nutritionStyles] = await Promise.all([
     readFile("src/shared/ui/SaveSuccessNotice.jsx", "utf8"),
     readFile("src/features/client/measurements/MeasurementWizardPage.jsx", "utf8"),
     readFile("src/features/client/profile/profileProgressHandlers.js", "utf8"),
     readFile("src/features/client/profile/ProfileProgressPhotosModal.jsx", "utf8"),
-    readFile("src/features/client/profile/ProfileBodyMetricsSettingsSection.jsx", "utf8")
+    readFile("src/features/client/profile/ProfileBodyMetricsSettingsSection.jsx", "utf8"),
+    readFile("src/features/client/profile/ProfileNutritionModal.module.css", "utf8")
   ]);
 
   assert.match(notice, /duration = 2400/);
@@ -18,4 +19,8 @@ test("profile saves show a green confirmation before closing their current scree
   assert.match(photos, /const saved = String\(status \|\| ""\)\.includes\("сохранены"\)/);
   assert.match(photos, /title="Фото сохранены"/);
   assert.match(questionnaire, /title="Анкета сохранена"/);
+  const idleBackground = nutritionStyles.match(/\.saveButton\s*\{[^}]*background:\s*([^;]+);/)[1];
+  const savedBackground = nutritionStyles.match(/\.saveButton\[data-save-state="saved"\]\s*\{[^}]*background:\s*([^;]+);/)[1];
+  assert.equal(savedBackground, idleBackground, "Successful save keeps the action colour while confirmation is shown");
+  assert.doesNotMatch(nutritionStyles, /\.saveButton\[data-save-state="saved"\][\s\S]*?background-profile-nutrition-modal-save-success/);
 });

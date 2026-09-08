@@ -1,819 +1,91 @@
 .dock {
   position: fixed;
   right: 0;
-  bottom: max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  bottom: 0;
   left: 0;
   display: flex;
   justify-content: center;
   pointer-events: none;
-}
-
-.mainDock,
-.trainingDock {
-  z-index: var(--z-training-nav);
-  isolation: isolate;
-}
-
-.nutritionDock {
   z-index: 90;
-  bottom: 14px;
-  isolation: isolate;
 }
-
-/* The dock floats above the page, but the safe area below it must remain a
-   calm opaque surface. Otherwise a scrollable page can show through the
-   small gap below the rounded bar. */
-:global(:root[data-app-theme="warm-light"]) .mainDock::before,
-:global(:root[data-app-theme="warm-light"]) .nutritionDock::before,
-:global(:root[data-app-theme="warm-light"]) .trainingDock::before {
-  position: absolute;
-  z-index: -1;
-  top: -12px;
-  right: 0;
-  bottom: -36px;
-  left: 0;
-  display: block;
-  content: "";
-  background: #f7f6f8;
-  pointer-events: none;
-}
-
-.main,
-.main * {
+.mainDock, .nutritionDock, .trainingDock { isolation: isolate; }
+.main, .nutrition, .training {
   box-sizing: border-box;
-}
-
-.main {
-  z-index: var(--z-training-nav);
-  width: min(394px, calc(100vw - 16px));
-  max-width: 394px;
-  height: 80px;
-  min-height: 80px;
-  max-height: 80px;
+  width: var(--layout-client-dock-width, 100%);
+  max-width: none;
+  min-height: 70px;
   margin: 0;
-  padding: 6px;
+  /* The home-indicator inset replaces the regular gap, rather than adding to it. */
+  padding: 8px 7px max(12px, env(safe-area-inset-bottom, 0px));
   display: grid;
-  position: relative;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: stretch;
-  justify-content: stretch;
-  gap: 4px;
-  overflow: hidden;
-  border: 1px solid var(--color-nutrition-nav-border);
-  border-radius: var(--radius-training-nav);
-  background: var(--color-nutrition-nav-surface);
-  color: var(--color-nutrition-nav-muted);
-  box-shadow: var(--shadow-nutrition-nav);
-  font-family: inherit;
-  font-size: 16px;
-  line-height: 24px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  border: 0;
+  border-top: 1px solid var(--apple-separator);
+  border-radius: 0;
+  background: var(--apple-surface);
+  color: var(--apple-secondary);
+  box-shadow: none;
   pointer-events: auto;
-  backdrop-filter: var(--filter-training-nav);
-  -webkit-backdrop-filter: var(--filter-training-nav);
-  isolation: isolate;
+  font-family: var(--font-family-sans);
 }
-
-.main > button {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  height: 68px;
-  min-height: 68px;
-  max-height: 68px;
-  margin: 0;
-  padding: 6px 2px 5px;
+.training { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.main > button, .nutrition > button, .training > button {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  overflow: hidden;
-  border: 1px solid transparent;
-  border-radius: var(--radius-training-nav-button);
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+  min-height: 47px;
+  padding: 3px 0;
+  border: 0;
+  border-radius: 10px;
   background: transparent;
-  color: var(--color-nutrition-nav-muted);
-  box-shadow: none;
+  color: inherit;
   font: inherit;
-  line-height: 16px;
-  text-align: center;
   cursor: pointer;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-
-.main > button > span {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  height: 31px;
-  min-height: 31px;
-  max-height: 31px;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: inherit;
-  font-size: 26px;
-  line-height: 31px;
-  filter: grayscale(1) saturate(0) opacity(0.78);
-}
-
-.main > button svg {
-  width: 24px;
-  height: 24px;
-  display: block;
-  color: inherit;
-  stroke: currentColor;
-}
-
-.main > button > strong {
-  width: 100%;
-  max-width: 100%;
-  height: 16px;
-  min-height: 16px;
-  max-height: 16px;
-  margin: 0;
-  display: block;
-  overflow: hidden;
-  color: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.main > button:nth-child(2) > strong,
-.main > button:nth-child(3) > strong {
-  font-size: 10px;
-}
-
-.main > .active {
-  border-color: var(--color-nutrition-nav-active-border);
-  background: var(--color-nutrition-nav-active-surface);
-  color: var(--color-nutrition-nav-active);
-  box-shadow: var(--shadow-nutrition-nav-active);
-}
-
-.main > .active > span {
-  filter: none;
-}
-
-.main > button:focus-visible {
-  outline: 2px solid var(--color-nutrition-nav-active);
-  outline-offset: -3px;
-}
-
-@media (max-width: 979px) {
-  :global(:root[data-app-theme="warm-light"]) .mainDock {
-    bottom: max(8px, env(safe-area-inset-bottom));
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .main {
-    width: min(394px, calc(100vw - 20px));
-    max-width: 394px;
-    height: 76px;
-    min-height: 76px;
-    max-height: 76px;
-    padding: 7px;
-    border-color: var(--color-nutrition-nav-border-compact);
-    background: var(--color-nutrition-nav-surface-compact);
-    box-shadow: var(--shadow-nutrition-nav-compact);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .main > button {
-    height: 60px;
-    min-height: 60px;
-    max-height: 60px;
-    padding: 5px 2px 4px;
-    display: grid;
-    grid-template-rows: 28px 16px;
-    place-items: center;
-    align-content: center;
-    gap: 2px;
-    border-radius: 16px;
-    color: var(--color-nutrition-nav-muted-compact);
-    font-size: 16px;
-    line-height: 13.3333px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .main > button > span {
-    width: 24px;
-    height: 30px;
-    min-height: 30px;
-    max-height: 31px;
-    font-size: 25px;
-    line-height: 25px;
-    filter: none;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .main > button > strong {
-    width: auto;
-    max-width: 100%;
-    overflow: visible;
-    font-size: 11px;
-    font-weight: 900;
-    line-height: 11px;
-    transform: translateY(-1px);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .main > button svg {
-    stroke-width: 2.4px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .main > .active {
-    border-color: var(--color-nutrition-nav-active-border-compact);
-    background: var(--color-nutrition-nav-active-surface-compact);
-    color: var(--color-nutrition-nav-active-compact);
-    box-shadow: var(--shadow-nutrition-nav-active-compact);
-  }
-}
-
-.nutrition,
-.nutrition * {
-  box-sizing: border-box;
-}
-
-.nutrition {
-  z-index: 90;
-  position: relative;
-  width: min(394px, calc(100vw - 16px));
-  max-width: 394px;
-  height: 80px;
-  min-height: 80px;
-  max-height: 80px;
-  margin: 0;
-  padding: 6px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 4px;
-  align-items: stretch;
-  justify-content: stretch;
-  overflow: hidden;
-  color: var(--color-nutrition-page-text);
-  font-family: inherit;
-  font-size: 16px;
-  line-height: 24px;
-  background: var(--color-nutrition-nav-surface);
-  border: 1px solid var(--color-nutrition-nav-border);
-  border-radius: 16px;
-  box-shadow: var(--shadow-nutrition-nav);
-  pointer-events: auto;
-  isolation: isolate;
-}
-
-.nutrition > button {
-  width: auto;
-  min-width: 0;
-  max-width: 100%;
-  height: 68px;
-  min-height: 68px;
-  max-height: 68px;
-  margin: 0;
-  padding: 6px 2px 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  overflow: hidden;
-  color: var(--color-nutrition-nav-muted);
-  font: inherit;
-  line-height: 16px;
-  text-align: center;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 13px;
-  box-shadow: none;
-  cursor: pointer;
-}
-
-.nutrition > button > span {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  height: 31px;
-  min-height: 31px;
-  max-height: 31px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: inherit;
-  font-size: 26px;
-  line-height: 31px;
-  filter: grayscale(1) saturate(0) opacity(0.78);
-}
-
-.nutrition > button svg {
-  display: block;
-  width: 24px;
-  height: 24px;
-  color: inherit;
-  stroke: currentColor;
-}
-
-.nutrition > button > strong {
-  width: 100%;
-  max-width: 100%;
-  height: 16px;
-  min-height: 16px;
-  max-height: 16px;
-  display: block;
-  overflow: hidden;
-  color: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 16px;
-  white-space: nowrap;
-}
-
-.nutrition > .active {
-  color: var(--color-nutrition-nav-active);
-  background: var(--color-nutrition-nav-active-surface);
-  border-color: var(--color-nutrition-nav-active-border);
-  box-shadow: var(--shadow-nutrition-nav-active);
-}
-
-.nutrition > .active > span {
-  filter: none;
-}
-
-:global(:root[data-app-theme="warm-light"]) .nutrition {
-  color: var(--color-heading);
-  background: var(--color-nutrition-nav-surface);
-  border-radius: 20px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-:global(:root[data-app-theme="warm-light"]) .nutrition::after {
-  position: absolute;
-  z-index: 0;
-  right: -18px;
-  bottom: -34px;
-  left: -18px;
-  display: block;
-  height: 42px;
-  content: "";
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f6f8 42%, #f7f6f8 100%);
-}
-
-:global(:root[data-app-theme="warm-light"]) .nutrition > button {
-  position: relative;
-  z-index: 1;
-  border-radius: 15px;
-}
-
-:global(:root[data-app-theme="warm-light"]) .nutrition > button svg {
-  color: var(--color-heading);
-  stroke: currentColor;
-}
-
-@media (max-width: 979px) {
-  :global(:root[data-app-theme="warm-light"]) .nutritionDock {
-    bottom: 8px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition {
-    width: min(394px, calc(100vw - 20px));
-    max-width: 394px;
-    height: 76px;
-    min-height: 76px;
-    max-height: 76px;
-    padding: 7px;
-    color: var(--color-heading);
-    background: var(--color-nutrition-nav-surface-compact);
-    border-color: var(--color-nutrition-nav-border-compact);
-    box-shadow: var(--shadow-nutrition-nav-compact);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition::after {
-    display: none;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button {
-    height: 60px;
-    min-height: 60px;
-    max-height: 60px;
-    padding: 5px 2px 4px;
-    display: grid;
-    grid-template-rows: 28px 16px;
-    place-items: center;
-    gap: 2px;
-    color: var(--color-nutrition-nav-muted-compact);
-    font-size: 16px;
-    line-height: 13.3333px;
-    border-radius: 16px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button > span {
-    width: 24px;
-    height: 30px;
-    min-height: 30px;
-    max-height: 31px;
-    font-size: 25px;
-    line-height: 25px;
-    filter: none;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button > strong {
-    width: auto;
-    max-width: 100%;
-    font-size: 11px;
-    font-weight: 900;
-    line-height: 11px;
-    transform: translateY(-1px);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button svg {
-    stroke-width: 2.4px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > .active {
-    max-height: 68px;
-    color: var(--color-nutrition-nav-active-compact);
-    background: var(--color-nutrition-nav-active-surface-compact);
-    border-color: var(--color-nutrition-nav-active-border-compact);
-    box-shadow: var(--shadow-nutrition-nav-active-compact);
-  }
-}
-
-@media (max-width: 699px) {
-  :global(:root[data-app-theme="warm-light"]) .nutrition {
-    width: calc(100vw - 20px);
-    max-width: none;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button > strong {
-    max-width: none;
-    overflow: visible;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button {
-    align-content: center;
-  }
-}
-
-@media (min-width: 700px) and (max-width: 979px) {
-  :global(:root[data-app-theme="warm-light"]) .nutrition {
-    color: var(--color-nutrition-page-text-wide);
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button > span {
-    height: 31px;
-    min-height: 31px;
-  }
-
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button {
-    grid-template-rows: 31px 16px;
-    -webkit-text-fill-color: var(--color-heading);
-  }
-}
-
-@media (min-width: 980px) {
-  :global(:root[data-app-theme="warm-light"]) .nutrition,
-  :global(:root[data-app-theme="warm-light"]) .nutrition > button {
-    -webkit-text-fill-color: var(--color-heading);
-  }
-}
-
-.training,
-.training * {
-  box-sizing: border-box;
-}
-
-.training {
-  z-index: var(--z-training-nav);
-  position: relative;
-  display: grid;
-  width: min(394px, calc(100vw - 20px));
-  max-width: 394px;
-  height: 80px;
-  min-height: 80px;
-  max-height: 80px;
-  margin: 0;
-  padding: 6px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: stretch;
-  gap: 4px;
-  overflow: hidden;
-  color: var(--color-workout-plan-page-text);
-  background: var(--color-nutrition-nav-surface);
-  border: 1px solid var(--color-nutrition-nav-border);
-  border-radius: var(--radius-training-nav);
-  box-shadow: var(--shadow-nutrition-nav);
-  pointer-events: auto;
-  backdrop-filter: var(--filter-training-nav);
-  -webkit-backdrop-filter: var(--filter-training-nav);
-}
-
-.training > button {
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  height: 68px;
-  min-height: 68px;
-  max-height: 68px;
-  margin: 0;
-  padding: 6px 2px 5px;
-  flex-direction: column;
-  grid-template-rows: 32px 16px;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  overflow: hidden;
-  color: var(--color-nutrition-nav-muted);
-  font: inherit;
-  text-align: center;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-training-nav-button);
-  box-shadow: none;
-  cursor: pointer;
-}
-
-.training > button > span {
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  height: 31px;
-  min-height: 31px;
-  max-height: 31px;
-  margin: 0;
-  align-items: center;
-  justify-content: center;
-  color: inherit;
-  font-size: 26px;
-  line-height: 31px;
-  filter: grayscale(1) saturate(0) opacity(0.78);
-}
-
-.training > button > strong {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: 16px;
-  min-height: 16px;
-  max-height: 16px;
-  margin: 0;
-  overflow: hidden;
-  color: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.training > .active {
-  color: var(--color-nutrition-nav-active);
-  background: var(--color-nutrition-nav-active-surface);
-  border-color: var(--color-nutrition-nav-active-border);
-  box-shadow: var(--shadow-nutrition-nav-active);
-}
-
-.training > .active > span {
-  filter: none;
-}
-
-:global(:root[data-app-theme="warm-light"]) .training {
-  isolation: isolate;
-}
-
-:global(:root[data-app-theme="warm-light"]) .training::after {
-  position: absolute;
-  z-index: 0;
-  right: -18px;
-  bottom: -34px;
-  left: -18px;
-  display: block;
-  height: 42px;
-  content: "";
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(244, 247, 253, 0.94), #f7f6f8 42%, #f7f6f8 100%);
-}
-
-:global(:root[data-app-theme="warm-light"]) .training > button {
-  position: relative;
-  z-index: 1;
-}
-
-:global(:root[data-app-theme="warm-light"]) .training > button > span {
-  color: var(--color-workout-plan-subtitle);
-}
-
-/* Calm iOS client dock. Training-only navigation above keeps its own module rules. */
-:global(:root[data-app-theme="warm-light"]) .mainDock,
-:global(:root[data-app-theme="warm-light"]) .nutritionDock {
-  right: 0;
-  bottom: var(--layout-client-dock-bottom);
-  left: 0;
-  z-index: 90;
-}
-
-:global(:root[data-app-theme="warm-light"]) .main.main,
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition {
-  box-sizing: border-box;
-  width: var(--layout-client-dock-width);
-  max-width: 382px;
-  height: var(--layout-client-dock-height);
-  min-height: var(--layout-client-dock-height);
-  max-height: var(--layout-client-dock-height);
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.96);
-  border-radius: var(--layout-client-dock-radius);
-  background: rgba(255, 255, 255, 0.96);
-  color: #7b7682;
-  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
-  backdrop-filter: blur(20px) saturate(1.15);
-  -webkit-backdrop-filter: blur(20px) saturate(1.15);
-}
-
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition::after { display: none; }
-
-:global(:root[data-app-theme="warm-light"]) .main.main > button,
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button {
-  box-sizing: border-box;
-  width: calc((100% - 12px) / 4);
-  min-width: 0;
-  max-width: 78px;
-  height: var(--layout-client-dock-button-height);
-  min-height: var(--layout-client-dock-button-height);
-  max-height: var(--layout-client-dock-button-height);
-  margin: 0;
-  padding: 6px 0 4px;
-  display: grid;
-  grid-template-rows: 28px 14px;
-  place-items: center;
-  align-content: center;
-  gap: 2px;
-  border: 0;
-  border-radius: var(--layout-client-dock-button-radius);
-  background: transparent;
-  color: #7b7682;
-  box-shadow: none;
-  line-height: 1;
-}
-
-:global(:root[data-app-theme="warm-light"]) .main.main > button > span,
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button > span {
-  width: 28px;
-  height: 28px;
-  min-height: 28px;
-  max-height: 28px;
+.main > button > span, .nutrition > button > span, .training > button > span {
   display: grid;
   place-items: center;
+  width: 23px;
+  height: 23px;
   color: inherit;
-  filter: none;
 }
-
-:global(:root[data-app-theme="warm-light"]) .main.main > button svg,
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button svg {
-  width: 24px;
-  height: 24px;
-  color: inherit;
-  stroke-width: 2;
+.main svg, .nutrition svg, .training svg {
+  display: block;
+  width: 23px;
+  height: 23px;
+  stroke-width: 1.8;
 }
-
-:global(:root[data-app-theme="warm-light"]) .main.main > button > strong,
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > button > strong,
-:global(:root[data-app-theme="warm-light"]) .main.main > button:nth-child(2) > strong,
-:global(:root[data-app-theme="warm-light"]) .main.main > button:nth-child(3) > strong {
-  width: auto;
-  max-width: none;
-  height: 14px;
-  min-height: 14px;
-  max-height: 14px;
-  overflow: visible;
-  color: inherit;
-  font-size: 9.5px;
-  font-weight: 600;
-  line-height: 14px;
-  transform: none;
-}
-
-:global(:root[data-app-theme="warm-light"]) .main.main > .active,
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active {
-  border: 0;
-  background: #f5f2f7;
-  color: #8f7ac8;
-  box-shadow: none;
-}
-
-:global(:root[data-app-theme="warm-light"]) .main.main > .active > strong,
-:global(:root[data-app-theme="warm-light"]) .nutrition.nutrition > .active > strong {
-  font-weight: 700;
-}
-
-/* Training sub-navigation follows the same calm iOS dock geometry. */
-:global(:root[data-app-theme="warm-light"]) .trainingDock.trainingDock {
-  right: 0;
-  bottom: calc(max(0px, 100dvh - 874px) + 14px);
-  left: 0;
-}
-
-:global(:root[data-app-theme="warm-light"]) .training.training {
-  box-sizing: border-box;
-  width: min(382px, calc(100vw - 20px));
-  max-width: 382px;
-  height: 76px;
-  min-height: 76px;
-  max-height: 76px;
-  padding: 6px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: center;
-  gap: 0;
-  overflow: hidden;
-  color: #7b7682;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.96);
-  border-radius: 28px;
-  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
-  backdrop-filter: blur(20px) saturate(1.15);
-  -webkit-backdrop-filter: blur(20px) saturate(1.15);
-}
-
-:global(:root[data-app-theme="warm-light"]) .training.training::after {
-  display: none;
-}
-
-:global(:root[data-app-theme="warm-light"]) .training.training > button {
-  width: 100%;
-  min-width: 0;
-  max-width: 78px;
-  height: 58px;
-  min-height: 58px;
-  max-height: 58px;
-  margin: 0 auto;
-  padding: 6px 0 4px;
-  display: grid;
-  grid-template-rows: 28px 14px;
-  place-items: center;
-  align-content: center;
-  gap: 2px;
-  color: #7b7682;
-  background: transparent;
-  border: 0;
-  border-radius: 20px;
-  box-shadow: none;
-}
-
-:global(:root[data-app-theme="warm-light"]) .training.training > button > span {
-  width: 28px;
-  height: 28px;
-  min-height: 28px;
-  max-height: 28px;
-  display: grid;
-  place-items: center;
-  color: inherit;
-  font-size: 21px;
-  line-height: 28px;
-  filter: grayscale(1) saturate(0) opacity(0.72);
-}
-
-:global(:root[data-app-theme="warm-light"]) .training.training > button > strong {
-  width: auto;
-  max-width: none;
-  height: 14px;
-  min-height: 14px;
-  max-height: 14px;
-  overflow: visible;
+.main strong, .nutrition strong, .training strong {
   color: inherit;
   font-size: 9px;
-  font-weight: 600;
-  line-height: 14px;
+  font-weight: 550;
+  line-height: 12px;
+  white-space: nowrap;
 }
-
-:global(:root[data-app-theme="warm-light"]) .training.training > .active {
-  color: #8f7ac8;
-  background: #f5f2f7;
-  border: 0;
-  box-shadow: none;
+.main > .active, .nutrition > .active, .training > .active {
+  color: var(--apple-action);
+  background: transparent;
 }
-
-:global(:root[data-app-theme="warm-light"]) .training.training > .active > span {
-  filter: none;
+.main > .active, .nutrition > .active { position:relative; }
+.main > .active::before, .nutrition > .active::before { content:""; position:absolute; top:-8px; width:17px; height:3px; border-radius:3px; background:var(--apple-action); }
+.active strong { font-weight: 650; }
+.active svg { stroke-width: 2.25; }
+.main button:focus-visible, .nutrition button:focus-visible, .training button:focus-visible {
+  outline: 2px solid var(--apple-action);
+  outline-offset: -2px;
 }
-
-:global(:root[data-app-theme="warm-light"]) .training.training > .active > strong {
-  font-weight: 700;
+.main button:active, .nutrition button:active, .training button:active {
+  background: var(--apple-surface-muted);
 }
-
 @media (min-width: 700px) {
-  :global(:root[data-app-theme="warm-light"]) .mainDock,
-  :global(:root[data-app-theme="warm-light"]) .nutritionDock,
-  :global(:root[data-app-theme="warm-light"]) .trainingDock.trainingDock {
-    bottom: max(12px, env(safe-area-inset-bottom, 0px));
-  }
+  .dock { bottom: 12px; }
+  .main, .nutrition, .training { border-radius: 0 0 28px 28px; }
 }

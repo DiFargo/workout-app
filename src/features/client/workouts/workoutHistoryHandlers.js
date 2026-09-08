@@ -1,6 +1,7 @@
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 import { getFailedHistoryQueue } from "../../../utils/offlineSyncStorage";
+import { dedupeWorkoutHistory } from "./workoutHistoryDedupe";
 
 const HISTORY_LOAD_LABEL = "Firebase \u00b7 history load";
 const STATUS_NO_USER = "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u0435\u0449\u0451 \u043d\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d";
@@ -73,7 +74,7 @@ export function createWorkoutHistoryHandlers({
         if (!mergedWorkouts.has(key)) mergedWorkouts.set(key, item);
       });
 
-      const nextHistory = Array.from(mergedWorkouts.values());
+      const nextHistory = dedupeWorkoutHistory(Array.from(mergedWorkouts.values()));
       nextHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       setHistory(nextHistory);
@@ -81,7 +82,7 @@ export function createWorkoutHistoryHandlers({
     } catch (err) {
       if (auth.currentUser?.uid !== currentUser.uid) return;
       console.error("History load failed:", err);
-      const pendingWorkouts = getPendingWorkouts(currentUser.uid)
+      const pendingWorkouts = dedupeWorkoutHistory(getPendingWorkouts(currentUser.uid))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
       if (pendingWorkouts.length) setHistory(pendingWorkouts);

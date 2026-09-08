@@ -1,3 +1,4 @@
+import { Check, Clock3, Lightbulb, LoaderCircle, Trophy } from "lucide-react";
 import styles from "./WorkoutFinishStage.module.css";
 
 export default function WorkoutFinishStage({
@@ -26,7 +27,7 @@ export default function WorkoutFinishStage({
     <>
       {showWorkoutSavedCard && (
         <div className={styles.savedCard} data-css-module-scope="workout-finish-stage">
-          <div className={styles.savedCheck}>✓</div>
+          <div className={styles.savedCheck}><Check aria-hidden="true" /></div>
           <strong>Тренировка сохранена</strong>
           <span>{postWorkoutFeedback?.advice || "Отличная работа"}</span>
         </div>
@@ -56,7 +57,7 @@ export default function WorkoutFinishStage({
           </div>
 
           <div className={styles.result}>
-            <span className={styles.trophy} aria-hidden="true">🏆</span>
+            <span className={styles.trophy} aria-hidden="true"><Trophy /></span>
             <div>
               <p>{isWorkoutSaved ? "Отличная работа" : "Проверь результат"}</p>
             </div>
@@ -103,14 +104,14 @@ export default function WorkoutFinishStage({
           )}
 
           <div className={styles.tip}>
-            <span aria-hidden="true">💡</span>
+            <span aria-hidden="true"><Lightbulb /></span>
             <p>{finishAdviceText}</p>
           </div>
 
           {finishSyncText && workoutHistorySyncState !== "synced" && (
             <div className={`${styles.syncStatus} ${styles[workoutHistorySyncState] || ""}`}>
               <span aria-hidden="true">
-                {workoutHistorySyncState === "local" ? "◷" : workoutHistorySyncState === "synced" ? "✓" : "•"}
+                {workoutHistorySyncState === "local" ? <Clock3 /> : workoutHistorySyncState === "synced" ? <Check /> : <LoaderCircle />}
               </span>
               {finishSyncText}
             </div>
@@ -118,18 +119,24 @@ export default function WorkoutFinishStage({
         </div>
       </div>
 
-      <div className={styles.actionPanel} data-css-module-scope="workout-finish-stage">
-        <div className={styles.navigationRow}>
-          <button
-            type="button"
-            className={styles.backButton}
-            data-css-module-control="workout-finish-stage"
-            onClick={goToPreviousExercise}
-            disabled={isSaving}
-            aria-label="Вернуться к последнему упражнению"
-          >
-            <span>Назад</span>
-          </button>
+      <div
+        className={`${styles.actionPanel} ${isWorkoutSaved ? styles.savedActionPanel : ""}`}
+        data-css-module-scope="workout-finish-stage"
+        data-testid="workout-finish-actions"
+      >
+        <div className={`${styles.navigationRow} ${isWorkoutSaved ? styles.savedNavigationRow : ""}`}>
+          {!isWorkoutSaved && (
+            <button
+              type="button"
+              className={styles.backButton}
+              data-css-module-control="workout-finish-stage"
+              onClick={goToPreviousExercise}
+              disabled={isSaving}
+              aria-label="Вернуться к последнему упражнению"
+            >
+              <span>Назад</span>
+            </button>
+          )}
           <button
             type="button"
             className={styles.finishButton}

@@ -1,19 +1,19 @@
-Always read AGENTS.md before making any changes.
+# Codex working contract
 
-Rules:
+Read `AGENTS.md` before making changes; it is the authoritative project rulebook. Use `index.md` and `project_map.md` to find the narrowest relevant context.
 
-1. Work only from the latest stable version.
-2. Never rollback functionality.
-3. Never rewrite App.jsx unless absolutely necessary.
-4. Use minimal diffs.
-5. Preserve Firebase.
-6. Preserve Auth.
-7. Preserve Trainer Dashboard.
-8. Preserve Admin Panel.
-9. Preserve Nutrition.
-10. Preserve Measurements.
-11. Preserve Telegram Integration.
-12. Run build validation before completing.
-13. Increment APP_VERSION after every completed task.
-14. Return ready-to-use files.
-15. Never remove existing features without explicit approval.
+## Execution loop
+
+1. Translate the user's request into a short outcome and acceptance checklist.
+2. Inspect only the mapped module, its imports, colocated styles and focused tests.
+3. Make the smallest safe diff and preserve protected product systems.
+4. Verify with checks proportional to the change. Build all runtime changes; use focused tests and live smoke checks where the risk warrants them.
+5. Publish only when the user asks, then verify the published surface before reporting completion.
+
+## Decision rules
+
+- A clear request to change, fix, build or publish is authorization to carry that work through to completion.
+- Make routine assumptions from existing product context. Ask only for a choice that materially affects the result, requires new authority, or cannot be safely inferred.
+- Explicit user instructions determine the requested outcome within system, security and permission constraints.
+- If a skill or instruction file causes a pause or conflicts with the task, cite the exact file and rule in the response.
+- Documentation-only work does not change `APP_VERSION`; a completed runtime release does.

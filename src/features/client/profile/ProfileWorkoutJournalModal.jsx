@@ -21,7 +21,7 @@ export default function ProfileWorkoutJournalModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-testid="profile-workout-journal-overlay"
       data-css-module-scope="profile-workout-journal"
       role="presentation"
@@ -33,6 +33,7 @@ export default function ProfileWorkoutJournalModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-cabinet-sheet="true"
         aria-labelledby="cabinetWorkoutJournalTitle"
         onClick={(event) => event.stopPropagation()}
       >
@@ -47,6 +48,7 @@ export default function ProfileWorkoutJournalModal({
           actions={(
             <ProfileModalCloseButton
               testId="profile-workout-journal-close"
+              className={styles.closeButton}
               ariaLabel="Закрыть тренировки"
               onClick={onClose}
             />

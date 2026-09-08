@@ -212,6 +212,28 @@ test("calendar keeps only slots for the active assigned workout program", () => 
   ]);
 
   assert.deepEqual(calendar.plannedWorkouts.map((item) => item.workoutId), ["new_1", "new_2"]);
-  assert.deepEqual(calendar.scheduledDates, ["2026-06-20", "2026-06-22"]);
+  assert.deepEqual(calendar.scheduledDates, ["2026-06-20", "2026-06-24"]);
   assert.equal(calendar.assignedProgramUpdatedAt, "assignment_v2");
+});
+
+test("calendar repairs duplicate planned dates without changing workout order", () => {
+  const calendar = getWorkoutScheduleCalendarForWorkouts({
+    scheduledDates: ["2026-09-01", "2026-09-03", "2026-09-06", "2026-09-08"],
+    plannedWorkouts: [
+      { workoutId: "w1", order: 1, date: "2026-09-01", status: "planned" },
+      { workoutId: "w2", order: 2, date: "2026-09-03", status: "planned" },
+      { workoutId: "w3", order: 3, date: "2026-09-06", status: "planned" },
+      { workoutId: "w4", order: 4, date: "2026-09-06", status: "planned" }
+    ]
+  }, [
+    { id: "w1", name: "Тренировка 1" },
+    { id: "w2", name: "Тренировка 2" },
+    { id: "w3", name: "Тренировка 3" },
+    { id: "w4", name: "Тренировка 4" }
+  ]);
+
+  assert.deepEqual(calendar.plannedWorkouts.map((item) => item.date), [
+    "2026-09-01", "2026-09-03", "2026-09-06", "2026-09-08"
+  ]);
+  assert.deepEqual(calendar.scheduledDates, ["2026-09-01", "2026-09-03", "2026-09-06", "2026-09-08"]);
 });

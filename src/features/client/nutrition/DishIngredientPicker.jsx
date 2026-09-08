@@ -7,6 +7,7 @@ import {
   getMyFoodsArray,
   normalizeNutritionFood
 } from "../../../utils/nutritionFoodModel";
+import { Plus, Search, X } from "lucide-react";
 import styles from "./DishIngredientPicker.module.css";
 
 function getIngredientSourceLabel(food = {}) {
@@ -133,6 +134,9 @@ export default function DishIngredientPicker({
             onClick={(event) => event.stopPropagation()}
           >
             <div className={styles.pickerHeader} data-testid="dish-ingredient-picker-header">
+              <strong id="dish-ingredient-picker-title" className={styles.pickerTitle} data-css-module-text="dish-ingredient-picker">
+                Добавить ингредиент
+              </strong>
               <button
                 type="button"
                 className={styles.closeButton}
@@ -141,15 +145,12 @@ export default function DishIngredientPicker({
                 onClick={onClose}
                 aria-label="Закрыть выбор ингредиента"
               >
-                ×
+                <X aria-hidden="true" />
               </button>
-              <strong id="dish-ingredient-picker-title" className={styles.pickerTitle} data-css-module-text="dish-ingredient-picker">
-                Добавить ингредиент
-              </strong>
             </div>
 
             <div className={styles.searchBox} data-testid="dish-ingredient-search">
-              <span className={styles.searchIcon} aria-hidden="true" data-css-module-text="dish-ingredient-picker">⌕</span>
+              <span className={styles.searchIcon} aria-hidden="true" data-css-module-text="dish-ingredient-picker"><Search /></span>
               <input
                 className={styles.searchInput}
                 data-css-module-control="dish-ingredient-picker"
@@ -202,7 +203,7 @@ export default function DishIngredientPicker({
                         <strong className={styles.resultTitle} data-css-module-text="dish-ingredient-picker">{search.trim()}</strong>
                         <small className={styles.resultMeta} data-css-module-text="dish-ingredient-picker">Добавить вручную · КБЖУ можно уточнить позже</small>
                       </div>
-                      <em className={styles.resultAction} aria-hidden="true" data-css-module-text="dish-ingredient-picker">＋</em>
+                      <em className={styles.resultAction} aria-hidden="true" data-css-module-text="dish-ingredient-picker"><Plus /></em>
                     </button>
                   ) : (
                     <div className={styles.empty} data-testid="dish-ingredient-empty" data-css-module-text="dish-ingredient-picker">
@@ -236,7 +237,7 @@ export default function DishIngredientPicker({
                         <strong className={styles.resultTitle} data-css-module-text="dish-ingredient-picker">{food.name}</strong>
                         <small className={styles.resultMeta} data-css-module-text="dish-ingredient-picker">{getIngredientSourceLabel(food)} · {Math.round(Number(food.calories) || 0)} ккал</small>
                       </div>
-                      <em className={styles.resultAction} aria-hidden="true" data-css-module-text="dish-ingredient-picker">＋</em>
+                      <em className={styles.resultAction} aria-hidden="true" data-css-module-text="dish-ingredient-picker"><Plus /></em>
                     </button>
                   ))}
                 </>
@@ -248,7 +249,7 @@ export default function DishIngredientPicker({
 
       {pendingIngredient && (
         <div
-          className={styles.confirmOverlay}
+          className={styles.confirmOverlay} data-modal-backdrop="true"
           data-css-module-scope="dish-ingredient-picker"
           data-testid="dish-ingredient-confirm"
         >

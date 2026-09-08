@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Pause, Pencil, Play } from "lucide-react";
+import { Check, Pencil } from "lucide-react";
+import { Pause, Play } from "lucide";
+import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import {
   createWorkoutCountdownDeadline,
   getWorkoutCountdownRemainingSeconds
@@ -269,15 +271,6 @@ export default function WorkoutExerciseSets({
     closeEditModal();
   }
 
-  function handleSetRowKeyDown(event, index) {
-    if (event.key !== "Enter" && event.key !== " ") {
-      return;
-    }
-
-    event.preventDefault();
-    toggleSetCompleted(index);
-  }
-
   function toggleSetCompleted(index) {
     if (activeTimedSet?.index === index) {
       setActiveTimedSet(null);
@@ -428,11 +421,7 @@ export default function WorkoutExerciseSets({
               data-testid="workout-exercise-set-row"
               className={`${styles.row} ${set.completed ? styles.completed : ""} ${isTimedSet ? styles.timedRow : ""}`}
               key={`${exercise.id}:${index}`}
-              role="button"
-              tabIndex={0}
               onClick={() => toggleSetCompleted(index)}
-              onKeyDown={(event) => handleSetRowKeyDown(event, index)}
-              aria-pressed={set.completed}
             >
               <span
                 className={styles.number}
@@ -467,7 +456,11 @@ export default function WorkoutExerciseSets({
                         ? `Продолжить таймер подхода ${index + 1}`
                         : `Запустить таймер подхода ${index + 1} на ${formatTimedSetDuration(durationSeconds)}`}
                   >
-                    {isTimedSetRunning ? <Pause size={16} fill="currentColor" aria-hidden="true" /> : <Play size={16} fill="currentColor" aria-hidden="true" />}
+                    <MorphingIcon
+                      icon={isTimedSetRunning ? Pause : Play}
+                      size={16}
+                      data-icon-state={isTimedSetRunning ? "pause" : "play"}
+                    />
                   </button>
                 ) : (
                   <button
@@ -507,7 +500,7 @@ export default function WorkoutExerciseSets({
       </div>
 
       {editingSet && (
-        <div className={styles.modalBackdrop} role="presentation" onClick={closeEditModal}>
+        <div className={styles.modalBackdrop} data-modal-backdrop="true" role="presentation" onClick={closeEditModal}>
           <div
             data-testid="workout-set-edit-modal"
             className={styles.modal}

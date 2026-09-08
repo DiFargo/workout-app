@@ -5,35 +5,35 @@
 body[data-app-theme="warm-light"] {
   color-scheme: light;
 
-  /* Legacy aliases resolve to the active light lavender system. */
-  --warm-yellow: #8f7ac8;
-  --warm-yellow-soft: rgba(143, 122, 200, 0.18);
-  --warm-yellow-muted: #806bb6;
-  --warm-yellow-deep: #806bb6;
+  /* Legacy aliases resolve to the active calm wellness system. */
+  --warm-yellow: #2f7d68;
+  --warm-yellow-soft: rgba(47, 125, 104, 0.18);
+  --warm-yellow-muted: #286e5b;
+  --warm-yellow-deep: #286e5b;
 
-  --bg: #f7f6f8;
+  --bg: #f1f3ee;
   --card: #ffffff;
-  --card-2: #f5f2f7;
-  --line: #efebf3;
-  --text: #28262e;
-  --muted: #7b7682;
+  --card-2: #f7f8f5;
+  --line: #e0e6e0;
+  --text: #1b231f;
+  --muted: #67716b;
 
-  --accent: #8f7ac8;
-  --accent-2: #806bb6;
+  --accent: #2f7d68;
+  --accent-2: #286e5b;
   --danger: #b36e72;
   --success: #718879;
 
   --warm-page:
-    radial-gradient(circle at 50% -10%, rgba(143, 122, 200, 0.12), transparent 38%),
-    linear-gradient(180deg, #f7f6f8 0%, #f5f2f7 100%);
+    radial-gradient(circle at 50% -10%, rgba(47, 125, 104, 0.12), transparent 38%),
+    linear-gradient(180deg, #f1f3ee 0%, #f7f8f5 100%);
 
   --warm-card: #ffffff;
   --warm-card-strong: #ffffff;
-  --warm-dark-card: #f5f2f7;
+  --warm-dark-card: #f7f8f5;
 
-  --warm-shadow-sm: 0 8px 20px rgba(40, 38, 46, 0.08);
-  --warm-shadow-md: 0 14px 34px rgba(40, 38, 46, 0.11), inset 0 1px 0 rgba(255,255,255,0.7);
-  --warm-shadow-lg: 0 24px 70px rgba(40, 38, 46, 0.14), inset 0 1px 0 rgba(255,255,255,0.74);
+  --warm-shadow-sm: 0 8px 20px rgba(27, 35, 31, 0.08);
+  --warm-shadow-md: 0 14px 34px rgba(27, 35, 31, 0.11), inset 0 1px 0 rgba(255,255,255,0.7);
+  --warm-shadow-lg: 0 24px 70px rgba(27, 35, 31, 0.14), inset 0 1px 0 rgba(255,255,255,0.74);
 
   --food-green: var(--accent);
   --food-text: var(--text);
@@ -228,7 +228,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminSaveBtn,
 :root[data-app-theme="warm-light"] .themeSwitchBtn {
   background: linear-gradient(180deg, #f6e46c 0%, #d7b73e 100%);
-  color: #28262e;
+  color: #1b231f;
   border-color: rgba(72, 58, 29, 0.14);
   box-shadow: 0 10px 22px rgba(151, 119, 35, 0.18), inset 0 1px 0 rgba(255,255,255,0.46);
 }
@@ -298,7 +298,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatDayCell.done,
 :root[data-app-theme="warm-light"] .fatDayCell.checked {
   background: linear-gradient(180deg, #f7e965 0%, #d6bd44 100%);
-  color: #28262e;
+  color: #1b231f;
 }
 
 /* calories grid / summary */
@@ -392,7 +392,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .startWorkoutIcon,
 :root[data-app-theme="warm-light"] .saveToastIcon {
   background: linear-gradient(180deg, rgba(244,224,100,0.42), rgba(244,224,100,0.18));
-  color: #28262e;
+  color: #1b231f;
   border-color: rgba(72, 58, 29, 0.12);
 }
 
@@ -540,7 +540,7 @@ body[data-app-theme="warm-light"],
 
 :root[data-app-theme="warm-light"] .fatSecretPage,
 :root[data-app-theme="warm-light"] .fatSecretPage *:not([data-css-module-scope]):not([data-css-module-scope] *) {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .nutritionCaloriesRenderGrid span.isActive {
@@ -560,13 +560,13 @@ body[data-app-theme="warm-light"],
 
 
 :root[data-app-theme="warm-light"] {
-  --text: #7b7682;
+  --text: #67716b;
 }
 
 /* unify ALL text on nutrition page */
 :root[data-app-theme="warm-light"] .fatSecretPage,
 :root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatMealAdd):not(.fatPlusBtn):not([data-css-module-scope]):not([data-css-module-scope] *) {
-  color: #7b7682;
+  color: #67716b;
 }
 
 /* bright yellow calories grid */
@@ -668,8 +668,8 @@ body[data-app-theme="warm-light"],
 /* all nutrition-page text unified to sample color */
 :root[data-app-theme="warm-light"] .fatSecretPage,
 :root[data-app-theme="warm-light"] .fatSecretPage *:not(.fatPlusBtn):not(.mealPlusExact):not([data-css-module-scope]):not([data-css-module-scope] *) {
-  color: #7b7682;
-  -webkit-text-fill-color: #7b7682;
+  color: #67716b;
+  -webkit-text-fill-color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatPlusBtn,
@@ -787,7 +787,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .summaryDonut {
   background:
     conic-gradient(
-      #8f7ac8 0deg calc(var(--carbs-angle, 120deg)),
+      #2f7d68 0deg calc(var(--carbs-angle, 120deg)),
       #c7945a calc(var(--carbs-angle, 120deg)) calc(var(--fat-angle, 240deg)),
       #b36e72 calc(var(--fat-angle, 240deg)) 360deg
     );
@@ -806,7 +806,7 @@ body[data-app-theme="warm-light"],
 }
 
 :root[data-app-theme="warm-light"] .summaryMacroLegend i.carbs {
-  background: #8f7ac8;
+  background: #2f7d68;
 }
 
 :root[data-app-theme="warm-light"] .summaryMacroLegend i.fat {
@@ -825,7 +825,7 @@ body[data-app-theme="warm-light"],
 
   background:
     conic-gradient(
-      #8f7ac8 0deg 165deg,
+      #2f7d68 0deg 165deg,
       #c7945a 165deg 320deg,
       #b36e72 320deg 360deg
     );
@@ -849,7 +849,7 @@ body[data-app-theme="warm-light"],
 
   background:
     conic-gradient(
-      #8f7ac8 0deg 165deg,
+      #2f7d68 0deg 165deg,
       #c7945a 165deg 320deg,
       #b36e72 320deg 360deg
     );
@@ -885,8 +885,8 @@ body[data-app-theme="warm-light"],
 
 
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon {
-  color: #7b7682;
-  -webkit-text-fill-color: #7b7682;
+  color: #67716b;
+  -webkit-text-fill-color: #67716b;
   background: transparent;
   border: 0;
   box-shadow: none;
@@ -894,8 +894,8 @@ body[data-app-theme="warm-light"],
 
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon::before,
 :root[data-app-theme="warm-light"] .fatSecretPage .nutritionQuickSearchIcon::after {
-  border-color: #7b7682;
-  background: #7b7682;
+  border-color: #67716b;
+  background: #67716b;
   box-shadow: none;
 }
 
@@ -912,8 +912,8 @@ body[data-app-theme="warm-light"],
   border: 0;
   outline: 0;
   box-shadow: none;
-  color: #7b7682;
-  -webkit-text-fill-color: #7b7682;
+  color: #67716b;
+  -webkit-text-fill-color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .fatSecretPage .fatMealToggle::before,
@@ -950,7 +950,7 @@ body[data-app-theme="warm-light"],
   outline: 0;
   box-shadow: none;
   border-radius: 0;
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .fatFoodArrow::before,
@@ -1018,9 +1018,9 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .warmupExerciseCard,
 :root[data-app-theme="warm-light"] .exerciseCard,
 :root[data-app-theme="warm-light"] .workoutCompletionCard {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .warmupExerciseIntro,
@@ -1030,9 +1030,9 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .exerciseSetRow,
 :root[data-app-theme="warm-light"] .workoutCompletionStats,
 :root[data-app-theme="warm-light"] .workoutCompletionProgress {
-  border-color: #efebf3;
-  background: #f7f6f8;
-  color: #28262e;
+  border-color: #e0e6e0;
+  background: #f1f3ee;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .warmupExerciseItem::after,
@@ -1043,62 +1043,62 @@ body[data-app-theme="warm-light"],
 
 :root[data-app-theme="warm-light"] .exerciseSetRow input,
 :root[data-app-theme="warm-light"] .workoutRunPage input {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: inset 0 1px 2px rgba(47, 54, 91, 0.04);
 }
 
 :root[data-app-theme="warm-light"] .exerciseSetRow input::placeholder,
 :root[data-app-theme="warm-light"] .workoutRunPage input::placeholder {
-  color: #7b7682;
+  color: #67716b;
 }
 
 
 /* Food search, product and editor */
 :root[data-app-theme="warm-light"] .fatFoodSearchScreenPremium,
 :root[data-app-theme="warm-light"] .nutritionCreateChoiceSheet {
-  border-color: #efebf3;
-  background: #f7f6f8;
-  color: #28262e;
+  border-color: #e0e6e0;
+  background: #f1f3ee;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: 0 8px 24px rgba(54, 62, 109, 0.07);
 }
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchInputWrapPremium input::placeholder {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchHistoryNameButton {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .fatSearchHistoryNameButton:active {
-  border-color: #8f7ac8;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #2f7d68;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 :root[data-app-theme="warm-light"] .foodEditMealSelector,
 :root[data-app-theme="warm-light"] .foodEditSegmentRow button.active {
-  border-color: #8f7ac8;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #2f7d68;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 :root[data-app-theme="warm-light"] .foodEditMacroValue {
-  color: #28262e;
+  color: #1b231f;
 }
 
 /* Shared bottom navigation and action bars */
@@ -1110,7 +1110,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .exerciseBottomPanel,
 :root[data-app-theme="warm-light"] .workoutCompletionBottomPanel,
 :root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: rgba(255, 255, 255, 0.96);
   box-shadow:
     0 -10px 32px rgba(53, 61, 105, 0.11),
@@ -1134,9 +1134,9 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .fatSearchBottomBar button.active,
 :root[data-app-theme="warm-light"] .fatSearchBottomBarFive button.active,
 :root[data-app-theme="warm-light"] .adminV3Nav.adminV3BottomBar button.active {
-  border-color: #e1defb;
-  background: #f7f6f8;
-  color: #806bb6;
+  border-color: #cde6da;
+  background: #f1f3ee;
+  color: #286e5b;
 }
 
 
@@ -1235,7 +1235,7 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] input:not([data-css-module-control]),
 :root[data-app-theme="warm-light"] select:not([data-css-module-control]),
 :root[data-app-theme="warm-light"] textarea:not([data-css-module-control]) {
-  caret-color: #806bb6;
+  caret-color: #286e5b;
 }
 
 :root[data-app-theme="warm-light"] .profileDashboardPage input,
@@ -1244,16 +1244,16 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminV3Shell input,
 :root[data-app-theme="warm-light"] .adminV3Shell select,
 :root[data-app-theme="warm-light"] .adminV3Shell textarea {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .profileDashboardPage input::placeholder,
 :root[data-app-theme="warm-light"] .profileDashboardPage textarea::placeholder,
 :root[data-app-theme="warm-light"] .adminV3Shell input::placeholder,
 :root[data-app-theme="warm-light"] .adminV3Shell textarea::placeholder {
-  color: #7b7682;
+  color: #67716b;
 }
 
 /* Trainer and admin surfaces */
@@ -1268,24 +1268,24 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminV3KpiGrid > *,
 :root[data-app-theme="warm-light"] .adminClientCardCrm,
 :root[data-app-theme="warm-light"] .adminCalendarPanel {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08);
 }
 
 :root[data-app-theme="warm-light"] .adminV3Sidebar button,
 :root[data-app-theme="warm-light"] .adminV3Tabs button,
 :root[data-app-theme="warm-light"] .adminV3Filters button {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .adminV3Sidebar button.active,
 :root[data-app-theme="warm-light"] .adminV3Tabs button.active,
 :root[data-app-theme="warm-light"] .adminV3Filters button.active {
-  border-color: #dedafb;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #cde6da;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 :root[data-app-theme="warm-light"] .adminFocusValue,
@@ -1293,20 +1293,20 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .adminDashboardMiniName,
 :root[data-app-theme="warm-light"] .adminV3PanelHead strong,
 :root[data-app-theme="warm-light"] .adminV3ProfileCard h3 {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] .adminFocusLabel,
 :root[data-app-theme="warm-light"] .adminDashboardMiniDesc,
 :root[data-app-theme="warm-light"] .adminV3ProfileCard p,
 :root[data-app-theme="warm-light"] .adminV3ProfileCard small {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] .adminDashboardMiniStatus,
 :root[data-app-theme="warm-light"] .adminV3OpenEditor,
 :root[data-app-theme="warm-light"] .adminSummaryLink small {
-  color: #806bb6;
+  color: #286e5b;
 }
 
 
@@ -1314,21 +1314,21 @@ body[data-app-theme="warm-light"],
 :root[data-app-theme="warm-light"] .menuRefreshIconBtn,
 :root[data-app-theme="warm-light"] .backIconBtn,
 :root[data-app-theme="warm-light"] .universalFixedBackPointer {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: rgba(255, 255, 255, 0.94);
   color: #434b61;
   box-shadow: 0 8px 22px rgba(55, 64, 112, 0.09);
 }
 
 :root[data-app-theme="warm-light"] .appVersionBadge {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] button:focus-visible,
 :root[data-app-theme="warm-light"] input:not([data-css-module-control]):focus-visible,
 :root[data-app-theme="warm-light"] textarea:focus-visible,
 :root[data-app-theme="warm-light"] select:focus-visible {
-  outline: 3px solid rgba(90, 73, 223, 0.2);
+  outline: 3px solid rgba(47, 125, 104, 0.24);
   outline-offset: 2px;
 }
 

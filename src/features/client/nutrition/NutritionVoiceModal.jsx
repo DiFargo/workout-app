@@ -1,9 +1,17 @@
-import { LoaderCircle, Mic, RefreshCw, Trash2, X } from "lucide-react";
+import { LoaderCircle, Trash2, X } from "lucide-react";
+import { Mic, RefreshCw, Square } from "lucide";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
+import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import { isNutritionVoiceSearchFailure } from "./nutritionVoiceFeedback";
 import { getNutritionVoiceItemEditDraft } from "./nutritionVoiceItemEditor";
 import styles from "./NutritionVoiceModal.module.css";
+
+const VOICE_METER_BARS = Array.from({ length: 25 }, (_, index) => ({
+  strength: 0.28 + Math.sin(Math.PI * (index + 1) / 26) ** 1.6 * 0.72,
+  delay: `${-index * 57}ms`,
+  duration: `${780 + (index % 7) * 65}ms`
+}));
 
 function getVoiceCopy({ analyzing, recording, feedback, hasAddedItems, hasReviewItems, hasSearchFailure }) {
   if (analyzing) {
@@ -107,6 +115,9 @@ export default function NutritionVoiceModal({
   const isRecording = voiceState === "recording";
   const isAnalyzing = voiceState === "analyzing";
   const normalizedAudioLevel = Math.min(1, Math.max(0, Number(audioLevel) || 0));
+  const meterLevel = isRecording && normalizedAudioLevel > 0.035
+    ? normalizedAudioLevel ** 0.7
+    : 0;
   const voiceResultItems = voiceState === "idle" && Array.isArray(voiceAddedItems)
     ? voiceAddedItems
     : [];
@@ -244,13 +255,22 @@ export default function NutritionVoiceModal({
             : hasSearchFailure
               ? "Повторить голосовой поиск"
             : isRecording
-              ? "Нажмите, чтобы закончить запись"
-              : "Нажмите, чтобы начать запись"}
+              ? "Завершить запись"
+              : "Начать запись"}
         >
           <span className={styles.recordIcon} aria-hidden="true">
-            {isAnalyzing ? <LoaderCircle className={styles.spinner} /> : hasSearchFailure ? <RefreshCw /> : <Mic />}
+            {isAnalyzing
+              ? <LoaderCircle className={styles.spinner} />
+              : (
+                <MorphingIcon
+                  icon={hasSearchFailure ? RefreshCw : isRecording ? Square : Mic}
+                  data-icon-state={hasSearchFailure ? "retry" : isRecording ? "recording" : "idle"}
+                />
+              )}
           </span>
-          <span className={styles.recordLabel}>{copy.holdLabel}</span>
+          <span className={styles.recordLabel}>{anchored
+            ? isAnalyzing ? "Ищем продукты…" : isRecording ? "Завершить запись" : "Начать запись"
+            : copy.holdLabel}</span>
         </button>
       </div>
     );
@@ -261,25 +281,23 @@ export default function NutritionVoiceModal({
   return createPortal(
     <div
       className={styles.overlay}
+      data-modal-layer="true"
       data-testid="nutrition-voice-modal"
       data-css-module-scope="nutrition-voice-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label={useAnchoredCaptureSurface ? "Голосовой ввод" : undefined}
-      aria-labelledby={useAnchoredCaptureSurface ? undefined : "nutritionVoiceModalTitle"}
-      aria-describedby={useAnchoredCaptureSurface ? undefined : "nutritionVoiceModalDescription"}
-      data-modal-surface="true"
+      data-fullscreen={!useAnchoredCaptureSurface}
+      role="presentation"
     >
       <button
         type="button"
-        className={styles.backdrop}
+        className={styles.backdrop} data-modal-backdrop="true"
         data-testid="nutrition-voice-backdrop"
         onClick={cancelAndClose}
         aria-label="Отменить голосовой ввод"
       />
 
       {useAnchoredCaptureSurface ? (
-        <section className={styles.anchoredSurface} data-testid="nutrition-voice-sheet" style={originStyle}>
+        <section className={styles.anchoredSurface} data-testid="nutrition-voice-sheet" style={originStyle} role="dialog" aria-modal="true" aria-label="Голосовой ввод" data-modal-surface="true">
+          <div className={styles.anchoredGrabber} aria-hidden="true" />
           <button
             type="button"
             className={`${styles.closeButton} ${styles.anchoredCloseButton}`}
@@ -289,21 +307,57 @@ export default function NutritionVoiceModal({
           >
             <X aria-hidden="true" />
           </button>
+          <p className={styles.anchoredEyebrow}>Голосовой поиск</p>
+          <h2 className={styles.anchoredTitle}>
+            {isRecording ? "Слушаю вас" : isAnalyzing ? "Ищем продукты" : "Что вы съели?"}
+          </h2>
+          <p className={styles.anchoredDescription}>
+            {isRecording
+              ? "Назовите продукты и количество. Например: «200 граммов курицы и рис»."
+              : isAnalyzing
+                ? "Сопоставляем запись с продуктами из базы."
+                : "Нажмите кнопку и назовите продукты с количеством."}
+          </p>
+          <div className={styles.captureMeter} data-recording={isRecording} data-speech={meterLevel > 0} data-testid="nutrition-voice-meter">
+            <div className={styles.captureBars} aria-hidden="true">
+              {VOICE_METER_BARS.map((bar, index) => (
+                <span
+                  key={index}
+                  className={styles.captureBar}
+                  style={{
+                    transform: `scaleY(${0.08 + meterLevel * 0.92 * bar.strength})`,
+                    opacity: 0.4 + bar.strength * 0.6,
+                    "--voice-bar-delay": bar.delay,
+                    "--voice-bar-duration": bar.duration
+                  }}
+                ><i className={styles.captureBarStroke} /></span>
+              ))}
+            </div>
+            <span className={styles.captureStatus} role="status">
+              {isRecording ? "Запись идёт" : isAnalyzing ? "Обрабатываем запись" : "Готов к записи"}
+            </span>
+          </div>
           {renderRecordControl(true)}
           <p className={styles.anchoredHint} data-testid="nutrition-voice-hint" aria-live="polite">
             {isRecording
-              ? "Запись идёт. Нажмите кнопку ещё раз, когда закончите. До 1 минуты."
+              ? "Нажмите, когда закончите говорить"
               : isAnalyzing
-                ? "Идёт поиск продуктов…"
-                : "Нажмите, чтобы начать запись"}
+                ? "Результат появится в этом окне"
+                : "Продукты и порции можно будет проверить"}
           </p>
         </section>
       ) : (
-      <section
-        className={styles.sheet}
-        data-testid="nutrition-voice-sheet"
-        data-search-failure={hasSearchFailure}
-      >
+        <section
+          className={styles.sheet}
+          data-testid="nutrition-voice-sheet"
+          data-search-failure={hasSearchFailure}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="nutritionVoiceModalTitle"
+          aria-describedby="nutritionVoiceModalDescription"
+          data-modal-surface="true"
+        >
+        <header className={styles.resultHeader}>
         <div className={styles.grabber} aria-hidden="true" />
         <button
           type="button"
@@ -316,16 +370,16 @@ export default function NutritionVoiceModal({
         </button>
 
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
-        <h2 className={styles.title} id="nutritionVoiceModalTitle">{copy.title}</h2>
-        <p className={styles.description} id="nutritionVoiceModalDescription">{copy.description}</p>
+        <h2 className={styles.title} id="nutritionVoiceModalTitle">{editingItem ? "Редактировать продукт" : copy.title}</h2>
+        <p className={styles.description} id="nutritionVoiceModalDescription">{editingItem ? "Уточните порцию и состав, затем сохраните изменения." : copy.description}</p>
+        </header>
 
+        <div className={styles.resultBody} data-testid="nutrition-voice-results">
         {editingItem && editingDraft ? (
           <section className={styles.itemEditor} aria-label={`Редактировать ${editingItem.name}`}>
             <button type="button" className={styles.editorBackButton} onClick={closeItemEditor}>
               ← К списку
             </button>
-            <p className={styles.itemEditorEyebrow}>ПРОВЕРЬТЕ КБЖУ И ПОРЦИЮ</p>
-            <h3 className={styles.itemEditorTitle}>Редактировать продукт</h3>
             <label className={styles.itemEditorField}>
               <span>Название</span>
               <input
@@ -377,10 +431,7 @@ export default function NutritionVoiceModal({
               />
               <span>Добавить в мою базу</span>
             </label>
-            {editingError ? <p className={styles.itemEditorError}>{editingError}</p> : null}
-            <button type="button" className={styles.itemEditorSaveButton} onClick={saveItemEditor}>
-              Сохранить изменения
-            </button>
+            {editingError ? <p className={styles.itemEditorError} role="alert">{editingError}</p> : null}
           </section>
         ) : hasAddedItems ? (
           <section className={styles.addedItemsSection} aria-label="Добавленные продукты">
@@ -463,8 +514,12 @@ export default function NutritionVoiceModal({
           </section>
         ) : null}
 
-        {!editingItem ? renderRecordControl() : null}
+        </div>
 
+        <footer className={styles.resultFooter} data-testid="nutrition-voice-actions">
+        {editingItem ? <button type="button" className={styles.itemEditorSaveButton} onClick={saveItemEditor}>
+          Сохранить изменения
+        </button> : null}
         {!editingItem ? <p className={styles.hint} aria-live="polite">
           {isRecording
             ? "Запись идёт. Нажмите кнопку ещё раз, когда закончите. До 1 минуты."
@@ -479,14 +534,18 @@ export default function NutritionVoiceModal({
                   : "Распознаём русскую речь. Названия брендов можно произносить по-английски."}
         </p> : null}
 
-        {!editingItem ? <button
+        {!editingItem ? <div className={styles.resultActions}>
+        {renderRecordControl()}
+        <button
           type="button"
           className={styles.doneButton}
           data-testid="nutrition-voice-done"
           onClick={hasSearchFailure ? retryVoiceSearch : finishAndClose}
         >
           {hasSearchFailure ? "Повторить запись" : hasReviewItems ? "Добавить в дневник" : "Готово"}
-        </button> : null}
+        </button>
+        </div> : null}
+        </footer>
       </section>
       )}
     </div>,

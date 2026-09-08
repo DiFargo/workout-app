@@ -50,8 +50,9 @@ export function buildPlannedWorkoutSlots({
   now = new Date()
 } = {}) {
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const normalizedCalendar = normalizeWorkoutCalendarSchedule(calendar, safeWorkouts);
   const assignmentVersion = String(
-    calendar?.assignedProgramUpdatedAt ||
+    normalizedCalendar?.assignedProgramUpdatedAt ||
     safeWorkouts.find((workout) => workout?.assignedProgramUpdatedAt)?.assignedProgramUpdatedAt ||
     ""
   ).trim();
@@ -62,10 +63,10 @@ export function buildPlannedWorkoutSlots({
     : history;
   const todayKey = toWorkoutDateKey(now);
   const sortedDates = [...new Set([
-    ...(Array.isArray(calendar.scheduledDates) ? calendar.scheduledDates : []),
-    ...(Array.isArray(calendar.monthlyTrainingDates) ? calendar.monthlyTrainingDates : [])
+    ...(Array.isArray(normalizedCalendar.scheduledDates) ? normalizedCalendar.scheduledDates : []),
+    ...(Array.isArray(normalizedCalendar.monthlyTrainingDates) ? normalizedCalendar.monthlyTrainingDates : [])
   ].map(toWorkoutDateKey).filter(Boolean))].sort();
-  const plannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
+  const plannedWorkouts = Array.isArray(normalizedCalendar.plannedWorkouts) ? normalizedCalendar.plannedWorkouts : [];
   const completionMaps = buildCompletionMaps(relevantHistory);
   const allHistoryCompletionMaps = buildCompletionMaps(history);
   const forcedCompletedWorkoutIds = new Set(
@@ -236,20 +237,82 @@ export function getWorkoutScheduleCalendarForWorkouts(calendar = {}, workouts = 
         ).trim();
         return !workoutId && Boolean(assignmentVersion) && assignmentVersions.has(assignmentVersion);
       });
-  const scheduledDates = scopedPlannedWorkouts
-    .map((item) => item?.date)
-    .filter(Boolean);
-  const workoutDates = safeWorkouts
-    .map((workout) => workout?.scheduledDate || workout?.plannedDate)
-    .filter(Boolean);
   const assignmentVersion = [...assignmentVersions][0] || "";
+
+  return normalizeWorkoutCalendarSchedule({
+    ...safeCalendar,
+    assignedProgramUpdatedAt: assignmentVersion || safeCalendar.assignedProgramUpdatedAt || "",
+    plannedWorkouts: scopedPlannedWorkouts
+  }, safeWorkouts);
+}
+
+// The calendar stores one slot per workout. Older clients could leave both the
+// old and the moved date in the array, which made two consecutive workouts land
+// on the same day. Keep the first chosen date and shift the following slots to
+// the next free plan day, preserving the workout order.
+export function normalizeWorkoutCalendarSchedule(calendar = {}, workouts = []) {
+  const safeCalendar = calendar && typeof calendar === "object" ? calendar : {};
+  const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const plannedWorkouts = Array.isArray(safeCalendar.plannedWorkouts)
+    ? safeCalendar.plannedWorkouts
+    : [];
+  const candidateDates = [...new Set([
+    ...(Array.isArray(safeCalendar.scheduledDates) ? safeCalendar.scheduledDates : []),
+    ...(Array.isArray(safeCalendar.monthlyTrainingDates) ? safeCalendar.monthlyTrainingDates : []),
+    ...plannedWorkouts.map((item) => item?.movedToDate || item?.date),
+    ...safeWorkouts.map((workout) => workout?.movedToDate || workout?.scheduledDate || workout?.plannedDate)
+  ].map(toWorkoutDateKey).filter(Boolean))].sort();
+  const usedDates = new Set();
+  let previousDate = "";
+
+  const normalizedPlannedWorkouts = safeWorkouts.map((workout, index) => {
+    const existing = findMatchingPlannedWorkout(plannedWorkouts, workout, index);
+    const requestedDate = toWorkoutDateKey(
+      existing?.movedToDate ||
+      existing?.date ||
+      workout?.movedToDate ||
+      workout?.scheduledDate ||
+      workout?.plannedDate ||
+      ""
+    );
+    const canKeepRequestedDate = requestedDate &&
+      !usedDates.has(requestedDate) &&
+      (!previousDate || requestedDate > previousDate);
+    let date = canKeepRequestedDate ? requestedDate : candidateDates.find((candidate) => (
+      !usedDates.has(candidate) && (!previousDate || candidate > previousDate)
+    ));
+
+    if (!date && requestedDate && previousDate) {
+      date = addDays(previousDate, 2);
+      while (date && usedDates.has(date)) date = addDays(date, 2);
+    }
+
+    if (date) {
+      usedDates.add(date);
+      previousDate = date;
+    }
+
+    const status = String(existing?.status || workout?.status || "planned").trim().toLowerCase();
+    return {
+      ...existing,
+      order: index + 1,
+      index,
+      workoutId: String(workout?.id || existing?.workoutId || "").trim(),
+      workoutName: String(workout?.name || existing?.workoutName || `Тренировка ${index + 1}`).trim(),
+      date,
+      movedToDate: "",
+      status: status === "moved" ? "planned" : status || "planned"
+    };
+  });
+  const scheduledDates = normalizedPlannedWorkouts
+    .map((item) => item.date)
+    .filter(Boolean);
 
   return {
     ...safeCalendar,
-    assignedProgramUpdatedAt: assignmentVersion || safeCalendar.assignedProgramUpdatedAt || "",
-    plannedWorkouts: scopedPlannedWorkouts,
-    scheduledDates: scheduledDates.length ? scheduledDates : workoutDates,
-    monthlyTrainingDates: scheduledDates.length ? scheduledDates : workoutDates
+    scheduledDates,
+    monthlyTrainingDates: scheduledDates,
+    plannedWorkouts: normalizedPlannedWorkouts
   };
 }
 
@@ -295,6 +358,7 @@ export function buildWorkoutScheduleDraftWithExistingStatuses(
 export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], updatedAt = "", updatedBy = "") {
   const existingPlannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  const isBasicPlan = safeWorkouts.some((workout) => workout?.source === "basic");
   const workoutAssignment = safeWorkouts.find((workout) => workout?.assignedProgramUpdatedAt) || {};
   const workoutProgram = safeWorkouts.find((workout) => workout?.assignedProgramId || workout?.assignedProgramName) || {};
   const workoutProgramAssignment = safeWorkouts.find((workout) => workout?.assignedProgramAddedAt || workout?.programAssignmentId) || {};
@@ -329,7 +393,12 @@ export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], update
       index,
       workoutId,
       workoutName: String(workout?.name || existing.workoutName || `Workout ${index + 1}`).trim(),
-      date: toWorkoutDateKey(existing.date || workout?.scheduledDate || workout?.plannedDate || scheduledDates[index] || ""),
+      date: toWorkoutDateKey(
+        existing.movedToDate ||
+        (isBasicPlan && workout?.scheduleShiftedAt
+          ? workout?.scheduledDate || workout?.plannedDate
+          : existing.date || workout?.scheduledDate || workout?.plannedDate || scheduledDates[index]) || ""
+      ),
       status,
       assignedProgramUpdatedAt,
       assignedProgramAddedAt,
@@ -340,8 +409,12 @@ export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], update
 
   return {
     ...calendar,
-    scheduledDates,
-    monthlyTrainingDates: scheduledDates,
+    scheduledDates: isBasicPlan
+      ? [...new Set(plannedWorkouts.map((item) => item?.movedToDate || item?.date).map(toWorkoutDateKey).filter(Boolean))].sort()
+      : scheduledDates,
+    monthlyTrainingDates: isBasicPlan
+      ? [...new Set(plannedWorkouts.map((item) => item?.movedToDate || item?.date).map(toWorkoutDateKey).filter(Boolean))].sort()
+      : scheduledDates,
     plannedWorkouts,
     assignedProgramId,
     assignedProgramName,

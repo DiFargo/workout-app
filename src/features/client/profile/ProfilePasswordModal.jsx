@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import { Check, Eye, EyeOff, LockKeyhole } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
@@ -84,7 +84,7 @@ export default function ProfilePasswordModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-testid="profile-password-overlay"
       data-css-module-scope="profile-password-modal"
       role="presentation"
@@ -96,6 +96,7 @@ export default function ProfilePasswordModal({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
+        data-cabinet-sheet="true"
         aria-labelledby="profilePasswordManageTitle"
         onClick={(event) => event.stopPropagation()}
       >
@@ -149,7 +150,7 @@ export default function ProfilePasswordModal({
           </label>
 
           <div className={styles.preview}>
-            <div className={styles.previewIcon}>✓</div>
+            <div className={styles.previewIcon} aria-hidden="true"><Check /></div>
             <div>
               <strong>Подтверждение входа</strong>
               <span>

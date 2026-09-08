@@ -19,8 +19,8 @@ export default function ProfileCabinetTitleRow({
           type="button"
           className={styles.refresh}
           data-testid="profile-cabinet-refresh"
-          aria-label="Обновить страницу"
-          title="Обновить страницу"
+          aria-label="Обновить данные"
+          title="Обновить данные"
           onClick={onRefresh}
         >
           <RefreshCw aria-hidden="true" />

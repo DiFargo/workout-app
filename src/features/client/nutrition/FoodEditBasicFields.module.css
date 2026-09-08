@@ -2,6 +2,44 @@
   display: contents;
 }
 
+.section {
+  width: 100%;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--color-food-dialog-border);
+  border-radius: 20px;
+  background: var(--color-food-dialog-surface);
+  color: var(--color-heading);
+}
+
+.sectionHeader {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sectionHeader strong {
+  color: var(--color-heading);
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.sectionHeader span {
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.section .field,
+.section .iconBox,
+.section .macroGrid {
+  margin-bottom: 0;
+}
+
 .field,
 .iconBox,
 .presetRow,
@@ -58,7 +96,7 @@
   outline: 0;
   background: var(--color-food-dialog-surface);
   color: var(--color-food-dialog-input-text);
-  box-shadow: 0 9px 22px rgba(72, 63, 87, 0.055);
+  box-shadow: 0 9px 22px rgba(27, 35, 31, 0.055);
   font-family: inherit;
   font-size: 15px;
   font-weight: 850;
@@ -160,7 +198,7 @@
   border-radius: 16px;
   background: var(--color-food-dialog-surface);
   color: var(--color-food-edit-preset-text);
-  box-shadow: 0 10px 24px rgba(72, 63, 87, 0.06);
+  box-shadow: 0 10px 24px rgba(27, 35, 31, 0.06);
   font-family: inherit;
   font-size: 16px;
   font-weight: 400;
@@ -215,7 +253,7 @@
   border-radius: 20px;
   background: var(--color-food-dialog-surface);
   color: var(--color-food-dialog-text);
-  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.08);
+  box-shadow: 0 12px 30px rgba(27, 35, 31, 0.08);
   -webkit-text-fill-color: var(--color-food-dialog-text-fill);
 }
 
@@ -371,7 +409,7 @@
   justify-content: normal;
   gap: 10px;
   border-radius: 18px;
-  box-shadow: 0 9px 22px rgba(72, 63, 87, 0.055);
+  box-shadow: 0 9px 22px rgba(27, 35, 31, 0.055);
   -webkit-text-fill-color: var(--color-food-dialog-text-fill);
 }
 
@@ -383,7 +421,7 @@
   display: inline-block;
   border-color: var(--color-food-dialog-border);
   border-radius: 18px;
-  box-shadow: 0 9px 22px rgba(72, 63, 87, 0.055);
+  box-shadow: 0 9px 22px rgba(27, 35, 31, 0.055);
   font-size: 15px;
   font-weight: 850;
   line-height: 1.25;
@@ -456,84 +494,140 @@
   }
 }
 
-:global(:root[data-app-theme="warm-light"]) .field { color: #28262e; -webkit-text-fill-color: #28262e; }
+:global(:root[data-app-theme="warm-light"]) .field { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); }
+:global(:root[data-app-theme="warm-light"]) .section {
+  padding: 12px;
+  gap: 10px;
+  border: 0;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader strong {
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  font-size: 16px;
+  font-weight: 650;
+}
+
+:global(:root[data-app-theme="warm-light"]) .sectionHeader span {
+  color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 450;
+}
 :global(:root[data-app-theme="warm-light"]) .labelText {
-  color: #7b7682;
-  -webkit-text-fill-color: #7b7682;
-  font-size: 11px;
-  font-weight: 600;
+  color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .input,
 :global(:root[data-app-theme="warm-light"]) .portionInput {
-  height: 50px;
-  min-height: 50px;
-  padding: 12px 14px;
-  border: 1px solid #efebf3;
-  border-radius: 16px;
+  height: 46px;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 12px;
   background: #fff;
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
   box-shadow: none;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
 }
 
 :global(:root[data-app-theme="warm-light"]) .input::placeholder,
-:global(:root[data-app-theme="warm-light"]) .portionInput::placeholder { color: #7b7682; -webkit-text-fill-color: #7b7682; }
+:global(:root[data-app-theme="warm-light"]) .portionInput::placeholder { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); }
 
 :global(:root[data-app-theme="warm-light"]) .iconBox {
-  padding: 10px;
-  border: 1px solid #efebf3;
-  border-radius: 18px;
-  background: #fff;
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
+  padding: 0;
+  display: block;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .iconPreview {
   border: 0;
   border-radius: 14px;
-  background: #f5f2f7;
-  color: #8f7ac8;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #3f73b8);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .presetRow { gap: 6px; }
 :global(:root[data-app-theme="warm-light"]) .presetButton {
   min-height: 44px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 13px;
   background: #fff;
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .presetActive {
   border-color: #cfd7dc;
-  background: #f5f2f7;
-  color: #8f7ac8;
-  -webkit-text-fill-color: #8f7ac8;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #3f73b8);
+  -webkit-text-fill-color: var(--apple-action, #3f73b8);
 }
 
-:global(:root[data-app-theme="warm-light"]) .macroGrid { gap: 7px; }
-:global(:root[data-app-theme="warm-light"]) .macroField { padding: 10px; border: 1px solid #efebf3; border-radius: 16px; background: #fff; }
-:global(:root[data-app-theme="warm-light"]) .macroInput { border: 0; background: #f5f2f7; }
-:global(:root[data-app-theme="warm-light"]) .portionRow { border: 1px solid #efebf3; border-radius: 16px; background: #fff; }
+:global(:root[data-app-theme="warm-light"]) .macroGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+:global(:root[data-app-theme="warm-light"]) .macroField { padding: 0; border: 0; border-radius: 0; background: transparent; }
+:global(:root[data-app-theme="warm-light"]) .macroTitle { overflow: visible; text-align: left; white-space: normal; }
+:global(:root[data-app-theme="warm-light"]) .macroInput { padding-inline: 4px; border: 0; background: var(--apple-surface-muted, #efeff4); font-variant-numeric: tabular-nums; }
+:global(:root[data-app-theme="warm-light"]) .portionRow { height: 46px; min-height: 46px; max-height: none; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) 52px; gap: 0; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 12px; background: #fff; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .portionRow .portionInput { border: 0; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .portionToggle {
-  min-width: 56px;
+  position: static;
+  width: 52px;
+  min-width: 52px;
+  height: 44px;
+  min-height: 44px;
   border: 0;
-  border-left: 1px solid #efebf3;
-  border-radius: 0 16px 16px 0;
-  background: #f5f2f7;
-  color: #8f7ac8;
-  -webkit-text-fill-color: #8f7ac8;
+  border-left: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 0 12px 12px 0;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #3f73b8);
+  -webkit-text-fill-color: var(--apple-action, #3f73b8);
   font-weight: 600;
 }
 
-:global(:root[data-app-theme="warm-light"]) .validation { border-color: rgba(179, 110, 114, 0.28); background: rgba(179, 110, 114, 0.1); color: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .validation { border-color: rgba(180, 35, 24, .2); background: #fff5f4; color: #b42318; font-size: 12px; font-weight: 500; }
+
+:global(:root[data-app-theme="warm-light"]) .mainSection { grid-template-columns: minmax(0, 1fr) 60px; align-items: end; gap: 10px; }
+:global(:root[data-app-theme="warm-light"]) .mainSection .field { min-width: 0; gap: 6px; }
+:global(:root[data-app-theme="warm-light"]) .sectionHeader { flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 8px; }
+:global(:root[data-app-theme="warm-light"]) .iconInput { padding-inline: 4px; font-size: 22px; }
+:global(:root[data-app-theme="warm-light"]) .portionSection { gap: 6px; }
+:global(:root[data-app-theme="warm-light"]) .portionHint { color: var(--apple-secondary, #636366); font-size: 12px; line-height: 1.35; }
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="dish"] .macroTitle { min-height: 29px; }
+:global(:root[data-app-theme="warm-light"]) .input:focus-visible,
+:global(:root[data-app-theme="warm-light"]) .portionInput:focus-visible { outline: 2px solid var(--apple-action, #3f73b8); outline-offset: -2px; }
+
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .section { padding: 16px; gap: 12px; }
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .input,
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .portionInput,
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .portionRow { height: 48px; min-height: 48px; }
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .portionToggle { height: 46px; min-height: 46px; }
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .mainSection .field,
+:global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .portionSection { gap: 8px; }
+
+@media (max-width: 350px) {
+  :global(:root[data-app-theme="warm-light"]) .section {
+    padding: 12px;
+  }
+  :global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .section { padding: 12px; }
+  :global(:root[data-app-theme="warm-light"]) .macroGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  :global(:root[data-app-theme="warm-light"]) .root[data-food-type="dish"] .macroTitle { min-height: 0; }
+}

@@ -1,7 +1,7 @@
 .overlay {
   --photo-modal-surface: var(--color-surface);
   --photo-modal-text: var(--color-heading);
-  --photo-modal-muted: #7b7682;
+  --photo-modal-muted: var(--apple-secondary, #636366);
   --photo-modal-border: var(--color-dialog-border);
   --photo-control-surface: var(--color-control-surface);
   --photo-control-border: var(--color-control-border);
@@ -55,7 +55,7 @@
   border-radius: 14px;
   background: var(--photo-control-surface);
   color: var(--photo-control-text);
-  box-shadow: 0 8px 18px rgba(72, 63, 87, 0.07);
+  box-shadow: 0 8px 18px rgba(27, 35, 31, 0.07);
   font: inherit;
   font-size: 22px;
   line-height: 1;
@@ -146,15 +146,15 @@
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
   --photo-modal-surface: #fff;
-  --photo-modal-text: #28262e;
-  --photo-modal-muted: #7b7682;
-  --photo-modal-border: #efebf3;
-  --photo-control-surface: #f5f2f7;
+  --photo-modal-text: var(--apple-text, #1c1c1e);
+  --photo-modal-muted: var(--apple-secondary, #636366);
+  --photo-modal-border: var(--apple-separator, rgba(60,60,67,.12));
+  --photo-control-surface: var(--apple-surface-muted, #efeff4);
   --photo-control-border: transparent;
-  --photo-control-text: #8f7ac8;
+  --photo-control-text: var(--apple-action, #3f73b8);
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
   align-items: end;
-  background: rgba(40, 38, 46, 0.35);
+  background: rgba(27, 35, 31, 0.35);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -162,11 +162,11 @@
 :global(:root[data-app-theme="warm-light"]) .modal {
   width: min(100%, 370px);
   padding: 22px 18px 18px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 26px;
   background: #fff;
-  color: #28262e;
-  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton {
@@ -176,27 +176,27 @@
   min-height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #28262e;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c1c1e);
   box-shadow: none;
   font-size: 24px;
 }
 
-:global(:root[data-app-theme="warm-light"]) .icon { background: #f5f2f7; color: #8f7ac8; }
-:global(:root[data-app-theme="warm-light"]) .title { color: #28262e; font-size: 20px; font-weight: 700; }
-:global(:root[data-app-theme="warm-light"]) .description { color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .icon { background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); }
+:global(:root[data-app-theme="warm-light"]) .title { color: var(--apple-text, #1c1c1e); font-size: 20px; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .description { color: var(--apple-secondary, #636366); font-weight: 450; }
 
 :global(:root[data-app-theme="warm-light"]) .actionButton {
   min-height: 50px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 16px;
   background: #fff;
-  color: #8f7ac8;
+  color: var(--apple-action, #3f73b8);
   font-weight: 600;
 }
 
 :global(:root[data-app-theme="warm-light"]) .primaryAction {
-  border-color: #8f7ac8;
-  background: #8f7ac8;
+  border-color: var(--apple-action, #3f73b8);
+  background: var(--apple-action, #3f73b8);
   color: #fff;
 }

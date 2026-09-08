@@ -196,7 +196,7 @@ function ModalFrame({ children, labelledBy, onClose, className = "", disabled = 
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       role="presentation"
       onMouseDown={(event) => {
         if (!disabled && event.target === event.currentTarget) onClose();

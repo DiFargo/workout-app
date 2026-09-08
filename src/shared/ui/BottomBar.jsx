@@ -1,5 +1,5 @@
 
-import { Dumbbell, Home, UserRound, Utensils } from "lucide-react";
+import { CalendarDays, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, Home, UserRound, Utensils } from "lucide-react";
 import styles from "./BottomBar.module.css";
 
 function runDeferredTouchPreload(preload) {
@@ -22,6 +22,7 @@ export function ClientMainBottomBar({
   onGoMain,
   onOpenTraining,
   onOpenNutrition,
+  onOpenProgress,
   onOpenCabinet,
   onPreloadMain,
   onPreloadTraining,
@@ -56,7 +57,10 @@ export function ClientMainBottomBar({
     : styles.main;
 
   return (
-    <div className={`${styles.dock} ${nutritionVariant ? styles.nutritionDock : styles.mainDock}`}>
+    <div
+      className={`${styles.dock} ${nutritionVariant ? styles.nutritionDock : styles.mainDock}`}
+      data-client-bottom-dock="true"
+    >
       <nav
         className={navigationClassName}
         data-css-module-scope={nutritionVariant ? "nutrition-bottom-bar" : "client-main-bottom-bar"}
@@ -73,7 +77,7 @@ export function ClientMainBottomBar({
         onClick={onGoMain}
       >
         <span aria-hidden="true"><Home /></span>
-        <strong>Главная</strong>
+        <strong>Сегодня</strong>
       </button>
       <button
         type="button"
@@ -98,6 +102,16 @@ export function ClientMainBottomBar({
       >
         <span aria-hidden="true"><Utensils /></span>
         <strong>Питание</strong>
+      </button>
+      <button
+        type="button"
+        data-testid="client-nav-progress"
+        className={activeTab === "progress" ? styles.active : ""}
+        aria-current={activeTab === "progress" ? "page" : undefined}
+        onClick={onOpenProgress}
+      >
+        <span aria-hidden="true"><ChartNoAxesColumnIncreasing /></span>
+        <strong>Прогресс</strong>
       </button>
       <button
         type="button"
@@ -223,7 +237,7 @@ export function ClientTrainingBottomBar({
   onOpenHistory
 }) {
   return (
-    <div className={`${styles.dock} ${styles.trainingDock}`}>
+    <div className={`${styles.dock} ${styles.trainingDock}`} data-client-bottom-dock="true">
       <nav
         className={styles.training}
         data-testid="client-training-bottom-nav"
@@ -231,7 +245,7 @@ export function ClientTrainingBottomBar({
         aria-label="Навигация тренировок"
       >
       <button type="button" onClick={onGoMain}>
-        <span aria-hidden="true">🏠</span>
+        <span aria-hidden="true"><Home /></span>
         <strong>Главная</strong>
       </button>
       <button
@@ -240,7 +254,7 @@ export function ClientTrainingBottomBar({
         aria-current={activeTab === "workouts" ? "page" : undefined}
         onClick={onOpenWorkouts}
       >
-        <span aria-hidden="true">🏋️</span>
+        <span aria-hidden="true"><Dumbbell /></span>
         <strong>Тренировки</strong>
       </button>
       <button
@@ -249,11 +263,11 @@ export function ClientTrainingBottomBar({
         aria-current={activeTab === "plan" ? "page" : undefined}
         onClick={onOpenPlan}
       >
-        <span aria-hidden="true">📋</span>
+        <span aria-hidden="true"><ClipboardList /></span>
         <strong>План</strong>
       </button>
       <button type="button" onClick={onOpenHistory}>
-        <span aria-hidden="true">🗓️</span>
+        <span aria-hidden="true"><CalendarDays /></span>
         <strong>История</strong>
       </button>
       </nav>

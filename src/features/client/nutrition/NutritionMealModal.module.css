@@ -1,7 +1,7 @@
 .overlay {
   --meal-backdrop: rgba(0, 0, 0, 0.62);
   --meal-backdrop-color: #fff;
-  --meal-overlay-text: #28262e;
+  --meal-overlay-text: var(--apple-text, #1c1c1e);
   --meal-sheet-border: rgba(255, 255, 255, 0.09);
   --meal-sheet-background: linear-gradient(180deg, rgba(18, 21, 19, 0.98), rgba(9, 12, 9, 0.98));
   --meal-sheet-text: var(--color-text);
@@ -51,19 +51,19 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
-  --meal-backdrop: rgba(72, 63, 87, 0.18);
-  --meal-backdrop-color: #7b7682;
-  --meal-overlay-text: #7b7682;
+  --meal-backdrop: rgba(27, 35, 31, 0.18);
+  --meal-backdrop-color: var(--apple-secondary, #636366);
+  --meal-overlay-text: var(--apple-secondary, #636366);
   --meal-sheet-border: rgba(72, 58, 29, 0.14);
   --meal-sheet-background: var(--color-surface);
   --meal-sheet-text: var(--color-heading);
-  --meal-sheet-shadow: 0 24px 60px rgba(72, 63, 87, 0.18);
+  --meal-sheet-shadow: 0 24px 60px rgba(27, 35, 31, 0.18);
   --meal-header-muted: var(--color-heading);
   --meal-header-total: var(--color-heading);
-  --meal-header-title: #7b7682;
+  --meal-header-title: var(--apple-secondary, #636366);
   --meal-icon-border: rgba(72, 58, 29, 0.14);
   --meal-close-color: var(--color-heading);
-  --meal-row-background: #f7f6f8;
+  --meal-row-background: var(--apple-canvas, #f2f2f7);
   --meal-row-active: #f1f3f9;
   --meal-delete-background: linear-gradient(135deg, #b8514c, #d37469);
   --meal-delete-color: var(--color-heading);
@@ -426,36 +426,36 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
-  --meal-backdrop: rgba(40, 38, 46, 0.35);
-  --meal-overlay-text: #28262e;
-  --meal-sheet-border: #efebf3;
-  --meal-sheet-background: #f7f6f8;
-  --meal-sheet-text: #28262e;
-  --meal-sheet-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
-  --meal-header-muted: #7b7682;
-  --meal-header-total: #7b7682;
-  --meal-header-title: #28262e;
+  --meal-backdrop: rgba(27, 35, 31, 0.35);
+  --meal-overlay-text: var(--apple-text, #1c1c1e);
+  --meal-sheet-border: var(--apple-separator, rgba(60,60,67,.12));
+  --meal-sheet-background: var(--apple-canvas, #f2f2f7);
+  --meal-sheet-text: var(--apple-text, #1c1c1e);
+  --meal-sheet-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
+  --meal-header-muted: var(--apple-secondary, #636366);
+  --meal-header-total: var(--apple-secondary, #636366);
+  --meal-header-title: var(--apple-text, #1c1c1e);
   --meal-icon-border: transparent;
-  --meal-icon-background: #f5f2f7;
+  --meal-icon-background: var(--apple-surface-muted, #efeff4);
   --meal-close-border: transparent;
-  --meal-close-background: #f5f2f7;
-  --meal-close-color: #28262e;
+  --meal-close-background: var(--apple-surface-muted, #efeff4);
+  --meal-close-color: var(--apple-text, #1c1c1e);
   --meal-row-background: #fff;
   --meal-row-active: #ffffff;
   --meal-delete-background: #b36e72;
   --meal-delete-color: #fff;
   --meal-food-icon-border: transparent;
-  --meal-food-icon-background: #f5f2f7;
+  --meal-food-icon-background: var(--apple-surface-muted, #efeff4);
   --meal-food-icon-shadow: none;
-  --meal-calories: #28262e;
-  --meal-calories-label: #7b7682;
-  --meal-food-name: #28262e;
-  --meal-food-amount: #7b7682;
-  --meal-food-amount-fill: #7b7682;
-  --meal-arrow: #7b7682;
-  --meal-arrow-fill: #7b7682;
+  --meal-calories: var(--apple-text, #1c1c1e);
+  --meal-calories-label: var(--apple-secondary, #636366);
+  --meal-food-name: var(--apple-text, #1c1c1e);
+  --meal-food-amount: var(--apple-secondary, #636366);
+  --meal-food-amount-fill: var(--apple-secondary, #636366);
+  --meal-arrow: var(--apple-secondary, #636366);
+  --meal-arrow-fill: var(--apple-secondary, #636366);
   --meal-add-border: transparent;
-  --meal-add-background: #8f7ac8;
+  --meal-add-background: var(--apple-action, #3f73b8);
   --meal-add-color: #fff;
   align-items: flex-end;
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
@@ -467,26 +467,26 @@
   max-width: 370px;
   max-height: min(720px, calc(100dvh - 32px));
   padding: 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 26px;
-  background: #f7f6f8;
-  color: #28262e;
-  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
 
 :global(:root[data-app-theme="warm-light"]) .header { padding: 2px 0 14px; }
-:global(:root[data-app-theme="warm-light"]) .icon { border: 0; border-radius: 14px; background: #f5f2f7; }
-:global(:root[data-app-theme="warm-light"]) .title { color: #28262e; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .icon { border: 0; border-radius: 14px; background: var(--apple-surface-muted, #efeff4); }
+:global(:root[data-app-theme="warm-light"]) .title { color: var(--apple-text, #1c1c1e); font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .headerEyebrow,
-:global(:root[data-app-theme="warm-light"]) .headerTotal { color: #7b7682; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f5f2f7; color: #28262e; font-size: 24px; font-weight: 400; }
+:global(:root[data-app-theme="warm-light"]) .headerTotal { color: var(--apple-secondary, #636366); font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: var(--apple-surface-muted, #efeff4); color: var(--apple-text, #1c1c1e); font-size: 24px; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .list { gap: 8px; }
 :global(:root[data-app-theme="warm-light"]) .swipeShell { border-radius: 18px; background: #b36e72; }
-:global(:root[data-app-theme="warm-light"]) .row { min-height: 68px; padding: 9px 12px; border: 1px solid #efebf3; border-radius: 18px; background: #fff; color: #28262e; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .foodIconWrap { border: 0; border-radius: 14px; background: #f5f2f7; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .row { min-height: 68px; padding: 9px 12px; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 18px; background: #fff; color: var(--apple-text, #1c1c1e); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .foodIconWrap { border: 0; border-radius: 14px; background: var(--apple-surface-muted, #efeff4); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .calories,
-:global(:root[data-app-theme="warm-light"]) .name { color: #28262e; font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .name { color: var(--apple-text, #1c1c1e); font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .caloriesLabel,
-:global(:root[data-app-theme="warm-light"]) .amount { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .arrow { color: #7b7682; -webkit-text-fill-color: #7b7682; }
-:global(:root[data-app-theme="warm-light"]) .addButton { min-height: 54px; border: 0; border-radius: 18px; background: #8f7ac8; color: #fff; box-shadow: none; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .amount { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .arrow { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); }
+:global(:root[data-app-theme="warm-light"]) .addButton { min-height: 54px; border: 0; border-radius: 18px; background: var(--apple-action, #3f73b8); color: #fff; box-shadow: none; font-weight: 600; }

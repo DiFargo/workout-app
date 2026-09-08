@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronRight, Clock3, Dumbbell, MapPin, SlidersHorizontal, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CalendarDays, Check, Clock3, Dumbbell, MapPin, SlidersHorizontal, Sparkles } from "lucide-react";
 
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
@@ -86,7 +86,7 @@ export default function BasicWorkoutTodayPage({
   onApplyBasicWorkoutPlan,
   onOpenLongPlan,
   onOpenTraining,
-  onGoBackToMode,
+  onBackToWorkouts,
   userId,
   canUseTrainerFeatures,
   onGoMain,
@@ -100,6 +100,7 @@ export default function BasicWorkoutTodayPage({
   const [generatedPlan, setGeneratedPlan] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const saveInFlightRef = useRef(false);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [selectionNotice, setSelectionNotice] = useState("");
@@ -191,7 +192,7 @@ export default function BasicWorkoutTodayPage({
       resetGeneratedWorkout();
       return;
     }
-    onGoBackToMode?.();
+    onBackToWorkouts?.();
   }
 
   function reserveGeneration() {
@@ -236,9 +237,10 @@ export default function BasicWorkoutTodayPage({
     }
   }
 
-  async function saveAndStartWorkout() {
-    if (!generatedPlan || isSaving) return;
+  async function saveWorkout(startWorkout) {
+    if (!generatedPlan || saveInFlightRef.current) return;
 
+    saveInFlightRef.current = true;
     setIsSaving(true);
     setError("");
     const nextQuiz = {
@@ -249,11 +251,11 @@ export default function BasicWorkoutTodayPage({
     onBasicWorkoutQuizChange((previous) => ({ ...previous, ...nextQuiz }));
 
     try {
-      const result = await onApplyBasicWorkoutPlan(nextQuiz);
+      const result = await onApplyBasicWorkoutPlan(nextQuiz, { startWorkout });
       if (result?.cloudSaved === false) {
         setError(
           result.offline
-            ? "Нет подключения к интернету. Тренировка осталась в черновике — подключитесь и повторите запуск."
+            ? "Нет подключения к интернету. Тренировка осталась в черновике — подключитесь и повторите сохранение."
             : "Не удалось сохранить тренировку в облаке. Попробуйте ещё раз."
         );
       }
@@ -261,6 +263,7 @@ export default function BasicWorkoutTodayPage({
       console.error("Today basic workout save failed:", saveError);
       setError("Не удалось сохранить тренировку в облаке. Попробуйте ещё раз.");
     } finally {
+      saveInFlightRef.current = false;
       setIsSaving(false);
     }
   }
@@ -269,14 +272,25 @@ export default function BasicWorkoutTodayPage({
     <div className={styles.page} data-testid="basic-workout-today-page" data-css-module-scope="basic-workout-today">
       <ClientPageHeader
         compact
-        title="Тренировка на сегодня"
-        eyebrow="Базовые тренировки"
+        title="Базовые тренировки"
+        eyebrow="Самостоятельный режим"
         onBack={handleBack}
         backAriaLabel="Вернуться к тренировкам"
         className={styles.topBar}
         testId="basic-workout-today-header"
         scope="basic-workout-today-header"
       />
+
+      <nav className={styles.planSwitcher} aria-label="Формат базовой тренировки" data-testid="basic-workout-plan-switcher">
+        <button type="button" aria-current="page">
+          <Dumbbell aria-hidden="true" />
+          <span><strong>На сегодня</strong><small>Быстрая тренировка</small></span>
+        </button>
+        <button type="button" onClick={onOpenLongPlan}>
+          <CalendarDays aria-hidden="true" />
+          <span><strong>На 4 недели</strong><small>Полная программа</small></span>
+        </button>
+      </nav>
 
       {!generatedWorkout ? (
         <main className={styles.content}>
@@ -410,9 +424,6 @@ export default function BasicWorkoutTodayPage({
           >
             <Sparkles aria-hidden="true" /> {isGenerating ? "Составляем тренировку…" : "Составить тренировку"}
           </button>
-          <button className={styles.longPlanLink} type="button" onClick={onOpenLongPlan}>
-            Нужна программа на 4 недели <ChevronRight aria-hidden="true" />
-          </button>
         </main>
       ) : (
         <main className={styles.resultContent}>
@@ -445,8 +456,11 @@ export default function BasicWorkoutTodayPage({
             </ol>
           </section>
           {error ? <p className={styles.errorMessage} role="alert">{error}</p> : null}
-          <button className={styles.primaryButton} type="button" disabled={isSaving} onClick={saveAndStartWorkout}>
+          <button className={styles.primaryButton} data-testid="basic-workout-save-start" type="button" disabled={isSaving} onClick={() => saveWorkout(true)}>
             <Dumbbell aria-hidden="true" /> {isSaving ? "Сохраняем…" : "Сохранить и начать"}
+          </button>
+          <button className={styles.secondaryButton} data-testid="basic-workout-save-later" type="button" disabled={isSaving} onClick={() => saveWorkout(false)}>
+            <Clock3 aria-hidden="true" /> Сохранить на потом
           </button>
           <p
             className={styles.generationLimit}
@@ -455,7 +469,7 @@ export default function BasicWorkoutTodayPage({
           >
             {generationLimitMessage}
           </p>
-          <button className={styles.secondaryButton} type="button" onClick={resetGeneratedWorkout}>
+          <button className={styles.secondaryButton} type="button" disabled={isSaving} onClick={resetGeneratedWorkout}>
             {generationAllowance.isLimitReached ? "Вернуться к настройке" : "Подобрать другой вариант"}
           </button>
         </main>

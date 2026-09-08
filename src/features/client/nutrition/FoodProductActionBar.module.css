@@ -20,7 +20,8 @@
   -webkit-text-fill-color: currentColor;
   font-family: var(--font-family-compact-ui);
   box-shadow: var(--shadow-food-nav);
-  backdrop-filter: blur(16px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .button {
@@ -45,6 +46,7 @@
   text-align: center;
   box-shadow: none;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .button > span {
@@ -127,40 +129,45 @@
 
 :global(:root[data-app-theme="warm-light"]) .root {
   right: 0;
-  bottom: var(--layout-client-dock-bottom);
+  bottom: 0;
   left: 0;
   box-sizing: border-box;
-  width: var(--layout-client-dock-width);
-  max-width: 382px;
-  height: var(--layout-client-dock-height);
-  min-height: var(--layout-client-dock-height);
-  max-height: var(--layout-client-dock-height);
-  padding: 6px;
-  gap: 6px;
+  width: min(100%, 402px);
+  max-width: 402px;
+  height: auto;
+  min-height: 64px;
+  max-height: none;
+  padding: 8px 16px max(8px, env(safe-area-inset-bottom, 0px));
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.96);
-  border-radius: var(--layout-client-dock-radius);
-  background: rgba(255, 255, 255, 0.96);
-  color: #7b7682;
-  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
-  backdrop-filter: blur(20px) saturate(1.15);
-  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  border: 0;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 0;
+  background: #ffffff;
+  color: var(--apple-secondary, #636366);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .button {
-  height: var(--layout-client-dock-button-height);
-  min-height: var(--layout-client-dock-button-height);
-  max-height: var(--layout-client-dock-button-height);
+  height: 48px;
+  min-height: 48px;
+  max-height: none;
   margin: 0;
-  padding: 6px 4px 4px;
-  gap: 2px;
+  padding: 8px;
+  gap: 8px;
+  flex-direction: row;
   border: 0;
-  border-radius: var(--layout-client-dock-button-radius);
-  color: #7b7682;
+  border-radius: 14px;
+  color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span { font-size: 21px; font-weight: 400; }
-:global(:root[data-app-theme="warm-light"]) .button > strong { font-size: 11px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .button > strong { font-size: 15px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .button > span { display: flex; }
+:global(:root[data-app-theme="warm-light"]) .button > span svg { width: 20px; height: 20px; }
 :global(:root[data-app-theme="warm-light"]) .add,
 :global(:root[data-app-theme="warm-light"]) .add:hover,
-:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: #8f7ac8; color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: var(--apple-action, #3f73b8); color: #fff; }

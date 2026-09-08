@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
 }
 :global(:root[data-app-theme="warm-light"]) .accessoryOnly.accessoryOnly {
   height: 50px;
@@ -34,14 +34,14 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 9.5px;
   font-weight: 500;
   line-height: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-:global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo::before { content: "◷"; margin-right: 7px; color: #7b7682; font-size: 16px; }
+:global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo::before { content: "◷"; margin-right: 7px; color: var(--apple-secondary, #636366); font-size: 16px; }
 :global(:root[data-app-theme="warm-light"]) .noteButton.noteButton {
   min-width: 66px;
   max-width: 80px;
@@ -52,7 +52,7 @@
   border: 0;
   border-radius: 13px;
   background: #f4f4f8;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 9.5px;
   font-weight: 700;
 }
@@ -65,7 +65,7 @@
   border: 0;
   border-radius: 13px;
   background: #eee9fb;
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   font-size: 9.5px;
   font-weight: 700;
 }
@@ -80,7 +80,7 @@
 :global(:root[data-app-theme="warm-light"]) .startingWeightCheck > span {
   min-width: 0;
   flex: 1 1 auto;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 9px;
   font-weight: 700;
   line-height: 1.1;
@@ -91,19 +91,19 @@
   padding: 0 7px;
   border: 0;
   border-radius: 14px;
-  background: #f5f2f7;
-  color: #7b7682;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-secondary, #636366);
   font: inherit;
   font-size: 8.5px;
   font-weight: 750;
   line-height: 1;
 }
 :global(:root[data-app-theme="warm-light"]) .startingWeightCheck > button:nth-of-type(2) {
-  background: #eee9fb;
-  color: #806bb6;
+  background: var(--apple-blue-tint, #eef3fa);
+  color: var(--apple-blue-pressed, #3565a3);
 }
 :global(:root[data-app-theme="warm-light"]) .startingWeightHint.startingWeightHint {
-  color: #806bb6;
+  color: var(--apple-blue-pressed, #3565a3);
   font-weight: 650;
   white-space: normal;
 }

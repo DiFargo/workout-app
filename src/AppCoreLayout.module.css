@@ -246,7 +246,7 @@ nav[aria-label="Основные разделы"].mainMenuBottomBar > button str
 }
 
 .monthProgramMonthTitleEditor input:focus {
-  border-color: #806bb6;
+  border-color: #286e5b;
 }
 
 .monthProgramRemoveMonth {
@@ -275,7 +275,7 @@ nav[aria-label="Основные разделы"].mainMenuBottomBar > button str
 }
 
 .trainerProgramManager {
-  --trainer-program-purple: #806bb6;
+  --trainer-program-purple: #286e5b;
 }
 
 .trainerProgramManager .programsCompactHeader,
@@ -875,8 +875,8 @@ html body #root nav.trainerRoleBottomBar {
 :root[data-app-theme="warm-light"] body #root .workoutModeBottomBar > button.active,
 :root[data-app-theme="warm-light"] body #root .trainerRoleBottomBar > button.active,
 :root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar > button.active {
-  border-color: #ddd9fa;
-  background: #f7f6f8;
+  border-color: #d0e7dc;
+  background: #f1f3ee;
   color: #4834dd;
 }
 
@@ -911,7 +911,7 @@ html body #root nav.trainerRoleBottomBar {
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseActionPanel .exerciseNextButton,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .exerciseActionPanel .exerciseReadyButton {
   border: 1px solid transparent;
-  background: linear-gradient(135deg, #806bb6, #8f7ac8);
+  background: linear-gradient(135deg, #286e5b, #2f7d68);
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
   box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22);
@@ -946,9 +946,9 @@ html body #root nav.trainerRoleBottomBar {
 
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishCard,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutStageCard.workoutFinishCard {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: 0 18px 44px rgba(50, 59, 104, 0.12);
 }
 
@@ -957,7 +957,7 @@ html body #root nav.trainerRoleBottomBar {
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress p,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete span,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTip p {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTop span:first-child,
@@ -965,51 +965,51 @@ html body #root nav.trainerRoleBottomBar {
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress strong,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats strong,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete strong {
-  color: #806bb6;
+  color: #286e5b;
 }
 
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishIncomplete,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishTip,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress {
-  border-color: #efebf3;
-  background: #f7f6f8;
-  color: #28262e;
+  border-color: #e0e6e0;
+  background: #f1f3ee;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats > div,
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishStats > div + div {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
 }
 
 :root[data-app-theme="warm-light"] body #root .workoutSavedFloatingCard {
-  border-color: #efebf3;
+  border-color: #e0e6e0;
   background: #ffffff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: 0 22px 58px rgba(43, 50, 92, 0.14);
 }
 
 :root[data-app-theme="warm-light"] body #root .workoutSavedCheck {
-  border-color: #ddd9fa;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: #d0e7dc;
+  background: #f7f8f5;
+  color: #286e5b;
 }
 
 
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishScreen h3 {
-  color: #28262e;
+  color: #1b231f;
 }
 
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .workoutFinishProgress p {
-  color: #7b7682;
+  color: #67716b;
 }
 
 :root[data-app-theme="warm-light"] body #root .workoutRunPage .warmupPreviousButton,
 :root[data-app-theme="warm-light"] body #root .exercisePrevButton,
 :root[data-app-theme="warm-light"] body #root .finishNavigationRow .finishBackButton {
-  border-color: #efebf3;
-  background: #f7f6f8;
-  color: #7b7682;
+  border-color: #e0e6e0;
+  background: #f1f3ee;
+  color: #67716b;
 }
 
 

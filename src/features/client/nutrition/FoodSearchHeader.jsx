@@ -1,6 +1,8 @@
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
-import { X } from "lucide-react";
+import { useRef } from "react";
+import { ChevronDown, X } from "lucide-react";
 import styles from "./FoodSearchHeader.module.css";
+import mealStyles from "./FoodProductHeader.module.css";
 
 export default function FoodSearchHeader({
   selectedFood,
@@ -14,7 +16,8 @@ export default function FoodSearchHeader({
   onCollapseMealMenu,
   onClose
 }) {
-  const selectedMealName = meals.find((meal) => meal.id === mealId)?.name;
+  const selectedMeal = meals.find((meal) => meal.id === mealId);
+  const mealToggleRef = useRef(null);
   const isMyProductsPage = !selectedFood && searchTab === "my";
   const showCloseButton = !createChoiceOpen;
 
@@ -47,48 +50,56 @@ export default function FoodSearchHeader({
         "data-food-search-header-variant": isMyProductsPage ? "my-products" : "search"
       }}
     >
-      <div className={styles.mealWrap} data-testid="food-search-meal-selector">
+      <div
+        className={`${styles.mealWrap} ${mealStyles.mealCard}`}
+        data-testid="food-search-meal-selector"
+        onKeyDown={(event) => {
+          if (event.key !== "Escape" || !mealMenuOpen) return;
+          event.preventDefault();
+          event.stopPropagation();
+          onCollapseMealMenu();
+          mealToggleRef.current?.focus({ preventScroll: true });
+        }}
+      >
         <button
+          ref={mealToggleRef}
           type="button"
-          className={styles.mealButton}
+          className={mealStyles.mealButton}
           data-css-module-control="food-search-header"
           data-food-search-header-action="toggle-meal"
           aria-expanded={mealMenuOpen}
           aria-controls="food-search-meal-menu"
           onClick={onToggleMealMenu}
         >
-          <span className={styles.mealLabel} data-css-module-text="food-search-header">Добавить в</span>
-          <strong className={styles.mealName} data-css-module-text="food-search-header">{selectedMealName}</strong>
+          <span className={mealStyles.mealLabel} data-css-module-text="food-search-header">Добавить в</span>
+          <span className={mealStyles.mealSelection}>
+            <span className={mealStyles.mealIcon} aria-hidden="true">{selectedMeal?.icon}</span>
+            <span className={mealStyles.mealName}>{selectedMeal?.name}</span>
+          </span>
+          <ChevronDown className={mealStyles.mealChevron} size={16} aria-hidden="true" />
         </button>
 
         {mealMenuOpen && (
-          <div className={styles.mealDropdown} id="food-search-meal-menu" data-testid="food-search-meal-menu">
+          <div className={`${mealStyles.mealDropdown} ${styles.searchMealDropdown}`} id="food-search-meal-menu" role="group" aria-label="Приём пищи" data-testid="food-search-meal-menu">
             {meals.map((meal) => (
               <button
                 type="button"
                 key={meal.id}
-                className={`${styles.mealOption}${mealId === meal.id ? ` ${styles.selected}` : ""}`}
+                className={`${mealStyles.mealOption}${mealId === meal.id ? ` ${mealStyles.selected}` : ""}`}
                 data-css-module-control="food-search-header"
                 data-food-search-meal={meal.id}
                 aria-pressed={mealId === meal.id}
-                onClick={() => onSelectMeal(meal.id)}
+                onClick={() => {
+                  onSelectMeal(meal.id);
+                  mealToggleRef.current?.focus({ preventScroll: true });
+                }}
               >
-                <span className={styles.mealIcon} aria-hidden="true" data-css-module-text="food-search-header">
+                <span className={mealStyles.mealIcon} aria-hidden="true" data-css-module-text="food-search-header">
                   {meal.icon}
                 </span>
-                <strong className={styles.optionName} data-css-module-text="food-search-header">{meal.name}</strong>
+                <strong className={mealStyles.mealName} data-css-module-text="food-search-header">{meal.name}</strong>
               </button>
             ))}
-            <button
-              type="button"
-              className={styles.collapseButton}
-              data-css-module-control="food-search-header"
-              data-food-search-header-action="collapse-meal"
-              onClick={onCollapseMealMenu}
-              aria-label="Свернуть выбор приёма пищи"
-            >
-              ↑
-            </button>
           </div>
         )}
       </div>

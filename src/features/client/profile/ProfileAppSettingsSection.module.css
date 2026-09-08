@@ -474,3 +474,41 @@
     display: none;
   }
 }
+
+/* Cabinet connections use the same grouped rows as the main account page. */
+.modal.section { margin: 0; padding: 0; overflow: hidden; border: 0; border-radius: 18px; background: #ffffff; box-shadow: none; }
+.modal .actions { gap: 0; }
+.modal .item, .modal .notificationButton {
+  min-height: 74px;
+  padding: 14px;
+  gap: 12px;
+  border: 0;
+  border-bottom: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: none;
+  color: var(--apple-text, #1c1c1e);
+  font-family: inherit;
+}
+.modal .actions > :last-child { border-bottom: 0; }
+.modal:not(.account) .item { grid-template-columns: 34px minmax(0, 1fr) 18px; }
+.modal .notificationButton { grid-template-columns: 34px minmax(0, 1fr) 46px; }
+.modal:not(.account) .avatar, .modal .notificationIcon {
+  width: 34px; height: 34px; border: 0; border-radius: 10px;
+  background: var(--apple-blue-tint, #edf2f9); color: var(--apple-blue, #3c6faa);
+}
+.modal .avatar svg, .modal .notificationIcon svg { width: 19px; height: 19px; stroke-width: 1.8; }
+.modal .text, .modal .notificationText { gap: 4px; }
+.modal .text strong, .modal .notificationText strong { color: var(--apple-text, #1c1c1e); font-size: 16px; font-weight: 600; line-height: 1.3; }
+.modal .text small, .modal .notificationText small {
+  overflow: visible; white-space: normal; overflow-wrap: anywhere; text-overflow: clip;
+  color: var(--apple-secondary, #636366); font-size: 13px; font-weight: 400; line-height: 1.4;
+}
+.modal .badge { display: none; }
+.modal .arrow { display: grid; color: #8e8e93; }
+.modal .arrow svg { width: 18px; height: 18px; stroke-width: 1.8; }
+.modal .toggle { height: 28px; padding: 3px; border: 0; background: #d1d1d6; box-shadow: none; }
+.modal .toggleKnob { width: 22px; height: 22px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.modal .notificationButton[aria-pressed="true"] .toggle { background: var(--apple-action, #3f73b8); }
+.modal .notificationButton:active, .modal .item:active { transform: none; background: var(--apple-surface-muted, #efeff4); }
+.modal button:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: -3px; }

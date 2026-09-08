@@ -20,6 +20,10 @@ export function createBottomBarActions({
   }
 
   return {
+    openClientProgressFromBottomBar() {
+      setProfileActiveTab("measurements");
+      setPage(APP_PAGES.PROFILE);
+    },
     openTrainerCabinetFromBottomBar() {
       setProfileActiveTab("cabinet");
       setPage(APP_PAGES.PROFILE);

@@ -58,10 +58,10 @@
 
 @layer components {
   :global(:root[data-app-theme="warm-light"]) .root { filter: none; }
-  :global(:root[data-app-theme="warm-light"]) .track { stroke: #efebf3; }
-  :global(:root[data-app-theme="warm-light"]) .protein { stroke: #708d79; }
-  :global(:root[data-app-theme="warm-light"]) .fat { stroke: #ae8768; }
-  :global(:root[data-app-theme="warm-light"]) .carbs { stroke: #6f879c; }
-  :global(:root[data-app-theme="warm-light"]) .center { fill: #f5f2f7; stroke: #efebf3; }
-  :global(:root[data-app-theme="warm-light"]) .value { fill: #28262e; font-weight: 700; }
+  :global(:root[data-app-theme="warm-light"]) .track { stroke: #e5e5ea; }
+  :global(:root[data-app-theme="warm-light"]) .protein { stroke: #b35d61; }
+  :global(:root[data-app-theme="warm-light"]) .fat { stroke: var(--apple-orange, #8b5a2d); }
+  :global(:root[data-app-theme="warm-light"]) .carbs { stroke: var(--apple-blue, #4f718c); }
+  :global(:root[data-app-theme="warm-light"]) .center { fill: var(--apple-surface-muted, #f0f1f3); stroke: #e1e3e6; }
+  :global(:root[data-app-theme="warm-light"]) .value { fill: var(--apple-text, #202226); font-weight: 700; }
 }

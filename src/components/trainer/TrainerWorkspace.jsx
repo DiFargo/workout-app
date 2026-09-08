@@ -1892,6 +1892,7 @@ function WorkoutSchedulePlanner({
 }) {
   const subscription = client?.subscription || {};
   const requiredCount = workouts.length;
+  const clientScheduleRequiresReview = client?.workoutCalendar?.clientScheduleRequiresReview === true;
   const [selectedDates, setSelectedDates] = useState(() => getWorkoutScheduleInitialDates(client, workouts));
   const [monthKey, setMonthKey] = useState(() => getLocalDateKey().slice(0, 7));
   const [saving, setSaving] = useState(false);
@@ -2082,6 +2083,12 @@ function WorkoutSchedulePlanner({
           <h3>Даты тренировок клиента</h3>
         </div>
       </header>
+
+      {clientScheduleRequiresReview ? (
+        <p className="trainerWorkoutScheduleClientNotice" role="status">
+          Клиент обновил дни тренировок. Проверьте календарь и скорректируйте его при необходимости.
+        </p>
+      ) : null}
 
       <div className="trainerWorkoutScheduleBody">
         <div className="trainerWorkoutScheduleCalendar">

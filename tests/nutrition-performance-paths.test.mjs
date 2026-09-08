@@ -20,6 +20,19 @@ test("closed nutrition picker avoids personal catalog work", async () => {
   assert.ok(personalCatalogIndex > earlyExitIndex);
 });
 
+test("general food search keeps multi-megabyte catalog parsing off the main thread", async () => {
+  const source = await readFile(
+    sourceUrl("src/features/client/nutrition/useNutritionSearchEffects.js"),
+    "utf8"
+  );
+
+  assert.doesNotMatch(source, /searchLocalNutritionFoods/);
+  assert.match(source, /searchBundledNutritionFallbackFoods/);
+  assert.match(source, /fetchAuthorizedWithTimeout/);
+  assert.match(source, /controller\.abort\(\)/);
+  assert.match(source, /startTransition/);
+});
+
 test("food commits queue compact My Database changes", async () => {
   const source = await readFile(sourceUrl("src/features/client/nutrition/nutritionFoodCommitHandlers.js"), "utf8");
   const persistence = await readFile(sourceUrl("src/features/client/nutrition/nutritionMyFoodsHandlers.js"), "utf8");

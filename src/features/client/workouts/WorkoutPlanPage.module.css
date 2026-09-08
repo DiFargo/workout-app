@@ -11,8 +11,8 @@
     margin: 0 auto;
     padding: 0 0 calc(110px + env(safe-area-inset-bottom, 0px));
     overflow: hidden auto;
-    color: #28262e;
-    background: #f7f6f8;
+    color: var(--apple-text, #1c1c1e);
+    background: var(--ios-canvas-background, var(--apple-canvas, #f2f2f7));
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     scrollbar-width: none;
   }
@@ -36,21 +36,21 @@
 
   :global(:root[data-app-theme="warm-light"]) .planName.planName {
     margin: 0 4px 12px;
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 12px;
     font-weight: 500;
     line-height: 17px;
   }
 
   :global(:root[data-app-theme="warm-light"]) .header.header > span {
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 10px;
     font-weight: 650;
     letter-spacing: 0.15px;
   }
 
   :global(:root[data-app-theme="warm-light"]) .header.header h1 {
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     font-size: 28px;
     font-weight: 750;
     letter-spacing: -0.75px;
@@ -60,7 +60,7 @@
   :global(:root[data-app-theme="warm-light"]) .header.header p {
     max-width: 100%;
     margin: 1px 0 0;
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 12px;
     font-weight: 500;
     line-height: 17px;
@@ -69,25 +69,25 @@
   :global(:root[data-app-theme="warm-light"]) .stats.stats {
     min-height: 78px;
     padding: 8px;
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     background: #ffffff;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 22px;
     box-shadow: none;
   }
 
   :global(:root[data-app-theme="warm-light"]) .stats.stats > div + div {
-    border-left-color: #efebf3;
+    border-left-color: var(--apple-separator, rgba(60,60,67,.12));
   }
 
   :global(:root[data-app-theme="warm-light"]) .stats.stats strong {
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     font-size: 21px;
     font-weight: 750;
   }
 
   :global(:root[data-app-theme="warm-light"]) .stats.stats span {
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 10px;
     font-weight: 600;
   }
@@ -98,30 +98,30 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .microcycleTabs {
-    background: #f5f2f7;
-    border-color: #efebf3;
+    background: var(--apple-surface-muted, #efeff4);
+    border-color: var(--apple-separator, rgba(60,60,67,.12));
   }
 
   :global(:root[data-app-theme="warm-light"]) .microcycleTabs button {
     min-height: 34px;
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
   }
 
   :global(:root[data-app-theme="warm-light"]) .microcycleTabs button.activeMicrocycleTab {
-    color: #806bb6;
+    color: var(--apple-blue-pressed, #3565a3);
     background: #ffffff;
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week {
     overflow: hidden;
     background: #ffffff;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 22px;
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week h2 {
     padding: 14px 16px 10px;
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 11px;
     font-weight: 650;
     letter-spacing: 0;
@@ -132,9 +132,9 @@
     padding: 11px 12px 11px 16px;
     grid-template-columns: minmax(0, 1fr) 34px;
     gap: 10px;
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     background: transparent;
-    border-top-color: #efebf3;
+    border-top-color: var(--apple-separator, rgba(60,60,67,.12));
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button:active {
@@ -143,18 +143,18 @@
 
   :global(:root[data-app-theme="warm-light"]) .week.week button small,
   :global(:root[data-app-theme="warm-light"]) .week.week button em {
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 10px;
     font-weight: 550;
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button .groupSummary {
-    color: #8f7ac8;
+    color: var(--apple-action, #3f73b8);
     font-weight: 700;
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button strong {
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     font-size: 15px;
     font-weight: 700;
   }
@@ -162,8 +162,8 @@
   :global(:root[data-app-theme="warm-light"]) .week.week button > i {
     width: 32px;
     height: 32px;
-    color: #7b7682;
-    background: #f5f2f7;
+    color: var(--apple-secondary, #636366);
+    background: var(--apple-surface-muted, #efeff4);
     border: 0;
     border-radius: 12px;
     font-size: 19px;
@@ -179,19 +179,19 @@
     min-height: 260px;
     padding: 28px 22px;
     gap: 7px;
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     background: #ffffff;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 24px;
   }
 
   :global(:root[data-app-theme="warm-light"]) .empty.empty strong {
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     font-size: 18px;
   }
 
   :global(:root[data-app-theme="warm-light"]) .empty.empty span {
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 12px;
   }
 

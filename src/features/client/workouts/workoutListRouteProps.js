@@ -32,6 +32,7 @@ export function createWorkoutListProps({
   openSavedBasicWorkoutsOrQuiz,
   openBasicWorkoutQuiz,
   openCabinetWorkoutHistory,
+  rescheduleWorkout,
   handleWorkoutDraftChoice
 }) {
   return {
@@ -69,7 +70,14 @@ export function createWorkoutListProps({
     openWorkout,
     onOpenBasicMode: openSavedBasicWorkoutsOrQuiz,
     onOpenBasicSettings: openBasicWorkoutQuiz,
+    onOpenBasicToday: () => setPage(APP_PAGES.BASIC_WORKOUT_TODAY),
+    onOpenPlan: () => setPage(APP_PAGES.WORKOUT_PLAN),
+    onOpenHistory: () => {
+      loadHistory();
+      setPage(APP_PAGES.HISTORY);
+    },
     openCabinetWorkoutHistory,
+    onRescheduleWorkout: rescheduleWorkout,
     handleWorkoutDraftChoice
   };
 }

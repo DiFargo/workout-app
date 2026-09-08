@@ -33,6 +33,64 @@ function addCompletedWorkoutKeys(completed, item = {}) {
   }
 }
 
+function getWorkoutAssignmentId(item = {}) {
+  return String(
+    item?.assignedProgramAddedAt ||
+    item?.programAssignmentId ||
+    item?.assignedAt ||
+    ""
+  ).trim();
+}
+
+function historyMatchesCurrentAssignment(item = {}, currentWorkouts = []) {
+  const workoutId = getCompletedWorkoutKey(item?.workoutId);
+  if (!workoutId) return false;
+
+  const matchingWorkouts = (Array.isArray(currentWorkouts) ? currentWorkouts : []).filter((workout) => (
+    getCompletedWorkoutKey(workout?.id) === workoutId
+  ));
+  if (!matchingWorkouts.length) return false;
+
+  const historyAssignmentId = getWorkoutAssignmentId(item);
+  if (historyAssignmentId) {
+    return matchingWorkouts.some((workout) => (
+      getWorkoutAssignmentId(workout) === historyAssignmentId
+    ));
+  }
+
+  const historyProgramId = String(item?.assignedProgramId || "").trim();
+  return Boolean(historyProgramId) && matchingWorkouts.length === 1 && matchingWorkouts.some((workout) => (
+    String(workout?.assignedProgramId || "").trim() === historyProgramId &&
+    !getWorkoutAssignmentId(workout)
+  ));
+}
+
+export function getCurrentAssignmentHistoryItems(
+  historyItems = [],
+  currentAssignmentVersion = "",
+  currentWorkouts = []
+) {
+  const assignmentVersion = String(currentAssignmentVersion || "").trim();
+  const workouts = Array.isArray(currentWorkouts) ? currentWorkouts : [];
+
+  return (Array.isArray(historyItems) ? historyItems : []).filter((item) => {
+    const historyAssignmentVersion = String(
+      item?.assignedProgramUpdatedAt || item?.assignmentVersion || ""
+    ).trim();
+
+    if (assignmentVersion) {
+      return historyAssignmentVersion === assignmentVersion ||
+        historyMatchesCurrentAssignment(item, workouts);
+    }
+
+    const itemKeys = new Set();
+    addCompletedWorkoutKeys(itemKeys, item);
+    return workouts.some((workout) => (
+      isWorkoutCompletedWithSet(workout, itemKeys, "")
+    ));
+  });
+}
+
 function addCalendarCompletedWorkouts(completed, workoutCalendar = {}, currentAssignmentVersion = "") {
   const assignmentVersion = String(currentAssignmentVersion || "").trim();
   const calendarAssignmentVersion = String(workoutCalendar?.assignedProgramUpdatedAt || "").trim();
@@ -52,16 +110,23 @@ function addCalendarCompletedWorkouts(completed, workoutCalendar = {}, currentAs
 export function buildCompletedWorkoutSet(
   historyItems = [],
   currentAssignmentVersion = "",
-  workoutCalendar = {}
+  workoutCalendar = {},
+  currentWorkouts = []
 ) {
   const completed = new Set();
   const assignmentVersion = String(currentAssignmentVersion || "").trim();
 
   (Array.isArray(historyItems) ? historyItems : []).forEach((item) => {
     if (assignmentVersion) {
+      const historyAssignmentVersion = String(
+        item?.assignedProgramUpdatedAt || item?.assignmentVersion || ""
+      ).trim();
       if (
-        String(item?.assignedProgramUpdatedAt || "").trim() === assignmentVersion &&
-        item?.workoutId
+        item?.workoutId &&
+        (
+          historyAssignmentVersion === assignmentVersion ||
+          historyMatchesCurrentAssignment(item, currentWorkouts)
+        )
       ) {
         addCompletedWorkoutKeys(completed, item);
       }

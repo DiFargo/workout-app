@@ -1,21 +1,19 @@
-import { useEffect } from "react";
+import { startTransition, useEffect } from "react";
 
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import {
   mergeNutritionFoodResults,
-  searchBundledNutritionFallbackFoods,
-  searchLocalNutritionFoods
+  searchBundledNutritionFallbackFoods
 } from "../../../utils/localNutritionCatalog";
 import { normalizeNutritionFood } from "../../../utils/nutritionFoodModel";
-import { awaitNutritionSearchResult } from "../../../utils/nutritionSearchDeadline.js";
+import { awaitNutritionSearchResult } from "../../../utils/nutritionSearchDeadline";
 
-const LOCAL_CATALOG_DEADLINE_MS = 1400;
-const REMOTE_SEARCH_DEADLINE_MS = 4500;
+const REMOTE_SEARCH_DEBOUNCE_MS = 350;
+const REMOTE_SEARCH_DEADLINE_MS = 12000;
 
 export function useNutritionSearchEffects({
   dishIngredientPickerOpen,
   dishIngredientSearch,
-  nutrition,
   nutritionPickerOpen,
   nutritionSearch,
   nutritionSearchTab,
@@ -46,109 +44,66 @@ export function useNutritionSearchEffects({
     let cancelled = false;
     const bundledFallbackFoods = searchBundledNutritionFallbackFoods(query);
     setFatSecretFoods(bundledFallbackFoods);
-    // A packaged result is immediately actionable offline. Keep the network
-    // lookup in the background instead of showing a spinner that can appear
-    // frozen while the phone is moving between mobile networks.
-    setFatSecretLoading(bundledFallbackFoods.length === 0);
+    setFatSecretError("");
+    setNutritionFallbackSuggestions([]);
+    setFatSecretLoading(true);
 
-    const runSearch = async () => {
+    // Do not load the multi-megabyte browser catalog here. Parsing its JSON and
+    // building indexes blocks taps and scrolling on mobile devices, and the
+    // previous deadline only stopped awaiting that work rather than cancelling
+    // it. Compact packaged matches stay actionable while the shared database is
+    // queried in the background.
+    timer = window.setTimeout(async () => {
       try {
-        startPerformanceCheck("Local catalog search", { query });
-        let localResults = [];
-        try {
-          localResults = await awaitNutritionSearchResult(
-            searchLocalNutritionFoods(query),
-            LOCAL_CATALOG_DEADLINE_MS,
-            "Local nutrition catalog timed out"
-          );
-        } catch (error) {
-          if (!controller.signal.aborted) {
-            console.warn("Local nutrition catalog search timed out:", error);
-          }
+        startPerformanceCheck("Food search · nutrition API", { query, packagedResults: bundledFallbackFoods.length });
+        const response = await awaitNutritionSearchResult(
+          fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+            signal: controller.signal
+          }, REMOTE_SEARCH_DEADLINE_MS),
+          REMOTE_SEARCH_DEADLINE_MS
+        );
+
+        if (!response.ok) {
+          throw new Error(`Nutrition search API error: ${response.status}`);
         }
+
+        const data = await response.json();
         if (cancelled) return;
+        const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
 
-        const combinedLocalResults = mergeNutritionFoodResults(bundledFallbackFoods, localResults);
-        setFatSecretFoods(combinedLocalResults);
-        setFatSecretError("");
-        setNutritionFallbackSuggestions([]);
-        endPerformanceCheck("Local catalog search", { query, results: localResults.length });
-
-        if (combinedLocalResults.length >= 8) {
-          setFatSecretLoading(false);
-          return;
-        }
-
-        setFatSecretLoading(false);
-        timer = window.setTimeout(async () => {
-          let shouldShowRemoteLoading = false;
-          try {
-            shouldShowRemoteLoading = combinedLocalResults.length === 0;
-            if (shouldShowRemoteLoading) setFatSecretLoading(true);
-            startPerformanceCheck("Food search · nutrition API", { query, localResults: combinedLocalResults.length });
-
-            const response = await fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
-              signal: controller.signal
-            }, REMOTE_SEARCH_DEADLINE_MS);
-
-            if (!response.ok) {
-              throw new Error(`Nutrition search API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
-
-            setFatSecretFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
-            setNutritionFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
-            endPerformanceCheck("Food search · nutrition API", { query, results: remoteFoods.length });
-          } catch (error) {
-            if (!controller.signal.aborted) {
-              if (error.name !== "AbortError") {
-                console.error(error);
-              }
-              if (combinedLocalResults.length) {
-                setFatSecretError("Нет соединения. Показаны доступные продукты на устройстве.");
-              } else {
-                setNutritionFallbackSuggestions(["Фото продукта", "Попробуй штрихкод", "Создать продукт"]);
-                setFatSecretError("Локально не найдено. ИИ-поиск временно недоступен.");
-                showAppError(
-                  typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "api",
-                  "Поиск еды сейчас недоступен."
-                );
-              }
-            }
-          } finally {
-            if (!controller.signal.aborted) {
-              if (shouldShowRemoteLoading) setFatSecretLoading(false);
-            }
-          }
-        }, localResults.length ? 900 : 250);
+        startTransition(() => {
+          setFatSecretFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
+          setNutritionFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
+        });
+        endPerformanceCheck("Food search · nutrition API", { query, results: remoteFoods.length });
       } catch (error) {
-        if (!cancelled && !controller.signal.aborted) {
-          if (error.name !== "AbortError") {
-            console.error(error);
-          }
-          setFatSecretLoading(false);
+        if (!cancelled && !controller.signal.aborted && error.name !== "AbortError") {
+          console.error(error);
           if (bundledFallbackFoods.length) {
-            setFatSecretFoods(bundledFallbackFoods);
             setFatSecretError("Нет соединения. Показаны доступные продукты на устройстве.");
-            return;
+          } else {
+            setNutritionFallbackSuggestions(["Фото продукта", "Уточнить название", "Создать продукт"]);
+            setFatSecretError("Общая база временно недоступна.");
+            showAppError(
+              typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "api",
+              "Поиск еды сейчас недоступен."
+            );
           }
-          setFatSecretError("Локальный каталог временно недоступен.");
+        }
+      } finally {
+        if (!cancelled && !controller.signal.aborted) {
+          setFatSecretLoading(false);
         }
       }
-    };
-
-    runSearch();
+    }, REMOTE_SEARCH_DEBOUNCE_MS);
 
     return () => {
       cancelled = true;
-      if (timer) clearTimeout(timer);
+      clearTimeout(timer);
       controller.abort();
     };
   }, [
     endPerformanceCheck,
-    nutrition.myFoods,
     nutritionPickerOpen,
     nutritionSearch,
     nutritionSearchTab,
@@ -173,72 +128,49 @@ export function useNutritionSearchEffects({
     const controller = new AbortController();
     let timer;
     let cancelled = false;
+    const bundledFallbackFoods = searchBundledNutritionFallbackFoods(query, 20);
+    setDishIngredientExternalFoods(bundledFallbackFoods);
+    setDishIngredientFallbackSuggestions([]);
     setDishIngredientLoading(true);
 
-    const runSearch = async () => {
+    timer = window.setTimeout(async () => {
       try {
-        startPerformanceCheck("Local dish ingredient search", { query });
-        const localResults = await searchLocalNutritionFoods(query, 20);
+        startPerformanceCheck("Food search · dish ingredient API", {
+          query,
+          packagedResults: bundledFallbackFoods.length
+        });
+        const response = await awaitNutritionSearchResult(
+          fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+            signal: controller.signal
+          }, REMOTE_SEARCH_DEADLINE_MS),
+          REMOTE_SEARCH_DEADLINE_MS
+        );
+
+        if (!response.ok) {
+          throw new Error(`Dish ingredient search API error: ${response.status}`);
+        }
+
+        const data = await response.json();
         if (cancelled) return;
-
-        setDishIngredientExternalFoods(localResults);
-        setDishIngredientFallbackSuggestions([]);
-        endPerformanceCheck("Local dish ingredient search", { query, results: localResults.length });
-
-        if (localResults.length >= 8) {
-          setDishIngredientLoading(false);
-          return;
-        }
-
-        setDishIngredientLoading(false);
-        timer = window.setTimeout(async () => {
-          try {
-            setDishIngredientLoading(true);
-            startPerformanceCheck("Food search · dish ingredient API", { query, localResults: localResults.length });
-
-            const response = await fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
-              signal: controller.signal
-            }, 12000);
-
-            if (!response.ok) {
-              throw new Error(`Dish ingredient search API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
-            setDishIngredientExternalFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
-            setDishIngredientFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
-            endPerformanceCheck("Food search · dish ingredient API", { query, results: remoteFoods.length });
-          } catch (error) {
-            if (!controller.signal.aborted) {
-              if (error.name !== "AbortError") {
-                console.error(error);
-              }
-              if (!localResults.length) {
-                setDishIngredientFallbackSuggestions([]);
-              }
-            }
-          } finally {
-            if (!controller.signal.aborted) {
-              setDishIngredientLoading(false);
-            }
-          }
-        }, localResults.length ? 900 : 250);
+        const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
+        startTransition(() => {
+          setDishIngredientExternalFoods((current) => mergeNutritionFoodResults(current, remoteFoods));
+          setDishIngredientFallbackSuggestions(Array.isArray(data.fallbackSuggestions) ? data.fallbackSuggestions : []);
+        });
+        endPerformanceCheck("Food search · dish ingredient API", { query, results: remoteFoods.length });
       } catch (error) {
-        if (!cancelled && !controller.signal.aborted) {
-          if (error.name !== "AbortError") {
-            console.error(error);
-          }
-          setDishIngredientLoading(false);
+        if (!cancelled && !controller.signal.aborted && error.name !== "AbortError") {
+          console.error(error);
+          if (!bundledFallbackFoods.length) setDishIngredientFallbackSuggestions([]);
         }
+      } finally {
+        if (!cancelled && !controller.signal.aborted) setDishIngredientLoading(false);
       }
-    };
-
-    runSearch();
+    }, REMOTE_SEARCH_DEBOUNCE_MS);
 
     return () => {
       cancelled = true;
-      if (timer) clearTimeout(timer);
+      clearTimeout(timer);
       controller.abort();
     };
   }, [

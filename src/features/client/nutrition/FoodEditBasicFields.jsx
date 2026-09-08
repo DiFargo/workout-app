@@ -1,5 +1,9 @@
 import styles from "./FoodEditBasicFields.module.css";
 
+function selectNumericValue(event) {
+  event.currentTarget.select();
+}
+
 export default function FoodEditBasicFields({
   selectedFood,
   iconPresets,
@@ -22,43 +26,41 @@ export default function FoodEditBasicFields({
       className={styles.root}
       data-css-module-scope="food-edit-basic-fields"
       data-testid="food-edit-basic-fields"
+      data-food-type={isDish ? "dish" : "food"}
     >
-      <label
-        className={styles.field}
-        data-css-module-control="food-edit-basic-fields"
-        data-testid="food-edit-basic-name"
-      >
-        <span className={styles.labelText}>{isDish ? "Название блюда" : "Краткое название продукта"}</span>
-        <input
-          className={styles.input}
+      <section className={`${styles.section} ${styles.mainSection}`} aria-label="Название и иконка">
+        <label
+          className={styles.field}
           data-css-module-control="food-edit-basic-fields"
-          value={selectedFood.name}
-          onChange={(event) => onUpdateField("name", event.target.value)}
-          placeholder="Название"
-          autoFocus
-          required
-          aria-required="true"
-          aria-invalid={!String(selectedFood.name || "").trim()}
-        />
-      </label>
-
-      <div className={styles.iconBox} data-testid="food-edit-basic-icon">
-        <div className={styles.iconPreview} data-testid="food-edit-basic-icon-preview">
-          <span>{selectedFood.icon || getFoodIcon(selectedFood)}</span>
-        </div>
-
-        <label className={`${styles.field} ${styles.iconField}`} data-css-module-control="food-edit-basic-fields">
-          <span className={styles.labelText}>Иконка</span>
+          data-testid="food-edit-basic-name"
+        >
+          <span className={styles.labelText}>{isDish ? "Название блюда" : "Название продукта"}</span>
           <input
-            className={`${styles.input} ${styles.iconInput}`}
+            className={styles.input}
             data-css-module-control="food-edit-basic-fields"
-            value={selectedFood.icon || ""}
-            onChange={(event) => onUpdateField("icon", event.target.value.slice(0, 4))}
-            placeholder="🍗"
-            maxLength={4}
+            value={selectedFood.name}
+            onChange={(event) => onUpdateField("name", event.target.value)}
+            placeholder={isDish ? "Например, сырники" : "Например, греческий йогурт"}
+            required
+            aria-required="true"
+            aria-invalid={!String(selectedFood.name || "").trim()}
           />
         </label>
-      </div>
+
+        <div className={styles.iconBox} data-testid="food-edit-basic-icon">
+          <label className={`${styles.field} ${styles.iconField}`} data-css-module-control="food-edit-basic-fields">
+            <span className={styles.labelText}>Иконка</span>
+            <input
+              className={`${styles.input} ${styles.iconInput}`}
+              data-css-module-control="food-edit-basic-fields"
+              value={selectedFood.icon || ""}
+              onChange={(event) => onUpdateField("icon", event.target.value.slice(0, 4))}
+              placeholder={getFoodIcon(selectedFood)}
+              maxLength={4}
+            />
+          </label>
+        </div>
+      </section>
 
       <div className={styles.presetRow} data-testid="food-edit-basic-presets">
         {iconPresets.map((icon) => (
@@ -76,7 +78,13 @@ export default function FoodEditBasicFields({
         ))}
       </div>
 
-      <div className={styles.macroGrid} data-testid="food-edit-basic-macros">
+      <section className={styles.section} aria-labelledby="food-edit-macros-title">
+        <div className={styles.sectionHeader}>
+          <strong id="food-edit-macros-title">Пищевая ценность</strong>
+          <span>{isDish ? "На всё блюдо" : `На 100 ${portionUnit}`}</span>
+        </div>
+
+        <div className={styles.macroGrid} data-testid="food-edit-basic-macros">
         <label className={`${styles.field} ${styles.macroField}`} data-css-module-control="food-edit-basic-fields">
           <span className={`${styles.labelText} ${styles.macroTitle}`}>{isDish ? "Ккал всего" : "Ккал"}</span>
           <input
@@ -84,6 +92,7 @@ export default function FoodEditBasicFields({
             data-css-module-control="food-edit-basic-fields"
             value={selectedFood.calories}
             onChange={(event) => onUpdateField("calories", event.target.value)}
+            onFocus={selectNumericValue}
             inputMode="decimal"
             aria-invalid={Boolean(productErrors.calories)}
           />
@@ -96,6 +105,7 @@ export default function FoodEditBasicFields({
             data-css-module-control="food-edit-basic-fields"
             value={selectedFood.protein}
             onChange={(event) => onUpdateField("protein", event.target.value)}
+            onFocus={selectNumericValue}
             inputMode="decimal"
             aria-invalid={Boolean(productErrors.protein)}
           />
@@ -108,6 +118,7 @@ export default function FoodEditBasicFields({
             data-css-module-control="food-edit-basic-fields"
             value={selectedFood.fat}
             onChange={(event) => onUpdateField("fat", event.target.value)}
+            onFocus={selectNumericValue}
             inputMode="decimal"
             aria-invalid={Boolean(productErrors.fat)}
           />
@@ -120,23 +131,27 @@ export default function FoodEditBasicFields({
             data-css-module-control="food-edit-basic-fields"
             value={selectedFood.carbs}
             onChange={(event) => onUpdateField("carbs", event.target.value)}
+            onFocus={selectNumericValue}
             inputMode="decimal"
             aria-invalid={Boolean(productErrors.carbs)}
           />
         </label>
-      </div>
+        </div>
+      </section>
 
-      <label
-        className={`${styles.field} ${styles.portionField}`}
-        data-css-module-control="food-edit-basic-fields"
-        data-testid="food-edit-basic-portion"
-      >
-        <span className={styles.labelText}>{isDish ? "Итоговый вес блюда" : "Вес порции"}</span>
-        <div className={styles.portionRow} data-testid="food-edit-basic-portion-row">
+      <section className={`${styles.section} ${styles.portionSection}`} aria-label={isDish ? "Вес готового блюда" : "Порция"}>
+        <label
+          className={`${styles.field} ${styles.portionField}`}
+          data-css-module-control="food-edit-basic-fields"
+          data-testid="food-edit-basic-portion"
+        >
+          <span className={styles.labelText}>{isDish ? "Итоговый вес" : "Вес порции"}</span>
+          <div className={styles.portionRow} data-testid="food-edit-basic-portion-row">
           <input
             className={styles.portionInput}
             data-css-module-control="food-edit-basic-fields"
             value={portionValue}
+            onFocus={selectNumericValue}
             onChange={(event) => {
               if (isDish) {
                 onUpdateDishTotalWeight(event.target.value);
@@ -161,8 +176,10 @@ export default function FoodEditBasicFields({
           >
             {portionUnit}
           </button>
-        </div>
-      </label>
+          </div>
+        </label>
+        {isDish && <small className={styles.portionHint}>Вес после приготовления</small>}
+      </section>
 
       {Object.values(productErrors).some(Boolean) && (
         <div className={styles.validation} data-testid="food-edit-basic-validation" role="alert">

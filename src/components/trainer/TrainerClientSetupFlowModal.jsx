@@ -360,7 +360,7 @@ export default function TrainerClientSetupFlowModal({
   }
 
   return (
-    <div className={styles.backdrop} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && requestClose()}>
+    <div className={styles.backdrop} data-modal-backdrop="true" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && requestClose()}>
       <section className={styles.sheet} role="dialog" aria-modal="true" aria-labelledby="trainer-client-setup-flow-title">
         <header className={styles.header}>
           <div className={styles.headerCopy}>

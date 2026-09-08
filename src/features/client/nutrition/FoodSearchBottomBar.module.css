@@ -173,8 +173,8 @@
   border: 1px solid rgba(255, 255, 255, 0.96);
   border-radius: var(--layout-client-dock-radius);
   background: rgba(255, 255, 255, 0.96);
-  color: #7b7682;
-  box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
+  color: var(--apple-secondary, #636366);
+  box-shadow: 0 8px 30px rgba(27, 35, 31, 0.1);
   backdrop-filter: blur(20px) saturate(1.15);
   -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
@@ -196,7 +196,7 @@
   gap: 2px;
   border: 0;
   border-radius: var(--layout-client-dock-button-radius);
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span {
@@ -238,8 +238,8 @@
 :global(:root[data-app-theme="warm-light"]) .active:hover,
 :global(:root[data-app-theme="warm-light"]) .active:active {
   border: 0;
-  background: #f5f2f7;
-  color: #8f7ac8;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #3f73b8);
   box-shadow: none;
 }
 

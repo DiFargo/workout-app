@@ -190,6 +190,7 @@ export function leaveClientWorkoutToPlan({
   setIsWorkoutSaved,
   setShowWorkoutSavedCard,
   setWorkoutHistorySyncState,
+  setIndividualWorkoutIndexInitialized,
   setPage
 }) {
   setSelectedWorkoutId(null);
@@ -216,6 +217,7 @@ export function leaveClientWorkoutToPlan({
   setIsWorkoutSaved(false);
   setShowWorkoutSavedCard(false);
   setWorkoutHistorySyncState("idle");
+  setIndividualWorkoutIndexInitialized?.(false);
   setPage(APP_PAGES.WORKOUTS);
 }
 

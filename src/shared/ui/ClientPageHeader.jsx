@@ -84,6 +84,7 @@ export default function ClientPageHeader({
       <header
         className={`${styles.root} ${compact ? styles.compact : styles.large} ${controlsVariant === "workout" ? styles.workoutControls : ""} ${titleAlign === "start" ? styles.startTitle : ""} ${primary ? styles.primary : ""} ${embedded ? styles.embedded : ""} ${className}`.trim()}
         data-client-page-header="true"
+        data-client-page-header-primary={primary ? "true" : undefined}
         data-client-page-header-controls={controlsVariant}
         data-client-page-header-layout={embedded ? "embedded" : "screen"}
         data-css-module-scope={scope}

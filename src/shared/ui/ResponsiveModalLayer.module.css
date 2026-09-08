@@ -1,3 +1,30 @@
+/* One scrim for every modal. Feature modules still own sheet geometry and content. */
+:global(:root) {
+  --modal-backdrop-color: rgba(28, 28, 30, 0.28);
+  --modal-backdrop-filter: blur(4px);
+}
+
+:global(html:root body [data-modal-backdrop="true"]),
+:global(html:root body [data-trainer-modal-backdrop="true"]) {
+  background: var(--modal-backdrop-color) !important;
+  backdrop-filter: var(--modal-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--modal-backdrop-filter) !important;
+}
+
+/* Backdrop buttons are painted separately, so their wrapper must not dim twice. */
+:global(html:root body [data-modal-layer="true"]) {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* A nested confirmation has one scrim, not two accumulating blur/dim layers. */
+:global(html:root body [data-modal-backdrop-muted="true"]) {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* A modal surface is explicitly marked so a fullscreen backdrop never gets
  * mistaken for the dialog itself at a tablet breakpoint. */
 :global([data-modal-surface="true"]) {
@@ -7,17 +34,104 @@
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
+}
+
+/* Client modal surfaces use one opaque visual contract. Backdrops may dim the
+ * page, but content must never depend on glass blur for readability. */
+:global(:root[data-app-theme="warm-light"] body [data-modal-surface="true"]) {
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-canvas, #f2f2f7);
+  background-image: none;
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 24px 64px rgba(27, 35, 31, 0.22), 0 2px 8px rgba(27, 35, 31, 0.08);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"] body [data-modal-surface="true"] button[aria-label^="Закрыть"]) {
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  background: #ffffff;
+  color: var(--apple-blue-pressed, #3565a3);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:global(:root[data-app-theme="warm-light"] body [data-profile-modal-close="true"]) {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--apple-blue-pressed, #3565a3);
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] header h1),
+:global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] header h2) {
+  max-width: 100%;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+/* Cabinet sheets share one opaque iOS-style visual language. The feature
+ * modules keep their own content layout, while this layer owns the shell. */
+:global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"]) {
+  width: min(402px, calc(100vw - 24px));
+  max-width: 402px;
+  padding: 16px;
+  gap: 12px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 30px;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 28px 72px rgba(27, 35, 31, 0.24), 0 4px 14px rgba(27, 35, 31, 0.08);
+}
+
+:global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] input),
+:global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] textarea),
+:global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] select) {
+  background-color: #ffffff;
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global([data-modal-surface="true"] button) {
   min-height: 44px;
+  touch-action: manipulation;
+}
+
+:global([data-modal-surface="true"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"])),
+:global([data-modal-surface="true"] select),
+:global([data-modal-surface="true"] textarea) {
+  min-height: 44px;
+  scroll-margin-block: 88px;
+}
+
+:global([data-modal-surface="true"] :is(button, input, select, textarea, a):focus-visible) {
+  outline: 3px solid rgba(60, 111, 170, 0.45);
+  outline-offset: 2px;
+}
+
+:global([data-modal-surface="true"] :is(h1, h2, h3, p, strong, small)) {
+  overflow-wrap: anywhere;
+}
+
+:global([data-modal-surface="true"] [aria-busy="true"]) {
+  cursor: progress;
 }
 
 @media (max-width: 699px) {
   :global([data-modal-surface="true"]) {
     width: calc(100vw - (var(--layout-modal-gutter) * 2));
     border-radius: 20px;
+    scroll-padding-block: 16px calc(92px + env(safe-area-inset-bottom, 0px));
   }
 
   :global(:root[data-app-theme="warm-light"] body #root [data-testid^="profile-"][data-testid$="-overlay"]:not([data-testid="profile-avatar-crop-overlay"])) {
@@ -29,13 +143,44 @@
   }
 
   :global(:root[data-app-theme="warm-light"] body #root [data-modal-surface="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])) {
-    width: min(100%, 402px);
-    max-width: 402px;
+    width: 100%;
+    max-width: 100%;
     max-height: calc(100dvh - max(52px, calc(env(safe-area-inset-top) + 40px)));
     border-right: 0;
     border-bottom: 0;
     border-left: 0;
-    border-radius: 28px 28px 0 0;
+    border-radius: 25px 25px 0 0;
+  }
+
+  :global(:root[data-app-theme="warm-light"] body #root [data-cabinet-sheet="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])) {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    padding: 22px 20px max(16px, env(safe-area-inset-bottom));
+    border-radius: 25px 25px 0 0;
+    box-shadow: 0 -12px 42px rgba(27, 35, 31, 0.18);
+  }
+
+  :global(:root[data-app-theme="warm-light"] body #root [data-cabinet-sheet="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])::before) {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 38px;
+    height: 4px;
+    border-radius: 999px;
+    background: #d1d1d6;
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global([data-modal-surface="true"]),
+  :global([data-modal-surface="true"] *) {
+    scroll-behavior: auto;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

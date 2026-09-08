@@ -1,3 +1,4 @@
+import { ChevronRight, Plus } from "lucide-react";
 import styles from "./NutritionMealModal.module.css";
 
 export default function NutritionMealModal({
@@ -21,21 +22,26 @@ export default function NutritionMealModal({
   return (
     <div
       className={styles.overlay}
-      role="dialog"
-      aria-modal="true"
-      aria-label={activeMeal.name}
+      role="presentation"
       data-testid="nutrition-meal-modal"
       data-css-module-scope="nutrition-meal-modal"
     >
       <button
         type="button"
-        className={styles.backdrop}
+        className={styles.backdrop} data-modal-backdrop="true"
         onClick={onClose}
         aria-label="Закрыть список продуктов"
         data-nutrition-meal-part="backdrop"
       />
 
-      <section className={styles.sheet} data-nutrition-meal-part="sheet">
+      <section
+        className={styles.sheet}
+        role="dialog"
+        aria-modal="true"
+        aria-label={activeMeal.name}
+        data-modal-surface="true"
+        data-nutrition-meal-part="sheet"
+      >
         <header className={styles.header} data-nutrition-meal-part="header">
           <span className={styles.icon} aria-hidden="true" data-nutrition-meal-part="icon">{activeMeal.icon}</span>
           <div className={styles.headerInfo}>
@@ -109,7 +115,7 @@ export default function NutritionMealModal({
                   </span>
                 </div>
 
-                <div className={styles.arrow} data-nutrition-meal-part="arrow">›</div>
+                <div className={styles.arrow} data-nutrition-meal-part="arrow" aria-hidden="true"><ChevronRight /></div>
               </div>
             </div>
           ))}
@@ -121,7 +127,7 @@ export default function NutritionMealModal({
           onClick={() => onAddFood(activeMeal.id)}
           data-testid="nutrition-meal-add"
         >
-          <span className={styles.addIcon} aria-hidden="true">＋</span>
+          <span className={styles.addIcon} aria-hidden="true"><Plus /></span>
           Добавить продукт
         </button>
       </section>

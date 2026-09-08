@@ -30,7 +30,7 @@
 .root {
   --plan-panel-background: rgba(255, 255, 255, 0.035);
   --plan-panel-border: rgba(255, 255, 255, 0.065);
-  --plan-text: #28262e;
+  --plan-text: var(--apple-text, #1c1c1e);
   --plan-muted: rgba(255, 255, 255, 0.58);
   --plan-chip-background: rgba(255, 255, 255, 0.04);
   --plan-chip-border: rgba(255, 255, 255, 0.055);
@@ -492,23 +492,23 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .backdrop {
-  background: rgba(72, 63, 87, 0.22);
+  background: rgba(27, 35, 31, 0.22);
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  --plan-panel-background: #f7f6f8;
+  --plan-panel-background: var(--apple-canvas, #f2f2f7);
   --plan-panel-border: #e5e7f0;
-  --plan-text: #7b7682;
-  --plan-muted: #7b7682;
+  --plan-text: var(--apple-secondary, #636366);
+  --plan-muted: var(--apple-secondary, #636366);
   --plan-chip-background: #fff;
-  --plan-chip-border: #efebf3;
-  --plan-chip-text: #7b7682;
-  --plan-close-background: #f5f2f7;
-  --plan-close-border: #efebf3;
-  --plan-close-text: #7b7682;
+  --plan-chip-border: var(--apple-separator, rgba(60,60,67,.12));
+  --plan-chip-text: var(--apple-secondary, #636366);
+  --plan-close-background: var(--apple-surface-muted, #efeff4);
+  --plan-close-border: var(--apple-separator, rgba(60,60,67,.12));
+  --plan-close-text: var(--apple-secondary, #636366);
 
-  border-color: #efebf3;
-  background: #fff;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-canvas, #f2f2f7);
   color: var(--plan-text);
   -webkit-text-fill-color: var(--plan-text);
 }
@@ -588,34 +588,34 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .backdrop {
-  background: rgba(40, 38, 46, 0.35);
+  background: rgba(27, 35, 31, 0.35);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  --plan-panel-background: #f5f2f7;
+  --plan-panel-background: var(--apple-surface-muted, #efeff4);
   --plan-panel-border: transparent;
-  --plan-text: #28262e;
-  --plan-muted: #7b7682;
-  --plan-chip-background: #f5f2f7;
+  --plan-text: var(--apple-text, #1c1c1e);
+  --plan-muted: var(--apple-secondary, #636366);
+  --plan-chip-background: var(--apple-surface-muted, #efeff4);
   --plan-chip-border: transparent;
-  --plan-chip-text: #8f7ac8;
-  --plan-close-background: #f5f2f7;
+  --plan-chip-text: var(--apple-action, #3f73b8);
+  --plan-close-background: var(--apple-surface-muted, #efeff4);
   --plan-close-border: transparent;
-  --plan-close-text: #28262e;
+  --plan-close-text: var(--apple-text, #1c1c1e);
   top: auto;
   bottom: max(16px, env(safe-area-inset-bottom));
   width: min(370px, calc(100vw - 32px));
   max-width: 370px;
   max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px)));
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 26px;
   background: #fff;
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
-  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
   transform: translateX(-50%);
   overflow-x: hidden;
   overflow-y: auto;
@@ -623,27 +623,27 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .header { grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; }
-:global(:root[data-app-theme="warm-light"]) .titleEyebrow { color: #28262e; -webkit-text-fill-color: #28262e; font-size: 18px; font-weight: 700; }
-:global(:root[data-app-theme="warm-light"]) .title { color: #7b7682; -webkit-text-fill-color: #7b7682; font-size: 11px; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #f5f2f7; color: #28262e; -webkit-text-fill-color: #28262e; font-size: 24px; font-weight: 400; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: #f5f2f7; color: #28262e; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .titleEyebrow { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-size: 18px; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .title { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-size: 11px; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: var(--apple-surface-muted, #efeff4); color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-size: 24px; font-weight: 400; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: var(--apple-surface-muted, #efeff4); color: var(--apple-text, #1c1c1e); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .dayPillActive { background: #e8efea; }
-:global(:root[data-app-theme="warm-light"]) .dayTitle { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .dayDescription { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .dayTitle { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .dayDescription { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 450; }
 
 :global(:root[data-app-theme="warm-light"]) .calorieProgress,
 :global(:root[data-app-theme="warm-light"]) .scoreBlock,
 :global(:root[data-app-theme="warm-light"]) .macro,
 :global(:root[data-app-theme="warm-light"]) .conclusion {
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 18px;
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: #efebf3; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .pixelActive { background: #8f7ac8; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: var(--apple-separator, rgba(60,60,67,.12)); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .pixelActive { background: var(--apple-action, #3f73b8); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .overLimit .pixelActive,
 :global(:root[data-app-theme="warm-light"]) .root[data-state="over-limit"] .pixelActive { background: #b36e72; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .calorieLabel,
@@ -651,14 +651,670 @@
 :global(:root[data-app-theme="warm-light"]) .scoreLabel,
 :global(:root[data-app-theme="warm-light"]) .macroLabel,
 :global(:root[data-app-theme="warm-light"]) .macroGoal,
-:global(:root[data-app-theme="warm-light"]) .conclusionLabel { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .conclusionLabel { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .calorieValue,
 :global(:root[data-app-theme="warm-light"]) .macroValue,
-:global(:root[data-app-theme="warm-light"]) .conclusionText { color: #28262e; -webkit-text-fill-color: #28262e; font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: #efebf3; }
-:global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: #7b7682; -webkit-text-fill-color: #7b7682; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .macroDot { background: #8f7ac8; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: #f5f2f7; color: #8f7ac8; -webkit-text-fill-color: #8f7ac8; box-shadow: none; font-weight: 550; }
+:global(:root[data-app-theme="warm-light"]) .conclusionText { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: var(--apple-separator, rgba(60,60,67,.12)); }
+:global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .macroDot { background: var(--apple-action, #3f73b8); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); -webkit-text-fill-color: var(--apple-action, #3f73b8); box-shadow: none; font-weight: 550; }
 :global(:root[data-app-theme="warm-light"]) .good { background: #e8efea; color: #708d79; -webkit-text-fill-color: #708d79; }
 :global(:root[data-app-theme="warm-light"]) .warning { background: #f2ece7; color: #ae8768; -webkit-text-fill-color: #ae8768; }
-:global(:root[data-app-theme="warm-light"]) .info { background: #f5f2f7; color: #6f879c; -webkit-text-fill-color: #6f879c; }
+:global(:root[data-app-theme="warm-light"]) .info { background: var(--apple-surface-muted, #efeff4); color: #6f879c; -webkit-text-fill-color: #6f879c; }
+
+/* Current opaque iOS nutrition-plan sheet. */
+:global(:root) .root.modern {
+  width: min(390px, calc(100vw - 24px));
+  max-width: 390px;
+  padding: 18px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 28px;
+  background: var(--apple-canvas, #f2f2f7);
+  box-shadow: 0 22px 64px rgba(27, 35, 31, 0.18);
+}
+
+:global(:root) .modern .header {
+  grid-template-columns: minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+:global(:root) .modern .titleBox {
+  grid-column: 1;
+  text-align: left;
+}
+
+:global(:root) .modern .titleEyebrow {
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 27px;
+  letter-spacing: -0.4px;
+}
+
+:global(:root) .modern .title {
+  margin-top: 2px;
+  color: var(--apple-blue-pressed, #3565a3);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+  text-align: left;
+  text-transform: uppercase;
+  -webkit-text-fill-color: var(--apple-blue-pressed, #3565a3);
+}
+
+:global(:root) .modern .close {
+  grid-column: 2;
+  background: var(--apple-surface-muted, #efeff4);
+}
+
+:global(:root) .modern .close svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.1;
+}
+
+:global(:root) .modern .dayPill {
+  margin: 0 0 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 16px;
+  background: var(--apple-canvas, #f2f2f7);
+  text-align: left;
+}
+
+:global(:root) .modern .dayPillActive {
+  border-color: #dce9df;
+  background: #eef5f0;
+}
+
+:global(:root) .modern .dayTitle {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 17px;
+}
+
+:global(:root) .modern .dayDescription {
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+:global(:root) .modern .body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 106px;
+  align-items: stretch;
+  gap: 10px;
+}
+
+:global(:root) .modern .calorieProgress {
+  min-height: 116px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 18px;
+  background: #fff;
+}
+
+.calorieTopline,
+.calorieSummary {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.calorieTopline {
+  color: var(--apple-text, #1c1c1e);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 17px;
+}
+
+.calorieTopline strong {
+  color: var(--apple-blue-pressed, #3565a3);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.calorieTrack,
+.macroTrack {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eee9f3;
+}
+
+.calorieTrack { height: 8px; }
+
+.calorieFill {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: var(--apple-action, #3f73b8);
+}
+
+.calorieFill[data-over-limit="true"] { background: #b56570; }
+
+.calorieSummary {
+  align-items: flex-end;
+  color: var(--apple-secondary, #636366);
+  font-size: 9px;
+  line-height: 13px;
+}
+
+.calorieSummary span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.calorieSummary span:last-child { text-align: right; }
+.calorieSummary strong { color: var(--apple-text, #1c1c1e); font-size: 14px; font-variant-numeric: tabular-nums; }
+
+:global(:root) .modern .scoreBlock {
+  min-height: 116px;
+  margin: 0;
+  padding: 14px 8px;
+  gap: 5px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 18px;
+  background: var(--apple-canvas, #f2f2f7);
+}
+
+:global(:root) .modern .scoreBlock svg {
+  width: 72px;
+  height: 72px;
+  filter: none;
+}
+
+:global(:root) .modern .scoreLabel {
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+}
+
+.scoreValue {
+  color: var(--apple-text, #1c1c1e);
+  font-size: 26px;
+  font-weight: 750;
+  line-height: 30px;
+  letter-spacing: -0.6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.scoreValue small { color: var(--apple-secondary, #636366); font-size: 11px; font-weight: 600; }
+.scoreCaption { color: var(--apple-blue-pressed, #3565a3); font-size: 9px; font-weight: 700; line-height: 13px; }
+
+:global(:root) .modern .macros {
+  margin-top: 10px;
+  gap: 8px;
+}
+
+:global(:root) .modern .macro {
+  min-width: 0;
+  min-height: 112px;
+  padding: 12px 10px 10px;
+  align-items: flex-start;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 17px;
+  background: #fff;
+  text-align: left;
+}
+
+:global(:root) .modern .macroLabel { font-size: 10px; line-height: 14px; }
+:global(:root) .modern .macroValue { margin-top: 5px; font-size: 16px; line-height: 20px; white-space: nowrap; }
+:global(:root) .modern .macroGoal { margin-top: 0; font-size: 9px; line-height: 13px; white-space: nowrap; }
+
+.macroTrack {
+  height: 5px;
+  margin-top: 9px;
+}
+
+.macroTrack i {
+  width: var(--macro-progress);
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: var(--apple-action, #3f73b8);
+}
+
+.macroPercentText {
+  margin-top: 4px;
+  color: var(--apple-secondary, #636366);
+  font-size: 9px;
+  font-weight: 650;
+  line-height: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+:global(:root) .modern .conclusion {
+  margin-top: 10px;
+  padding: 13px 14px;
+  border-radius: 18px;
+  background: var(--apple-canvas, #f2f2f7);
+  text-align: left;
+}
+
+:global(:root) .modern .conclusionLabel { font-size: 10px; line-height: 14px; }
+:global(:root) .modern .conclusionText { margin-top: 4px; font-size: 12px; font-weight: 550; line-height: 17px; }
+
+:global(:root) .modern .badges {
+  margin-top: 10px;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+:global(:root) .modern .badge {
+  min-height: 30px;
+  padding: 0 10px;
+  gap: 5px;
+  border-radius: 12px;
+  font-size: 10px;
+}
+
+:global(:root) .modern .badgeIcon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  stroke-width: 2;
+}
+
+@media (max-width: 360px) {
+  :global(:root) .root.modern { padding: 14px; }
+  :global(:root) .modern .body { grid-template-columns: minmax(0, 1fr) 96px; gap: 8px; }
+  :global(:root) .modern .calorieProgress { padding: 12px; }
+  :global(:root) .modern .macro { padding-inline: 8px; }
+  :global(:root) .modern .macroValue { font-size: 15px; }
+}
+
+/* Polished opaque plan sheet. Keep this block last so legacy theme rules cannot leak in. */
+:global(:root) .root.modern.modern {
+  top: 50%;
+  bottom: auto;
+  width: min(406px, calc(100vw - 24px));
+  max-width: 406px;
+  max-height: calc(100dvh - 24px);
+  margin: 0;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 30px;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 26px 72px rgba(27, 35, 31, 0.2);
+  transform: translate(-50%, -50%);
+  -webkit-text-fill-color: initial;
+}
+
+:global(:root) .modern .header {
+  grid-template-columns: minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+:global(:root) .modern .titleBox {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px 10px;
+  text-align: left;
+}
+
+:global(:root) .modern .titleEyebrow {
+  color: var(--apple-text, #1c1c1e);
+  font-size: 24px;
+  font-weight: 750;
+  line-height: 28px;
+  letter-spacing: -0.65px;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .modern .title {
+  margin: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--apple-blue-tint, #eef3fa);
+  color: var(--apple-blue, #3c6faa);
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 13px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+}
+
+:global(:root) .modern .close {
+  grid-column: 2;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  background: #ffffff;
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 5px 16px rgba(27, 35, 31, 0.06);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .modern .dayPill {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 17px;
+  background: #ffffff;
+  text-align: left;
+}
+
+:global(:root) .modern .dayPillActive {
+  border-color: #d7e2da;
+  background: #f1f6f2;
+}
+
+:global(:root) .modern .dayTitle {
+  color: var(--apple-text, #1c1c1e);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .modern .dayDescription {
+  margin-top: 3px;
+  color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 16px;
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+}
+
+:global(:root) .modern .body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 104px;
+  align-items: stretch;
+  gap: 10px;
+}
+
+:global(:root) .modern .calorieProgress {
+  min-height: 124px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+:global(:root) .modern .calorieTopline {
+  color: var(--apple-text, #1c1c1e);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+:global(:root) .modern .calorieTopline strong {
+  color: var(--apple-blue, #3c6faa);
+  font-size: 13px;
+  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+}
+
+:global(:root) .modern .calorieTrack {
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 999px;
+  background: #eee9f3;
+}
+
+:global(:root) .modern .calorieFill {
+  background: var(--apple-action, #3f73b8);
+}
+
+:global(:root) .modern .calorieFill[data-over-limit="true"] {
+  background: #b56570;
+}
+
+:global(:root) .modern .calorieSummary {
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  line-height: 14px;
+}
+
+:global(:root) .modern .calorieSummary strong {
+  color: var(--apple-text, #1c1c1e);
+  font-size: 17px;
+  line-height: 20px;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .modern .scoreBlock {
+  min-height: 124px;
+  margin: 0;
+  padding: 14px 8px;
+  gap: 6px;
+  border: 1px solid #e6dff2;
+  border-radius: 20px;
+  background: #f0ebf8;
+}
+
+:global(:root) .modern .scoreLabel {
+  color: #6f6878;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+  text-transform: none;
+  -webkit-text-fill-color: #6f6878;
+}
+
+:global(:root) .modern .scoreValue {
+  color: var(--apple-text, #1c1c1e);
+  font-size: 30px;
+  font-weight: 750;
+  line-height: 34px;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .modern .scoreValue small {
+  color: #6f6878;
+  font-size: 11px;
+  -webkit-text-fill-color: #6f6878;
+}
+
+:global(:root) .modern .scoreCaption {
+  color: var(--apple-blue, #3c6faa);
+  font-size: 10px;
+  font-weight: 700;
+  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+}
+
+:global(:root) .modern .macros {
+  margin-top: 10px;
+  gap: 8px;
+}
+
+:global(:root) .modern .macro {
+  min-width: 0;
+  min-height: 112px;
+  padding: 13px 11px 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 18px;
+  background: #ffffff;
+  text-align: left;
+}
+
+:global(:root) .modern .macroLabel {
+  color: var(--apple-secondary, #636366);
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 15px;
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+}
+
+:global(:root) .modern .macroValue {
+  margin-top: 5px;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 21px;
+  white-space: nowrap;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .modern .macroGoal {
+  margin-top: 1px;
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  white-space: nowrap;
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+}
+
+:global(:root) .modern .macroTrack {
+  width: 100%;
+  height: 6px;
+  min-height: 6px;
+  margin-top: auto;
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--apple-action, #3f73b8) 0 var(--macro-progress),
+    #eee9f3 var(--macro-progress) 100%
+  );
+}
+
+:global(:root) .modern .macroPercentText {
+  margin-top: 5px;
+  color: var(--apple-blue, #3c6faa);
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 13px;
+  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+}
+
+:global(:root) .modern .conclusion {
+  margin-top: 10px;
+  padding: 14px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 18px;
+  background: #ffffff;
+  text-align: left;
+}
+
+:global(:root) .modern .conclusionLabel {
+  color: var(--apple-secondary, #636366);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+  -webkit-text-fill-color: var(--apple-secondary, #636366);
+}
+
+:global(:root) .modern .conclusionText {
+  margin: 5px 0 0;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 17px;
+  overflow-wrap: anywhere;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+}
+
+:global(:root) .modern .badges {
+  margin-top: 10px;
+  padding: 0;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+:global(:root) .modern .badge {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--apple-blue-tint, #eef3fa);
+  color: var(--apple-blue, #3c6faa);
+  font-size: 10px;
+  font-weight: 600;
+  box-shadow: none;
+  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+}
+
+:global(:root) .modern .badge.good {
+  background: #e8efea;
+  color: #587461;
+  -webkit-text-fill-color: #587461;
+}
+
+:global(:root) .modern .badge.warning {
+  background: #f2ece7;
+  color: #8b664c;
+  -webkit-text-fill-color: #8b664c;
+}
+
+@media (max-width: 370px), (max-height: 720px) {
+  :global(:root) .root.modern.modern {
+    padding: 14px;
+    border-radius: 26px;
+  }
+
+  :global(:root) .modern .header { margin-bottom: 10px; }
+  :global(:root) .modern .titleEyebrow { font-size: 21px; line-height: 25px; }
+  :global(:root) .modern .dayPill { margin-bottom: 8px; padding-block: 9px; }
+  :global(:root) .modern .body { grid-template-columns: minmax(0, 1fr) 94px; gap: 8px; }
+  :global(:root) .modern .calorieProgress,
+  :global(:root) .modern .scoreBlock { min-height: 112px; }
+  :global(:root) .modern .scoreBlock svg { width: 64px; height: 64px; }
+  :global(:root) .modern .calorieProgress { padding: 12px; gap: 9px; }
+  :global(:root) .modern .macros { margin-top: 8px; gap: 6px; }
+  :global(:root) .modern .macro { min-height: 101px; padding: 10px 8px 8px; }
+  :global(:root) .modern .macroValue { font-size: 15px; }
+  :global(:root) .modern .conclusion { margin-top: 8px; padding: 11px 12px; }
+  :global(:root) .modern .badges { margin-top: 8px; }
+}
+
+/* Native progress values keep dynamic data out of inline styles. */
+:global(:root) .modern progress.calorieTrack,
+:global(:root) .modern progress.macroTrack {
+  display: block;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+:global(:root) .modern progress.calorieTrack::-webkit-progress-bar,
+:global(:root) .modern progress.macroTrack::-webkit-progress-bar {
+  border-radius: inherit;
+  background: #eee9f3;
+}
+
+:global(:root) .modern progress.calorieTrack::-webkit-progress-value,
+:global(:root) .modern progress.macroTrack::-webkit-progress-value {
+  border-radius: inherit;
+  background: var(--apple-action, #3f73b8);
+}
+
+:global(:root) .modern progress.calorieTrack::-moz-progress-bar,
+:global(:root) .modern progress.macroTrack::-moz-progress-bar {
+  border-radius: inherit;
+  background: var(--apple-action, #3f73b8);
+}
+
+:global(:root) .modern progress.calorieTrack[data-over-limit="true"]::-webkit-progress-value,
+:global(:root) .modern progress.calorieTrack[data-over-limit="true"]::-moz-progress-bar {
+  background: #b56570;
+}

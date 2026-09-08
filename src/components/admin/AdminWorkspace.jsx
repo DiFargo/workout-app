@@ -300,7 +300,7 @@ export default function AdminWorkspace({
       </main>
 
       {accountOpen ? (
-        <div className={styles.accountOverlay} role="presentation" onMouseDown={closeAccount}>
+        <div className={styles.accountOverlay} data-modal-backdrop="true" role="presentation" onMouseDown={closeAccount}>
           <section
             aria-labelledby="admin-account-title"
             aria-modal="true"

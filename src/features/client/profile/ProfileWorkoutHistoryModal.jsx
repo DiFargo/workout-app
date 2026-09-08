@@ -1,3 +1,4 @@
+import { ChevronDown, ChevronRight, Dumbbell } from "lucide-react";
 import styles from "./ProfileWorkoutHistoryModal.module.css";
 
 export function ProfileWorkoutHistoryContent({
@@ -51,16 +52,19 @@ export function ProfileWorkoutHistoryContent({
               aria-expanded={isOpen}
               aria-label={`${isOpen ? "Свернуть" : "Развернуть"} тренировку: ${workoutTitle}. ${workoutDateLabel}`}
             >
-              <span className={styles.itemIcon} aria-hidden="true">{item.postWorkoutFeedback?.emoji || item.readiness?.emoji || "🏋️"}</span>
+              <span className={styles.itemIcon} aria-hidden="true"><Dumbbell size={20} strokeWidth={1.8} /></span>
               <div className={styles.itemContent}>
                 <strong className={styles.itemTitle}>{workoutTitle}</strong>
                 <small className={styles.itemMeta}>{workoutDateLabel}{item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}</small>
               </div>
-              <i className={styles.itemIndicator}>{isOpen ? "⌃" : "›"}</i>
+              <i className={styles.itemIndicator} aria-hidden="true">{isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}</i>
             </button>
 
             {isOpen && (
               <div className={styles.details}>
+                {(item.postWorkoutFeedback || item.readiness) && (
+                  <p className={styles.feedback}>Самочувствие: {item.postWorkoutFeedback?.title || item.readiness?.title || item.postWorkoutFeedback?.emoji || item.readiness?.emoji}</p>
+                )}
                 {(item.exercises || []).map((exercise, index) => (
                   <div className={styles.exercise} key={`${exercise.name}_${index}`}>
                     <div className={styles.exerciseHeader}>

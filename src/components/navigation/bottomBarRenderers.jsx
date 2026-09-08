@@ -9,6 +9,7 @@ export function renderClientMainBottomBar({
   onGoMain,
   onOpenTraining,
   onOpenNutrition,
+  onOpenProgress,
   onOpenCabinet,
   onPreloadMain,
   onPreloadTraining,
@@ -26,6 +27,7 @@ export function renderClientMainBottomBar({
       onGoMain={onGoMain}
       onOpenTraining={onOpenTraining}
       onOpenNutrition={onOpenNutrition}
+      onOpenProgress={onOpenProgress}
       onOpenCabinet={onOpenCabinet}
       onPreloadMain={onPreloadMain}
       onPreloadTraining={onPreloadTraining}

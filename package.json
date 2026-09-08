@@ -1,11 +1,14 @@
 {
   "name": "workout-app",
   "private": true,
-  "version": "3.0.609",
+  "version": "3.0.705",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "npm run build:production",
+    "android:sync": "npx cap sync android",
+    "android:build": "npm run build:production && npx cap sync android",
+    "android:open": "npx cap open android",
     "build:staging": "node scripts/build-firebase-artifact.mjs --environment=staging",
     "build:production": "node scripts/build-firebase-artifact.mjs --environment=production",
     "import:exercise-catalog": "node scripts/import-free-exercise-catalog.mjs",
@@ -26,13 +29,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
     "firebase": "^12.12.1",
+    "lucide": "^0.468.0",
     "lucide-react": "^0.468.0",
+    "morphicons": "^1.7.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "read-excel-file": "^9.0.10"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.1",
     "@eslint/js": "^10.0.1",
     "@firebase/rules-unit-testing": "^5.0.1",
     "@playwright/test": "^1.60.0",
@@ -43,6 +51,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
+    "typescript": "^7.0.2",
     "vite": "^8.0.10"
   },
   "overrides": {

@@ -1,4 +1,4 @@
-import { Bell, Mail } from "lucide-react";
+import { Bell, ChevronRight, Mail, Send } from "lucide-react";
 import styles from "./ProfileAppSettingsSection.module.css";
 
 export default function ProfileAppSettingsSection({
@@ -62,15 +62,15 @@ export default function ProfileAppSettingsSection({
             aria-label={email ? "Открыть настройки почты" : "Привязать почту"}
             onClick={onOpenEmail}
           >
-            <span className={`${styles.avatar} ${styles.emailAvatar}`}>
-              <Mail size={18} strokeWidth={2.4} />
+            <span className={`${styles.avatar} ${styles.emailAvatar}`} aria-hidden="true">
+              <Mail size={18} strokeWidth={1.8} />
             </span>
             <span className={styles.text}>
               <strong>Почта</strong>
               <small>{email ? `${email} · привязана` : "Нажми, чтобы привязать"}</small>
             </span>
             <em className={styles.badge}>{email ? "Привязана" : "Привязать"}</em>
-            <i className={styles.arrow}>›</i>
+            <i className={styles.arrow} aria-hidden="true"><ChevronRight /></i>
           </button>
         )}
 
@@ -82,7 +82,7 @@ export default function ProfileAppSettingsSection({
           onClick={onOpenTelegram}
         >
           <span className={styles.avatar}>
-            {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" onError={onTelegramAvatarError} /> : "✈️"}
+            {telegramProfile.avatarUrl ? <img src={telegramProfile.avatarUrl} alt="" onError={onTelegramAvatarError} /> : <Send size={20} strokeWidth={2.2} aria-hidden="true" />}
           </span>
           <span className={styles.text}>
             <strong>Telegram</strong>
@@ -93,7 +93,7 @@ export default function ProfileAppSettingsSection({
             </small>
           </span>
           <em className={styles.badge}>{telegramProfile.connected ? connectedBadge : "Подключить"}</em>
-          <i className={styles.arrow}>›</i>
+          <i className={styles.arrow} aria-hidden="true"><ChevronRight /></i>
         </button>}
 
       </div>

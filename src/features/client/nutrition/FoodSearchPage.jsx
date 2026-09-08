@@ -6,7 +6,7 @@ import FoodSearchResults from "./FoodSearchResults";
 import NutritionCreateChoice from "./NutritionCreateChoice";
 import NutritionPhotoAiPreview from "./NutritionPhotoAiPreview";
 import NutritionPhotoNotFoundModal from "./NutritionPhotoNotFoundModal";
-import { Package, Plus } from "lucide-react";
+import { ChevronRight, Package, Plus } from "lucide-react";
 import styles from "./FoodSearchPage.module.css";
 import {
   getSearchHistoryName,
@@ -208,7 +208,7 @@ export default function FoodSearchPage({
               {searchTab === "my" ? "Найти продукт в общей базе" : "Ваша личная база продуктов и блюд"}
             </small>
           </span>
-          <em className={styles.photoChevron} aria-hidden="true">›</em>
+          <em className={styles.photoChevron} aria-hidden="true"><ChevronRight /></em>
         </button>
       )}
 

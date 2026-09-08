@@ -7,22 +7,22 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: #f7f6f8;
-  color: #28262e;
+  background: #f1f3ee;
+  color: #1b231f;
 }
 
 .roleAccessGateCard {
   box-sizing: border-box;
   width: min(100%, 420px);
   padding: 28px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 28px;
   background: #fff;
-  box-shadow: 0 24px 58px rgba(72, 63, 87, 0.12);
+  box-shadow: 0 24px 58px rgba(27, 35, 31, 0.12);
 }
 
 .roleAccessGateCard > span {
-  color: #8f7ac8;
+  color: #2f7d68;
   font-size: 12px;
   font-weight: 850;
   letter-spacing: 0.08em;
@@ -36,7 +36,7 @@
 
 .roleAccessGateCard p {
   margin: 0;
-  color: #7b7682;
+  color: #67716b;
   font-size: 15px;
   line-height: 1.45;
 }
@@ -50,18 +50,18 @@
 
 .roleAccessGateCard button {
   min-height: 48px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 15px;
   background: #fff;
-  color: #8f7ac8;
+  color: #2f7d68;
   font: inherit;
   font-weight: 760;
   cursor: pointer;
 }
 
 .roleAccessGateCard button.primary {
-  border-color: #8f7ac8;
-  background: #8f7ac8;
+  border-color: #2f7d68;
+  background: #2f7d68;
   color: #fff;
 }
 
@@ -136,11 +136,11 @@
   height: 46px;
   display: grid;
   place-items: center;
-  border: 1px solid #f7f6f8;
+  border: 1px solid #f1f3ee;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.96);
   color: #5f6678;
-  box-shadow: 0 14px 32px rgba(72, 63, 87, 0.1);
+  box-shadow: 0 14px 32px rgba(27, 35, 31, 0.1);
   font-size: 30px;
   font-weight: 850;
   line-height: 1;
@@ -161,25 +161,25 @@
   margin: 0 auto;
   padding: 34px 22px 24px;
   place-items: center;
-  border: 1px solid #f7f6f8;
+  border: 1px solid #f1f3ee;
   border-radius: 30px;
   background:
     radial-gradient(circle at 50% 0%, rgba(156, 136, 210, 0.08), transparent 46%),
     #fff;
-  color: #28262e;
-  box-shadow: 0 24px 58px rgba(72, 63, 87, 0.1);
+  color: #1b231f;
+  box-shadow: 0 24px 58px rgba(27, 35, 31, 0.1);
 }
 
 .firstSetupMetricLabel,
 .profileMetricSlider > span {
-  color: #7b7682;
+  color: #67716b;
   font-size: 12px;
   font-weight: 900;
 }
 
 .firstSetupMetricValue,
 .profileMetricSlider > strong {
-  color: #28262e;
+  color: #1b231f;
   font-size: 34px;
   line-height: 1;
   font-weight: 1000;
@@ -195,14 +195,14 @@
 
 .firstSetupMetricValue small,
 .profileMetricSlider > strong small {
-  color: #7b7682;
+  color: #67716b;
   font-size: 14px;
   font-weight: 900;
 }
 
 .firstSetupMetricValue small {
   margin-left: 6px;
-  color: #28262e;
+  color: #1b231f;
   font-size: 24px;
   letter-spacing: 0;
 }
@@ -213,7 +213,7 @@
   width: 100%;
   height: 24px;
   margin: 0;
-  accent-color: #8f7ac8;
+  accent-color: #2f7d68;
 }
 
 .firstSetupMetricSlider input[type="range"] {
@@ -228,10 +228,10 @@
   border-radius: 999px;
   background: linear-gradient(
     90deg,
-    #8f7ac8 0%,
-    #8f7ac8 var(--slider-progress, 0%),
-    #f5f2f7 var(--slider-progress, 0%),
-    #f5f2f7 100%
+    #2f7d68 0%,
+    #2f7d68 var(--slider-progress, 0%),
+    #f7f8f5 var(--slider-progress, 0%),
+    #f7f8f5 100%
   );
 }
 
@@ -243,22 +243,22 @@
   -webkit-appearance: none;
   border: 10px solid #ffffff;
   border-radius: 50%;
-  background: #8f7ac8;
+  background: #2f7d68;
   box-shadow:
-    0 10px 24px rgba(143, 122, 200, 0.26),
-    0 0 0 1px rgba(143, 122, 200, 0.16);
+    0 10px 24px rgba(47, 125, 104, 0.26),
+    0 0 0 1px rgba(47, 125, 104, 0.16);
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-track {
   height: 16px;
   border-radius: 999px;
-  background: #f5f2f7;
+  background: #f7f8f5;
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-progress {
   height: 16px;
   border-radius: 999px;
-  background: #8f7ac8;
+  background: #2f7d68;
 }
 
 .firstSetupMetricSlider input[type="range"]::-moz-range-thumb {
@@ -266,10 +266,10 @@
   height: 18px;
   border: 9px solid #ffffff;
   border-radius: 50%;
-  background: #8f7ac8;
+  background: #2f7d68;
   box-shadow:
-    0 10px 24px rgba(143, 122, 200, 0.26),
-    0 0 0 1px rgba(143, 122, 200, 0.16);
+    0 10px 24px rgba(47, 125, 104, 0.26),
+    0 0 0 1px rgba(47, 125, 104, 0.16);
 }
 
 .firstSetupMetricTicks {
@@ -320,11 +320,11 @@
   width: 100%;
   min-height: 48px;
   padding: 0 54px 0 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 15px;
   outline: none;
   background: #fff;
-  color: #28262e;
+  color: #1b231f;
   font-size: 18px;
   font-weight: 900;
 }
@@ -335,12 +335,12 @@
   text-align: center;
   font-size: 17px;
   border-radius: 14px;
-  background: #f7f6f8;
+  background: #f1f3ee;
 }
 
 .firstSetupMetricInput input:focus,
 .profileMetricSliderInput input:focus {
-  border-color: #c4b8e3;
+  border-color: #a9d2c3;
   box-shadow: 0 0 0 3px rgba(156, 136, 210, 0.1);
 }
 
@@ -349,7 +349,7 @@
   position: absolute;
   top: 50%;
   right: 16px;
-  color: #7b7682;
+  color: #67716b;
   font-size: 12px;
   font-style: normal;
   font-weight: 900;
@@ -365,7 +365,7 @@
   border: 1px solid #f0ecf4;
   border-radius: 26px;
   background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 18px 42px rgba(72, 63, 87, 0.1);
+  box-shadow: 0 18px 42px rgba(27, 35, 31, 0.1);
 }
 
 .firstSetupPrimary,
@@ -402,23 +402,23 @@
 .firstSetupExitConfirmCard {
   width: min(100%, 330px);
   padding: 22px;
-  border: 1px solid #f7f6f8;
+  border: 1px solid #f1f3ee;
   border-radius: 24px;
   background: #ffffff;
-  box-shadow: 0 24px 64px rgba(72, 63, 87, 0.18);
+  box-shadow: 0 24px 64px rgba(27, 35, 31, 0.18);
   text-align: center;
 }
 
 .firstSetupExitConfirmCard h3 {
   margin: 0;
-  color: #28262e;
+  color: #1b231f;
   font-size: 22px;
   line-height: 1.12;
 }
 
 .firstSetupExitConfirmCard p {
   margin: 10px auto 18px;
-  color: #7b7682;
+  color: #67716b;
   font-size: 14px;
   line-height: 1.38;
 }
@@ -431,7 +431,7 @@
 
 .firstSetupExitConfirmCard button {
   min-height: 50px;
-  border: 1px solid #f7f6f8;
+  border: 1px solid #f1f3ee;
   border-radius: 16px;
   background: #ffffff;
   color: #687184;
@@ -441,7 +441,7 @@
 
 .firstSetupExitConfirmCard button.primary {
   border-color: transparent;
-  background: linear-gradient(135deg, #8f7ac8, #806bb6);
+  background: linear-gradient(135deg, #2f7d68, #286e5b);
   color: #ffffff;
   box-shadow: 0 12px 26px rgba(117, 97, 170, 0.2);
 }
@@ -500,10 +500,10 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupOverlay {
   box-sizing: border-box;
   padding: 0;
   align-items: stretch;
-  background: #f7f6f8;
+  background: #f1f3ee;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  color: #28262e;
+  color: #1b231f;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -520,8 +520,8 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
   gap: 0;
   border: 0;
   border-radius: 0;
-  background: #f7f6f8;
-  color: #28262e;
+  background: #f1f3ee;
+  color: #1b231f;
   box-shadow: none;
 }
 
@@ -529,7 +529,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupProgress {
   min-height: 44px;
   grid-template-columns: 42px minmax(0, 1fr);
   gap: 10px;
-  color: #7b7682;
+  color: #67716b;
   font-size: 12px;
   font-weight: 650;
 }
@@ -545,7 +545,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i {
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupProgress i.active {
-  background: #8f7ac8;
+  background: #2f7d68;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitButton {
@@ -554,10 +554,10 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupExitButton {
   width: 44px;
   height: 44px;
   min-height: 44px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 14px;
   background: #fff;
-  color: #8f7ac8;
+  color: #2f7d68;
   box-shadow: none;
   font-size: 25px;
   font-weight: 500;
@@ -570,7 +570,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupHeader {
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupCard .firstSetupHeader h2 {
   margin: 0;
-  color: #28262e;
+  color: #1b231f;
   font-size: clamp(28px, 8vw, 34px);
   font-weight: 740;
   line-height: 1.04;
@@ -581,7 +581,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupCard .firstSetupHea
 html:root[data-app-theme="warm-light"] body #root .firstSetupCard .firstSetupHeader p {
   max-width: 342px;
   margin: 9px 0 0;
-  color: #7b7682;
+  color: #67716b;
   font-size: 14px;
   font-weight: 450;
   line-height: 1.4;
@@ -603,7 +603,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupWelcomeVisual span 
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupClipboard {
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   background: #fff;
 }
 
@@ -611,9 +611,9 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button,
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview {
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   background: #fff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: none;
 }
 
@@ -634,7 +634,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList small,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button small,
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview small {
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button > i {
@@ -644,14 +644,14 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button
 html:root[data-app-theme="warm-light"] body #root .firstSetupSexGrid button.active,
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active,
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button.active {
-  border-color: #c4b8e3;
-  background: #f5f2f7;
-  color: #28262e;
-  box-shadow: inset 0 0 0 1px #c4b8e3;
+  border-color: #a9d2c3;
+  background: #f7f8f5;
+  color: #1b231f;
+  box-shadow: inset 0 0 0 1px #a9d2c3;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupActivityList button.active > i {
-  border: 5px solid #8f7ac8;
+  border: 5px solid #2f7d68;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupGoalGrid button {
@@ -665,74 +665,74 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupReview {
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div {
-  border-bottom-color: #efebf3;
+  border-bottom-color: #e0e6e0;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview > div > span {
-  color: #8f7ac8;
+  color: #2f7d68;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupReview strong {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupField {
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupInput,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input {
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 15px;
   background: #fff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupInput:focus,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricInput input:focus {
-  border-color: #c4b8e3;
-  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.14);
+  border-color: #a9d2c3;
+  box-shadow: 0 0 0 3px rgba(47, 125, 104, 0.14);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider {
   min-height: 318px;
   padding: 30px 20px 22px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 28px;
   background: #fff;
-  color: #28262e;
+  color: #1b231f;
   box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricLabel,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricMarks {
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricValue,
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricValue small {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"] {
-  accent-color: #8f7ac8;
+  accent-color: #2f7d68;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-runnable-track {
   background: linear-gradient(
     90deg,
-    #8f7ac8 0%,
-    #8f7ac8 var(--slider-progress, 0%),
-    #efebf3 var(--slider-progress, 0%),
-    #efebf3 100%
+    #2f7d68 0%,
+    #2f7d68 var(--slider-progress, 0%),
+    #e0e6e0 var(--slider-progress, 0%),
+    #e0e6e0 100%
   );
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricSlider input[type="range"]::-webkit-slider-thumb {
   border-color: #fff;
-  background: #8f7ac8;
-  box-shadow: 0 5px 14px rgba(72, 63, 87, 0.18);
+  background: #2f7d68;
+  box-shadow: 0 5px 14px rgba(27, 35, 31, 0.18);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupMetricTicks i,
@@ -758,14 +758,14 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary {
   border: 0;
-  background: #8f7ac8;
+  background: #2f7d68;
   color: #fff;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupSecondary {
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   background: #fff;
-  color: #8f7ac8;
+  color: #2f7d68;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary:disabled {
@@ -776,41 +776,41 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupPrimary:disabled {
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirm {
   padding: 48px 0 0;
   align-items: end;
-  background: rgba(40, 38, 46, 0.22);
+  background: rgba(27, 35, 31, 0.22);
   backdrop-filter: blur(10px);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard {
   width: min(100%, 402px);
   padding: 20px 16px max(16px, calc(env(safe-area-inset-bottom) + 10px));
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-bottom: 0;
   border-radius: 28px 28px 0 0;
   background: #fff;
-  color: #28262e;
-  box-shadow: 0 -10px 32px rgba(72, 63, 87, 0.12);
+  color: #1b231f;
+  box-shadow: 0 -10px 32px rgba(27, 35, 31, 0.12);
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard h3 {
-  color: #28262e;
+  color: #1b231f;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard p {
-  color: #7b7682;
+  color: #67716b;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button {
   min-height: 50px;
-  border: 1px solid #efebf3;
+  border: 1px solid #e0e6e0;
   border-radius: 15px;
-  background: #f7f6f8;
-  color: #8f7ac8;
+  background: #f1f3ee;
+  color: #2f7d68;
   box-shadow: none;
 }
 
 html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard button.primary {
   border-color: transparent;
-  background: #8f7ac8;
+  background: #2f7d68;
   color: #fff;
 }
 
@@ -823,7 +823,7 @@ html:root[data-app-theme="warm-light"] body #root .firstSetupExitConfirmCard but
   html:root[data-app-theme="warm-light"] body #root .firstSetupCard {
     height: min(850px, calc(100dvh - 24px));
     max-height: calc(100dvh - 24px);
-    border: 1px solid #efebf3;
+    border: 1px solid #e0e6e0;
     border-radius: 30px;
   }
 }

@@ -1,4 +1,4 @@
-export function getFoodScale(amount, food = null, mode = "grams") {
+export function getFoodScale(amount, food = null) {
   const parsedAmount = Number(String(amount).replace(",", "."));
   if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) return 1;
 
@@ -7,18 +7,8 @@ export function getFoodScale(amount, food = null, mode = "grams") {
     return parsedAmount / (dishBase > 0 ? dishBase : 100);
   }
 
-  if (mode === "portion") {
-    const portionText = String(food?.portion || "").toLowerCase();
-    const isPieceBased = portionText.includes("шт") || String(food?.name || "").toLowerCase().includes("яйц");
-    const portionBase = Number(food?.portionAmount) || getFoodPortionAmount(food) || (isPieceBased ? parsedAmount : 100);
-
-    if (isPieceBased) {
-      return parsedAmount / (portionBase > 0 ? portionBase : parsedAmount);
-    }
-
-    return parsedAmount / (portionBase > 0 ? portionBase : 100);
-  }
-
+  // Product macros are normalized per 100 g. A portion selects its gram
+  // weight, but never replaces that macro base.
   return parsedAmount / 100;
 }
 

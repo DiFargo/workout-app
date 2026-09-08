@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Workout App — логичный iOS-макет тренера</title>
+    <style>
+      :root {
+        --canvas: #efecf4;
+        --app: #f7f6f8;
+        --surface: rgba(255, 255, 255, .92);
+        --glass: rgba(255, 255, 255, .68);
+        --border: #e9e3ee;
+        --text: #28262e;
+        --muted: #756f7c;
+        --quiet: #97919d;
+        --accent: #806bb6;
+        --accent-dark: #6e579f;
+        --accent-soft: #eee9f8;
+        --green: #247352;
+        --green-soft: #e6f4ed;
+        --orange: #9c6525;
+        --orange-soft: #fff1df;
+        --red: #ad4758;
+        --red-soft: #fdecef;
+        --blue: #397db7;
+        --blue-soft: #e8f3fc;
+        --shadow: 0 16px 38px rgba(69, 54, 87, .10), inset 0 1px 0 rgba(255,255,255,.94);
+        --control: 16px;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+      html { background: var(--canvas); }
+      body {
+        min-width: 320px;
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 7% 8%, rgba(194, 178, 225, .55), transparent 27rem),
+          radial-gradient(circle at 95% 16%, rgba(226, 211, 240, .62), transparent 32rem),
+          linear-gradient(180deg, #f9f8fb, var(--canvas));
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      button { font: inherit; cursor: pointer; }
+      button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+      button:focus-visible { outline: 3px solid rgba(128, 107, 182, .5); outline-offset: 3px; }
+      svg { display: block; }
+      .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+      .icon.small { width: 16px; height: 16px; }
+      .defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+      .page { max-width: 1740px; margin: 0 auto; padding: 54px 26px 80px; }
+      .intro { max-width: 955px; margin: 0 auto 27px; text-align: center; }
+      .eyebrow { color: #725ca8; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      h1 { margin: 11px 0 13px; font-size: clamp(36px, 5vw, 62px); line-height: 1; letter-spacing: -.06em; }
+      .intro p { max-width: 780px; margin: 0 auto; color: var(--muted); font-size: 17px; line-height: 1.52; }
+      .principles { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 20px; }
+      .principles span { padding: 8px 12px; border: 1px solid rgba(255,255,255,.86); border-radius: 999px; background: rgba(255,255,255,.55); color: #544d5d; font-size: 12px; font-weight: 720; backdrop-filter: blur(16px); }
+
+      .coverage { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); gap: 10px; max-width: 1360px; margin: 0 auto 44px; }
+      .coverage-card { min-height: 130px; padding: 17px; border: 1px solid rgba(255,255,255,.82); border-radius: 20px; background: rgba(255,255,255,.62); box-shadow: var(--shadow); backdrop-filter: blur(20px); }
+      .coverage-card .icon-box { float: right; display: grid; width: 36px; height: 36px; place-items: center; border-radius: 13px; color: var(--accent-dark); background: var(--accent-soft); }
+      .coverage-card strong { display: block; margin: 2px 42px 7px 0; font-size: 15px; letter-spacing: -.02em; }
+      .coverage-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+      .coverage-note { grid-column: 1 / -1; margin: 2px 5px 0; color: var(--muted); font-size: 12px; line-height: 1.48; text-align: center; }
+
+      .gallery { display: grid; grid-template-columns: repeat(3, minmax(310px, 354px)); justify-content: center; gap: 28px; align-items: start; }
+      .concept { min-width: 0; }
+      .concept-title { margin: 0 0 11px; color: #5e5767; font-size: 13px; font-weight: 760; text-align: center; }
+      .concept-title span { color: var(--quiet); font-weight: 620; }
+      .device { overflow: hidden; border: 8px solid #26242a; border-radius: 47px; background: #26242a; box-shadow: 0 30px 72px rgba(49, 38, 60, .22), 0 8px 20px rgba(49, 38, 60, .12); }
+      .phone { min-height: 812px; }
+      .screen { position: relative; min-height: 796px; overflow: hidden; padding: 0 14px 103px; border-radius: 39px; background: var(--app); }
+      .screen::before { content: ""; position: absolute; top: -105px; right: -96px; width: 270px; height: 270px; border-radius: 50%; background: radial-gradient(circle, rgba(175,153,219,.40), rgba(208,193,233,.12) 57%, transparent 72%); pointer-events: none; }
+      .screen::after { content: ""; position: absolute; left: -95px; bottom: 74px; width: 238px; height: 238px; border-radius: 50%; background: radial-gradient(circle, rgba(237,220,240,.72), transparent 69%); pointer-events: none; }
+      .content { position: relative; z-index: 1; }
+      .status { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 41px; padding: 9px 8px 0; font-size: 11px; font-weight: 760; }
+      .island { width: 86px; height: 25px; border-radius: 999px; background: #1f1d21; }
+      .status-icons { display: flex; justify-content: flex-end; gap: 5px; font-size: 10px; }
+      .header { display: flex; align-items: center; justify-content: space-between; gap: 9px; min-height: 70px; padding: 10px 2px 11px; }
+      .header h2 { margin: 3px 0 0; font-size: 27px; line-height: 1; letter-spacing: -.052em; }
+      .header .eyebrow { font-size: 10px; }
+      .icon-btn, .back { display: inline-grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 0; border-radius: 16px; color: #514a5d; background: rgba(255,255,255,.72); box-shadow: inset 0 0 0 1px rgba(233,227,238,.94); backdrop-filter: blur(18px); }
+      .header-actions { display: flex; gap: 7px; }
+      .back { border-radius: 50%; }
+      .header-split { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .header-split > div { min-width: 0; }
+      .header-split h2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .subcopy { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.35; }
+
+      .panel { margin-bottom: 10px; padding: 14px; border: 1px solid rgba(255,255,255,.78); border-radius: 21px; background: var(--surface); box-shadow: var(--shadow); }
+      .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+      .panel-head h3 { margin: 0; font-size: 16px; letter-spacing: -.025em; }
+      .panel-head small, .panel > p { color: var(--muted); font-size: 11px; }
+      .panel-head small { font-weight: 700; }
+      .panel > p { margin: -3px 0 10px; line-height: 1.4; }
+      .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 4px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-dark); font-size: 10px; font-weight: 800; white-space: nowrap; }
+      .tag.green { color: var(--green); background: var(--green-soft); }
+      .tag.orange { color: var(--orange); background: var(--orange-soft); }
+      .tag.red { color: var(--red); background: var(--red-soft); }
+      .tag.blue { color: var(--blue); background: var(--blue-soft); }
+      .button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 7px; padding: 9px 12px; border: 0; border-radius: var(--control); color: #fff; background: var(--accent); font-size: 12px; font-weight: 780; }
+      .button.secondary { color: var(--accent-dark); background: var(--accent-soft); box-shadow: inset 0 0 0 1px #d9cff1; }
+      .button.ghost { color: var(--accent-dark); background: rgba(255,255,255,.64); box-shadow: inset 0 0 0 1px #ded6eb; }
+      .button.small { min-height: 34px; padding: 7px 9px; border-radius: 12px; font-size: 10px; }
+      .button.wide { width: 100%; }
+      .chips { display: flex; gap: 6px; overflow: hidden; margin-bottom: 10px; }
+      .chip { flex: 0 0 auto; min-height: 32px; padding: 7px 10px; border: 1px solid #e4ddec; border-radius: 999px; color: var(--muted); background: rgba(255,255,255,.68); font-size: 10px; font-weight: 750; }
+      .chip.active { border-color: transparent; color: var(--accent-dark); background: var(--accent-soft); }
+      .search { display: flex; align-items: center; min-height: 43px; gap: 8px; margin-bottom: 10px; padding: 0 12px; border: 1px solid #e4ddec; border-radius: 14px; color: var(--quiet); background: rgba(255,255,255,.76); font-size: 12px; }
+
+      .critical-item, .client-row, .event, .program-row, .food-row, .exercise { display: flex; align-items: center; gap: 10px; }
+      .critical-item { min-height: 66px; padding: 10px 0; border-top: 1px solid #eee9f1; }
+      .critical-item:first-of-type { border-top: 0; padding-top: 0; }
+      .critical-item:last-child { padding-bottom: 0; }
+      .signal { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border-radius: 13px; color: var(--red); background: var(--red-soft); }
+      .signal.orange { color: var(--orange); background: var(--orange-soft); }
+      .signal.purple { color: var(--accent-dark); background: var(--accent-soft); }
+      .critical-item > div, .event > div, .client-row > div, .program-row > div, .exercise > div { min-width: 0; flex: 1; }
+      .critical-item strong, .event strong, .client-row strong, .program-row strong, .exercise strong { display: block; overflow: hidden; font-size: 12px; letter-spacing: -.01em; text-overflow: ellipsis; white-space: nowrap; }
+      .critical-item small, .event small, .client-row small, .program-row small, .exercise small { display: block; margin-top: 3px; overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+      .chevron { flex: 0 0 auto; color: var(--accent); }
+      .event { position: relative; min-height: 52px; padding: 8px 0 8px 7px; border-left: 2px solid #e2d9f2; }
+      .event + .event { margin-top: 1px; }
+      .event time { width: 33px; flex: 0 0 33px; color: var(--quiet); font-size: 10px; font-weight: 760; }
+      .event .dot { width: 8px; height: 8px; margin-left: -12px; flex: 0 0 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--app); }
+      .event .recorded { margin-left: auto; color: var(--green); font-size: 10px; font-weight: 760; }
+      .event .review { margin-left: auto; color: var(--accent-dark); font-size: 10px; font-weight: 760; }
+
+      .bottom-nav { position: absolute; right: 11px; bottom: 11px; left: 11px; z-index: 3; display: grid; grid-template-columns: repeat(4, 1fr); min-height: 72px; padding: 7px; border: 1px solid rgba(255,255,255,.88); border-radius: 24px; background: rgba(255,255,255,.78); box-shadow: 0 12px 32px rgba(70,56,88,.14); backdrop-filter: blur(24px); }
+      .bottom-nav span { display: grid; place-items: center; align-content: center; gap: 3px; border-radius: 17px; color: #77717d; font-size: 9px; font-weight: 750; }
+      .bottom-nav .active { color: var(--accent-dark); background: var(--accent-soft); }
+      .bottom-nav .icon { width: 19px; height: 19px; }
+
+      .avatar { display: grid; width: 38px; height: 38px; flex: 0 0 38px; place-items: center; overflow: hidden; border-radius: 50%; color: #4d3e61; background: linear-gradient(145deg, #e4d8ee, #bd9dd1); font-size: 12px; font-weight: 830; }
+      .avatar.alt { color: #3e6055; background: linear-gradient(145deg, #cfede0, #9ac9b4); }
+      .avatar.orange { color: #704929; background: linear-gradient(145deg, #ffe4c1, #e7b778); }
+      .avatar.sm { width: 31px; height: 31px; flex-basis: 31px; font-size: 10px; }
+      .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+      .metric { min-height: 72px; padding: 10px 8px; border-radius: 16px; background: #f7f5f9; }
+      .metric span { display: block; color: var(--muted); font-size: 9px; font-weight: 700; }
+      .metric strong { display: block; margin-top: 6px; font-size: 16px; letter-spacing: -.045em; }
+      .metric small { color: var(--green); font-size: 9px; font-weight: 760; }
+      .segmented { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 39px; padding: 3px; border: 1px solid #e7e1ed; border-radius: 14px; background: rgba(255,255,255,.61); }
+      .segmented span { display: grid; place-items: center; min-width: 0; padding: 5px 3px; border-radius: 10px; color: var(--muted); font-size: 9px; font-weight: 760; text-align: center; }
+      .segmented .active { color: var(--accent-dark); background: var(--accent-soft); }
+      .helper { padding: 10px; border-radius: 14px; color: #5f5381; background: #f0ebfa; font-size: 10px; line-height: 1.4; }
+      .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+      .client-hero { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+      .client-hero .avatar { width: 50px; height: 50px; flex-basis: 50px; font-size: 16px; }
+      .client-hero h3 { margin: 0; font-size: 19px; letter-spacing: -.04em; }
+      .client-hero p { margin: 4px 0 0; color: var(--muted); font-size: 10px; }
+      .client-actions { display: grid; grid-template-columns: 1.15fr 1fr 44px; gap: 7px; margin-bottom: 11px; }
+      .client-actions .button { min-width: 0; padding-inline: 8px; font-size: 10px; }
+      .client-actions .icon-btn { border-radius: 14px; }
+      .mini-links { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+      .mini-link { display: flex; min-height: 54px; align-items: center; gap: 8px; padding: 9px; border: 1px solid #eee8f1; border-radius: 15px; background: #faf9fb; }
+      .mini-link .mini-icon { display: grid; width: 26px; height: 26px; flex: 0 0 26px; place-items: center; border-radius: 10px; color: var(--accent-dark); background: var(--accent-soft); }
+      .mini-link span { color: var(--muted); font-size: 9px; }
+      .mini-link strong { display: block; margin-top: 2px; font-size: 11px; }
+
+      .program-card { padding: 12px; border: 1px solid #dfd5ee; border-radius: 17px; background: linear-gradient(135deg, #f7f3fd, #fbfaff); }
+      .program-card > span { color: #79689b; font-size: 9px; font-weight: 800; letter-spacing: .04em; }
+      .program-card h3 { margin: 4px 0 3px; font-size: 18px; letter-spacing: -.04em; }
+      .program-card p { margin: 0; color: var(--muted); font-size: 10px; }
+      .program-card .split { margin-top: 10px; }
+      .tiny-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 11px 0 8px; }
+      .tiny-calendar span { display: grid; aspect-ratio: 1; place-items: center; border: 1px solid #e9e2ef; border-radius: 8px; color: var(--quiet); background: #fff; font-size: 9px; font-weight: 760; }
+      .tiny-calendar .plan { color: var(--accent-dark); border-color: #d2c2eb; background: var(--accent-soft); }
+      .tiny-calendar .done { color: var(--green); border-color: #c5ead6; background: var(--green-soft); }
+      .legend { display: flex; flex-wrap: wrap; gap: 5px 9px; color: var(--muted); font-size: 9px; }
+      .legend b { display: inline-block; width: 7px; height: 7px; margin-right: 4px; border-radius: 50%; background: var(--accent); }
+      .legend .done { background: #36a872; }
+      .legend .miss { background: #cd6170; }
+      .subscription { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid #cde6d9; border-radius: 16px; background: linear-gradient(135deg, #f1faf5, #e6f4ed); }
+      .subscription .signal { color: var(--green); background: #dff1e8; }
+      .subscription strong { display: block; font-size: 12px; }
+      .subscription small { display: block; margin-top: 3px; color: var(--green); font-size: 10px; }
+
+      .nutrition-hero { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 13px; border-radius: 18px; color: #4d3d69; background: linear-gradient(135deg, #eee8f7, #f6f2fb); }
+      .nutrition-hero strong { display: block; font-size: 17px; letter-spacing: -.04em; }
+      .nutrition-hero small { display: block; margin-top: 3px; color: #7e7194; font-size: 10px; }
+      .nutrition-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 10px; }
+      .nutrition-days span { display: grid; aspect-ratio: 1; place-items: center; border-radius: 8px; color: var(--muted); background: #f6f4f8; font-size: 9px; font-weight: 760; }
+      .nutrition-days .good { color: var(--green); background: var(--green-soft); }
+      .nutrition-days .warn { color: var(--orange); background: var(--orange-soft); }
+      .sparkline { position: relative; height: 53px; overflow: hidden; border-radius: 12px; background: #f8f7fa; }
+      .sparkline svg { width: 100%; height: 100%; }
+      .photo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+      .photo { position: relative; min-height: 76px; overflow: hidden; border-radius: 14px; background: linear-gradient(155deg, #d7c6dc, #f3e9e4 45%, #cfcce5); }
+      .photo::after { content: ""; position: absolute; right: 31%; bottom: -10px; width: 28%; height: 82%; border-radius: 44% 44% 21% 21%; background: linear-gradient(#56515a, #807780); opacity: .82; }
+      .photo span { position: absolute; z-index: 1; bottom: 6px; left: 7px; padding: 3px 5px; border-radius: 7px; color: #fff; background: rgba(35,31,39,.5); font-size: 8px; font-weight: 780; }
+
+      .cabinet-hero { display: flex; align-items: center; gap: 11px; padding: 14px; border-radius: 20px; color: #fff; background: linear-gradient(135deg, #8975ba, #68548f); }
+      .cabinet-hero .avatar { color: #655183; background: #f2edfb; }
+      .cabinet-hero strong { display: block; font-size: 16px; }
+      .cabinet-hero small { display: block; margin-top: 4px; color: #eee9fb; font-size: 10px; }
+      .service-list { display: grid; gap: 7px; }
+      .service { display: flex; min-height: 53px; align-items: center; gap: 9px; padding: 9px; border: 1px solid #eee8f2; border-radius: 15px; background: rgba(255,255,255,.70); }
+      .service .service-icon { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 11px; color: var(--accent-dark); background: var(--accent-soft); }
+      .service > div { min-width: 0; flex: 1; }
+      .service strong { display: block; font-size: 11px; }
+      .service small { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; }
+      .service .badge { min-width: 20px; padding: 4px; border-radius: 999px; color: var(--red); background: var(--red-soft); font-size: 9px; font-weight: 800; text-align: center; }
+
+      .concept.desktop-concept { grid-column: 1 / -1; max-width: 1170px; justify-self: center; width: 100%; }
+      .desktop { border-radius: 30px; }
+      .desktop-screen { min-height: 690px; padding: 18px; border-radius: 22px; background: var(--app); }
+      .desktop-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 2px 4px 16px; }
+      .desktop-top h2 { margin: 3px 0 0; font-size: 25px; letter-spacing: -.045em; }
+      .desktop-top .eyebrow { font-size: 10px; }
+      .desktop-actions { display: flex; gap: 7px; }
+      .studio { display: grid; grid-template-columns: 226px minmax(390px, 1fr) 230px; min-height: 616px; overflow: hidden; border: 1px solid #e8e2ed; border-radius: 22px; background: rgba(255,255,255,.69); }
+      .studio-side { padding: 13px; background: rgba(247,245,249,.78); }
+      .studio-side + .studio-side { border-left: 1px solid #e9e2ef; }
+      .studio-main { min-width: 0; padding: 16px; border-left: 1px solid #e9e2ef; }
+      .studio-side h3, .studio-main h3 { margin: 0; font-size: 13px; letter-spacing: -.02em; }
+      .studio-side p { margin: 4px 0 12px; color: var(--muted); font-size: 10px; line-height: 1.4; }
+      .studio-search { display: flex; min-height: 34px; align-items: center; gap: 6px; padding: 0 9px; border: 1px solid #e4ddeb; border-radius: 11px; color: var(--quiet); background: #fff; font-size: 10px; }
+      .tree { display: grid; gap: 5px; margin-top: 10px; }
+      .tree-row { display: flex; min-height: 35px; align-items: center; gap: 6px; padding: 7px; border-radius: 10px; color: #5e5766; font-size: 10px; font-weight: 720; }
+      .tree-row.active { color: var(--accent-dark); background: var(--accent-soft); }
+      .tree-row.indent { margin-left: 12px; }
+      .tree-row.deep { margin-left: 24px; }
+      .tree-row .icon { width: 14px; height: 14px; }
+      .main-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding-bottom: 13px; border-bottom: 1px solid #ede8f0; }
+      .main-title h3 { font-size: 18px; }
+      .main-title p { margin: 4px 0 0; color: var(--muted); font-size: 10px; }
+      .studio-tabs { display: flex; gap: 5px; margin: 14px 0 10px; }
+      .studio-tabs span { padding: 7px 9px; border-radius: 10px; color: var(--muted); font-size: 10px; font-weight: 760; }
+      .studio-tabs .active { color: var(--accent-dark); background: var(--accent-soft); }
+      .exercise { padding: 11px; border: 1px solid #e9e4ee; border-radius: 15px; background: #fff; }
+      .exercise + .exercise { margin-top: 8px; }
+      .exercise .num { display: grid; width: 27px; height: 27px; flex: 0 0 27px; place-items: center; border-radius: 9px; color: var(--accent-dark); background: var(--accent-soft); font-size: 10px; font-weight: 800; }
+      .exercise .exercise-data { display: grid; grid-template-columns: repeat(4, auto); gap: 7px; text-align: right; }
+      .exercise .exercise-data span { color: var(--muted); font-size: 9px; }
+      .exercise .exercise-data b { display: block; margin-top: 3px; color: var(--text); font-size: 10px; }
+      .inline-add { display: flex; min-height: 38px; align-items: center; justify-content: center; gap: 5px; margin-top: 9px; border: 1px dashed #cdbde9; border-radius: 13px; color: var(--accent-dark); background: #fbf9fe; font-size: 10px; font-weight: 780; }
+      .inspector-card { margin-top: 11px; padding: 10px; border: 1px solid #e5dfeb; border-radius: 13px; background: #fff; }
+      .inspector-card strong { display: block; font-size: 11px; }
+      .inspector-card p { margin: 4px 0 0; color: var(--muted); font-size: 9px; line-height: 1.35; }
+      .desktop-note { margin: 12px 7px 0; color: var(--muted); font-size: 12px; line-height: 1.48; text-align: center; }
+
+      @media (max-width: 1160px) {
+        .gallery { grid-template-columns: repeat(2, minmax(310px, 354px)); }
+        .concept.desktop-concept { grid-column: 1 / -1; }
+        .studio { grid-template-columns: 195px minmax(350px, 1fr) 205px; }
+      }
+      @media (max-width: 760px) {
+        .page { padding: 34px 14px 54px; }
+        .intro p { font-size: 15px; }
+        .coverage { grid-template-columns: 1fr 1fr; }
+        .coverage-card { min-height: 121px; padding: 13px; }
+        .gallery { grid-template-columns: minmax(0, 354px); gap: 25px; }
+        .concept.desktop-concept { grid-column: auto; max-width: 100%; }
+        .desktop { overflow-x: auto; border-radius: 24px; }
+        .desktop-screen { width: 880px; min-height: 600px; border-radius: 16px; }
+        .studio { grid-template-columns: 180px minmax(365px, 1fr) 190px; }
+      }
+      @media (max-width: 420px) {
+        .coverage { grid-template-columns: 1fr; }
+        .phone { width: 100%; }
+      }
+      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+    </style>
+  </head>
+  <body>
+    <svg class="defs" aria-hidden="true">
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+      <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="m6.5 6.5 11 11M4 9l-2 2 4 4 2-2M20 15l2-2-4-4-2 2M14 4l-2 2 6 6 2-2M10 20l2-2-6-6-2 2"/></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 2 5-6"/></symbol>
+      <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 11.5a8 8 0 0 1-8.5 8 9 9 0 0 1-3.7-.9L3 21l1.6-5.2A8 8 0 1 1 21 11.5Z"/></symbol>
+      <symbol id="i-plate" viewBox="0 0 24 24"><path d="M4 3v8M8 3v8M4 7h4M6 11v10M15 3v18M15 3c3.5 0 5 2.5 5 5s-1.5 5-5 5"/></symbol>
+      <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="m8 15 3-3 3 3 2-2 3 3M8.5 9.5h.01"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24"><path d="m4 20 4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10zM13.5 6.5l3 3"/></symbol>
+      <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6zM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z"/></symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16M8 3v8M16 13v8"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4zM22 2 11 13"/></symbol>
+    </svg>
+
+    <main class="page">
+      <header class="intro">
+        <div class="eyebrow">Workout App · Trainer workspace</div>
+        <h1>Рабочее место тренера,<br />а не сокращённая витрина</h1>
+        <p>Новая схема сохраняет реальные сценарии: от приоритизации сигналов до редактирования программы, календаря, абонемента, питания и прогресса. На телефоне — быстрые решения; на широком экране — полноценное конструирование плана.</p>
+        <div class="principles" aria-label="Принципы макета">
+          <span>4 главных раздела</span><span>карточка клиента — рабочий центр</span><span>сигналы ≠ вся активность</span><span>сложный редактор — на широком экране</span>
+        </div>
+      </header>
+
+      <section class="coverage" aria-label="Покрытие функциональности тренера">
+        <article class="coverage-card"><span class="icon-box"><svg class="icon"><use href="#i-home"/></svg></span><strong>Главная</strong><p>Только действия, которые реально требуют решения, плюс журнал всех событий дня.</p></article>
+        <article class="coverage-card"><span class="icon-box"><svg class="icon"><use href="#i-users"/></svg></span><strong>Клиенты</strong><p>Поиск, фильтры, статусы работы и быстрый вход в персональное рабочее пространство.</p></article>
+        <article class="coverage-card"><span class="icon-box"><svg class="icon"><use href="#i-dumbbell"/></svg></span><strong>Программы</strong><p>Шаблоны, библиотека упражнений, импорт, ИИ-черновики, версии и полноценный редактор.</p></article>
+        <article class="coverage-card"><span class="icon-box"><svg class="icon"><use href="#i-user"/></svg></span><strong>Кабинет</strong><p>Входящие, аналитика, уведомления, интеграции, настройки тренера и профиль.</p></article>
+        <p class="coverage-note">В карточке клиента сохранены: сводка, тренировки и история, питание и дневник, фото и 12 замеров, задания, сообщения, уведомления, календарь, абонемент и первичная настройка. Администраторские операции остаются отдельным защищённым контуром — они не смешиваются с ежедневной работой тренера.</p>
+      </section>
+
+      <section class="gallery" aria-label="Экраны макета">
+        <article class="concept">
+          <h2 class="concept-title">01 · Главная <span>приоритеты и журнал</span></h2>
+          <div class="device phone">
+            <div class="screen"><div class="content">
+              <div class="status"><span>9:41</span><span class="island"></span><span class="status-icons">▮▮▮ Wi‑Fi&nbsp; 92%</span></div>
+              <header class="header"><div><span class="eyebrow">Рабочий день</span><h2>Главная</h2></div><div class="header-actions"><button class="icon-btn" aria-label="Открыть входящие"><svg class="icon"><use href="#i-message"/></svg></button><button class="icon-btn" aria-label="Открыть уведомления"><svg class="icon"><use href="#i-bell"/></svg></button></div></header>
+              <section class="panel"><div class="panel-head"><div><h3>Требуют действия</h3><small>Только критичные сигналы</small></div><span class="tag red">3</span></div>
+                <div class="critical-item"><span class="signal"><svg class="icon small"><use href="#i-alert"/></svg></span><div><strong>Артём · 3 пропуска подряд</strong><small>Проверьте самочувствие и план</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+                <div class="critical-item"><span class="signal orange"><svg class="icon small"><use href="#i-calendar"/></svg></span><div><strong>Илья · осталась 1 тренировка</strong><small>Абонемент закончится после следующей</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+                <div class="critical-item"><span class="signal purple"><svg class="icon small"><use href="#i-dumbbell"/></svg></span><div><strong>Мария · нет программы</strong><small>Не назначен ближайший план</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+              </section>
+              <section class="panel"><div class="panel-head"><div><h3>Журнал дня</h3><small>События и уже проверенные сигналы</small></div><span class="tag">Сегодня</span></div>
+                <div class="chips"><span class="chip active">Все 8</span><span class="chip">Тренировки 3</span><span class="chip">Питание 2</span><span class="chip">Ответы 1</span></div>
+                <div class="event"><time>10:30</time><i class="dot"></i><div><strong>Илья завершил тренировку</strong><small>Комментарий: «всё хорошо»</small></div><span class="recorded">Записано</span></div>
+                <div class="event"><time>09:10</time><i class="dot"></i><div><strong>Новый замер · Мария</strong><small>Вес −0,4 кг, талия −1 см</small></div><span class="recorded">Записано</span></div>
+                <div class="event"><time>08:40</time><i class="dot"></i><div><strong>Артём пропустил тренировку</strong><small>Третий пропуск в серии</small></div><span class="review">Открыть</span></div>
+              </section>
+              <section class="panel"><div class="panel-head"><h3>Сегодня по расписанию</h3><span class="tag green">5 из 7</span></div><div class="metric-grid"><div class="metric"><span>Выполнено</span><strong>3</strong><small>+1 сейчас</small></div><div class="metric"><span>В работе</span><strong>2</strong><small>до 20:00</small></div><div class="metric"><span>Ответы</span><strong>1</strong><small>ждёт вас</small></div></div></section>
+            </div><nav class="bottom-nav" aria-label="Основная навигация"><span class="active"><svg class="icon"><use href="#i-home"/></svg>Главная</span><span><svg class="icon"><use href="#i-users"/></svg>Клиенты</span><span><svg class="icon"><use href="#i-dumbbell"/></svg>Программы</span><span><svg class="icon"><use href="#i-user"/></svg>Кабинет</span></nav></div>
+          </div>
+        </article>
+
+        <article class="concept">
+          <h2 class="concept-title">02 · Клиенты <span>очередь работы, а не таблица</span></h2>
+          <div class="device phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island"></span><span class="status-icons">▮▮▮ Wi‑Fi&nbsp; 92%</span></div>
+            <header class="header"><div><span class="eyebrow">12 в работе</span><h2>Клиенты</h2></div><button class="icon-btn" aria-label="Добавить клиента"><svg class="icon"><use href="#i-plus"/></svg></button></header>
+            <div class="search"><svg class="icon small"><use href="#i-search"/></svg><span>Поиск по имени или цели</span></div>
+            <div class="chips"><span class="chip active">Все 12</span><span class="chip">Внимание 3</span><span class="chip">Без программы 1</span><span class="chip">Неактивные</span></div>
+            <section class="panel"><div class="panel-head"><h3>Внимание</h3><small>По текущему состоянию</small></div>
+              <div class="client-row"><span class="avatar orange">А</span><div><strong>Артём Соколов</strong><small>3 пропуска · нужен контакт</small></div><span class="tag red">Сигнал</span><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+              <div class="client-row" style="margin-top:10px"><span class="avatar">И</span><div><strong>Илья Михайлов</strong><small>1 тренировка до конца абонемента</small></div><span class="tag orange">Скоро</span><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+            </section>
+            <section class="panel"><div class="panel-head"><h3>Все клиенты</h3><small>Сортировка: активность</small></div>
+              <div class="client-row"><span class="avatar alt">М</span><div><strong>Мария Алексеева</strong><small>Программа · день 3 из 8</small></div><span class="tag green">86%</span><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+              <div class="client-row" style="margin-top:11px"><span class="avatar">И</span><div><strong>Илья Михайлов</strong><small>Full body Илья · 2 из 8</small></div><span class="tag">67%</span><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+              <div class="client-row" style="margin-top:11px"><span class="avatar orange">В</span><div><strong>Виктор Орлов</strong><small>Питание 5 из 7 дней</small></div><span class="tag blue">5/7</span><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+            </section>
+            <div class="helper">В строке клиента остаются три коротких показателя: выполнение плана, питание за 7 дней и последняя активность. Детали не прячутся в списке.</div>
+          </div><nav class="bottom-nav" aria-label="Основная навигация"><span><svg class="icon"><use href="#i-home"/></svg>Главная</span><span class="active"><svg class="icon"><use href="#i-users"/></svg>Клиенты</span><span><svg class="icon"><use href="#i-dumbbell"/></svg>Программы</span><span><svg class="icon"><use href="#i-user"/></svg>Кабинет</span></nav></div></div>
+        </article>
+
+        <article class="concept">
+          <h2 class="concept-title">03 · Клиент <span>единый рабочий контур</span></h2>
+          <div class="device phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island"></span><span class="status-icons">▮▮▮ Wi‑Fi&nbsp; 92%</span></div>
+            <header class="header"><div class="header-split"><button class="back" aria-label="Назад к клиентам"><svg class="icon"><use href="#i-back"/></svg></button><div><span class="eyebrow">Клиент</span><h2>Илья Михайлов</h2></div></div><button class="icon-btn" aria-label="Действия с клиентом"><svg class="icon"><use href="#i-more"/></svg></button></header>
+            <div class="client-hero"><span class="avatar">И</span><div><h3>Илья Михайлов</h3><p>33 года · сушка · 92,5 кг</p><span class="tag green" style="margin-top:5px">Абонемент активен</span></div></div>
+            <div class="client-actions"><button class="button secondary"><svg class="icon small"><use href="#i-clipboard"/></svg>Задания</button><button class="button ghost"><svg class="icon small"><use href="#i-message"/></svg>Сообщения</button><button class="icon-btn" aria-label="Ещё действия"><svg class="icon"><use href="#i-more"/></svg></button></div>
+            <div class="segmented" aria-label="Разделы клиента"><span class="active">Сводка</span><span>Тренировки</span><span>Питание</span><span>Фото<br />и замеры</span></div>
+            <section class="panel" style="margin-top:10px"><div class="panel-head"><div><h3>Контроль клиента</h3><small>Показывается только если есть риск</small></div><span class="tag orange">1</span></div><div class="critical-item"><span class="signal orange"><svg class="icon small"><use href="#i-calendar"/></svg></span><div><strong>Осталась 1 тренировка</strong><small>Продлите абонемент до следующей даты</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div></section>
+            <section class="panel"><div class="panel-head"><h3>Сегодня</h3><span class="tag">День 3</span></div><div class="metric-grid"><div class="metric"><span>Тренировки</span><strong>2/8</strong><small>по плану</small></div><div class="metric"><span>Питание</span><strong>86%</strong><small>6 из 7</small></div><div class="metric"><span>Вес</span><strong>−0,4</strong><small>за 14 дней</small></div></div><div class="mini-links" style="margin-top:9px"><div class="mini-link"><span class="mini-icon"><svg class="icon small"><use href="#i-chart"/></svg></span><div><span>Упражнения</span><strong>Сравнить прогресс</strong></div></div><div class="mini-link"><span class="mini-icon"><svg class="icon small"><use href="#i-photo"/></svg></span><div><span>Тело</span><strong>Фото и 12 замеров</strong></div></div></div></section>
+            <section class="panel"><div class="panel-head"><h3>Быстрые листы</h3><small>Не теряют контекст</small></div><div class="split"><button class="button ghost small"><svg class="icon small"><use href="#i-calendar"/></svg>Календарь</button><button class="button ghost small"><svg class="icon small"><use href="#i-bell"/></svg>Напоминания</button></div><div class="split" style="margin-top:7px"><button class="button ghost small"><svg class="icon small"><use href="#i-message"/></svg>Входящие</button><button class="button ghost small"><svg class="icon small"><use href="#i-clipboard"/></svg>Настройка</button></div></section>
+          </div></div></div>
+        </article>
+
+        <article class="concept">
+          <h2 class="concept-title">04 · План и календарь <span>назначение, история, абонемент</span></h2>
+          <div class="device phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island"></span><span class="status-icons">▮▮▮ Wi‑Fi&nbsp; 92%</span></div>
+            <header class="header"><div class="header-split"><button class="back" aria-label="Назад к сводке клиента"><svg class="icon"><use href="#i-back"/></svg></button><div><span class="eyebrow">Илья · Тренировки</span><h2>План клиента</h2></div></div><button class="icon-btn" aria-label="Открыть историю программ"><svg class="icon"><use href="#i-clock"/></svg></button></header>
+            <div class="segmented"><span class="active">Текущая</span><span>Календарь</span><span>История</span><span>Разборы</span></div>
+            <section class="panel" style="margin-top:10px"><div class="program-card"><span>НАЗНАЧЕННАЯ ПРОГРАММА</span><h3>Full body Илья</h3><p>8 тренировок · 2 выполнены · назначена 16 авг.</p><div class="split"><button class="button secondary small"><svg class="icon small"><use href="#i-edit"/></svg>Переименовать</button><button class="button ghost small"><svg class="icon small"><use href="#i-dumbbell"/></svg>Редактировать</button></div></div><button class="button ghost wide" style="margin-top:9px"><svg class="icon small"><use href="#i-plus"/></svg>Назначить сохранённую программу</button></section>
+            <section class="panel"><div class="panel-head"><div><h3>Расписание</h3><small>Порядок дат — порядок тренировок</small></div><span class="tag">Август</span></div><div class="tiny-calendar"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span><span>17</span><span class="plan">18</span><span>19</span><span>20</span><span class="done">21</span><span>22</span><span>23</span><span>24</span><span class="plan">25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span></div><div class="legend"><span><b></b>Плановая</span><span><b class="done"></b>В срок</span><span><b class="miss"></b>Пропуск</span></div><button class="button secondary wide" style="margin-top:10px"><svg class="icon small"><use href="#i-calendar"/></svg>Изменить расписание</button></section>
+            <section class="panel"><div class="panel-head"><h3>Абонемент</h3><button class="button ghost small"><svg class="icon small"><use href="#i-edit"/></svg>Изменить</button></div><div class="subscription"><span class="signal"><svg class="icon small"><use href="#i-calendar"/></svg></span><div><strong>Активен · осталось 1 занятие</strong><small>16 авг. — 16 сент. · напомнить тренеру</small></div></div></section>
+            <div class="helper">История программы, прошлые тренировки, сравнение упражнений и коррекция нагрузки остаются рядом с планом — не в отдельном несвязанном разделе.</div>
+          </div></div></div>
+        </article>
+
+        <article class="concept">
+          <h2 class="concept-title">05 · Питание и тело <span>данные, план и динамика</span></h2>
+          <div class="device phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island"></span><span class="status-icons">▮▮▮ Wi‑Fi&nbsp; 92%</span></div>
+            <header class="header"><div class="header-split"><button class="back" aria-label="Назад к клиенту"><svg class="icon"><use href="#i-back"/></svg></button><div><span class="eyebrow">Илья · Питание</span><h2>Питание и тело</h2></div></div><button class="icon-btn" aria-label="Открыть дневник питания"><svg class="icon"><use href="#i-plate"/></svg></button></header>
+            <div class="segmented"><span class="active">Питание</span><span>Дневник</span><span>Замеры</span><span>Фото</span></div>
+            <section class="panel" style="margin-top:10px"><div class="nutrition-hero"><div><strong>Рекомпозиция</strong><small>2 300 ккал · Б 180 · Ж 70 · У 235</small></div><span class="tag green">86%</span></div><div class="nutrition-days"><span>П</span><span class="good">В</span><span class="good">С</span><span class="warn">Ч</span><span class="good">П</span><span class="good">С</span><span class="good">В</span></div><div class="split" style="margin-top:9px"><button class="button secondary small"><svg class="icon small"><use href="#i-edit"/></svg>Изменить план</button><button class="button ghost small"><svg class="icon small"><use href="#i-spark"/></svg>ИИ-черновик</button></div></section>
+            <section class="panel"><div class="panel-head"><div><h3>Дневник питания</h3><small>Только просмотр тренеру</small></div><span class="tag">25 авг.</span></div><div class="food-row"><span class="signal purple"><svg class="icon small"><use href="#i-plate"/></svg></span><div><strong>Завтрак · 625 ккал</strong><small>Овсянка, творог, ягоды</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div><div class="food-row" style="margin-top:10px"><span class="signal purple"><svg class="icon small"><use href="#i-plate"/></svg></span><div><strong>Обед · 740 ккал</strong><small>Курица, рис, овощи</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div></section>
+            <section class="panel"><div class="panel-head"><div><h3>Динамика тела</h3><small>12 измерений и фото-сессии</small></div><span class="tag green">−0,4 кг</span></div><div class="sparkline"><svg viewBox="0 0 300 54" role="img" aria-label="Динамика веса за четыре недели"><path d="M0 42 C28 38 38 41 60 35 S96 37 116 29 S149 34 174 22 S205 25 225 20 S265 24 300 10" fill="none" stroke="#806bb6" stroke-width="3"/><path d="M0 42 C28 38 38 41 60 35 S96 37 116 29 S149 34 174 22 S205 25 225 20 S265 24 300 10 V54 H0Z" fill="rgba(128,107,182,.12)"/></svg></div><div class="photo-pair" style="margin-top:9px"><div class="photo"><span>10 авг.</span></div><div class="photo"><span>24 авг.</span></div></div><button class="button ghost wide" style="margin-top:9px"><svg class="icon small"><use href="#i-chart"/></svg>Открыть все замеры и сравнения</button></section>
+          </div></div></div>
+        </article>
+
+        <article class="concept">
+          <h2 class="concept-title">06 · Кабинет <span>служебные сценарии не исчезают</span></h2>
+          <div class="device phone"><div class="screen"><div class="content">
+            <div class="status"><span>9:41</span><span class="island"></span><span class="status-icons">▮▮▮ Wi‑Fi&nbsp; 92%</span></div>
+            <header class="header"><div><span class="eyebrow">Тренер</span><h2>Кабинет</h2></div><button class="icon-btn" aria-label="Настройки профиля"><svg class="icon"><use href="#i-sliders"/></svg></button></header>
+            <section class="cabinet-hero"><span class="avatar">АК</span><div><strong>Алексей Ковалёв</strong><small>12 клиентов · персональный тренер</small></div><svg class="icon" style="margin-left:auto"><use href="#i-chevron"/></svg></section>
+            <section class="panel" style="margin-top:10px"><div class="panel-head"><div><h3>Рабочие сервисы</h3><small>Сохраняют контекст тренера</small></div></div><div class="service-list">
+              <div class="service"><span class="service-icon"><svg class="icon small"><use href="#i-message"/></svg></span><div><strong>Входящие</strong><small>Ожидают ответа: 2 · обработаны: 11</small></div><span class="badge">2</span><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+              <div class="service"><span class="service-icon"><svg class="icon small"><use href="#i-chart"/></svg></span><div><strong>Аналитика</strong><small>Нагрузка, активность и удержание клиентов</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+              <div class="service"><span class="service-icon"><svg class="icon small"><use href="#i-bell"/></svg></span><div><strong>Уведомления</strong><small>Напоминания, календарь, Telegram</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+              <div class="service"><span class="service-icon"><svg class="icon small"><use href="#i-send"/></svg></span><div><strong>Интеграции</strong><small>Telegram подключён · тест уведомления</small></div><svg class="icon small chevron"><use href="#i-chevron"/></svg></div>
+            </div></section>
+            <section class="panel"><div class="panel-head"><h3>Правило внимания</h3><span class="tag green">Понятно</span></div><p>Комментарии «всё хорошо», выполненные тренировки и обычные задания остаются во входящих или журнале. В «Требуют действия» попадают только риск: три пропуска, боль/плохое самочувствие, отсутствие программы и окончание абонемента.</p></section>
+          </div><nav class="bottom-nav" aria-label="Основная навигация"><span><svg class="icon"><use href="#i-home"/></svg>Главная</span><span><svg class="icon"><use href="#i-users"/></svg>Клиенты</span><span><svg class="icon"><use href="#i-dumbbell"/></svg>Программы</span><span class="active"><svg class="icon"><use href="#i-user"/></svg>Кабинет</span></nav></div></div>
+        </article>
+
+        <article class="concept desktop-concept">
+          <h2 class="concept-title">07 · Студия программ <span>широкий экран для сложного редактирования</span></h2>
+          <div class="device desktop"><div class="desktop-screen">
+            <header class="desktop-top"><div><span class="eyebrow">Программы · редактор</span><h2>Full body Илья <span class="tag" style="vertical-align:middle">Черновик</span></h2></div><div class="desktop-actions"><button class="button ghost"><svg class="icon small"><use href="#i-clock"/></svg>История</button><button class="button secondary"><svg class="icon small"><use href="#i-edit"/></svg>Переименовать</button><button class="button"><svg class="icon small"><use href="#i-check"/></svg>Сохранить</button></div></header>
+            <section class="studio" aria-label="Редактор программы">
+              <aside class="studio-side"><h3>Структура программы</h3><p>Месяцы, циклы, недели и дни не скрываются за линейным списком.</p><div class="studio-search"><svg class="icon small"><use href="#i-search"/></svg>Поиск дня или упражнения</div><div class="tree"><div class="tree-row active"><svg class="icon"><use href="#i-calendar"/></svg>Месяц 1 · Адаптация</div><div class="tree-row indent"><svg class="icon"><use href="#i-chevron"/></svg>Неделя 1</div><div class="tree-row deep active"><svg class="icon"><use href="#i-dumbbell"/></svg>День 1 · Full body</div><div class="tree-row deep"><svg class="icon"><use href="#i-dumbbell"/></svg>День 2 · Низ тела</div><div class="tree-row indent"><svg class="icon"><use href="#i-chevron"/></svg>Неделя 2</div><div class="tree-row"><svg class="icon"><use href="#i-calendar"/></svg>Месяц 2 · Нагрузка</div></div><button class="button ghost wide small" style="margin-top:12px"><svg class="icon small"><use href="#i-plus"/></svg>Добавить день</button></aside>
+              <section class="studio-main"><div class="main-title"><div><h3>День 1 · Full body</h3><p>Название тренировки, статус, цель и упражнения редактируются в одном месте.</p></div><button class="button ghost small"><svg class="icon small"><use href="#i-edit"/></svg>Настроить день</button></div><div class="studio-tabs"><span class="active">Упражнения</span><span>Прогресс</span><span>Комментарий клиенту</span></div>
+                <article class="exercise"><span class="num">1</span><div><strong>Гоблет-присед с гантелью</strong><small>Видео добавлено · техника</small></div><div class="exercise-data"><span>Подходы<b>3</b></span><span>Повторы<b>10–12</b></span><span>Вес<b>24 кг</b></span><span>Отдых<b>75 с</b></span></div><button class="icon-btn" aria-label="Действия упражнения"><svg class="icon small"><use href="#i-more"/></svg></button></article>
+                <article class="exercise"><span class="num">2</span><div><strong>Жим гантелей лёжа</strong><small>Без видео · добавить из библиотеки</small></div><div class="exercise-data"><span>Подходы<b>3</b></span><span>Повторы<b>8–10</b></span><span>Вес<b>18 кг</b></span><span>Отдых<b>90 с</b></span></div><button class="icon-btn" aria-label="Действия упражнения"><svg class="icon small"><use href="#i-more"/></svg></button></article>
+                <article class="exercise"><span class="num">3</span><div><strong>Тяга верхнего блока</strong><small>Видео добавлено · спина</small></div><div class="exercise-data"><span>Подходы<b>3</b></span><span>Повторы<b>10</b></span><span>Вес<b>45 кг</b></span><span>Отдых<b>75 с</b></span></div><button class="icon-btn" aria-label="Действия упражнения"><svg class="icon small"><use href="#i-more"/></svg></button></article>
+                <button class="inline-add"><svg class="icon small"><use href="#i-plus"/></svg>Добавить упражнение из библиотеки</button>
+              </section>
+              <aside class="studio-side"><h3>Публикация и контекст</h3><p>Сначала сохранить, затем назначить — изменения не потеряются.</p><div class="inspector-card"><strong>Состояние</strong><p><span class="tag orange">Есть несохранённые изменения</span></p><button class="button wide small" style="margin-top:8px">Сохранить черновик</button></div><div class="inspector-card"><strong>Клиенты</strong><p>Илья Михайлов · назначена версия 2</p><button class="button ghost wide small" style="margin-top:8px">Открыть назначения</button></div><div class="inspector-card"><strong>Создание</strong><p>Новая программа, копия, импорт Excel/JSON или ИИ-черновик из материала.</p><button class="button ghost wide small" style="margin-top:8px">Открыть библиотеку</button></div></aside>
+            </section>
+            <p class="desktop-note">Телефон ведёт тренера к решению по конкретному клиенту. Конструктор с циклом, днями, подходами, видео, копированием, импортом и версиями остаётся полноценным на планшете или компьютере — без искусственного урезания возможностей.</p>
+          </div></div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

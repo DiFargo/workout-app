@@ -99,7 +99,7 @@ export default function AdminPanelHub({
   if (!canUseAdminFeatures()) {
     return (
       <main className={styles.root}>
-        <button className={styles.backButton} type="button" onClick={() => setPage("main")}>
+        <button className={styles.backButton} type="button" aria-label="Главное меню" onClick={() => setPage("main")}>
           <ArrowLeft aria-hidden="true" />
           <span>Главное меню</span>
         </button>

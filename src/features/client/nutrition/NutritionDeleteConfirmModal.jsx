@@ -16,19 +16,22 @@ export default function NutritionDeleteConfirmModal({
       className={styles.overlay}
       data-css-module-scope="nutrition-delete-confirm"
       data-testid="nutrition-delete-confirm-modal"
-      role="dialog"
-      aria-modal="true"
-      data-modal-surface="true"
-      aria-labelledby="nutrition-delete-title"
+      role="presentation"
     >
       <button
         type="button"
-        className={styles.backdrop}
+        className={styles.backdrop} data-modal-backdrop="true"
         data-testid="nutrition-delete-confirm-backdrop"
         onClick={onCancel}
         aria-label="Отменить удаление"
       />
-      <section className={styles.card}>
+      <section
+        className={styles.card}
+        role="dialog"
+        aria-modal="true"
+        data-modal-surface="true"
+        aria-labelledby="nutrition-delete-title"
+      >
         <button
           type="button"
           className={styles.closeButton}

@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import styles from "./FoodSearchInput.module.css";
 
 export default function FoodSearchInput({
@@ -20,7 +21,7 @@ export default function FoodSearchInput({
       role="search"
     >
       <label className={styles.visuallyHidden} htmlFor={inputId}>{searchLabel}</label>
-      <span className={styles.searchIcon} aria-hidden="true">⌕</span>
+      <span className={styles.searchIcon} aria-hidden="true"><Search /></span>
       <input
         id={inputId}
         className={styles.input}

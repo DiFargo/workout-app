@@ -8,8 +8,8 @@
     place-items: center;
     overflow: hidden;
     padding: 1.5rem;
-    color: #28262e;
-    background: #f7f6f8;
+    color: var(--apple-text, #1c1c1e);
+    background: var(--apple-canvas, #f2f2f7);
   }
 
   .splashInner {
@@ -22,11 +22,11 @@
     justify-content: center;
     padding: 2.125rem 1.5rem;
     overflow: hidden;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 2.375rem;
     background: rgba(255, 255, 255, 0.94);
     box-shadow:
-      0 1.25rem 3.75rem rgba(57, 67, 75, 0.12),
+      0 1.25rem 3.75rem rgba(27, 35, 31, 0.12),
       inset 0 1px 0 rgba(255, 255, 255, 0.96);
   }
 
@@ -47,14 +47,14 @@
     place-items: center;
     border: 1px solid #dce2e5;
     border-radius: 1.75rem;
-    background: #efebf3;
-    color: #7b7682;
+    background: #ebf5ef;
+    color: var(--apple-blue-pressed, #3565a3);
     box-shadow: none;
     font-size: 2.625rem;
   }
 
   .splashLogo {
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     font-size: clamp(5.125rem, 22vw, 7.625rem);
     font-weight: 900;
     line-height: 0.92;
@@ -63,7 +63,7 @@
 
   .splashText {
     margin-block-start: 0.875rem;
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 0.9375rem;
     font-weight: 800;
     letter-spacing: 0.02em;
@@ -74,9 +74,9 @@
     height: 0.5625rem;
     margin-block-start: 1.75rem;
     overflow: hidden;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 999px;
-    background: #efebf3;
+    background: var(--apple-separator, rgba(60,60,67,.12));
   }
 
   .splashProgress > span {
@@ -84,7 +84,7 @@
     width: 42%;
     height: 100%;
     border-radius: inherit;
-    background: #7b7682;
+    background: linear-gradient(90deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
     box-shadow: none;
     animation: splash-loading 1.2s ease-in-out infinite;
   }
@@ -99,7 +99,7 @@
     width: 0.4375rem;
     height: 0.4375rem;
     border-radius: 50%;
-    background: #8296a5;
+    background: var(--apple-action, #3f73b8);
     animation: splash-dot 1.1s ease-in-out infinite;
   }
 
@@ -123,7 +123,7 @@
 
   .splashRecovery p {
     margin: 0;
-    color: #7b7682;
+    color: var(--apple-secondary, #636366);
     font-size: 0.8125rem;
     font-weight: 650;
     line-height: 1.35;
@@ -134,7 +134,7 @@
     min-height: 44px;
     border: 1px solid #ded7e9;
     border-radius: 14px;
-    background: #f5f2f7;
+    background: var(--apple-surface-muted, #efeff4);
     color: #4c4656;
     font: inherit;
     font-size: 0.875rem;
@@ -142,7 +142,7 @@
   }
 
   .splashRetry:focus-visible {
-    outline: 3px solid rgba(143, 122, 200, 0.32);
+    outline: 3px solid rgba(47, 125, 104, 0.32);
     outline-offset: 2px;
   }
 
@@ -197,7 +197,7 @@
   }
 
   :global(:root[data-app-theme="legacy-inactive"]) .appSplash {
-    color: #28262e;
+    color: var(--apple-text, #1c1c1e);
     background:
       radial-gradient(circle at 50% 38%, rgba(127, 159, 58, 0.18), transparent 34%),
       radial-gradient(circle at 50% 58%, rgba(127, 159, 58, 0.08), transparent 42%),
@@ -264,8 +264,8 @@
   justify-content: center;
   gap: 28px;
   overflow-x: hidden;
-  background: #f7f6f8;
-  color: #28262e;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -282,14 +282,14 @@
   place-items: center;
   border: 0;
   border-radius: 20px;
-  background: #7b7682;
+  background: linear-gradient(145deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
   color: #fff;
   box-shadow: none;
 }
 
 .loginHero h1 {
   margin: 0;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 34px;
   font-weight: 760;
   line-height: 1.05;
@@ -299,7 +299,7 @@
 .loginHero p {
   max-width: 270px;
   margin: 8px auto 0;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 14px;
   line-height: 1.35;
 }
@@ -312,15 +312,15 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 28px;
   background: #fff;
-  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
+  box-shadow: 0 3px 12px rgba(27, 35, 31, 0.07);
 }
 
 .loginCard h2 {
   margin: 2px 0 0;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 21px;
   font-weight: 720;
   line-height: 1.15;
@@ -330,7 +330,7 @@
 
 .loginInviteNote {
   margin: 0 0 4px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
@@ -339,7 +339,7 @@
 .loginField {
   display: grid;
   gap: 7px;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 12px;
   font-weight: 650;
 }
@@ -348,12 +348,12 @@
   width: 100%;
   min-height: 52px;
   padding: 0 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 14px;
   outline: 0;
   appearance: none;
   background: #f7f8f8;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 16px;
   font-weight: 500;
 }
@@ -391,7 +391,7 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   box-shadow: none;
 }
 
@@ -433,7 +433,7 @@
 .loginBtn {
   margin-top: 4px;
   border: 0;
-  background: linear-gradient(135deg, #9a85d1, #806bb6);
+  background: linear-gradient(135deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
   color: #fff;
   box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
   font-size: 16px;
@@ -445,9 +445,9 @@
   align-items: center;
   justify-content: center;
   gap: 9px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 14px;
 }
 
@@ -456,10 +456,10 @@
   height: 24px;
   display: grid;
   place-items: center;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 50%;
   background: #fff;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 13px;
   font-weight: 750;
 }
@@ -467,7 +467,7 @@
 .loginResetBtn {
   border: 0;
   background: transparent;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 14px;
 }
 
@@ -479,7 +479,7 @@
 .loginCard .loginBtn:disabled {
   opacity: 1;
   cursor: wait;
-  background: linear-gradient(135deg, #9a85d1, #806bb6);
+  background: linear-gradient(135deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
   color: #fff;
   box-shadow: 0 8px 18px rgba(105, 82, 157, 0.18);
 }
@@ -487,7 +487,7 @@
 .loginHint {
   margin: 0;
   color: #8b9094;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4;
   text-align: center;
 }
@@ -499,64 +499,64 @@
     16px
     max(24px, calc(env(safe-area-inset-bottom) + 16px));
   gap: 28px;
-  background: #f7f6f8;
-  color: #28262e;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard {
   max-width: none;
   padding: 18px;
   gap: 12px;
-  border-color: #efebf3;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 28px;
   background: #fff;
-  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
+  box-shadow: 0 3px 12px rgba(27, 35, 31, 0.07);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .appLogo.appLogo {
-  background: #7b7682;
+  background: linear-gradient(145deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
   color: #fff;
   box-shadow: none;
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginBtn.loginBtn {
-  background: linear-gradient(135deg, #9a85d1, #806bb6);
+  background: linear-gradient(135deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
   color: #fff;
   box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard input {
-  border-color: #efebf3;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
   background: #f7f8f8;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginHero h1,
 :global(html:root[data-app-theme="warm-light"]) .loginCard h2 {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginHero p,
 :global(html:root[data-app-theme="warm-light"]) .loginInviteNote,
 :global(html:root[data-app-theme="warm-light"]) .loginHint {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="legacy-inactive"]) .loginPage {
-  background: #28262e;
-  color: #28262e;
+  background: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(:root[data-app-theme="legacy-inactive"]) .loginCard {
   border-color: #2b302b;
-  background: #28262e;
+  background: var(--apple-text, #1c1c1e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="legacy-inactive"]) .loginHero h1,
 :global(:root[data-app-theme="legacy-inactive"]) .loginCard h2,
 :global(:root[data-app-theme="legacy-inactive"]) .loginGoogleBtn {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
 }
 
 :global(:root[data-app-theme="legacy-inactive"]) .loginCard input,
@@ -597,7 +597,7 @@
   .loginPage {
     min-height: calc(100dvh - 24px);
     margin: 12px auto;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 30px;
   }
 }
@@ -607,8 +607,8 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: 16px;
-  background: #f7f6f8;
-  color: #28262e;
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -616,10 +616,10 @@
   width: min(100%, 370px);
   min-height: 286px;
   padding: 30px 24px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 30px;
   background: #fff;
-  box-shadow: 0 3px 12px rgba(57, 67, 75, 0.07);
+  box-shadow: 0 3px 12px rgba(27, 35, 31, 0.07);
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashInner::before {
@@ -632,13 +632,13 @@
   margin-bottom: 16px;
   border: 0;
   border-radius: 20px;
-  background: #7b7682;
-  color: #fff;
+  background: #ebf5ef;
+  color: var(--apple-blue-pressed, #3565a3);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashLogo {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 58px;
   line-height: 0.95;
   letter-spacing: 0.08em;
@@ -646,27 +646,123 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashText {
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashProgress {
   height: 6px;
   margin-top: 24px;
   border: 0;
-  background: #efebf3;
+  background: var(--apple-separator, rgba(60,60,67,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashProgress > span {
-  background: #7b7682;
+  background: linear-gradient(90deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashDots > i {
-  background: #8296a5;
+  background: var(--apple-action, #3f73b8);
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashRetry {
-  border-color: #efebf3;
-  background: #f5f2f7;
+  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-surface-muted, #efeff4);
   color: #4c4656;
+}
+
+/* Unified client entry: an open loading state and a compact, single-purpose
+   authentication sheet. */
+.splashCaption {
+  max-width: 250px;
+  margin-top: 6px;
+  color: #9a94a1;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.loginEyebrow {
+  display: inline-block;
+  margin-bottom: 5px;
+  color: var(--apple-blue-pressed, #3565a3);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+:global(:root[data-app-theme="warm-light"]) .appSplash {
+  padding: max(24px, env(safe-area-inset-top, 0px)) 24px max(24px, env(safe-area-inset-bottom, 0px));
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashInner {
+  width: min(100%, 320px);
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashMark {
+  width: 68px;
+  height: 68px;
+  margin-bottom: 20px;
+  border-radius: 22px;
+  background: var(--apple-blue-tint, #eef3fa);
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashLogo {
+  font-size: 44px;
+  letter-spacing: 0.12em;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashProgress {
+  width: 220px;
+  height: 5px;
+  margin-top: 28px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .splashDots {
+  display: none;
+}
+
+.loginPage {
+  gap: 22px;
+}
+
+.loginCard {
+  padding: 20px;
+  gap: 13px;
+  border-radius: 26px;
+  box-shadow: 0 14px 40px rgba(27, 35, 31, 0.09);
+}
+
+.loginCard h2 {
+  font-size: 23px;
+}
+
+.loginField > span {
+  color: #5f5967;
+  font-size: 13px;
+}
+
+.loginBtn,
+.loginGoogleBtn {
+  min-height: 54px;
+  border-radius: 17px;
+}
+
+@media (max-height: 700px) {
+  .loginPage {
+    gap: 14px;
+  }
+
+  .loginEyebrow,
+  .loginHero p {
+    display: none;
+  }
 }

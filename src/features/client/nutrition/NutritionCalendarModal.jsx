@@ -124,7 +124,7 @@ export default function NutritionCalendarModal({
     >
       <button
         type="button"
-        className={styles.backdrop}
+        className={styles.backdrop} data-modal-backdrop="true"
         onClick={onClose}
         aria-label="Закрыть календарь по фону"
         data-nutrition-calendar-action="backdrop"

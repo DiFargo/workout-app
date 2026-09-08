@@ -90,7 +90,7 @@ export default function ProfileBodyMetricsSettingsSection({
   const profileValidation = getAiNutritionProfileValidation(draft);
   const heading = (
     <div className={styles.headText}>
-      <span className={styles.eyebrow}>ПРОФИЛЬ</span>
+      {isCollapsible ? <span className={styles.eyebrow}>ПРОФИЛЬ</span> : null}
       <strong className={styles.title}>Параметры тела</strong>
       <small className={styles.description}>{description}</small>
     </div>
@@ -171,7 +171,7 @@ export default function ProfileBodyMetricsSettingsSection({
             ))}
           </div>
 
-          <div className={`${styles.grid} ${styles.gridTwo}`}>
+          <div className={`${styles.grid} ${styles.selectGrid}`}>
             <label className={styles.field}>
               <span className={styles.fieldLabel}>Твоя цель</span>
               <select

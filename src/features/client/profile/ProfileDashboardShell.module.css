@@ -11,10 +11,10 @@
   overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
-  color: #28262e;
-  background: #f7f6f8;
+  color: var(--apple-text, #1c1c1e);
+  background: var(--ios-canvas-background, var(--apple-canvas, #f2f2f7));
   font-family: var(--font-family-compact-ui);
-  scroll-padding-block-end: calc(148px + env(safe-area-inset-bottom, 0px));
+  scroll-padding-block-end: calc(92px + env(safe-area-inset-bottom, 0px));
   scrollbar-width: none;
 }
 
@@ -28,7 +28,7 @@
   /* This padding is inside the fixed-height shell: it reserves space for the
      dock only after the content genuinely overflows, so short pages do not
      gain an empty scroll range. */
-  padding: 0 0 calc(148px + env(safe-area-inset-bottom, 0px));
+  padding: 0 0 calc(92px + env(safe-area-inset-bottom, 0px));
 }
 
 .measurements,
@@ -37,7 +37,7 @@
   width: min(402px, 100vw);
   min-height: 100dvh;
   overflow: hidden;
-  background: #f7f6f8;
+  background: var(--ios-canvas-background, var(--apple-canvas, #f2f2f7));
 }
 
 .content {
@@ -52,12 +52,12 @@
 }
 
 .mainContent {
-  padding: 0 16px 24px;
-  gap: 14px;
+  padding: 0 20px 24px;
+  gap: 0;
 }
 
 .cabinetContent {
-  padding: 0 16px 24px;
+  padding: 0 20px 24px;
 }
 
 .measurementsContent,
@@ -69,19 +69,35 @@
   overflow: hidden auto;
 }
 
+.measurementsContent {
+  padding: 2px 20px 0;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  scrollbar-width: none;
+}
+
+.measurementsContent::-webkit-scrollbar { display: none; }
+
 .heroStats { width: 100%; }
 
 .version {
-  width: 100%;
-  margin: -0.25rem 0 0;
-  color: #aaa5b2;
+  position: static;
+  z-index: auto;
+  width: auto;
+  margin: 16px auto 0;
+  padding: 0 8px;
+  border-radius: 10px;
+  color: var(--apple-secondary, #636366);
+  background: transparent;
   font-family: var(--font-family-compact-ui);
   font-size: 0.6875rem;
   font-weight: 600;
-  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  line-height: 16px;
   letter-spacing: -0.01em;
   pointer-events: none;
   text-align: center;
+  white-space: nowrap;
+  transform: none;
 }
 
 .harnessTitle {
@@ -92,7 +108,7 @@
 @media (min-width: 403px) {
   .root {
     border-radius: 54px;
-    box-shadow: 0 24px 80px rgba(40, 38, 46, 0.14);
+    box-shadow: 0 24px 80px rgba(27, 35, 31, 0.14);
   }
 }
 

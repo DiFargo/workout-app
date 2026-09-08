@@ -1,4 +1,22 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  Activity,
+  Apple,
+  Armchair,
+  CakeSlice,
+  Dumbbell,
+  Flame,
+  Footprints,
+  Leaf,
+  PersonStanding,
+  MoveHorizontal,
+  RefreshCcw,
+  Ruler,
+  Scale,
+  Target,
+  UserRound,
+  X
+} from "lucide-react";
 import styles from "./FirstSetupOnboarding.module.css";
 import {
   ageToCenteredSlider,
@@ -7,24 +25,24 @@ import {
 } from "./firstSetupMetricScale.js";
 
 import { hasRequiredAiNutritionProfileFields } from "../../utils/profileDefaults";
-import { MAX_USER_DISPLAY_NAME_LENGTH } from "../../utils/userDisplayName.js";
+import { limitUserDisplayName, MAX_USER_DISPLAY_NAME_LENGTH } from "../../utils/userDisplayName.js";
 
 const MAX_PROFILE_NAME_LENGTH = MAX_USER_DISPLAY_NAME_LENGTH;
 
 const TOTAL_STEPS = 10;
 
 const ACTIVITY_OPTIONS = [
-  ["low", "🪑", "Минимальный", "Мало движения"],
-  ["medium", "🚶", "Умеренный", "1–3 тренировки в неделю"],
-  ["high", "🏃", "Активный", "3–5 тренировок в неделю"],
-  ["veryHigh", "🏋️", "Очень активный", "Спорт почти каждый день"]
+  ["low", Armchair, "Минимальный", "Мало движения"],
+  ["medium", Footprints, "Умеренный", "1–3 тренировки в неделю"],
+  ["high", Activity, "Активный", "3–5 тренировок в неделю"],
+  ["veryHigh", Dumbbell, "Очень активный", "Спорт почти каждый день"]
 ];
 
 const GOAL_OPTIONS = [
-  ["cut", "🔥", "Похудение", "Снизить вес"],
-  ["mass", "💪", "Набор массы", "Набрать мышечную массу"],
-  ["recomp", "🔄", "Рекомпозиция", "Снизить жир и набрать мышцы"],
-  ["maintain", "🌿", "Поддержание формы", "Сохранить текущую форму"]
+  ["cut", Flame, "Похудение", "Снизить вес"],
+  ["mass", Dumbbell, "Набор массы", "Набрать мышечную массу"],
+  ["recomp", RefreshCcw, "Рекомпозиция", "Снизить жир и набрать мышцы"],
+  ["maintain", Leaf, "Поддержание формы", "Сохранить текущую форму"]
 ];
 
 const ONBOARDING_TITLES = [
@@ -137,9 +155,9 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
   }
 
   return (
-    <label className="firstSetupMetricSlider" style={{ "--slider-progress": `${sliderProgress}%` }}>
-      <span className="firstSetupMetricLabel">{config.label}</span>
-      <strong className="firstSetupMetricValue">{formatNumberValue(sliderValue, config.step)} <small>{config.unit}</small></strong>
+    <label className={styles.firstSetupMetricSlider} style={{ "--slider-progress": `${sliderProgress}%` }}>
+      <span className={styles.firstSetupMetricLabel}>{config.label}</span>
+      <strong className={styles.firstSetupMetricValue}>{formatNumberValue(sliderValue, config.step)} <small>{config.unit}</small></strong>
       <input
         type="range"
         min={nativeSliderMin}
@@ -153,16 +171,16 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
         onKeyDown={() => field === "weight" && setIsWeightSliderDragging(true)}
         onKeyUp={() => field === "weight" && setIsWeightSliderDragging(false)}
       />
-      <div className="firstSetupMetricTicks" aria-hidden="true">
+      <div className={styles.firstSetupMetricTicks} aria-hidden="true">
         {Array.from({ length: 21 }, (_, index) => <i key={index} />)}
       </div>
-      <div className="firstSetupMetricMarks" aria-hidden="true">
+      <div className={styles.firstSetupMetricMarks} aria-hidden="true">
         {(weightWindow
           ? [weightWindow.min, weightWindow.midpoint, weightWindow.max]
           : config.marks || [config.min, safeFallback, config.max]
         ).map((mark, index) => <span key={`${mark}-${index}`}>{formatNumberValue(mark, config.step)}</span>)}
       </div>
-      <div className="firstSetupMetricInput">
+      <div className={styles.firstSetupMetricInput}>
         <input
           inputMode={config.step < 1 ? "decimal" : "numeric"}
           type="text"
@@ -195,7 +213,7 @@ export default function FirstSetupOnboarding({
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false);
   const initializedMetricStepsRef = useRef(new Set());
 
-  const profileName = String(profileDraft.name || "").trim();
+  const profileName = limitUserDisplayName(profileDraft.name);
   const numericAge = Number(profileDraft.age);
   const numericWeight = Number(String(profileDraft.weight || "").replace(",", "."));
   const numericHeight = Number(profileDraft.height);
@@ -259,18 +277,18 @@ export default function FirstSetupOnboarding({
   if (!open) return null;
 
   return (
-    <div className="firstSetupOverlay" data-testid="first-setup-onboarding">
-      <div className="firstSetupCard" data-step={onboardingStep} data-testid="first-setup-card">
+    <div className={styles.firstSetupOverlay} data-testid="first-setup-onboarding">
+      <div className={styles.firstSetupCard} data-step={onboardingStep} data-testid="first-setup-card">
         <button
           type="button"
-          className="firstSetupExitButton"
+          className={styles.firstSetupExitButton}
           aria-label="Выйти из опросника"
           onClick={() => setExitConfirmOpen(true)}
         >
-          ×
+          <X size={21} strokeWidth={2.2} aria-hidden="true" />
         </button>
 
-        <div className="firstSetupProgress" data-testid="first-setup-progress">
+        <div className={styles.firstSetupProgress} data-testid="first-setup-progress">
           <span>Шаг {onboardingStep + 1} из {TOTAL_STEPS}</span>
           <div>
             {Array.from({ length: TOTAL_STEPS }, (_, index) => (
@@ -279,30 +297,36 @@ export default function FirstSetupOnboarding({
           </div>
         </div>
 
-        <header className="firstSetupHeader">
+        <header className={styles.firstSetupHeader}>
           <h2>{ONBOARDING_TITLES[onboardingStep]}</h2>
           <p>{ONBOARDING_SUBTITLES[onboardingStep]}</p>
         </header>
 
-        <div className="firstSetupBody" data-testid="first-setup-body">
+        <div className={styles.firstSetupBody} data-testid="first-setup-body">
           {onboardingStep === 0 && (
-            <div className="firstSetupWelcomeVisual" aria-hidden="true">
-              <span className="firstSetupClipboard">📋</span>
-              <span className="firstSetupDumbbell">🏋️</span>
-              <span className="firstSetupApple">🍏</span>
-              <span className="firstSetupBottle">🧴</span>
-            </div>
+            <ul className={styles.welcomeList} data-testid="first-setup-welcome-features">
+              {[
+                [Dumbbell, "Тренировки", "Ваш план и результаты занятий"],
+                [Apple, "Питание", "Дневник и цели на каждый день"],
+                [Activity, "Прогресс", "Вес, замеры и ваши достижения"]
+              ].map(([Icon, title, description]) => (
+                <li key={title}>
+                  <span className={styles.welcomeIcon}><Icon aria-hidden="true" /></span>
+                  <div><strong>{title}</strong><small>{description}</small></div>
+                </li>
+              ))}
+            </ul>
           )}
 
           {onboardingStep === 1 && (
-            <div className="firstSetupChoiceGrid firstSetupSexGrid">
+            <div className={styles.firstSetupChoiceGrid + " " + styles.firstSetupSexGrid}>
               <button
                 type="button"
                 className={profileDraft.sex === "male" ? "active" : ""}
                 aria-pressed={profileDraft.sex === "male"}
                 onClick={() => updateProfileDraft({ sex: "male" })}
               >
-                <span>👨🏻</span>
+                <span><PersonStanding aria-hidden="true" /></span>
                 <strong>Мужчина</strong>
               </button>
 
@@ -312,24 +336,26 @@ export default function FirstSetupOnboarding({
                 aria-pressed={profileDraft.sex === "female"}
                 onClick={() => updateProfileDraft({ sex: "female" })}
               >
-                <span>👩🏻</span>
+                <span><UserRound aria-hidden="true" /></span>
                 <strong>Женщина</strong>
               </button>
             </div>
           )}
 
           {onboardingStep === 2 && (
-            <label className="firstSetupField">
+            <label className={styles.firstSetupField}>
               <span>Ваше имя</span>
               <input
-                className="firstSetupInput"
+                className={styles.firstSetupInput}
                 placeholder="Например, Илья"
                 type="text"
                 autoComplete="name"
+                autoCapitalize="words"
                 enterKeyHint="next"
                 maxLength={MAX_PROFILE_NAME_LENGTH}
                 value={profileDraft.name || ""}
                 onChange={(event) => updateProfileDraft({ name: event.target.value.slice(0, MAX_PROFILE_NAME_LENGTH) })}
+                onBlur={(event) => updateProfileDraft({ name: limitUserDisplayName(event.target.value) })}
                 onKeyDown={handleFieldSubmit}
               />
             </label>
@@ -360,8 +386,8 @@ export default function FirstSetupOnboarding({
           )}
 
           {onboardingStep === 6 && (
-            <div className="firstSetupActivityList">
-              {ACTIVITY_OPTIONS.map(([id, icon, label, description]) => (
+            <div className={styles.firstSetupActivityList}>
+              {ACTIVITY_OPTIONS.map(([id, Icon, label, description]) => (
                 <button
                   type="button"
                   key={id}
@@ -369,7 +395,7 @@ export default function FirstSetupOnboarding({
                   aria-pressed={profileDraft.activity === id}
                   onClick={() => updateProfileDraft({ activity: id })}
                 >
-                  <span>{icon}</span>
+                  <span><Icon aria-hidden="true" /></span>
                   <span><strong>{label}</strong><small>{description}</small></span>
                   <i aria-hidden="true" />
                 </button>
@@ -378,9 +404,9 @@ export default function FirstSetupOnboarding({
           )}
 
           {onboardingStep === 7 && (
-            <div className="firstSetupGoalStep">
-              <div className="firstSetupGoalGrid">
-                {GOAL_OPTIONS.map(([id, icon, label, description]) => (
+            <div className={styles.firstSetupGoalStep}>
+              <div className={styles.firstSetupGoalGrid}>
+                {GOAL_OPTIONS.map(([id, Icon, label, description]) => (
                   <button
                     type="button"
                     key={id}
@@ -388,7 +414,7 @@ export default function FirstSetupOnboarding({
                     aria-pressed={profileDraft.goal === id}
                     onClick={() => updateProfileDraft({ goal: id })}
                   >
-                    <span>{icon}</span>
+                    <span><Icon aria-hidden="true" /></span>
                     <strong>{label}</strong>
                     <small>{description}</small>
                   </button>
@@ -407,19 +433,19 @@ export default function FirstSetupOnboarding({
           )}
 
           {onboardingStep === 9 && (
-            <div className="firstSetupReview">
+            <div className={styles.firstSetupReview}>
               {[
-                ["⚥", "Пол", profileDraft.sex === "female" ? "Женщина" : "Мужчина"],
-                ["👤", "Имя", profileName || "—"],
-                ["🎂", "Возраст", `${profileDraft.age || "—"} лет`],
-                ["⚖️", "Вес", `${profileDraft.weight || "—"} кг`],
-                ["📏", "Рост", `${profileDraft.height || "—"} см`],
-                ["🏃", "Уровень активности", activityLabel],
-                ["🎯", "Цель", goalLabel],
-                ["↔", "Целевой вес", profileDraft.targetWeight ? `${profileDraft.targetWeight} кг` : "Не указан"]
-              ].map(([icon, label, value]) => (
+                [profileDraft.sex === "female" ? UserRound : PersonStanding, "Пол", profileDraft.sex === "female" ? "Женщина" : "Мужчина"],
+                [UserRound, "Имя", profileName || "—"],
+                [CakeSlice, "Возраст", `${profileDraft.age || "—"} лет`],
+                [Scale, "Вес", `${profileDraft.weight || "—"} кг`],
+                [Ruler, "Рост", `${profileDraft.height || "—"} см`],
+                [Activity, "Уровень активности", activityLabel],
+                [Target, "Цель", goalLabel],
+                [MoveHorizontal, "Целевой вес", profileDraft.targetWeight ? `${profileDraft.targetWeight} кг` : "Не указан"]
+              ].map(([Icon, label, value]) => (
                 <div key={label}>
-                  <span>{icon}</span>
+                  <span><Icon aria-hidden="true" /></span>
                   <small>{label}</small>
                   <strong>{value}</strong>
                 </div>
@@ -428,11 +454,11 @@ export default function FirstSetupOnboarding({
           )}
         </div>
 
-        <div className="firstSetupBottom" data-testid="first-setup-navigation">
+        <div className={styles.firstSetupBottom} data-testid="first-setup-navigation">
           {onboardingStep > 0 && (
             <button
               type="button"
-              className="firstSetupSecondary"
+              className={styles.firstSetupSecondary}
               onClick={() => setOnboardingStep((prev) => prev - 1)}
             >
               Назад
@@ -442,7 +468,7 @@ export default function FirstSetupOnboarding({
           {onboardingStep < TOTAL_STEPS - 1 ? (
             <button
               type="button"
-              className="firstSetupPrimary"
+              className={styles.firstSetupPrimary}
               disabled={!stepCanContinue}
               onClick={() => setOnboardingStep((prev) => prev + 1)}
             >
@@ -451,7 +477,7 @@ export default function FirstSetupOnboarding({
           ) : (
             <button
               type="button"
-              className="firstSetupPrimary"
+              className={styles.firstSetupPrimary}
               disabled={!hasRequiredAiNutritionProfileFields(profileDraft) || !targetWeightIsValid || saveStatus === "saving"}
               onClick={onSubmit}
             >
@@ -465,8 +491,8 @@ export default function FirstSetupOnboarding({
         </div>
 
         {exitConfirmOpen && (
-          <div className="firstSetupExitConfirm" role="dialog" aria-modal="true" aria-label="Выход из опросника">
-            <div className="firstSetupExitConfirmCard">
+          <div className={styles.firstSetupExitConfirm} role="dialog" aria-modal="true" aria-label="Выход из опросника">
+            <div className={styles.firstSetupExitConfirmCard} data-modal-surface="true">
               <h3>Выйти из опросника?</h3>
               <p>Данные этого шага не сохранятся. Ты вернёшься на экран авторизации.</p>
               <div>

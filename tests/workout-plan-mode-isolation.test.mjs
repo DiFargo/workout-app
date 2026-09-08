@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  hasSavedWorkoutPlanForMode,
   isBasicWorkoutPlanItem,
   isWorkoutPlanForMode,
   resolveWorkoutPlanMode
@@ -40,4 +41,15 @@ test("dashboard plan matches the selected workout mode", () => {
   assert.equal(isWorkoutPlanForMode(basicPlan, "individual"), false);
   assert.equal(isWorkoutPlanForMode(individualPlan, "individual"), true);
   assert.equal(isWorkoutPlanForMode(individualPlan, "basic"), false);
+});
+
+test("a saved workout mode requires at least one workout from that mode", () => {
+  assert.equal(hasSavedWorkoutPlanForMode({ source: "basic", workouts: [] }, "basic"), false);
+  assert.equal(hasSavedWorkoutPlanForMode({
+    source: "basic",
+    workouts: [{ id: "basic-1", source: "basic" }]
+  }, "basic"), true);
+  assert.equal(hasSavedWorkoutPlanForMode({
+    workouts: [{ id: "trainer-1", assignedProgramUpdatedAt: "trainer:program-1" }]
+  }, "basic"), false);
 });

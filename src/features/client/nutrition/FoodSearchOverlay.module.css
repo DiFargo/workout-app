@@ -92,7 +92,7 @@
 
 .myProductsLayout {
   padding: 58px 26px calc(112px + env(safe-area-inset-bottom, 0px));
-  background: #f7f6f8;
+  background: var(--apple-canvas, #f2f2f7);
 }
 
 .productOverlay,
@@ -114,8 +114,8 @@
   background: var(--color-food-product-overlay);
   color: var(--color-food-product-overlay-text);
   font-family: inherit;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   scrollbar-color: var(--scrollbar-food-product-page);
   -webkit-text-fill-color: var(--color-food-product-overlay-text);
 }
@@ -253,10 +253,10 @@
 :global(:root[data-app-theme="warm-light"]) .searchOverlay,
 :global(:root[data-app-theme="warm-light"]) .productOverlay {
   padding: 0;
-  background: rgba(40, 38, 46, 0.34);
-  color: #28262e;
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+  background: rgba(27, 35, 31, 0.34);
+  color: var(--apple-text, #1c1c1e);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchOverlay {
@@ -276,9 +276,9 @@
   margin: auto;
   border: 1px solid rgba(255, 255, 255, 0.95);
   border-radius: 28px;
-  background: #f7f6f8;
-  color: #28262e;
-  box-shadow: 0 24px 56px rgba(40, 38, 46, 0.2);
+  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 24px 56px rgba(27, 35, 31, 0.2);
   font-family: var(--font-family-sans);
 }
 
@@ -290,10 +290,10 @@
   align-self: flex-end;
   margin: 0 auto;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 28px;
-  background: #f7f6f8;
-  box-shadow: 0 20px 60px rgba(40, 38, 46, 0.16);
+  background: var(--apple-canvas, #f2f2f7);
+  box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchOverlay .grabber {
@@ -333,11 +333,11 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .productLayout {
-  padding: 0 16px calc(106px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px;
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-gutter: auto;
-  -webkit-text-fill-color: #28262e;
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
 }
 
 @media (max-width: 640px) {
@@ -359,7 +359,7 @@
     min-height: min(78dvh, 690px);
     max-height: calc(100dvh - 32px);
     margin: 0 auto;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 28px;
   }
 }
@@ -368,7 +368,7 @@
   :global(:root[data-app-theme="warm-light"]) .searchScreen,
   :global(:root[data-app-theme="warm-light"]) .productLayout,
   :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
-    border-right: 1px solid #efebf3;
-    border-left: 1px solid #efebf3;
+    border-right: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+    border-left: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   }
 }

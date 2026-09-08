@@ -20,8 +20,9 @@
         --text-tertiary: #918b98;
         --accent: #8f7ac8;
         --accent-active: #806bb6;
+        --accent-text: #725ca8;
         --accent-soft: #eee9f8;
-        --green: #2f8c68;
+        --green: #267653;
         --green-soft: #e7f5ef;
         --orange: #ad6d28;
         --orange-soft: #fff1df;
@@ -43,10 +44,12 @@
           radial-gradient(circle at 8% 8%, rgba(189, 174, 225, 0.55), transparent 30rem),
           radial-gradient(circle at 92% 18%, rgba(221, 207, 239, 0.66), transparent 34rem),
           linear-gradient(180deg, #f8f6fb 0%, var(--canvas) 100%);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
 
       button { font: inherit; }
-      button, a { -webkit-tap-highlight-color: transparent; }
+      button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
       button:focus-visible, a:focus-visible { outline: 3px solid rgba(128, 107, 182, 0.48); outline-offset: 3px; }
       svg { display: block; }
       .icon { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -54,7 +57,7 @@
 
       .page { max-width: 1900px; margin: 0 auto; padding: 52px 28px 72px; }
       .intro { max-width: 930px; margin: 0 auto 36px; text-align: center; }
-      .kicker { color: var(--accent-active); font-size: 12px; font-weight: 780; letter-spacing: 0.12em; text-transform: uppercase; }
+      .kicker { color: var(--accent-text); font-size: 12px; font-weight: 780; letter-spacing: 0.12em; text-transform: uppercase; }
       h1 { margin: 10px 0 14px; font-size: clamp(36px, 5vw, 62px); line-height: 1.02; letter-spacing: -0.058em; }
       .intro > p { max-width: 720px; margin: 0 auto; color: var(--text-secondary); font-size: 17px; line-height: 1.55; }
       .principles { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
@@ -86,7 +89,7 @@
       .glass-card { border: 1px solid var(--glass-border); background: rgba(255,255,255,.62); box-shadow: var(--shadow-glass); backdrop-filter: blur(var(--blur)) saturate(135%); -webkit-backdrop-filter: blur(var(--blur)) saturate(135%); }
       .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 24px 4px 10px; }
       .section-head h3 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -.025em; }
-      .text-button { min-width: 44px; min-height: 44px; margin: -12px -8px -12px 0; padding: 0 8px; border: 0; color: var(--accent-active); background: none; font-size: 12px; font-weight: 730; cursor: pointer; }
+      .text-button { min-width: 44px; min-height: 44px; margin: -12px -8px -12px 0; padding: 0 8px; border: 0; color: var(--accent-text); background: none; font-size: 12px; font-weight: 730; cursor: pointer; }
       .muted { color: var(--text-secondary); }
 
       .hero { min-height: 210px; padding: 18px; color: #fff; background: linear-gradient(142deg, #9c8bd1 0%, #806bb6 58%, #6f5aa4 100%); box-shadow: 0 18px 35px rgba(91, 70, 140, .26); }
@@ -151,7 +154,7 @@
       .macros span { color: var(--text-secondary); font-size: 10px; }
       .macros b { display: block; margin-top: 2px; color: var(--text); font-size: 12px; }
       .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
-      .quick { display: grid; place-items: center; gap: 5px; min-height: 76px; padding: 8px 3px; border: 1px solid var(--glass-border); border-radius: 18px; color: var(--accent-active); background: var(--glass); box-shadow: 0 9px 22px rgba(67,53,84,.08); backdrop-filter: blur(16px); font-size: 9px; font-weight: 700; cursor: pointer; }
+      .quick { display: grid; place-items: center; gap: 5px; min-height: 76px; padding: 8px 3px; border: 1px solid var(--glass-border); border-radius: 18px; color: var(--accent-text); background: var(--glass); box-shadow: 0 9px 22px rgba(67,53,84,.08); backdrop-filter: blur(16px); font-size: 10px; font-weight: 700; cursor: pointer; }
       .quick .mini-icon { width: 34px; height: 34px; background: rgba(238,233,248,.86); }
       .meal-row { display: flex; align-items: center; gap: 10px; min-height: 66px; padding: 10px 12px; }
       .meal-row + .meal-row { border-top: 1px solid var(--border); }
@@ -184,7 +187,7 @@
       .profile-copy { min-width: 0; flex: 1; }
       .profile-copy h3 { margin: 0; font-size: 17px; letter-spacing: -.025em; }
       .profile-copy p { margin: 4px 0 0; color: var(--text-secondary); font-size: 10px; }
-      .profile-role { display: inline-flex; align-items: center; min-height: 24px; margin-top: 7px; padding: 0 8px; border-radius: 999px; color: var(--accent-active); background: var(--accent-soft); font-size: 9px; font-weight: 750; }
+      .profile-role { display: inline-flex; align-items: center; min-height: 24px; margin-top: 7px; padding: 0 8px; border-radius: 999px; color: var(--accent-text); background: var(--accent-soft); font-size: 10px; font-weight: 750; }
       .profile-card .glass-button { flex: 0 0 44px; box-shadow: none; color: var(--accent-active); background: rgba(238,233,248,.9); }
       .settings-head { margin-top: 17px; margin-bottom: 7px; }
       .settings-head h3 { color: var(--text-secondary); font-size: 10px; font-weight: 770; letter-spacing: .08em; text-transform: uppercase; }
@@ -197,15 +200,15 @@
       .setting-icon.orange { color: var(--orange); background: var(--orange-soft); }
       .setting-copy { min-width: 0; flex: 1; }
       .setting-copy b { display: block; font-size: 12px; font-weight: 700; }
-      .setting-copy span { display: block; margin-top: 2px; overflow: hidden; color: var(--text-secondary); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-      .setting-status { color: var(--green); font-size: 9px; font-weight: 730; white-space: nowrap; }
+      .setting-copy span { display: block; margin-top: 2px; overflow: hidden; color: var(--text-secondary); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+      .setting-status { color: var(--green); font-size: 10px; font-weight: 730; white-space: nowrap; }
       .logout-row { min-height: 44px; margin-top: 10px; color: var(--red); background: rgba(255,255,255,.54); }
       .logout-row .setting-icon { color: var(--red); background: rgba(189,79,98,.1); }
 
       .tab-bar { position: absolute; z-index: 4; right: 12px; bottom: 12px; left: 12px; display: grid; grid-template-columns: repeat(5, 1fr); min-height: 78px; padding: 7px; border: 1px solid var(--glass-border); border-radius: 27px; background: rgba(255,255,255,.66); box-shadow: var(--shadow-glass); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); }
-      .tab { display: grid; place-items: center; align-content: center; gap: 4px; min-width: 0; min-height: 60px; border: 0; border-radius: 20px; color: var(--text-secondary); background: transparent; font-size: 9px; font-weight: 680; cursor: pointer; transition: transform 150ms ease, background 150ms ease, color 150ms ease; }
+      .tab { display: grid; place-items: center; align-content: center; gap: 4px; min-width: 0; min-height: 60px; border: 0; border-radius: 20px; color: var(--text-secondary); background: transparent; font-size: 8.5px; font-weight: 720; letter-spacing: -.02em; cursor: pointer; transition: transform 150ms ease, background 150ms ease, color 150ms ease; }
       .tab .icon { width: 20px; height: 20px; }
-      .tab.active { color: var(--accent-active); background: rgba(238,233,248,.9); box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
+      .tab.active { color: var(--accent-text); background: rgba(238,233,248,.9); box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
 
       .footer-note { max-width: 980px; margin: 38px auto 0; padding: 18px 20px; border: 1px solid rgba(255,255,255,.82); border-radius: 22px; color: #5d5765; background: rgba(255,255,255,.56); box-shadow: 0 12px 30px rgba(67,53,84,.07); backdrop-filter: blur(18px); font-size: 13px; line-height: 1.55; text-align: center; }
 
@@ -222,7 +225,7 @@
         <h1>Лёгкое стекло.<br />Сильный фокус.</h1>
         <p>Макет пяти главных клиентских экранов: знакомая светло-лавандовая система стала глубже, а действия — ближе к нативной iOS-логике.</p>
         <div class="principles" aria-label="Принципы редизайна">
-          <span>Стекло только для управления</span><span>Контент на спокойных карточках</span><span>Зоны касания 44 px</span><span>Safe area учтена</span>
+          <span>Стекло только для управления</span><span>Контент на спокойных карточках</span><span>Зоны касания 44 px</span><span>Безопасные зоны учтены</span>
         </div>
       </header>
 
@@ -245,7 +248,7 @@
           <div class="phone"><div class="screen"><div class="content">
             <div class="status"><span>9:41</span><span class="island" aria-hidden="true"></span><span class="status-icons">●●● 5G ▰</span></div>
             <header class="header"><div><div class="overline">Неделя 3 из 8</div><h2 class="title">Тренировки</h2></div><button class="glass-button" aria-label="История тренировок"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5M12 7v5l3 2"/></svg></button></header>
-            <section class="card glass-card week" aria-label="Календарь тренировок"><div class="day done"><span>Пн</span><b>1</b></div><div class="day"><span>Вт</span><b>2</b></div><div class="day active"><span>Ср</span><b>3</b></div><div class="day"><span>Чт</span><b>4</b></div><div class="day"><span>Пт</span><b>5</b></div><div class="day"><span>Сб</span><b>6</b></div><div class="day"><span>Вс</span><b>7</b></div></section>
+            <section class="card glass-card week" aria-label="Календарь тренировок"><div class="day active"><span>Пн</span><b>1</b></div><div class="day"><span>Вт</span><b>2</b></div><div class="day"><span>Ср</span><b>3</b></div><div class="day"><span>Чт</span><b>4</b></div><div class="day"><span>Пт</span><b>5</b></div><div class="day"><span>Сб</span><b>6</b></div><div class="day"><span>Вс</span><b>7</b></div></section>
             <div class="section-head"><h3>Следующая тренировка</h3><button class="text-button">План</button></div>
             <section class="card workout-card"><div class="workout-head"><div class="workout-index">01</div><div><h4>Спина + бицепс</h4><p>6 упражнений · 22 подхода</p></div><span class="status-pill">Сегодня</span></div><div class="progress" aria-label="0 из 6 упражнений"><span></span><span></span><span></span><span></span><span></span><span></span></div><button class="glass-pill primary">Начать тренировку</button></section>
             <div class="section-head"><h3>Программа</h3><button class="text-button">Все</button></div>
@@ -257,7 +260,7 @@
           <p class="concept-title">03 · Питание</p>
           <div class="phone"><div class="screen"><div class="content">
             <div class="status"><span>9:41</span><span class="island" aria-hidden="true"></span><span class="status-icons">●●● 5G ▰</span></div>
-            <header class="header"><div><div class="overline">Понедельник</div><h2 class="title">Питание</h2></div><button class="glass-button" aria-label="Открыть календарь"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button></header>
+            <header class="header"><div><div class="overline">Понедельник, 1 сентября</div><h2 class="title">Питание</h2></div><button class="glass-button" aria-label="Открыть календарь"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></button></header>
             <div class="date-control"><button class="glass-pill"><svg class="icon small" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Сегодня <svg class="icon small" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></div>
             <section class="card glass-card energy"><div class="ring"><div class="ring-content"><strong>1 840</strong><small>из 2 500 ккал</small></div></div><div><h3>Хороший темп</h3><p>Осталось 660 ккал</p><div class="macros"><span>Белки<b>118 г</b></span><span>Жиры<b>61 г</b></span><span>Углеводы<b>193 г</b></span></div></div></section>
             <div class="section-head"><h3>Быстро добавить</h3></div>
@@ -290,15 +293,15 @@
             <div class="section-head settings-head"><h3>Здоровье и план</h3></div>
             <section class="card settings-list">
               <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg></span><span class="setting-copy"><b>Параметры тела</b><span>Вес, цель, рост и активность</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
-              <button class="setting-row"><span class="setting-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16v10H4zM7 7v4M11 7v3M15 7v4"/></svg></span><span class="setting-copy"><b>Замеры тела и фото</b><span>12 показателей · обновлено 7 дней назад</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16v10H4zM7 7v4M11 7v3M15 7v4"/></svg></span><span class="setting-copy"><b>Замеры тела и фото</b><span>12 показателей · 7 дней назад</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
               <button class="setting-row"><span class="setting-icon orange"><svg class="icon" viewBox="0 0 24 24"><path d="M7 3v8M10 3v8M4 3v6a3 3 0 0 0 6 0M16 3v18M16 12h4V3"/></svg></span><span class="setting-copy"><b>Цели питания</b><span>Калории и макронутриенты</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
               <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span><span class="setting-copy"><b>Тренировки</b><span>Расписание, история и режим</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
             </section>
 
             <div class="section-head settings-head"><h3>Приложение</h3></div>
             <section class="card settings-list">
-              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></span><span class="setting-copy"><b>Почта и Telegram</b><span>Оба аккаунта подключены</span></span><span class="setting-status">Подключено</span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
-              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span><span class="setting-copy"><b>Уведомления</b><span>Тренировки и напоминания</span></span><span class="setting-status">Включены</span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></span><span class="setting-copy"><b>Связанные аккаунты</b><span>Почта и Telegram подключены</span></span><span class="setting-status">Готово</span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              <button class="setting-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span><span class="setting-copy"><b>Уведомления</b><span>Тренировки и прогресс</span></span><span class="setting-status">Включены</span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
               <button class="setting-row"><span class="setting-icon orange"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg></span><span class="setting-copy"><b>Ошибка или идея</b><span>Отзыв и предложение</span></span><svg class="icon chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
             </section>
             <button class="setting-row glass-card logout-row"><span class="setting-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M14 3h7v18h-7"/></svg></span><span class="setting-copy"><b>Выйти из аккаунта</b></span></button>

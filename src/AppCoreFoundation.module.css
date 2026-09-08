@@ -1,6 +1,6 @@
 :global {
 :root {
-  --focus-ring: 0 0 0 3px rgba(143, 122, 200, 0.28);
+  --focus-ring: 0 0 0 3px rgba(47, 125, 104, 0.28);
   --radius-xs: 10px;
   --radius-sm: 12px;
   --radius-md: 16px;
@@ -17,43 +17,43 @@
   --space-18: 18px;
   --space-20: 20px;
   --space-24: 24px;
-  --shadow-soft: 0 12px 30px rgba(40, 38, 46, 0.12);
+  --shadow-soft: 0 12px 30px rgba(27, 35, 31, 0.12);
 }
 
 /* APP THEME SWITCHER */
 :root,
 :root[data-app-theme="warm-light"] {
   color-scheme: light;
-  --bg: #f7f6f8;
+  --bg: #f1f3ee;
   --card: #ffffff;
-  --card-2: #f5f2f7;
-  --line: #efebf3;
-  --text: #28262e;
-  --muted: #7b7682;
-  --accent: #8f7ac8;
-  --accent-2: #806bb6;
+  --card-2: #f7f8f5;
+  --line: #e0e6e0;
+  --text: #1b231f;
+  --muted: #67716b;
+  --accent: #2f7d68;
+  --accent-2: #286e5b;
   --danger: #b36e72;
   --success: #718879;
-  --theme-menu-bg: #f7f6f8;
+  --theme-menu-bg: #f1f3ee;
   --theme-button-bg: #ffffff;
-  --theme-button-text: #28262e;
-  --theme-subtle-panel: #f5f2f7;
+  --theme-button-text: #1b231f;
+  --theme-subtle-panel: #f7f8f5;
 }
 
 :root[data-app-theme="legacy-inactive"] {
   color-scheme: light;
-  --bg: #f7f6f8;
+  --bg: #f1f3ee;
   --card: #ffffff;
-  --card-2: #f5f2f7;
-  --line: #efebf3;
-  --text: #28262e;
-  --muted: #7b7682;
-  --accent: #8f7ac8;
-  --accent-2: #806bb6;
-  --theme-menu-bg: #f7f6f8;
+  --card-2: #f7f8f5;
+  --line: #e0e6e0;
+  --text: #1b231f;
+  --muted: #67716b;
+  --accent: #2f7d68;
+  --accent-2: #286e5b;
+  --theme-menu-bg: #f1f3ee;
   --theme-button-bg: #ffffff;
-  --theme-button-text: #28262e;
-  --theme-subtle-panel: #f5f2f7;
+  --theme-button-text: #1b231f;
+  --theme-subtle-panel: #f7f8f5;
 }
 
 :root[data-app-theme="warm-light"] body,
@@ -79,8 +79,8 @@
 :root[data-app-theme="warm-light"] .loginPage,
 :root[data-app-theme="warm-light"] .appSplash {
   background:
-    radial-gradient(circle at top, rgba(143, 122, 200, 0.14) 0%, transparent 44%),
-    linear-gradient(180deg, #f7f6f8 0%, #f5f2f7 100%);
+    radial-gradient(circle at top, rgba(47, 125, 104, 0.14) 0%, transparent 44%),
+    linear-gradient(180deg, #f1f3ee 0%, #f7f8f5 100%);
 }
 
 :root[data-app-theme="warm-light"] .loginHero h1,
@@ -104,7 +104,7 @@
 :root[data-app-theme="warm-light"] .startWorkoutSlide {
   background: var(--card);
   border-color: var(--line);
-  box-shadow: 0 16px 40px rgba(40, 38, 46, 0.10);
+  box-shadow: 0 16px 40px rgba(27, 35, 31, 0.10);
 }
 
 :root[data-app-theme="warm-light"] .loginCard input,
@@ -129,15 +129,15 @@
 }
 
 :root {
-  --bg: #f7f6f8;
+  --bg: #f1f3ee;
   --card: #ffffff;
-  --card-2: #f5f2f7;
-  --line: #efebf3;
-  --text: #28262e;
-  --muted: #7b7682;
+  --card-2: #f7f8f5;
+  --line: #e0e6e0;
+  --text: #1b231f;
+  --muted: #67716b;
 
-  --accent: #8f7ac8;
-  --accent-2: #806bb6;
+  --accent: #2f7d68;
+  --accent-2: #286e5b;
 
   --danger: #b36e72;
   --success: #718879;
@@ -290,7 +290,7 @@ button:disabled {
   border-radius: 18px;
   border: none;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #28262e;
+  color: #1b231f;
   cursor: pointer;
   font-size: 17px;
   font-weight: 900;
@@ -430,7 +430,7 @@ button:disabled {
   border-radius: 28px;
 
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #28262e;
+  color: #1b231f;
 
   font-size: 24px;
   font-weight: 900;
@@ -484,7 +484,7 @@ button:disabled {
   margin: 0 auto 16px;
   border-radius: 24px;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #28262e;
+  color: #1b231f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -594,7 +594,7 @@ button:disabled {
   border: none;
   border-radius: 22px;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #28262e;
+  color: #1b231f;
   font-size: 22px;
   font-weight: 900;
   cursor: pointer;
@@ -631,7 +631,7 @@ button:disabled {
   place-items: center;
   border-radius: 999px;
   background: #fff;
-  color: #28262e;
+  color: #1b231f;
   font-size: 14px;
   font-weight: 950;
 }

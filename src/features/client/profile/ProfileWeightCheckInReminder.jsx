@@ -19,7 +19,7 @@ export default function ProfileWeightCheckInReminder({ checkIn, onOpen }) {
     <section className={styles.root} data-testid="profile-weight-checkin-reminder" aria-label="Контроль веса">
       <span className={styles.icon} aria-hidden="true"><Scale size={21} strokeWidth={2.2} /></span>
       <span className={styles.copy}>
-        <small>КОНТРОЛЬ ВЕСА</small>
+        <small>Контроль веса</small>
         <strong>{title}</strong>
         <span>{description}</span>
       </span>

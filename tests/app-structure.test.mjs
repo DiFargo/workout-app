@@ -211,13 +211,14 @@ test("global style entrypoint keeps only reset, base, and component layers", asy
   assert.match(reset, /box-sizing: border-box/);
 });
 
-test("only the approved global style files remain in src/styles", async () => {
+test("only approved reset, tokens and client theme contracts are global", async () => {
   const allCss = await collectFiles("src", [CSS_EXTENSION]);
   const globalCss = allCss
     .filter((file) => !file.endsWith(".module.css"))
     .sort();
 
   assert.deepEqual(globalCss, [
+    path.normalize("src/AppCoreClientAppleTheme.css"),
     path.normalize("src/styles/_reset.css"),
     path.normalize("src/styles/_variables.css"),
     path.normalize("src/styles/index.css")

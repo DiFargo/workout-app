@@ -22,7 +22,7 @@ export default function NutritionSummary({
       >
         <span className={styles.icon} aria-hidden="true" data-nutrition-summary-part="icon"><ChartNoAxesColumnIncreasing /></span>
         <span className={styles.title} data-nutrition-summary-part="title">
-          <strong className={styles.titleStrong}>Анализ</strong>
+          <strong className={styles.titleStrong}>Анализ питания</strong>
           <small className={styles.description}>{summaryText || "Баланс и динамика за неделю"}</small>
         </span>
         <span className={styles.arrow} aria-hidden="true" data-nutrition-summary-part="arrow"><ChevronRight /></span>

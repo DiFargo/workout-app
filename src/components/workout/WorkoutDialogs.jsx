@@ -1,5 +1,11 @@
 import { getWorkoutReadinessOption, WORKOUT_READINESS_OPTIONS } from "../../domain/workoutPresentation";
-import { AlertCircle, LogOut, X } from "lucide-react";
+import {
+  AlertCircle,
+  Clock3,
+  LogOut,
+  RotateCcw,
+  X
+} from "lucide-react";
 import styles from "./WorkoutDialogs.module.css";
 
 export function WorkoutExitDialog({ open, onStay, onLeave }) {
@@ -7,7 +13,7 @@ export function WorkoutExitDialog({ open, onStay, onLeave }) {
 
   return (
     <div
-      className={styles.exitOverlay}
+      className={styles.exitOverlay} data-modal-backdrop="true"
       data-testid="workout-exit-dialog"
       data-css-module-scope="workout-dialogs"
     >
@@ -34,7 +40,7 @@ export function WorkoutIncompleteDialog({ open, completion, onContinue, onSave }
 
   return (
     <div
-      className={styles.exitOverlay}
+      className={styles.exitOverlay} data-modal-backdrop="true"
       data-testid="workout-incomplete-dialog"
       data-css-module-scope="workout-dialogs"
     >
@@ -63,13 +69,14 @@ export function PostWorkoutFeedbackDialog({
   open,
   options,
   isSaving,
-  onSelect
+  onSelect,
+  onClose
 }) {
   if (!open) return null;
 
   return (
     <div
-      className={styles.postOverlay}
+      className={styles.postOverlay} data-modal-backdrop="true"
       data-testid="post-workout-feedback-dialog"
       data-css-module-scope="workout-dialogs"
     >
@@ -80,23 +87,35 @@ export function PostWorkoutFeedbackDialog({
         data-modal-surface="true"
         aria-labelledby="post-workout-feedback-title"
       >
-        <span className={styles.postBadge}>AI feedback</span>
+        <div className={styles.postHeader}>
+          <span className={styles.postBadge}>Самочувствие</span>
+          <button
+            type="button"
+            className={styles.postCloseButton}
+            onClick={onClose}
+            aria-label="Закрыть оценку тренировки"
+          >
+            <X size={20} strokeWidth={2.2} aria-hidden="true" />
+          </button>
+        </div>
         <h2 id="post-workout-feedback-title">Как прошла тренировка?</h2>
-        <p>AI учтёт это для восстановления и следующих рекомендаций.</p>
+        <p>Ответ поможет точнее подобрать восстановление и следующую нагрузку.</p>
 
         <div className={styles.postGrid}>
           {options.map((option) => (
-            <button
-              type="button"
-              key={option.id}
-              className={styles.postOption}
-              disabled={isSaving}
-              onClick={() => onSelect(option)}
-            >
-              <span>{option.emoji}</span>
-              <strong>{option.title}</strong>
-              <small>{option.subtitle}</small>
-            </button>
+              <button
+                type="button"
+                key={option.id}
+                className={styles.postOption}
+                disabled={isSaving}
+                onClick={() => onSelect(option)}
+              >
+                <span className={styles.postOptionIcon} aria-hidden="true">
+                  {option.emoji}
+                </span>
+                <strong>{option.title}</strong>
+                <small>{option.subtitle}</small>
+              </button>
           ))}
         </div>
       </div>
@@ -118,7 +137,7 @@ export function WorkoutReadinessDialog({
 
   return (
     <div
-      className={styles.readinessOverlay}
+      className={styles.readinessOverlay} data-modal-backdrop="true"
       role="dialog"
       aria-modal="true"
       aria-labelledby="workout-readiness-title"
@@ -133,7 +152,7 @@ export function WorkoutReadinessDialog({
 
         <div className={styles.readinessCard}>
           <div className={styles.readinessIntro}>
-            <span aria-hidden="true">◷</span>
+            <span aria-hidden="true"><Clock3 /></span>
             <div>
               <strong>Как ты себя чувствуешь?</strong>
               <p>Выбор влияет только на рабочий вес этой тренировки.</p>
@@ -142,28 +161,30 @@ export function WorkoutReadinessDialog({
 
           <div className={styles.readinessGrid}>
             {WORKOUT_READINESS_OPTIONS.map((option) => (
-              <button
-                type="button"
-                key={option.id}
-                className={`${styles.readinessOption} ${
-                  selectedOption?.id === option.id ? styles.active : ""
-                }`}
-                data-workout-readiness-option={option.id}
-                aria-pressed={selectedOption?.id === option.id}
-                onClick={() => onSelectOption(option)}
-              >
-                <span>{option.emoji}</span>
-                <span>
-                  <strong>{option.title}</strong>
-                  <small>
-                    {option.id === "excellent"
-                      ? "Немного увеличить рабочий вес"
-                      : option.id === "good"
-                        ? "Оставить план тренера без изменений"
-                        : "Немного снизить нагрузку"}
-                  </small>
-                </span>
-              </button>
+                <button
+                  type="button"
+                  key={option.id}
+                  className={`${styles.readinessOption} ${
+                    selectedOption?.id === option.id ? styles.active : ""
+                  }`}
+                  data-workout-readiness-option={option.id}
+                  aria-pressed={selectedOption?.id === option.id}
+                  onClick={() => onSelectOption(option)}
+                >
+                  <span className={styles.readinessOptionIcon} aria-hidden="true">
+                    {option.emoji}
+                  </span>
+                  <span>
+                    <strong>{option.title}</strong>
+                    <small>
+                      {option.id === "excellent"
+                        ? "Немного увеличить рабочий вес"
+                        : option.id === "good"
+                          ? "Оставить план тренера без изменений"
+                          : "Немного снизить нагрузку"}
+                    </small>
+                  </span>
+                </button>
             ))}
           </div>
 
@@ -200,7 +221,7 @@ export function WorkoutDraftRestoreDialog({
 
   return (
     <div
-      className={styles.draftOverlay}
+      className={styles.draftOverlay} data-modal-backdrop="true"
       data-testid="workout-draft-restore-dialog"
       data-css-module-scope="workout-dialogs"
     >
@@ -212,7 +233,7 @@ export function WorkoutDraftRestoreDialog({
         aria-labelledby="workoutDraftRestoreTitle"
         aria-describedby="workoutDraftRestoreDescription"
       >
-        <span className={styles.draftIcon} aria-hidden="true">↩</span>
+        <span className={styles.draftIcon} aria-hidden="true"><RotateCcw /></span>
         <h2 id="workoutDraftRestoreTitle">Продолжить тренировку?</h2>
         <p id="workoutDraftRestoreDescription">
           Найден незавершённый черновик. Можно восстановить прогресс или начать заново.

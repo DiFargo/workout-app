@@ -308,7 +308,7 @@ export default function TrainerProgramOverviewPage({
       </section>
 
       {isNextWorkspace && adminProgramCreateChoiceOpen && !aiImportOpen && (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="programCreateChoiceTitle" onClick={closeCreateChoice}>
+        <div className={styles.overlay} data-modal-backdrop="true" role="dialog" aria-modal="true" aria-labelledby="programCreateChoiceTitle" onClick={closeCreateChoice}>
           <section className={styles.choiceSheet} onClick={(event) => event.stopPropagation()}>
             <header>
               <div>
@@ -364,7 +364,7 @@ export default function TrainerProgramOverviewPage({
       )}
 
       {isNextWorkspace && adminProgramCreateChoiceOpen && aiImportOpen && (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="programAiImportTitle" onClick={closeCreateChoice}>
+        <div className={styles.overlay} data-modal-backdrop="true" role="dialog" aria-modal="true" aria-labelledby="programAiImportTitle" onClick={closeCreateChoice}>
           <form className={`${styles.choiceSheet} ${styles.aiImportSheet}`} onSubmit={handleAiImportSubmit} onClick={(event) => event.stopPropagation()}>
             <header>
               <div>

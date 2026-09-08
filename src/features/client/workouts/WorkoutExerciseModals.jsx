@@ -28,7 +28,7 @@ export default function WorkoutExerciseModals({
     <>
       {noteOpen && createPortal(
         <div
-          className={styles.overlay}
+          className={styles.overlay} data-modal-backdrop="true"
           data-testid="workout-exercise-note-modal"
           data-css-module-scope="workout-exercise-modals"
           role="presentation"
@@ -82,7 +82,7 @@ export default function WorkoutExerciseModals({
 
       {progressOpen && createPortal(
         <div
-          className={styles.overlay}
+          className={styles.overlay} data-modal-backdrop="true"
           data-testid="workout-exercise-progress-modal"
           data-css-module-scope="workout-exercise-modals"
           role="presentation"
@@ -132,7 +132,7 @@ export default function WorkoutExerciseModals({
 
       {swapOpen && createPortal(
         <div
-          className={styles.overlay}
+          className={styles.overlay} data-modal-backdrop="true"
           data-testid="basic-workout-exercise-swap-modal"
           data-css-module-scope="workout-exercise-modals"
           role="presentation"
@@ -193,7 +193,7 @@ export default function WorkoutExerciseModals({
 
       {techniqueOpen && createPortal(
         <div
-          className={styles.overlay}
+          className={styles.overlay} data-modal-backdrop="true"
           data-testid="workout-exercise-technique-modal"
           data-css-module-scope="workout-exercise-modals"
           role="presentation"

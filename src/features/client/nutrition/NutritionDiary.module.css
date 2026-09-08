@@ -14,13 +14,13 @@
   justify-content: space-between;
   border: 0;
   background: transparent;
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font: inherit;
   text-align: left;
   cursor: pointer;
 }
 .titleText { font-size: 17px; font-weight: 700; }
-.diaryHeader > svg { width: 18px; height: 18px; color: #7b7682; }
+.diaryHeader > svg { width: 18px; height: 18px; color: var(--apple-secondary, #636366); }
 .diaryTitle, .diaryMeta, .subtitleText { display: none; }
 
 .mealList {
@@ -30,12 +30,12 @@
   margin: 0 16px;
   display: block;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 22px;
   background: #fff;
 }
 .mealCard { height: 50px; position: relative; }
-.mealCard:not(:last-child)::after { content: ""; height: 1px; position: absolute; right: 15px; bottom: 0; left: 45px; background: #efebf3; }
+.mealCard:not(:last-child)::after { content: ""; height: 1px; position: absolute; right: 15px; bottom: 0; left: 45px; background: var(--apple-separator, rgba(60,60,67,.12)); }
 .mealRow {
   width: 100%;
   height: 50px;
@@ -47,14 +47,14 @@
   position: relative;
 }
 .mealOpenArea { position: absolute; z-index: 3; inset: 0; padding: 0; border: 0; background: transparent; cursor: pointer; }
-.mealIcon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 13px; background: #f5f2f7; color: #8f7ac8; }
+.mealIcon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 13px; background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); }
 .mealIcon svg { width: 14px; height: 14px; stroke-width: 2; }
 .mealTitle { min-width: 0; display: flex; flex-direction: column; }
-.mealTitle strong { color: #28262e; font-size: 12px; font-weight: 700; line-height: 16px; }
-.mealTitle span { color: #7b7682; font-size: 10px; font-weight: 500; line-height: 15px; }
-.mealCalories { display: flex; align-items: center; gap: 3px; color: #7b7682; }
+.mealTitle strong { color: var(--apple-text, #1c1c1e); font-size: 12px; font-weight: 700; line-height: 16px; }
+.mealTitle span { color: var(--apple-secondary, #636366); font-size: 10px; font-weight: 500; line-height: 15px; }
+.mealCalories { display: flex; align-items: center; gap: 3px; color: var(--apple-secondary, #636366); }
 .mealCalories strong { font-size: 10.5px; font-weight: 600; }
-.mealCalories svg { width: 16px; height: 16px; color: #7b7682; }
+.mealCalories svg { width: 16px; height: 16px; color: var(--apple-secondary, #636366); }
 
 .modalOverlay { position: fixed; z-index: 1200; inset: 0; display: grid; align-items: end; }
 .modalBackdrop { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(19, 23, 28, 0.42); }
@@ -66,37 +66,95 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-bottom: 0;
   border-radius: 28px 28px 0 0;
-  background: #f7f6f8;
-  box-shadow: 0 -20px 70px rgba(40, 38, 46, 0.16);
+  background: var(--apple-canvas, #f2f2f7);
+  box-shadow: 0 -20px 70px rgba(27, 35, 31, 0.16);
 }
-.modalHeader { padding: 16px 18px; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; border-bottom: 1px solid #efebf3; background: #fff; }
-.diaryIcon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: #f5f2f7; }
-.modalHeader h2 { margin: 2px 0; color: #28262e; font-size: 18px; }
-.modalHeader small, .modalHeader strong { display: block; color: #7b7682; font-size: 11px; }
-.modalHeader > button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: #f5f2f7; color: #28262e; font-size: 24px; }
+.modalHeader { padding: 16px 18px; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; border-bottom: 1px solid var(--apple-separator, rgba(60,60,67,.12)); background: #fff; }
+.diaryIcon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: var(--apple-surface-muted, #efeff4); }
+.modalHeader h2 { margin: 2px 0; color: var(--apple-text, #1c1c1e); font-size: 18px; }
+.modalHeader small, .modalHeader strong { display: block; color: var(--apple-secondary, #636366); font-size: 11px; }
+.modalHeader > button { width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--apple-surface-muted, #efeff4); color: var(--apple-text, #1c1c1e); font-size: 24px; }
 .content { padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 12px; overflow-y: auto; }
-.mealGroup { overflow: hidden; border: 1px solid #efebf3; border-radius: 18px; background: #fff; }
+.mealGroup { overflow: hidden; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 18px; background: #fff; }
 .mealHeading { padding: 12px; display: grid; grid-template-columns: 40px 1fr 42px; align-items: center; gap: 10px; }
 .mealHeading > div { min-width: 0; display: flex; flex-direction: column; }
-.mealHeading small { color: #7b7682; font-size: 11px; }
-.addButton, .mealAddButton { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #8f7ac8; color: #fff; font-size: 20px; }
-.foods { border-top: 1px solid #efebf3; }
+.mealHeading small { color: var(--apple-secondary, #636366); font-size: 11px; }
+.addButton, .mealAddButton { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: var(--apple-action, #3f73b8); color: #fff; font-size: 20px; }
+.foods { border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12)); }
 .swipeShell { position: relative; overflow: hidden; background: #b36e72; }
-.swipeShell + .swipeShell { border-top: 1px solid #efebf3; }
+.swipeShell + .swipeShell { border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12)); }
 .deleteBackground { position: absolute; inset: 0 16px 0 auto; display: grid; place-items: center; color: #fff; }
-.foodButton { width: 100%; min-height: 64px; padding: 8px 12px; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; position: relative; border: 0; background: #fff; color: #28262e; text-align: left; transition: opacity .18s ease, transform .18s ease; }
-.foodIcon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #f5f2f7; }
+.foodButton { width: 100%; min-height: 64px; padding: 8px 12px; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; position: relative; border: 0; background: #fff; color: var(--apple-text, #1c1c1e); text-align: left; transition: opacity .18s ease, transform .18s ease; }
+.foodIcon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--apple-surface-muted, #efeff4); }
 .foodText, .foodCalories { min-width: 0; display: flex; flex-direction: column; }
 .foodText strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.foodText small, .foodCalories small { color: #7b7682; font-size: 10px; }
+.foodText small, .foodCalories small { color: var(--apple-secondary, #636366); font-size: 10px; }
 .foodCalories { align-items: flex-end; }
-.emptyButton { width: calc(100% - 24px); margin: 0 12px 12px; padding: 12px; border: 1px dashed #efebf3; border-radius: 12px; background: #f5f2f7; color: #7b7682; }
+.emptyButton { width: calc(100% - 24px); margin: 0 12px 12px; padding: 12px; border: 1px dashed var(--apple-separator, rgba(60,60,67,.12)); border-radius: 12px; background: var(--apple-surface-muted, #efeff4); color: var(--apple-secondary, #636366); }
 .deleting { pointer-events: none; }
 
 @media (min-width: 700px) {
   .modalOverlay { align-items: center; padding: 24px; }
-  .modalSheet { border-bottom: 1px solid #efebf3; border-radius: 28px; }
+  .modalSheet { border-bottom: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 28px; }
 }
+
+/* Nutrition keeps its own orange accent inside the shared iOS system. */
+.diaryHeader,
+.mealTitle strong,
+.foodButton,
+.modalHeader h2 { color: var(--apple-text, #1c1c1e); }
+.diaryHeader > svg,
+.mealTitle span,
+.mealCalories,
+.mealCalories svg,
+.modalHeader small,
+.modalHeader strong,
+.mealHeading small,
+.foodText small,
+.foodCalories small { color: var(--apple-secondary, #6c6c70); }
+.mealList,
+.mealGroup,
+.modalSheet { border-color: var(--apple-separator, rgba(60, 60, 67, 0.18)); }
+.mealList,
+.mealGroup,
+.modalSheet { background: var(--apple-surface, #ffffff); }
+.mealList { border-radius: 18px; }
+.mealCard:not(:last-child)::after,
+.foods,
+.swipeShell + .swipeShell { border-color: var(--apple-separator, rgba(60, 60, 67, 0.18)); }
+.mealIcon,
+.diaryIcon,
+.foodIcon { background: #fff3df; color: var(--apple-orange, #ff9500); }
+.addButton,
+.mealAddButton { background: var(--apple-orange, #ff9500); }
+.addButton:active,
+.mealAddButton:active { background: #de7d00; transform: scale(0.97); }
+.modalBackdrop { background: rgba(0, 0, 0, 0.28); }
+.modalHeader { border-color: var(--apple-separator, rgba(60, 60, 67, 0.18)); }
+.modalHeader > button { background: var(--apple-surface-muted, #f2f2f7); color: var(--apple-text, #1c1c1e); }
+.swipeShell { background: var(--apple-red, #ff3b30); }
+
+/* Approved native grouped meals: the row opens details, the trailing + adds food. */
+.diaryBlock { width:calc(100% - 40px); height:auto; margin:14px 20px 9px; }
+.diaryHeader { min-height:44px; height:auto; margin-block:-9px; padding:0 2px; }
+.titleText { font-size:18px; font-weight:680; letter-spacing:-.4px; }
+.mealList { width:calc(100% - 40px); height:auto; margin:0 20px; border:0; border-radius:18px; }
+.mealCard { height:auto; min-height:57px; }
+.mealCard:not(:last-child)::after { left:15px; right:0; background:var(--apple-separator); }
+.mealRow { height:auto; min-height:57px; padding:0 6px 0 13px; display:flex; gap:9px; }
+.mealOpenArea { right:50px; }
+.mealTitle { flex:1; padding-block:10px; }
+.mealTitle strong { font-size:13px; font-weight:600; letter-spacing:-.2px; }
+.mealTitle span { display:block; margin-top:3px; overflow:hidden; color:var(--apple-secondary); font-size:11px; line-height:1.4; text-overflow:ellipsis; white-space:nowrap; }
+.mealCalories strong { font-size:12px; font-weight:590; }
+.mealAddButton { position:relative; z-index:4; width:44px; height:44px; min-width:44px; display:grid; place-items:center; border:0; border-radius:10px; background:transparent; color:var(--apple-blue); }
+.mealAddButton svg { width:19px; height:19px; }
+.mealAddButton:active { background:var(--apple-blue-tint); }
+.mealIcon, .diaryIcon, .foodIcon { background:var(--apple-surface-muted); color:var(--apple-secondary); }
+.addButton { background:var(--apple-action); }
+.addButton svg { width:20px; height:20px; }
+.modalHeader > button svg { width:18px; height:18px; }
+@media(max-width:360px) { .diaryBlock, .mealList { width:calc(100% - 30px); margin-inline:15px;  border-radius:18px;} }

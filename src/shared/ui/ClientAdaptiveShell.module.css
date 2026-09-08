@@ -48,11 +48,11 @@
    header and dock use one shared centred width. */
 @media (max-width: 699px) {
   :global(:root[data-app-theme="warm-light"]) .shell.shell.shell {
-    width: min(402px, 100vw);
-    max-width: 402px;
-    height: var(--client-shell-height, min(874px, 100dvh));
-    min-height: var(--client-shell-min-height, min(874px, 100dvh));
-    max-height: var(--client-shell-max-height, min(874px, 100dvh));
+    width: 100%;
+    max-width: none;
+    height: var(--client-shell-height, 100dvh);
+    min-height: var(--client-shell-min-height, 100dvh);
+    max-height: var(--client-shell-max-height, 100dvh);
     margin: 0 auto;
     border-radius: 54px;
   }

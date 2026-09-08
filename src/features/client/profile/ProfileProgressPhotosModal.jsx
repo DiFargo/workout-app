@@ -1,4 +1,4 @@
-import { Camera } from "lucide-react";
+import { Camera, Check, ChevronDown, Plus } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
@@ -47,7 +47,7 @@ export default function ProfileProgressPhotosModal({
 
   return (
     <div
-      className={styles.overlay}
+      className={styles.overlay} data-modal-backdrop="true"
       data-css-module-scope="profile-progress-photos"
       data-testid="profile-progress-photos-overlay"
       role="presentation"
@@ -89,7 +89,7 @@ export default function ProfileProgressPhotosModal({
               aria-selected="true"
               className={styles.active}
             >
-              Фото прогресса
+              Фото
             </button>
             <button
               type="button"
@@ -111,7 +111,7 @@ export default function ProfileProgressPhotosModal({
           {latestPhoto && (
             <div className={styles.latest} data-testid="profile-progress-photos-latest">
               <div>
-                <span>ПОСЛЕДНЯЯ ФОТОСЕССИЯ</span>
+                <span>Последняя фотосессия</span>
                 <strong>
                   {new Date(`${latestPhoto.date || latestPhoto.createdAt?.slice(0, 10)}T12:00:00`).toLocaleDateString("ru-RU")}
                 </strong>
@@ -153,7 +153,9 @@ export default function ProfileProgressPhotosModal({
                   <strong>{label}</strong>
                   <small>{files[view] ? "Готово · нажми, чтобы заменить" : "Нажми, чтобы сделать фото"}</small>
                 </span>
-                <em>{files[view] ? "✓" : "+"}</em>
+                <em aria-hidden="true">
+                  {files[view] ? <Check size={18} strokeWidth={2.4} /> : <Plus size={19} strokeWidth={2.2} />}
+                </em>
               </label>
             ))}
           </div>
@@ -178,7 +180,7 @@ export default function ProfileProgressPhotosModal({
                     {formatPhotoDate(selectedAfter)}
                   </small>
                 </span>
-                <i aria-hidden="true">⌄</i>
+                <i aria-hidden="true"><ChevronDown size={18} strokeWidth={2.1} /></i>
               </summary>
 
               <div className={styles.compareContent} data-testid="profile-progress-photos-compare-content">

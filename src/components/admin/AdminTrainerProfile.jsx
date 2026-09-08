@@ -496,7 +496,7 @@ export default function AdminTrainerProfile({
       </section>
 
       {roleDialogOpen ? (
-        <div className={styles.roleDialogOverlay} role="presentation" onMouseDown={closeRoleDialog}>
+        <div className={styles.roleDialogOverlay} data-modal-backdrop="true" role="presentation" onMouseDown={closeRoleDialog}>
           <section
             aria-describedby="admin-trainer-role-dialog-description"
             aria-labelledby="admin-trainer-role-dialog-title"
@@ -540,7 +540,7 @@ export default function AdminTrainerProfile({
       ) : null}
 
       {accessDialogOpen ? (
-        <div className={styles.roleDialogOverlay} role="presentation" onMouseDown={closeAccessDialog}>
+        <div className={styles.roleDialogOverlay} data-modal-backdrop="true" role="presentation" onMouseDown={closeAccessDialog}>
           <section
             aria-describedby="admin-trainer-access-dialog-description"
             aria-labelledby="admin-trainer-access-dialog-title"
@@ -579,7 +579,7 @@ export default function AdminTrainerProfile({
       ) : null}
 
       {reassignDialogOpen ? (
-        <div className={styles.roleDialogOverlay} role="presentation" onMouseDown={closeReassignDialog}>
+        <div className={styles.roleDialogOverlay} data-modal-backdrop="true" role="presentation" onMouseDown={closeReassignDialog}>
           <section
             aria-describedby="admin-trainer-reassign-dialog-description"
             aria-labelledby="admin-trainer-reassign-dialog-title"

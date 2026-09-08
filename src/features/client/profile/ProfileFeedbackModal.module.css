@@ -7,9 +7,9 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: var(--background-profile-modal-overlay);
-  backdrop-filter: var(--filter-profile-modal-overlay);
-  -webkit-backdrop-filter: var(--filter-profile-modal-overlay);
+  background: rgba(28, 28, 30, 0.28);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .dialog {
@@ -28,7 +28,15 @@
   background: var(--background-profile-modal);
   box-shadow: var(--shadow-profile-modal);
   color: var(--color-profile-modal);
-  --gradient-primary: linear-gradient(135deg, #8f7ac8, #806bb6);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  --gradient-primary: var(--apple-action, #3f73b8);
+}
+
+.dialog button { font-family: inherit; }
+.header.header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+.dialog.dialog[data-cabinet-sheet="true"] .closeButton[data-profile-modal-close="true"] {
+  border: 0; color: var(--apple-secondary, #636366); background: var(--apple-surface-muted, #efeff4); box-shadow: none;
 }
 
 .header {
@@ -49,6 +57,7 @@
   padding: 0;
   display: grid;
   gap: 10px;
+  align-content: start;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -65,45 +74,73 @@
 }
 
 .typeButton {
-  min-height: 64px;
-  padding: 10px;
+  min-height: 72px;
+  padding: 12px;
   display: grid;
-  align-content: center;
-  gap: 4px;
-  border: 1px solid var(--color-profile-feedback-type-border);
+  align-content: start;
+  gap: 9px;
+  border: 1px solid transparent;
   border-radius: 15px;
-  background: var(--background-profile-feedback-type);
-  color: var(--color-profile-feedback-type);
+  background: #ffffff;
+  color: var(--apple-text, #1c1c1e);
   text-align: left;
 }
 
+.typeIcon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-blue, #3c6faa);
+}
+
+.typeIcon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.8;
+}
+
+.typeCopy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
 .activeType {
-  border-color: var(--color-profile-feedback-type-active-border);
-  background: var(--background-profile-feedback-type-active);
-  box-shadow: var(--shadow-profile-feedback-type-active);
-  color: var(--color-profile-feedback-type-active);
+  border-color: var(--apple-blue, #3c6faa);
+  background: var(--apple-blue-tint, #edf2f9);
+  box-shadow: none;
+  color: var(--apple-blue, #3c6faa);
 }
 
 .typeTitle {
   color: inherit;
-  font-size: 13px;
-  font-weight: 950;
-  line-height: 1.05;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .typeHint {
-  color: var(--color-profile-feedback-type-hint);
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1.18;
+  color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
 }
 
 .activeType .typeTitle {
-  color: var(--color-profile-feedback-type-active);
+  color: var(--apple-blue, #3c6faa);
 }
 
 .activeType .typeHint {
-  color: var(--color-profile-feedback-type-active-hint);
+  color: var(--apple-secondary, #636366);
+}
+
+.activeType .typeIcon {
+  background: #ffffff;
+  color: var(--apple-blue, #3c6faa);
 }
 
 .field {
@@ -112,30 +149,29 @@
 }
 
 .fieldLabel {
-  color: var(--color-profile-feedback-field-label);
-  font-size: 11px;
-  font-weight: 900;
+  color: var(--apple-secondary, #636366);
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .textarea,
 .input {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid var(--color-profile-feedback-field-border);
-  border-radius: 16px;
-  background: var(--background-profile-feedback-field);
-  color: var(--color-profile-feedback-field);
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--apple-text, #1c1c1e);
   font: inherit;
-  font-size: 14px;
-  font-weight: 750;
-  outline: none;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .textarea {
   min-height: 132px;
   padding: 13px;
   resize: none;
-  line-height: 1.35;
+  line-height: 1.45;
 }
 
 .input {
@@ -145,15 +181,15 @@
 
 .textarea:focus,
 .input:focus {
-  border-color: var(--color-profile-feedback-focus);
-  box-shadow: var(--shadow-profile-feedback-focus);
+  border-color: var(--apple-blue, #3c6faa);
+  box-shadow: none;
 }
 
 .counter {
   justify-self: end;
-  color: var(--color-profile-feedback-counter);
-  font-size: 10px;
-  font-weight: 800;
+  color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .attachment {
@@ -169,10 +205,11 @@
   grid-template-columns: minmax(0, 1fr);
   align-content: center;
   gap: 2px;
-  border: 1px dashed var(--color-profile-feedback-attachment-border);
-  border-radius: 16px;
-  background: var(--background-profile-feedback-attachment);
-  color: var(--color-profile-feedback-attachment);
+  border: 0;
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--apple-blue, #3c6faa);
+  cursor: pointer;
 }
 
 .fileInput {
@@ -188,16 +225,16 @@
   align-items: center;
   gap: 7px;
   color: inherit;
-  font-size: 13px;
-  font-weight: 950;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.12;
 }
 
 .attachmentHint {
-  color: var(--color-profile-feedback-attachment-hint);
-  font-size: 10px;
-  font-weight: 750;
-  line-height: 1.2;
+  color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .attachmentFile {
@@ -205,7 +242,7 @@
   min-height: 38px;
   padding: 7px 8px 7px 10px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 28px;
+  grid-template-columns: minmax(0, 1fr) auto 44px;
   align-items: center;
   gap: 7px;
   border: 1px solid var(--color-profile-feedback-file-border);
@@ -215,10 +252,10 @@
 
 .fileName {
   min-width: 0;
-  overflow: hidden;
+  overflow-wrap: anywhere;
   color: var(--color-profile-feedback-file);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  font-size: 13px;
 }
 
 .fileSize {
@@ -227,8 +264,8 @@
 }
 
 .removeAttachment {
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 10px;
   background: var(--background-profile-feedback-file-remove);
@@ -246,7 +283,7 @@
   background: var(--background-profile-feedback-status);
   color: var(--color-profile-feedback-status);
   font-size: 12px;
-  font-weight: 850;
+  font-weight: 400;
   line-height: 1.25;
 }
 
@@ -260,16 +297,30 @@
   border: 0;
   border-radius: 17px;
   background: var(--gradient-primary);
-  box-shadow: var(--shadow-profile-feedback-submit);
-  color: var(--color-profile-feedback-submit);
-  font-size: 15px;
-  font-weight: 950;
+  box-shadow: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .submit:disabled {
   opacity: 0.52;
   box-shadow: none;
 }
+
+@media (min-height: 721px) {
+  .dialog {
+    height: auto;
+    max-height: min(780px, calc(100dvh - 24px));
+  }
+
+  .body {
+    max-height: 620px;
+  }
+}
+
+.attachmentPicker:focus-within { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }
+.textarea::placeholder, .input::placeholder { color: var(--apple-secondary, #636366); opacity: 1; }
 
 @media (max-height: 720px) {
   .dialog {

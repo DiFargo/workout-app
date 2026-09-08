@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { ArrowLeft, Check, X } from "lucide-react";
 import DishEditIngredientsBox from "./DishEditIngredientsBox";
 import DishIngredientPicker from "./DishIngredientPicker";
 import FoodEditBasicFields from "./FoodEditBasicFields";
@@ -41,6 +41,11 @@ export default function FoodEditPage({
   }
 
   const isDish = selectedFood?.type === "dish";
+  const foodId = String(selectedFood?.foodId || selectedFood?.id || "");
+  const isNew = /^(?:custom|dish)_/u.test(foodId);
+  const pageTitle = isDish
+    ? (isNew ? "Новое блюдо" : "Редактирование блюда")
+    : (isNew ? "Новый продукт" : "Редактирование продукта");
 
   return (
     <div
@@ -51,21 +56,23 @@ export default function FoodEditPage({
       <div
         className={styles.sheet}
         data-testid="food-edit-page"
+        data-food-type={isDish ? "dish" : "food"}
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
-        aria-label={isDish ? "Редактирование блюда" : "Редактирование продукта"}
+        aria-label={pageTitle}
       >
         <ClientPageHeader
           compact
           controlsVariant="workout"
           frameClassName={styles.headerFrame}
           className={styles.header}
-          title={isDish ? "Редактирование блюда" : "Редактирование продукта"}
-          eyebrow="Питание"
+          title={pageTitle}
+          eyebrow={isDish ? "Рецепт и состав" : "Моя база продуктов"}
           actions={(
             <button
               type="button"
+              className={styles.closeButton}
               data-food-edit-page-action="close"
               onClick={onCancel}
               aria-label="Закрыть редактор продукта"
@@ -134,7 +141,7 @@ export default function FoodEditPage({
               data-css-module-control="food-edit-page"
               value={editNote}
               onChange={(event) => onEditNoteChange(event.target.value)}
-              rows={5}
+              rows={2}
               placeholder={isDish ? "Например: рецепт, способ приготовления, порции" : "Бренд, текст с этикетки, состав, масса нетто и пищевая ценность"}
             />
           </label>
@@ -152,7 +159,7 @@ export default function FoodEditPage({
             data-css-module-control="food-edit-page"
             onClick={onCancel}
           >
-            <span aria-hidden="true" data-css-module-text="food-edit-page">←</span>
+            <ArrowLeft aria-hidden="true" />
             <strong data-css-module-text="food-edit-page">Назад</strong>
           </button>
 
@@ -164,7 +171,7 @@ export default function FoodEditPage({
             disabled={!String(selectedFood?.name || "").trim()}
             onClick={onConfirm}
           >
-            <span aria-hidden="true" data-css-module-text="food-edit-page">✓</span>
+            <Check aria-hidden="true" />
             <strong data-css-module-text="food-edit-page">Сохранить</strong>
           </button>
         </nav>

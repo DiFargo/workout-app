@@ -21,11 +21,11 @@
   justify-items: center;
   align-content: center;
   gap: 13px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 30px;
   background: #ffffff;
   box-shadow: 0 22px 48px rgba(42, 35, 57, 0.2);
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   text-align: center;
   animation: rise 220ms cubic-bezier(0.22, 0.88, 0.35, 1.1);
 }
@@ -42,7 +42,7 @@
 }
 
 .card strong {
-  color: #28262e;
+  color: var(--apple-text, #1c1c1e);
   font-size: 25px;
   font-weight: 850;
   letter-spacing: -0.35px;
@@ -52,7 +52,7 @@
 .card p {
   max-width: 316px;
   margin: 0;
-  color: #7b7682;
+  color: var(--apple-secondary, #636366);
   font-size: 15px;
   font-weight: 600;
   line-height: 1.42;

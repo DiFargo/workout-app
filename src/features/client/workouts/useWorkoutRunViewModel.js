@@ -102,6 +102,10 @@ export function useWorkoutRunViewModel(runtime) {
     executionSteps.length
   ]);
 
+  const closePostWorkoutFeedback = useCallback(() => {
+    if (!runtime.isSaving) setPostWorkoutFeedbackOpen(false);
+  }, [runtime.isSaving, setPostWorkoutFeedbackOpen]);
+
   const closeFullscreenVideo = useCallback(() => {
     setFullscreenVideo(null);
   }, [setFullscreenVideo]);
@@ -151,7 +155,8 @@ export function useWorkoutRunViewModel(runtime) {
       feedback: {
         open: runtime.postWorkoutFeedbackOpen,
         isSaving: runtime.isSaving,
-        onSelect: selectPostWorkoutFeedback
+        onSelect: selectPostWorkoutFeedback,
+        onClose: closePostWorkoutFeedback
       }
     },
     onboarding: {

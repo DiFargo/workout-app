@@ -7,6 +7,7 @@ import "./AppCoreSurface.module.css";
 import "./AppCoreLayout.module.css";
 import "./AppCoreClientFlow.module.css";
 import "./AppCoreClientVisual.module.css";
+import "./AppCoreClientAppleTheme.css";
 /* eslint-disable react-hooks/refs -- Event factories capture refs for later handlers; they do not read refs during render. */
 import {
   defaultNutritionState
@@ -227,6 +228,7 @@ import {
 import { auth, db } from "./firebase";
 
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { rescheduleClientWorkout } from "./features/client/workouts/workoutReschedule";
 
 import * as appConfig from "./constants/appConfig";
 import { APP_PAGES } from "./app/appPages";
@@ -583,6 +585,7 @@ function AppRuntime() {
   useBodyScrollLock(Boolean(adminSelectedExerciseId));
 
   const [isSaving, setIsSaving] = useState(false);
+  const workoutSaveInFlightRef = useRef(false);
   const [isWorkoutSaved, setIsWorkoutSaved] = useState(false);
   const [showWorkoutSavedCard, setShowWorkoutSavedCard] = useState(false);
 
@@ -1148,7 +1151,6 @@ function AppRuntime() {
   useNutritionSearchEffects({
     dishIngredientPickerOpen,
     dishIngredientSearch,
-    nutrition,
     nutritionPickerOpen,
     nutritionSearch,
     nutritionSearchTab,
@@ -1234,6 +1236,7 @@ function AppRuntime() {
     auth,
     currentExerciseIndex,
     inlineVideoControlsTimerRef,
+    isWorkoutSaved,
     plan,
     postWorkoutFeedback,
     restTimerDuration,
@@ -1958,6 +1961,7 @@ function AppRuntime() {
   });
 
   const {
+    openClientProgressFromBottomBar,
     openTrainerCabinetFromBottomBar,
     openTrainerClientsList,
     openTrainerProgramsList
@@ -1989,6 +1993,7 @@ function AppRuntime() {
     onGoMain: goBackToMain,
     onOpenTraining: openTrainingEntry,
     onOpenNutrition: () => setPage(APP_PAGES.NUTRITION),
+    onOpenProgress: openClientProgressFromBottomBar,
     onOpenCabinet: openTrainerCabinetFromBottomBar,
     onPreloadMain: preloadClientMainTarget,
     onPreloadTraining: preloadClientTrainingTarget,
@@ -2184,12 +2189,14 @@ function AppRuntime() {
     centerExerciseDeck,
     goToPreviousExercise,
     goToNextExercise,
+    goToNextExerciseKeepingRestTimer,
     handleExerciseTouchStart,
     handleExerciseTouchMove,
     handleExerciseTouchEnd
   } = createWorkoutRunNavigationHandlers({
     workout,
     workoutStarted,
+    isWorkoutSaved,
     currentExerciseIndex,
     deckRef,
     touchStartY,
@@ -2290,6 +2297,7 @@ function AppRuntime() {
       plan,
       workout,
       isSaving,
+      workoutSaveInFlightRef,
       isWorkoutSaved,
       workoutStartedAt,
       workoutReadiness,
@@ -2456,6 +2464,16 @@ function AppRuntime() {
       ? APP_PAGES.ADMIN_PANEL
       : page;
 
+  const rescheduleWorkout = (request) => rescheduleClientWorkout({
+    ...request, auth, user, db, doc, setDoc, plan,
+    workoutCalendar: profileWorkoutCalendarData,
+    setWorkoutCalendar: setProfileWorkoutCalendarData,
+    setScheduledDates: setProfileWorkoutScheduledDates,
+    setDraftDates: setProfileWorkoutCalendarDraftDates,
+    persistCalendar: (uid, calendar) => safeWriteUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, uid, calendar),
+    showError: showAppError
+  });
+
   const routedPage = renderAppRoutePage({
     APP_VERSION,
     APP_PAGES,
@@ -2543,6 +2561,7 @@ function AppRuntime() {
     saveWorkoutModePreference,
     setSelectedWorkoutId,
     openCabinetWorkoutHistory,
+    rescheduleWorkout,
     handleWorkoutDraftChoice
   });
 
@@ -2883,6 +2902,7 @@ function AppRuntime() {
     getTrainerTaskStatus,
     goBackToMain,
     goToNextExercise,
+    goToNextExerciseKeepingRestTimer,
     goToPreviousExercise,
     handleAdminProgramSwipeCancel,
     handleAdminProgramSwipeClick,

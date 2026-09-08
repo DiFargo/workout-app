@@ -1,5 +1,5 @@
 import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
-import { X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Ruler, Scale, X } from "lucide-react";
 import { useState } from "react";
 import { APP_VERSION } from "../../../constants/appConfig";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
@@ -39,9 +39,13 @@ export default function MeasurementWizardPage({
     ...(aiNutritionProfile || {}),
     ...aiNutritionProfileDraft
   };
-  const latestProfileMeasurement = Array.isArray(profileMeasurements) && profileMeasurements.length
-    ? profileMeasurements[0]
-    : null;
+  const measurementHistory = Array.isArray(profileMeasurements) ? profileMeasurements : [];
+  const bodyMeasurementHistory = measurementHistory.filter(
+    (measurement) => measurement?.measurementType !== "weight_checkin"
+  );
+  const latestProfileMeasurement = measurementMode === "weight"
+    ? (measurementHistory.find((measurement) => Number(measurement?.weight) > 0) || null)
+    : (bodyMeasurementHistory[0] || null);
   const allMeasurementFields = getProfileMeasurementFields(activeProfile?.goal || "recomp");
   const measurementFields = measurementMode === "weight"
     ? allMeasurementFields.filter((field) => field.id === "weight")
@@ -132,7 +136,10 @@ export default function MeasurementWizardPage({
       return;
     }
 
-    saveProfileMeasurement();
+    saveProfileMeasurement(
+      null,
+      measurementMode === "weight" ? { measurementType: "weight_checkin" } : {}
+    );
   };
 
   const startWeightOnlyMeasurement = () => {
@@ -160,8 +167,6 @@ export default function MeasurementWizardPage({
         title="Замеры тела"
         testId="measurement-wizard-header"
         scope="measurement-wizard-header"
-        onBack={handleGoBack}
-        backAriaLabel="Вернуться к предыдущему шагу"
         actions={(
           <button
             type="button"
@@ -173,9 +178,17 @@ export default function MeasurementWizardPage({
           </button>
         )}
       >
-        <div className={styles.progress}>
-          <span>Шаг {profileMeasurementWizardStep + 1} из {totalWizardScreens}</span>
-          <i><em style={{ width: `${progressPercent}%` }} /></i>
+        <div
+          className={styles.progress}
+          aria-label={`Шаг ${profileMeasurementWizardStep + 1} из ${totalWizardScreens}`}
+        >
+          <div className={styles.progressMeta}>
+            <span>Шаг {profileMeasurementWizardStep + 1} из {totalWizardScreens}</span>
+            <strong>{isIntroStep ? "Подготовка" : isReviewStep ? "Проверка" : activeField?.label}</strong>
+          </div>
+          <div className={styles.progressTrack} aria-hidden="true">
+            <span style={{ width: `${progressPercent}%` }} />
+          </div>
         </div>
       </ClientPageHeader>
 
@@ -218,10 +231,12 @@ export default function MeasurementWizardPage({
 
             <div className={styles.modeChoices} data-testid="measurement-wizard-mode-choices">
               <button type="button" onClick={startWeightOnlyMeasurement}>
+                <Scale aria-hidden="true" />
                 <strong>Только вес</strong>
                 <small>Быстрая отметка без остальных замеров</small>
               </button>
               <button type="button" className={styles.fullMode} onClick={startFullMeasurement}>
+                <Ruler aria-hidden="true" />
                 <strong>Полный замер</strong>
                 <small>Вес и параметры тела</small>
               </button>
@@ -254,6 +269,7 @@ export default function MeasurementWizardPage({
             </div>
 
             <label className={styles.input}>
+              <span className={styles.inputLabel}>Введите значение</span>
               <div>
                 <input
                   data-css-module-control
@@ -329,7 +345,7 @@ export default function MeasurementWizardPage({
           type="button"
           onClick={handleGoBack}
         >
-          ← Назад
+          <ArrowLeft aria-hidden="true" /> Назад
         </button>
 
         <button
@@ -338,13 +354,21 @@ export default function MeasurementWizardPage({
           disabled={isReviewStep && profileMeasurementSaving}
           onClick={handleGoNext}
         >
-          {isIntroStep
-            ? "Полный замер →"
-            : (!isReviewStep ? "Вперёд →" : (profileMeasurementStatus.startsWith("Замер сохранён") ? "Сохранено ✓" : "Сохранить"))}
+          {isIntroStep ? <><span>Полный замер</span><ArrowRight aria-hidden="true" /></> : (!isReviewStep
+            ? <><span>Вперёд</span><ArrowRight aria-hidden="true" /></>
+            : (profileMeasurementStatus.startsWith("Замер сохранён")
+              ? <><span>Сохранено</span><Check aria-hidden="true" /></>
+              : <><span>Сохранить</span><Check aria-hidden="true" /></>))}
         </button>
       </div>
 
-      {measurementSaved ? (
+      {measurementSaved && measurementMode === "weight" ? (
+        <SaveSuccessNotice
+          title="Вес сохранён"
+          description="Мини-замер добавлен только в динамику веса."
+          onComplete={closeMeasurementWizard}
+        />
+      ) : measurementSaved ? (
         <SaveSuccessNotice
           title="Замеры сохранены"
           description="Новая запись добавлена в динамику тела."

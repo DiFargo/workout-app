@@ -1,4 +1,6 @@
 import { Info, Maximize2 } from "lucide-react";
+import { Pause, Play } from "lucide";
+import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import BasicWorkoutExerciseIllustration from "./BasicWorkoutExerciseIllustration";
 import styles from "./WorkoutExerciseVideoFrame.module.css";
 
@@ -24,6 +26,7 @@ export default function WorkoutExerciseVideoFrame({
   videoRetryToken
 }) {
   const hasVideo = Boolean(exercise.video && !exerciseVideoFailed);
+  const isInlinePlaying = inlinePlayingVideoId === exercise.id;
 
   return (
     <div
@@ -62,35 +65,23 @@ export default function WorkoutExerciseVideoFrame({
           {videoLoadingId === exercise.id && (
             <span className={styles.loading}>Загрузка видео...</span>
           )}
-          {inlinePlayingVideoId !== exercise.id && (
-            <button
-              type="button"
-              className={`${styles.inlineControl} ${styles.playButton} ${inlineVideoControlsVisible ? "" : styles.hidden}`}
-              data-css-module-control="workout-exercise-video"
-              onClick={(event) => {
-                event.stopPropagation();
-                const video = event.currentTarget.parentElement?.querySelector("video");
+          <button
+            type="button"
+            className={`${styles.inlineControl} ${isInlinePlaying ? styles.pauseButton : styles.playButton} ${inlineVideoControlsVisible ? "" : styles.hidden}`}
+            data-css-module-control="workout-exercise-video"
+            onClick={(event) => {
+              event.stopPropagation();
+              const video = event.currentTarget.parentElement?.querySelector("video");
+              if (isInlinePlaying) {
+                video?.pause();
+              } else {
                 video?.play().catch(onInlineVideoPlayFailed);
-              }}
-              aria-label="Воспроизвести видео упражнения"
-            >
-              <span aria-hidden="true">▶</span>
-            </button>
-          )}
-          {inlinePlayingVideoId === exercise.id && (
-            <button
-              type="button"
-              className={`${styles.inlineControl} ${styles.pauseButton} ${inlineVideoControlsVisible ? "" : styles.hidden}`}
-              data-css-module-control="workout-exercise-video"
-              onClick={(event) => {
-                event.stopPropagation();
-                event.currentTarget.parentElement?.querySelector("video")?.pause();
-              }}
-              aria-label="Поставить видео на паузу"
-            >
-              <span aria-hidden="true">Ⅱ</span>
-            </button>
-          )}
+              }
+            }}
+            aria-label={isInlinePlaying ? "Поставить видео на паузу" : "Воспроизвести видео упражнения"}
+          >
+            <MorphingIcon icon={isInlinePlaying ? Pause : Play} data-icon-state={isInlinePlaying ? "pause" : "play"} />
+          </button>
           <button
             type="button"
             className={styles.fullscreenButton}

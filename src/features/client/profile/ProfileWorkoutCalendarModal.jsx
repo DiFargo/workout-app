@@ -1,3 +1,4 @@
+import { ChevronRight, Dumbbell } from "lucide-react";
 import styles from "./ProfileWorkoutCalendarModal.module.css";
 
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
@@ -13,6 +14,8 @@ export function ProfileWorkoutCalendarContent({
   scheduledDates = [],
   draftDates = [],
   canEditSchedule = true,
+  isTrainerManaged = false,
+  scheduleRequiredCount = 0,
   editing,
   saving,
   status,
@@ -27,6 +30,9 @@ export function ProfileWorkoutCalendarContent({
   const currentDates = editing ? draftDates : scheduledDates;
   const scheduledThisMonth = scheduledDates.filter((dateKey) => dateKey.startsWith(monthKey)).length;
   const selectedDayScheduled = currentDates.includes(selectedDate);
+  const scheduleCountLabel = scheduleRequiredCount === 1
+    ? "1 дату"
+    : `${scheduleRequiredCount} дат`;
 
   return (
     <div
@@ -51,21 +57,29 @@ export function ProfileWorkoutCalendarContent({
 
       <div className={styles.planner}>
         <div className={styles.plannerContent}>
-          <strong className={styles.plannerTitle}>{editing ? "Выбери дни тренировок" : "План на месяц"}</strong>
+          <strong className={styles.plannerTitle}>{editing ? "Выберите дни тренировок" : "План на месяц"}</strong>
           <small className={styles.plannerDescription}>
             {editing
-              ? "Нажимай на даты текущего месяца"
-              : !canEditSchedule
-                ? "Расписание ведёт тренер. Статусы обновляются автоматически"
-              : `${scheduledThisMonth} дней запланировано`}
+              ? scheduleRequiredCount
+                ? `Выберите ${scheduleCountLabel}; программа останется без изменений.`
+                : "Нажимай на даты текущего месяца"
+              : isTrainerManaged
+                ? "Вы выбираете дни, а тренер видит изменения."
+                : `${scheduledThisMonth} дней запланировано`}
           </small>
         </div>
         {!editing && canEditSchedule && (
           <button className={styles.plannerButton} data-testid="profile-workout-calendar-edit" type="button" onClick={onStartEdit}>
-            Изменить
+            Изменить расписание
           </button>
         )}
       </div>
+
+      {editing && isTrainerManaged && (
+        <p className={styles.coordinationNote}>
+          Упражнения, их порядок и объём остаются под управлением тренера.
+        </p>
+      )}
 
       <div className={styles.weekdays} aria-hidden="true">
         {WEEKDAYS.map((day) => (
@@ -97,6 +111,7 @@ export function ProfileWorkoutCalendarContent({
                 day.isScheduled ? styles.scheduled : "",
                 visualStatus ? styles[visualStatus] : "",
                 editing ? styles.editing : "",
+                editing && day.isScheduleLocked ? styles.locked : "",
                 day.key === selectedDate ? styles.selected : ""
               ].filter(Boolean).join(" ")}
               disabled={editing && !day.isCurrentMonth}
@@ -106,7 +121,8 @@ export function ProfileWorkoutCalendarContent({
               aria-label={[
                 day.date.toLocaleDateString("ru-RU"),
                 entryLabel ? `тренировка ${entryLabel}` : "",
-                day.workouts.length ? `тренировок выполнено: ${day.workouts.length}` : ""
+                day.workouts.length ? `тренировок выполнено: ${day.workouts.length}` : "",
+                day.isScheduleLocked ? "дата выполненной тренировки недоступна для изменения" : ""
               ].filter(Boolean).join(", ")}
             >
               <span>{day.date.getDate()}</span>
@@ -138,7 +154,7 @@ export function ProfileWorkoutCalendarContent({
       )}
 
       {status && (
-        <p className={`${styles.status} ${status.includes("сохранены") ? styles.success : ""}`}>
+        <p className={`${styles.status} ${(status.includes("сохранены") || status.includes("сохранено")) ? styles.success : ""}`} role="status" aria-live="polite">
           {status}
         </p>
       )}
@@ -167,7 +183,7 @@ export function ProfileWorkoutCalendarContent({
               key={item.id || `${item.date}_${item.workout}`}
               onClick={() => onOpenHistory(item.id)}
             >
-              <span className={styles.historyIcon} aria-hidden="true">🏋️</span>
+              <span className={styles.historyIcon} aria-hidden="true"><Dumbbell /></span>
               <div className={styles.historyContent}>
                 <strong className={styles.historyTitle}>{item.workout || "Тренировка"}</strong>
                 <small className={styles.historyMeta}>
@@ -178,7 +194,7 @@ export function ProfileWorkoutCalendarContent({
                   {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
                 </small>
               </div>
-              <i className={styles.historyIndicator}>›</i>
+              <i className={styles.historyIndicator} aria-hidden="true"><ChevronRight /></i>
             </button>
           ))
         ) : (

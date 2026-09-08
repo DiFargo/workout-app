@@ -4,9 +4,8 @@ let lockDepth = 0;
 let scrollPosition = 0;
 let savedStyles = null;
 
-export function useBodyScrollLock(locked, { lockHtml = false } = {}) {
-  useEffect(() => {
-    if (!locked || typeof document === "undefined") return undefined;
+export function acquireBodyScrollLock() {
+    if (typeof document === "undefined") return () => {};
 
     const body = document.body;
     const html = document.documentElement;
@@ -32,7 +31,10 @@ export function useBodyScrollLock(locked, { lockHtml = false } = {}) {
 
     lockDepth += 1;
 
+    let released = false;
     return () => {
+      if (released) return;
+      released = true;
       lockDepth = Math.max(0, lockDepth - 1);
       if (lockDepth === 0 && savedStyles) {
         body.style.overflow = savedStyles.bodyOverflow;
@@ -45,5 +47,11 @@ export function useBodyScrollLock(locked, { lockHtml = false } = {}) {
         savedStyles = null;
       }
     };
+}
+
+export function useBodyScrollLock(locked, { lockHtml = false } = {}) {
+  useEffect(() => {
+    if (!locked) return undefined;
+    return acquireBodyScrollLock();
   }, [locked, lockHtml]);
 }

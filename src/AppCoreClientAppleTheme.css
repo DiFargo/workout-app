@@ -1,0 +1,240 @@
+/*
+ * Shared visual contract for the five client destinations.
+ * This is intentionally global: it supplies semantic tokens to isolated
+ * feature modules without touching their data, routing or business logic.
+ */
+
+html:root[data-app-theme="warm-light"] {
+  color-scheme: light;
+
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  --font-family-compact-ui: var(--font-family-sans);
+  --font-family-display: var(--font-family-sans);
+
+  --apple-canvas: #f2f2f7;
+  --apple-surface: #ffffff;
+  --apple-surface-muted: #efeff4;
+  --apple-text: #1c1c1e;
+  --apple-secondary: #636366;
+  --apple-separator: rgba(60, 60, 67, 0.12);
+  --apple-blue: #3c6faa;
+  --apple-blue-pressed: #3565a3;
+  --apple-blue-tint: #edf2f9;
+  --apple-hero-tint: #f0f4fa;
+  --apple-rhythm-track: #dfe7f2;
+  --apple-macro-progress: #8fa9ca;
+  --apple-segmented-fill: #e6e6ec;
+  --apple-action: #3f73b8;
+  --apple-action-pressed: #3565a3;
+  --apple-green: #237a42;
+  --apple-green-tint: #edf8f0;
+  --apple-orange: #886100;
+  --apple-orange-tint: #fff6df;
+  --apple-red: #c43830;
+  --apple-red-tint: #fff0ee;
+  --apple-fill: rgba(120, 120, 128, 0.12);
+  --apple-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --apple-shadow-float: 0 12px 28px rgba(28, 28, 30, 0.12);
+  --layout-client-dock-width: 100%;
+  --layout-client-dock-height: calc(70px + env(safe-area-inset-bottom, 0px));
+  --layout-client-dock-bottom: 0px;
+
+  --color-client-canvas: var(--apple-canvas);
+  --color-client-surface: var(--apple-surface);
+  --color-client-surface-raised: var(--apple-surface);
+  --color-client-surface-soft: var(--apple-surface-muted);
+  --color-client-text: var(--apple-text);
+  --color-client-text-muted: var(--apple-secondary);
+  --color-client-border: var(--apple-separator);
+  --color-client-accent: var(--apple-blue);
+  --color-client-accent-strong: var(--apple-blue-pressed);
+  --color-client-accent-muted: var(--apple-blue-tint);
+
+  --color-background: var(--apple-canvas);
+  --color-surface: var(--apple-surface);
+  --color-surface-raised: var(--apple-surface);
+  --color-surface-muted: var(--apple-surface-muted);
+  --color-text: var(--apple-text);
+  --color-text-primary: var(--apple-text);
+  --color-text-muted: var(--apple-secondary);
+  --color-heading: var(--apple-text);
+  --color-border: var(--apple-separator);
+  --color-accent: var(--apple-blue);
+  --color-accent-strong: var(--apple-blue-pressed);
+  --color-accent-contrast: #ffffff;
+  --color-danger: var(--apple-red);
+  --focus-ring: 0 0 0 3px rgba(79, 113, 140, 0.32);
+
+  --bg: var(--apple-canvas);
+  --card: var(--apple-surface);
+  --card-2: var(--apple-surface-muted);
+  --line: var(--apple-separator);
+  --text: var(--apple-text);
+  --muted: var(--apple-secondary);
+  --accent: var(--apple-blue);
+  --accent-2: var(--apple-blue-pressed);
+  --success: var(--apple-green);
+  --danger: var(--apple-red);
+  --warm-page: var(--apple-canvas);
+  --warm-card: var(--apple-surface);
+  --warm-card-strong: var(--apple-surface);
+  --warm-dark-card: var(--apple-surface-muted);
+  --warm-shadow-sm: none;
+  --warm-shadow-md: 0 1px 2px rgba(28, 28, 30, 0.04);
+  --warm-shadow-lg: var(--apple-shadow-float);
+
+  --ios-canvas: var(--apple-canvas);
+  --ios-surface: var(--apple-surface);
+  --ios-surface-muted: var(--apple-surface-muted);
+  --ios-text: var(--apple-text);
+  --ios-muted: var(--apple-secondary);
+  --ios-line: var(--apple-separator);
+  --ios-accent: var(--apple-blue);
+  --ios-accent-strong: var(--apple-blue-pressed);
+  --ios-accent-soft: var(--apple-blue-tint);
+  --ios-success: var(--apple-green);
+  --ios-warning: var(--apple-orange);
+  --ios-danger: var(--apple-red);
+  --ios-accent-text: var(--apple-blue);
+  --ios-backdrop: rgba(0, 0, 0, 0.28);
+  --ios-shadow-float: var(--apple-shadow-float);
+  --ios-glass-surface: #ffffff;
+  --ios-glass-surface-strong: #ffffff;
+  --ios-glass-border: var(--apple-separator);
+  --ios-glass-highlight: none;
+  --ios-glass-shadow: none;
+  --ios-glass-filter: none;
+  --ios-canvas-background: var(--apple-canvas);
+
+  --color-food-flow-photo-accent: var(--apple-blue);
+  --color-food-flow-link-accent: var(--apple-blue);
+  --color-food-flow-photo-icon: var(--apple-blue);
+  --color-food-dialog-icon-accent: var(--apple-blue);
+  --color-food-result-icon-accent: var(--apple-blue);
+  --color-food-result-action-accent: var(--apple-blue);
+  --color-food-result-secondary-text: var(--apple-blue);
+  --color-food-edit-focus: var(--apple-blue);
+  --color-food-edit-preset-active-text: var(--apple-blue);
+  --color-food-nav-active: var(--apple-blue);
+  --color-food-nav-mobile-active: var(--apple-blue);
+  --color-nutrition-nav-active: var(--apple-blue);
+  --color-nutrition-nav-mobile-active: var(--apple-blue);
+
+  --color-workout-plan-accent: var(--apple-blue);
+  --color-workout-plan-icon: var(--apple-blue);
+  --color-workout-history-accent: var(--apple-blue);
+  --color-workout-history-card-accent: var(--apple-blue);
+  --color-workout-history-latest-accent: var(--apple-blue);
+  --color-workout-history-exercise-accent: var(--apple-blue);
+  --background-workout-history-primary: var(--apple-blue);
+  --color-workout-mode-icon: var(--apple-blue);
+  --color-basic-quiz-eyebrow: var(--apple-blue);
+  --color-basic-quiz-stat-value: var(--apple-blue);
+  --gradient-basic-quiz-start: var(--apple-blue);
+  --color-workout-list-dialog-eyebrow: var(--apple-blue);
+  --color-workout-list-dialog-icon: var(--apple-blue);
+  --background-workout-readiness-primary: var(--apple-blue);
+  --background-workout-dialog-primary: var(--apple-blue);
+  --color-workout-dialog-icon: var(--apple-blue);
+  --color-workout-warmup-badge-text: var(--apple-blue);
+  --background-workout-warmup-accent: var(--apple-blue);
+}
+
+html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"],
+html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] #root {
+  background: var(--apple-canvas);
+  color: var(--apple-text);
+}
+
+html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] [data-client-adaptive-shell="true"],
+html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] .profileDashboardPage.clientCorePageMain,
+html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] .profileDashboardPage.clientCorePageCabinet {
+  background: var(--apple-canvas) !important;
+  background-image: none !important;
+  color: var(--apple-text) !important;
+  font-family: var(--font-family-sans);
+}
+
+html:root[data-app-theme="warm-light"] [data-client-page-header="true"] {
+  background: var(--apple-canvas) !important;
+  border-bottom-color: rgba(60, 60, 67, 0.14) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html:root[data-app-theme="warm-light"] [data-client-page-header="true"] h1 {
+  color: var(--apple-text) !important;
+}
+
+html:root[data-app-theme="warm-light"] [data-client-page-header="true"] button {
+  color: var(--apple-blue) !important;
+}
+
+html:root[data-app-theme="warm-light"] [data-client-page-header-primary="true"] h1 {
+  font-family: var(--font-family-sans) !important;
+  font-size: 32px !important;
+  font-weight: 750 !important;
+  letter-spacing: -1.35px !important;
+  line-height: 1.14 !important;
+}
+
+html:root[data-app-theme="warm-light"] [data-client-bottom-dock="true"]::before {
+  background: var(--apple-surface) !important;
+}
+
+html:root[data-app-theme="warm-light"] [data-testid="client-bottom-nav"],
+html:root[data-app-theme="warm-light"] [data-testid="client-training-bottom-nav"] {
+  border-color: var(--apple-separator) !important;
+  background: var(--apple-surface) !important;
+  box-shadow: none !important;
+  color: var(--apple-secondary) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html:root[data-app-theme="warm-light"] [data-testid="client-bottom-nav"] button,
+html:root[data-app-theme="warm-light"] [data-testid="client-training-bottom-nav"] button {
+  color: var(--apple-secondary) !important;
+  transition: transform 160ms var(--apple-ease-out), background-color 160ms ease, color 160ms ease;
+}
+
+html:root[data-app-theme="warm-light"] [data-testid="client-bottom-nav"] button:active,
+html:root[data-app-theme="warm-light"] [data-testid="client-training-bottom-nav"] button:active {
+  transform: scale(0.97);
+}
+
+html:root[data-app-theme="warm-light"] [data-testid="client-bottom-nav"] button[aria-current="page"],
+html:root[data-app-theme="warm-light"] [data-testid="client-training-bottom-nav"] button[aria-current="page"] {
+  background: transparent !important;
+  color: var(--apple-action) !important;
+}
+
+html:root[data-app-theme="warm-light"] body [data-modal-surface="true"] {
+  border-color: var(--apple-separator) !important;
+  background: var(--apple-canvas) !important;
+  color: var(--apple-text) !important;
+  box-shadow: 0 18px 52px rgba(28, 28, 30, 0.2) !important;
+}
+
+html:root[data-app-theme="warm-light"] body [data-modal-surface="true"] :is(button, input, select, textarea):focus-visible,
+html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] button:focus-visible {
+  outline: 3px solid rgba(60, 111, 170, 0.45) !important;
+  outline-offset: 2px;
+}
+
+@media (max-width: 699px) {
+  html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] [data-client-adaptive-shell="true"] {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

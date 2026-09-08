@@ -30,7 +30,7 @@
   z-index: 9500;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;
@@ -56,8 +56,8 @@
   font-size: 14px;
   font-weight: 700;
 }
-:global(:root[data-app-theme="warm-light"]) .exercisePrevButton.exercisePrevButton { border-radius: 24px; background: #f2f2f7; color: #28262e; -webkit-text-fill-color: #28262e; }
-:global(:root[data-app-theme="warm-light"]) .exerciseNextButton.exerciseNextButton { border-radius: 17px; background: #8f7ac8; color: #fff; -webkit-text-fill-color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .exercisePrevButton.exercisePrevButton { border-radius: 24px; background: #f2f2f7; color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); }
+:global(:root[data-app-theme="warm-light"]) .exerciseNextButton.exerciseNextButton { border-radius: 17px; background: var(--apple-action, #3f73b8); color: #fff; -webkit-text-fill-color: #fff; }
 
 .warmupPanel {
   height: 76px;
@@ -205,10 +205,10 @@
     max-height: 76px;
     margin: 0;
     padding: 7px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 18px 48px rgba(72, 63, 87, 0.18);
+    box-shadow: 0 18px 48px rgba(27, 35, 31, 0.18);
     backdrop-filter: blur(18px);
   }
 
@@ -248,25 +248,25 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .warmupPreviousButton {
-    border-color: #efebf3;
+    border-color: var(--apple-separator, rgba(60,60,67,.12));
     background: #ffffff;
-    box-shadow: 0 12px 24px rgba(72, 63, 87, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 24px rgba(27, 35, 31, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     color: #2d3342;
     -webkit-text-fill-color: #2d3342;
   }
 
   :global(:root[data-app-theme="warm-light"]) .exercisePrevButton {
-    border-color: #efebf3;
+    border-color: var(--apple-separator, rgba(60,60,67,.12));
     background: #f7f9fe;
     box-shadow: none;
-    color: #7b7682;
-    -webkit-text-fill-color: #7b7682;
+    color: var(--apple-secondary, #636366);
+    -webkit-text-fill-color: var(--apple-secondary, #636366);
   }
 
   :global(:root[data-app-theme="warm-light"]) .warmupReadyButton,
   :global(:root[data-app-theme="warm-light"]) .exerciseNextButton {
     border-color: transparent;
-    background: linear-gradient(135deg, #8f7ac8 0%, #806bb6 100%);
+    background: linear-gradient(135deg, var(--apple-action, #3f73b8) 0%, var(--apple-blue-pressed, #3565a3) 100%);
     box-shadow: 0 12px 26px rgba(117, 97, 170, 0.23);
     color: #ffffff;
     -webkit-text-fill-color: #ffffff;
@@ -289,7 +289,7 @@
   z-index: 9500;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;
@@ -320,8 +320,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .warmupPreviousButton.warmupPreviousButton {
-  color: #28262e;
-  -webkit-text-fill-color: #28262e;
+  color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
   background: #f2f2f7;
   border-radius: 24px;
 }
@@ -329,7 +329,7 @@
 :global(:root[data-app-theme="warm-light"]) .warmupReadyButton.warmupReadyButton {
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  background: #8f7ac8;
+  background: var(--apple-action, #3f73b8);
   border-radius: 17px;
 }
 
@@ -354,5 +354,28 @@
   :global(:root[data-app-theme="warm-light"]) .exerciseNavigationRow.exerciseNavigationRow,
   :global(:root[data-app-theme="warm-light"]) .warmupPanel.warmupPanel .navigationRow.navigationRow {
     grid-template-columns: 150px minmax(0, 1fr);
+  }
+}
+
+/* One quiet dock for both workout stages, including the mobile safe area. */
+:global(:root[data-app-theme="warm-light"]) .exercisePanel.exercisePanel,
+:global(:root[data-app-theme="warm-light"]) .warmupPanel.warmupPanel {
+  height: calc(73px + env(safe-area-inset-bottom, 0px));
+  min-height: calc(73px + env(safe-area-inset-bottom, 0px));
+  max-height: none;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: #fff;
+  backdrop-filter: none;
+}
+:global(:root[data-app-theme="warm-light"]) .panel .button.button {
+  border-radius: 12px;
+  box-shadow: none;
+  font-weight: 620;
+}
+@media (max-width: 699px) {
+  :global(:root[data-app-theme="warm-light"]) .exercisePanel.exercisePanel,
+  :global(:root[data-app-theme="warm-light"]) .warmupPanel.warmupPanel {
+    width: 100%;
+    max-width: 100%;
   }
 }

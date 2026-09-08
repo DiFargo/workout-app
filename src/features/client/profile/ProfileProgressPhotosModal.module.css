@@ -5,7 +5,7 @@
   box-sizing: border-box;
   display: grid;
   place-items: center;
-  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  padding: max(10px, env(safe-area-inset-top)) 12px max(10px, env(safe-area-inset-bottom));
   background: var(--background-profile-progress-photos-overlay);
   backdrop-filter: var(--filter-profile-progress-photos-overlay);
   -webkit-backdrop-filter: var(--filter-profile-progress-photos-overlay);
@@ -14,14 +14,14 @@
 .dialog {
   box-sizing: border-box;
   width: min(100%, 430px);
-  max-height: min(820px, calc(100dvh - 24px));
-  padding: 15px;
+  max-height: min(812px, calc(100dvh - 20px));
+  padding: 12px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 10px;
   overflow: hidden;
   border: 1px solid var(--color-profile-progress-photos-dialog-border);
-  border-radius: 32px;
+  border-radius: 28px;
   background: var(--background-profile-progress-photos-dialog);
   box-shadow: var(--shadow-profile-progress-photos-dialog);
   color: var(--color-profile-progress-photos-text);
@@ -29,9 +29,9 @@
 
 .bodyControlDialog {
   width: min(100%, 430px);
-  height: min(820px, calc(100dvh - 24px));
-  max-height: min(820px, calc(100dvh - 24px));
-  border-radius: 32px;
+  height: min(812px, calc(100dvh - 20px));
+  max-height: min(812px, calc(100dvh - 20px));
+  border-radius: 28px;
   grid-template-rows: auto 48px minmax(0, 1fr) auto;
 }
 
@@ -84,56 +84,13 @@
   cursor: pointer;
 }
 
-.bodyControlDialog .header {
-  box-sizing: border-box;
-  min-height: 86px;
-  padding: 2px 0 0 4px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px;
-  align-items: start;
-  gap: 12px;
-}
-
-.bodyControlDialog .header > div {
-  align-content: start;
-  gap: 3px;
-  padding-top: 1px;
-}
-
-.bodyControlDialog .header span {
-  display: block;
-  color: var(--color-profile-progress-photos-tabbed-eyebrow);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  line-height: 1.1;
-}
-
-.bodyControlDialog .header h2 {
-  color: var(--color-profile-progress-photos-tabbed-heading);
-  font-size: 25px;
-  line-height: 1.02;
-}
-
-.bodyControlDialog .header small {
-  display: block;
-  min-height: 17px;
-  color: var(--color-profile-progress-photos-tabbed-muted);
-  font-size: 12px;
-  font-weight: 750;
-  line-height: 1.2;
-}
-
 .bodyControlDialog .closeButton {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
-  align-self: start;
-  justify-self: end;
-  display: grid;
-  place-items: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-color: var(--color-profile-progress-photos-tabbed-close-border);
-  border-radius: 14px;
+  border-radius: 50%;
   background: var(--background-profile-progress-photos-tabbed-close);
   color: var(--color-profile-progress-photos-tabbed-close);
   font-weight: 500;
@@ -143,36 +100,36 @@
 .bodyControlTabs {
   box-sizing: border-box;
   height: 48px;
-  padding: 3px;
+  padding: 2px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
-  gap: 6px;
+  gap: 4px;
   border: 1px solid var(--color-profile-progress-photos-section-tabs-border);
-  border-radius: 16px;
+  border-radius: 14px;
   background: var(--background-profile-progress-photos-section-tabs);
 }
 
 .bodyControlTabs button {
   min-width: 0;
   width: 100%;
-  height: 40px;
-  min-height: 40px;
+  height: 44px;
+  min-height: 44px;
   padding: 0 8px;
   border: 1px solid var(--color-profile-progress-photos-section-tab-border);
-  border-radius: 13px;
+  border-radius: 11px;
   background: var(--background-profile-progress-photos-section-tab);
   color: var(--color-profile-progress-photos-section-tab);
-  font-size: 12px;
-  font-weight: 950;
+  font-size: 13px;
+  font-weight: 700;
   line-height: 1;
 }
 
 .bodyControlTabs button.active {
-  border-color: #806bb6;
-  background: linear-gradient(135deg, #9a86d3, #806bb6);
-  color: #ffffff;
-  box-shadow: 0 8px 18px rgba(128, 107, 182, 0.3);
+  border-color: var(--color-profile-progress-photos-section-tab-active-border);
+  background: var(--background-profile-progress-photos-section-tab-active);
+  color: var(--color-profile-progress-photos-section-tab-active);
+  box-shadow: var(--shadow-profile-progress-photos-section-tab-active);
 }
 
 .body {
@@ -180,7 +137,7 @@
   display: grid;
   grid-auto-rows: max-content;
   align-content: start;
-  gap: 10px;
+  gap: 8px;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -192,24 +149,24 @@
 
 .intro {
   box-sizing: border-box;
-  min-height: 70px;
-  padding: 11px 13px;
+  min-height: 62px;
+  padding: 9px 11px;
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-columns: 40px minmax(0, 1fr);
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   border: 1px solid var(--color-profile-progress-photos-intro-border);
-  border-radius: 17px;
+  border-radius: 16px;
   background: var(--background-profile-progress-photos-intro);
 }
 
 .intro > i {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   border: 1px solid var(--color-profile-progress-photos-accent-border);
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--background-profile-progress-photos-accent);
   font-size: 20px;
   font-style: normal;
@@ -218,18 +175,19 @@
 .intro p {
   margin: 0;
   color: var(--color-profile-progress-photos-muted);
-  font-size: 11px;
-  line-height: 1.45;
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .latest {
-  padding: 11px 13px;
+  min-height: 58px;
+  padding: 8px 10px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   border: 1px solid var(--color-profile-progress-photos-latest-border);
-  border-radius: 17px;
+  border-radius: 16px;
   background: var(--background-profile-progress-photos-latest);
 }
 
@@ -240,14 +198,14 @@
 
 .latest span {
   color: var(--color-profile-progress-photos-label);
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .latest strong {
   color: var(--color-profile-progress-photos-card-heading);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .latest > div:last-child {
@@ -256,29 +214,29 @@
 }
 
 .latest img {
-  width: 34px;
-  height: 44px;
+  width: 32px;
+  height: 40px;
   border-radius: 8px;
   object-fit: cover;
 }
 
 .steps {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .steps label {
   position: relative;
   box-sizing: border-box;
-  min-height: 82px;
-  padding: 9px 12px;
+  min-height: 72px;
+  padding: 7px 10px;
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr) 26px;
+  grid-template-columns: 50px minmax(0, 1fr) 44px;
   align-items: center;
   gap: 11px;
   overflow: hidden;
   border: 1px solid var(--color-profile-progress-photos-step-border);
-  border-radius: 17px;
+  border-radius: 16px;
   background: var(--background-profile-progress-photos-step);
   cursor: pointer;
 }
@@ -298,9 +256,9 @@
 
 .steps label > img,
 .steps label > i {
-  width: 58px;
-  height: 64px;
-  border-radius: 13px;
+  width: 50px;
+  height: 56px;
+  border-radius: 12px;
 }
 
 .steps label > img {
@@ -331,19 +289,19 @@
 
 .steps small {
   color: var(--color-profile-progress-photos-muted);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.35;
 }
 
 .steps label > em {
-  width: 26px;
-  height: 26px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: 1px solid var(--color-profile-progress-photos-step-action-border);
   border-radius: 50%;
   color: var(--color-profile-progress-photos-step-action);
-  font-size: 16px;
+  font-size: 0;
   font-style: normal;
   font-weight: 950;
 }
@@ -370,7 +328,7 @@
   padding: 0;
   overflow: hidden;
   border: 1px solid var(--color-profile-progress-photos-compare-border);
-  border-radius: 18px;
+  border-radius: 16px;
   background: var(--background-profile-progress-photos-compare);
 }
 
@@ -379,8 +337,8 @@
 }
 
 .compareHeader {
-  min-height: 58px;
-  padding: 10px 12px;
+  min-height: 56px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -413,16 +371,16 @@
 }
 
 .compareHeader > i {
-  width: 30px;
-  height: 30px;
-  flex: 0 0 30px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   display: grid;
   place-items: center;
   border: 1px solid var(--color-profile-progress-photos-compare-control-border);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--background-profile-progress-photos-compare-control);
   color: var(--color-profile-progress-photos-compare-control);
-  font-size: 18px;
+  font-size: 0;
   font-style: normal;
   transition: transform 0.18s ease;
 }
@@ -460,7 +418,7 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 40px;
+  height: 44px;
   padding: 0 28px 0 10px;
   border: 1px solid var(--color-profile-progress-photos-compare-control-border);
   border-radius: 12px;
@@ -478,7 +436,7 @@
 
 .compareTabs button {
   min-width: 0;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 7px;
   border: 1px solid var(--color-profile-progress-photos-compare-tab-border);
   border-radius: 11px;
@@ -548,9 +506,9 @@
 }
 
 .saveButton {
-  min-height: 54px;
+  min-height: 50px;
   border: 0;
-  border-radius: 17px;
+  border-radius: 15px;
   background: var(--background-profile-progress-photos-save);
   color: var(--color-profile-progress-photos-save);
   font-size: 15px;
@@ -565,7 +523,8 @@
 }
 
 .saveButton:disabled {
-  filter: saturate(0.3);
+  filter: none;
+  opacity: 0.42;
 }
 
 .closeButton:focus-visible,
@@ -580,7 +539,7 @@
   outline-offset: 2px;
 }
 
-@media (max-height: 800px) {
+@media (max-height: 760px) {
   .dialog:not(.bodyControlDialog) {
     padding: 12px;
     gap: 9px;
@@ -611,9 +570,9 @@
 }
 .header.header,
 .bodyControlDialog .header.header {
-  width: calc(100% + 30px);
+  width: calc(100% + 24px);
   min-height: 44px;
-  margin: -3px -15px 0;
+  margin: 0 -12px;
   padding: 0;
   display: block;
   grid-template-columns: none;
