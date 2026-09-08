@@ -1243,6 +1243,11 @@ function ClientOverview({
         nutritionGoals={nutritionGoals}
         onTabChange={onTabChange}
       />
+      {isTrainerV2Path(window.location.pathname) ? <aside className="trainerClientOverviewTools">
+        <h2>Работа с клиентом</h2>
+        <ClientSectionLaunchButton icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
+        <ClientSectionLaunchButton icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
+      </aside> : null}
       <TrainerClientProgressDashboard
         key={client?.id || "client-progress"}
         measurements={measurements}
@@ -1250,11 +1255,7 @@ function ClientOverview({
         nutritionDays={nutritionDays}
         nutritionGoals={nutritionGoals}
       />
-      {isTrainerV2Path(window.location.pathname) ? <aside className="trainerClientOverviewTools">
-        <h2>Работа с клиентом</h2>
-        <ClientSectionLaunchButton icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
-        <ClientSectionLaunchButton icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
-      </aside> : null}
+
       <ClientSectionLaunchButton
         icon={BarChart3}
         title="Открыть прогресс упражнений"
@@ -2645,6 +2646,7 @@ function ClientWorkoutPlan({
   const scheduleWorkouts = primaryProgramAssignment?.workouts || [];
   const scheduleHistory = primaryProgramAssignment?.history || [];
   const scheduleCompletedWorkoutIds = primaryProgramAssignment?.completedWorkoutIds || [];
+  const visibleWorkoutSlots = useMemo(() => buildPlannedWorkoutSlots({ workouts: primaryProgramAssignment?.workouts || [], calendar: client?.workoutCalendar || {}, history: primaryProgramAssignment?.history || [], completedWorkoutIds: primaryProgramAssignment?.completedWorkoutIds || [] }), [primaryProgramAssignment, client?.workoutCalendar]);
   const scheduleArchivedWorkouts = useMemo(() => {
     const primaryKey = primaryProgramAssignment?.key || "";
     const seenWorkoutIds = new Set();
@@ -2889,7 +2891,7 @@ function ClientWorkoutPlan({
         <header className={trainerClientWorkoutPlanStyles.programHeader}>
           <span><ClipboardList size={19} /></span>
           <div className={trainerClientWorkoutPlanStyles.programHeaderCopy}>
-            <h2>Программа тренировок клиента</h2>
+            <h2>{isTrainerV2Path(window.location.pathname) ? "Программа клиента" : "Программа тренировок клиента"}</h2>
             <p>Текущий план, следующее назначение и история клиента.</p>
           </div>
           {programTimeline.length || hasBasicProgramHistory ? (
@@ -2911,7 +2913,7 @@ function ClientWorkoutPlan({
         <div className={trainerClientWorkoutPlanStyles.programGrid}>
           {assignedProgramAssignment ? (
             <div className={trainerClientWorkoutPlanStyles.currentProgram}>
-              <div className={trainerClientWorkoutPlanStyles.currentProgramTop}>
+              <div className={`${trainerClientWorkoutPlanStyles.currentProgramTop} trainerClientProgramTop`}>
                 <div className={trainerClientWorkoutPlanStyles.currentMain}>
                   <span className={trainerClientWorkoutPlanStyles.programIcon}><Dumbbell size={21} /></span>
                   <div className={trainerClientWorkoutPlanStyles.currentInfo}>
@@ -3058,7 +3060,7 @@ function ClientWorkoutPlan({
         <section className="trainerClientWorkoutList" aria-label="Тренировки программы">
           <header><h2>Тренировки программы</h2><span>{assignedProgramCompletion}% выполнено</span></header>
           <progress max="100" value={assignedProgramCompletion} aria-label="Выполнение программы" />
-          {scheduleWorkouts.map((workout, index) => <TrainerClientDisclosure key={workout.id || index} title={`${index + 1}. ${workout.name || workout.title || "Тренировка"}`}>
+          {scheduleWorkouts.map((workout, index) => <TrainerClientDisclosure key={workout.id || index} title={<span className="trainerWorkoutRowLabel"><span>{`${index + 1}. ${workout.name || workout.title || "Тренировка"}`}</span>{(visibleWorkoutSlots.find(slot => slot.workoutId === String(workout.id || "")) || visibleWorkoutSlots[index])?.isCompleted ? <small className="trainerWorkoutCompleted"><Check size={14} />Выполнена</small> : null}</span>}>
             <ul>{(workout.exercises || []).map((exercise, exerciseIndex) => <li key={exercise.id || exerciseIndex}>{exercise.name || exercise.exerciseName || "Упражнение"}</li>)}</ul>
             <button type="button" className="trainerClientTextAction" onClick={() => { setEditorWorkoutId(workout.id); setEditorStatus(""); setEditorOpen(true); }}>Открыть тренировку</button>
           </TrainerClientDisclosure>)}
@@ -5354,7 +5356,7 @@ function TrainerClientDetail({
               <span>Завершить<br /> настройку</span>
             </button>
           ) : null}
-          {onCreateTask ? (
+          {onCreateTask && !isTrainerV2Path(window.location.pathname) ? (
             <button
               className="trainerNextClientTaskButton"
               type="button"

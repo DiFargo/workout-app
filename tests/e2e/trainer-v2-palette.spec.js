@@ -54,9 +54,11 @@ for (const width of [393,768,1366]) {
       expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
       await page.screenshot({path:`artifacts/trainer-complete-${width}-${name}.png`,animations:'disabled'});
     }
+    const summaryTabs=page.locator('.trainerNextClientTabs');
+    await (await summaryTabs.isVisible()?summaryTabs:page.locator('.trainerNextClientMobileNav')).getByRole('button',{name:'Сводка',exact:true}).click();
     // Open read-only utility sheets; no messages are sent and no client data is saved.
     for (const [button,title] of [['Задания клиенту','Задания клиенту'],['Сообщения клиента','Сообщения'],['Открыть абонемент клиента','Календарь тренировок']]) {
-      await page.getByRole('button',{name:button,exact:true}).click();
+      await page.getByRole('button',{name:button === 'Задания клиенту' ? /^Задания клиенту/ : button,exact:button !== 'Задания клиенту'}).click();
       const dialog=page.getByRole('dialog',{name:title,exact:true});
       await expect(dialog).toBeVisible();
       await assertPalette(page);

@@ -115,3 +115,18 @@ remain distinct. No client data, authorization or persistence behavior changed.
 - One measurement shows its date and explains why no trend is available. Missing photos show a descriptive empty state; measurements remain accessible. Nutrition bars are capped at 40 px.
 - Setup action wraps separately on compact screens; diary remains available in the nutrition page header. Original trainer routes and data handlers remain intact.
 - Verified: 20 focused E2E checks, plus five sparse-client viewport checks (320, 393, 768, 1024, 1366), production build, bundle budget and Firebase artifact guard. Existing four-tab coverage spans 320–1920 px. Lint has no errors; pre-existing warnings remain.
+
+
+## 3.0.714 — unified client pages
+
+Reviewed with ui-ux-pro-max (grouping, hierarchy, touch targets) and emil-design-eng (consistent geometry, restrained states). The existing approved iOS palette remains the reference.
+
+| Before | After | Why |
+| --- | --- | --- |
+| Unequal sidebars leave large holes | Sequential full-width sections; nutrition plan and macros share one row | Keep the content flow continuous |
+| Oversized key metrics and broken mobile words | Content-sized columns on desktop, compact rows on phones | Read labels and values without truncation |
+| Duplicate task button in profile | Tasks in the overview action group before the chart | One predictable entry point |
+| Identical workout rows | Check icon and completion label from planned workout slots | Distinguish completed sessions without colour alone |
+| Mixed labels and tiny avatar | Larger avatar, shorter headings, consistent controls | Match the calm iOS interface |
+
+Acceptance: all 11 user comments addressed across overview, workouts, nutrition and photos/measurements. Protected handlers and original route preserved. Eight viewport checks (320–1920), task/calendar/message sheets, program editor, photo comparison, sparse states and 680 unit tests verified. Explicit layout checks cover metric height, section gaps and completed workout identity. Screenshots also inspected below the fold for calendar, nutrition and measurements.

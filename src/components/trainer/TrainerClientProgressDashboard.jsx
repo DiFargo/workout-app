@@ -205,7 +205,7 @@ export default function TrainerClientProgressDashboard({
     >
       <header className={styles.dashboardHeader}>
         <div>
-          <h2 id="trainer-client-progress-dashboard-title">Результат</h2>
+          <h2 id="trainer-client-progress-dashboard-title">{isTrainerV2Path(window.location.pathname) ? "Динамика показателей" : "Результат"}</h2>
           <p>Вес, замеры, сила и питание — отдельно, на реальных данных клиента.</p>
         </div>
         <div className={styles.periods} aria-label="Период анализа прогресса">
@@ -241,7 +241,7 @@ export default function TrainerClientProgressDashboard({
           ))}
         </div>
       </div>
-      <p className={styles.caption}>Изменение веса само по себе не означает прогресс. Оценка питания не включает сегодняшний незавершённый день. Это контекст, а не причина прогресса.</p>
+      <p className={styles.caption}>{isTrainerV2Path(window.location.pathname) ? "Оценивайте вес вместе с замерами и силовыми показателями. Данные питания — только за завершённые дни." : "Изменение веса само по себе не означает прогресс. Оценка питания не включает сегодняшний незавершённый день. Это контекст, а не причина прогресса."}</p>
     </section>
   );
 }

@@ -33,12 +33,30 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
         expect(dock.x + dock.width).toBeLessThanOrEqual(width);
         expect(dock.y + dock.height).toBeLessThanOrEqual(852);
       }
+      if (name === 'Сводка') {
+        await expect(page.locator('.trainerNextClientHeader .trainerNextClientTaskButton')).toHaveCount(0);
+        const metrics = await page.locator('.trainerClientWorkSummary').boundingBox();
+        expect(metrics.height).toBeLessThan(width > 760 ? 125 : 230);
+        if (width > 760) {
+          const sections = await page.locator('.trainerNextClientOverview > *').all();
+          let previous;
+          for (const section of sections) {
+            const box = await section.boundingBox();
+            if (!box) continue;
+            if (previous) expect(box.y - previous.y - previous.height).toBeLessThanOrEqual(18);
+            previous = box;
+          }
+        }
+      }
       if (name === 'Тренировки') {
+        await expect(page.locator('.trainerClientWorkoutList .trainerWorkoutCompleted')).toHaveCount(1);
+        await expect(page.locator('.trainerClientWorkoutList details').first()).toContainText('Выполнена');
+
         const program = await page.locator('.trainerClientMainColumn > section').first().boundingBox();
         const list = await page.locator('.trainerClientWorkoutList').boundingBox();
         expect(list.y - program.y - program.height).toBeLessThanOrEqual(20);
       }
-      await page.screenshot({ path: `artifacts/client-four-runtime-${width}-${name}.png` });
+      await page.screenshot({ fullPage: true, path: `artifacts/client-four-runtime-${width}-${name}.png` });
     }
     await expect(page.locator('.trainerPhotoCompareGrid figure')).toHaveCount(2);
     await expect(page.getByLabel('Первая фотосессия для сравнения')).toHaveValue('p2');
