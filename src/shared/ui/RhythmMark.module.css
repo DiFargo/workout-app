@@ -1,4 +1,0 @@
-.root { display:inline-flex; align-items:center; gap:3px; width:32px; height:32px; margin-right:2px; transform:rotate(12deg); flex-shrink:0; pointer-events:none; }
-.root i { display:block; width:4px; height:11px; border-radius:3px; background:var(--apple-blue, #3c6faa); opacity:.2; }
-.root i:nth-child(2), .root i:nth-child(4) { height:19px; opacity:.35; }
-.root i:nth-child(3) { height:27px; opacity:.6; }

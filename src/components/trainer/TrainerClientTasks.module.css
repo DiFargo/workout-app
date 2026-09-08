@@ -224,3 +224,4 @@
     width: 100%;
   }
 }
+:global(html[data-trainer-variant="v2"]) .createButton {background:#3f73b8;color:#fff;box-shadow:none;border-radius:12px}

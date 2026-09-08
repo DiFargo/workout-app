@@ -388,3 +388,9 @@
   }
 
 }
+
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .root {--trainer-surface:#fff;--trainer-border:rgba(60,60,67,.12);--trainer-text:#1c1c1e;--trainer-muted:#636366;--trainer-accent:#3f73b8}
+
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .editorModalSave {background:#3f73b8!important;border-color:#3f73b8!important;box-shadow:none!important;color:#fff}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .editorModalHeader,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .editorModalFooter {background:#fff;border-color:rgba(60,60,67,.12)}

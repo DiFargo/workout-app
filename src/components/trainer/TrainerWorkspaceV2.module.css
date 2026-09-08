@@ -1,0 +1,218 @@
+/* Temporary /v2 presentation layer. Existing trainer components own all data,
+   navigation and actions. Every selector is opt-in; / retains its own styles. */
+:global(html[data-trainer-variant="v2"] .trainerNextRoot) {
+  --tn-page: #f2f2f7;
+  --tn-surface: #fff;
+  --tn-surface-soft: #efeff4;
+  --tn-line: rgba(60,60,67,.12);
+  --tn-text: #1c1c1e;
+  --tn-muted: #636366;
+  --tn-purple: #3c6faa;
+  --tn-purple-strong: #3f73b8;
+  --tn-purple-soft: #eef3fa;
+  --tn-purple-wash: #f2f2f7;
+  --tn-green: #237a42;
+  --tn-green-soft: #edf8f0;
+  --tn-orange: #886100;
+  --tn-red: #b43b34;
+  --tn-blue: #3c6faa;
+  --tn-shadow: none;
+  color: var(--tn-text);
+  background: var(--tn-page) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(button,input,select,textarea)) { font-family: inherit; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot button) {
+  transition: opacity 130ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot button:active) { opacity: .72; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(button,a,input,select,textarea):focus-visible) {
+  outline: 2px solid #3f73b8;
+  outline-offset: 3px;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextMain,.trainerNextPage,.trainerNextMobileHeader)) {
+  background: #f2f2f7 !important;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(h1,h2,h3)) {
+  color: #1c1c1e;
+  letter-spacing: -.4px;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextDesktopPageHead h1) { font-size: 28px; font-weight: 700; letter-spacing: -.8px; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextPanel,.trainerNextMetric,.trainerNextClientHeader,.trainerClientWorkSummary,.trainerClientOverviewCard,.trainerCabinetHero,.trainerCabinetStats article,.trainerNutritionAnalytics,.trainerNutritionPlan,.trainerNextSubscriptionCard,.trainerImmediateActionsSection)) {
+  background: #fff !important;
+  border-color: rgba(60,60,67,.12) !important;
+  border-radius: 16px !important;
+  box-shadow: none !important;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextMetric,.trainerCabinetStats article)) { padding: 14px 12px; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextMetric strong,.trainerCabinetStats strong)) { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextAvatar,.trainerCabinetWorkspaceIcon)) {
+  background: #efeff4 !important;
+  color: #636366 !important;
+  box-shadow: none !important;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextPrimary,.trainerClientProgramEditButton)) {
+  min-height: 46px;
+  border-radius: 12px !important;
+  background: #3f73b8 !important;
+  border-color: #3f73b8 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  font-weight: 600;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextSecondary,.trainerNextSearch,.trainerClientFilters)) {
+  background: #efeff4;
+  border-color: rgba(60,60,67,.12);
+  box-shadow: none;
+  border-radius: 12px;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerMessageFilters,.trainerClientFilters)) { flex-wrap: wrap; gap: 6px; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerMessageFilters,.trainerClientFilters) button) {
+  min-height: 44px;
+  border-radius: 10px;
+  color: #636366;
+  background: #efeff4;
+  border-color: transparent;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerMessageFilters,.trainerClientFilters) button:is(.active,[aria-pressed="true"])) {
+  background: #fff !important;
+  color: #3c6faa !important;
+  border-color: rgba(60,60,67,.12) !important;
+  box-shadow: 0 1px 3px #1c1c1e08;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientTable > button) {
+  background: #fff !important;
+  border-color: rgba(60,60,67,.12) !important;
+  box-shadow: none !important;
+  border-radius: 14px;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientHeader) { padding: 17px; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientHeader h1) { font-size: 23px; font-weight: 680; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientHeaderActions button) {
+  min-height: 44px;
+  border-radius: 11px !important;
+  background: #efeff4 !important;
+  border-color: transparent !important;
+  color: #3c6faa !important;
+  box-shadow: none !important;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientTabs) {
+  background: #e6e6ec !important;
+  border: 0;
+  border-radius: 12px;
+  padding: 3px;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientTabs button) { border-radius: 9px; color: #636366; box-shadow: none; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientTabs button.active) {
+  background: #fff !important;
+  color: #3c6faa !important;
+  border-color: transparent !important;
+  box-shadow: 0 1px 3px #1c1c1e0c;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerCabinetWorkspaceLinks) { gap: 0; border-radius: 16px; overflow: hidden; background: #fff; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerCabinetWorkspaceLinks button) {
+  min-height: 72px;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(60,60,67,.12) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  transform: none !important;
+}
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerCabinetWorkspaceLinks button:last-child) { border-bottom: 0 !important; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerCabinetWorkspaceCopy strong) { font-size: 14px; font-weight: 600; white-space: normal; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerCabinetWorkspaceIcon) { width: 36px; height: 36px; border-radius: 10px; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerImmediateActionsSection) { background: linear-gradient(120deg,#fff,#eef3fa) !important; padding: 16px; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerImmediateActionsHead > div > span) { color: #3c6faa; }
+:global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerImmediateActionsList article) { border-color: rgba(60,60,67,.12); border-radius: 12px; }
+
+/* Portaled trainer sheets retain the opt-in URL boundary. */
+:global(html[data-trainer-variant="v2"] [data-trainer-modal-surface="true"]),
+:global(html[data-trainer-variant="v2"] :is(.trainerWorkoutEditorModal,.trainerClientActionSheet,.trainerProgramAssignmentModal)) {
+  --tn-page: #f2f2f7;
+  --tn-surface: #fff;
+  --tn-line: rgba(60,60,67,.12);
+  --tn-text: #1c1c1e;
+  --tn-muted: #636366;
+  --tn-purple: #3c6faa;
+  --tn-purple-strong: #3f73b8;
+  --tn-purple-soft: #eef3fa;
+  --tn-purple-wash: #f2f2f7;
+  background: #fff !important;
+  border-color: rgba(60,60,67,.12) !important;
+  color: #1c1c1e;
+  box-shadow: 0 20px 70px #1c1c1e24 !important;
+}
+:global(html[data-trainer-variant="v2"] [data-trainer-modal-surface="true"] :is(input,select,textarea)) { accent-color: #3f73b8; }
+:global(html[data-trainer-variant="v2"] [data-trainer-modal-footer="true"]) { background: #fff !important; border-color: rgba(60,60,67,.12) !important; }
+
+/* Program selectors are stable semantic attributes rather than CSS hash matches. */
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot) [data-trainer-constructor]) {
+  --purple: #3f73b8;
+  --purple-soft: #eef3fa;
+  --ink: #1c1c1e;
+  --muted: #636366;
+  --line: rgba(60,60,67,.12);
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot) [data-trainer-constructor] [data-constructor-surface]) { border-radius: 14px; box-shadow: none; background: #fff; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot) [data-trainer-constructor] button) { box-shadow: none; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot) [data-trainer-constructor] [data-constructor-primary]) { background: #3f73b8 !important; border-color: #3f73b8; color: #fff; box-shadow: none; }
+
+@media(min-width:700px) {
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextDesktopDock) { background: #fff !important; border-color: rgba(60,60,67,.12) !important; box-shadow: 0 4px 18px #1c1c1e0a !important; border-radius: 16px; backdrop-filter: none; }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextDesktopDock button.active) { background: #eef3fa !important; color: #3c6faa !important; }
+}
+@media(max-width:699px) {
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot) {
+    width: min(402px,100%);
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    --trainer-mobile-nav-height: calc(60px + env(safe-area-inset-bottom,0px));
+    --trainer-mobile-nav-bottom: 0px;
+    --trainer-mobile-nav-width: min(402px,100vw);
+    --trainer-mobile-nav-radius: 0px;
+    --trainer-mobile-nav-clearance: calc(76px + env(safe-area-inset-bottom,0px));
+  }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot::after) { height: var(--trainer-mobile-nav-height); border-radius: 0; background: #fff; box-shadow: none; }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextMobileHeader) {
+    position: sticky;
+    top: 0;
+    min-height: calc(54px + env(safe-area-inset-top,0px));
+    padding-top: env(safe-area-inset-top,0px);
+    border-bottom: 1px solid rgba(60,60,67,.12);
+    border-radius: 0;
+    backdrop-filter: none !important;
+    box-shadow: none;
+  }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextMobileTitle) { font-size: 25px; font-weight: 700; letter-spacing: -.7px; color: #1c1c1e; text-align: left; }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextMobileNav,.trainerNextClientMobileNav)) {
+    bottom: 0 !important;
+    width: min(402px,100vw) !important;
+    max-width: 100vw !important;
+    min-height: var(--trainer-mobile-nav-height);
+    height: var(--trainer-mobile-nav-height);
+    padding: 6px 7px max(6px,env(safe-area-inset-bottom,0px)) !important;
+    border: 0 !important;
+    border-top: 1px solid rgba(60,60,67,.12) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextMobileNav,.trainerNextClientMobileNav) button) { min-height: 44px; background: transparent !important; color: #636366; border-radius: 9px; box-shadow: none !important; font-size: 10px; }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot :is(.trainerNextMobileNav,.trainerNextClientMobileNav) button:is(.active,[aria-current="page"])) { color: #3c6faa !important; font-weight: 650; }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextNavIcon) { background: transparent !important; box-shadow: none !important; }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerCabinetWorkspaceLinks) { grid-template-columns: minmax(0,1fr); }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerCabinetHero) { padding: 17px 14px; }
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot .trainerNextClientHeader) { padding: 14px; gap: 11px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  :global(html[data-trainer-variant="v2"] .trainerNextRoot button) { transition: none; }
+}
+
+:global(html[data-trainer-variant="v2"] .trainerNextRoot button:disabled) {opacity:.45}

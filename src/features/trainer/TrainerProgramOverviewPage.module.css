@@ -885,3 +885,21 @@
     margin-bottom: 12px;
   }
 }
+
+/* Temporary trainer comparison style, opt-in by URL. */
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .root {color:#1c1c1e;padding-top:12px}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .section {border-color:rgba(60,60,67,.12);border-radius:16px}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField {background:#efeff4;border-color:transparent;border-radius:12px;color:#636366}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .addButton,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions .prepareAction {background:#3f73b8;border-color:#3f73b8;border-radius:12px;color:white;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card {min-height:240px;border-color:rgba(60,60,67,.12);background:white;box-shadow:none;transform:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card.selected {border-color:#3f73b8;background:#fff;box-shadow:0 0 0 1px #3f73b8}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle > i,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats span {background:#efeff4;border-color:transparent;color:#636366}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats svg {color:#636366}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedMark {background:#3f73b8;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions {background:#fff;border-color:rgba(60,60,67,.12)}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions :is(.editAction,.copyAction) {background:#efeff4;border-color:transparent;color:#3c6faa;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .formatBadge {background:#efeff4;border-color:transparent;color:#636366}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .statusBadge {color:#237a42;background:#edf8f0;border-color:transparent}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer {background:#fff;border-color:rgba(60,60,67,.12)}

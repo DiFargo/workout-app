@@ -658,9 +658,9 @@ export default function TrainerProgramConstructor({
   }
 
   return (
-    <section className={`${styles.constructor}${embeddedInModal ? ` ${styles.embeddedInModal}` : ""}`}>
-      <header className={styles.programBar}>
-        <div className={styles.programIcon}><CalendarDays size={25} /></div>
+    <section data-trainer-constructor="true" className={`${styles.constructor}${embeddedInModal ? ` ${styles.embeddedInModal}` : ""}`}>
+      <header data-constructor-surface="true" className={styles.programBar}>
+        <div data-constructor-primary="true" className={styles.programIcon}><CalendarDays size={25} /></div>
         <label className={styles.programName}>
           <span>Название программы</span>
           <span className={styles.nameInputRow}>
@@ -670,7 +670,7 @@ export default function TrainerProgramConstructor({
         {showProgramActions ? (
           <div className={styles.programActions} data-trainer-modal-footer="true">
             <button className={styles.deleteButton} type="button" onClick={onDeleteProgram}><Trash2 size={17} />Удалить</button>
-            <button className={styles.saveButton} type="button" onClick={() => onSaveProgram()}><Save size={17} />Сохранить</button>
+            <button data-constructor-primary="true" className={styles.saveButton} type="button" onClick={() => onSaveProgram()}><Save size={17} />Сохранить</button>
           </div>
         ) : null}
       </header>

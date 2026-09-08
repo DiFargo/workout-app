@@ -423,3 +423,17 @@
   .dailyJournalReviewed,
   .dailyJournalRecorded { grid-column: 4; justify-self: start; padding-right: 0; }
 }
+/* /v2 only: keep the journal's existing action centre and event handling. */
+:global(html[data-trainer-variant="v2"]) .immediateActionsSection{background:linear-gradient(120deg,#fff,#eef3fa);border-color:rgba(60,60,67,.12);border-radius:16px;padding:16px}
+:global(html[data-trainer-variant="v2"]) .dailyJournalSection{background:#fff;border-color:rgba(60,60,67,.12);border-radius:16px;padding:16px}
+:global(html[data-trainer-variant="v2"]) .immediateActionsHead span,
+:global(html[data-trainer-variant="v2"]) .dailyJournalHead span{color:#3c6faa;font-weight:600;letter-spacing:.035em}
+:global(html[data-trainer-variant="v2"]) .immediateActionsHead>strong{background:#3f73b8}
+:global(html[data-trainer-variant="v2"]) .immediateActionCard{background:#fff;border-color:rgba(60,60,67,.12);border-radius:12px;box-shadow:none}
+:global(html[data-trainer-variant="v2"]) .immediateActionCta{color:#3c6faa}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button{min-height:44px;border-radius:10px;background:#efeff4;color:#636366;border-color:transparent}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active{background:#eef3fa;color:#3c6faa;border-color:rgba(60,60,67,.12)}
+:global(html[data-trainer-variant="v2"]) .dailyJournalEvent{border-color:rgba(60,60,67,.12);box-shadow:none}
+:global(html[data-trainer-variant="v2"]) .dailyJournalEventAction{color:#3c6faa}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button strong{background:#efeff4;color:#636366}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active strong{background:#3f73b8;color:#fff}

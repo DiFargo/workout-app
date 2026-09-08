@@ -1231,3 +1231,33 @@
     padding: 0 10px 14px;
   }
 }
+/* The comparison URL changes presentation, never the program model. */
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor{--purple:#3f73b8;--purple-soft:#eef3fa;--ink:#1c1c1e;--muted:#636366;--line:rgba(60,60,67,.12)}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .programIcon,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .saveButton{background:#3f73b8;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .programBar,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .daysPanel,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .dayEditorSurface{border-color:rgba(60,60,67,.12);border-radius:16px;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .programActions button{min-height:44px;border-radius:11px}
+
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .dayCard.selectedDay {background:#eef3fa;border-color:#3f73b8;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .dayCard > svg,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .dayCard small i {color:#636366!important}
+
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .dayEditorSurface,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .dayEditorModalHeader {background:#f2f2f7!important;border-color:rgba(60,60,67,.12)!important}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .dayNavigatorButton,
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .returnToDaysButton {background:#efeff4!important;border-color:transparent!important;color:#3c6faa!important;box-shadow:none!important}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .exerciseCard.selectedExercise {background:#eef3fa!important;box-shadow:inset 3px 0 #3f73b8!important}
+
+@media(max-width:620px) {
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .exerciseRow {grid-template-columns:16px 32px minmax(0,1fr)!important;grid-template-areas:"order media name" "metrics metrics metrics" "actions actions actions"!important;gap:8px!important;padding:10px!important}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .exerciseMedia {width:32px;height:32px}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .exerciseName {width:100%;min-width:0;text-align:left}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .exerciseName strong {font-size:12px;line-height:1.35;word-break:normal;overflow-wrap:break-word}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .exerciseActions {justify-content:flex-end}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .exerciseActions button {width:44px;height:44px}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .dayStats > span {min-width:0!important;padding:5px!important;grid-template-columns:1fr!important;text-align:center}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .dayStats svg {display:none}
+  :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .constructor .dayEditorTitle > span {font-size:8px;letter-spacing:0}
+}

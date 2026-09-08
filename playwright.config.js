@@ -10,6 +10,7 @@ const e2eFirebaseEnvironment = {
   VITE_FIREBASE_APP_ID: "1:000000000000:web:e2e"
 };
 const reuseExistingE2eServer = process.env.PW_REUSE_SERVER === "1";
+const e2ePort = Number(process.env.PW_PORT || 4174);
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -19,7 +20,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {
-    baseURL: "http://127.0.0.1:4174",
+    baseURL: `http://127.0.0.1:${e2ePort}`,
     trace: "retain-on-failure"
   },
   projects: [
@@ -39,8 +40,8 @@ export default defineConfig({
     }
   ],
   webServer: {
-    command: "node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port 4174 --strictPort",
-    url: "http://127.0.0.1:4174",
+    command: `node ./node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${e2ePort} --strictPort`,
+    url: `http://127.0.0.1:${e2ePort}`,
     env: {
       ...process.env,
       ...e2eFirebaseEnvironment
