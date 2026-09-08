@@ -1241,6 +1241,7 @@ function ClientOverview({
         onOpenMessage={onOpenMessage}
       />
       <ClientWorkSummary
+        client={client}
         workouts={workouts}
         history={history}
         snapshot={snapshot}
@@ -4750,6 +4751,7 @@ function ClientNotifications({
 }
 
 function ClientWorkSummary({
+  client,
   workouts = [],
   history = [],
   snapshot,
@@ -4814,11 +4816,15 @@ function ClientWorkSummary({
   ];
 
   if (isTrainerV2Path(window.location.pathname)) {
-    const week = buildTrainerClientProgressDashboard({ nutritionDays, nutritionGoals, days: 7 }).nutrition;
+    const timeline = buildTrainerClientProgramTimeline({ workouts: workouts.filter(workout => !isTrainerClientBasicWorkout(workout)), history, clientProfile: client });
+    const assignment = timeline.find(item => item.status === "current") || timeline.find(item => item.status === "future");
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const cutoff = new Date(today); cutoff.setDate(cutoff.getDate() - 7);
+    const trackedDays = nutritionDays.filter(day => { const date = getNutritionDayDate(day.date); return date && date >= cutoff && date < today && Number(day.totals?.calories) > 0; }).length;
     const weight = latestMeasurement ? getMeasurementFieldValue(latestMeasurement, MEASUREMENT_FIELDS[0]) : null;
     cards.splice(0, cards.length,
-      { id: "workout", target: "workouts", icon: CalendarDays, label: "Тренировки", value: workoutCompletion, detail: snapshot?.lastWorkoutAt ? `Последняя — ${formatCompactDate(snapshot.lastWorkoutAt)}` : "Пока нет завершённых тренировок" },
-      { id: "nutrition", target: "nutrition", icon: Utensils, label: "Дневник питания", value: `${week.trackedDays} из 7 дней`, detail: "За последнюю неделю" },
+      { id: "workout", target: "workouts", icon: CalendarDays, label: "Тренировки", value: assignment ? `${assignment.completedCount || 0} из ${assignment.workoutCount}` : "Нет программы", detail: snapshot?.lastWorkoutAt ? `Последняя — ${formatCompactDate(snapshot.lastWorkoutAt)}` : "Пока нет завершённых тренировок" },
+      { id: "nutrition", target: "nutrition", icon: Utensils, label: "Дневник питания", value: `${trackedDays} из 7 дней`, detail: "За последнюю неделю" },
       { id: "measurements", target: "bodyProgress", icon: Ruler, label: "Последний вес", value: weight !== null && weight !== undefined ? `${weight} кг` : "Нет записи", detail: latestMeasurement ? formatCompactDate(getMeasurementDate(latestMeasurement)) : "Клиент ещё не добавлял замеры" }
     );
   }
