@@ -1221,6 +1221,7 @@ function ClientOverview({
   onOpenTasks,
   onOpenFeedback,
   onOpenMessage,
+  onOpenMessages,
   onOpenExerciseProgress
 }) {
   return (
@@ -1247,6 +1248,7 @@ function ClientOverview({
         <h2>Работа с клиентом</h2>
         <ClientSectionLaunchButton icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
         <ClientSectionLaunchButton icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
+        <ClientSectionLaunchButton icon={MessageSquare} title="Сообщения" description="Переписка с клиентом" onClick={onOpenMessages} />
       </aside> : null}
       <TrainerClientProgressDashboard
         key={client?.id || "client-progress"}
@@ -5366,7 +5368,7 @@ function TrainerClientDetail({
               <span>Задания<br /> клиенту</span>
             </button>
           ) : null}
-          <button
+          {!isTrainerV2Path(window.location.pathname) ? <button
             className="trainerNextClientHeaderUtilityButton"
             type="button"
             onClick={() => setUtilitySheet("messages")}
@@ -5374,7 +5376,7 @@ function TrainerClientDetail({
           >
             <MessageSquare size={16} />
             <span>Сообщения</span>
-          </button>
+          </button> : null}
           <button
             className="trainerNextClientHeaderUtilityButton trainerNextClientActionsButton"
             type="button"
@@ -5437,6 +5439,7 @@ function TrainerClientDetail({
           onTabChange={onTabChange}
           onOpenCalendar={() => setUtilitySheet("calendar")}
           onOpenTasks={() => setUtilitySheet("tasks")}
+          onOpenMessages={() => setUtilitySheet("messages")}
           onOpenFeedback={openMessageFromNote}
           onOpenMessage={() => openNewMessage("notification")}
           onOpenExerciseProgress={() => setUtilitySheet("exerciseProgress")}

@@ -57,7 +57,7 @@ for (const width of [393,768,1366]) {
     const summaryTabs=page.locator('.trainerNextClientTabs');
     await (await summaryTabs.isVisible()?summaryTabs:page.locator('.trainerNextClientMobileNav')).getByRole('button',{name:'Сводка',exact:true}).click();
     // Open read-only utility sheets; no messages are sent and no client data is saved.
-    for (const [button,title] of [['Задания клиенту','Задания клиенту'],['Сообщения клиента','Сообщения'],['Открыть абонемент клиента','Календарь тренировок']]) {
+    for (const [button,title] of [['Задания клиенту','Задания клиенту'],['Сообщения Переписка с клиентом','Сообщения'],['Открыть абонемент клиента','Календарь тренировок']]) {
       await page.getByRole('button',{name:button === 'Задания клиенту' ? /^Задания клиенту/ : button,exact:button !== 'Задания клиенту'}).click();
       const dialog=page.getByRole('dialog',{name:title,exact:true});
       await expect(dialog).toBeVisible();

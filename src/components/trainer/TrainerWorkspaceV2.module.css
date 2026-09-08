@@ -802,3 +802,10 @@
 :global(html[data-trainer-variant="v2"] body .trainerSubscriptionCalendarUnified .trainerNotificationCalendarGrid button) {display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;min-height:52px!important;padding:4px 1px!important}
 :global(html[data-trainer-variant="v2"] body .trainerSubscriptionCalendarUnified .trainerNotificationDayBadges) {position:static!important;transform:none!important;display:flex!important;justify-content:center!important;gap:2px!important;margin:0!important;width:auto!important}
 :global(html[data-trainer-variant="v2"] body .trainerSubscriptionCalendarUnified .trainerNotificationDayBadges i) {white-space:nowrap!important;flex-shrink:0!important}
+
+@media(min-width:1100px) {
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextClientOverview > .trainerClientOverviewTools) {grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(min-width:761px) and (max-width:1099px) {
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextClientOverview > .trainerClientOverviewTools) {grid-template-columns:1fr!important}
+}
