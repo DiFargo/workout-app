@@ -85,9 +85,13 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.locator('.trainerClientWorkoutList > summary').click();
     await page.locator('.trainerClientWorkoutList .trainerClientDisclosure > summary').first().click();
     expect(await page.locator('.trainerWorkoutRowLabel').first().evaluate(el => getComputedStyle(el).transform)).toBe('none');
-    await expect(page.locator('.trainerClientWorkoutList')).toContainText('План и факт');
-    await expect(page.locator('.trainerClientWorkoutList')).toContainText('План:');
-    await expect(page.locator('.trainerClientWorkoutList')).toContainText('Факт:');
+    await expect(page.locator('.trainerClientWorkoutList')).toContainText('Результат тренировки');
+    const exercise = page.locator('.trainerClientWorkoutList li details').first();
+    await expect(exercise).not.toHaveAttribute('open');
+    await exercise.locator('summary').click();
+    await expect(exercise).toContainText('Подход');
+    await expect(exercise).toContainText('Факт');
+    await exercise.locator('summary').click();
     await page.screenshot({path: `artifacts/workout-inline-${width}.png`});
     await expect(page.locator('.trainerClientWorkoutList li').first()).toBeVisible();
     await page.getByRole('button', { name: 'Открыть тренировку', exact: true }).click();

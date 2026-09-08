@@ -617,7 +617,7 @@ test("client workout plan is compact and offers a two-path workout review decisi
   assert.doesNotMatch(plan, dynamicsLabel);
   assert.doesNotMatch(plan, workoutDynamicsTitle);
   assert.match(plan, /Открыть разбор и историю тренировок/);
-  assert.match(plan, /title="Разбор и история тренировок"/);
+  assert.match(plan, /title=\{isTrainerV2Path\(window\.location\.pathname\) \? "История тренировок" : "Разбор и история тренировок"\}/);
   assert.match(plan, /<ClientWorkoutReviewPanel[\s\S]*?<ClientWorkoutHistoryBlock history=\{history\} showAll/);
   assert.match(workspace, /function ClientWorkoutHistoryBlock\(\{ history = \[\], showAll = false \}\)/);
   assert.match(plan, /<TrainerWorkoutReviewDecisionModal/);

@@ -14,10 +14,23 @@
 .metrics span {display:flex;gap:8px;align-items:baseline}
 .metrics b {color:#1c1c1e;font-size:14px;font-variant-numeric:tabular-nums}
 .exercises {list-style:none!important;margin:10px 0!important;padding:0!important}
-.exercises li {display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);gap:6px 16px;padding:10px 0;border-bottom:1px solid rgba(60,60,67,.1);font-size:13px;line-height:1.5}
-.exercises strong {color:#1c1c1e;font-weight:500}
-.exercises span {color:#636366;overflow-wrap:anywhere}
+.exercises li {padding:0;border-bottom:1px solid rgba(60,60,67,.1)}
+.exerciseToggle {display:flex!important;align-items:center;gap:12px!important;list-style:none;cursor:pointer;min-height:64px!important;padding:12px 0!important}
+.exerciseToggle::-webkit-details-marker {display:none}
+.exerciseToggle:focus-visible {outline:2px solid #3f73b8;outline-offset:2px;border-radius:8px}
+.number {display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#f2f2f7;color:#636366;font-size:12px;flex-shrink:0}
+.exerciseInfo {display:grid;gap:3px;flex:1;min-width:0}
+.exerciseInfo strong {font-size:14px;font-weight:600;line-height:1.4;color:#1c1c1e}
+.exerciseInfo > span {font-size:13px;color:#636366;line-height:1.4;overflow-wrap:anywhere}
+.matched,.changed,.missing {display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;white-space:nowrap}
+.matched {color:#237a42}.changed {color:#996000}.missing {color:#636366}
+.exerciseChevron {flex-shrink:0;color:#636366}
+.exercise[open] > summary .exerciseChevron {transform:rotate(180deg)}
+.setDetails {margin:0 0 12px 40px;padding:8px 12px;background:#f2f2f7;border-radius:10px}
+.setRow {display:grid;grid-template-columns:50px 1fr 1fr;gap:8px;padding:7px 0;font-size:13px;color:#1c1c1e;line-height:1.4}
+.setRow:first-child {color:#636366;font-size:12px;border-bottom:1px solid rgba(60,60,67,.1)}
+.commentLabel {display:block;font-size:12px;color:#636366;margin-bottom:4px}
 .comment {background:#edf3fc;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5}
 .comment p {margin:4px 0 0;white-space:pre-wrap}
 .note {font-size:13px;color:#636366;margin:0 0 8px}
-@media(max-width:600px) {.exercises li {grid-template-columns:1fr}.metrics {display:grid;grid-template-columns:1fr 1fr;gap:8px}.metrics span {display:grid;gap:2px}.heading {gap:8px}}
+@media(max-width:600px) {.exerciseToggle {gap:8px!important;flex-wrap:wrap}.exerciseInfo {flex-basis:calc(100% - 64px)}.exerciseToggle small {margin-left:36px}.exerciseChevron {margin-left:auto}.setDetails {margin-left:0}.setRow {grid-template-columns:42px 1fr 1fr;font-size:12px}.metrics {display:grid;grid-template-columns:1fr 1fr;gap:8px}.metrics span {display:grid;gap:2px}.heading {gap:8px}}
