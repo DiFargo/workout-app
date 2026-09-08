@@ -264,3 +264,6 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .macros progress::-webkit-progress-bar {background:#efeff4;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .macros progress::-webkit-progress-value {background:#7c94b0;border-radius:4px;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .macros progress::-moz-progress-bar {background:#7c94b0;border-radius:4px;}
+
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerClientMainColumn) {width:100%!important;align-self:stretch!important;align-items:stretch!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerClientMainColumn > section) {width:100%!important;max-width:none!important;}
