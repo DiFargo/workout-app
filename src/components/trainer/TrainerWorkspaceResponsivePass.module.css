@@ -98,11 +98,11 @@
   gap: 7px;
   padding: 7px 13px;
   margin: 0;
-  border: 1px solid #d6caee;
+  border: 1px solid var(--trainer-v2-line, #d6caee);
   border-radius: 13px;
   color: var(--tn-purple-strong);
   background: var(--tn-purple-soft);
-  box-shadow: 0 6px 14px rgba(86, 68, 126, 0.08);
+  box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 86 68 126) / 0.08);
   font-size: 13px;
   font-weight: 730;
   line-height: 1.18;
@@ -145,7 +145,7 @@
   z-index: 3;
   min-width: 0;
   padding: 10px 16px max(12px, env(safe-area-inset-bottom));
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--trainer-v2-line, #efebf3);
   background: #fbfafc;
 }
 
@@ -201,7 +201,7 @@
   justify-content: space-between;
   gap: 14px;
   padding: 15px 70px 14px 18px;
-  border-bottom: 1px solid #efebf3;
+  border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
   background: #fbfafc;
 }
 
@@ -212,7 +212,7 @@
 }
 
 :global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"] span) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 10px;
   font-weight: 760;
   letter-spacing: .06em;
@@ -220,14 +220,14 @@
 
 :global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"] h2) {
   margin: 0;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 22px;
   line-height: 1.12;
 }
 
 :global(.trainerWorkoutHistoryModal > [data-trainer-modal-header="true"] p) {
   margin: 3px 0 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -524,7 +524,7 @@
     border: 1px solid var(--tn-line);
     border-radius: 18px;
     background: var(--tn-surface);
-    box-shadow: 0 8px 18px rgba(56, 44, 78, 0.06);
+    box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 56 44 78) / 0.06);
   }
 
   :global(.trainerNextRoot) :global(.trainerNextClientTable > button:last-child) {
@@ -663,7 +663,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 14px 68px 14px 18px;
-  border-bottom: 1px solid #efebf3;
+  border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
   background: #fbfafc;
 }
 
@@ -905,7 +905,7 @@
     justify-content: center;
     gap: 7px;
     padding: 8px 10px;
-    border: 1px solid #e4deec;
+    border: 1px solid var(--trainer-v2-line, #e4deec);
     border-radius: 13px;
     color: var(--tn-muted);
     background: #fff;
@@ -916,7 +916,7 @@
   }
 
   :global(.trainerNextRoot) :global(.trainerNextClientContextActions button.active) {
-    border-color: #d8ccec;
+    border-color: var(--trainer-v2-line, #d8ccec);
     color: var(--tn-purple-strong);
     background: var(--tn-purple-soft);
   }
@@ -1080,9 +1080,9 @@
   gap: 13px;
   margin-bottom: 12px;
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 18px;
-  box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+  box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.045);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeader .trainerNextAvatar.large) {
@@ -1125,7 +1125,7 @@
   gap: 3px;
   margin: 0 0 14px;
   padding: 4px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 14px;
   background: #fff;
   box-shadow: none;
@@ -1143,7 +1143,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button:focus-visible) {
-  outline: 2px solid rgba(143, 122, 200, 0.48);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / 0.48);
   outline-offset: 2px;
 }
 
@@ -1156,7 +1156,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkSummary article) {
   min-height: 84px;
   padding: 13px 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 16px;
   box-shadow: none;
 }
@@ -1182,7 +1182,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextResultCard),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextActivityCard) {
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 16px;
   box-shadow: none;
 }
@@ -1204,7 +1204,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutHistoryBlock),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientWorkoutReviewPanel) {
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 18px;
   box-shadow: none;
 }
@@ -1275,7 +1275,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionCurrentPlan) {
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 18px;
   box-shadow: none;
 }
@@ -1333,7 +1333,7 @@
   gap: 8px;
   margin-bottom: 10px;
   padding: 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 14px;
 }
 
@@ -1367,8 +1367,8 @@
   justify-items: center;
   gap: 7px;
   border-radius: 10px;
-  color: #8a8493;
-  background: #f5f2f7;
+  color: var(--trainer-v2-muted, #8a8493);
+  background: var(--trainer-v2-surface, #f5f2f7);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoMediaPlaceholder svg) {
@@ -1394,7 +1394,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed > div) {
   gap: 0;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 14px;
   background: #fbfafc;
 }
@@ -1403,7 +1403,7 @@
   min-height: 72px;
   padding: 12px;
   border: 0;
-  border-right: 1px solid #efebf3;
+  border-right: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 0;
   background: transparent;
 }
@@ -1511,7 +1511,7 @@
   :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed article) {
     min-height: 0;
     border-right: 0;
-    border-bottom: 1px solid #efebf3;
+    border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
   }
 
   :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerMeasurementCollapsed article:last-child) {
@@ -1528,9 +1528,9 @@
   margin: 0 0 16px;
   padding: 4px;
   overflow: hidden;
-  border-color: #e0d6f1;
+  border-color: var(--trainer-v2-line, #e0d6f1);
   border-radius: 16px;
-  background: #f3eef9;
+  background: var(--trainer-v2-surface, #f3eef9);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button) {
@@ -1544,7 +1544,7 @@
   padding: 0 14px;
   border: 1px solid transparent;
   border-radius: 12px;
-  color: #6e6876;
+  color: var(--trainer-v2-muted, #6e6876);
   background: transparent;
   font-weight: 720;
 }
@@ -1561,19 +1561,19 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button[aria-pressed="true"]) {
-  border-color: #806bb6;
-  background: #8f7ac8;
+  border-color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
-  box-shadow: 0 7px 14px rgba(128, 107, 182, 0.2);
+  box-shadow: 0 7px 14px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.2);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionPeriodButtons button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionPeriodButtons button[aria-pressed="true"]),
 :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button.active),
 :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button[aria-pressed="true"]) {
-  border-color: #8f7ac8;
-  background: #eee8fa;
-  color: #806bb6;
+  border-color: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--trainer-v2-surface, #eee8fa);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs) {
@@ -1585,16 +1585,16 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button) {
   min-width: 124px;
   min-height: 40px;
-  border-color: #d8cdef;
+  border-color: var(--trainer-v2-line, #d8cdef);
   background: #ffffff;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerPhotoViewTabs button[aria-pressed="true"]) {
-  border-color: #8f7ac8;
-  background: #eee8fa;
-  box-shadow: inset 0 0 0 1px rgba(143, 122, 200, 0.12);
+  border-color: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--trainer-v2-surface, #eee8fa);
+  box-shadow: inset 0 0 0 1px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.12);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTaskButton) {
@@ -1632,7 +1632,7 @@
   width: 100%;
   gap: 6px;
   padding: 5px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 16px;
   background: #ffffff;
 }
@@ -1644,7 +1644,7 @@
   border: 1px solid transparent;
   border-radius: 11px;
   background: transparent;
-  color: #6f6977;
+  color: var(--trainer-v2-muted, #6f6977);
   font: inherit;
   font-size: 13px;
   font-weight: 740;
@@ -1653,13 +1653,13 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button[aria-pressed="true"]) {
-  border-color: #d8cdef;
-  background: #eee8fa;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #d8cdef);
+  background: var(--trainer-v2-surface, #eee8fa);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientSectionTabs button:focus-visible) {
-  outline: 2px solid rgba(143, 122, 200, 0.48);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / 0.48);
   outline-offset: 2px;
 }
 
@@ -1669,8 +1669,8 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded) {
   margin: 0;
-  border-color: #e5dfeb;
-  background: #f5f2f7;
+  border-color: var(--trainer-v2-line, #e5dfeb);
+  background: var(--trainer-v2-surface, #f5f2f7);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded button) {
@@ -1680,8 +1680,8 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerClientCalendarTabsEmbedded button[aria-pressed="true"]) {
-  border-color: #d8cdef;
-  background: #eee8fa;
+  border-color: var(--trainer-v2-line, #d8cdef);
+  background: var(--trainer-v2-surface, #eee8fa);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientNotifications) {
@@ -1699,7 +1699,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription header span) {
   display: block;
   margin-bottom: 4px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 11px;
   font-weight: 780;
   letter-spacing: .04em;
@@ -1707,14 +1707,14 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:first-child > strong) {
   display: block;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 18px;
   line-height: 1.2;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:first-child > p) {
   margin: 5px 0 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -1735,16 +1735,16 @@
   height: 44px;
   flex: 0 0 52px;
   place-items: center;
-  border: 1px solid #ded6eb;
+  border: 1px solid var(--trainer-v2-line, #ded6eb);
   border-radius: 14px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   background: #ffffff;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel > header > div:last-child > b) {
   min-width: 0;
   flex: 1 1 auto;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 16px;
   font-weight: 800;
   text-align: center;
@@ -1753,15 +1753,15 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.subscriptionRange) {
-  border-color: #d8cdef;
-  background: #f4f0fb;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #d8cdef);
+  background: var(--trainer-v2-surface, #f4f0fb);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionStart),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionEnd) {
-  border-color: #8f7ac8;
-  background: #8f7ac8;
+  border-color: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
 }
 
@@ -1788,14 +1788,14 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.subscription) {
-  border-color: #8f7ac8;
-  background: #eee8fa;
+  border-color: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--trainer-v2-surface, #eee8fa);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.plannedWorkout) {
-  border-color: #9d89d3;
-  background: #e4daf6;
-  color: #6e59a9;
+  border-color: var(--trainer-v2-accent, #9d89d3);
+  background: var(--trainer-v2-surface, #e4daf6);
+  color: var(--trainer-v2-accent, #6e59a9);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationCalendarGrid button.completed) {
@@ -1829,7 +1829,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel .trainerNotificationDayBadges i.plannedWorkout) {
-  color: #654b9d;
+  color: var(--trainer-v2-accent, #654b9d);
   background: #ffffff;
 }
 
@@ -1858,8 +1858,8 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.plannedWorkout) {
-  border-color: #9d89d3;
-  background: #e4daf6;
+  border-color: var(--trainer-v2-accent, #9d89d3);
+  background: var(--trainer-v2-surface, #e4daf6);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i.completed) {
@@ -1896,7 +1896,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend span) {
   gap: 7px;
-  color: #5f596b;
+  color: var(--trainer-v2-muted, #5f596b);
   font-size: 13px;
   font-weight: 650;
   line-height: 1.35;
@@ -1905,7 +1905,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNotificationLegend i) {
   width: 8px;
   height: 8px;
-  border: 1px solid rgba(95, 89, 107, 0.18);
+  border: 1px solid rgb(var(--trainer-v2-accent-rgb, 95 89 107) / 0.18);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields) {
@@ -1913,7 +1913,7 @@
   gap: 12px;
   margin-top: 4px;
   padding-top: 14px;
-  border-top: 1px solid #e9e4ee;
+  border-top: 1px solid var(--trainer-v2-line, #e9e4ee);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange) {
@@ -1921,12 +1921,12 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 16px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 12px;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange b) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-weight: 720;
 }
 
@@ -1955,8 +1955,8 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionRange i.neutral) {
-  color: #625d6a;
-  background: #f0edf2;
+  color: var(--trainer-v2-muted, #625d6a);
+  background: var(--trainer-v2-surface, #f0edf2);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionInputs) {
@@ -1971,7 +1971,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionInputs small) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 12px;
   font-weight: 700;
 }
@@ -1981,10 +1981,10 @@
   width: 100%;
   min-height: 48px;
   padding: 0 13px;
-  border: 1px solid #e5dfeb;
+  border: 1px solid var(--trainer-v2-line, #e5dfeb);
   border-radius: 12px;
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font: inherit;
   font-size: 16px;
 }
@@ -1997,19 +1997,19 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > span) {
-  color: #625d6a;
+  color: var(--trainer-v2-muted, #625d6a);
   font-size: 12px;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > span b) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > label) {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #625d6a;
+  color: var(--trainer-v2-muted, #625d6a);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > label small) {
@@ -2042,8 +2042,8 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerSubscriptionCalendarUnified > header > strong.neutral) {
-  border-color: #e2dfe6;
-  color: #625d6a;
+  border-color: var(--trainer-v2-line, #e2dfe6);
+  color: var(--trainer-v2-muted, #625d6a);
   background: #f5f3f6;
 }
 
@@ -2075,16 +2075,16 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionSummary footer > span + span) {
   padding-left: 10px;
-  border-left: 1px solid #e9e4ee;
+  border-left: 1px solid var(--trainer-v2-line, #e9e4ee);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionEdit),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionCancel) {
   min-height: 38px;
   padding: 0 13px;
-  border: 1px solid #d9cdec;
+  border: 1px solid var(--trainer-v2-line, #d9cdec);
   border-radius: 11px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   background: #ffffff;
   font: inherit;
   font-size: 12px;
@@ -2094,8 +2094,8 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionCancel) {
   margin-left: auto;
-  border-color: #e5dfeb;
-  color: #625d6a;
+  border-color: var(--trainer-v2-line, #e5dfeb);
+  color: var(--trainer-v2-muted, #625d6a);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarSubscriptionFields footer > .trainerCalendarSubscriptionEdit) {
@@ -2107,7 +2107,7 @@
   display: grid;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 16px;
   background: #ffffff;
 }
@@ -2115,7 +2115,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor h2),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription h2) {
   margin: 0;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 18px;
   line-height: 1.2;
 }
@@ -2123,18 +2123,18 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor p),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscription header p) {
   margin: -5px 0 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 13px;
   line-height: 1.45;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor > strong) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 14px;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerCalendarWorkoutEditor > small) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 12px;
 }
 
@@ -2162,7 +2162,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionGrid small) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   font-weight: 680;
 }
@@ -2172,10 +2172,10 @@
   width: 100%;
   min-height: 40px;
   padding: 0 11px;
-  border: 1px solid #e5dfeb;
+  border: 1px solid var(--trainer-v2-line, #e5dfeb);
   border-radius: 10px;
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font: inherit;
   font-size: 13px;
 }
@@ -2187,11 +2187,11 @@
   gap: 12px;
   padding: 11px 12px;
   border-radius: 11px;
-  background: #f5f2f7;
+  background: var(--trainer-v2-surface, #f5f2f7);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerInlineSubscriptionSummary strong) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 13px;
 }
 
@@ -2199,7 +2199,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #5f5967;
+  color: var(--trainer-v2-muted, #5f5967);
   font-size: 12px;
 }
 
@@ -2276,7 +2276,7 @@
   min-height: 212px;
   margin-top: 0;
   padding: 12px 10px 10px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 14px;
   background: #ffffff;
 }
@@ -2413,9 +2413,9 @@
   justify-content: center;
   gap: 6px;
   padding: 6px 11px;
-  border: 1px solid #ded6eb;
+  border: 1px solid var(--trainer-v2-line, #ded6eb);
   border-radius: 12px;
-  color: #5f5968;
+  color: var(--trainer-v2-muted, #5f5968);
   background: #ffffff;
   box-shadow: none;
   cursor: pointer;
@@ -2427,9 +2427,9 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientHeaderUtilityButton:hover) {
-  border-color: #d6caee;
-  color: #806bb6;
-  background: #f7f3fc;
+  border-color: var(--trainer-v2-line, #d6caee);
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #f7f3fc);
 }
 
 @media (max-width: 899px) {
@@ -2486,8 +2486,8 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientSubscriptionStatus.is-frozen) {
-  color: #65606d;
-  background: #f0eef3;
+  color: var(--trainer-v2-muted, #65606d);
+  background: var(--trainer-v2-surface, #f0eef3);
 }
 
 /* Variant A: one calm client workspace. Primary navigation spans the client
@@ -2508,15 +2508,15 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientSetupButton) {
-  border-color: #d9ccef;
-  color: #6d55aa;
-  background: #f3eefc;
+  border-color: var(--trainer-v2-line, #d9ccef);
+  color: var(--trainer-v2-accent, #6d55aa);
+  background: var(--trainer-v2-surface, #f3eefc);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientSetupButton:hover) {
-  border-color: #bba8df;
-  color: #5f4797;
-  background: #ece4fa;
+  border-color: var(--trainer-v2-accent, #bba8df);
+  color: var(--trainer-v2-accent, #5f4797);
+  background: var(--trainer-v2-surface, #ece4fa);
 }
 
 @media (min-width: 900px) {
@@ -2630,9 +2630,9 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   padding: 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 18px;
-  background: #f5f2f7;
+  background: var(--trainer-v2-surface, #f5f2f7);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader) {
@@ -2650,26 +2650,26 @@
   height: 38px;
   place-items: center;
   padding: 0;
-  border: 1px solid #e4ddea;
+  border: 1px solid var(--trainer-v2-line, #e4ddea);
   border-radius: 11px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   background: #ffffff;
   cursor: pointer;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader > button:hover:not(:disabled)) {
-  border-color: #cfc1ec;
-  background: #eee8fa;
+  border-color: var(--trainer-v2-line, #cfc1ec);
+  background: var(--trainer-v2-surface, #eee8fa);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader > button:disabled) {
-  color: #c5becd;
+  color: var(--trainer-v2-muted, #c5becd);
   cursor: default;
   opacity: 0.7;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHeader > strong) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 15px;
   font-weight: 750;
   line-height: 1.2;
@@ -2684,7 +2684,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryWeekdays span) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   font-weight: 700;
   text-align: center;
@@ -2698,31 +2698,31 @@
   justify-items: center;
   gap: 3px;
   padding: 5px 2px;
-  border: 1px solid #e9e4ed;
+  border: 1px solid var(--trainer-v2-line, #e9e4ed);
   border-radius: 12px;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   background: #ffffff;
   cursor: pointer;
   text-align: center;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.has-entry:hover) {
-  border-color: #cfc1ec;
-  background: #faf8fe;
+  border-color: var(--trainer-v2-line, #cfc1ec);
+  background: var(--trainer-v2-surface, #faf8fe);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.is-empty) {
   border-color: transparent;
-  color: #b4aebc;
+  color: var(--trainer-v2-muted, #b4aebc);
   background: transparent;
   cursor: default;
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.active) {
-  border-color: #8f7ac8;
+  border-color: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
-  background: #8f7ac8;
-  box-shadow: 0 6px 14px rgba(128, 107, 182, 0.2);
+  background: var(--trainer-v2-accent, #8f7ac8);
+  box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.2);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button strong) {
@@ -2732,7 +2732,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button small) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 10px;
   font-weight: 650;
   line-height: 1;
@@ -2748,7 +2748,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarHint) {
   margin: 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   line-height: 1.35;
   text-align: center;
@@ -2789,7 +2789,7 @@
     margin-bottom: 14px;
     padding: 18px 20px;
     border-radius: 20px;
-    box-shadow: 0 10px 26px rgba(40, 38, 46, 0.04);
+    box-shadow: 0 10px 26px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.04);
   }
 
   :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientPage.trainerNextClientVariantA .trainerNextClientHeader .trainerNextAvatar.large) {
@@ -2873,7 +2873,7 @@
     border: 1px solid var(--tn-line);
     border-radius: 16px;
     background: var(--tn-surface);
-    box-shadow: 0 6px 16px rgba(56, 44, 78, 0.045);
+    box-shadow: 0 6px 16px rgb(var(--trainer-v2-shadow-rgb, 56 44 78) / 0.045);
   }
 
   :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientsPage .trainerNextClientTable > button:last-child) {
@@ -2881,8 +2881,8 @@
   }
 
   :global(.trainerNextRoot):local(.scope) :global(.trainerNextClientsPage .trainerNextClientTable > button:hover) {
-    border-color: #d5c8ef;
-    box-shadow: 0 10px 20px rgba(56, 44, 78, 0.08);
+    border-color: var(--trainer-v2-line, #d5c8ef);
+    box-shadow: 0 10px 20px rgb(var(--trainer-v2-shadow-rgb, 56 44 78) / 0.08);
     transform: translateY(-1px);
   }
 }

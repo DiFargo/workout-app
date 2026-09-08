@@ -16,7 +16,7 @@
   flex-direction: column;
   overflow: hidden;
   padding: 0;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 22px 64px rgb(31 36 48 / 20%);
@@ -28,7 +28,7 @@
   min-width: 44px;
   height: 44px;
   place-items: center;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 12px;
   background: #fff;
   color: #1f2430;
@@ -87,9 +87,9 @@
 .context > div {
   min-width: 0;
   padding: 13px 14px;
-  border: 1px solid #e7e5ef;
+  border: 1px solid var(--trainer-v2-line, #e7e5ef);
   border-radius: 12px;
-  background: #faf9fe;
+  background: var(--trainer-v2-surface, #faf9fe);
 }
 
 .context strong {
@@ -105,7 +105,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   padding: 16px 24px 20px;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--trainer-v2-line, #efebf3);
   background: #ffffff;
 }
 
@@ -151,10 +151,10 @@
 }
 
 .edit {
-  border: 1px solid #806bb6;
-  background: #806bb6;
+  border: 1px solid var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-accent, #806bb6);
   color: #fff;
-  box-shadow: 0 9px 24px rgb(99 48 245 / 20%);
+  box-shadow: 0 9px 24px var(--trainer-v2-shadow, rgb(99 48 245 / 20%));
 }
 
 .edit small {

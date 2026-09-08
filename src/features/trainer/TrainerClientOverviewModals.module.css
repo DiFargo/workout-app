@@ -8,7 +8,7 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: rgba(40, 38, 46, 0.3);
+  background: rgb(var(--trainer-v2-ink-rgb, 40 38 46) / 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -21,10 +21,10 @@
   flex-direction: column;
   overflow: hidden;
   padding: 0;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 22px;
   background: #ffffff;
-  box-shadow: 0 24px 64px rgba(40, 38, 46, 0.2);
+  box-shadow: 0 24px 64px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.2);
 }
 
 .photoCompareModal {
@@ -38,7 +38,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 18px 20px 14px;
-  border-bottom: 1px solid #efebf3;
+  border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 .header > div,
@@ -55,7 +55,7 @@
 }
 
 .header span {
-  color: #8f7ac8;
+  color: var(--trainer-v2-accent, #8f7ac8);
   font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.06em;
@@ -63,7 +63,7 @@
 
 .header h3 {
   margin: 0;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 22px;
   line-height: 1.16;
 }
@@ -75,8 +75,8 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #28262e;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 26px;
   line-height: 1;
   cursor: pointer;
@@ -96,7 +96,7 @@
 }
 
 .body label > span {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   font-weight: 750;
 }
@@ -108,18 +108,18 @@
   min-width: 0;
   height: 44px;
   padding: 0 13px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 13px;
   outline: none;
-  background: #f5f2f7;
-  color: #28262e;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-ink, #28262e);
   font: inherit;
 }
 
 .body input:focus,
 .body select:focus {
-  border-color: #8f7ac8;
-  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.16);
+  border-color: var(--trainer-v2-accent, #8f7ac8);
+  box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.16);
 }
 
 .footer {
@@ -127,7 +127,7 @@
   display: flex;
   justify-content: flex-end;
   padding: 12px 20px max(16px, env(safe-area-inset-bottom));
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--trainer-v2-line, #efebf3);
   background: #ffffff;
 }
 
@@ -136,7 +136,7 @@
   padding: 0 18px;
   border: 0;
   border-radius: 14px;
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
   font: inherit;
   font-weight: 800;
@@ -152,10 +152,10 @@
 .templateRow button {
   min-height: 32px;
   padding: 0 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 999px;
-  background: #f5f2f7;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
   font: inherit;
   font-size: 12px;
   font-weight: 750;
@@ -175,7 +175,7 @@
 .photoCompare > div {
   min-width: 0;
   padding: 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 16px;
   background: #f7f6f8;
 }
@@ -195,13 +195,13 @@
 }
 
 .photoCompare strong {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 13px;
 }
 
 .photoCompare small,
 .photoCompare > div > span {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 12px;
 }
 

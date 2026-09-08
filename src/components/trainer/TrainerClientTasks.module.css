@@ -1,10 +1,10 @@
 .panel {
-  --tn-line: #efebf3;
-  --tn-purple: #8f7ac8;
-  --tn-purple-strong: #806bb6;
-  --tn-purple-soft: #eee8fb;
-  --tn-text: #28262e;
-  --tn-muted: #7b7682;
+  --tn-line: var(--trainer-v2-surface, #efebf3);
+  --tn-purple: var(--trainer-v2-accent, #8f7ac8);
+  --tn-purple-strong: var(--trainer-v2-accent, #806bb6);
+  --tn-purple-soft: var(--trainer-v2-surface, #eee8fb);
+  --tn-text: var(--trainer-v2-ink, #28262e);
+  --tn-muted: var(--trainer-v2-muted, #7b7682);
   grid-column: 1 / -1;
   width: 100%;
   min-width: 0;
@@ -108,7 +108,7 @@
 }
 
 .createButton:hover {
-  background: var(--tn-purple-strong, #806bb6);
+  background: var(--tn-purple-strong, var(--trainer-v2-accent, #806bb6));
 }
 
 .embedded .list {
@@ -225,3 +225,8 @@
   }
 }
 :global(html[data-trainer-variant="v2"]) .createButton {background:#3f73b8;color:#fff;box-shadow:none;border-radius:12px}
+
+@media(max-width:539px) {
+ :global(html[data-trainer-variant="v2"]) .embeddedHeader {grid-template-columns:36px minmax(0,1fr);gap:10px;padding:12px}
+ :global(html[data-trainer-variant="v2"]) .createButton {grid-column:1 / -1;justify-self:stretch}
+}

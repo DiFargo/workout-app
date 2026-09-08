@@ -7,9 +7,9 @@
 :local(.breadcrumb) {
   align-items: center;
   background: #ffffff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 14px;
-  color: #5f5870;
+  color: var(--trainer-v2-muted, #5f5870);
   cursor: pointer;
   display: inline-flex;
   font: inherit;
@@ -21,12 +21,12 @@
 }
 
 :local(.breadcrumb:hover) {
-  border-color: #d9d0ec;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #d9d0ec);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 :local(.breadcrumb:focus-visible) {
-  outline: 3px solid rgba(143, 122, 200, 0.28);
+  outline: 3px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / 0.28);
   outline-offset: 2px;
 }
 

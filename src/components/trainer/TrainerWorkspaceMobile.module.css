@@ -87,7 +87,7 @@
     width: 42px;
     min-width: 42px;
     height: 42px;
-    box-shadow: 0 4px 12px rgba(40, 38, 46, 0.05);
+    box-shadow: 0 4px 12px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.05);
   }
 
   :global(.trainerNextRoot) :global(.trainerNextMobileNav) {
@@ -105,7 +105,7 @@
     border-color: var(--tn-line);
     border-radius: var(--trainer-mobile-nav-radius);
     background: #ffffff;
-    box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
+    box-shadow: 0 8px 30px rgb(var(--trainer-v2-shadow-rgb, 72 63 87) / 0.1);
     margin: 0;
     transform: translateX(-50%);
     isolation: isolate;
@@ -121,7 +121,7 @@
     padding: 0 8px;
     border-radius: 10px;
     background: var(--tn-page);
-    color: #aaa5b2;
+    color: var(--trainer-v2-muted, #aaa5b2);
     font-size: 11px;
     font-variant-numeric: tabular-nums;
     font-weight: 700;
@@ -159,7 +159,7 @@
 
   :global(.trainerNextRoot) :global(.trainerNextMobileNav button:focus-visible),
   :global(.trainerNextRoot) :global(.trainerNextMobileHeader button:focus-visible) {
-    outline: 3px solid rgba(143, 122, 200, 0.32);
+    outline: 3px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / 0.32);
     outline-offset: 2px;
   }
 
@@ -222,7 +222,7 @@
     border-radius: 15px;
     color: #fff;
     background: var(--tn-purple);
-    box-shadow: 0 10px 22px rgba(128, 107, 182, 0.25);
+    box-shadow: 0 10px 22px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.25);
     font-size: 12px;
     font-weight: 750;
     white-space: nowrap;
@@ -255,7 +255,7 @@
     border: 1px solid var(--tn-line);
     border-radius: 18px;
     background: var(--tn-surface);
-    box-shadow: 0 8px 18px rgba(56, 44, 78, 0.06);
+    box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 56 44 78) / 0.06);
   }
 
   :global(.trainerNextRoot) :global(.trainerNextClientsPage .trainerNextClientTable > button:last-child) {
@@ -447,7 +447,7 @@
     border: 1px solid var(--tn-line);
     border-radius: var(--trainer-mobile-nav-radius);
     background: #ffffff;
-    box-shadow: 0 8px 30px rgba(72, 63, 87, 0.1);
+    box-shadow: 0 8px 30px rgb(var(--trainer-v2-shadow-rgb, 72 63 87) / 0.1);
     max-width: calc(100vw - 20px);
     margin: 0;
     transform: translateX(-50%);
@@ -668,7 +668,7 @@
     z-index: 260;
     align-items: end;
     padding: 20px 12px calc(16px + env(safe-area-inset-bottom));
-    background: rgba(40, 38, 46, 0.36);
+    background: rgb(var(--trainer-v2-ink-rgb, 40 38 46) / 0.36);
     backdrop-filter: blur(10px);
   }
 
@@ -678,10 +678,10 @@
     max-height: min(640px, calc(100dvh - 36px));
     grid-template-rows: auto minmax(0, 1fr);
     overflow: hidden;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 26px;
     background: #ffffff;
-    box-shadow: 0 24px 54px rgba(40, 38, 46, 0.2);
+    box-shadow: 0 24px 54px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.2);
   }
 
   .clientPageFix :global(.trainerClientActionSheet > header) {
@@ -690,7 +690,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 18px 18px 14px;
-    border-bottom: 1px solid #efebf3;
+    border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
   }
 
   .clientPageFix :global(.trainerClientActionSheet header > div) {
@@ -700,7 +700,7 @@
   .clientPageFix :global(.trainerClientActionSheet header span) {
     display: block;
     margin-bottom: 4px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     font-weight: 760;
     letter-spacing: 0.08em;
@@ -708,7 +708,7 @@
 
   .clientPageFix :global(.trainerClientActionSheet h2) {
     margin: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 20px;
     font-weight: 760;
     letter-spacing: -0.35px;
@@ -720,10 +720,10 @@
     height: 40px;
     flex: 0 0 auto;
     place-items: center;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 13px;
-    color: #7b7682;
-    background: #f5f2f7;
+    color: var(--trainer-v2-muted, #7b7682);
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerClientActionSheet > div) {
@@ -740,10 +740,10 @@
     align-items: center;
     gap: 11px;
     padding: 9px 12px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 15px;
-    color: #28262e;
-    background: #f5f2f7;
+    color: var(--trainer-v2-ink, #28262e);
+    background: var(--trainer-v2-surface, #f5f2f7);
     text-align: left;
   }
 
@@ -753,7 +753,7 @@
     height: 38px;
     place-items: center;
     border-radius: 12px;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
     background: #ffffff;
   }
 
@@ -779,10 +779,10 @@
     gap: 15px;
     min-width: 0;
     padding: 16px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 20px;
     background: #ffffff;
-    box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+    box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.045);
   }
 
   .clientPageFix :global(.trainerWorkoutSchedulePlanner > header),
@@ -803,7 +803,7 @@
   .clientPageFix :global(.trainerClientWorkoutReviewPanel > header span) {
     display: block;
     margin-bottom: 5px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     font-weight: 760;
     letter-spacing: 0.08em;
@@ -813,7 +813,7 @@
   .clientPageFix :global(.trainerClientWorkoutHistoryBlock > header h3),
   .clientPageFix :global(.trainerClientWorkoutReviewPanel > header h3) {
     margin: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 20px;
     font-weight: 760;
     letter-spacing: -0.35px;
@@ -824,7 +824,7 @@
   .clientPageFix :global(.trainerClientWorkoutHistoryBlock > header p),
   .clientPageFix :global(.trainerClientWorkoutReviewPanel > header p) {
     margin: 7px 0 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 13px;
     line-height: 1.45;
   }
@@ -839,10 +839,10 @@
     justify-content: center;
     gap: 5px;
     padding: 0 13px;
-    border: 1px solid #ddd1ee;
+    border: 1px solid var(--trainer-v2-line, #ddd1ee);
     border-radius: 14px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
     font-size: 18px;
     font-weight: 760;
     line-height: 1;
@@ -851,7 +851,7 @@
   .clientPageFix :global(.trainerWorkoutSchedulePlanner > header > strong small),
   .clientPageFix :global(.trainerClientWorkoutHistoryBlock > header > strong small) {
     display: block;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     font-weight: 680;
     line-height: 1.2;
@@ -866,9 +866,9 @@
     display: grid;
     gap: 10px;
     padding: 12px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 17px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleMonth) {
@@ -883,15 +883,15 @@
     width: 38px;
     height: 38px;
     place-items: center;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 12px;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
     background: #ffffff;
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleMonth strong) {
     min-width: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 14px;
     font-weight: 740;
     text-align: center;
@@ -907,7 +907,7 @@
 
   .clientPageFix :global(.trainerWorkoutScheduleWeekdays span) {
     min-width: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     font-weight: 700;
     text-align: center;
@@ -921,9 +921,9 @@
     justify-items: center;
     gap: 1px;
     padding: 3px 1px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 10px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     background: #ffffff;
     line-height: 1;
   }
@@ -944,26 +944,26 @@
   .clientPageFix :global(.trainerWorkoutScheduleGrid button i) {
     overflow: hidden;
     max-width: 100%;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
     font-size: 8px;
     font-weight: 760;
     text-overflow: ellipsis;
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleGrid .muted) {
-    color: #b7b1bc;
+    color: var(--trainer-v2-muted, #b7b1bc);
     background: #fbfafc;
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleGrid .today) {
-    border-color: #d9cdf5;
+    border-color: var(--trainer-v2-line, #d9cdf5);
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleGrid .selected),
   .clientPageFix :global(.trainerWorkoutScheduleGrid button.planned) {
-    border-color: #d9cdf5;
-    color: #806bb6;
-    background: #ede7fb;
+    border-color: var(--trainer-v2-line, #d9cdf5);
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #ede7fb);
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleGrid button.completed) {
@@ -1000,7 +1000,7 @@
 
   .clientPageFix :global(.trainerWorkoutScheduleLegend) {
     padding-top: 2px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     font-weight: 650;
   }
@@ -1018,7 +1018,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #8f7ac8;
+    background: var(--trainer-v2-accent, #8f7ac8);
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleLegend i.completed) { background: #56a473; }
@@ -1033,12 +1033,12 @@
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleFooter span) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleFooter span b) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleFooter .trainerNextPrimary) {
@@ -1047,7 +1047,7 @@
 
   .clientPageFix :global(.trainerWorkoutScheduleHint) {
     margin: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
     line-height: 1.45;
   }
@@ -1064,9 +1064,9 @@
     align-items: start;
     gap: 8px 10px;
     padding: 12px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 15px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerClientWorkoutHistoryList article > span) {
@@ -1098,14 +1098,14 @@
   }
 
   .clientPageFix :global(.trainerClientWorkoutHistoryList strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 14px;
     font-weight: 740;
   }
 
   .clientPageFix :global(.trainerClientWorkoutHistoryList small),
   .clientPageFix :global(.trainerClientWorkoutHistoryList time) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     font-weight: 620;
   }
@@ -1117,7 +1117,7 @@
   .clientPageFix :global(.trainerClientWorkoutHistoryList p) {
     grid-column: 2 / -1;
     margin: 0;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
     font-size: 12px;
     font-weight: 680;
   }
@@ -1130,10 +1130,10 @@
     justify-content: center;
     gap: 6px;
     padding: 0 13px;
-    border: 1px solid #dcd1ed;
+    border: 1px solid var(--trainer-v2-line, #dcd1ed);
     border-radius: 12px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
     font-size: 12px;
     font-weight: 700;
   }
@@ -1148,10 +1148,10 @@
     gap: 15px;
     min-width: 0;
     padding: 16px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 20px;
     background: #ffffff;
-    box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+    box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.045);
   }
 
   .clientPageFix :global(.trainerMeasurementPanelTitle),
@@ -1165,7 +1165,7 @@
   .clientPageFix :global(.trainerMeasurementPanelTitle h2),
   .clientPageFix :global(.trainerClientBodyProgress > .trainerNextSimplePanel > .trainerNextPanelTitle h2) {
     margin: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 20px;
     font-weight: 760;
     letter-spacing: -0.35px;
@@ -1175,7 +1175,7 @@
   .clientPageFix :global(.trainerMeasurementPanelTitle p),
   .clientPageFix :global(.trainerClientBodyProgress > .trainerNextSimplePanel > .trainerNextPanelTitle p) {
     margin: 5px 0 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 13px;
     line-height: 1.45;
   }
@@ -1187,10 +1187,10 @@
     align-items: center;
     gap: 5px;
     padding: 0 12px;
-    border: 1px solid #dcd1ed;
+    border: 1px solid var(--trainer-v2-line, #dcd1ed);
     border-radius: 12px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
     font-size: 12px;
     font-weight: 700;
   }
@@ -1220,9 +1220,9 @@
     min-width: 0;
     gap: 4px;
     padding: 12px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 14px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerMeasurementCollapsed article span),
@@ -1232,7 +1232,7 @@
   .clientPageFix :global(.trainerMeasurementFieldGrid article span),
   .clientPageFix :global(.trainerMeasurementFieldGrid article small) {
     display: block;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     line-height: 1.3;
   }
@@ -1243,7 +1243,7 @@
     display: block;
     min-width: 0;
     overflow: hidden;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 18px;
     font-weight: 760;
     letter-spacing: -0.25px;
@@ -1255,8 +1255,8 @@
     margin: 0;
     padding: 13px;
     border-radius: 14px;
-    color: #7b7682;
-    background: #f0ebfa;
+    color: var(--trainer-v2-muted, #7b7682);
+    background: var(--trainer-v2-surface, #f0ebfa);
     font-size: 13px;
     line-height: 1.45;
   }
@@ -1264,7 +1264,7 @@
   .clientPageFix :global(.trainerMeasurementCollapsed > p b) {
     display: block;
     margin-bottom: 3px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
   }
 
   .clientPageFix :global(.trainerMeasurementMainGrid),
@@ -1280,15 +1280,15 @@
   .clientPageFix :global(.trainerPhotoComparePanel) {
     min-width: 0;
     padding: 14px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 16px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerMeasurementInsight h3),
   .clientPageFix :global(.trainerMeasurementTimeline h3) {
     margin: 6px 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 16px;
   }
 
@@ -1296,7 +1296,7 @@
   .clientPageFix :global(.trainerMeasurementChart p),
   .clientPageFix :global(.trainerPhotoComparePanel p) {
     margin: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 13px;
     line-height: 1.45;
   }
@@ -1328,25 +1328,25 @@
     min-width: 0;
     min-height: 40px;
     padding: 0 6px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 12px;
-    color: #7b7682;
-    background: #f5f2f7;
+    color: var(--trainer-v2-muted, #7b7682);
+    background: var(--trainer-v2-surface, #f5f2f7);
     font-size: 12px;
     font-weight: 700;
   }
 
   .clientPageFix :global(.trainerPhotoViewTabs button.active),
   .clientPageFix :global(.trainerPhotoViewTabs button[aria-pressed="true"]) {
-    border-color: #d9cdf5;
-    color: #806bb6;
-    background: #ede7fb;
+    border-color: var(--trainer-v2-line, #d9cdf5);
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #ede7fb);
   }
 
   .clientPageFix :global(.trainerPhotoComparePanel strong) {
     display: block;
     margin-bottom: 4px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 14px;
     font-weight: 730;
   }
@@ -1355,9 +1355,9 @@
     width: 100%;
     min-height: 42px;
     padding: 0 11px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 12px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     background: #ffffff;
     font-size: 13px;
   }
@@ -1376,9 +1376,9 @@
     min-width: 0;
     margin: 0;
     padding: 7px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 15px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerPhotoCompareGrid img),
@@ -1399,7 +1399,7 @@
 
   .clientPageFix :global(.trainerPhotoCompareGrid figcaption),
   .clientPageFix :global(.trainerNextPhotoGrid figcaption) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
   }
 
@@ -1413,7 +1413,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 5px;
     padding: 5px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 16px;
     background: #ffffff;
   }
@@ -1424,7 +1424,7 @@
     padding: 0 5px;
     border: 0;
     border-radius: 11px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     background: transparent;
     font-size: 11px;
     font-weight: 700;
@@ -1433,8 +1433,8 @@
 
   .clientPageFix :global(.trainerNutritionQuickNav button:first-child),
   .clientPageFix :global(.trainerNutritionQuickNav button:hover) {
-    color: #806bb6;
-    background: #ede7fb;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #ede7fb);
   }
 
   .clientPageFix :global(.trainerNutritionUnifiedSection),
@@ -1444,10 +1444,10 @@
     gap: 14px;
     min-width: 0;
     padding: 16px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 20px;
     background: #ffffff;
-    box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+    box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.045);
   }
 
   .clientPageFix :global(.trainerClientBlockHeading) {
@@ -1464,8 +1464,8 @@
     height: 40px;
     place-items: center;
     border-radius: 12px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
   }
 
   .clientPageFix :global(.trainerClientBlockHeading > div) {
@@ -1474,7 +1474,7 @@
 
   .clientPageFix :global(.trainerClientBlockHeading h2) {
     margin: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 20px;
     font-weight: 760;
     letter-spacing: -0.35px;
@@ -1485,7 +1485,7 @@
   .clientPageFix :global(.trainerClientBlockHeading small) {
     display: block;
     margin: 4px 0 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
     line-height: 1.42;
   }
@@ -1495,10 +1495,10 @@
     width: 100%;
     min-height: 40px;
     margin: 2px 0 0;
-    border: 1px solid #dcd1ed;
+    border: 1px solid var(--trainer-v2-line, #dcd1ed);
     border-radius: 12px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
     font-size: 12px;
     font-weight: 700;
   }
@@ -1520,7 +1520,7 @@
   .clientPageFix :global(.trainerNutritionPeriod) {
     padding: 13px;
     border-radius: 15px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerNutritionPeriod > div:first-child) {
@@ -1529,13 +1529,13 @@
   }
 
   .clientPageFix :global(.trainerNutritionPeriod > div:first-child strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 15px;
     font-weight: 730;
   }
 
   .clientPageFix :global(.trainerNutritionPeriod > div:first-child small) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
     line-height: 1.4;
   }
@@ -1550,9 +1550,9 @@
     min-width: 0;
     min-height: 38px;
     padding: 0 4px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 11px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     background: #ffffff;
     font-size: 11px;
     font-weight: 700;
@@ -1560,9 +1560,9 @@
 
   .clientPageFix :global(.trainerNutritionPeriodButtons button.active),
   .clientPageFix :global(.trainerNutritionPeriodButtons button[aria-pressed="true"]) {
-    border-color: #d9cdf5;
-    color: #806bb6;
-    background: #ede7fb;
+    border-color: var(--trainer-v2-line, #d9cdf5);
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #ede7fb);
   }
 
   .clientPageFix :global(.trainerNutritionMetricGrid) {
@@ -1577,23 +1577,23 @@
     min-width: 0;
     gap: 5px;
     padding: 14px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 16px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerNutritionMetricGrid span),
   .clientPageFix :global(.trainerNutritionMetricGrid small) {
     display: block;
     min-width: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     line-height: 1.35;
   }
 
   .clientPageFix :global(.trainerNutritionMetricGrid strong) {
     display: block;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 19px;
     font-weight: 760;
     letter-spacing: -0.25px;
@@ -1621,7 +1621,7 @@
   .clientPageFix :global(.trainerNutritionCaloriesChart header h3),
   .clientPageFix :global(.trainerNutritionBalance header h3) {
     margin: 4px 0 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 18px;
     font-weight: 750;
     line-height: 1.2;
@@ -1631,8 +1631,8 @@
     flex: 0 0 auto;
     padding: 6px 9px;
     border-radius: 10px;
-    color: #806bb6;
-    background: #ede7fb;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #ede7fb);
     font-size: 11px;
     white-space: nowrap;
   }
@@ -1663,7 +1663,7 @@
   }
 
   .clientPageFix :global(.trainerNutritionDonut > span strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 17px;
     font-weight: 760;
     line-height: 1;
@@ -1671,7 +1671,7 @@
 
   .clientPageFix :global(.trainerNutritionDonut > span small) {
     margin-top: 3px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
   }
 
@@ -1687,7 +1687,7 @@
     align-items: center;
     gap: 7px;
     padding: 6px 0;
-    border-bottom: 1px solid #e9e4ed;
+    border-bottom: 1px solid var(--trainer-v2-line, #e9e4ed);
   }
 
   .clientPageFix :global(.trainerNutritionLegend span::before) {
@@ -1699,17 +1699,17 @@
   }
 
   .clientPageFix :global(.trainerNutritionLegend span.fat::before) { background: #f2a329; }
-  .clientPageFix :global(.trainerNutritionLegend span.carbs::before) { background: #6a43ef; }
+  .clientPageFix :global(.trainerNutritionLegend span.carbs::before) { background: var(--trainer-v2-surface, #6a43ef); }
 
   .clientPageFix :global(.trainerNutritionLegend b) {
     min-width: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     font-weight: 650;
   }
 
   .clientPageFix :global(.trainerNutritionLegend strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 14px;
     font-weight: 750;
     white-space: nowrap;
@@ -1718,8 +1718,8 @@
   .clientPageFix :global(.trainerNutritionBalance > p) {
     margin: 0;
     padding-top: 11px;
-    border-top: 1px solid #e9e4ed;
-    color: #7b7682;
+    border-top: 1px solid var(--trainer-v2-line, #e9e4ed);
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
     line-height: 1.45;
   }
@@ -1732,15 +1732,15 @@
     justify-content: space-between;
     gap: 9px;
     padding: 0 12px;
-    border: 1px solid #dcd1ed;
+    border: 1px solid var(--trainer-v2-line, #dcd1ed);
     border-radius: 13px;
-    color: #7b7682;
-    background: #f5f2f7;
+    color: var(--trainer-v2-muted, #7b7682);
+    background: var(--trainer-v2-surface, #f5f2f7);
     text-align: left;
   }
 
   .clientPageFix :global(.trainerNutritionDiaryCollapsed strong) {
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
     font-size: 12px;
     white-space: nowrap;
   }
@@ -1756,18 +1756,18 @@
     gap: 3px;
     padding: 11px;
     border-radius: 13px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerNutritionCurrentGoals small),
   .clientPageFix :global(.trainerNutritionCurrentGoals strong) {
     display: block;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
   }
 
   .clientPageFix :global(.trainerNutritionCurrentGoals strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 15px;
     font-weight: 750;
   }
@@ -1806,9 +1806,9 @@
     min-width: 0;
     gap: 4px;
     padding: 12px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 14px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerWorkoutReviewGrid article.warning) {
@@ -1820,7 +1820,7 @@
   .clientPageFix :global(.trainerWorkoutReviewGrid small) {
     display: block;
     min-width: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     line-height: 1.32;
   }
@@ -1829,7 +1829,7 @@
     display: block;
     min-width: 0;
     overflow: hidden;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 17px;
     font-weight: 760;
     letter-spacing: -0.2px;
@@ -1844,9 +1844,9 @@
     align-items: start;
     gap: 9px;
     padding: 12px;
-    border: 1px solid #e2d9f3;
+    border: 1px solid var(--trainer-v2-line, #e2d9f3);
     border-radius: 14px;
-    background: #f7f3fd;
+    background: var(--trainer-v2-surface, #f7f3fd);
   }
 
   .clientPageFix :global(.trainerWorkoutReviewFeedback > span) {
@@ -1865,14 +1865,14 @@
 
   .clientPageFix :global(.trainerWorkoutReviewFeedback strong) {
     display: block;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 14px;
     font-weight: 740;
   }
 
   .clientPageFix :global(.trainerWorkoutReviewFeedback p) {
     margin: 4px 0 0;
-    color: #625d6a;
+    color: var(--trainer-v2-muted, #625d6a);
     font-size: 12px;
     line-height: 1.45;
   }
@@ -1884,9 +1884,9 @@
     align-items: end;
     gap: 6px;
     padding: 12px 8px 8px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 15px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerClientBarChart > div) {
@@ -1910,7 +1910,7 @@
     width: 100%;
     min-height: 6px;
     border-radius: 7px 7px 3px 3px;
-    background: #8f7ac8;
+    background: var(--trainer-v2-accent, #8f7ac8);
   }
 
   .clientPageFix :global(.trainerClientBarChart > div > span i.over) {
@@ -1922,7 +1922,7 @@
     display: block;
     min-width: 0;
     overflow: hidden;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 10px;
     font-weight: 740;
     line-height: 1.2;
@@ -1932,7 +1932,7 @@
   }
 
   .clientPageFix :global(.trainerClientBarChart small) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     font-weight: 650;
   }
@@ -1944,13 +1944,13 @@
 
   .clientPageFix :global(.trainerNutritionCurrentMeta span) {
     display: block;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
     line-height: 1.42;
   }
 
   .clientPageFix :global(.trainerNutritionCurrentMeta span b) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
   }
 
   .clientPageFix :global(.trainerNutritionCurrentMeta button),
@@ -1962,11 +1962,11 @@
     justify-content: center;
     gap: 7px;
     padding: 0 13px;
-    border: 1px solid #d6caee;
+    border: 1px solid var(--trainer-v2-line, #d6caee);
     border-radius: 13px;
-    color: #806bb6;
-    background: #f0ebfa;
-    box-shadow: 0 6px 14px rgba(86, 68, 126, 0.08);
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
+    box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 86 68 126) / 0.08);
     font-size: 13px;
     font-weight: 730;
   }
@@ -1990,7 +1990,7 @@
     display: grid;
     min-width: 0;
     gap: 6px;
-    color: #4d4853;
+    color: var(--trainer-v2-muted, #4d4853);
     font-size: 13px;
     line-height: 1.3;
   }
@@ -2002,9 +2002,9 @@
     min-width: 0;
     min-height: 44px;
     padding: 0 12px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 12px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     background: #ffffff;
     font-size: 14px;
   }
@@ -2027,7 +2027,7 @@
     grid-column: 2;
     grid-row: 1;
     margin: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
     pointer-events: none;
   }
@@ -2044,16 +2044,16 @@
     min-width: 0;
     gap: 0;
     padding: 16px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 18px;
     background: #ffffff;
-    box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+    box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.045);
   }
 
   .clientPageFix :global(.trainerNextResultCard h3),
   .clientPageFix :global(.trainerNextActivityCard h3) {
     margin: 0 0 10px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 18px;
     font-weight: 750;
   }
@@ -2065,19 +2065,19 @@
     align-items: center;
     gap: 12px;
     min-height: 33px;
-    border-top: 1px solid #f0edf3;
+    border-top: 1px solid var(--trainer-v2-line, #f0edf3);
   }
 
   .clientPageFix :global(.trainerNextResultCard span),
   .clientPageFix :global(.trainerNextActivityCard span),
   .clientPageFix :global(.trainerNextActivityCard time) {
     min-width: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
   }
 
   .clientPageFix :global(.trainerNextResultCard strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 15px;
     font-weight: 750;
     white-space: nowrap;
@@ -2090,7 +2090,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    border-top: 1px solid #f0edf3;
+    border-top: 1px solid var(--trainer-v2-line, #f0edf3);
   }
 
   .clientPageFix :global(.trainerNextActivityCard span) {
@@ -2098,13 +2098,13 @@
     min-width: 0;
     align-items: center;
     gap: 7px;
-    color: #4d4853;
+    color: var(--trainer-v2-muted, #4d4853);
     white-space: nowrap;
   }
 
   .clientPageFix :global(.trainerNextActivityCard span svg) {
     flex: 0 0 auto;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
   }
 
   .clientPageFix :global(.trainerNextActivityCard time) {
@@ -2123,10 +2123,10 @@
     gap: 14px;
     min-width: 0;
     padding: 16px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 20px;
     background: #ffffff;
-    box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+    box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.045);
   }
 
   .clientPageFix :global(.trainerExerciseProgressHeader) {
@@ -2149,8 +2149,8 @@
     height: 40px;
     place-items: center;
     border-radius: 12px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
   }
 
   .clientPageFix :global(.trainerExerciseProgressHeading > div) {
@@ -2159,7 +2159,7 @@
 
   .clientPageFix :global(.trainerExerciseProgressHeading h3) {
     margin: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 20px;
     font-weight: 760;
     letter-spacing: -0.35px;
@@ -2168,7 +2168,7 @@
 
   .clientPageFix :global(.trainerExerciseProgressHeading p) {
     margin: 6px 0 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 13px;
     line-height: 1.48;
   }
@@ -2180,10 +2180,10 @@
     align-items: center;
     gap: 7px;
     padding: 0 12px;
-    border: 1px solid #dcd1ed;
+    border: 1px solid var(--trainer-v2-line, #dcd1ed);
     border-radius: 12px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
     font-size: 12px;
     font-weight: 720;
   }
@@ -2193,9 +2193,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
     padding: 8px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 15px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerExerciseProgressToolbar button) {
@@ -2208,7 +2208,7 @@
     padding: 0 7px;
     border: 0;
     border-radius: 10px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     background: transparent;
     font-size: 11px;
     font-weight: 700;
@@ -2216,8 +2216,8 @@
 
   .clientPageFix :global(.trainerExerciseProgressToolbar button.active) {
     color: #ffffff;
-    background: #8f7ac8;
-    box-shadow: 0 6px 14px rgba(112, 88, 164, 0.2);
+    background: var(--trainer-v2-accent, #8f7ac8);
+    box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 112 88 164) / 0.2);
   }
 
   .clientPageFix :global(.trainerExerciseProgressToolbar button span) {
@@ -2227,7 +2227,7 @@
     place-items: center;
     border-radius: 9px;
     color: inherit;
-    background: rgba(128, 107, 182, 0.12);
+    background: rgb(var(--trainer-v2-accent-rgb, 128 107 182) / 0.12);
     font-size: 10px;
   }
 
@@ -2245,10 +2245,10 @@
     min-width: 0;
     gap: 12px;
     padding: 13px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-left: 4px solid #c29543;
     border-radius: 17px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
   }
 
   .clientPageFix :global(.trainerExerciseProgressRow.progress) { border-left-color: #62a97c; }
@@ -2280,7 +2280,7 @@
 
   .clientPageFix :global(.trainerExerciseProgressName > strong) {
     min-width: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 16px;
     font-weight: 750;
     line-height: 1.32;
@@ -2289,7 +2289,7 @@
   .clientPageFix :global(.trainerExerciseProgressName > small) {
     grid-column: 1 / -1;
     margin-top: 3px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     line-height: 1.4;
   }
@@ -2306,7 +2306,7 @@
     align-content: start;
     gap: 4px;
     padding: 10px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 13px;
     background: #ffffff;
   }
@@ -2315,20 +2315,20 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 10px;
     line-height: 1.25;
   }
 
   .clientPageFix :global(.trainerExerciseProgressMetrics b) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 13px;
     font-weight: 750;
     line-height: 1.25;
   }
 
   .clientPageFix :global(.trainerExerciseProgressMetrics em) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     font-style: normal;
     font-weight: 700;
@@ -2339,7 +2339,7 @@
     min-width: 0;
     gap: 10px;
     padding: 12px;
-    border: 1px solid #e2d9f3;
+    border: 1px solid var(--trainer-v2-line, #e2d9f3);
     border-radius: 14px;
     background: #ffffff;
   }
@@ -2350,7 +2350,7 @@
   }
 
   .clientPageFix :global(.trainerExerciseProgressResultHead > strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 13px;
     font-weight: 740;
     line-height: 1.42;
@@ -2369,17 +2369,17 @@
     justify-content: center;
     gap: 5px;
     padding: 0 10px;
-    border: 1px solid #d7c9ef;
+    border: 1px solid var(--trainer-v2-line, #d7c9ef);
     border-radius: 11px;
-    color: #806bb6;
-    background: #f5f0ff;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f5f0ff);
     font-size: 11px;
     font-weight: 720;
   }
 
   .clientPageFix :global(.trainerExerciseProgressCardNote) {
     margin: 0;
-    color: #625d6a;
+    color: var(--trainer-v2-muted, #625d6a);
     font-size: 12px;
     line-height: 1.5;
   }
@@ -2389,12 +2389,12 @@
     display: grid;
     gap: 6px;
     padding-top: 10px;
-    border-top: 1px solid #efebf3;
+    border-top: 1px solid var(--trainer-v2-line, #efebf3);
   }
 
   .clientPageFix :global(.trainerExerciseProgressContext small),
   .clientPageFix :global(.trainerExerciseProgressResult > div:not(.trainerExerciseProgressResultHead) small) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     line-height: 1.42;
   }
@@ -2412,9 +2412,9 @@
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 20px;
-    background: #f5f2f7;
+    background: var(--trainer-v2-surface, #f5f2f7);
     box-shadow: none;
   }
 
@@ -2442,8 +2442,8 @@
     justify-content: center;
     padding: 0 12px;
     border-radius: 12px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
     font-size: 12px;
     font-weight: 760;
     line-height: 1;
@@ -2455,7 +2455,7 @@
   .notificationRoot :global(.trainerReminderCard h3),
   .notificationRoot :global(.trainerNotificationCalendar h3) {
     margin: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 17px;
     font-weight: 740;
     line-height: 23px;
@@ -2466,7 +2466,7 @@
   .notificationRoot :global(.trainerReminderCard p),
   .notificationRoot :global(.trainerNotificationCalendar p) {
     margin: 3px 0 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 14px;
     line-height: 20px;
   }
@@ -2508,9 +2508,9 @@
     min-width: 0;
     min-height: 40px;
     padding: 5px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 11px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     background: #ffffff;
     font-size: 12px;
     font-weight: 650;
@@ -2520,9 +2520,9 @@
   }
 
   .notificationRoot :global(.trainerReminderPeriod button.active) {
-    border-color: #d9cdf5;
-    color: #806bb6;
-    background: #ede7fb;
+    border-color: var(--trainer-v2-line, #d9cdf5);
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #ede7fb);
   }
 
   .notificationRoot :global(.trainerNotificationSchedule) {
@@ -2552,7 +2552,7 @@
 
   .notificationRoot :global(.trainerNotificationWeekdays) {
     margin-top: 14px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 11px;
     font-weight: 700;
     line-height: 16px;
@@ -2567,9 +2567,9 @@
     min-width: 0;
     height: 38px;
     padding: 0;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 10px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     background: #ffffff;
     font-size: 14px;
     font-weight: 700;
@@ -2577,9 +2577,9 @@
   }
 
   .notificationRoot :global(.trainerNotificationCalendarGrid button.active) {
-    border-color: #d9cdf5;
-    color: #806bb6;
-    background: #e8e0f8;
+    border-color: var(--trainer-v2-line, #d9cdf5);
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #e8e0f8);
   }
 
   .notificationRoot :global(.trainerNotificationLegend) {
@@ -2587,7 +2587,7 @@
     flex-wrap: wrap;
     gap: 8px 12px;
     margin-top: 12px;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
   }
 
@@ -2600,9 +2600,9 @@
   .notificationRoot :global(.trainerNotificationActions button) {
     width: 100%;
     min-height: 44px;
-    border: 1px solid #d9cdf5;
+    border: 1px solid var(--trainer-v2-line, #d9cdf5);
     border-radius: 13px;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
     background: #ffffff;
     font-weight: 720;
   }
@@ -2620,7 +2620,7 @@
     min-height: 44px;
     padding: 0 2px;
     border: 0;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
     background: transparent;
   }
 
@@ -2639,18 +2639,18 @@
     min-height: 44px;
     place-items: center;
     padding: 0;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 14px;
-    color: #625d6a;
+    color: var(--trainer-v2-muted, #625d6a);
     background: #ffffff;
-    box-shadow: 0 7px 16px rgba(40, 38, 46, 0.06);
+    box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.06);
   }
 
   .clientToolbarFix > div > :global(.trainerNextPrimary) {
-    border-color: #8f7ac8;
+    border-color: var(--trainer-v2-accent, #8f7ac8);
     color: #ffffff;
-    background: #8f7ac8;
-    box-shadow: 0 9px 18px rgba(112, 88, 164, 0.24);
+    background: var(--trainer-v2-accent, #8f7ac8);
+    box-shadow: 0 9px 18px rgb(var(--trainer-v2-shadow-rgb, 112 88 164) / 0.24);
   }
 
   .clientToolbarFix :global(.trainerNextClientActionLabel),
@@ -2672,14 +2672,14 @@
 
   .libraryFix :global(.trainerNextPanelTitle h2) {
     margin: 0;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 22px;
     line-height: 28px;
   }
 
   .libraryFix :global(.trainerNextPanelTitle p) {
     margin: 0;
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 14px;
     line-height: 20px;
   }
@@ -2725,11 +2725,11 @@
     gap: 12px;
     min-height: 84px;
     padding: 14px 16px;
-    border: 1px solid #efebf3;
+    border: 1px solid var(--trainer-v2-line, #efebf3);
     border-radius: 18px;
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     background: #ffffff;
-    box-shadow: 0 10px 24px rgba(40, 38, 46, 0.045);
+    box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.045);
     text-align: left;
   }
 
@@ -2739,8 +2739,8 @@
     height: 42px;
     place-items: center;
     border-radius: 13px;
-    color: #806bb6;
-    background: #f0ebfa;
+    color: var(--trainer-v2-accent, #806bb6);
+    background: var(--trainer-v2-surface, #f0ebfa);
   }
 
   .cabinetFix :global(.trainerCabinetWorkspaceCopy) {
@@ -2760,13 +2760,13 @@
   }
 
   .cabinetFix :global(.trainerCabinetWorkspaceCopy strong) {
-    color: #28262e;
+    color: var(--trainer-v2-ink, #28262e);
     font-size: 16px;
     font-weight: 750;
   }
 
   .cabinetFix :global(.trainerCabinetWorkspaceCopy small) {
-    color: #7b7682;
+    color: var(--trainer-v2-muted, #7b7682);
     font-size: 12px;
     line-height: 1.35;
   }
@@ -2774,7 +2774,7 @@
   .cabinetFix :global(.trainerCabinetWorkspaceLinks > button > svg) {
     justify-self: end;
     align-self: center;
-    color: #806bb6;
+    color: var(--trainer-v2-accent, #806bb6);
   }
 
   .cabinetFix :global(.trainerCabinetLogout) {

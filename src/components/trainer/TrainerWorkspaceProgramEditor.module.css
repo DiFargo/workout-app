@@ -15,10 +15,10 @@
   max-height: calc(100dvh - 40px);
   grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;
-  border: 1px solid rgba(239, 235, 243, 0.96);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 239 235 243) / 0.96);
   border-radius: 28px;
   background: var(--tn-surface);
-  box-shadow: 0 28px 70px rgba(40, 38, 46, 0.24);
+  box-shadow: 0 28px 70px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.24);
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > header) {
@@ -93,7 +93,7 @@
   padding: 18px;
   background: var(--tn-bg);
   overscroll-behavior: contain;
-  scrollbar-color: #cbbce7 transparent;
+  scrollbar-color: var(--trainer-v2-surface, #cbbce7) transparent;
   scrollbar-width: thin;
 }
 
@@ -104,7 +104,7 @@
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModalBody::-webkit-scrollbar-thumb) {
   border: 2px solid var(--tn-bg);
   border-radius: 999px;
-  background: #cbbce7;
+  background: var(--trainer-v2-surface, #cbbce7);
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal .trainerNextEmbeddedPlan) {
@@ -146,11 +146,11 @@
   border-color: var(--tn-purple);
   color: #ffffff;
   background: var(--tn-purple);
-  box-shadow: 0 8px 17px rgba(128, 107, 182, 0.22);
+  box-shadow: 0 8px 17px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.22);
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > footer button:first-of-type:hover) {
-  border-color: #d9cdec;
+  border-color: var(--trainer-v2-line, #d9cdec);
   background: var(--tn-surface-soft);
 }
 

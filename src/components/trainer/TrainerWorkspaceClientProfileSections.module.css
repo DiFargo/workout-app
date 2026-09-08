@@ -38,7 +38,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientBackRow > button:hover),
 :global(.trainerNextRoot) :global(.trainerNextClientBackRow > div > button:not(.trainerNextPrimary):hover) {
-  border-color: #d9cdec;
+  border-color: var(--trainer-v2-line, #d9cdec);
   color: var(--tn-purple-strong);
   background: var(--tn-purple-soft);
 }
@@ -94,11 +94,11 @@
   justify-content: center;
   gap: 7px;
   padding: 0 13px;
-  border: 1px solid #ded4f0;
+  border: 1px solid var(--trainer-v2-line, #ded4f0);
   border-radius: 14px;
   color: var(--tn-purple-strong);
   background: var(--tn-purple-soft);
-  box-shadow: 0 8px 18px rgba(87, 67, 136, 0.1);
+  box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 87 67 136) / 0.1);
   cursor: pointer;
   font: inherit;
   font-size: 12px;
@@ -109,7 +109,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientTaskButton:hover) {
   border-color: var(--tn-purple);
-  background: #eee8fb;
+  background: var(--trainer-v2-surface, #eee8fb);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextMobileMore) {
@@ -426,7 +426,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerMeasurementChart svg line) {
-  stroke: #e8e2ef;
+  stroke: var(--trainer-v2-surface, #e8e2ef);
 }
 
 :global(.trainerNextRoot) :global(.trainerMeasurementChart svg polyline) {
@@ -553,7 +553,7 @@
   aspect-ratio: 4 / 5;
   border: 0;
   border-radius: 11px;
-  background: #eeeaf2;
+  background: var(--trainer-v2-surface, #eeeaf2);
   object-fit: cover;
 }
 
@@ -1021,7 +1021,7 @@
   width: 44px;
   height: 26px;
   border-radius: 999px;
-  background: #ded9e2;
+  background: var(--trainer-v2-surface, #ded9e2);
   transition: background-color 160ms ease;
 }
 
@@ -1033,7 +1033,7 @@
   height: 20px;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 2px 5px rgba(40, 38, 46, 0.18);
+  box-shadow: 0 2px 5px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.18);
   content: "";
   transition: transform 160ms ease;
 }
@@ -1083,7 +1083,7 @@
 :global(.trainerNextRoot) :global(.trainerNotificationOffsets label.active),
 :global(.trainerNextRoot) :global(.trainerReminderPeriod button.active),
 :global(.trainerNextRoot) :global(.trainerReminderPeriod button[aria-pressed="true"]) {
-  border-color: #d7cbed;
+  border-color: var(--trainer-v2-line, #d7cbed);
   color: var(--tn-purple-strong);
   background: var(--tn-purple-soft);
 }
@@ -1202,19 +1202,19 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.muted) {
-  color: #b8b1bd;
+  color: var(--trainer-v2-muted, #b8b1bd);
   background: transparent;
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.today) {
-  border-color: #d7cbed;
+  border-color: var(--trainer-v2-line, #d7cbed);
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.active) {
-  border-color: #d8ceea;
+  border-color: var(--trainer-v2-line, #d8ceea);
   color: var(--tn-purple-strong);
-  background: #eee9f7;
-  box-shadow: 0 4px 10px rgba(128, 107, 182, 0.1);
+  background: var(--trainer-v2-surface, #eee9f7);
+  box-shadow: 0 4px 10px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.1);
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationDayBadges) {

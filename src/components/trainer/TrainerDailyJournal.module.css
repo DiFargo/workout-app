@@ -1,15 +1,15 @@
 .immediateActionsSection,
 .dailyJournalSection {
   background: #fff;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 18px;
   padding: 20px;
 }
 
 .immediateActionsSection {
   margin-bottom: 16px;
-  border-color: #e1d4f4;
-  background: linear-gradient(135deg, #fdfbff 0%, #f8f4ff 100%);
+  border-color: var(--trainer-v2-line, #e1d4f4);
+  background: linear-gradient(135deg, var(--trainer-v2-surface, #fdfbff) 0%, var(--trainer-v2-surface, #f8f4ff) 100%);
 }
 
 .immediateActionsSection .immediateActionsHead {
@@ -25,13 +25,13 @@
   justify-content: space-between;
   gap: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #efebf3;
+  border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 .immediateActionsHead span,
 .dailyJournalHead span {
   display: block;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: .06em;
@@ -40,7 +40,7 @@
 .immediateActionsHead h2,
 .dailyJournalHead h2 {
   margin: 7px 0 5px;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 24px;
   line-height: 1.18;
 }
@@ -48,7 +48,7 @@
 .immediateActionsHead p,
 .dailyJournalHead p {
   margin: 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -61,7 +61,7 @@
   place-items: center;
   border-radius: 999px;
   color: #fff;
-  background: #806bb6;
+  background: var(--trainer-v2-accent, #806bb6);
   font-size: 15px;
 }
 
@@ -101,7 +101,7 @@
   gap: 12px;
   min-height: 76px;
   padding: 11px 12px;
-  border: 1px solid #e5daf5;
+  border: 1px solid var(--trainer-v2-line, #e5daf5);
   border-radius: 12px;
   background: #fff;
   cursor: pointer;
@@ -109,13 +109,13 @@
 }
 
 .immediateActionCard:hover {
-  border-color: #cfc0ee;
-  box-shadow: 0 8px 18px rgba(95, 73, 148, .08);
+  border-color: var(--trainer-v2-line, #cfc0ee);
+  box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 95 73 148) / .08);
   transform: translateY(-1px);
 }
 
 .immediateActionCard:focus-visible {
-  outline: 3px solid rgba(143, 122, 200, .35);
+  outline: 3px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / .35);
   outline-offset: 2px;
 }
 
@@ -139,7 +139,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 12px;
   font-weight: 700;
 }
@@ -149,7 +149,7 @@
   display: block;
   overflow: hidden;
   margin-top: 2px;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 15px;
   line-height: 1.25;
   text-overflow: ellipsis;
@@ -161,7 +161,7 @@
   display: block;
   overflow: hidden;
   margin-top: 3px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -174,10 +174,10 @@
   align-items: center;
   justify-content: center;
   padding: 0 13px;
-  border: 1px solid #d9cdf4;
+  border: 1px solid var(--trainer-v2-line, #d9cdf4);
   border-radius: 10px;
-  color: #806bb6;
-  background: #f1ebfc;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #f1ebfc);
   font: inherit;
   font-size: 13px;
   font-weight: 800;
@@ -190,8 +190,8 @@
   padding: 0 9px;
   border-color: transparent;
   border-radius: 999px;
-  color: #806bb6;
-  background: #f1ebfc;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #f1ebfc);
   font-size: 11px;
 }
 
@@ -210,9 +210,9 @@
   gap: 8px;
   min-height: 34px;
   padding: 0 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 10px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   background: #fff;
   font: inherit;
   font-size: 13px;
@@ -226,27 +226,27 @@
   height: 20px;
   place-items: center;
   border-radius: 999px;
-  color: #806bb6;
-  background: #f5f2f7;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #f5f2f7);
   font-size: 11px;
 }
 
 .dailyJournalFilters button.active {
-  border-color: #d9cdf4;
-  color: #806bb6;
-  background: #f1ebfc;
+  border-color: var(--trainer-v2-line, #d9cdf4);
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #f1ebfc);
 }
 
 .dailyJournalFilters button.active span {
   color: #fff;
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .dailyJournalTimeline {
   position: relative;
   max-height: 610px;
   overflow: auto;
-  scrollbar-color: #cfc0ee transparent;
+  scrollbar-color: var(--trainer-v2-surface, #cfc0ee) transparent;
   scrollbar-width: thin;
 }
 
@@ -255,7 +255,7 @@
   z-index: 2;
   height: 28px;
   padding: 9px 0 0 94px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   background: #fff;
   font-size: 12px;
   font-weight: 800;
@@ -268,7 +268,7 @@
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #b8a8dc;
+  background: var(--trainer-v2-surface, #b8a8dc);
   content: "";
 }
 
@@ -281,7 +281,7 @@
   align-items: center;
   gap: 10px;
   min-height: 72px;
-  border-bottom: 1px solid #efebf3;
+  border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 .dailyJournalEvent:last-of-type {
@@ -289,7 +289,7 @@
 }
 
 .dailyJournalEvent time {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 13px;
   font-weight: 700;
   text-align: right;
@@ -306,7 +306,7 @@
   bottom: 0;
   left: 8px;
   width: 2px;
-  background: #ede6f8;
+  background: var(--trainer-v2-surface, #ede6f8);
   content: "";
 }
 
@@ -320,7 +320,7 @@
   transform: translateY(-50%);
   border: 2px solid #fff;
   border-radius: 999px;
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .dailyJournalEvent :global(.trainerNextAvatar.small) {
@@ -329,7 +329,7 @@
 }
 
 .dailyJournalEvent.requiresAction {
-  background: linear-gradient(90deg, rgba(248, 244, 255, .48), transparent 42%);
+  background: linear-gradient(90deg, rgb(var(--trainer-v2-surface-rgb, 248 244 255) / .48), transparent 42%);
 }
 
 .dailyJournalEventClickable {
@@ -338,13 +338,13 @@
 }
 
 .dailyJournalEventClickable:hover {
-  box-shadow: inset 3px 0 0 #d9cdf4;
+  box-shadow: inset 3px 0 0 var(--trainer-v2-shadow, #d9cdf4);
   background-color: #fcfbfe;
 }
 
 .dailyJournalEventClickable:focus-visible {
   z-index: 1;
-  outline: 3px solid rgba(143, 122, 200, .35);
+  outline: 3px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / .35);
   outline-offset: -3px;
 }
 
@@ -366,7 +366,7 @@
 }
 
 .dailyJournalRecorded {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-weight: 700;
 }
 
@@ -376,7 +376,7 @@
   justify-content: center;
   gap: 8px;
   min-height: 120px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 14px;
   text-align: center;
 }
@@ -424,36 +424,36 @@
   .dailyJournalRecorded { grid-column: 4; justify-self: start; padding-right: 0; }
 }
 /* /v2 only: keep the journal's existing action centre and event handling. */
-:global(html[data-trainer-variant="v2"]) .immediateActionsSection{background:linear-gradient(120deg,#fff,#eef3fa);border-color:rgba(60,60,67,.12);border-radius:16px;padding:16px}
-:global(html[data-trainer-variant="v2"]) .dailyJournalSection{background:#fff;border-color:rgba(60,60,67,.12);border-radius:16px;padding:16px}
+:global(html[data-trainer-variant="v2"]) .immediateActionsSection{background:linear-gradient(120deg,#fff,#eef3fa);border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:16px;padding:16px}
+:global(html[data-trainer-variant="v2"]) .dailyJournalSection{background:#fff;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:16px;padding:16px}
 :global(html[data-trainer-variant="v2"]) .immediateActionsHead span,
 :global(html[data-trainer-variant="v2"]) .dailyJournalHead span{color:#3c6faa;font-weight:600;letter-spacing:.035em}
 :global(html[data-trainer-variant="v2"]) .immediateActionsHead>strong{background:#3f73b8}
-:global(html[data-trainer-variant="v2"]) .immediateActionCard{background:#fff;border-color:rgba(60,60,67,.12);border-radius:12px;box-shadow:none}
+:global(html[data-trainer-variant="v2"]) .immediateActionCard{background:#fff;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:12px;box-shadow:none}
 :global(html[data-trainer-variant="v2"]) .immediateActionCta{color:#3c6faa}
 :global(html[data-trainer-variant="v2"]) .dailyJournalFilters button{min-height:44px;border-radius:10px;background:#efeff4;color:#636366;border-color:transparent}
-:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active{background:#eef3fa;color:#3c6faa;border-color:rgba(60,60,67,.12)}
-:global(html[data-trainer-variant="v2"]) .dailyJournalEvent{border-color:rgba(60,60,67,.12);box-shadow:none}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active{background:#eef3fa;color:#3c6faa;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12)}
+:global(html[data-trainer-variant="v2"]) .dailyJournalEvent{border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);box-shadow:none}
 :global(html[data-trainer-variant="v2"]) .dailyJournalEventAction{color:#3c6faa}
 :global(html[data-trainer-variant="v2"]) .dailyJournalFilters button strong{background:#efeff4;color:#636366}
 :global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active strong{background:#3f73b8;color:#fff}
 
 /* V2 uses the client spacing and surface system. */
-:global(html[data-trainer-variant="v2"] body) .immediateActionsSection { padding: 16px; margin-bottom: 12px; background: #fff !important; border-color: rgba(60,60,67,.12); }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalSection { padding: 16px; border-color: rgba(60,60,67,.12); }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalHead { flex-wrap: wrap; gap: 10px; padding-bottom: 12px; border-color: rgba(60,60,67,.12); }
+:global(html[data-trainer-variant="v2"] body) .immediateActionsSection { padding: 16px; margin-bottom: 12px; background: #fff !important; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalSection { padding: 16px; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalHead { flex-wrap: wrap; gap: 10px; padding-bottom: 12px; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalHead > div { flex: 1 1 220px; min-width: 0; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalHead h2, :global(html[data-trainer-variant="v2"] body) .immediateActionsHead h2 { font-size: 20px; line-height: 1.2; margin: 5px 0; letter-spacing: -.4px; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalHead p, :global(html[data-trainer-variant="v2"] body) .immediateActionsHead p { font-size: 13px; line-height: 1.4; }
 :global(html[data-trainer-variant="v2"] body) .attention, :global(html[data-trainer-variant="v2"] body) .calm { padding: 5px 9px; font-size: 11px; font-weight: 600; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalFilters { gap: 6px; margin: 12px 0; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button { min-height: 44px; padding: 0 10px; font-size: 12px; gap: 5px; }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button span { color: #636366; background: #e8e8ed; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button span { color: #636366; background: var(--trainer-v2-surface, #e8e8ed); }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button.active span { color: #fff; background: #3f73b8; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalTimeline { max-height: none; overflow: visible; }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary { position: relative; color: #8e8e93; font-size: 11px; }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary::before, :global(html[data-trainer-variant="v2"] body) .dailyJournalLine::before { background: #d1d1d6; }
-:global(html[data-trainer-variant="v2"] body) .immediateActionCard { padding: 12px; border-color: rgba(60,60,67,.12); min-height: 0; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary { position: relative; color: var(--trainer-v2-muted, #8e8e93); font-size: 11px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary::before, :global(html[data-trainer-variant="v2"] body) .dailyJournalLine::before { background: var(--trainer-v2-surface, #d1d1d6); }
+:global(html[data-trainer-variant="v2"] body) .immediateActionCard { padding: 12px; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); min-height: 0; }
 :global(html[data-trainer-variant="v2"] body) .immediateActionsContent span, :global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent span { color: #3c6faa; font-size: 11px; }
 :global(html[data-trainer-variant="v2"] body) .immediateActionsContent strong { font-size: 15px; white-space: normal; }
 :global(html[data-trainer-variant="v2"] body) .immediateActionCta { background: #eef3fa; color: #3c6faa; border: 0; }

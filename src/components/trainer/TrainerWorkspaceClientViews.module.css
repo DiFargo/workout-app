@@ -94,7 +94,7 @@
   margin-top: 6px;
   padding: 0 11px;
   border-radius: 999px;
-  color: #716988;
+  color: var(--trainer-v2-muted, #716988);
   background: var(--tn-surface-soft);
   font-size: 12px;
   font-weight: 700;
@@ -327,7 +327,7 @@
   place-items: center;
   padding: 20px;
   overflow-y: auto;
-  background: rgba(40, 38, 46, 0.34);
+  background: rgb(var(--trainer-v2-ink-rgb, 40 38 46) / 0.34);
   backdrop-filter: blur(9px);
 }
 
@@ -337,7 +337,7 @@
   border: 1px solid var(--tn-line);
   border-radius: 24px;
   background: var(--tn-surface);
-  box-shadow: 0 24px 60px rgba(40, 38, 46, 0.22);
+  box-shadow: 0 24px 60px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.22);
 }
 
 :global(.trainerNextRoot) :global(.trainerClientActionSheet > header) {
@@ -401,7 +401,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerClientActionSheet > div button:hover) {
-  border-color: #d9cdec;
+  border-color: var(--trainer-v2-line, #d9cdec);
   background: var(--tn-purple-soft);
 }
 

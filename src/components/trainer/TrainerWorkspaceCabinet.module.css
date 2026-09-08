@@ -27,7 +27,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks button:hover) {
-  border-color: #d7c9eb;
+  border-color: var(--trainer-v2-line, #d7c9eb);
   background: #fcfbfe;
   transform: translateY(-1px);
 }

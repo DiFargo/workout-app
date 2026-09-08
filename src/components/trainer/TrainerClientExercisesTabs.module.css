@@ -23,7 +23,7 @@
   border: 1px solid transparent;
   border-radius: 10px;
   background: #fff;
-  color: #6d657a;
+  color: var(--trainer-v2-muted, #6d657a);
   font: inherit;
   font-size: 13px;
   font-weight: 800;
@@ -33,19 +33,19 @@
 }
 
 .switcher button:hover {
-  border-color: #e1d8f0;
-  background: #faf8fd;
+  border-color: var(--trainer-v2-line, #e1d8f0);
+  background: var(--trainer-v2-surface, #faf8fd);
 }
 
 .switcher button:focus-visible {
-  outline: 3px solid rgba(100, 55, 245, 0.2);
+  outline: 3px solid rgb(var(--trainer-v2-line-rgb, 100 55 245) / 0.2);
   outline-offset: 2px;
 }
 
 .switcher button.active {
-  border-color: #e2d8f3;
-  background: #eee8fb;
-  color: #7455a8;
+  border-color: var(--trainer-v2-line, #e2d8f3);
+  background: var(--trainer-v2-surface, #eee8fb);
+  color: var(--trainer-v2-accent, #7455a8);
   box-shadow: none;
 }
 

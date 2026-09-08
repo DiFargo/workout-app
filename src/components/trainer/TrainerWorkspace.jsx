@@ -3530,7 +3530,7 @@ function NutritionAnalytics({ nutritionDays, target }) {
           <div className="trainerNutritionDonutRow">
             <div
               className="trainerNutritionDonut"
-              style={{ background: `conic-gradient(#e8f6ee 0 ${proteinAngle}deg, #fff4df ${proteinAngle}deg ${proteinAngle + fatAngle}deg, #eee8fa ${proteinAngle + fatAngle}deg 360deg)` }}
+              style={{ background: `conic-gradient(#e8f6ee 0 ${proteinAngle}deg, #fff4df ${proteinAngle}deg ${proteinAngle + fatAngle}deg, var(--trainer-v2-surface, #eee8fa) ${proteinAngle + fatAngle}deg 360deg)` }}
             >
               <span><strong>{averages.calories || "—"}</strong><small>ккал</small></span>
             </div>

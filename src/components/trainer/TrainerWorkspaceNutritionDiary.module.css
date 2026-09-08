@@ -64,10 +64,10 @@
 :global(.trainerNextRoot) :global(.trainerNutritionPresetMode) {
   margin: 2px 0 0;
   padding: 9px 11px;
-  border: 1px solid #e7ddf5;
+  border: 1px solid var(--trainer-v2-line, #e7ddf5);
   border-radius: 11px;
-  color: #706783;
-  background: #f8f5fc;
+  color: var(--trainer-v2-muted, #706783);
+  background: var(--trainer-v2-surface, #f8f5fc);
   font-size: 12px;
   line-height: 1.35;
 }
@@ -88,17 +88,17 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionPresetMode.isIndividual) {
-  border-color: #d8c9f4;
-  color: #6650a3;
-  background: #f1ebfb;
+  border-color: var(--trainer-v2-line, #d8c9f4);
+  color: var(--trainer-v2-accent, #6650a3);
+  background: var(--trainer-v2-surface, #f1ebfb);
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionPlanModal .trainerNutritionLockedField input:disabled) {
   opacity: 1;
-  color: #746d80;
-  border-color: #eeeaf2;
-  background: #f4f2f6;
-  -webkit-text-fill-color: #746d80;
+  color: var(--trainer-v2-muted, #746d80);
+  border-color: var(--trainer-v2-line, #eeeaf2);
+  background: var(--trainer-v2-surface, #f4f2f6);
+  -webkit-text-fill-color: var(--trainer-v2-muted, #746d80);
   cursor: not-allowed;
 }
 
@@ -146,7 +146,7 @@
   border-radius: 18px;
   background: var(--tn-surface-soft);
   scrollbar-width: thin;
-  scrollbar-color: #d8ceea transparent;
+  scrollbar-color: var(--trainer-v2-surface, #d8ceea) transparent;
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button) {
@@ -165,15 +165,15 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button:hover) {
-  border-color: #d8ceea;
-  background: #fcfbff;
+  border-color: var(--trainer-v2-line, #d8ceea);
+  background: var(--trainer-v2-surface, #fcfbff);
   transform: translateY(-1px);
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button.active) {
   border-color: var(--tn-purple-strong);
   background: var(--tn-purple-strong);
-  box-shadow: 0 8px 18px rgba(128, 107, 182, 0.22);
+  box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.22);
   color: #fff;
 }
 

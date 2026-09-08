@@ -4,15 +4,15 @@
 }
 
 .workspaceRoot :global(.trainerNextRoot) {
-  --tn-purple: #806bb6;
-  --tn-purple-soft: #f2efff;
-  --tn-purple-border: #d9cffd;
+  --tn-purple: var(--trainer-v2-accent, #806bb6);
+  --tn-purple-soft: var(--trainer-v2-surface, #f2efff);
+  --tn-purple-border: var(--trainer-v2-line, #d9cffd);
   --tn-green: #17aa4a;
   --tn-green-soft: #eaf8ee;
   --tn-orange: #f59b13;
   --tn-red: #ef4444;
   --tn-blue: #2474f5;
-  --tn-text: #15151b;
+  --tn-text: var(--trainer-v2-ink, #15151b);
   --tn-muted: #6f7380;
   --tn-line: #e5e7ed;
   --tn-surface: #ffffff;
@@ -60,19 +60,19 @@
   justify-items: center;
   gap: 9px;
   padding: 26px 22px 22px;
-  border: 1px solid rgba(217, 207, 253, 0.9);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 217 207 253) / 0.9);
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.96);
   color: var(--tn-text);
   text-align: center;
-  box-shadow: 0 24px 70px rgba(36, 32, 80, 0.18);
+  box-shadow: 0 24px 70px rgb(var(--trainer-v2-shadow-rgb, 36 32 80) / 0.18);
 }
 
 .workspaceRoot :global(.trainerSyncSpinner) {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 4px solid #ece8ff;
+  border: 4px solid var(--trainer-v2-line, #ece8ff);
   border-top-color: var(--tn-purple);
   animation: trainerSyncSpin 0.85s linear infinite;
 }
@@ -102,8 +102,8 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #656171;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-muted, #656171);
   cursor: pointer;
 }
 
@@ -140,15 +140,15 @@
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: #ece8f5;
+  background: var(--trainer-v2-surface, #ece8f5);
 }
 
 .workspaceRoot :global(.trainerSyncProgressTrack i) {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #806bb6, #a58ee4);
-  box-shadow: 0 3px 10px rgba(128, 107, 182, .32);
+  background: linear-gradient(90deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-surface, #a58ee4));
+  box-shadow: 0 3px 10px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / .32);
   transition: width .28s ease;
 }
 
@@ -158,7 +158,7 @@
   padding: 0 12px;
   border: 0;
   border-radius: 11px;
-  background: #f5f2f7;
+  background: var(--trainer-v2-surface, #f5f2f7);
   color: var(--tn-purple);
   font-size: 12px;
   font-weight: 850;
@@ -172,10 +172,10 @@
   bottom: 24px;
   width: min(352px, calc(100vw - 48px));
   padding: 13px 14px;
-  border: 1px solid #d9cffd;
+  border: 1px solid var(--trainer-v2-line, #d9cffd);
   border-radius: 16px;
   background: rgba(255, 255, 255, .98);
-  box-shadow: 0 14px 34px rgba(39, 33, 76, .16);
+  box-shadow: 0 14px 34px rgb(var(--trainer-v2-shadow-rgb, 39 33 76) / .16);
   backdrop-filter: blur(14px);
 }
 
@@ -213,7 +213,7 @@
   padding: 0 8px;
   border: 0;
   border-radius: 9px;
-  background: #f5f2f7;
+  background: var(--trainer-v2-surface, #f5f2f7);
   color: var(--tn-purple);
   font-size: 11px;
   font-weight: 900;
@@ -254,7 +254,7 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(41, 38, 51, 0.32);
+  background: rgb(var(--trainer-v2-ink-rgb, 41 38 51) / 0.32);
   backdrop-filter: blur(7px);
 }
 
@@ -265,26 +265,26 @@
   justify-items: center;
   gap: 10px;
   padding: 30px 24px 24px;
-  border: 1px solid rgba(239, 235, 243, 0.96);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 239 235 243) / 0.96);
   border-radius: 28px;
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   text-align: center;
-  box-shadow: 0 24px 70px rgba(40, 38, 46, 0.24);
+  box-shadow: 0 24px 70px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.24);
 }
 
 .spinner {
   width: 42px;
   height: 42px;
   margin-bottom: 2px;
-  border: 4px solid #eee9fa;
-  border-top-color: #806bb6;
+  border: 4px solid var(--trainer-v2-line, #eee9fa);
+  border-top-color: var(--trainer-v2-accent, #806bb6);
   border-radius: 50%;
   animation: trainerSyncSpin 0.85s linear infinite;
 }
 
 .eyebrow {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.08em;
@@ -299,7 +299,7 @@
 .overlayCard p {
   max-width: 285px;
   margin: 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 14px;
   font-weight: 650;
   line-height: 1.42;
@@ -316,8 +316,8 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #5d5965;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-muted, #5d5965);
   cursor: pointer;
 }
 
@@ -332,7 +332,7 @@
 
 .progressMeta {
   margin-top: 6px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 12px;
   font-weight: 700;
   text-align: left;
@@ -340,7 +340,7 @@
 
 .progressMeta b {
   flex: 0 0 auto;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 15px;
 }
 
@@ -349,15 +349,15 @@
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: #eee9f4;
+  background: var(--trainer-v2-surface, #eee9f4);
 }
 
 .progressTrack i {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #806bb6, #a58ee4);
-  box-shadow: 0 3px 10px rgba(128, 107, 182, 0.32);
+  background: linear-gradient(90deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-surface, #a58ee4));
+  box-shadow: 0 3px 10px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.32);
   transition: width 0.28s ease;
 }
 
@@ -367,7 +367,7 @@
   margin-top: 5px;
   border: 0;
   border-radius: 14px;
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
   font-size: 14px;
   font-weight: 800;
@@ -381,10 +381,10 @@
   bottom: 24px;
   width: min(360px, calc(100vw - 48px));
   padding: 14px;
-  border: 1px solid #e1d8f8;
+  border: 1px solid var(--trainer-v2-line, #e1d8f8);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 14px 34px rgba(39, 33, 76, 0.18);
+  box-shadow: 0 14px 34px rgb(var(--trainer-v2-shadow-rgb, 39 33 76) / 0.18);
   backdrop-filter: blur(14px);
 }
 
@@ -399,14 +399,14 @@
 }
 
 .toast strong {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 13px;
   line-height: 1.2;
 }
 
 .toast span {
   overflow: hidden;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   font-weight: 650;
   text-overflow: ellipsis;
@@ -422,8 +422,8 @@
   padding: 0 9px;
   border: 0;
   border-radius: 10px;
-  background: #f2eff9;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #f2eff9);
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 12px;
   font-weight: 850;
   cursor: pointer;
@@ -456,7 +456,7 @@
   border: 1px solid #e3e6ef;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.88);
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   font-weight: 850;
   line-height: 1;
@@ -654,8 +654,8 @@
 }
 
 .workspaceRoot :global(.trainerNextMoreDrawer nav button.active) {
-  border-color: #d8ceff;
-  background: #f4f0ff;
+  border-color: var(--trainer-v2-line, #d8ceff);
+  background: var(--trainer-v2-surface, #f4f0ff);
   color: var(--tn-purple);
 }
 
@@ -957,7 +957,7 @@
   gap: 9px;
   margin: -2px 0 12px;
   padding: 0 14px;
-  border: 1px solid #e8e4ff;
+  border: 1px solid var(--trainer-v2-line, #e8e4ff);
   border-radius: 12px;
   background: #ffffff;
   color: var(--tn-purple);
@@ -1070,7 +1070,7 @@
   overflow-y: auto;
   padding: 14px;
   scrollbar-width: thin;
-  scrollbar-color: #c7bbff transparent;
+  scrollbar-color: var(--trainer-v2-surface, #c7bbff) transparent;
 }
 
 .workspaceRoot :global(.trainerMessageList::-webkit-scrollbar) {
@@ -1092,7 +1092,7 @@
 .workspaceRoot :global(.trainerNextWorkoutDays::-webkit-scrollbar-thumb),
 .workspaceRoot :global(.trainerWorkoutEditorModalBody::-webkit-scrollbar-thumb) {
   border-radius: 999px;
-  background: #c7bbff;
+  background: var(--trainer-v2-surface, #c7bbff);
 }
 
 
@@ -1110,7 +1110,7 @@
   background: #fff;
   border-bottom: 0;
   scrollbar-width: thin;
-  scrollbar-color: #c7bbff transparent;
+  scrollbar-color: var(--trainer-v2-surface, #c7bbff) transparent;
 }
 
 .workspaceRoot :global(.trainerMessageFilters::-webkit-scrollbar) {
@@ -1121,7 +1121,7 @@
   flex: 0 0 auto;
   min-height: 40px;
   padding: 0 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 999px;
   background: #fff;
   color: #596070;
@@ -1174,8 +1174,8 @@
 
 .workspaceRoot :global(.trainerMessageList > button.active) {
   border-color: var(--tn-purple-border);
-  background: linear-gradient(135deg, #ffffff 0%, #f4efff 100%);
-  box-shadow: 0 10px 24px rgba(100, 55, 245, 0.1);
+  background: linear-gradient(135deg, #ffffff 0%, var(--trainer-v2-surface, #f4efff) 100%);
+  box-shadow: 0 10px 24px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.1);
 }
 
 .workspaceRoot :global(.trainerMessageList > button strong) {
@@ -1197,7 +1197,7 @@
   margin-top: 2px;
   padding: 8px 9px;
   border-radius: 11px;
-  background: #f7f4ff;
+  background: var(--trainer-v2-surface, #f7f4ff);
   color: var(--tn-purple);
   font-size: 11px;
   font-weight: 850;
@@ -1221,7 +1221,7 @@
 }
 
 .workspaceRoot :global(.trainerMessageSource.workout) {
-  background: #eee9ff;
+  background: var(--trainer-v2-surface, #eee9ff);
   color: var(--tn-purple);
 }
 
@@ -1277,7 +1277,7 @@
 .workspaceRoot :global(.trainerMessageCoachHint button) {
   min-height: 40px;
   padding: 8px 10px;
-  border: 1px solid #e5e2f7;
+  border: 1px solid var(--trainer-v2-line, #e5e2f7);
   border-radius: 11px;
   background: #fff;
   color: var(--tn-text);
@@ -1310,7 +1310,7 @@
 .workspaceRoot :global(.trainerMessageReply textarea:focus),
 .workspaceRoot :global(.trainerMessageModal textarea:focus) {
   border-color: var(--tn-purple-border);
-  box-shadow: 0 0 0 4px rgba(100, 55, 245, 0.08);
+  box-shadow: 0 0 0 4px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.08);
 }
 
 .workspaceRoot :global(.trainerMessageReply > button),
@@ -1330,7 +1330,7 @@
   color: #fff;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 14px 24px rgba(100, 55, 245, 0.2);
+  box-shadow: 0 14px 24px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.2);
 }
 
 .workspaceRoot :global(.trainerMessageReply > button:disabled),
@@ -1427,7 +1427,7 @@
   margin: 0;
   padding: 10px 12px;
   border-radius: 12px;
-  background: #f4f1ff;
+  background: var(--trainer-v2-surface, #f4f1ff);
   color: var(--tn-purple);
   font-size: 12px;
   font-weight: 800;
@@ -1677,9 +1677,9 @@
   padding: 0 17px;
   border: 0;
   border-radius: 7px;
-  background: linear-gradient(135deg, #7550f7, #5425ec);
+  background: linear-gradient(135deg, var(--trainer-v2-surface, #7550f7), var(--trainer-v2-surface, #5425ec));
   color: #fff;
-  box-shadow: 0 8px 18px rgba(100, 55, 245, 0.18);
+  box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.18);
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.08s ease-out;
@@ -1847,7 +1847,7 @@
   height: 34px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(108, 78, 255, .18);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 108 78 255) / .18);
   border-radius: 12px;
   background: var(--tn-purple-soft);
   color: var(--tn-purple);
@@ -1877,19 +1877,19 @@
 
 .workspaceRoot :global(.trainerActionCenterCard:hover),
 .workspaceRoot :global(.trainerActionCenterCard:focus-visible) {
-  border-color: rgba(108, 78, 255, .34);
+  border-color: rgb(var(--trainer-v2-line-rgb, 108 78 255) / .34);
   box-shadow: 0 14px 32px rgba(30, 38, 80, .08);
 }
 
 .workspaceRoot :global(.trainerActionCenterCard:focus-visible) {
-  outline: 2px solid rgba(108, 78, 255, .24);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 108 78 255) / .24);
   outline-offset: 2px;
 }
 
 .workspaceRoot :global(.trainerActionCenterCard.active) {
-  border-color: rgba(108, 78, 255, .42);
-  background: linear-gradient(180deg, #f7f4ff 0%, #fff 100%);
-  box-shadow: 0 14px 34px rgba(108, 78, 255, .12);
+  border-color: rgb(var(--trainer-v2-line-rgb, 108 78 255) / .42);
+  background: linear-gradient(180deg, var(--trainer-v2-surface, #f7f4ff) 0%, #fff 100%);
+  box-shadow: 0 14px 34px rgb(var(--trainer-v2-shadow-rgb, 108 78 255) / .12);
 }
 
 .workspaceRoot :global(.trainerActionCenterCard header) {
@@ -2195,8 +2195,8 @@
 }
 
 .workspaceRoot :global(.trainerNextStatus.taskAssigned) {
-  color: #6e59b6;
-  background: #f1edfb;
+  color: var(--trainer-v2-accent, #6e59b6);
+  background: var(--trainer-v2-surface, #f1edfb);
 }
 
 .workspaceRoot :global(.trainerNextStatus.attention),
@@ -2621,18 +2621,18 @@
   justify-content: center;
   gap: 7px;
   padding: 0 13px;
-  border: 1px solid #d6c8ed;
+  border: 1px solid var(--trainer-v2-line, #d6c8ed);
   border-radius: 999px;
-  background: #eee8fa;
-  color: #6a52a5;
+  background: var(--trainer-v2-surface, #eee8fa);
+  color: var(--trainer-v2-accent, #6a52a5);
   font-size: 10px;
   font-weight: 800;
   cursor: pointer;
 }
 
 .workspaceRoot :global(.trainerMeasurementPanelTitle button:hover) {
-  border-color: #bca8df;
-  background: #e5dcf6;
+  border-color: var(--trainer-v2-accent, #bca8df);
+  background: var(--trainer-v2-surface, #e5dcf6);
 }
 
 
@@ -2679,9 +2679,9 @@
   min-height: 28px;
   margin-top: 8px;
   padding: 0 12px;
-  border: 1px solid rgba(107, 78, 255, 0.22);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 107 78 255) / 0.22);
   border-radius: 7px;
-  background: rgba(107, 78, 255, 0.08);
+  background: rgb(var(--trainer-v2-surface-rgb, 107 78 255) / 0.08);
   color: var(--tn-purple);
   font-size: 11px;
   font-weight: 800;
@@ -2751,7 +2751,7 @@
 .workspaceRoot :global(.trainerMeasurementCollapsed p) {
   margin: 0;
   padding: 10px 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 8px;
   background: #ffffff;
 }
@@ -2835,7 +2835,7 @@
   align-content: center;
   gap: 8px;
   padding: 16px;
-  background: linear-gradient(135deg, #fff, #faf8ff);
+  background: linear-gradient(135deg, #fff, var(--trainer-v2-surface, #faf8ff));
 }
 
 .workspaceRoot :global(.trainerMeasurementInsight > span) {
@@ -2885,7 +2885,7 @@
 }
 
 .workspaceRoot :global(.trainerMeasurementChart line) {
-  stroke: #eeeaf7;
+  stroke: var(--trainer-v2-surface, #eeeaf7);
   stroke-width: 1;
 }
 
@@ -2898,7 +2898,7 @@
 }
 
 .workspaceRoot :global(.trainerMeasurementChart circle) {
-  fill: #6242ef;
+  fill: var(--trainer-v2-surface, #6242ef);
   stroke: #fff;
   stroke-width: 2;
 }
@@ -3120,7 +3120,7 @@
   overflow-x: auto;
   border: 1px solid var(--tn-line);
   border-radius: 8px;
-  background: #f7f6fb;
+  background: var(--trainer-v2-surface, #f7f6fb);
   scrollbar-width: none;
 }
 
@@ -3144,7 +3144,7 @@
 }
 
 .workspaceRoot :global(.trainerNextNutrition > .trainerNextPageTabs button.active) {
-  box-shadow: 0 5px 14px rgba(91, 54, 238, 0.2);
+  box-shadow: 0 5px 14px rgb(var(--trainer-v2-shadow-rgb, 91 54 238) / 0.2);
 }
 
 .workspaceRoot :global(.trainerNextWorkoutLayout) {
@@ -3168,7 +3168,7 @@
   padding-right: 4px;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: #c7bbff transparent;
+  scrollbar-color: var(--trainer-v2-surface, #c7bbff) transparent;
 }
 
 .workspaceRoot :global(.trainerNextWorkoutDays::-webkit-scrollbar) {
@@ -3459,9 +3459,9 @@
   justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
-  border: 1px dashed #c9bfff;
+  border: 1px dashed var(--trainer-v2-line, #c9bfff);
   border-radius: 10px;
-  background: linear-gradient(135deg, #ffffff, #faf8ff);
+  background: linear-gradient(135deg, #ffffff, var(--trainer-v2-surface, #faf8ff));
   color: var(--tn-muted);
   text-align: left;
   cursor: pointer;
@@ -3823,7 +3823,7 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(29, 27, 35, 0.48);
+  background: rgb(var(--trainer-v2-ink-rgb, 29 27 35) / 0.48);
   backdrop-filter: blur(8px);
 }
 
@@ -3831,11 +3831,11 @@
   position: relative;
   width: min(100%, 520px);
   padding: 28px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 28px;
   background: #fff;
-  box-shadow: 0 30px 80px rgba(30, 24, 45, 0.3);
-  color: #28262e;
+  box-shadow: 0 30px 80px rgb(var(--trainer-v2-shadow-rgb, 30 24 45) / 0.3);
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 :global(.trainerConfirmClose) {
@@ -3849,8 +3849,8 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #28262e;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-ink, #28262e);
   cursor: pointer;
 }
 
@@ -3861,7 +3861,7 @@
 :global(.trainerConfirmDialog [data-trainer-modal-header] > span) {
   display: block;
   margin-bottom: 8px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -3869,14 +3869,14 @@
 
 :global(.trainerConfirmDialog [data-trainer-modal-header] h2) {
   margin: 0;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: clamp(24px, 4vw, 30px);
   line-height: 1.12;
 }
 
 :global(.trainerConfirmDialog [data-trainer-modal-header] p) {
   margin: 12px 0 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 16px;
   line-height: 1.45;
 }
@@ -3902,10 +3902,10 @@
 
 :global(.trainerConfirmDialog [data-trainer-modal-footer] button) {
   min-height: 50px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 16px;
   background: #fff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-weight: 800;
   cursor: pointer;
 }
@@ -3946,7 +3946,7 @@
 }
 
 .workspaceRoot :global(.trainerNextCredentials code) {
-  color: #3e286f;
+  color: var(--trainer-v2-accent, #3e286f);
   font-size: 11px;
 }
 
@@ -3973,21 +3973,21 @@
   flex: 0 0 42px;
   margin: 0;
   padding: 0;
-  border: 1px solid #cfc7ff;
+  border: 1px solid var(--trainer-v2-line, #cfc7ff);
   border-radius: 12px;
   background: #fff;
-  color: #5741d3;
+  color: var(--trainer-v2-surface, #5741d3);
   font-family: inherit;
   font-size: 14px;
   font-weight: 800;
   line-height: 1;
-  box-shadow: 0 7px 16px rgba(82, 65, 181, 0.1);
+  box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 82 65 181) / 0.1);
   cursor: pointer;
 }
 
 .workspaceRoot :global(.trainerNextCredentials .trainerNextCopyInviteLink:hover) {
   background: #f7f6f8;
-  border-color: #a99dff;
+  border-color: var(--trainer-v2-accent, #a99dff);
 }
 
 .workspaceRoot :global(.trainerNextMobileNav) {
@@ -4345,7 +4345,7 @@
   }
 
   .workspaceRoot :global(.trainerNextMobileNav button.active) {
-    border-color: #e3ddff;
+    border-color: var(--trainer-v2-line, #e3ddff);
     background: #f7f6f8;
     color: var(--tn-purple);
   }
@@ -5195,14 +5195,14 @@
   padding: 0;
   border: 1px solid var(--tn-purple-border);
   border-radius: 8px;
-  background: linear-gradient(135deg, #fff 0%, #f8f5ff 58%, #f7f6f8 100%);
+  background: linear-gradient(135deg, #fff 0%, var(--trainer-v2-surface, #f8f5ff) 58%, #f7f6f8 100%);
   color: var(--tn-text);
-  box-shadow: 0 8px 25px rgba(80, 56, 184, 0.06);
+  box-shadow: 0 8px 25px rgb(var(--trainer-v2-shadow-rgb, 80 56 184) / 0.06);
 }
 
 .workspaceRoot :global(.trainerNextProgramsTab .programsOverviewCard.selected) {
-  border-color: #9e88ff;
-  background: linear-gradient(135deg, #fff 0%, #f7f3ff 52%, #eee8ff 100%);
+  border-color: var(--trainer-v2-accent, #9e88ff);
+  background: linear-gradient(135deg, #fff 0%, var(--trainer-v2-surface, #f7f3ff) 52%, var(--trainer-v2-surface, #eee8ff) 100%);
 }
 
 .workspaceRoot :global(.trainerNextProgramsTab .programsOverviewCardTitle) {
@@ -5220,7 +5220,7 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: #eae4ff;
+  background: var(--trainer-v2-surface, #eae4ff);
   color: var(--tn-purple);
 }
 
@@ -5244,7 +5244,7 @@
   gap: 6px;
   padding: 7px 10px;
   border-radius: 7px;
-  background: #eee9ff;
+  background: var(--trainer-v2-surface, #eee9ff);
   color: var(--tn-purple);
   font-size: 9px;
 }
@@ -5276,7 +5276,7 @@
   justify-content: start;
   gap: 0 8px;
   padding: 8px 10px;
-  border: 1px solid #ebe9f5;
+  border: 1px solid var(--trainer-v2-line, #ebe9f5);
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.86);
   color: var(--tn-purple);
@@ -5320,7 +5320,7 @@
   align-items: center;
   gap: 28px;
   padding: 0 20px;
-  border-top: 1px solid #e8e5f1;
+  border-top: 1px solid var(--trainer-v2-line, #e8e5f1);
   color: var(--tn-muted);
   font-size: 9px;
 }
@@ -5338,9 +5338,9 @@
   align-items: center;
   justify-content: center;
   padding: 6px 10px;
-  border: 1px solid #e5e0f8;
+  border: 1px solid var(--trainer-v2-line, #e5e0f8);
   border-radius: 999px;
-  background: #f7f4ff;
+  background: var(--trainer-v2-surface, #f7f4ff);
   color: var(--tn-purple);
   font-size: 9px;
   font-weight: 900;
@@ -5378,7 +5378,7 @@
   justify-content: center;
   gap: 3px 8px;
   padding: 14px;
-  border: 1px dashed #a994ff;
+  border: 1px dashed var(--trainer-v2-accent, #a994ff);
   border-radius: 8px;
   background: #fff;
   color: var(--tn-purple);
@@ -5534,8 +5534,8 @@
 }
 
 .workspaceRoot :global(.trainerNextProgramsTab .programAiImportText textarea:focus) {
-  border-color: rgba(104, 68, 245, 0.45);
-  box-shadow: 0 0 0 4px rgba(104, 68, 245, 0.08);
+  border-color: rgb(var(--trainer-v2-line-rgb, 104 68 245) / 0.45);
+  box-shadow: 0 0 0 4px rgb(var(--trainer-v2-shadow-rgb, 104 68 245) / 0.08);
 }
 
 .workspaceRoot :global(.trainerNextProgramsTab .programAiImportFile) {
@@ -5547,9 +5547,9 @@
   gap: 12px;
   margin-bottom: 12px;
   padding: 12px;
-  border: 1px dashed rgba(104, 68, 245, 0.32);
+  border: 1px dashed rgb(var(--trainer-v2-line-rgb, 104 68 245) / 0.32);
   border-radius: 16px;
-  background: #f6f3ff;
+  background: var(--trainer-v2-surface, #f6f3ff);
   color: var(--tn-text);
   cursor: pointer;
 }
@@ -5598,9 +5598,9 @@
 
 .workspaceRoot :global(.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button:last-child) {
   border-color: transparent;
-  background: linear-gradient(135deg, #806bb6, #8f7ac8);
+  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
   color: #fff;
-  box-shadow: 0 14px 28px rgba(76, 68, 201, 0.18);
+  box-shadow: 0 14px 28px rgb(var(--trainer-v2-shadow-rgb, 76 68 201) / 0.18);
 }
 
 .workspaceRoot :global(.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button:disabled) {
@@ -5773,7 +5773,7 @@
 .workspaceRoot :global(.trainerProgramWeekRow button:hover),
 .workspaceRoot :global(.trainerProgramDay > button:not(:first-child):hover),
 .workspaceRoot :global(.trainerNextWorkoutDays .trainerNextWorkoutDayActions button:hover) {
-  background: #f1efff;
+  background: var(--trainer-v2-surface, #f1efff);
   color: var(--tn-purple);
 }
 
@@ -5854,7 +5854,7 @@
 
 .workspaceRoot :global(.trainerProgramDay.selected) {
   border-color: var(--tn-purple-border);
-  background: #f2efff;
+  background: var(--trainer-v2-surface, #f2efff);
 }
 
 .workspaceRoot :global(.trainerProgramDay > button:first-child) {
@@ -5924,7 +5924,7 @@
   position: fixed;
   z-index: 1000;
   inset: 0;
-  background: rgba(40, 38, 46, 0.38);
+  background: rgb(var(--trainer-v2-ink-rgb, 40 38 46) / 0.38);
   backdrop-filter: blur(5px);
 }
 
@@ -5936,10 +5936,10 @@
   max-height: calc(100dvh - 40px);
   overflow: auto;
   padding: 0 18px 20px;
-  border: 1px solid #EFEBF3;
+  border: 1px solid var(--trainer-v2-line, #EFEBF3);
   border-radius: 22px;
   background: #FFFFFF;
-  box-shadow: 0 28px 70px rgba(40, 38, 46, 0.20);
+  box-shadow: 0 28px 70px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.20);
 }
 
 .workspaceRoot :global(.trainerProgramDayModalHeader) {
@@ -5952,12 +5952,12 @@
   justify-content: space-between;
   margin: 0 -18px;
   padding: 0 18px;
-  border-bottom: 1px solid #EFEBF3;
+  border-bottom: 1px solid var(--trainer-v2-line, #EFEBF3);
   background: #FFFFFF;
 }
 
 .workspaceRoot :global(.trainerProgramDayModalHeader strong) {
-  color: #28262E;
+  color: var(--trainer-v2-ink, #28262E);
   font-size: 16px;
 }
 
@@ -5969,8 +5969,8 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #F5F2F7;
-  color: #28262E;
+  background: var(--trainer-v2-surface, #F5F2F7);
+  color: var(--trainer-v2-ink, #28262E);
   cursor: pointer;
 }
 
@@ -6037,7 +6037,7 @@
 .workspaceRoot :global(.trainerProgramBreadcrumb > aside button:hover),
 .workspaceRoot :global(.trainerProgramExerciseList .trainerNextExerciseActions button:hover),
 .workspaceRoot :global(.trainerNextExerciseList .trainerNextExerciseActions button:hover) {
-  background: #f3f1ff;
+  background: var(--trainer-v2-surface, #f3f1ff);
   color: var(--tn-purple);
 }
 
@@ -6221,7 +6221,7 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 8px;
-  background: #eee9ff;
+  background: var(--trainer-v2-surface, #eee9ff);
   color: var(--tn-purple);
 }
 
@@ -6335,10 +6335,10 @@
   min-width: 0;
   min-height: 134px;
   padding: 16px 18px;
-  border: 1px solid #e7e0fb;
+  border: 1px solid var(--trainer-v2-line, #e7e0fb);
   border-radius: 10px;
   background:
-    linear-gradient(135deg, rgba(242, 239, 255, 0.88), rgba(255, 255, 255, 0.98) 62%),
+    linear-gradient(135deg, rgb(var(--trainer-v2-surface-rgb, 242 239 255) / 0.88), rgba(255, 255, 255, 0.98) 62%),
     #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
@@ -6360,11 +6360,11 @@
   min-width: 0;
   margin-top: 0;
   padding: 18px;
-  border: 1px solid #e7e0fb;
+  border: 1px solid var(--trainer-v2-line, #e7e0fb);
   border-radius: 10px;
   background:
     linear-gradient(135deg, #fff 0%, #ffffff 100%);
-  box-shadow: 0 12px 30px rgba(42, 32, 88, 0.05);
+  box-shadow: 0 12px 30px rgb(var(--trainer-v2-shadow-rgb, 42 32 88) / 0.05);
 }
 
 .workspaceRoot :global(.trainerAnalyticsRiskList),
@@ -6390,7 +6390,7 @@
   background: var(--tn-purple);
   color: #fff;
   font-weight: 700;
-  box-shadow: 0 12px 24px rgba(100, 55, 245, 0.16);
+  box-shadow: 0 12px 24px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.16);
 }
 
 .workspaceRoot :global(.trainerClientProgramSelectLabel > span) {
@@ -6409,7 +6409,7 @@
 .workspaceRoot :global(.trainerClientAssignmentControls .trainerClientProgramSelectField select) {
   height: 48px;
   padding: 0 42px 0 16px;
-  border-color: #e4ddfa;
+  border-color: var(--trainer-v2-line, #e4ddfa);
   border-radius: 9px;
   appearance: none;
   background:
@@ -6419,7 +6419,7 @@
   font-weight: 700;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
-    0 10px 22px rgba(42, 32, 88, 0.04);
+    0 10px 22px rgb(var(--trainer-v2-shadow-rgb, 42 32 88) / 0.04);
 }
 
 .workspaceRoot :global(.trainerClientAssignmentControls .trainerClientProgramSelectField select:hover) {
@@ -6429,8 +6429,8 @@
 .workspaceRoot :global(.trainerClientAssignmentControls .trainerClientProgramSelectField select:focus) {
   border-color: var(--tn-purple);
   box-shadow:
-    0 0 0 3px rgba(100, 55, 245, 0.1),
-    0 10px 22px rgba(42, 32, 88, 0.05);
+    0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.1),
+    0 10px 22px rgb(var(--trainer-v2-shadow-rgb, 42 32 88) / 0.05);
 }
 
 .workspaceRoot :global(.trainerClientProgramSelectField svg) {
@@ -6484,7 +6484,7 @@
   align-content: center;
   gap: 3px;
   padding: 7px 11px;
-  border: 1px solid #ebe9f4;
+  border: 1px solid var(--trainer-v2-line, #ebe9f4);
   border-radius: 7px;
   background: #ffffff;
 }
@@ -6565,7 +6565,7 @@
   min-height: 6px;
   display: block;
   border-radius: 5px 5px 0 0;
-  background: linear-gradient(180deg, #7753fa, #5429e8);
+  background: linear-gradient(180deg, var(--trainer-v2-surface, #7753fa), var(--trainer-v2-surface, #5429e8));
 }
 
 .workspaceRoot :global(.trainerClientBarChart i.over) {
@@ -6589,7 +6589,7 @@
   align-items: center;
   gap: 7px;
   padding: 5px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 999px;
   background: #ffffff;
 }
@@ -6620,7 +6620,7 @@
   align-content: center;
   gap: 2px;
   padding: 8px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 8px;
   background: #ffffff;
 }
@@ -6699,7 +6699,7 @@
 .workspaceRoot :global(.trainerWorkoutMonthGrid .today),
 .workspaceRoot :global(.trainerWorkoutScheduleGrid .today) {
   border-color: var(--tn-purple-border);
-  box-shadow: 0 0 0 3px rgba(100, 55, 245, 0.08);
+  box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.08);
 }
 
 .workspaceRoot :global(.trainerWorkoutMonthGrid .scheduled) {
@@ -6760,7 +6760,7 @@
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleLegend i.archived) {
-  background: #9b97a0;
+  background: var(--trainer-v2-muted, #9b97a0);
 }
 
 .workspaceRoot :global(.trainerWorkoutMonthLegend) {
@@ -6801,7 +6801,7 @@
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleColorHint b:nth-child(1)) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleColorHint b:nth-child(2)) {
@@ -6819,7 +6819,7 @@
   place-items: center;
   align-content: center;
   gap: 2px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 9px;
   background: #ffffff;
   color: var(--tn-purple);
@@ -6831,7 +6831,7 @@
   display: grid;
   gap: 10px;
   padding: 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 9px;
   background: #ffffff;
 }
@@ -6899,7 +6899,7 @@
 
 .workspaceRoot :global(.trainerWorkoutScheduleGrid .selected) {
   border-color: var(--tn-purple);
-  background: #f4f0ff;
+  background: var(--trainer-v2-surface, #f4f0ff);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleGrid button.hasWorkout:disabled) {
@@ -6907,15 +6907,15 @@
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleGrid button.planned) {
-  border-color: #d8ccff;
-  background: #f6f2ff;
+  border-color: var(--trainer-v2-line, #d8ccff);
+  background: var(--trainer-v2-surface, #f6f2ff);
   color: var(--tn-purple);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleGrid button.hasWorkout i) {
   padding: 1px 5px;
   border-radius: 999px;
-  background: #ebe5ff;
+  background: var(--trainer-v2-surface, #ebe5ff);
   line-height: 1.2;
 }
 
@@ -6940,14 +6940,14 @@
 }
 
 .workspaceRoot :global(.trainerWorkoutSchedulePlanner .trainerWorkoutScheduleGrid button.archived:disabled) {
-  border-color: #ddd9e1;
+  border-color: var(--trainer-v2-line, #ddd9e1);
   background: #f1f0f3;
-  color: #87828d;
+  color: var(--trainer-v2-muted, #87828d);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleGrid button.archived i) {
-  background: #e2e0e5;
-  color: #706b75;
+  background: var(--trainer-v2-surface, #e2e0e5);
+  color: var(--trainer-v2-muted, #706b75);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleLegend) {
@@ -6982,7 +6982,7 @@
 .workspaceRoot :global(.trainerWorkoutScheduleFooter span),
 .workspaceRoot :global(.trainerWorkoutStatusSummary span) {
   padding: 5px 8px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 999px;
   background: #ffffff;
   color: var(--tn-muted);
@@ -7003,14 +7003,14 @@
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleFooter button.trainerWorkoutScheduleSubscriptionAction) {
-  border: 1px solid #d3c2ec;
-  color: #6d55aa;
-  background: #f8f5fc;
+  border: 1px solid var(--trainer-v2-line, #d3c2ec);
+  color: var(--trainer-v2-accent, #6d55aa);
+  background: var(--trainer-v2-surface, #f8f5fc);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleFooter button.trainerWorkoutScheduleSubscriptionAction:hover:not(:disabled)) {
-  border-color: #b9a7df;
-  background: #eee8fa;
+  border-color: var(--trainer-v2-accent, #b9a7df);
+  background: var(--trainer-v2-surface, #eee8fa);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleHint) {
@@ -7022,10 +7022,10 @@
 .workspaceRoot :global(.trainerWorkoutScheduleClientNotice) {
   margin: -2px 0 0;
   padding: 9px 11px;
-  border: 1px solid #d9cbed;
+  border: 1px solid var(--trainer-v2-line, #d9cbed);
   border-radius: 9px;
-  background: #f7f3fc;
-  color: #694ea1;
+  background: var(--trainer-v2-surface, #f7f3fc);
+  color: var(--trainer-v2-accent, #694ea1);
   font-size: 10px;
   font-weight: 700;
   line-height: 1.4;
@@ -7051,7 +7051,7 @@
   place-items: center;
   align-content: center;
   gap: 2px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 9px;
   background: #ffffff;
   color: var(--tn-purple);
@@ -7077,7 +7077,7 @@
   align-items: center;
   gap: 12px;
   padding: 9px 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 10px;
   background: #ffffff;
 }
@@ -7088,7 +7088,7 @@
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: #f0ebff;
+  background: var(--trainer-v2-surface, #f0ebff);
   font-size: 15px;
 }
 
@@ -7165,9 +7165,9 @@
   justify-self: start;
   min-height: 40px;
   padding: 0 15px;
-  border: 1px solid rgba(108, 78, 255, .22);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 108 78 255) / .22);
   border-radius: 10px;
-  background: #f7f4ff;
+  background: var(--trainer-v2-surface, #f7f4ff);
   color: var(--tn-purple);
   font: inherit;
   font-size: 13px;
@@ -7178,7 +7178,7 @@
 .workspaceRoot :global(.trainerWorkoutReviewAction:hover),
 .workspaceRoot :global(.trainerWorkoutReviewAction:focus-visible) {
   border-color: var(--tn-purple);
-  background: #eee9ff;
+  background: var(--trainer-v2-surface, #eee9ff);
 }
 
 .workspaceRoot :global(.trainerClientWorkoutReviewPanel > header p) {
@@ -7220,7 +7220,7 @@
   min-width: 0;
   min-height: 78px;
   padding: 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 10px;
   background: #ffffff;
 }
@@ -7261,9 +7261,9 @@
   grid-template-columns: auto minmax(0, 1fr);
   gap: 10px;
   padding: 12px;
-  border: 1px solid rgba(107, 78, 255, 0.16);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 107 78 255) / 0.16);
   border-radius: 10px;
-  background: rgba(107, 78, 255, 0.06);
+  background: rgb(var(--trainer-v2-surface-rgb, 107 78 255) / 0.06);
 }
 
 .workspaceRoot :global(.trainerWorkoutReviewFeedback > span) {
@@ -7304,7 +7304,7 @@
   align-content: center;
   gap: 5px;
   padding: 10px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 7px;
   background: #ffffff;
 }
@@ -7337,7 +7337,7 @@
   align-content: center;
   gap: 4px;
   padding: 10px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 8px;
   background: #ffffff;
 }
@@ -7353,7 +7353,7 @@
 .workspaceRoot :global(.trainerExerciseProgressInsight) {
   margin: 10px 0 0;
   padding: 10px 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 8px;
   background: #ffffff;
   color: var(--tn-muted);
@@ -7375,7 +7375,7 @@
   justify-content: center;
   gap: 7px;
   padding: 0 11px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 999px;
   background: #fff;
   color: var(--tn-muted);
@@ -7392,7 +7392,7 @@
 .workspaceRoot :global(.trainerExerciseProgressToolbar button.active) {
   background: var(--tn-purple);
   color: #fff;
-  box-shadow: 0 8px 18px rgba(100, 55, 245, 0.16);
+  box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.16);
 }
 
 .workspaceRoot :global(.trainerExerciseProgressToolbar span) {
@@ -7401,7 +7401,7 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(100, 55, 245, 0.1);
+  background: rgb(var(--trainer-v2-surface-rgb, 100 55 245) / 0.1);
   color: inherit;
   font-size: 8px;
 }
@@ -7452,7 +7452,7 @@
   display: grid;
   gap: 3px;
   padding: 7px 8px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 6px;
   background: #ffffff;
 }
@@ -7650,7 +7650,7 @@
 
 .workspaceRoot :global(.trainerNutritionDiary > aside button.active) {
   border-color: var(--tn-purple);
-  background: #f8f5ff;
+  background: var(--trainer-v2-surface, #f8f5ff);
   color: var(--tn-purple);
 }
 
@@ -7680,7 +7680,7 @@
 .workspaceRoot :global(.trainerNutritionDiaryTotals span) {
   min-width: 76px;
   padding: 8px 10px;
-  border: 1px solid #ebe9f4;
+  border: 1px solid var(--trainer-v2-line, #ebe9f4);
   border-radius: 7px;
   background: #ffffff;
   color: var(--tn-muted);
@@ -7741,7 +7741,7 @@
   align-content: center;
   gap: 4px;
   padding: 8px 10px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 7px;
   background: #ffffff;
 }
@@ -7975,7 +7975,7 @@
 
 .workspaceRoot :global(.trainerReminderCard) {
   padding: 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 10px;
   background: #fff;
 }
@@ -7993,7 +7993,7 @@
   display: grid;
   place-items: center;
   border-radius: 9px;
-  background: #eee9ff;
+  background: var(--trainer-v2-surface, #eee9ff);
   color: var(--tn-purple);
 }
 
@@ -8034,7 +8034,7 @@
   align-items: center;
   gap: 3px 9px;
   padding: 10px 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 7px;
   background: #ffffff;
 }
@@ -8048,7 +8048,7 @@
 .workspaceRoot :global(.trainerReminderPeriod) {
   margin-top: 14px;
   padding-top: 13px;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 .workspaceRoot :global(.trainerNotificationOffsets > p),
@@ -8137,15 +8137,15 @@
 }
 
 .workspaceRoot :global(.trainerReminderPeriod button.active) {
-  background: #f4f0ff;
+  background: var(--trainer-v2-surface, #f4f0ff);
   color: var(--tn-purple);
-  box-shadow: inset 0 0 0 1px #cfc3ff;
+  box-shadow: inset 0 0 0 1px var(--trainer-v2-shadow, #cfc3ff);
 }
 
 .workspaceRoot :global(.trainerProgressReminderSettings) {
   margin-top: 18px;
   padding: 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 8px;
   background: #fff;
 }
@@ -8173,7 +8173,7 @@
 .workspaceRoot :global(.trainerProgressReminderOptions label.active) {
   border-color: var(--tn-purple);
   background: #f7f6f8;
-  box-shadow: 0 8px 18px rgba(103, 70, 255, 0.08);
+  box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 103 70 255) / 0.08);
 }
 
 .workspaceRoot :global(.trainerProgressReminderOptions label > span) {
@@ -8183,14 +8183,14 @@
   grid-row: 1 / 3;
   place-items: center;
   border-radius: 8px;
-  background: #eee9ff;
+  background: var(--trainer-v2-surface, #eee9ff);
   color: var(--tn-purple);
 }
 
 .workspaceRoot :global(.trainerNotificationCalendar) {
   margin-top: 18px;
   padding: 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 8px;
   background: #ffffff;
 }
@@ -8239,7 +8239,7 @@
   justify-items: center;
   gap: 2px;
   padding: 3px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 7px;
   background: #fff;
   color: var(--tn-text);
@@ -8257,9 +8257,9 @@
 
 .workspaceRoot :global(.trainerNotificationCalendarGrid button.active) {
   border-color: var(--tn-purple);
-  background: #f4f0ff;
+  background: var(--trainer-v2-surface, #f4f0ff);
   color: var(--tn-purple);
-  box-shadow: 0 8px 16px rgba(103, 70, 255, 0.18);
+  box-shadow: 0 8px 16px rgb(var(--trainer-v2-shadow-rgb, 103 70 255) / 0.18);
 }
 
 .workspaceRoot :global(.trainerNotificationCalendarGrid button.photoReminder) {
@@ -8280,7 +8280,7 @@
 
 .workspaceRoot :global(.trainerNotificationCalendarGrid button.active.photoReminder),
 .workspaceRoot :global(.trainerNotificationCalendarGrid button.active.measurementReminder) {
-  box-shadow: inset 0 0 0 1px rgba(103, 70, 255, 0.28);
+  box-shadow: inset 0 0 0 1px rgb(var(--trainer-v2-shadow-rgb, 103 70 255) / 0.28);
 }
 
 .workspaceRoot :global(.trainerNotificationDayBadges) {
@@ -8419,7 +8419,7 @@
   overscroll-behavior: contain;
   touch-action: pan-y;
   scrollbar-width: thin;
-  scrollbar-color: #c7bbff transparent;
+  scrollbar-color: var(--trainer-v2-surface, #c7bbff) transparent;
 }
 
 .workspaceRoot :global(.trainerWorkoutEditorModalBody::-webkit-scrollbar) {
@@ -8575,7 +8575,7 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: #f4f1ff;
+  background: var(--trainer-v2-surface, #f4f1ff);
 }
 
 .workspaceRoot :global(.trainerClientActionSheet > div button.danger) {
@@ -8621,7 +8621,7 @@
 
 .workspaceRoot :global(.trainerNextArchivedProgram) {
   overflow: hidden;
-  border: 1px solid #e2dfe6;
+  border: 1px solid var(--trainer-v2-line, #e2dfe6);
   border-radius: 8px;
   background: #f5f4f6;
 }
@@ -8637,7 +8637,7 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #67626d;
+  color: var(--trainer-v2-muted, #67626d);
 }
 
 .workspaceRoot :global(.trainerNextArchivedProgramToggle > span) {
@@ -8647,7 +8647,7 @@
 }
 
 .workspaceRoot :global(.trainerNextArchivedProgramToggle small) {
-  color: #908b95;
+  color: var(--trainer-v2-muted, #908b95);
   font-size: 7px;
   font-weight: 900;
   letter-spacing: .06em;
@@ -8656,7 +8656,7 @@
 .workspaceRoot :global(.trainerNextArchivedProgramToggle strong) {
   min-width: 0;
   overflow: hidden;
-  color: #4f4a55;
+  color: var(--trainer-v2-muted, #4f4a55);
   font-size: 11px;
   line-height: 1.2;
   text-overflow: ellipsis;
@@ -8664,14 +8664,14 @@
 }
 
 .workspaceRoot :global(.trainerNextArchivedProgramToggle em) {
-  color: #8c8791;
+  color: var(--trainer-v2-muted, #8c8791);
   font-size: 8px;
   font-style: normal;
 }
 
 .workspaceRoot :global(.trainerNextArchivedProgramToggle > svg) {
   flex: 0 0 auto;
-  color: #89848f;
+  color: var(--trainer-v2-muted, #89848f);
   transition: transform .18s ease;
 }
 
@@ -8689,19 +8689,19 @@
   display: grid;
   gap: 2px;
   padding: 8px;
-  border: 1px solid #e8e5eb;
+  border: 1px solid var(--trainer-v2-line, #e8e5eb);
   border-radius: 6px;
   background: rgba(255, 255, 255, .68);
 }
 
 .workspaceRoot :global(.trainerNextArchivedWorkoutList strong) {
-  color: #6f6975;
+  color: var(--trainer-v2-muted, #6f6975);
   font-size: 9px;
 }
 
 .workspaceRoot :global(.trainerNextArchivedWorkoutList span) {
   overflow: hidden;
-  color: #56515c;
+  color: var(--trainer-v2-muted, #56515c);
   font-size: 10px;
   font-weight: 750;
   text-overflow: ellipsis;
@@ -8709,7 +8709,7 @@
 }
 
 .workspaceRoot :global(.trainerNextArchivedWorkoutList small) {
-  color: #928c97;
+  color: var(--trainer-v2-muted, #928c97);
   font-size: 8px;
 }
 
@@ -8738,7 +8738,7 @@
   width: fit-content;
   padding: 3px 7px;
   border-radius: 999px;
-  background: #f4f1ff;
+  background: var(--trainer-v2-surface, #f4f1ff);
   color: var(--tn-purple);
   font-size: 8px;
   font-style: normal;
@@ -8807,7 +8807,7 @@
   gap: 10px;
   margin: -4px 0 14px;
   padding: 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 8px;
   background: #ffffff;
 }
@@ -8830,7 +8830,7 @@
   justify-content: center;
   padding: 0 12px;
   border-radius: 999px;
-  background: #f1ecff;
+  background: var(--trainer-v2-surface, #f1ecff);
   color: var(--tn-purple);
   font-size: 10px;
   font-weight: 800;
@@ -8973,7 +8973,7 @@
   padding: 3px 8px;
   border: 1px solid var(--tn-line);
   border-radius: 999px;
-  background: #f7f4fa;
+  background: var(--trainer-v2-surface, #f7f4fa);
   color: var(--tn-muted);
 }
 
@@ -9010,9 +9010,9 @@
 }
 
 .workspaceRoot :global(.trainerNextExerciseProgress.status-stable) {
-  border-color: #e6e2ea;
+  border-color: var(--trainer-v2-line, #e6e2ea);
   background: #f4f3f6;
-  color: #6f6977;
+  color: var(--trainer-v2-muted, #6f6977);
 }
 
 .workspaceRoot :global(.trainerNextExerciseActions) {
@@ -9131,7 +9131,7 @@
   place-items: center;
   height: 34px;
   border-radius: 6px;
-  background: #efedf9;
+  background: var(--trainer-v2-surface, #efedf9);
   color: var(--tn-purple);
   font-size: 10px;
 }
@@ -9176,7 +9176,7 @@
   justify-content: center;
   gap: 6px;
   margin-top: 3px;
-  border: 1px dashed #c9c4e8;
+  border: 1px dashed var(--trainer-v2-line, #c9c4e8);
   border-radius: 6px;
   background: transparent;
   color: var(--tn-purple);
@@ -9205,7 +9205,7 @@
   border: 1px solid var(--tn-line);
   border-radius: 10px;
   background: #fff;
-  box-shadow: 0 24px 70px rgba(29, 28, 43, 0.2);
+  box-shadow: 0 24px 70px rgb(var(--trainer-v2-shadow-rgb, 29 28 43) / 0.2);
 }
 
 .workspaceRoot :global(.trainerNextWorkoutPreview > small) {
@@ -9229,7 +9229,7 @@
   display: grid;
   gap: 3px;
   padding: 11px 13px;
-  background: #f8f7fc;
+  background: var(--trainer-v2-surface, #f8f7fc);
 }
 
 .workspaceRoot :global(.trainerNextWorkoutPreview article header strong) {
@@ -9251,7 +9251,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #efedf9;
+  background: var(--trainer-v2-surface, #efedf9);
   color: var(--tn-purple);
   font-size: 9px;
 }
@@ -10476,7 +10476,7 @@
   background:
     radial-gradient(circle at 16% 0%, rgba(127,159,58,.09), transparent 34%),
     linear-gradient(180deg, #070a07 0%, #050705 100%);
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(.adminV3Sidebar) {
@@ -11235,7 +11235,7 @@
   background:
     radial-gradient(circle at 15% 0%, rgba(127,159,58,.08), transparent 32%),
     linear-gradient(180deg, #070a07, #050705);
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(.adminUsersBack),
@@ -11764,20 +11764,20 @@
   gap: 10px;
   margin-top: 14px;
   padding: 16px;
-  border: 1px solid #d9d2ff;
+  border: 1px solid var(--trainer-v2-line, #d9d2ff);
   border-radius: 16px;
   background: #f7f6f8;
 }
 
 .workspaceRoot :global(.adminCreateClientModal .adminCredentialsBox span) {
-  color: #5d4bd4;
+  color: var(--trainer-v2-surface, #5d4bd4);
   font-size: 12px;
   font-weight: 900;
 }
 
 .workspaceRoot :global(.adminCreateClientModal .adminCredentialsBox strong) {
   overflow-wrap: anywhere;
-  color: #3d328a;
+  color: var(--trainer-v2-accent, #3d328a);
   font: 700 14px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
@@ -11786,18 +11786,18 @@
   min-height: 42px;
   margin: 0;
   padding: 0 16px;
-  border: 1px solid #cfc7ff;
+  border: 1px solid var(--trainer-v2-line, #cfc7ff);
   border-radius: 12px;
   background: #ffffff;
-  color: #5741d3;
+  color: var(--trainer-v2-surface, #5741d3);
   font: 800 14px/1 Arial, sans-serif;
-  box-shadow: 0 7px 16px rgba(82, 65, 181, 0.1);
+  box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 82 65 181) / 0.1);
   cursor: pointer;
 }
 
 .workspaceRoot :global(.adminCreateClientModal .adminCredentialsBox button:hover) {
-  border-color: #7b68ec;
-  background: #ece8ff;
+  border-color: var(--trainer-v2-accent, #7b68ec);
+  background: var(--trainer-v2-surface, #ece8ff);
 }
 
 @media (max-width: 760px) {
@@ -12939,7 +12939,7 @@
 .workspaceRoot :global(.monthProgramEditorPage) {
   min-height: 100dvh;
   padding: max(22px, env(safe-area-inset-top)) 14px 28px;
-  background: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
   color: #fff;
 }
 
@@ -13638,13 +13638,13 @@
 }
 
 .workspaceRoot :global(.monthExerciseWeightMode.active) {
-  border-color: rgba(139, 120, 240, 0.34);
-  background: rgba(117, 101, 232, 0.1);
+  border-color: rgb(var(--trainer-v2-line-rgb, 139 120 240) / 0.34);
+  background: rgb(var(--trainer-v2-surface-rgb, 117 101 232) / 0.1);
 }
 
 .workspaceRoot :global(.monthExerciseWeightMode.active i) {
-  background: rgba(117, 101, 232, 0.18);
-  color: #b7adff;
+  background: rgb(var(--trainer-v2-surface-rgb, 117 101 232) / 0.18);
+  color: var(--trainer-v2-surface, #b7adff);
 }
 
 .workspaceRoot :global(.monthProgramPremiumSetLegend.withoutWeight),
@@ -13654,25 +13654,25 @@
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode > span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode i) {
   background: #ffffff;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode.active) {
-  border-color: #d8d2fb;
-  background: #f0edff;
+  border-color: var(--trainer-v2-line, #d8d2fb);
+  background: var(--trainer-v2-surface, #f0edff);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseWeightMode.active i) {
-  background: #e2ddff;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #e2ddff);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 @media (min-width: 900px) {
@@ -15602,7 +15602,7 @@
 }
 
 .workspaceRoot :global(.adminNutritionCalendarLegend .proteinFill) {
-  background: #8a6df1;
+  background: var(--trainer-v2-surface, #8a6df1);
 }
 
 .workspaceRoot :global(.adminNutritionCalendarLegend .carbsFill) {
@@ -15688,7 +15688,7 @@
   width: 5px;
   left: 0;
   border-radius: 0 5px 0 18px;
-  background: #8a6df1;
+  background: var(--trainer-v2-surface, #8a6df1);
   opacity: 0.94;
 }
 
@@ -16940,8 +16940,8 @@
 .workspaceRoot :global(.adminShell),
 .workspaceRoot :global(.adminMain),
 .workspaceRoot :global(.adminDashboardShell) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
 }
 
 
@@ -16993,8 +16993,8 @@
 .workspaceRoot :global(.adminV3Workspace .clientCard) {
   background:
     radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
-    linear-gradient(180deg, #28262e 0%, #28262e 100%);
-  background-color: #28262e;
+    linear-gradient(180deg, var(--trainer-v2-ink, #28262e) 0%, var(--trainer-v2-ink, #28262e) 100%);
+  background-color: var(--trainer-v2-ink, #28262e);
   border: 1px solid rgba(255, 255, 255, 0.075);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
 }
@@ -17214,8 +17214,8 @@
 .workspaceRoot :global(.adminV3Content),
 .workspaceRoot :global(.adminShell),
 .workspaceRoot :global(.adminMain) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   background-image: none;
 }
 
@@ -17273,8 +17273,8 @@
 .workspaceRoot :global(.adminV3Workspace .adminStatsGrid > *) {
   background:
     radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
-    linear-gradient(180deg, #28262e 0%, #28262e 100%);
-  background-color: #28262e;
+    linear-gradient(180deg, var(--trainer-v2-ink, #28262e) 0%, var(--trainer-v2-ink, #28262e) 100%);
+  background-color: var(--trainer-v2-ink, #28262e);
   border: 1px solid rgba(255, 255, 255, 0.075);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
 }
@@ -17345,8 +17345,8 @@
   border-radius: 26px;
   background:
     radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
-    linear-gradient(180deg, #28262e 0%, #28262e 100%);
-  background-color: #28262e;
+    linear-gradient(180deg, var(--trainer-v2-ink, #28262e) 0%, var(--trainer-v2-ink, #28262e) 100%);
+  background-color: var(--trainer-v2-ink, #28262e);
 }
 
 
@@ -17412,22 +17412,22 @@
 
 
 .workspaceRoot :global(.adminV3Shell) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   background-image: none;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   padding-bottom: 118px;
 }
 
 .workspaceRoot :global(.adminV3Sidebar) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   border-right: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .workspaceRoot :global(.adminV3Main) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   padding-bottom: 138px;
 }
 
@@ -17444,8 +17444,8 @@
 .workspaceRoot :global(.adminV3TemplateCard) {
   background:
     radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
-    linear-gradient(180deg, #28262e 0%, #28262e 100%);
-  background-color: #28262e;
+    linear-gradient(180deg, var(--trainer-v2-ink, #28262e) 0%, var(--trainer-v2-ink, #28262e) 100%);
+  background-color: var(--trainer-v2-ink, #28262e);
   border: 1px solid rgba(255, 255, 255, 0.075);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
   backdrop-filter: none;
@@ -17500,8 +17500,8 @@
 }
 
 .workspaceRoot :global(.adminV3Nav.adminV3BottomBar) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   border: 1px solid rgba(255, 255, 255, 0.09);
   box-shadow: 0 -14px 38px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255,255,255,.045);
   backdrop-filter: none;
@@ -17509,22 +17509,22 @@
 }
 
 .workspaceRoot :global(.adminV3Nav.adminV3BottomBar button) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(.adminV3Nav.adminV3BottomBar button.active) {
   background:
     radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.22), transparent 58%),
-    #28262e;
-  background-color: #28262e;
+    var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
 }
 
 @media (max-width: 980px) {
   .workspaceRoot :global(.adminV3Shell) {
     grid-template-columns: 1fr;
-    background: #28262e;
-    background-color: #28262e;
+    background: var(--trainer-v2-ink, #28262e);
+    background-color: var(--trainer-v2-ink, #28262e);
     padding-bottom: 132px;
   }
 
@@ -17532,8 +17532,8 @@
     min-height: auto;
     position: static;
     padding: 18px 14px 14px;
-    background: #28262e;
-    background-color: #28262e;
+    background: var(--trainer-v2-ink, #28262e);
+    background-color: var(--trainer-v2-ink, #28262e);
     border-right: none;
   }
 
@@ -17545,8 +17545,8 @@
 @media (max-width: 720px) {
   .workspaceRoot :global(.adminV3Main) {
     padding: 28px 14px 154px;
-    background: #28262e;
-    background-color: #28262e;
+    background: var(--trainer-v2-ink, #28262e);
+    background-color: var(--trainer-v2-ink, #28262e);
   }
 
   .workspaceRoot :global(.adminV3KpiGrid) {
@@ -17596,8 +17596,8 @@
 .workspaceRoot :global(.adminV3ClientWorkspace),
 .workspaceRoot :global(.adminV3ClientDashboard),
 .workspaceRoot :global(.adminV3ClientOverview) {
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   background-image: none;
 }
 
@@ -17671,8 +17671,8 @@
 .workspaceRoot :global(.clientOverview .clientTelegramCard) {
   background:
     radial-gradient(circle at 100% 0%, rgba(127, 159, 58, 0.10), transparent 42%),
-    linear-gradient(180deg, #28262e 0%, #28262e 100%);
-  background-color: #28262e;
+    linear-gradient(180deg, var(--trainer-v2-ink, #28262e) 0%, var(--trainer-v2-ink, #28262e) 100%);
+  background-color: var(--trainer-v2-ink, #28262e);
   border: 1px solid rgba(255, 255, 255, 0.075);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
 }
@@ -17750,9 +17750,9 @@
 .workspaceRoot :global(.clientMobileBar button[aria-selected="true"]) {
   background:
     radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.24), transparent 58%),
-    #28262e;
-  background-color: #28262e;
-  color: #28262e;
+    var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
+  color: var(--trainer-v2-ink, #28262e);
   border-color: rgba(127, 159, 58, 0.38);
   box-shadow:
     0 0 0 1px rgba(127, 159, 58, 0.12),
@@ -17782,8 +17782,8 @@
 
   border-radius: 28px;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   box-shadow:
     0 -14px 38px rgba(0, 0, 0, 0.58),
     inset 0 1px 0 rgba(255, 255, 255, 0.045);
@@ -17799,8 +17799,8 @@
   min-height: 68px;
   padding: 8px 6px;
   border-radius: 22px;
-  background: #28262e;
-  background-color: #28262e;
+  background: var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(.adminClientPage .adminV3Nav button.active),
@@ -17810,8 +17810,8 @@
 .workspaceRoot :global(.clientOverview .adminV3Nav button.active) {
   background:
     radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.24), transparent 58%),
-    #28262e;
-  background-color: #28262e;
+    var(--trainer-v2-ink, #28262e);
+  background-color: var(--trainer-v2-ink, #28262e);
   border-color: rgba(127, 159, 58, 0.38);
 }
 
@@ -17892,8 +17892,8 @@
 
   border-radius: 30px;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  background: linear-gradient(180deg, #28262e 0%, #28262e 100%);
-  background-color: #28262e;
+  background: linear-gradient(180deg, var(--trainer-v2-ink, #28262e) 0%, var(--trainer-v2-ink, #28262e) 100%);
+  background-color: var(--trainer-v2-ink, #28262e);
 
   box-shadow:
     0 -18px 44px rgba(0, 0, 0, 0.66),
@@ -17929,8 +17929,8 @@
 
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.075);
-  background: linear-gradient(180deg, #191d19 0%, #28262e 100%);
-  background-color: #28262e;
+  background: linear-gradient(180deg, #191d19 0%, var(--trainer-v2-ink, #28262e) 100%);
+  background-color: var(--trainer-v2-ink, #28262e);
   color: rgba(255, 255, 255, 0.64);
 
   box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
@@ -17943,9 +17943,9 @@
   background:
     radial-gradient(circle at 50% 0%, rgba(127, 159, 58, 0.32), transparent 62%),
     linear-gradient(180deg, #253018 0%, #1b2416 100%);
-  background-color: #28262e;
+  background-color: var(--trainer-v2-ink, #28262e);
   border-color: rgba(127, 159, 58, 0.44);
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow:
     0 0 0 1px rgba(127, 159, 58, 0.13),
     inset 0 1px 0 rgba(255,255,255,.055);
@@ -18058,7 +18058,7 @@
   padding: max(14px, env(safe-area-inset-top)) 12px calc(150px + env(safe-area-inset-bottom));
   background:
     radial-gradient(circle at 50% -10%, rgba(131, 167, 58, 0.12), transparent 30%),
-    #28262e;
+    var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(.monthProgramPremium .monthProgramPremiumTopbar),
@@ -18834,7 +18834,7 @@
 }
 
 .workspaceRoot :global(.adminV3Nav.adminV3BottomBar button.active) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 
@@ -20957,9 +20957,9 @@
 }
 
 .workspaceRoot :global(.adminTrainerRoleButton.active) {
-  border-color: rgba(171, 125, 255, .32);
-  background: rgba(171, 125, 255, .14);
-  color: rgba(238, 226, 255, .94);
+  border-color: rgb(var(--trainer-v2-line-rgb, 171 125 255) / .32);
+  background: rgb(var(--trainer-v2-surface-rgb, 171 125 255) / .14);
+  color: rgb(var(--trainer-v2-surface-rgb, 238 226 255) / .94);
 }
 
 .workspaceRoot :global(.adminClientStatusRender + .adminTrainerRoleButton) {
@@ -21049,7 +21049,7 @@
 
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, .08);
-    background: #28262e;
+    background: var(--trainer-v2-ink, #28262e);
     background-image: linear-gradient(180deg, #171c18 0%, #101410 100%);
     opacity: 1;
 
@@ -22542,15 +22542,15 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgramGridPage),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgramEditorPage),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramEditorPage.monthProgramPremium) {
-  --accent: #806bb6;
-  --accent-2: #8f7ac8;
-  --text: #28262e;
-  --muted: #7b7682;
-  --line: #efebf3;
+  --accent: var(--trainer-v2-accent, #806bb6);
+  --accent-2: var(--trainer-v2-accent, #8f7ac8);
+  --text: var(--trainer-v2-ink, #28262e);
+  --muted: var(--trainer-v2-muted, #7b7682);
+  --line: var(--trainer-v2-surface, #efebf3);
   background:
-    radial-gradient(circle at 50% -8%, rgba(90, 73, 223, 0.055), transparent 34%),
+    radial-gradient(circle at 50% -8%, rgb(var(--trainer-v2-surface-rgb, 90 73 223) / 0.055), transparent 34%),
     linear-gradient(180deg, #ffffff 0%, #f7f8fd 100%);
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3Shell h1),
@@ -22568,7 +22568,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium h2),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium h3),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium strong) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   text-shadow: none;
 }
 
@@ -22586,7 +22586,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarNoDaysHint),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .programsOverviewEmpty),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramEmpty) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3Sidebar),
@@ -22641,9 +22641,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumExercise),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseSearchResults),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseVideoBlock) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08);
 }
 
@@ -22653,9 +22653,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumExercise.selected),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumBlock.expanded),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumWeek.expanded) {
-  border-color: #7565e8;
-  background: #f5f2f7;
-  box-shadow: 0 0 0 3px rgba(90, 73, 223, 0.07);
+  border-color: var(--trainer-v2-accent, #7565e8);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 90 73 223) / 0.07);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminFocusLabel),
@@ -22673,7 +22673,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .weekEditorDayOpen span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseListItem span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumSetLegend) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminDashboardMiniStatus),
@@ -22683,7 +22683,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramEditorNameField span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramMonthHead span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .programCopyTargetMonth h3) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 
@@ -22696,9 +22696,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium input),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium select),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium textarea) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow: none;
 }
 
@@ -22708,7 +22708,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminUsersCrmPage textarea::placeholder),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium input::placeholder),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium textarea::placeholder) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminUsersFilterPills),
@@ -22719,9 +22719,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarToggles),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionCalendarLegend),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgramGridFilters) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f4f6fc;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminUsersFilterPills button),
@@ -22739,9 +22739,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramHeaderToggle),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthAddExerciseBtn),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthAddSetBtn) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   box-shadow: none;
 }
 
@@ -22752,9 +22752,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarToggles button.active),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarEqualButton.active),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgramGridFilters button.active) {
-  border-color: #7565e8;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-accent, #7565e8);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3OpenEditor),
@@ -22767,10 +22767,10 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .exerciseEditBar button.save),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthExerciseEditorNav button.save) {
   border-color: transparent;
-  background: linear-gradient(135deg, #806bb6, #8f7ac8);
+  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.22);
+  box-shadow: 0 12px 26px rgb(var(--trainer-v2-shadow-rgb, 76 68 201) / 0.22);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionAssignButton.ghost),
@@ -22779,9 +22779,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientBackToList),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumBackToOverview),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminFixedMainBack) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f4f6fc;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   box-shadow: 0 8px 22px rgba(55, 64, 112, 0.08);
 }
 
@@ -22794,9 +22794,9 @@
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCreateClientModal),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programCopySheet) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow: 0 24px 64px rgba(43, 50, 92, 0.2);
 }
 
@@ -22804,13 +22804,13 @@
   display: grid;
   gap: 10px;
   padding: 16px;
-  border-color: #d9d2ff;
+  border-color: var(--trainer-v2-line, #d9d2ff);
   background: #f7f6f8;
   color: #1b1d2b;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCredentialsBox span) {
-  color: #5d4bd4;
+  color: var(--trainer-v2-surface, #5d4bd4);
   font-size: 12px;
   font-weight: 900;
 }
@@ -22818,7 +22818,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCredentialsBox strong) {
   margin: 0;
   overflow-wrap: anywhere;
-  color: #3d328a;
+  color: var(--trainer-v2-accent, #3d328a);
   font: 700 14px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
@@ -22827,21 +22827,21 @@
   min-height: 40px;
   margin: 0;
   padding: 0 16px;
-  border: 1px solid #cfc7ff;
+  border: 1px solid var(--trainer-v2-line, #cfc7ff);
   border-radius: 12px;
   background: #ffffff;
-  color: #5741d3;
+  color: var(--trainer-v2-surface, #5741d3);
   font-weight: 800;
-  box-shadow: 0 7px 16px rgba(82, 65, 181, 0.1);
+  box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 82 65 181) / 0.1);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCreateClientModalClose),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programCopyTargetMonth),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programCopyTargetMonth button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programCopySheetActions button) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programCopySheetHandle) {
@@ -22855,19 +22855,19 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthExerciseListItem),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthExerciseSearchResults button) {
   background: transparent;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramAccordionHead b),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .weekEditorToggle b),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumExerciseNumber) {
-  background: #f5f2f7;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected) {
   background: #f7f8fd;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthProgramPremiumExercise.selected .monthExerciseFullscreenHeader) {
@@ -22877,15 +22877,15 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor.exercise-fullscreen-open .monthExerciseFullscreenHeader button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor .exerciseEditBar),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor .monthExerciseEditorNav) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: rgba(255, 255, 255, 0.97);
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   box-shadow: 0 14px 36px rgba(52, 60, 105, 0.14);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor .exerciseEditBar button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor .monthExerciseEditorNav button) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor .monthExerciseVideoBlock) {
@@ -22893,7 +22893,7 @@
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremiumDayEditor .monthExerciseVideoBlock > span) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientDesktopDelete),
@@ -22914,7 +22914,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3Nav.programsTopActionBar),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar.programEditorBottomBar),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3Nav.adminV3BottomBar.workoutEditorBottomBar) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: rgba(255, 255, 255, 0.97);
   box-shadow:
     0 14px 34px rgba(52, 60, 105, 0.13),
@@ -22936,9 +22936,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .programsTopActionBar > button.active),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .programEditorBottomBar > button.active),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .workoutEditorBottomBar > button.active) {
-  border-color: #e1defb;
+  border-color: var(--trainer-v2-line, #e1defb);
   background: #f7f6f8;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 
@@ -22957,7 +22957,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminDashboardShell) {
   background: transparent;
   background-color: transparent;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3ClientTable),
@@ -22987,10 +22987,10 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumStats > div),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumDayEditor),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramBottomSave) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
   background-color: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow: 0 10px 30px rgba(52, 61, 106, 0.08);
 }
 
@@ -23010,9 +23010,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientInitialsRender),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientAddIcon),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramLogoRender) {
-  border-color: #ddd9fa;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #ddd9fa);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
   box-shadow: none;
 }
 
@@ -23026,7 +23026,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressBarsChart em),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressMiniColumns small),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressDiagramsHead p) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .adminClientMetricCardRender strong),
@@ -23035,35 +23035,35 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionMonthSummaryBelow strong),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressBarsChart strong),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressDiagramsHead h3) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientStatusRender),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCurrentProgramBadge),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramBadge),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramSavedRender) {
-  border-color: #ddd9fa;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #ddd9fa);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientAddCard) {
-  border-color: #d9d5fa;
-  background: #f4f2ff;
+  border-color: var(--trainer-v2-line, #d9d5fa);
+  background: var(--trainer-v2-surface, #f4f2ff);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientDangerZoneBottom strong) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientDangerZoneBottom p) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTabsFoodBar),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .adminClientTabsFoodBar) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: rgba(255, 255, 255, 0.97);
   box-shadow:
     0 14px 34px rgba(52, 60, 105, 0.13),
@@ -23077,68 +23077,68 @@
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientWorkspaceCrmPage .adminClientTabsFoodBar button.active) {
-  border-color: #e1defb;
+  border-color: var(--trainer-v2-line, #e1defb);
   background: #f7f6f8;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   box-shadow: none;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientNotesBlock),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTransferBlock) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientBottomBlockHead span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainingMonthHead span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionMonthSummaryBelow small) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientBottomBlockHead h3) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCell),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionCalendarDay),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainingDayCell),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminCalendarDays button) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   box-shadow: none;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCell.trainingDay),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainingDayCell.trainingDay),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminCalendarDays button.active) {
-  border-color: #7565e8;
-  background: #f5f2f7;
-  color: #806bb6;
-  box-shadow: 0 0 0 3px rgba(90, 73, 223, 0.07);
+  border-color: var(--trainer-v2-accent, #7565e8);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
+  box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 90 73 223) / 0.07);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCell.trainingDay::after),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainingDayCell.trainingDay::before),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionCalendarLegend .trainingFill) {
-  background: linear-gradient(90deg, #806bb6, #8f7ac8);
-  box-shadow: 0 0 12px rgba(90, 73, 223, 0.22);
+  background: linear-gradient(90deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  box-shadow: 0 0 12px rgb(var(--trainer-v2-shadow-rgb, 90 73 223) / 0.22);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionTrainingMark) {
-  border-color: #d9d5fa;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #d9d5fa);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
   filter: none;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainingDayCell i) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainingDayCell.today) {
   border-color: #b9c1d4;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressBarsChart i) {
@@ -23147,8 +23147,8 @@
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressBarsChart i b),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressMiniColumns i) {
-  background: linear-gradient(180deg, #806bb6, #8f7ac8);
-  box-shadow: 0 8px 18px rgba(90, 73, 223, 0.15);
+  background: linear-gradient(180deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 90 73 223) / 0.15);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminProgressMiniColumnsProtein i) {
@@ -23156,9 +23156,9 @@
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminCalendarDaySettingsTitle) {
-  border-color: #ddd9fa;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #ddd9fa);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminCalendarWorkoutTimeField input),
@@ -23169,31 +23169,31 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientNutritionCalendarContent .adminCalendarReminderBeforeField select),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminReminderBeforeSelect),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientNutritionCalendarContent .adminReminderBeforeSelect) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
   background-color: #ffffff;
   background-image: none;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow: none;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminReminderBeforeSelect option),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientNutritionCalendarContent .adminReminderBeforeSelect option) {
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminCalendarHourReminder),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientNutritionCalendarContent .adminCalendarHourReminder) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCalendarPanelMerged .adminCalendarTelegram),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramUserRender),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTelegramQuickMessages button) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   box-shadow: none;
 }
 
@@ -23201,14 +23201,14 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramBadge.connected) {
   border-color: #bcd1ff;
   background: #eef4ff;
-  color: #8f7ac8;
+  color: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3Status),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminCreateUserStatus) {
-  border-color: #d9d5fa;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #d9d5fa);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 
@@ -23219,36 +23219,36 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumDays > span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewCard > p),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewCardStats span) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumField > span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumBlockHead span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumDayHead span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewSectionHead span) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumWeek),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewEmpty) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumWeekHead button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumDays button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewSectionHead > button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewConstructorActions label) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumDays button.active) {
-  border-color: #7565e8;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-accent, #7565e8);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumDayHead button) {
@@ -23259,8 +23259,8 @@
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumExerciseNumber),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewCardTitle span) {
-  background: #f5f2f7;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewCardStats span) {
@@ -23269,7 +23269,7 @@
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewCardStats b) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programsOverviewConstructorActions button),
@@ -23277,29 +23277,29 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramBottomSave button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programEditorBottomBarSave) {
   border-color: transparent;
-  background: linear-gradient(135deg, #806bb6, #8f7ac8);
+  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  box-shadow: 0 12px 26px rgba(76, 68, 201, 0.2);
+  box-shadow: 0 12px 26px rgb(var(--trainer-v2-shadow-rgb, 76 68 201) / 0.2);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramPremiumAddBlock) {
-  border-color: #cfc9f8;
-  background: #f4f2ff;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #cfc9f8);
+  background: var(--trainer-v2-surface, #f4f2ff);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programEditorSwipeRow:hover > .programEditorSwipeContent),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programEditorSwipeRow:active > .programEditorSwipeContent) {
-  box-shadow: inset 0 0 0 1px rgba(90, 73, 223, 0.18);
+  box-shadow: inset 0 0 0 1px rgb(var(--trainer-v2-shadow-rgb, 90 73 223) / 0.18);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminSummaryLink:hover) {
-  border-color: #bcb4f3;
+  border-color: var(--trainer-v2-accent, #bcb4f3);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminSummaryLink:focus-visible) {
-  outline-color: rgba(90, 73, 223, 0.55);
+  outline-color: rgb(var(--trainer-v2-line-rgb, 90 73 223) / 0.55);
 }
 
 
@@ -23316,9 +23316,9 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramSummary > div),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramWeek),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseCard) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow: 0 8px 24px rgba(55, 64, 112, 0.07);
 }
 
@@ -23337,7 +23337,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramTopbar p),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramSummary span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseSetRow span) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender span),
@@ -23347,13 +23347,13 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramTopbar span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramBlockHead span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramNameField span) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3MiniChart span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminV3MiniChart em) {
-  background: linear-gradient(180deg, #806bb6, #8f7ac8);
-  color: #806bb6;
+  background: linear-gradient(180deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminUsersBack),
@@ -23370,16 +23370,16 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTelegramQuickMessagesRender button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramModeButtons button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramImportBtn) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   box-shadow: none;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminAssignProgramActions button:last-child),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender button:last-child) {
   border-color: transparent;
-  background: linear-gradient(135deg, #806bb6, #8f7ac8);
+  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
   color: #ffffff;
 }
 
@@ -23392,29 +23392,29 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthWorkoutHead input),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthExerciseRow input),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramModePanel select) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #ffffff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   box-shadow: none;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTransferGrid label span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionPlanSelect span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminAssignProgramHead p) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientCardBottom i),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramAvatarRender) {
-  border-color: #ddd9fa;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #ddd9fa);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientCardBottom b),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionDayContent span),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionPlanPreview strong) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCalorieFill) {
@@ -23422,7 +23422,7 @@
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionDayProteinFill) {
-  background: linear-gradient(180deg, #9d86f5, #7153de);
+  background: linear-gradient(180deg, var(--trainer-v2-surface, #9d86f5), var(--trainer-v2-surface, #7153de));
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminNutritionDayCarbsFill) {
@@ -23440,20 +23440,20 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramActionsRender button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTelegramSendButton) {
   border-color: transparent;
-  background: linear-gradient(135deg, #806bb6, #8f7ac8);
+  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
   color: #ffffff;
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainerRoleButton) {
-  border-color: #efebf3;
+  border-color: var(--trainer-v2-line, #efebf3);
   background: #f7f6f8;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTrainerRoleButton.active) {
-  border-color: #7565e8;
-  background: #f5f2f7;
-  color: #806bb6;
+  border-color: var(--trainer-v2-accent, #7565e8);
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminHistoryCheck i) {
@@ -23462,12 +23462,12 @@
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminHistoryCheck input:checked + i) {
-  border-color: #806bb6;
-  background: #806bb6;
+  border-color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-accent, #806bb6);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty span) {
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 
@@ -23482,7 +23482,7 @@
 
 /* V2 uses the client spacing and surface system. */
 :global(html[data-trainer-variant="v2"] body) .overlay { padding: 20px; background: rgba(28,28,30,.3); }
-:global(html[data-trainer-variant="v2"] body) .overlayCard { width: min(380px,100%); max-height: calc(100dvh - 40px); overflow-y: auto; padding: 28px 20px 20px; border-radius: 22px; border-color: rgba(60,60,67,.12); color: #1c1c1e; }
+:global(html[data-trainer-variant="v2"] body) .overlayCard { width: min(380px,100%); max-height: calc(100dvh - 40px); overflow-y: auto; padding: 28px 20px 20px; border-radius: 22px; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); color: #1c1c1e; }
 :global(html[data-trainer-variant="v2"] body) .overlayCard strong { font-size: 22px; line-height: 1.2; }
 :global(html[data-trainer-variant="v2"] body) .overlayCard p { font-size: 13px; font-weight: 400; color: #636366; }
 :global(html[data-trainer-variant="v2"] body) .spinner { border-color: #e8edf4; border-top-color: #3f73b8; width: 34px; height: 34px; }
@@ -23491,4 +23491,4 @@
 :global(html[data-trainer-variant="v2"] body) .progressTrack i { background: #3f73b8; box-shadow: none; }
 :global(html[data-trainer-variant="v2"] body) .backgroundButton { background: #3f73b8; min-height: 46px; font-weight: 600; border-radius: 12px; }
 :global(html[data-trainer-variant="v2"] body) .close { background: #efeff4; color: #636366; width: 44px; height: 44px; }
-:global(html[data-trainer-variant="v2"] body) .toast { border-color: rgba(60,60,67,.12); background: #fff; color: #1c1c1e; }
+:global(html[data-trainer-variant="v2"] body) .toast { border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); background: #fff; color: #1c1c1e; }

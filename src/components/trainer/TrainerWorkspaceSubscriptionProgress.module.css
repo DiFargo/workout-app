@@ -9,9 +9,9 @@
 .actions button {
   min-height: 30px;
   padding: 0 10px;
-  border: 1px solid rgba(124, 92, 246, 0.3);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 124 92 246) / 0.3);
   border-radius: 8px;
-  background: rgba(124, 92, 246, 0.08);
+  background: rgb(var(--trainer-v2-surface-rgb, 124 92 246) / 0.08);
   color: inherit;
   font: inherit;
   font-size: 10px;
@@ -29,9 +29,9 @@
   gap: 6px;
   margin-top: 7px;
   padding: 8px;
-  border: 1px solid rgba(124, 92, 246, 0.18);
+  border: 1px solid rgb(var(--trainer-v2-line-rgb, 124 92 246) / 0.18);
   border-radius: 12px;
-  background: rgba(124, 92, 246, 0.045);
+  background: rgb(var(--trainer-v2-surface-rgb, 124 92 246) / 0.045);
 }
 
 .history > div {
@@ -75,7 +75,7 @@
   align-items: end;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 12px;
   background: #fff;
 }
@@ -91,10 +91,10 @@
   width: 100%;
   min-height: 34px;
   padding: 5px 8px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 9px;
   background: #fff;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
 }
 
 .globalNotificationStack {
@@ -106,10 +106,10 @@
   display: grid;
   gap: 12px;
   padding: 16px;
-  border: 1px solid var(--tn-line, #efebf3);
+  border: 1px solid var(--tn-line, var(--trainer-v2-line, #efebf3));
   border-radius: 22px;
   background: var(--tn-surface, #fff);
-  box-shadow: var(--tn-shadow, 0 12px 30px rgba(40, 38, 46, 0.08));
+  box-shadow: var(--tn-shadow, 0 12px 30px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.08));
 }
 
 .globalSubscriptionHeader {
@@ -125,42 +125,42 @@
   place-items: center;
   flex: 0 0 auto;
   border-radius: 14px;
-  background: var(--tn-purple-soft, #efeaf9);
-  color: var(--tn-purple-strong, #806bb6);
+  background: var(--tn-purple-soft, var(--trainer-v2-surface, #efeaf9));
+  color: var(--tn-purple-strong, var(--trainer-v2-accent, #806bb6));
 }
 
 .globalSubscriptionHeader > div { display: grid; gap: 4px; }
-.globalSubscriptionHeader h3 { margin: 0; color: var(--tn-text, #28262e); font-size: 17px; font-weight: 740; letter-spacing: -0.25px; }
-.globalSubscriptionHeader p { margin: 0; color: var(--tn-muted, #7b7682); font-size: 12px; line-height: 1.42; }
+.globalSubscriptionHeader h3 { margin: 0; color: var(--tn-text, var(--trainer-v2-ink, #28262e)); font-size: 17px; font-weight: 740; letter-spacing: -0.25px; }
+.globalSubscriptionHeader p { margin: 0; color: var(--tn-muted, var(--trainer-v2-muted, #7b7682)); font-size: 12px; line-height: 1.42; }
 
 .globalSubscriptionSettings .subscriptionReminderBar {
   order: 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   padding: 14px;
-  border-color: var(--tn-line, #efebf3);
+  border-color: var(--tn-line, var(--trainer-v2-line, #efebf3));
   border-radius: 16px;
-  background: var(--tn-surface-soft, #f5f2f7);
+  background: var(--tn-surface-soft, var(--trainer-v2-surface, #f5f2f7));
 }
 
 .globalSubscriptionSettings .subscriptionReminderBar > div { grid-column: span 2; }
 .globalSubscriptionSettings .subscriptionReminderBar label:has(input[type="checkbox"]) { grid-column: span 1; }
 
 .globalSubscriptionSettings .subscriptionReminderBar > div strong {
-  color: var(--tn-text, #28262e);
+  color: var(--tn-text, var(--trainer-v2-ink, #28262e));
   font-size: 12px;
   font-weight: 700;
 }
 
 .globalSubscriptionSettings .subscriptionReminderBar > div small,
 .globalSubscriptionSettings .subscriptionReminderBar label small {
-  color: var(--tn-muted, #7b7682);
+  color: var(--tn-muted, var(--trainer-v2-muted, #7b7682));
   font-size: 11px;
 }
 
 .globalSubscriptionSettings .subscriptionReminderBar label {
   min-width: 0;
-  color: var(--tn-text, #28262e);
+  color: var(--tn-text, var(--trainer-v2-ink, #28262e));
   font-size: 12px;
   font-weight: 600;
 }
@@ -173,10 +173,10 @@
   max-width: 100%;
   min-height: 38px;
   padding: 7px 10px;
-  border-color: var(--tn-line, #efebf3);
+  border-color: var(--tn-line, var(--trainer-v2-line, #efebf3));
   border-radius: 11px;
   background: var(--tn-surface, #fff);
-  color: var(--tn-text, #28262e);
+  color: var(--tn-text, var(--trainer-v2-ink, #28262e));
   font-size: 13px;
 }
 
@@ -184,7 +184,7 @@
   width: 16px;
   height: 16px;
   margin: 0;
-  accent-color: var(--tn-purple-strong, #806bb6);
+  accent-color: var(--tn-purple-strong, var(--trainer-v2-accent, #806bb6));
 }
 
 .globalSubscriptionSettings .subscriptionReminderBar input[type="time"] {
@@ -199,7 +199,7 @@
 
 .globalSubscriptionActions > small {
   margin-right: auto;
-  color: var(--tn-muted, #7b7682);
+  color: var(--tn-muted, var(--trainer-v2-muted, #7b7682));
   font-size: 11px;
   line-height: 1.4;
 }
@@ -207,9 +207,9 @@
 .globalSubscriptionActions button {
   min-height: 44px;
   padding: 0 16px;
-  border: 1px solid var(--tn-purple-strong, #806bb6);
+  border: 1px solid var(--tn-purple-strong, var(--trainer-v2-accent, #806bb6));
   border-radius: 13px;
-  background: var(--tn-purple, #8f7ac8);
+  background: var(--tn-purple, var(--trainer-v2-accent, #8f7ac8));
   color: #fff;
   font: inherit;
   font-size: 13px;
@@ -229,14 +229,14 @@
   align-items: center;
   gap: 16px;
   padding: 14px 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 14px;
   background: #fff;
 }
 
 .overviewSubscription header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .overviewSubscription header > div { display: grid; gap: 3px; }
-.overviewSubscription header span { color: #6b47ef; font-size: 8px; font-weight: 800; }
+.overviewSubscription header span { color: var(--trainer-v2-surface, #6b47ef); font-size: 8px; font-weight: 800; }
 .overviewSubscription h3 { margin: 0; font-size: 15px; }
 .overviewSubscription header i { font-size: 9px; font-style: normal; }
 .overviewSubscriptionMetrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
@@ -247,17 +247,17 @@
 .overviewSubscription > button {
   min-height: 36px;
   padding: 0 13px;
-  border: 1px solid #ddd4ea;
+  border: 1px solid var(--trainer-v2-line, #ddd4ea);
   border-radius: 10px;
-  background: #f8f5fb;
-  color: #725d96;
+  background: var(--trainer-v2-surface, #f8f5fb);
+  color: var(--trainer-v2-accent, #725d96);
   font-weight: 750;
   cursor: pointer;
 }
 
 .overviewSubscription > button:hover {
-  border-color: #d3c8e2;
-  background: #f1ecf8;
+  border-color: var(--trainer-v2-line, #d3c8e2);
+  background: var(--trainer-v2-surface, #f1ecf8);
 }
 
 .subscriptionModalBackdrop { z-index: 1200; }
@@ -267,22 +267,22 @@
   padding: 22px;
   border-radius: 18px;
   background: #fff;
-  box-shadow: 0 24px 70px rgba(29, 26, 45, 0.24);
+  box-shadow: 0 24px 70px rgb(var(--trainer-v2-shadow-rgb, 29 26 45) / 0.24);
 }
 .subscriptionModal > header { display: grid; gap: 4px; padding-right: 44px; }
-.subscriptionModal > header span { color: #6b47ef; font-size: 9px; font-weight: 800; }
+.subscriptionModal > header span { color: var(--trainer-v2-surface, #6b47ef); font-size: 9px; font-weight: 800; }
 .subscriptionModal > header h2 { margin: 0; font-size: 21px; }
 .subscriptionModal > header p { margin: 0; color: #858999; font-size: 10px; }
-.subscriptionModalClose { position: absolute; z-index: 3; top: 16px; right: 16px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
+.subscriptionModalClose { position: absolute; z-index: 3; top: 16px; right: 16px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--trainer-v2-line, #efebf3); border-radius: 10px; background: #fff; cursor: pointer; }
 .subscriptionModalGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
 .subscriptionModalGrid label { display: grid; gap: 5px; }
 .subscriptionModalGrid small { color: #858999; font-size: 9px; }
-.subscriptionModalGrid input { min-height: 40px; padding: 7px 10px; border: 1px solid #efebf3; border-radius: 10px; background: #fffdf6; }
-.subscriptionModalSummary { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; padding: 11px 12px; border-radius: 11px; background: #f5f2f7; }
+.subscriptionModalGrid input { min-height: 40px; padding: 7px 10px; border: 1px solid var(--trainer-v2-line, #efebf3); border-radius: 10px; background: #fffdf6; }
+.subscriptionModalSummary { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; padding: 11px 12px; border-radius: 11px; background: var(--trainer-v2-surface, #f5f2f7); }
 .subscriptionModalSummary label { display: flex; align-items: center; gap: 7px; font-size: 10px; }
 .subscriptionModal footer { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 .subscriptionModal footer > span { margin-right: auto; }
-.subscriptionModal footer button { min-height: 44px; padding: 0 14px; border: 1px solid #efebf3; border-radius: 10px; background: #fff; cursor: pointer; }
+.subscriptionModal footer button { min-height: 44px; padding: 0 14px; border: 1px solid var(--trainer-v2-line, #efebf3); border-radius: 10px; background: #fff; cursor: pointer; }
 
 .reminderCard :global(.trainerReminderCardHead) {
   min-height: 42px;
@@ -395,10 +395,10 @@
   grid-template-columns: 1fr;
   gap: 16px;
   padding: 20px;
-  border: 1px solid var(--tn-line, #efebf3);
+  border: 1px solid var(--tn-line, var(--trainer-v2-line, #efebf3));
   border-radius: 22px;
   background: var(--tn-surface, #fff);
-  box-shadow: var(--tn-shadow, 0 12px 30px rgba(40, 38, 46, 0.08));
+  box-shadow: var(--tn-shadow, 0 12px 30px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.08));
 }
 
 .notificationPanel > header,
@@ -415,9 +415,9 @@
   order: initial;
   margin: 0;
   padding: 15px;
-  border: 1px solid var(--tn-line, #efebf3);
+  border: 1px solid var(--tn-line, var(--trainer-v2-line, #efebf3));
   border-radius: 17px;
-  background: var(--tn-surface-soft, #f5f2f7);
+  background: var(--tn-surface-soft, var(--trainer-v2-surface, #f5f2f7));
 }
 
 .reminderCard :global(.trainerReminderCardHead) {
@@ -432,12 +432,12 @@
 }
 
 .reminderCard :global(.trainerReminderCardHead strong) {
-  color: var(--tn-text, #28262e);
+  color: var(--tn-text, var(--trainer-v2-ink, #28262e));
   font-size: 14px;
 }
 
 .reminderCard :global(.trainerReminderCardHead p) {
-  color: var(--tn-muted, #7b7682);
+  color: var(--tn-muted, var(--trainer-v2-muted, #7b7682));
   font-size: 12px;
   line-height: 1.42;
 }
@@ -457,8 +457,8 @@
 .reminderCard :global(.trainerReminderPeriod button) {
   min-height: 34px;
   padding: 0 10px;
-  border-color: var(--tn-line, #efebf3);
-  color: var(--tn-muted, #7b7682);
+  border-color: var(--tn-line, var(--trainer-v2-line, #efebf3));
+  color: var(--tn-muted, var(--trainer-v2-muted, #7b7682));
   background: var(--tn-surface, #fff);
   font-size: 12px;
 }
@@ -467,9 +467,9 @@
   order: initial;
   margin: 0;
   padding: 16px;
-  border-color: var(--tn-line, #efebf3);
+  border-color: var(--tn-line, var(--trainer-v2-line, #efebf3));
   border-radius: 18px;
-  background: var(--tn-surface-soft, #f5f2f7);
+  background: var(--tn-surface-soft, var(--trainer-v2-surface, #f5f2f7));
 }
 
 .notificationCalendar :global(header) { padding-bottom: 0; }

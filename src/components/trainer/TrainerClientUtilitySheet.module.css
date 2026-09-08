@@ -7,7 +7,7 @@
   display: grid;
   place-items: center;
   padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
-  background: rgba(40, 38, 46, 0.34);
+  background: rgb(var(--trainer-v2-ink-rgb, 40 38 46) / 0.34);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -18,10 +18,10 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 24px;
   background: #ffffff;
-  box-shadow: 0 24px 64px rgba(40, 38, 46, 0.2);
+  box-shadow: 0 24px 64px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.2);
 }
 
 .header {
@@ -31,7 +31,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 18px 20px 14px;
-  border-bottom: 1px solid #efebf3;
+  border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 .eyebrow,
@@ -40,7 +40,7 @@
 }
 
 .eyebrow {
-  color: #8f7ac8;
+  color: var(--trainer-v2-accent, #8f7ac8);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -49,7 +49,7 @@
 
 .title {
   margin-top: 3px;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 22px;
   line-height: 1.15;
 }
@@ -67,10 +67,10 @@
   justify-content: center;
   gap: 7px;
   padding: 0 13px;
-  border: 1px solid #d9ccec;
+  border: 1px solid var(--trainer-v2-line, #d9ccec);
   border-radius: 12px;
-  background: #eee8fb;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #eee8fb);
+  color: var(--trainer-v2-accent, #806bb6);
   font: inherit;
   font-size: 13px;
   font-weight: 750;
@@ -79,7 +79,7 @@
 }
 
 .headerAction > button:hover {
-  background: #e7def7;
+  background: var(--trainer-v2-surface, #e7def7);
 }
 
 .close {
@@ -91,25 +91,25 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: #f5f2f7;
-  color: #28262e;
+  background: var(--trainer-v2-surface, #f5f2f7);
+  color: var(--trainer-v2-ink, #28262e);
   cursor: pointer;
 }
 
 .close:hover {
-  background: #efebf3;
+  background: var(--trainer-v2-surface, #efebf3);
 }
 
 .content {
-  --tn-purple: #806bb6;
-  --tn-purple-soft: #f2efff;
-  --tn-purple-border: #d9cffd;
+  --tn-purple: var(--trainer-v2-accent, #806bb6);
+  --tn-purple-soft: var(--trainer-v2-surface, #f2efff);
+  --tn-purple-border: var(--trainer-v2-line, #d9cffd);
   --tn-green: #17aa4a;
   --tn-green-soft: #eaf8ee;
   --tn-orange: #f59b13;
   --tn-red: #ef4444;
   --tn-blue: #2474f5;
-  --tn-text: #15151b;
+  --tn-text: var(--trainer-v2-ink, #15151b);
   --tn-muted: #6f7380;
   --tn-line: #e5e7ed;
   --tn-surface: #ffffff;
@@ -141,17 +141,17 @@
   display: flex;
   justify-content: flex-end;
   padding: 12px 20px max(16px, env(safe-area-inset-bottom));
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--trainer-v2-line, #efebf3);
   background: #ffffff;
 }
 
 .footer button {
   min-height: 44px;
   padding: 0 18px;
-  border: 1px solid #dfd6e9;
+  border: 1px solid var(--trainer-v2-line, #dfd6e9);
   border-radius: 12px;
   background: #ffffff;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font: inherit;
   font-size: 14px;
   font-weight: 750;
@@ -178,8 +178,8 @@
 .content :global(.trainerNotificationSettings),
 .content :global(.trainerReminderCard),
 .content :global(.trainerNotificationCalendar) {
-  border: 1px solid #efebf3;
-  background: #f5f2f7;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
+  background: var(--trainer-v2-surface, #f5f2f7);
 }
 
 .content :global(.trainerNotificationStatusCard) {
@@ -204,7 +204,7 @@
 
 .content :global(.trainerNotificationStatusCard) h2,
 .content :global(.trainerNotificationSettings) h2 {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 16px;
   line-height: 1.25;
 }
@@ -214,14 +214,14 @@
 .content :global(.trainerNotificationCalendar) p,
 .content :global(.trainerNotificationSettings) p {
   margin-top: 4px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 13px;
   line-height: 1.4;
 }
 
 .content :global(.trainerNotificationStatusCard) > span,
 .content :global(.trainerNotificationSettings header span:first-child) {
-  color: #8f7ac8;
+  color: var(--trainer-v2-accent, #8f7ac8);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.07em;
@@ -236,7 +236,7 @@
 .content :global(.trainerNotificationStatusCard) > i {
   padding: 6px 9px;
   border-radius: 999px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   background: #ffffff;
   font-size: 11px;
   font-weight: 700;
@@ -255,8 +255,8 @@
   height: 42px;
   place-items: center;
   border-radius: 14px;
-  color: #806bb6;
-  background: #eee8fb;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee8fb);
 }
 
 .content :global(.trainerNotificationIcon.connected) {
@@ -295,7 +295,7 @@
   width: 100%;
   height: 100%;
   border-radius: 999px;
-  background: #d8d3de;
+  background: var(--trainer-v2-surface, #d8d3de);
 }
 
 .content :global(.trainerNotificationSwitch i::after) {
@@ -305,13 +305,13 @@
   content: "";
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 1px 3px rgba(40, 38, 46, 0.2);
+  box-shadow: 0 1px 3px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.2);
   transform: translate(3px, 3px);
   transition: transform 160ms ease;
 }
 
 .content :global(.trainerNotificationSwitch input:checked + i) {
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .content :global(.trainerNotificationSwitch input:checked + i::after) {
@@ -341,9 +341,9 @@
   justify-content: center;
   gap: 6px;
   padding: 7px 10px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 11px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   background: #ffffff;
   font-size: 12px;
   font-weight: 700;
@@ -351,13 +351,13 @@
 
 .content :global(.trainerNotificationOffsets label.active),
 .content :global(.trainerReminderPeriod button.active) {
-  border-color: #d9ccec;
-  color: #806bb6;
-  background: #eee8fb;
+  border-color: var(--trainer-v2-line, #d9ccec);
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee8fb);
 }
 
 .content :global(.trainerNotificationOffsets input) {
-  accent-color: #8f7ac8;
+  accent-color: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .content :global(.trainerNotificationOffsets label span) {
@@ -375,14 +375,14 @@
   width: 32px;
   height: 32px;
   place-items: center;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 10px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   background: #ffffff;
 }
 
 .content :global(.trainerNotificationCalendar) > header b {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 14px;
   text-transform: capitalize;
   white-space: nowrap;
@@ -401,7 +401,7 @@
   gap: 3px 8px;
   padding: 10px;
   border-radius: 12px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   background: #ffffff;
 }
 
@@ -418,12 +418,12 @@
 }
 
 .content :global(.trainerNotificationSchedule) b {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 12px;
 }
 
 .content :global(.trainerNotificationSchedule) small {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
 }
 
@@ -435,7 +435,7 @@
 }
 
 .content :global(.trainerNotificationWeekdays) span {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   font-weight: 700;
   text-align: center;
@@ -447,27 +447,27 @@
   place-items: center;
   gap: 1px;
   padding: 4px 2px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 10px;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   background: #ffffff;
   font-size: 12px;
 }
 
 .content :global(.trainerNotificationCalendarGrid) button.muted {
-  color: #b4afbb;
+  color: var(--trainer-v2-muted, #b4afbb);
   background: transparent;
 }
 
 .content :global(.trainerNotificationCalendarGrid) button.active {
-  border-color: #8f7ac8;
+  border-color: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .content :global(.trainerNotificationCalendarGrid) button.today:not(.active) {
-  border-color: #d6c8ea;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #d6c8ea);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .content :global(.trainerNotificationDayBadges) {
@@ -485,7 +485,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
 }
 
@@ -499,7 +499,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .content :global(.trainerNotificationLegend) i.photo {
@@ -524,9 +524,9 @@
   justify-content: center;
   gap: 7px;
   padding: 9px 13px;
-  border: 1px solid #dfd6e9;
+  border: 1px solid var(--trainer-v2-line, #dfd6e9);
   border-radius: 12px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   background: #ffffff;
   font-size: 13px;
   font-weight: 750;
@@ -537,10 +537,10 @@
   justify-self: end;
   min-height: 42px;
   padding: 0 16px;
-  border-color: #d8c9eb;
+  border-color: var(--trainer-v2-line, #d8c9eb);
   border-radius: 12px;
-  color: #806bb6;
-  background: #eee8fa;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee8fa);
   font-size: 13px;
   font-weight: 750;
   line-height: 1.15;
@@ -549,19 +549,19 @@
 }
 
 .content :global(.trainerNotificationStatusCard > .trainerNotificationTelegramConnect:hover) {
-  border-color: #b9a7df;
-  background: #e7dff7;
+  border-color: var(--trainer-v2-accent, #b9a7df);
+  background: var(--trainer-v2-surface, #e7dff7);
 }
 
 .content :global(.trainerNotificationStatusCard > .trainerNotificationTelegramConnect:focus-visible) {
-  outline: 2px solid rgba(143, 122, 200, .45);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / .45);
   outline-offset: 2px;
 }
 
 .content :global(.trainerNotificationActions) :global(.trainerNextPrimary) {
-  border-color: #8f7ac8;
+  border-color: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
 }
 
 /* The notification calendar repeats the full program-calendar hierarchy so
@@ -576,7 +576,7 @@
   gap: 18px;
   margin: 0;
   padding: 22px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 22px;
   background: #ffffff;
 }
@@ -595,7 +595,7 @@
 .content :global(.trainerNotificationCalendarUnified > header span) {
   display: block;
   margin: 0 0 6px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 10px;
   font-weight: 780;
   letter-spacing: .09em;
@@ -603,7 +603,7 @@
 
 .content :global(.trainerNotificationCalendarUnified > header h3) {
   margin: 0;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 20px;
   font-weight: 760;
   letter-spacing: -.35px;
@@ -613,7 +613,7 @@
 .content :global(.trainerNotificationCalendarUnified > header p) {
   max-width: 700px;
   margin: 7px 0 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 13px;
   line-height: 1.45;
 }
@@ -628,10 +628,10 @@
   justify-content: center;
   gap: 2px;
   padding: 7px 10px;
-  border: 1px solid #e4dbef;
+  border: 1px solid var(--trainer-v2-line, #e4dbef);
   border-radius: 16px;
-  color: #806bb6;
-  background: #eee8fa;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee8fa);
   font-size: 22px;
   font-weight: 760;
   line-height: 1;
@@ -675,7 +675,7 @@
 
 .content :global(.trainerNotificationCalendarUnified > header > strong small) {
   margin: 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 10px;
   font-weight: 680;
   line-height: 1.2;
@@ -690,9 +690,9 @@
   display: grid;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 18px;
-  background: #f5f2f7;
+  background: var(--trainer-v2-surface, #f5f2f7);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerWorkoutScheduleMonth) {
@@ -702,7 +702,7 @@
   min-height: 56px;
   gap: 12px;
   padding: 4px;
-  border: 1px solid #e7e0ef;
+  border: 1px solid var(--trainer-v2-line, #e7e0ef);
   border-radius: 17px;
   background: #ffffff;
 }
@@ -713,18 +713,18 @@
   height: 48px;
   place-items: center;
   padding: 0;
-  border: 1px solid #ded3ed;
+  border: 1px solid var(--trainer-v2-line, #ded3ed);
   border-radius: 14px;
-  color: #806bb6;
-  background: #f8f5fb;
-  box-shadow: 0 1px 2px rgba(72, 52, 107, .06);
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #f8f5fb);
+  box-shadow: 0 1px 2px rgb(var(--trainer-v2-shadow-rgb, 72 52 107) / .06);
   transition: background .15s ease, border-color .15s ease, transform .15s ease;
   cursor: pointer;
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerWorkoutScheduleMonth button:hover) {
-  border-color: #b9a7df;
-  background: #eee8fa;
+  border-color: var(--trainer-v2-accent, #b9a7df);
+  background: var(--trainer-v2-surface, #eee8fa);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerWorkoutScheduleMonth button:active) {
@@ -732,12 +732,12 @@
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerWorkoutScheduleMonth button:focus-visible) {
-  outline: 2px solid rgba(143, 122, 200, .45);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / .45);
   outline-offset: 2px;
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerWorkoutScheduleMonth strong) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-size: 18px;
   font-weight: 760;
   letter-spacing: -.01em;
@@ -755,7 +755,7 @@
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationWeekdays span) {
   padding: 2px 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   font-weight: 720;
   text-align: center;
@@ -768,9 +768,9 @@
   align-content: center;
   gap: 2px;
   padding: 5px;
-  border: 1px solid #eae5ef;
+  border: 1px solid var(--trainer-v2-line, #eae5ef);
   border-radius: 12px;
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   background: #ffffff;
   font: inherit;
   opacity: 1;
@@ -788,32 +788,32 @@
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.today) {
-  border-color: #d2c1ec;
-  box-shadow: inset 0 0 0 1px #ede5fa;
+  border-color: var(--trainer-v2-line, #d2c1ec);
+  box-shadow: inset 0 0 0 1px var(--trainer-v2-shadow, #ede5fa);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.plannedWorkout) {
-  border-color: #b9a7df;
-  color: #806bb6;
-  background: #eee8fa;
+  border-color: var(--trainer-v2-accent, #b9a7df);
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee8fa);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.subscriptionRange) {
-  border-color: #c6b2e5;
-  color: #806bb6;
-  background: #f0eafb;
-  box-shadow: inset 0 -3px 0 #b89fdd;
+  border-color: var(--trainer-v2-accent, #c6b2e5);
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #f0eafb);
+  box-shadow: inset 0 -3px 0 var(--trainer-v2-shadow, #b89fdd);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.plannedWorkout.subscriptionRange) {
-  border-color: #b9a7df;
-  background: #eee8fa;
-  box-shadow: inset 0 -3px 0 #a98ed4;
+  border-color: var(--trainer-v2-accent, #b9a7df);
+  background: var(--trainer-v2-surface, #eee8fa);
+  box-shadow: inset 0 -3px 0 var(--trainer-v2-shadow, #a98ed4);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.subscriptionBoundary) {
-  border-color: #9e84cc;
-  box-shadow: inset 0 -3px 0 #8f7ac8;
+  border-color: var(--trainer-v2-accent, #9e84cc);
+  box-shadow: inset 0 -3px 0 var(--trainer-v2-shadow, #8f7ac8);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerNotificationCalendarGrid button.subscriptionBoundary b) {
@@ -864,8 +864,8 @@
   min-width: 20px;
   padding: 2px 5px;
   border-radius: 999px;
-  color: #806bb6;
-  background: #eee8fa;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee8fa);
   font-size: 9px;
   font-style: normal;
   font-weight: 750;
@@ -898,7 +898,7 @@
 
 .content :global(.trainerNotificationCalendarUnified > small) {
   margin: 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -908,7 +908,7 @@
   gap: 12px;
   margin: 0;
   padding: 14px;
-  border: 1px solid #e8e1f0;
+  border: 1px solid var(--trainer-v2-line, #e8e1f0);
   border-radius: 16px;
   background: #ffffff;
 }
@@ -918,13 +918,13 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 7px 14px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 13px;
   line-height: 1.35;
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionRange b) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-weight: 750;
 }
 
@@ -958,13 +958,13 @@
   flex-wrap: wrap;
   gap: 10px 14px;
   padding-top: 12px;
-  border-top: 1px solid #eee9f3;
-  color: #625d6a;
+  border-top: 1px solid var(--trainer-v2-line, #eee9f3);
+  color: var(--trainer-v2-muted, #625d6a);
   font-size: 13px;
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > span b) {
-  color: #28262e;
+  color: var(--trainer-v2-ink, #28262e);
   font-weight: 750;
 }
 
@@ -981,7 +981,7 @@
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs label small) {
-  color: #625d6a;
+  color: var(--trainer-v2-muted, #625d6a);
   font-size: 12px;
   font-weight: 720;
 }
@@ -992,10 +992,10 @@
   min-width: 0;
   min-height: 44px;
   padding: 0 12px;
-  border: 1px solid #ded4ea;
+  border: 1px solid var(--trainer-v2-line, #ded4ea);
   border-radius: 12px;
-  color: #28262e;
-  background: #fbfaff;
+  color: var(--trainer-v2-ink, #28262e);
+  background: var(--trainer-v2-surface, #fbfaff);
   font: inherit;
   font-size: 16px;
   font-variant-numeric: tabular-nums;
@@ -1003,8 +1003,8 @@
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionInputs input:focus) {
-  border-color: #9d83cb;
-  box-shadow: 0 0 0 3px rgba(143, 122, 200, .16);
+  border-color: var(--trainer-v2-accent, #9d83cb);
+  box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / .16);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionEdit),
@@ -1015,11 +1015,11 @@
   justify-content: center;
   margin-left: auto;
   padding: 0 14px;
-  border: 1px solid #d7c8ed;
+  border: 1px solid var(--trainer-v2-line, #d7c8ed);
   border-radius: 12px;
-  color: #6b53a3;
-  background: #f4effc;
-  box-shadow: 0 4px 10px rgba(89, 65, 128, .08);
+  color: var(--trainer-v2-accent, #6b53a3);
+  background: var(--trainer-v2-surface, #f4effc);
+  box-shadow: 0 4px 10px rgb(var(--trainer-v2-shadow-rgb, 89 65 128) / .08);
   font: inherit;
   font-weight: 720;
 }
@@ -1029,14 +1029,14 @@
   min-height: 44px;
   align-items: center;
   gap: 7px;
-  color: #625d6a;
+  color: var(--trainer-v2-muted, #625d6a);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > label input) {
   width: 18px;
   height: 18px;
   margin: 0;
-  accent-color: #806bb6;
+  accent-color: var(--trainer-v2-accent, #806bb6);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > label small) {
@@ -1049,18 +1049,18 @@
   align-items: center;
   justify-content: center;
   padding: 0 16px;
-  border: 1px solid #806bb6;
+  border: 1px solid var(--trainer-v2-accent, #806bb6);
   border-radius: 12px;
   color: #ffffff;
-  background: #806bb6;
-  box-shadow: 0 7px 15px rgba(112, 86, 164, .2);
+  background: var(--trainer-v2-accent, #806bb6);
+  box-shadow: 0 7px 15px rgb(var(--trainer-v2-shadow-rgb, 112 86 164) / .2);
   font: inherit;
   font-weight: 750;
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerNextPrimary:hover:not(:disabled)) {
-  border-color: #7059a7;
-  background: #7059a7;
+  border-color: var(--trainer-v2-accent, #7059a7);
+  background: var(--trainer-v2-accent, #7059a7);
 }
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionFields footer > .trainerNextPrimary:disabled) {
@@ -1070,8 +1070,8 @@
 
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionEdit:hover:not(:disabled)),
 .content :global(.trainerNotificationCalendarUnified .trainerCalendarSubscriptionCancel:hover:not(:disabled)) {
-  border-color: #bfa8df;
-  background: #ece4f9;
+  border-color: var(--trainer-v2-accent, #bfa8df);
+  background: var(--trainer-v2-surface, #ece4f9);
 }
 
 @media (max-width: 699px) {
@@ -1194,4 +1194,15 @@
     width: 100%;
     margin-left: 0;
   }
+}
+
+/* A utility sheet owns its scroll area, not the full-page trainer shell. */
+:global(html[data-trainer-variant="v2"] body) .content {width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;flex:1 1 auto!important;margin:0!important;padding:14px!important;overflow:auto!important;border-radius:0!important;box-shadow:none!important}
+:global(html[data-trainer-variant="v2"] body) .content::after {display:none!important}
+:global(html[data-trainer-variant="v2"] body) .sheet {height:auto!important;max-height:calc(100dvh - 24px)!important;min-height:0!important}
+@media(max-width:699px) {
+ :global(html[data-trainer-variant="v2"] body) .header {padding:12px 14px!important;gap:10px!important;flex-wrap:wrap}
+ :global(html[data-trainer-variant="v2"] body) .headerActions {flex-wrap:wrap;gap:8px}
+ :global(html[data-trainer-variant="v2"] body) .title {font-size:20px}
+ :global(html[data-trainer-variant="v2"] body) .footer {padding:10px 14px!important}
 }

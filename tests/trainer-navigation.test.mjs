@@ -69,7 +69,7 @@ test("program overview uses compact cards with a program search and add control"
   assert.match(styles, /background: #f7f6f8/);
   assert.doesNotMatch(styles, /!important/);
   assert.match(styles, /border: 2px solid #fff/);
-  assert.match(styles, /border: 2px dashed #bca9fa/);
+  assert.match(styles, /border: 2px dashed var\(--trainer-v2-accent, #bca9fa\)/);
 });
 
 test("program creation asks for a format and persists the selected format", async () => {
@@ -247,7 +247,7 @@ test("workout schedule keeps subscription editing beside schedule editing", asyn
   assert.match(schedule, /showEditAction=\{false\}/);
   assert.match(schedule, /className="trainerWorkoutScheduleSubscriptionAction"/);
   assert.match(schedule, /onClick=\{startSubscriptionEditing\}/);
-  assert.match(styles, /trainerWorkoutScheduleSubscriptionAction\) \{[\s\S]*?background: #eee7fa/);
+  assert.match(styles, /trainerWorkoutScheduleSubscriptionAction\) \{[\s\S]*?background: var\(--trainer-v2-surface, #eee7fa\)/);
   assert.match(styles, /trainerWorkoutScheduleActions\) \{[\s\S]*?flex-direction: column/);
 });
 
@@ -392,8 +392,8 @@ test("client card keeps Messages and notifications in the header instead of dupl
   assert.match(messagesView, /Обработаны/);
   assert.match(messagesView, /data-selected=\{selected \? "true" : undefined\}/);
   assert.match(styles, /\.filters button\[aria-pressed="true"\]/);
-  assert.match(styles, /background: #806bb6/);
-  assert.match(styles, /\.replyPrimary\s*\{[\s\S]*?background: #806bb6/);
+  assert.match(styles, /background: var\(--trainer-v2-accent, #806bb6\)/);
+  assert.match(styles, /\.replyPrimary\s*\{[\s\S]*?background: var\(--trainer-v2-accent, #806bb6\)/);
   assert.match(messagesView, /onReplyToMessage\(item\)/);
   assert.match(messagesView, /Обработать все/);
   assert.doesNotMatch(messagesView, /Задания клиенту|tasksPanel/);

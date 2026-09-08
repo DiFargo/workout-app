@@ -42,24 +42,24 @@
   min-height: 46px;
   margin-left: auto;
   padding: 0 18px;
-  border: 1px solid #cfc1ec;
+  border: 1px solid var(--trainer-v2-line, #cfc1ec);
   border-radius: 14px;
-  color: #6f59a7;
-  background: #eee8fa;
-  box-shadow: 0 7px 16px rgba(101, 78, 152, 0.1);
+  color: var(--trainer-v2-accent, #6f59a7);
+  background: var(--trainer-v2-surface, #eee8fa);
+  box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 101 78 152) / 0.1);
   font-size: 14px;
   font-weight: 760;
   line-height: 1.2;
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta .trainerNutritionPlanEditButton:hover) {
-  border-color: #bba9e1;
-  color: #5f4a98;
-  background: #e5dcf7;
+  border-color: var(--trainer-v2-accent, #bba9e1);
+  color: var(--trainer-v2-accent, #5f4a98);
+  background: var(--trainer-v2-surface, #e5dcf7);
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionCurrentMeta .trainerNutritionPlanEditButton:focus-visible) {
-  outline: 2px solid rgba(128, 107, 182, 0.45);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 128 107 182) / 0.45);
   outline-offset: 2px;
 }
 

@@ -25,7 +25,7 @@
   overflow: hidden !important;
   overscroll-behavior: contain;
   isolation: isolate;
-  background: rgba(40, 38, 46, 0.34) !important;
+  background: rgb(var(--trainer-v2-ink-rgb, 40 38 46) / 0.34) !important;
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
@@ -39,10 +39,10 @@
   margin: 0 !important;
   overflow: auto !important;
   overscroll-behavior: contain;
-  border: 1px solid #efebf3 !important;
+  border: 1px solid var(--trainer-v2-line, #efebf3) !important;
   border-radius: var(--trainer-modal-radius) !important;
   background: #fbfafc !important;
-  box-shadow: 0 28px 72px rgba(40, 38, 46, 0.24) !important;
+  box-shadow: 0 28px 72px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.24) !important;
 }
 
 /* A modal may opt into a stable application frame.  Its title controls and
@@ -74,14 +74,14 @@
   place-items: center !important;
   border: 0 !important;
   border-radius: 50% !important;
-  background: #f5f2f7 !important;
+  background: var(--trainer-v2-surface, #f5f2f7) !important;
   box-shadow: none !important;
-  color: #28262e !important;
+  color: var(--trainer-v2-ink, #28262e) !important;
 }
 
 :global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"] .trainerNextModalClose:hover) {
-  background: #efeaf9 !important;
-  color: #806bb6 !important;
+  background: var(--trainer-v2-surface, #efeaf9) !important;
+  color: var(--trainer-v2-accent, #806bb6) !important;
 }
 
 :global([data-trainer-modal-surface="true"][data-trainer-modal-frame="true"] [data-trainer-modal-content="true"]) {

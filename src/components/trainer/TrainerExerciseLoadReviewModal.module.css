@@ -36,7 +36,7 @@
 .header > div > span {
   display: block;
   margin-bottom: 4px;
-  color: #806bb6;
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: .06em;
@@ -72,17 +72,17 @@
   display: flex;
   justify-content: flex-end;
   padding: 12px 22px max(16px, env(safe-area-inset-bottom));
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--trainer-v2-line, #efebf3);
   background: #ffffff;
 }
 
 .footer button {
   min-height: 44px;
   padding: 0 18px;
-  border: 1px solid #cfc5f6;
+  border: 1px solid var(--trainer-v2-line, #cfc5f6);
   border-radius: 10px;
   background: #ffffff;
-  color: #4e34b5;
+  color: var(--trainer-v2-accent, #4e34b5);
   font: inherit;
   font-size: 12px;
   font-weight: 800;
@@ -100,7 +100,7 @@
   gap: 12px;
   margin: 0 22px 14px;
   padding: 13px;
-  border: 1px solid #e4def8;
+  border: 1px solid var(--trainer-v2-line, #e4def8);
   border-radius: 12px;
   background: #ffffff;
 }
@@ -111,8 +111,8 @@
   display: grid;
   place-items: center;
   border-radius: 11px;
-  background: #efeaff;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #efeaff);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .issueCard > div { min-width: 0; }
@@ -154,8 +154,8 @@
   place-items: center;
   flex: 0 0 auto;
   border-radius: 7px;
-  background: #f0ecff;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #f0ecff);
+  color: var(--trainer-v2-accent, #806bb6);
   font-size: 10px;
   font-weight: 850;
 }
@@ -169,10 +169,10 @@
   justify-content: center;
   gap: 7px;
   padding: 0 14px;
-  border: 1px solid #cfc5f6;
+  border: 1px solid var(--trainer-v2-line, #cfc5f6);
   border-radius: 9px;
   background: #fff;
-  color: #4e34b5;
+  color: var(--trainer-v2-accent, #4e34b5);
   font-size: 10px;
   font-weight: 800;
   cursor: pointer;
@@ -208,7 +208,7 @@
 .setHeader { padding: 11px 4px 5px; color: #858996; font-size: 8px; }
 .setList { display: grid; gap: 6px; }
 .setRow { padding: 6px; border: 1px solid #e5e7ed; border-radius: 9px; background: #fff; }
-.setRow > strong { text-align: center; color: #806bb6; font-size: 11px; }
+.setRow > strong { text-align: center; color: var(--trainer-v2-accent, #806bb6); font-size: 11px; }
 .setRow label { min-width: 0; }
 .setRow label > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .setRow input,
@@ -224,7 +224,7 @@
   font-size: 11px;
   -webkit-text-fill-color: #22242d;
 }
-.setRow input:focus, .editorFooter input:focus { border-color: #7955ee; box-shadow: 0 0 0 3px rgba(100, 55, 245, .09); }
+.setRow input:focus, .editorFooter input:focus { border-color: var(--trainer-v2-accent, #7955ee); box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / .09); }
 .setRow input:disabled { background: #f0f1f4; color: #a0a3ad; -webkit-text-fill-color: #a0a3ad; }
 .setRow > button {
   width: 32px;
@@ -253,10 +253,10 @@
 .saveButton {
   width: 100%;
   margin-top: 12px;
-  border-color: #6031eb;
-  background: linear-gradient(135deg, #7042f4, #5424df);
+  border-color: var(--trainer-v2-accent, #6031eb);
+  background: linear-gradient(135deg, var(--trainer-v2-surface, #7042f4), var(--trainer-v2-surface, #5424df));
   color: #fff;
-  box-shadow: 0 8px 20px rgba(95, 45, 230, .16);
+  box-shadow: 0 8px 20px rgb(var(--trainer-v2-shadow-rgb, 95 45 230) / .16);
 }
 
 .noTarget {

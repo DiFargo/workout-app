@@ -325,7 +325,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerDailyJournalFilters button.active) {
-  border-color: #d8cbed;
+  border-color: var(--trainer-v2-line, #d8cbed);
   background: var(--tn-purple-soft);
   color: var(--tn-purple-strong);
 }
@@ -336,7 +336,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerDailyJournalFilters button:focus-visible) {
-  outline: 2px solid rgba(143, 122, 200, .48);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / .48);
   outline-offset: 2px;
 }
 
@@ -347,7 +347,7 @@
   padding: 0 8px 0 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-color: #c9bde0 transparent;
+  scrollbar-color: var(--trainer-v2-surface, #c9bde0) transparent;
   scrollbar-width: thin;
 }
 
@@ -357,7 +357,7 @@
 
 :global(.trainerNextRoot) :global(.trainerDailyJournalTimeline::-webkit-scrollbar-thumb) {
   border-radius: 999px;
-  background: #c9bde0;
+  background: var(--trainer-v2-surface, #c9bde0);
 }
 
 :global(.trainerNextRoot) :global(.trainerDailyJournalBoundary) {
@@ -379,7 +379,7 @@
   left: 68px;
   border: 2px solid var(--tn-surface);
   border-radius: 50%;
-  background: #b9afcb;
+  background: var(--trainer-v2-muted, #b9afcb);
   box-sizing: border-box;
   content: "";
 }
@@ -428,7 +428,7 @@
   top: -10px;
   bottom: -10px;
   width: 1px;
-  background: #e6dfef;
+  background: var(--trainer-v2-surface, #e6dfef);
   content: "";
 }
 
@@ -439,7 +439,7 @@
   height: 9px;
   border: 2px solid var(--tn-surface);
   border-radius: 50%;
-  background: #a99dbb;
+  background: var(--trainer-v2-muted, #a99dbb);
 }
 
 :global(.trainerNextRoot) :global(.trainerDailyJournalEvent.requiresAction .trainerDailyJournalLine i) {
@@ -497,7 +497,7 @@
 :global(.trainerNextRoot) :global(.trainerDailyJournalEvent > button) {
   min-height: 32px;
   padding: 0 12px;
-  border: 1px solid #d9cdec;
+  border: 1px solid var(--trainer-v2-line, #d9cdec);
   border-radius: 10px;
   background: var(--tn-purple-soft);
   color: var(--tn-purple-strong);
@@ -508,7 +508,7 @@
 
 :global(.trainerNextRoot) :global(.trainerDailyJournalEvent > button:hover) {
   border-color: var(--tn-purple);
-  background: #eee7fa;
+  background: var(--trainer-v2-surface, #eee7fa);
 }
 
 :global(.trainerNextRoot) :global(.trainerDailyJournalReviewed),
@@ -559,8 +559,8 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNextTrainer:hover) {
-  border-color: #d8ceea;
-  background: #fcfbff;
+  border-color: var(--trainer-v2-line, #d8ceea);
+  background: var(--trainer-v2-surface, #fcfbff);
   transform: translateY(-1px);
 }
 

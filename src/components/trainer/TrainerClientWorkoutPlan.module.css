@@ -3,10 +3,10 @@
   gap: 0;
   overflow: hidden;
   padding: 0;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 24px;
   background: #fff;
-  box-shadow: 0 8px 22px rgba(50, 40, 70, 0.04);
+  box-shadow: 0 8px 22px rgb(var(--trainer-v2-shadow-rgb, 50 40 70) / 0.04);
 }
 
 .programHeader {
@@ -14,7 +14,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 22px 24px;
-  border-bottom: 1px solid #efebf3;
+  border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 .programHeaderCopy {
@@ -28,8 +28,8 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 16px;
-  background: #f0ebff;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #f0ebff);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .programHeader h2 {
@@ -56,7 +56,7 @@
   padding: 0 8px;
   border: 1px solid transparent;
   border-radius: 12px;
-  color: #6f58af;
+  color: var(--trainer-v2-accent, #6f58af);
   background: transparent;
   font: inherit;
   font-size: 11px;
@@ -68,13 +68,13 @@
 }
 
 .programHistoryButton:hover {
-  border-color: #dfd3f1;
-  background: #f7f3fd;
-  color: #5d4697;
+  border-color: var(--trainer-v2-line, #dfd3f1);
+  background: var(--trainer-v2-surface, #f7f3fd);
+  color: var(--trainer-v2-accent, #5d4697);
 }
 
 .programHistoryButton:focus-visible {
-  outline: 2px solid rgba(143, 122, 200, .45);
+  outline: 2px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / .45);
   outline-offset: 2px;
 }
 
@@ -101,7 +101,7 @@
 .currentProgram {
   display: grid;
   align-content: center;
-  border-right: 1px solid #efebf3;
+  border-right: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 .assignment {
@@ -156,10 +156,10 @@
   justify-content: center;
   gap: 6px;
   padding: 0 12px;
-  border: 1px solid #ded3ef;
+  border: 1px solid var(--trainer-v2-line, #ded3ef);
   border-radius: 11px;
   background: #fff;
-  color: #7455a8;
+  color: var(--trainer-v2-accent, #7455a8);
   font: inherit;
   font-size: 12px;
   font-weight: 750;
@@ -177,8 +177,8 @@
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton:hover:not(:disabled),
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton:focus-visible {
-  border-color: #bda9df;
-  background: #f7f3fd;
+  border-color: var(--trainer-v2-accent, #bda9df);
+  background: var(--trainer-v2-surface, #f7f3fd);
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderButton:disabled { cursor: not-allowed; opacity: .55; }
@@ -189,16 +189,16 @@
   gap: 10px 12px;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid #efebf3;
+  border-top: 1px solid var(--trainer-v2-line, #efebf3);
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm label { display: grid; min-width: 0; gap: 5px; }
-:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm label > span { display: block; margin: 0; color: #77717d; font-size: 10px; font-weight: 800; letter-spacing: .035em; text-transform: uppercase; }
-:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid #ded3ef; border-radius: 11px; outline: 0; background: #fff; color: #252936; font: inherit; font-size: 13px; font-weight: 700; }
-:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm input:focus { border-color: #8f7ac8; box-shadow: 0 0 0 3px rgba(143, 122, 200, .12); }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm label > span { display: block; margin: 0; color: var(--trainer-v2-muted, #77717d); font-size: 10px; font-weight: 800; letter-spacing: .035em; text-transform: uppercase; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid var(--trainer-v2-line, #ded3ef); border-radius: 11px; outline: 0; background: #fff; color: #252936; font: inherit; font-size: 13px; font-weight: 700; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm input:focus { border-color: var(--trainer-v2-accent, #8f7ac8); box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / .12); }
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm > div { display: flex; align-items: end; gap: 7px; }
-:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button { display: inline-flex; width: auto; height: auto; min-height: 42px; place-items: initial; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #ded3ef; border-radius: 11px; background: #fff; color: #7455a8; font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
-:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button[type="submit"] { border-color: #806bb6; background: #806bb6; color: #fff; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button { display: inline-flex; width: auto; height: auto; min-height: 42px; place-items: initial; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--trainer-v2-line, #ded3ef); border-radius: 11px; background: #fff; color: var(--trainer-v2-accent, #7455a8); font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
+:global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button[type="submit"] { border-color: var(--trainer-v2-accent, #806bb6); background: var(--trainer-v2-accent, #806bb6); color: #fff; }
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm button:disabled { cursor: wait; opacity: .62; }
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal > header) .programRenameHeaderForm p { grid-column: 1 / -1; margin: -2px 0 0; color: #a24f5c; font-size: 11px; }
 
@@ -208,17 +208,17 @@
   align-items: center;
   gap: 10px;
   border-style: dashed;
-  border-color: #e5dfea;
+  border-color: var(--trainer-v2-line, #e5dfea);
   background: #fcfbfd;
 }
 
 .emptyProgram .currentInfo h3 {
-  color: #5e5965;
+  color: var(--trainer-v2-muted, #5e5965);
 }
 
 .emptyProgram .currentInfo p {
   max-width: 360px;
-  color: #837d89;
+  color: var(--trainer-v2-muted, #837d89);
   line-height: 1.4;
 }
 
@@ -229,8 +229,8 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 14px;
-  background: #eee9ff;
-  color: #806bb6;
+  background: var(--trainer-v2-surface, #eee9ff);
+  color: var(--trainer-v2-accent, #806bb6);
 }
 
 .currentInfo {
@@ -277,7 +277,7 @@
   justify-content: space-between;
   gap: 7px;
   padding: 7px 9px;
-  border: 1px solid #e8e8f0;
+  border: 1px solid var(--trainer-v2-line, #e8e8f0);
   border-radius: 9px;
   background: #fff;
 }
@@ -349,38 +349,38 @@
 }
 
 .assignButton {
-  border: 1px solid #806bb6;
-  background: #806bb6;
+  border: 1px solid var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-accent, #806bb6);
   color: #fff;
 }
 
 .editButton {
-  border: 1px solid #806bb6;
-  background: #806bb6;
+  border: 1px solid var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-accent, #806bb6);
   color: #fff;
 }
 
 /* The assigned-program action is secondary to scheduling a new program. */
 .currentProgramEditButton {
-  border-color: #a58bd0;
-  background: #f4effc;
-  color: #654b9d;
+  border-color: var(--trainer-v2-accent, #a58bd0);
+  background: var(--trainer-v2-surface, #f4effc);
+  color: var(--trainer-v2-accent, #654b9d);
   box-shadow: none;
 }
 
 .currentProgramEditButton:not(:disabled):hover,
 .currentProgramEditButton:not(:disabled):focus-visible {
-  border-color: #8f7ac8;
-  background: #e7ddf6;
-  color: #5e4594;
-  box-shadow: 0 5px 12px rgba(143, 122, 200, 0.12);
+  border-color: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--trainer-v2-surface, #e7ddf6);
+  color: var(--trainer-v2-accent, #5e4594);
+  box-shadow: 0 5px 12px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.12);
 }
 
 .assignButton:disabled {
   cursor: not-allowed;
-  border-color: #d8cdef;
-  background: #eee8fa;
-  color: #806bb6;
+  border-color: var(--trainer-v2-line, #d8cdef);
+  background: var(--trainer-v2-surface, #eee8fa);
+  color: var(--trainer-v2-accent, #806bb6);
   opacity: 1;
 }
 
@@ -407,7 +407,7 @@
   align-items: center;
   gap: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #eeeaf2;
+  border-bottom: 1px solid var(--trainer-v2-line, #eeeaf2);
 }
 
 .programHistoryModalHeader > div {
@@ -422,7 +422,7 @@
   align-items: center;
   gap: 7px;
   padding: 0 8px;
-  border: 1px solid #e6e0ee;
+  border: 1px solid var(--trainer-v2-line, #e6e0ee);
   border-radius: 999px;
   color: #626978;
   background: #fff;
@@ -448,7 +448,7 @@
   height: 16px;
   flex: 0 0 auto;
   border-radius: 999px;
-  background: #d9d6df;
+  background: var(--trainer-v2-surface, #d9d6df);
   transition: background .18s ease;
 }
 
@@ -460,13 +460,13 @@
   height: 12px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 3px rgb(38 31 56 / 22%);
+  box-shadow: 0 1px 3px var(--trainer-v2-shadow, rgb(38 31 56 / 22%));
   content: "";
   transition: transform .18s ease;
 }
 
 .assignmentHistoryToggle input:checked + span {
-  background: #8f7ac8;
+  background: var(--trainer-v2-accent, #8f7ac8);
 }
 
 .assignmentHistoryToggle input:checked + span::after {
@@ -474,7 +474,7 @@
 }
 
 .assignmentHistoryToggle input:focus-visible + span {
-  outline: 2px solid #806bb6;
+  outline: 2px solid var(--trainer-v2-accent, #806bb6);
   outline-offset: 2px;
 }
 
@@ -487,7 +487,7 @@
 .programHistoryModalHeader > div > span {
   display: block;
   margin-bottom: 1px;
-  color: #857d8e;
+  color: var(--trainer-v2-muted, #857d8e);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .035em;
@@ -523,7 +523,7 @@
 .assignmentHistoryEmpty {
   margin: 0;
   padding: 10px;
-  border: 1px dashed #ded9e7;
+  border: 1px dashed var(--trainer-v2-line, #ded9e7);
   border-radius: 10px;
   color: #777b87;
   font-size: 11px;
@@ -538,7 +538,7 @@
   gap: 9px;
   min-width: 0;
   padding: 8px 10px;
-  border: 1px solid #eeeaf2;
+  border: 1px solid var(--trainer-v2-line, #eeeaf2);
   border-radius: 12px;
   background: #fff;
 }
@@ -549,8 +549,8 @@
   height: 34px;
   place-items: center;
   border-radius: 10px;
-  color: #806bb6;
-  background: #eee9ff;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee9ff);
 }
 
 .assignmentHistoryInfo {
@@ -577,8 +577,8 @@
   flex: 0 0 auto;
   padding: 3px 7px;
   border-radius: 999px;
-  color: #806bb6;
-  background: #eee9ff;
+  color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-surface, #eee9ff);
   font-size: 10px;
   font-weight: 750;
 }
@@ -594,18 +594,18 @@
 }
 
 .assignmentCurrent {
-  border-color: #ddd1ef;
-  background: #fcfaff;
+  border-color: var(--trainer-v2-line, #ddd1ef);
+  background: var(--trainer-v2-surface, #fcfaff);
 }
 
 .assignmentCurrent .assignmentBadge {
-  color: #6f55a8;
-  background: #e9def8;
+  color: var(--trainer-v2-accent, #6f55a8);
+  background: var(--trainer-v2-surface, #e9def8);
 }
 
 .assignmentFuture .assignmentBadge {
-  color: #74618f;
-  background: #f1edf7;
+  color: var(--trainer-v2-accent, #74618f);
+  background: var(--trainer-v2-surface, #f1edf7);
 }
 
 .assignmentPast .assignmentBadge,
@@ -628,10 +628,10 @@
   justify-content: center;
   gap: 5px;
   padding: 0 10px;
-  border: 1px solid #ded3ef;
+  border: 1px solid var(--trainer-v2-line, #ded3ef);
   border-radius: 9px;
-  color: #7455a8;
-  background: #fbf9fe;
+  color: var(--trainer-v2-accent, #7455a8);
+  background: var(--trainer-v2-surface, #fbf9fe);
   font: inherit;
   font-size: 11px;
   font-weight: 750;
@@ -639,8 +639,8 @@
 }
 
 .assignmentHistoryActions button:hover:not(:disabled) {
-  border-color: #bda9df;
-  background: #f2ecfa;
+  border-color: var(--trainer-v2-accent, #bda9df);
+  background: var(--trainer-v2-surface, #f2ecfa);
 }
 
 .assignmentHistoryActions button:disabled {
@@ -843,7 +843,7 @@
 
 :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseProgressHead) {
   min-width: 0;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 10px;
   font-weight: 800;
   line-height: 1.2;
@@ -855,10 +855,10 @@
   align-content: center;
   gap: 3px;
   padding: 8px 10px;
-  border: 1px solid #e8e3ed;
+  border: 1px solid var(--trainer-v2-line, #e8e3ed);
   border-radius: 10px;
   background: #fbfafc;
-  color: #5f5968;
+  color: var(--trainer-v2-muted, #5f5968);
   white-space: normal;
   overflow-wrap: anywhere;
 }
@@ -876,23 +876,23 @@
 }
 
 :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseProgress small) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 10px;
 }
 
 :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseProgress.hasComparison) {
-  border-color: #d9cdec;
-  background: #f7f3fb;
-  color: #4e4262;
+  border-color: var(--trainer-v2-line, #d9cdec);
+  background: var(--trainer-v2-surface, #f7f3fb);
+  color: var(--trainer-v2-muted, #4e4262);
 }
 
 :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextExerciseProgress.needsHistory) {
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
 }
 
 :global(.trainerWorkoutEditorModal.trainerClientProgramEditorModal .trainerNextWorkoutReadOnlyHint) {
   margin: -5px 0 12px;
-  color: #7b7682;
+  color: var(--trainer-v2-muted, #7b7682);
   font-size: 11px;
   line-height: 1.35;
 }
@@ -1064,8 +1064,8 @@
 }
 
 .editorFooter button:last-child {
-  border-color: #806bb6;
-  background: #806bb6;
+  border-color: var(--trainer-v2-accent, #806bb6);
+  background: var(--trainer-v2-accent, #806bb6);
   color: #fff;
 }
 
@@ -1081,7 +1081,7 @@
 
   .currentProgram {
     border-right: 0;
-    border-bottom: 1px solid #efebf3;
+    border-bottom: 1px solid var(--trainer-v2-line, #efebf3);
   }
 }
 
@@ -1439,4 +1439,17 @@
   .assignmentRow {
     gap: 8px;
   }
+}
+
+/* V2 compact phone card; preserve the program controls and content. */
+@media(max-width:699px) {
+ :global(html[data-trainer-variant="v2"]) .programHeader {padding:14px;gap:10px;flex-wrap:wrap}
+ :global(html[data-trainer-variant="v2"]) .programHeader > span {width:36px;height:36px;border-radius:10px}
+ :global(html[data-trainer-variant="v2"]) .programHeader h2 {font-size:18px}
+ :global(html[data-trainer-variant="v2"]) .programCard {border-radius:16px;box-shadow:none}
+}
+
+@media(max-width:699px) {
+ :global(html[data-trainer-variant="v2"]) .currentProgram,
+ :global(html[data-trainer-variant="v2"]) .assignment {padding:14px}
 }

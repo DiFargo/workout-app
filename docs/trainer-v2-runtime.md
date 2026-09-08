@@ -1,4 +1,4 @@
-# Trainer style comparison — 3.0.708
+# Trainer style comparison — 3.0.710
 
 - Existing interface: https://tren-85720.web.app/
 - Temporary comparison interface: https://tren-85720.web.app/v2
@@ -58,3 +58,25 @@ Acceptance checklist:
 The adaptive harness adds long names, enough clients to scroll, and a sync preview;
 it is test-only and does not add demo users to Firebase. Constructor styles no
 longer require local `!important` overrides; existing source-contract tests pass.
+
+## Nested screens and palette completeness — 3.0.710
+
+The V2 marker supplies shared palette values inherited by trainer components and
+portaled sheets. Local CSS Modules retain their legacy colors as variable
+fallbacks, so the original URL keeps its presentation. Alpha in translucent
+backgrounds and shadows is preserved. Semantic success/warning/error colors
+remain distinct. No client data, authorization or persistence behavior changed.
+
+- All trainer CSS Modules now consume the V2 palette for legacy violet values,
+  including tasks, messages, calendar, nutrition, measurements, photos, program
+  and exercise editors, onboarding and review dialogs.
+- Client detail has 16px outer phone gutters and a compact sticky back row.
+  Nutrition removes a redundant inner padding layer; program sections use 14px.
+- Utility sheet content no longer inherits the full-page trainer height.
+- Browser checks inspect computed colors throughout all four client tabs and
+  utility sheets at 393, 768 and 1366px; additional phone checks cover cabinet
+  analytics/notifications, program library, constructor and day editor.
+- Focused suite: 19 passed, 11 intentionally skipped duplicate viewport cases.
+  Extended phone palette case also passes. Unit tests: 680 passed.
+- Production build and bundle/artifact validation pass. Existing full-suite
+  limitations described above remain; fixture checks do not claim Firebase writes.
