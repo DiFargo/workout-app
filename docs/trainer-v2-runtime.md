@@ -135,3 +135,8 @@ Acceptance: all 11 user comments addressed across overview, workouts, nutrition 
 ## 3.0.715 — readable calendar legend
 
 Replaced indistinguishable dots with status symbols and semantic colours in the subscription calendar. Actual day badges carry the same symbols alongside workout numbers. Removed inherited text hiding, separated date and badge layout, and separated subscription range from workout statuses. Verified the calendar sheet and legend at 393, 768 and 1366 px, JSX lint, production build and artifact guards.
+
+
+## 3.0.717 — collapsible program workouts
+
+The workout list starts collapsed with its title and progress. Expanding a workout shows planned sets, actual sets, completion totals, client feedback and review status in one compact panel. Actual data is matched by workout ID within the active assignment. Only the disclosure chevron rotates. The original editor remains accessible. Verified expanded/collapsed states, label orientation and editor navigation at eight viewport widths (320–1920), 680 unit tests, lint and production build.

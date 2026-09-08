@@ -53,7 +53,10 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
         await expect(page.locator('.trainerClientWorkoutList details').first()).toContainText('Выполнена');
 
         const program = await page.locator('.trainerClientMainColumn > section').first().boundingBox();
+        await expect(page.locator('.trainerClientWorkoutList')).not.toHaveAttribute('open');
+        await expect(page.locator('.trainerClientWorkoutList li').first()).toBeHidden();
         const list = await page.locator('.trainerClientWorkoutList').boundingBox();
+        expect(list.height).toBeLessThan(115);
         expect(list.y - program.y - program.height).toBeLessThanOrEqual(20);
       }
       await page.screenshot({ fullPage: true, path: `artifacts/client-four-runtime-${width}-${name}.png` });
@@ -74,7 +77,13 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.locator('.trainerClientAssignmentDisclosure > summary').click();
     await expect(assign).toBeVisible();
     await page.locator('.trainerClientAssignmentDisclosure > summary').click();
-    await page.locator('.trainerClientWorkoutList summary').first().click();
+    await page.locator('.trainerClientWorkoutList > summary').click();
+    await page.locator('.trainerClientWorkoutList .trainerClientDisclosure > summary').first().click();
+    expect(await page.locator('.trainerWorkoutRowLabel').first().evaluate(el => getComputedStyle(el).transform)).toBe('none');
+    await expect(page.locator('.trainerClientWorkoutList')).toContainText('План и факт');
+    await expect(page.locator('.trainerClientWorkoutList')).toContainText('План:');
+    await expect(page.locator('.trainerClientWorkoutList')).toContainText('Факт:');
+    await page.screenshot({path: `artifacts/workout-inline-${width}.png`});
     await expect(page.locator('.trainerClientWorkoutList li').first()).toBeVisible();
     await page.getByRole('button', { name: 'Открыть тренировку', exact: true }).click();
     await expect(page.locator('.trainerClientProgramEditorModal')).toBeVisible();

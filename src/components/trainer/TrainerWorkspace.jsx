@@ -1,3 +1,4 @@
+import TrainerWorkoutList from "./TrainerWorkoutList";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { isTrainerV2Path } from "../../app/cssVariant";
@@ -3059,14 +3060,7 @@ function ClientWorkoutPlan({
       ) : null}
 
       {isTrainerV2Path(window.location.pathname) && scheduleWorkouts.length ? (
-        <section className="trainerClientWorkoutList" aria-label="Тренировки программы">
-          <header><h2>Тренировки программы</h2><span>{assignedProgramCompletion}% выполнено</span></header>
-          <progress max="100" value={assignedProgramCompletion} aria-label="Выполнение программы" />
-          {scheduleWorkouts.map((workout, index) => <TrainerClientDisclosure key={workout.id || index} title={<span className="trainerWorkoutRowLabel"><span>{`${index + 1}. ${workout.name || workout.title || "Тренировка"}`}</span>{(visibleWorkoutSlots.find(slot => slot.workoutId === String(workout.id || "")) || visibleWorkoutSlots[index])?.isCompleted ? <small className="trainerWorkoutCompleted"><Check size={14} />Выполнена</small> : null}</span>}>
-            <ul>{(workout.exercises || []).map((exercise, exerciseIndex) => <li key={exercise.id || exerciseIndex}>{exercise.name || exercise.exerciseName || "Упражнение"}</li>)}</ul>
-            <button type="button" className="trainerClientTextAction" onClick={() => { setEditorWorkoutId(workout.id); setEditorStatus(""); setEditorOpen(true); }}>Открыть тренировку</button>
-          </TrainerClientDisclosure>)}
-        </section>
+        <TrainerWorkoutList workouts={scheduleWorkouts} slots={visibleWorkoutSlots} history={scheduleHistory} completion={assignedProgramCompletion} reviewedKeys={persistedReviewedKeys} localReviewedKeys={localReviewedKeys} onOpen={(id) => { setEditorWorkoutId(id); setEditorStatus(""); setEditorOpen(true); }} />
       ) : null}
       <ClientSectionLaunchButton
         icon={ClipboardList}
