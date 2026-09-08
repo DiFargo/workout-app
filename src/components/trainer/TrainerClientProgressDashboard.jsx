@@ -205,7 +205,7 @@ export default function TrainerClientProgressDashboard({
     >
       <header className={styles.dashboardHeader}>
         <div>
-          <h2 id="trainer-client-progress-dashboard-title">{isTrainerV2Path(window.location.pathname) ? "Динамика показателей" : "Результат"}</h2>
+          <h2 id="trainer-client-progress-dashboard-title">{isTrainerV2Path(window.location.pathname) ? "Динамика" : "Результат"}</h2>
           <p>Вес, замеры, сила и питание — отдельно, на реальных данных клиента.</p>
         </div>
         <div className={styles.periods} aria-label="Период анализа прогресса">

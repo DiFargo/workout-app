@@ -1,3 +1,5 @@
+import appleStyles from "./TrainerAppleClient.module.css";
+import { AppleSchedule, AppleRecent } from "./TrainerAppleClientParts";
 import TrainerWorkoutList from "./TrainerWorkoutList";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -1211,6 +1213,7 @@ function ClientSectionLaunchButton({ icon: Icon, title, description, onClick }) 
 
 function ClientOverview({
   client,
+  workouts = [],
   snapshot,
   workoutReview,
   measurements,
@@ -1238,6 +1241,8 @@ function ClientOverview({
         onOpenMessage={onOpenMessage}
       />
       <ClientWorkSummary
+        workouts={workouts}
+        history={history}
         snapshot={snapshot}
         workoutReview={workoutReview}
         measurements={measurements}
@@ -1245,12 +1250,6 @@ function ClientOverview({
         nutritionGoals={nutritionGoals}
         onTabChange={onTabChange}
       />
-      {isTrainerV2Path(window.location.pathname) ? <aside className="trainerClientOverviewTools">
-        <h2>Работа с клиентом</h2>
-        <ClientSectionLaunchButton icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
-        <ClientSectionLaunchButton icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
-        <ClientSectionLaunchButton icon={MessageSquare} title="Сообщения" description="Переписка с клиентом" onClick={onOpenMessages} />
-      </aside> : null}
       <TrainerClientProgressDashboard
         key={client?.id || "client-progress"}
         measurements={measurements}
@@ -1259,12 +1258,19 @@ function ClientOverview({
         nutritionGoals={nutritionGoals}
       />
 
-      <ClientSectionLaunchButton
+      {isTrainerV2Path(window.location.pathname) ? <AppleRecent note={getWorkoutNoteItems(history)[0]} lastMeasurement={measurements?.length ? formatCompactDate(getMeasurementDate([...measurements].sort((a,b) => (getMeasurementDate(b)?.getTime() || 0) - (getMeasurementDate(a)?.getTime() || 0))[0])) : ""} onFeedback={onOpenFeedback} onMeasurements={() => onTabChange("bodyProgress")} onTraining={() => onTabChange("workouts")} onProgress={onOpenExerciseProgress} /> : null}
+      {isTrainerV2Path(window.location.pathname) ? <aside className="trainerClientOverviewTools">
+        <h2>Работа с клиентом</h2>
+        <ClientSectionLaunchButton icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
+        <ClientSectionLaunchButton icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
+        <ClientSectionLaunchButton icon={MessageSquare} title="Сообщения" description="Переписка с клиентом" onClick={onOpenMessages} />
+      </aside> : null}
+      {!isTrainerV2Path(window.location.pathname) ? <ClientSectionLaunchButton
         icon={BarChart3}
         title="Открыть прогресс упражнений"
         description="Сравнения нагрузки, адаптация и решения по упражнениям"
         onClick={onOpenExerciseProgress}
-      />
+      /> : null}
     </div>
   );
 }
@@ -1554,13 +1560,13 @@ function ClientPhotos({ photos }) {
     </section>;
   }
   const activePhoto = sortedPhotos.find((photo, index) => getPhotoId(photo, index) === openPhotoId);
-  const effectiveCompareIds = compareIds.map((id, index) => id || (isV2 && sortedPhotos[index] ? getPhotoId(sortedPhotos[index], index) : ""));
+  const effectiveCompareIds = compareIds.map((id, index) => { const defaultIndex = sortedPhotos.length > 1 ? 1 - index : 0; return id || (isV2 && sortedPhotos[defaultIndex] ? getPhotoId(sortedPhotos[defaultIndex], defaultIndex) : ""); });
   const comparePhotos = effectiveCompareIds.map((id) => sortedPhotos.find((photo, index) => getPhotoId(photo, index) === id)).filter(Boolean);
 
   return (
     <section className="trainerNextSimplePanel">
       <div className="trainerNextPanelTitle">
-        <div><h2>Фото прогресса</h2><p>Фотосессии клиента по датам</p></div>
+        <div><h2>{isV2 ? "Сравнение фото" : "Фото прогресса"}</h2><p>Фотосессии клиента по датам</p></div>
         <div className="trainerPhotoViewTabs">
           {photoViews.map((item) => <button type="button" className={view === item.id ? "active" : ""} aria-pressed={view === item.id} key={item.id} onClick={() => setView(item.id)}>{item.label}</button>)}
         </div>
@@ -1572,14 +1578,14 @@ function ClientPhotos({ photos }) {
             <strong>Сравнить фотосессии</strong>
             <p>Выберите две даты и ракурс для крупного сравнения.</p>
           </div>
-          <select aria-label="Первая фотосессия для сравнения" value={effectiveCompareIds[0]} onChange={(event) => setCompareIds([event.target.value, effectiveCompareIds[1]])}>
+          <label className="trainerPhotoDateLabel">{isV2 ? <span>До</span> : null}<select aria-label="Первая фотосессия для сравнения" value={effectiveCompareIds[0]} onChange={(event) => setCompareIds([event.target.value, effectiveCompareIds[1]])}>
             <option value="">Первая дата</option>
             {sortedPhotos.map((photo, index) => <option value={getPhotoId(photo, index)} key={`a-${getPhotoId(photo, index)}`}>{formatCompactDate(photo.date || photo.createdAt)}</option>)}
-          </select>
-          <select aria-label="Вторая фотосессия для сравнения" value={effectiveCompareIds[1]} onChange={(event) => setCompareIds([effectiveCompareIds[0], event.target.value])}>
+          </select></label>
+          <label className="trainerPhotoDateLabel">{isV2 ? <span>После</span> : null}<select aria-label="Вторая фотосессия для сравнения" value={effectiveCompareIds[1]} onChange={(event) => setCompareIds([effectiveCompareIds[0], event.target.value])}>
             <option value="">Вторая дата</option>
             {sortedPhotos.map((photo, index) => <option value={getPhotoId(photo, index)} key={`b-${getPhotoId(photo, index)}`}>{formatCompactDate(photo.date || photo.createdAt)}</option>)}
-          </select>
+          </select></label>
         </div>
       ) : null}
 
@@ -2522,6 +2528,8 @@ function ClientWorkoutReviewPanel({ review, onAdjustNextWorkout }) {
 }
 
 function ClientWorkoutPlan({
+  historyOpen,
+  onHistoryOpenChange,
   client,
   history,
   workouts,
@@ -2561,7 +2569,9 @@ function ClientWorkoutPlan({
   const [showBasicWorkoutHistory, setShowBasicWorkoutHistory] = useState(false);
   const [programHistoryOpen, setProgramHistoryOpen] = useState(false);
   const [scheduleAssignmentRequest, setScheduleAssignmentRequest] = useState(null);
-  const [workoutInsightsOpen, setWorkoutInsightsOpen] = useState(false);
+  const [localWorkoutInsightsOpen, setLocalWorkoutInsightsOpen] = useState(false);
+  const workoutInsightsOpen = historyOpen ?? localWorkoutInsightsOpen;
+  const setWorkoutInsightsOpen = onHistoryOpenChange || setLocalWorkoutInsightsOpen;
 
   useEffect(() => {
     if ((!editorOpen && !reviewDecisionOpen && !assignmentReviewOpen && !programAssignmentConfirm && !scheduleAssignmentRequest && !workoutInsightsOpen && !programHistoryOpen) || typeof document === "undefined") return undefined;
@@ -2894,7 +2904,7 @@ function ClientWorkoutPlan({
         <header className={trainerClientWorkoutPlanStyles.programHeader}>
           <span><ClipboardList size={19} /></span>
           <div className={trainerClientWorkoutPlanStyles.programHeaderCopy}>
-            <h2>{isTrainerV2Path(window.location.pathname) ? "Программа клиента" : "Программа тренировок клиента"}</h2>
+            <h2>{isTrainerV2Path(window.location.pathname) ? "Текущая программа" : "Программа тренировок клиента"}</h2>
             <p>Текущий план, следующее назначение и история клиента.</p>
           </div>
           {programTimeline.length || hasBasicProgramHistory ? (
@@ -2941,6 +2951,9 @@ function ClientWorkoutPlan({
             </div>
           )}
 
+      {isTrainerV2Path(window.location.pathname) && scheduleWorkouts.length ? (
+        <TrainerWorkoutList workouts={scheduleWorkouts} slots={visibleWorkoutSlots} history={scheduleHistory} completion={assignedProgramCompletion} reviewedKeys={persistedReviewedKeys} localReviewedKeys={localReviewedKeys} onOpen={(id) => { setEditorWorkoutId(id); setEditorStatus(""); setEditorOpen(true); }} />
+      ) : null}
           <TrainerClientDisclosure title={assignedProgramAssignment ? "Назначить другую программу" : "Выбрать программу для клиента"} className="trainerClientAssignmentDisclosure">
           <div className={trainerClientWorkoutPlanStyles.assignment}>
               <span>Назначить программу</span>
@@ -3059,18 +3072,28 @@ function ClientWorkoutPlan({
         </TrainerClientUtilitySheet>
       ) : null}
 
-      {isTrainerV2Path(window.location.pathname) && scheduleWorkouts.length ? (
-        <TrainerWorkoutList workouts={scheduleWorkouts} slots={visibleWorkoutSlots} history={scheduleHistory} completion={assignedProgramCompletion} reviewedKeys={persistedReviewedKeys} localReviewedKeys={localReviewedKeys} onOpen={(id) => { setEditorWorkoutId(id); setEditorStatus(""); setEditorOpen(true); }} />
-      ) : null}
-      <ClientSectionLaunchButton
+      {!isTrainerV2Path(window.location.pathname) ? (<ClientSectionLaunchButton
         icon={ClipboardList}
         title={isTrainerV2Path(window.location.pathname) ? "История тренировок" : "Открыть разбор и историю тренировок"}
         description={isTrainerV2Path(window.location.pathname) ? "Все завершённые тренировки клиента" : visibleWorkoutReview
           ? "Последняя тренировка, комментарий клиента и все сохранённые записи"
           : "Все сохранённые тренировки клиента в одном месте"}
         onClick={() => setWorkoutInsightsOpen(true)}
-      />
+      />) : null}
       </TrainerClientColumn>
+      {isTrainerV2Path(window.location.pathname) ? <AppleSchedule slots={visibleWorkoutSlots} client={client}>
+      <WorkoutSchedulePlanner
+        key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
+        client={client}
+        workouts={scheduleWorkouts}
+        archivedWorkouts={scheduleArchivedWorkouts}
+        history={history}
+        completedWorkoutIds={scheduleCompletedWorkoutIds}
+        onSaveSchedule={onSaveWorkoutSchedule}
+        onSaveSubscription={onSaveSubscription}
+        status={programStatus}
+      />
+      </AppleSchedule> : (
       <TrainerClientDisclosure enabled={!scheduleWorkouts.length} title="Абонемент и календарь" className="trainerClientEmptyCalendar">
       <WorkoutSchedulePlanner
         key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
@@ -3085,6 +3108,7 @@ function ClientWorkoutPlan({
       />
 
       </TrainerClientDisclosure>
+      )}
       {scheduleAssignmentRequest && scheduleModalAssignment ? (
         <TrainerProgramScheduleModal
           client={client}
@@ -3553,12 +3577,13 @@ function NutritionAnalytics({ nutritionDays, target }) {
         <article><span>Дней заполнено</span><strong>{trackedDays.length}/{period === "custom" ? recentDays.length || "—" : period}</strong><small>только завершённые дни</small></article>
         <article><span>Средние калории</span><strong>{averages.calories || "—"}</strong><small>цель {target.calories} ккал</small></article>
         <article><span>Средний белок</span><strong>{averages.protein || "—"} г</strong><small>цель {target.protein} г</small></article>
-        <article><span>Соблюдение плана</span><strong>{adherence}%</strong><small>{adherence >= 85 ? "хороший результат" : "нужна корректировка"}</small></article>
+        {!isTrainerV2Path(window.location.pathname) ? <article><span>Соблюдение плана</span><strong>{adherence}%</strong><small>{adherence >= 85 ? "хороший результат" : "нужна корректировка"}</small></article> : null}
       </section>
 
       <div className="trainerNutritionAnalyticsMain">
         <section className="trainerClientAnalyticsCard trainerNutritionCaloriesChart">
           <header><div><span>КАЛОРИЙНОСТЬ</span><h3>{period === "custom" ? "Питание за выбранный период" : `Питание за ${period} дней`}</h3></div><strong>цель {target.calories}</strong></header>
+          {isTrainerV2Path(window.location.pathname) && trackedDays.length > 0 ? <div className={appleStyles.calorieSummary}><strong>{trackedDays.length && target.calories ? Math.round(averages.calories / target.calories * 100) : "—"}%</strong><span>от цели {target.calories} ккал</span></div> : null}
           <div
             className="trainerClientBarChart"
             data-density={chartDensity}
@@ -3587,7 +3612,8 @@ function NutritionAnalytics({ nutritionDays, target }) {
         </section>
 
         <section className="trainerClientAnalyticsCard trainerNutritionBalance">
-          <header><div><span>СРЕДНИЙ БАЛАНС</span><h3>Распределение БЖУ</h3></div><Utensils size={20} /></header>
+          <header><div><span>СРЕДНИЙ БАЛАНС</span><h3>{isTrainerV2Path(window.location.pathname) ? "Баланс за период" : "Распределение БЖУ"}</h3></div><Utensils size={20} /></header>
+          {isTrainerV2Path(window.location.pathname) ? <div className={appleStyles.macros}>{[["protein", "Белки"], ["fat", "Жиры"], ["carbs", "Углеводы"]].map(([key, label]) => <div key={key}><span>{label}</span><strong>{trackedDays.length ? averages[key] : "—"} <small>г</small></strong><progress max={Math.max(target[key], averages[key], 1)} value={averages[key]} aria-label={`${label}: ${averages[key]} г, цель ${target[key]} г`} /><small>Цель {target[key]} г</small></div>)}</div> : (
           <div className="trainerNutritionDonutRow">
             <div
               className="trainerNutritionDonut"
@@ -3600,7 +3626,7 @@ function NutritionAnalytics({ nutritionDays, target }) {
               <span className="fat"><b>Жиры</b><strong>{averages.fat} г</strong></span>
               <span className="carbs"><b>Углеводы</b><strong>{averages.carbs} г</strong></span>
             </div>
-          </div>
+          </div>          )}
           <p>{trackedDays.length < 4
             ? "Недостаточно данных для устойчивого вывода. Попросите клиента чаще заполнять дневник."
             : adherence >= 85
@@ -3844,6 +3870,7 @@ function NutritionPlan({ client, profile = {}, history = [], nutritionDays = [],
 
   return (
     <div className="trainerNutritionPlan">
+      {isTrainerV2Path(window.location.pathname) ? <h3 className={appleStyles.nutritionPlanHeading}>План питания</h3> : null}
       <section className="trainerNutritionCurrentPlan">
         <div className="trainerClientBlockHeading">
           <span><Utensils size={19} /></span>
@@ -4723,6 +4750,8 @@ function ClientNotifications({
 }
 
 function ClientWorkSummary({
+  workouts = [],
+  history = [],
   snapshot,
   workoutReview,
   measurements = [],
@@ -4743,8 +4772,8 @@ function ClientWorkSummary({
     nutritionGoals,
     days: 180
   }).nutrition;
-  const workoutCompletion = snapshot?.assignedWorkoutCount
-    ? `${snapshot.completedWorkoutCount || 0} из ${snapshot.assignedWorkoutCount}`
+  const workoutCompletion = (snapshot?.assignedWorkoutCount || workouts.length)
+    ? `${snapshot?.completedWorkoutCount ?? buildPlannedWorkoutSlots({ workouts, history }).filter(slot => slot.isCompleted).length} из ${snapshot?.assignedWorkoutCount || workouts.length}`
     : "нет программы";
   const reviewSets = workoutReview?.plannedSetsCount
     ? `${workoutReview.completedSetsCount || 0} из ${workoutReview.plannedSetsCount} подходов`
@@ -4783,6 +4812,16 @@ function ClientWorkSummary({
         : "Нет завершённых записей"
     }
   ];
+
+  if (isTrainerV2Path(window.location.pathname)) {
+    const week = buildTrainerClientProgressDashboard({ nutritionDays, nutritionGoals, days: 7 }).nutrition;
+    const weight = latestMeasurement ? getMeasurementFieldValue(latestMeasurement, MEASUREMENT_FIELDS[0]) : null;
+    cards.splice(0, cards.length,
+      { id: "workout", target: "workouts", icon: CalendarDays, label: "Тренировки", value: workoutCompletion, detail: snapshot?.lastWorkoutAt ? `Последняя — ${formatCompactDate(snapshot.lastWorkoutAt)}` : "Пока нет завершённых тренировок" },
+      { id: "nutrition", target: "nutrition", icon: Utensils, label: "Дневник питания", value: `${week.trackedDays} из 7 дней`, detail: "За последнюю неделю" },
+      { id: "measurements", target: "bodyProgress", icon: Ruler, label: "Последний вес", value: weight !== null && weight !== undefined ? `${weight} кг` : "Нет записи", detail: latestMeasurement ? formatCompactDate(getMeasurementDate(latestMeasurement)) : "Клиент ещё не добавлял замеры" }
+    );
+  }
 
   return (
     <section className={`trainerClientWorkSummary ${clientOverviewStyles.keyMetrics}`} aria-label="Ключевые показатели клиента">
@@ -4954,6 +4993,7 @@ function TrainerClientDetail({
     )
   );
   const clientSubscriptionStatus = hasClientSubscription ? getSubscriptionStatus(client.subscription) : null;
+  const [workoutHistoryOpen, setWorkoutHistoryOpen] = useState(false);
   const clientSubscriptionBadge = (() => {
     if (!clientSubscriptionStatus) return { id: "inactive", label: "Абонемент не активен" };
     if (clientSubscriptionStatus.id === "active") return { id: "active", label: "Абонемент активен" };
@@ -5312,35 +5352,14 @@ function TrainerClientDetail({
   }
 
   return (
-    <div className={`trainerNextPage trainerNextClientPage trainerNextClientVariantA ${mobileStyles.clientPageFix}`}>
+    <div className={`trainerNextPage trainerNextClientPage trainerNextClientVariantA ${mobileStyles.clientPageFix} ${isTrainerV2Path(window.location.pathname) ? appleStyles.page : ""}`}>
       <div className={`trainerNextClientBackRow ${mobileStyles.clientToolbarFix}`}>
         <button className="trainerNextClientBackButton" type="button" onClick={onBack} aria-label="Назад к списку клиентов">
           <ArrowLeft size={20} />
           <span className="trainerNextClientBackDesktop">Назад к списку</span>
           <span className="trainerNextClientBackMobile">Клиенты</span>
         </button>
-      </div>
-
-      <header className="trainerNextClientHeader">
-        <TrainerAvatar client={client} size="large" />
-        <div>
-          <div className="trainerNextClientName">
-            <h1>{name}</h1>
-            <div className="trainerNextClientStatusRow">
-              <button
-                className={`trainerNextClientSubscriptionStatus is-${clientSubscriptionBadge.id}`}
-                type="button"
-                onClick={() => setUtilitySheet("calendar")}
-                aria-label="Открыть абонемент клиента"
-              >
-                {clientSubscriptionBadge.label}
-              </button>
-            </div>
-          </div>
-          <p>{profileMetaText}</p>
-          <strong>Цель: {client.goalDescription || profile?.goalLabel || "Персональный результат"}</strong>
-        </div>
-        <div className={`trainerNextClientHeaderActions${setupChecklist.status !== "completed" ? " trainerNextClientHeaderActionsWithSetup" : ""}`} aria-label="Действия с клиентом">
+        {isTrainerV2Path(window.location.pathname) ? (<div className={`trainerNextClientHeaderActions${setupChecklist.status !== "completed" ? " trainerNextClientHeaderActionsWithSetup" : ""}`} aria-label="Действия с клиентом">
           {setupChecklist.status !== "completed" ? (
             <button
               className="trainerNextClientHeaderUtilityButton trainerNextClientSetupButton"
@@ -5380,7 +5399,70 @@ function TrainerClientDetail({
             <EllipsisVertical size={18} />
             <span>Действия</span>
           </button>
+        </div>) : null}
+      </div>
+
+      <header className="trainerNextClientHeader">
+        <TrainerAvatar client={client} size="large" />
+        <div>
+          <div className="trainerNextClientName">
+            <h1>{name}</h1>
+            {!isTrainerV2Path(window.location.pathname) ? <div className="trainerNextClientStatusRow">
+              <button
+                className={`trainerNextClientSubscriptionStatus is-${clientSubscriptionBadge.id}`}
+                type="button"
+                onClick={() => setUtilitySheet("calendar")}
+                aria-label="Открыть абонемент клиента"
+              >
+                {clientSubscriptionBadge.label}
+              </button>
+            </div> : null}
+          </div>
+          <p>{profileMetaText}</p>
+          <strong>Цель: {client.goalDescription || profile?.goalLabel || "Персональный результат"}</strong>
         </div>
+        {isTrainerV2Path(window.location.pathname) ? <button type="button" className={`${appleStyles.subscription} trainerNextClientSubscriptionStatus is-${clientSubscriptionBadge.id}`} aria-label="Открыть абонемент клиента" onClick={() => setUtilitySheet("calendar")}><span>{clientSubscriptionBadge.label}</span><small>{clientSubscriptionStatus ? `${clientSubscriptionStatus.remainingSessions || 0} занятий осталось` : "Настроить абонемент"} ›</small></button> : null}
+        {!isTrainerV2Path(window.location.pathname) ? (<div className={`trainerNextClientHeaderActions${setupChecklist.status !== "completed" ? " trainerNextClientHeaderActionsWithSetup" : ""}`} aria-label="Действия с клиентом">
+          {setupChecklist.status !== "completed" ? (
+            <button
+              className="trainerNextClientHeaderUtilityButton trainerNextClientSetupButton"
+              type="button"
+              onClick={() => setSetupWizardOpen(true)}
+              aria-label="Завершить первичную настройку клиента"
+            >
+              <ClipboardList size={17} />
+              <span>Завершить<br /> настройку</span>
+            </button>
+          ) : null}
+          {onCreateTask && !isTrainerV2Path(window.location.pathname) ? (
+            <button
+              className="trainerNextClientTaskButton"
+              type="button"
+              onClick={() => setUtilitySheet("tasks")}
+            >
+              <ClipboardList size={17} />
+              <span>Задания<br /> клиенту</span>
+            </button>
+          ) : null}
+          {!isTrainerV2Path(window.location.pathname) ? <button
+            className="trainerNextClientHeaderUtilityButton"
+            type="button"
+            onClick={() => setUtilitySheet("messages")}
+            aria-label="Сообщения клиента"
+          >
+            <MessageSquare size={16} />
+            <span>Сообщения</span>
+          </button> : null}
+          <button
+            className="trainerNextClientHeaderUtilityButton trainerNextClientActionsButton"
+            type="button"
+            onClick={() => setActionsOpen(true)}
+            aria-label="Действия с клиентом"
+          >
+            <EllipsisVertical size={18} />
+            <span>Действия</span>
+          </button>
+        </div>) : null}
       </header>
 
       <nav className="trainerNextClientTabs">
@@ -5417,12 +5499,14 @@ function TrainerClientDetail({
       {isTrainerV2Path(window.location.pathname) ? (
         <div className="trainerClientPageHeading">
           <div><h2>{exercisesOpen ? "Тренировки" : currentTab === "nutrition" ? "Питание" : ["bodyProgress", "measurements", "photos"].includes(currentTab) ? "Фото и замеры" : "Сводка"}</h2>
-          <p>{exercisesOpen ? "Текущая программа и расписание занятий" : currentTab === "nutrition" ? "Дневник, цели и соблюдение плана" : ["bodyProgress", "measurements", "photos"].includes(currentTab) ? "Сравнение дат и изменение показателей" : "Динамика и текущие задачи клиента"}</p></div>
+          <p>{exercisesOpen ? "Программа, результаты и ближайшие занятия" : currentTab === "nutrition" ? "Дневник, цели и соблюдение плана" : ["bodyProgress", "measurements", "photos"].includes(currentTab) ? "Сравнение дат и изменение показателей" : "Всё важное о клиенте"}</p></div>
+          {exercisesOpen ? <button type="button" onClick={() => setWorkoutHistoryOpen(true)}>История тренировок</button> : null}
           {currentTab === "nutrition" ? <button type="button" onClick={() => setUtilitySheet("nutritionDiary")}>Дневник</button> : null}
         </div>
       ) : null}
       {currentTab === "overview" ? (
         <ClientOverview
+          workouts={workouts}
           client={client}
           snapshot={snapshot}
           workoutReview={visibleSummaryWorkoutReview}
@@ -5442,6 +5526,8 @@ function TrainerClientDetail({
       {exercisesOpen ? (
         <section className={`${trainerClientExercisesTabsStyles.section} trainerClientTabContent`}>
           <ClientWorkoutPlan
+            historyOpen={workoutHistoryOpen}
+            onHistoryOpenChange={setWorkoutHistoryOpen}
             client={client}
               summary={summary}
               history={history}

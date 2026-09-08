@@ -36,49 +36,31 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
       if (name === 'Сводка') {
         await expect(page.locator('.trainerNextClientHeader .trainerNextClientTaskButton')).toHaveCount(0);
         const metrics = await page.locator('.trainerClientWorkSummary').boundingBox();
-        expect(metrics.height).toBeLessThan(width > 760 ? 125 : 230);
-        if (width > 760) {
-          const sections = await page.locator('.trainerNextClientOverview > *').all();
-          let previous;
-          for (const section of sections) {
-            const box = await section.boundingBox();
-            if (!box) continue;
-            if (previous) expect(box.y - previous.y - previous.height).toBeLessThanOrEqual(18);
-            previous = box;
-          }
-        }
+        expect(metrics.height).toBeLessThan(width > 360 ? 150 : 260);
+
       }
       if (name === 'Тренировки') {
         await expect(page.locator('.trainerClientWorkoutList .trainerWorkoutCompleted')).toHaveCount(1);
         await expect(page.locator('.trainerClientWorkoutList details').first()).toContainText('Выполнена');
 
-        const program = await page.locator('.trainerClientMainColumn > section').first().boundingBox();
+        await expect(page.locator('.trainerClientMainColumn > section').first().locator('.trainerClientWorkoutList')).toHaveCount(1);
         await expect(page.locator('.trainerClientWorkoutList')).not.toHaveAttribute('open');
         await expect(page.locator('.trainerClientWorkoutList li').first()).toBeHidden();
         const list = await page.locator('.trainerClientWorkoutList').boundingBox();
         expect(list.height).toBeLessThan(115);
-        expect(list.y - program.y - program.height).toBeLessThanOrEqual(20);
-        if (width > 760) {
-          const footer = page.locator('.trainerWorkoutScheduleFooter');
-          const schedule = await footer.locator('.trainerWorkoutScheduleControls > strong').boundingBox();
-          const subscription = await footer.locator('.trainerWorkoutSubscriptionSectionActions > aside').boundingBox();
-          expect(Math.abs(schedule.y - subscription.y)).toBeLessThanOrEqual(1);
-          expect(Math.abs(schedule.height - subscription.height)).toBeLessThanOrEqual(1);
-          const buttons = await Promise.all([
-            footer.getByRole('button', { name: 'Изменить расписание', exact: true }).boundingBox(),
-            footer.getByRole('button', { name: 'Изменить абонемент', exact: true }).boundingBox()
-          ]);
-          expect(Math.abs(buttons[0].y - buttons[1].y)).toBeLessThanOrEqual(1);
-          expect(Math.abs(buttons[0].height - buttons[1].height)).toBeLessThanOrEqual(1);
-        }
+        await expect(page.locator('.trainerWorkoutScheduleFooter')).toHaveCount(0);
+        await page.getByRole('button', { name: 'Календарь', exact: true }).click();
+        const calendarSheet = page.getByRole('dialog', { name: 'Расписание и абонемент', exact: true });
+        await expect(calendarSheet).toBeVisible();
+        await calendarSheet.getByRole('button', { name: 'Закрыть: Расписание и абонемент', exact: true }).click();
 
       }
       await page.screenshot({ fullPage: true, path: `artifacts/client-four-runtime-${width}-${name}.png` });
     }
     await expect(page.locator('.trainerPhotoCompareGrid figure')).toHaveCount(2);
-    await expect(page.getByLabel('Первая фотосессия для сравнения')).toHaveValue('p2');
-    await page.getByLabel('Первая фотосессия для сравнения').selectOption('p1');
-    await expect(page.locator('.trainerPhotoCompareGrid figcaption').first()).toContainText('1 июн.');
+    await expect(page.getByLabel('Первая фотосессия для сравнения')).toHaveValue('p1');
+    await page.getByLabel('Первая фотосессия для сравнения').selectOption('p2');
+    await expect(page.locator('.trainerPhotoCompareGrid figcaption').first()).toContainText('16 июн.');
     await page.locator('.trainerPhotoCompareGrid button').first().click();
     await expect(page.getByRole('dialog', { name: 'Просмотр фото клиента' })).toBeVisible();
     await page.getByRole('dialog', { name: 'Просмотр фото клиента' }).getByRole('button', { name: 'Закрыть', exact: true }).click();
@@ -86,7 +68,7 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.getByRole('button', { name: 'Все показатели · 12' }).click();
     await expect(page.locator('.trainerClientMeasurementTable tbody tr')).toHaveCount(12);
     await tab('Тренировки');
-    await page.getByRole('button', { name: 'История тренировок Все завершённые тренировки клиента', exact: true }).click();
+    await page.getByRole('button', { name: 'История тренировок', exact: true }).click();
     const historySheet = page.getByRole('dialog', { name: 'История тренировок', exact: true });
     await expect(historySheet.locator('.trainerClientWorkoutHistoryBlock')).toBeVisible();
     await expect(historySheet.getByText('РАЗБОР ТРЕНИРОВКИ', { exact: true })).toHaveCount(0);

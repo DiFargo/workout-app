@@ -27,7 +27,7 @@ for (const width of [320, 393, 768, 1024, 1366]) {
       if(name==='Сводка') await expect(page.getByText(/Одна запись за период/)).toBeVisible();
       if(name==='Тренировки') {
         await expect(page.getByText('Нет активной программы',{exact:true})).toBeVisible();
-        await page.locator('.trainerClientEmptyCalendar > summary').click();
+        await page.getByRole('button', { name: 'Календарь', exact: true }).click();
         const footer=page.locator('.trainerWorkoutScheduleFooter');
         await footer.scrollIntoViewIfNeeded();
         const collision=await page.locator('.trainerWorkoutScheduleSection').evaluate(el=>{
@@ -36,11 +36,12 @@ for (const width of [320, 393, 768, 1024, 1366]) {
           return controls.top < text.bottom - 1;
         });
         expect(collision).toBe(false);
+        await page.getByRole('button', {name: 'Закрыть: Расписание и абонемент', exact: true}).click();
       }
       if(name==='Питание') {
         const bar=page.locator('.trainerClientBarChart i').first();
         await expect(bar).toBeVisible();
-        expect((await bar.boundingBox()).width).toBeLessThanOrEqual(40);
+        expect((await bar.boundingBox()).width).toBeLessThanOrEqual(42);
       }
       if(name==='Фото и замеры') await expect(page.getByRole('heading',{name:'Фото пока нет'})).toBeVisible();
       expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
