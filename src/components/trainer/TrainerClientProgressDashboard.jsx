@@ -44,6 +44,9 @@ function MiniLineChart({ points, title, baseline = null }) {
     return <div className={styles.emptyChart}>Недостаточно данных за период</div>;
   }
 
+  if (points.length === 1 && isTrainerV2Path(window.location.pathname)) {
+    return <div className={styles.emptyChart}>Одна запись за период · {formatChartDate(points[0].date)}. После следующей записи появится динамика.</div>;
+  }
   const values = points.map((point) => point.value);
   const scaleValues = Number.isFinite(baseline) ? [...values, baseline] : values;
   let min = Math.min(...scaleValues);

@@ -511,3 +511,5 @@
  :global(html[data-trainer-variant="v2"]) .periods {width:auto}
  :global(html[data-trainer-variant="v2"]) .periods button {padding:6px 8px}
 }
+
+:global(html[data-trainer-variant="v2"]) .emptyChart {min-height:0;height:auto;padding:20px 12px;font-size:13px;line-height:1.6;text-align:left;margin-top:12px;border-radius:12px;background:#f2f2f7}

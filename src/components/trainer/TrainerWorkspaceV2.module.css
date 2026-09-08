@@ -648,3 +648,36 @@
  :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextClientHeaderActions) {grid-column:3!important;grid-row:1!important;justify-self:end!important}
  :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNutritionPeriod) {width:360px!important;max-width:100%!important}
 }
+
+/* Sparse client data and narrow calendar columns use their own layout states. */
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleSection), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSection) {display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important;padding:14px 0!important;min-width:0!important;position:static!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleContent), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionContent) {width:100%!important;min-width:0!important;padding:0!important;margin:0!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleControls), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSectionActions) {display:flex!important;position:static!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;min-width:0!important;transform:none!important;margin:0!important;gap:8px!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleControls > *), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSectionActions > *) {position:static!important;width:100%!important;min-width:0!important;transform:none!important;margin:0!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleSection p), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSection p) {font-size:12px!important;line-height:1.5!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;margin:4px 0 0!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleFooter) {display:block!important;padding:0!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleActions), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSectionActions) {display:flex!important;flex-wrap:wrap!important;position:static!important;width:100%!important;gap:8px!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleActions button), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSectionActions button) {position:static!important;width:100%!important;min-width:0!important;margin:0!important;transform:none!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerCalendarSubscriptionFields) {padding:0!important;background:transparent!important;border:0!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerCalendarSubscriptionRange), :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerCalendarSubscriptionFields footer) {display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important;font-size:12px!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyCalendar) {grid-column:auto!important;grid-row:auto!important;background:white;border:1px solid rgba(60,60,67,.12);border-radius:16px;padding:0 16px}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyCalendar .trainerWorkoutSchedulePlanner) {border:0!important;padding:0!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyPhotos) {min-height:230px;display:flex!important;align-items:flex-start;justify-content:center;flex-direction:column;gap:12px!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyPhotos > svg) {color:#3c6faa;background:#efeff4;border-radius:12px;padding:10px;box-sizing:content-box}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyPhotos h2) {font-size:18px!important;margin:0!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyPhotos p) {font-size:13px!important;line-height:1.6;max-width:42ch;margin:0!important;color:#636366}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyPhotos small) {font-size:12px;color:#636366}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientBarChart > div > span) {display:flex!important;justify-content:center!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientBarChart > div > span > i) {width:100%!important;max-width:40px!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientBarChart:has(> .trainerNextEmpty)) {height:auto!important;min-height:90px!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextNutritionUnified > button) {display:none!important}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextClientHeaderActions .trainerNextClientSetupButton) {background:transparent!important}
+@media(min-width:1100px) {
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextClientHeaderActions .trainerNextClientSetupButton) {flex-basis:auto!important;width:auto!important}
+}
+@media(min-width:761px) and (max-width:1099px) {
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextClientHeaderActionsWithSetup) {grid-column:1 / -1!important;grid-row:2!important;width:100%!important}
+}
+@media(min-width:761px) {
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientEmptyCalendar) {grid-column:2!important;grid-row:1!important}
+}

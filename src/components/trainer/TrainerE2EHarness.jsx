@@ -5,6 +5,8 @@ import * as appConfig from "../../constants/appConfig";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
 
 function TrainerE2EHarness({ ProgramManagerView }) {
+  const sparsePreview = new URLSearchParams(window.location.search).has("sparsePreview");
+  const [yesterday] = useState(() => new Date(Date.now() - 86400000).toISOString().slice(0, 10));
   const APP_VERSION = appConfig?.APP_VERSION || "v0";
   const includeProgramAssignmentHistory = new URLSearchParams(window.location.search).get("programAssignments") === "1";
   const includeBasicWorkoutHistory = new URLSearchParams(window.location.search).get("basicHistory") === "1";
@@ -68,7 +70,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }
     },
     telegram: { connected: true, username: "germes" },
-    telegramNotificationsEnabled: true
+    telegramNotificationsEnabled: true,
+    ...(sparsePreview ? { name: "Margo", assignedProgramId: "", assignedProgramName: "", assignedProgramUpdatedAt: "", assignedWorkoutCount: 0, firstSetupCompleted: false, trainerSetupChecklist: {}, workoutCalendar: {} } : {})
   });
   const layoutPreview = new URLSearchParams(window.location.search).get("layoutPreview") === "1";
   const clients = layoutPreview ? [selectedClient, ...[
@@ -478,13 +481,13 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         onPasswordChange: () => {},
         onGeneratePassword: () => {}
       }}
-      measurements={measurements}
-      history={history}
+      measurements={sparsePreview ? [{id:"one", date:yesterday, weight:66, values:{weight:66}}] : measurements}
+      history={sparsePreview ? [] : history}
       exerciseProgressReviews={exerciseProgressReviews}
-      nutritionDays={nutritionDays}
+      nutritionDays={sparsePreview ? [{date:yesterday, totals:{calories:605,protein:65,fat:15,carbs:56}}] : nutritionDays}
       nutritionGoals={{ calories: 2300, protein: 180, fat: 70, carbs: 235 }}
       nutritionPlanOptions={nutritionPlanOptions}
-      photos={new URLSearchParams(window.location.search).has("photoCompare") ? [{ id: "p2", date: "2026-06-16", frontUrl: "" }, { id: "p1", date: "2026-06-01", frontUrl: "" }] : [{ id: "p1", date: "2026-06-01", frontUrl: "" }]}
+      photos={sparsePreview ? [] : new URLSearchParams(window.location.search).has("photoCompare") ? [{ id: "p2", date: "2026-06-16", frontUrl: "" }, { id: "p1", date: "2026-06-01", frontUrl: "" }] : [{ id: "p1", date: "2026-06-01", frontUrl: "" }]}
       tasks={[{
         id: "task_e2e",
         title: "Заполнить дневник самочувствия",
@@ -576,8 +579,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         }, ...current]);
         return true;
       }}
-      workouts={workouts}
-      archivedWorkouts={archivedWorkouts}
+      workouts={sparsePreview ? [] : workouts}
+      archivedWorkouts={sparsePreview ? [] : archivedWorkouts}
       exerciseLibrary={workouts.flatMap((workout) => workout.exercises)}
       programTemplates={programTemplates}
       selectedProgramId={selectedProgramId}

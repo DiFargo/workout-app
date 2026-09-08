@@ -107,3 +107,11 @@ remain distinct. No client data, authorization or persistence behavior changed.
 - Переносы подписей и длинных имён, рамки/отступы фото, единые размеры кнопок.
 
 Проверено: 32 сочетания вкладки/ширины (320, 393, 760, 761, 768, 1024, 1366, 1920); отдельные проверки положения каждого элемента профиля, границ нижней панели и промежутка программа/список. 680 unit-тестов; 17 пройденных focused E2E в двух запусках, 11 намеренных пропусков дублирующего mobile-проекта. Линтер: 0 ошибок, 36 существующих предупреждений. Оригинальный адрес и редакторы проверены focused E2E; сохранения production-данных во время smoke не выполняются.
+
+
+## 3.0.713 — sparse client states
+
+- Stacked calendar and subscription controls prevent text overlap in narrow columns. Clients without workouts can expand the calendar and subscription below a labelled disclosure.
+- One measurement shows its date and explains why no trend is available. Missing photos show a descriptive empty state; measurements remain accessible. Nutrition bars are capped at 40 px.
+- Setup action wraps separately on compact screens; diary remains available in the nutrition page header. Original trainer routes and data handlers remain intact.
+- Verified: 20 focused E2E checks, plus five sparse-client viewport checks (320, 393, 768, 1024, 1366), production build, bundle budget and Firebase artifact guard. Existing four-tab coverage spans 320–1920 px. Lint has no errors; pre-existing warnings remain.

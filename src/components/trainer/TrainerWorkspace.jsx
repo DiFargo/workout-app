@@ -1541,6 +1541,14 @@ function ClientPhotos({ photos }) {
       />
     );
   };
+  if (isV2 && !sortedPhotos.length) {
+    return <section className="trainerNextSimplePanel trainerClientEmptyPhotos">
+      <Camera size={32} aria-hidden="true" />
+      <h2>Фото пока нет</h2>
+      <p>Когда клиент добавит фотографии, здесь можно будет сравнить две даты и выбрать ракурс.</p>
+      <small>Замеры доступны в соседнем разделе.</small>
+    </section>;
+  }
   const activePhoto = sortedPhotos.find((photo, index) => getPhotoId(photo, index) === openPhotoId);
   const effectiveCompareIds = compareIds.map((id, index) => id || (isV2 && sortedPhotos[index] ? getPhotoId(sortedPhotos[index], index) : ""));
   const comparePhotos = effectiveCompareIds.map((id) => sortedPhotos.find((photo, index) => getPhotoId(photo, index) === id)).filter(Boolean);
@@ -2928,7 +2936,7 @@ function ClientWorkoutPlan({
             </div>
           )}
 
-          <TrainerClientDisclosure title="Назначить другую программу" className="trainerClientAssignmentDisclosure">
+          <TrainerClientDisclosure title={assignedProgramAssignment ? "Назначить другую программу" : "Выбрать программу для клиента"} className="trainerClientAssignmentDisclosure">
           <div className={trainerClientWorkoutPlanStyles.assignment}>
               <span>Назначить программу</span>
             <div className={trainerClientWorkoutPlanStyles.assignmentRow}>
@@ -3065,6 +3073,7 @@ function ClientWorkoutPlan({
         onClick={() => setWorkoutInsightsOpen(true)}
       />
       </TrainerClientColumn>
+      <TrainerClientDisclosure enabled={!scheduleWorkouts.length} title="Абонемент и календарь" className="trainerClientEmptyCalendar">
       <WorkoutSchedulePlanner
         key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
         client={client}
@@ -3077,6 +3086,7 @@ function ClientWorkoutPlan({
         status={programStatus}
       />
 
+      </TrainerClientDisclosure>
       {scheduleAssignmentRequest && scheduleModalAssignment ? (
         <TrainerProgramScheduleModal
           client={client}
@@ -5341,7 +5351,7 @@ function TrainerClientDetail({
               aria-label="Завершить первичную настройку клиента"
             >
               <ClipboardList size={17} />
-              <span>Завершить<br />настройку</span>
+              <span>Завершить<br /> настройку</span>
             </button>
           ) : null}
           {onCreateTask ? (
