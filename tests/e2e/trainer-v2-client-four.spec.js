@@ -58,6 +58,20 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
         const list = await page.locator('.trainerClientWorkoutList').boundingBox();
         expect(list.height).toBeLessThan(115);
         expect(list.y - program.y - program.height).toBeLessThanOrEqual(20);
+        if (width > 760) {
+          const footer = page.locator('.trainerWorkoutScheduleFooter');
+          const schedule = await footer.locator('.trainerWorkoutScheduleControls > strong').boundingBox();
+          const subscription = await footer.locator('.trainerWorkoutSubscriptionSectionActions > aside').boundingBox();
+          expect(Math.abs(schedule.y - subscription.y)).toBeLessThanOrEqual(1);
+          expect(Math.abs(schedule.height - subscription.height)).toBeLessThanOrEqual(1);
+          const buttons = await Promise.all([
+            footer.getByRole('button', { name: 'Изменить расписание', exact: true }).boundingBox(),
+            footer.getByRole('button', { name: 'Изменить абонемент', exact: true }).boundingBox()
+          ]);
+          expect(Math.abs(buttons[0].y - buttons[1].y)).toBeLessThanOrEqual(1);
+          expect(Math.abs(buttons[0].height - buttons[1].height)).toBeLessThanOrEqual(1);
+        }
+
       }
       await page.screenshot({ fullPage: true, path: `artifacts/client-four-runtime-${width}-${name}.png` });
     }

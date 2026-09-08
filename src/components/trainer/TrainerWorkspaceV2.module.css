@@ -812,3 +812,16 @@
 
 
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientWorkoutList) {display:block!important;padding:0 16px!important}
+
+/* Keep the schedule and subscription actions on shared horizontal baselines. */
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleFooter) {padding:16px!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleControls > strong),
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSectionActions > aside) {box-sizing:border-box!important;min-height:72px!important;height:72px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;padding:8px 12px!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleActions button),
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSectionActions button) {min-height:48px!important;height:48px!important;box-sizing:border-box!important;box-shadow:none!important;}
+@media(min-width:761px) {
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleFooter) {align-items:stretch!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleFooter > section) {padding:0!important;border:0!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutScheduleControls),
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerWorkoutSubscriptionSectionActions) {margin-top:auto!important;}
+}
