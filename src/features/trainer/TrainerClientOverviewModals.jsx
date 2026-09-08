@@ -40,11 +40,11 @@ export default function TrainerClientOverviewModals({
             if (event.target === event.currentTarget) setAdminTaskComposerOpen(false);
           }}
         >
-          <section className={styles.modal} role="dialog" aria-modal="true" data-modal-surface="true" data-trainer-modal-surface="true" data-trainer-modal-frame="true" aria-labelledby="trainerTaskModalTitle">
+          <section className={`${styles.modal} ${styles.taskModal}`} role="dialog" aria-modal="true" data-modal-surface="true" data-trainer-modal-surface="true" data-trainer-modal-frame="true" aria-labelledby="trainerTaskModalTitle">
             <header className={styles.header} data-trainer-modal-header="true">
               <div>
                 <span>ЗАДАЧА КЛИЕНТУ</span>
-                <h3 id="trainerTaskModalTitle">Назначить новую задачу</h3>
+                <h3 id="trainerTaskModalTitle">Новое задание</h3>
               </div>
               <button type="button" onClick={() => setAdminTaskComposerOpen(false)} aria-label="Закрыть"><X size={20} /></button>
             </header>
@@ -65,12 +65,14 @@ export default function TrainerClientOverviewModals({
                 ))}
               </div>
               <label>
-                <span>Срок выполнения</span>
+                <span>Срок выполнения · необязательно</span>
                 <input type="date" value={adminNewTaskDueDate} onChange={(event) => setAdminNewTaskDueDate(event.target.value)} />
               </label>
             </div>
             <footer className={styles.footer} data-trainer-modal-footer="true">
+              <button className={styles.cancelButton} type="button" onClick={() => setAdminTaskComposerOpen(false)}>Отмена</button>
               <button
+                disabled={!adminNewTaskTitle.trim()}
                 type="button"
                 onClick={async () => {
                   if (!adminNewTaskTitle.trim()) return;
