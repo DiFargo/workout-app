@@ -3082,7 +3082,7 @@ function ClientWorkoutPlan({
         onClick={() => setWorkoutInsightsOpen(true)}
       />) : null}
       </TrainerClientColumn>
-      {isTrainerV2Path(window.location.pathname) ? <AppleSchedule slots={visibleWorkoutSlots} client={client}>
+      {isTrainerV2Path(window.location.pathname) ? <AppleSchedule slots={visibleWorkoutSlots} client={client} onOpenHistory={() => setWorkoutInsightsOpen(true)}>
       <WorkoutSchedulePlanner
         key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
         client={client}
@@ -5506,7 +5506,6 @@ function TrainerClientDetail({
         <div className="trainerClientPageHeading">
           <div><h2>{exercisesOpen ? "Тренировки" : currentTab === "nutrition" ? "Питание" : ["bodyProgress", "measurements", "photos"].includes(currentTab) ? "Фото и замеры" : "Сводка"}</h2>
           <p>{exercisesOpen ? "Программа, результаты и ближайшие занятия" : currentTab === "nutrition" ? "Дневник, цели и соблюдение плана" : ["bodyProgress", "measurements", "photos"].includes(currentTab) ? "Сравнение дат и изменение показателей" : "Всё важное о клиенте"}</p></div>
-          {exercisesOpen ? <button type="button" onClick={() => setWorkoutHistoryOpen(true)}>История тренировок</button> : null}
           {currentTab === "nutrition" ? <button type="button" onClick={() => setUtilitySheet("nutritionDiary")}>Дневник</button> : null}
         </div>
       ) : null}

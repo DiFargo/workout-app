@@ -49,7 +49,7 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
         const list = await page.locator('.trainerClientWorkoutList').boundingBox();
         expect(list.height).toBeLessThan(115);
         await expect(page.locator('.trainerWorkoutScheduleFooter')).toHaveCount(0);
-        await page.getByRole('button', { name: 'Календарь', exact: true }).click();
+        await page.locator('[class*=scheduleEditRow]').getByRole('button', { name: 'Редактировать', exact: true }).click();
         const calendarSheet = page.getByRole('dialog', { name: 'Расписание и абонемент', exact: true });
         await expect(calendarSheet).toBeVisible();
         await calendarSheet.getByRole('button', { name: 'Закрыть: Расписание и абонемент', exact: true }).click();
@@ -68,7 +68,12 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.getByRole('button', { name: 'Все показатели · 12' }).click();
     await expect(page.locator('.trainerClientMeasurementTable tbody tr')).toHaveCount(12);
     await tab('Тренировки');
-    await page.getByRole('button', { name: 'История тренировок', exact: true }).click();
+    await expect(page.getByRole('button', {name:'Календарь',exact:true})).toHaveCount(0);
+    await page.getByRole('button', {name:/^История абонементов/}).click();
+    const subscriptions = page.getByRole('dialog', {name:'История абонементов',exact:true});
+    await expect(subscriptions).toContainText('История абонементов пока пуста');
+    await subscriptions.getByRole('button',{name:'Закрыть: История абонементов'}).click();
+    await page.getByRole('button', { name: /^История тренировок/ }).click();
     const historySheet = page.getByRole('dialog', { name: 'История тренировок', exact: true });
     await expect(historySheet.locator('.trainerClientWorkoutHistoryBlock')).toBeVisible();
     await expect(historySheet.getByText('РАЗБОР ТРЕНИРОВКИ', { exact: true })).toHaveCount(0);

@@ -27,7 +27,7 @@ for (const width of [320, 393, 768, 1024, 1366]) {
       if(name==='Сводка') await expect(page.getByText(/Одна запись за период/)).toBeVisible();
       if(name==='Тренировки') {
         await expect(page.getByText('Нет активной программы',{exact:true})).toBeVisible();
-        await page.getByRole('button', { name: 'Календарь', exact: true }).click();
+        await page.locator('[class*=scheduleEditRow]').getByRole('button', { name: 'Редактировать', exact: true }).click();
         const footer=page.locator('.trainerWorkoutScheduleFooter');
         await footer.scrollIntoViewIfNeeded();
         const collision=await page.locator('.trainerWorkoutScheduleSection').evaluate(el=>{

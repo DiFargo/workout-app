@@ -267,3 +267,16 @@
 
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerClientMainColumn) {width:100%!important;align-self:stretch!important;align-items:stretch!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerClientMainColumn > section) {width:100%!important;max-width:none!important;}
+
+.calendarLabel {font-size:13px;color:#636366;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow {display:flex;align-items:center;gap:12px;padding:16px 20px;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow strong {flex:1;font-size:15px;font-weight:600;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow button {min-height:44px;padding:10px 16px;border:0;border-radius:10px;background:#3f73b8;color:white;font:inherit;font-size:14px;font-weight:600;box-shadow:none;}
+.subscriptionHistory {display:grid;gap:12px;font-size:14px;color:#1c1c1e;}
+.subscriptionHistory article {padding:16px;background:white;border-radius:14px;}
+.subscriptionHistory header {display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.subscriptionHistory time {font-size:12px;color:#636366;}
+.subscriptionHistory dl {display:grid;grid-template-columns:1fr auto;gap:8px;}
+.subscriptionHistory dt {color:#636366;}
+.subscriptionHistory dd {margin:0;}
+@media(max-width:480px){:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow {flex-wrap:wrap;padding:14px;} :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow button {width:100%;}}
