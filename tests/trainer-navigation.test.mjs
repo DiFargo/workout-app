@@ -44,10 +44,12 @@ test("program overview uses compact cards with a program search and add control"
   assert.match(source, /TrainerProgramOverviewPage\.module\.css/);
   assert.match(source, /ProgramCheckIcon size=\{15\}/);
   assert.match(source, /className=\{styles\.selectedMark\} aria-label="Выбрана"/);
-  assert.match(source, /label: "Черновик"/);
-  assert.match(source, /label: "Готова к назначению"/);
-  assert.match(source, /label: "Используется"/);
-  assert.match(source, /label: "Архив"/);
+  const statusSource = await readFile(new URL("../src/utils/trainerProgramLibraryStatus.js", import.meta.url), "utf8");
+  assert.match(source, /getProgramLibraryStatusMeta/);
+  assert.match(statusSource, /label: "Черновик"/);
+  assert.match(statusSource, /label: "Готова к назначению"/);
+  assert.match(statusSource, /label: "Используется"/);
+  assert.match(statusSource, /label: "Архив"/);
   assert.doesNotMatch(source, /<b>•••<\/b>/);
   assert.doesNotMatch(source, /className=\{styles\.headerActions\}/);
   assert.doesNotMatch(source, /ProgramRefreshIcon/);
@@ -130,18 +132,19 @@ test("trainer constructor keeps one clear workout day list", async () => {
   assert.doesNotMatch(source, /weekGroups/);
 });
 
-test("trainer constructor opens the selected day in a dedicated editor modal", async () => {
+test("trainer constructor keeps legacy day modals and uses an inline Apple editor", async () => {
   const source = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.jsx", import.meta.url), "utf8");
   const styles = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.module.css", import.meta.url), "utf8");
 
   assert.match(source, /const \[isDayEditorOpen, setIsDayEditorOpen\] = useState\(false\)/);
-  assert.match(source, /setIsDayEditorOpen\(true\)/);
+  assert.match(source, /setIsDayEditorOpen\(!apple\)/);
   assert.match(source, /setIsDayEditorOpen\(false\)/);
   assert.match(source, /aria-label="Свернуть тренировочный день"/);
   assert.match(source, /Редактор тренировочного дня/);
   assert.match(styles, /\.dayEditorModal/);
   assert.match(styles, /\.dayEditorBackdrop/);
-  assert.doesNotMatch(styles, /!important/);
+  assert.doesNotMatch(styles.split("/* Approved Apple constructor:")[0], /!important/);
+  assert.match(styles, /\.appleConstructor\.appleConstructor/);
 });
 
 test("trainer day editor keeps all exercise controls within the mobile sheet", async () => {
@@ -186,7 +189,8 @@ test("trainer program editor keeps mobile back and save actions reachable", asyn
   assert.match(manager, /editorModalSaveSaved/);
   assert.match(styles, /\.programActions \{[\s\S]*?position: fixed;[\s\S]*?bottom: max\(16px, calc\(env\(safe-area-inset-bottom\) \+ 12px\)\)/);
   assert.match(styles, /\.embeddedInModal \.dayEditorModal \{/);
-  assert.doesNotMatch(styles, /!important/);
+  assert.doesNotMatch(styles.split("/* Approved Apple constructor:")[0], /!important/);
+  assert.match(styles, /\.appleConstructor\.appleConstructor/);
 });
 
 test("trainer plan keeps program and exercise-library navigation outside editor", async () => {
@@ -555,7 +559,7 @@ test("trainer program days open in a dismissible exercise editor modal", async (
   const responsiveStyles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceResponsivePass.module.css", import.meta.url), "utf8");
 
   assert.match(workspace, /const \[isDayEditorOpen, setIsDayEditorOpen\] = useState\(false\)/);
-  assert.match(workspace, /setIsDayEditorOpen\(true\)/);
+  assert.match(workspace, /setIsDayEditorOpen\(!apple\)/);
   assert.match(workspace, /aria-label="Свернуть тренировочный день"/);
   assert.match(workspace, /styles\.dayEditorBackdrop/);
   assert.match(styles, /\.dayEditorModal\s*\{/);

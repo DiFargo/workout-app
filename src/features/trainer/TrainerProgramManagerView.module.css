@@ -394,3 +394,10 @@
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .editorModalSave {background:#3f73b8!important;border-color:#3f73b8!important;box-shadow:none!important;color:#fff}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .editorModalHeader,
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .editorModalFooter {background:#fff;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12)}
+
+/* Keep the program frame quiet around the Apple constructor. */
+:global(html[data-trainer-variant="v2"] body) .editorModalBody.editorModalBodyProgram {padding:0!important;background:#f2f2f7!important}
+:global(html[data-trainer-variant="v2"] body) .editorProgramNameField input {border:0!important;box-shadow:none!important;background:transparent!important;font-size:20px!important;padding:0!important;min-height:36px!important}
+:global(html[data-trainer-variant="v2"] body) .editorModalFooter {display:flex!important;justify-content:flex-end!important;gap:12px!important}
+:global(html[data-trainer-variant="v2"] body) .editorModalFooter button {flex:initial!important;width:auto!important;min-height:44px!important;padding:10px 22px!important;font-size:14px!important;box-shadow:none!important}
+:global(html[data-trainer-variant="v2"] body) .editorModalDelete {margin-right:auto!important;border:0!important;background:transparent!important}
