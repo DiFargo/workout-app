@@ -495,6 +495,7 @@ export default function TrainerAdminWorkoutsRoute({
 
   const programManagerView = (
     <TrainerProgramManagerView
+      usersList={usersList}
       APP_PAGES={APP_PAGES}
       addMonthBlock={addMonthBlock}
       addMonthExercise={addMonthExercise}

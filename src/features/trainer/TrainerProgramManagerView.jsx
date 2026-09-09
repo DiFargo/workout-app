@@ -22,6 +22,7 @@ export function getTrainerProgramEditorSnapshot(program) {
 }
 
 export default function TrainerProgramManagerView({
+  usersList = [],
   APP_PAGES,
   addMonthBlock,
   addMonthExercise,
@@ -403,6 +404,7 @@ export default function TrainerProgramManagerView({
 
       {adminProgramLibraryTab === "overview" || isEditorModalOpen ? (
         <TrainerProgramOverviewPage
+          clients={usersList}
           adminProgramCreateChoiceOpen={adminProgramCreateChoiceOpen}
           adminProgramImportInputRef={adminProgramImportInputRef}
           adminSelectedTemplateId={adminSelectedTemplateId}

@@ -19,6 +19,16 @@ import {
 import { getTrainerProgramFormatMeta, TRAINER_PROGRAM_FORMATS } from "../../utils/trainerProgramFormat.js";
 import styles from "./TrainerProgramOverviewPage.module.css";
 
+function ProgramClientAvatar({ client }) {
+  const [failed, setFailed] = useState(false);
+  const name = client.name || client.displayName || client.email || "Клиент";
+  const photo = client.avatarUrl || client.photoURL || client.telegramAvatarUrl || client.telegram?.avatarUrl;
+  const initials = name.trim().split(/\s+/).slice(0, 2).map((word) => word[0]).join("").toLocaleUpperCase("ru");
+  return <span className={styles.clientAvatar} title={name} aria-label={name}>
+    {photo && !failed ? <img src={photo} alt="" loading="lazy" onError={() => setFailed(true)} /> : initials}
+  </span>;
+}
+
 function getProgramLibraryStatusMeta(program = {}) {
   const status = getTrainerProgramStatusMeta(program);
 
@@ -51,6 +61,7 @@ function getProgramLibraryStatusMeta(program = {}) {
 }
 
 export default function TrainerProgramOverviewPage({
+  clients = [],
   adminProgramCreateChoiceOpen,
   adminProgramImportInputRef,
   adminSelectedTemplateId,
@@ -192,7 +203,8 @@ export default function TrainerProgramOverviewPage({
             {visibleTrainingTemplates.map((template) => {
           const stats = getTemplateStats(template);
           const isSelected = adminSelectedTemplateId === template.id;
-          const statusMeta = getProgramLibraryStatusMeta(template);
+          const assignedClients = clients.filter((client) => client.assignedProgramId === template.id);
+          const statusMeta = getProgramLibraryStatusMeta(assignedClients.length ? { ...template, assignedClientIds: assignedClients.map((client) => client.id) } : template);
           const isDraft = statusMeta.id === TRAINER_PROGRAM_STATUSES.DRAFT;
               const formatMeta = getTrainerProgramFormatMeta(template.trainingFormat);
               const createdAt = template.createdAt ? new Date(template.createdAt) : null;
@@ -221,6 +233,10 @@ export default function TrainerProgramOverviewPage({
                       : `programsOverviewStatusBadge status-${statusMeta.tone}`} title={statusMeta.description}>
                       {statusMeta.label}
                     </span>
+                    {isNextWorkspace && assignedClients.length > 0 ? <span className={styles.clientAvatars} aria-label={`Используют: ${assignedClients.map((client) => client.name || client.email || "Клиент").join(", ")}`}>
+                      {assignedClients.slice(0, 4).map((client) => <ProgramClientAvatar key={client.id} client={client} />)}
+                      {assignedClients.length > 4 ? <span className={styles.clientAvatar} title={assignedClients.slice(4).map((client) => client.name || client.email || "Клиент").join(", ")}>+{assignedClients.length - 4}</span> : null}
+                    </span> : null}
                     {isSelected && (
                       <span className={styles.selectedMark} aria-label="Выбрана" title="Выбрана">
                         <ProgramCheckIcon size={15} aria-hidden="true" />
