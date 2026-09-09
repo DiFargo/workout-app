@@ -83,7 +83,10 @@ export async function loadTrainerUsersWithDeps({
       trainerEmail ? query(collection(db, "users"), where("role", "==", "client"), where("createdBy", "==", trainerEmail)) : null
     ].filter(Boolean);
 
-    const queryResults = await Promise.allSettled(trainerQueries.map((trainerQuery) => getDocs(trainerQuery)));
+    const [queryResults, linkedClientsResult] = await Promise.all([
+      Promise.allSettled(trainerQueries.map((trainerQuery) => getDocs(trainerQuery))),
+      Promise.allSettled(trainerUid ? [getDocs(collection(db, "users", trainerUid, "trainerClients"))] : [])
+    ]);
     queryResults.forEach((result) => {
       if (result.status !== "fulfilled") return;
       result.value.forEach((userDoc) => {
@@ -95,7 +98,9 @@ export async function loadTrainerUsersWithDeps({
     });
 
     if (trainerUid) {
-      const linkedClientsSnap = await getDocs(collection(db, "users", trainerUid, "trainerClients"));
+      if (linkedClientsResult[0].status === "rejected") throw linkedClientsResult[0].reason;
+      const linkedClientsSnap = linkedClientsResult[0].value;
+      const loadedProfiles = new Map(users.map((profile) => [profile.id, profile]));
       const linkedClientDocs = [];
 
       linkedClientsSnap.forEach((linkDoc) => {
@@ -112,6 +117,7 @@ export async function loadTrainerUsersWithDeps({
         async (linkedClient) => {
         const clientId = linkedClient.clientId || linkedClient.uid || linkedClient.id;
         if (!clientId) return null;
+        if (loadedProfiles.has(clientId)) return loadedProfiles.get(clientId);
 
         try {
           const clientDoc = await getDoc(doc(db, "users", clientId));

@@ -7962,7 +7962,7 @@ export default function TrainerWorkspace({
   onRefresh,
   onLogout
 }) {
-  const [syncMinimized, setSyncMinimized] = useState(false);
+  const [syncMinimized, setSyncMinimized] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -7979,7 +7979,7 @@ export default function TrainerWorkspace({
 
   useEffect(() => {
     if (summariesLoading && mode === "dashboard") {
-      setSyncMinimized(false);
+      setSyncMinimized(true);
     }
   }, [mode, summariesLoading]);
 

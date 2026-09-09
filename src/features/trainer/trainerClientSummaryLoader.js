@@ -187,7 +187,7 @@ export function createTrainerClientSummaryLoader({
     const workers = Array.from(
       { length: Math.min(MAX_TRAINER_SUMMARY_CONCURRENCY, safeClients.length) },
       async () => {
-        while (nextClientIndex < safeClients.length) {
+        while (trainerClientSummaryRequestRef.current === requestId && nextClientIndex < safeClients.length) {
           const client = safeClients[nextClientIndex];
           nextClientIndex += 1;
 
