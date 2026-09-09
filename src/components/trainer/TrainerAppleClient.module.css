@@ -59,10 +59,11 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerClientWorkoutList h2) {font-size:14px!important;font-weight:500!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerClientAssignmentDisclosure) {border-top:1px solid rgba(60,60,67,.12)!important;padding:0 20px!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerClientAssignmentDisclosure > summary) {font-weight:500!important;font-size:14px!important;padding:14px 0!important;min-height:64px!important;}
+/* The column must fill the page instead of inheriting the legacy grid's start alignment. */
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNextNutritionUnified),
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNutritionUnifiedSection),
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNutritionAnalytics),
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNutritionAnalyticsMain) {display:flex!important;flex-direction:column!important;gap:24px!important;background:transparent!important;padding:0!important;border:0!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNutritionAnalyticsMain) {display:flex!important;flex-direction:column!important;align-items:stretch!important;min-width:0!important;gap:24px!important;background:transparent!important;padding:0!important;border:0!important;box-shadow:none!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNutritionMetricGrid) {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;padding:18px 0!important;background:white!important;border-radius:16px!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNutritionMetricGrid > article) {background:transparent!important;border:0!important;border-right:1px solid rgba(60,60,67,.12)!important;border-radius:0!important;padding:0 22px!important;min-height:0!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerNutritionMetricGrid > article:nth-child(1)) {order:3!important;border:0!important;}
