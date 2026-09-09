@@ -5,6 +5,7 @@ import { defineBoolean, defineSecret, defineString } from "firebase-functions/pa
 import admin from "firebase-admin";
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
+import { readClientExerciseMedia } from "./clientExerciseMedia.js";
 import { INVITE_PAGE_STYLES, formatInviteAccountLabel } from "./invitePageStyles.js";
 import { getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout } from "./reminderSchedule.js";
 import { isTelegramRemindersEnabled } from "./telegramNotificationPreferences.js";
@@ -877,6 +878,20 @@ async function assertAdmin(request) {
 
   await assertActiveCallableMember(request);
 }
+
+export const clientExerciseMedia = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 15 },
+  async (req, res) => {
+    res.set("Cache-Control", "private, no-store");
+    if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
+    try {
+      const context = await requireActiveMember(req);
+      return json(res, 200, await readClientExerciseMedia({ db: admin.firestore(), context, clientId: req.body?.clientId || context.uid }));
+    } catch (error) {
+      return json(res, getHttpErrorStatus(error), { error: "Не удалось обновить видео упражнений." });
+    }
+  }
+);
 
 export const setAdminClaim = onCall(
   {

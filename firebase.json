@@ -86,6 +86,13 @@
     ],
     "rewrites": [
       {
+        "source": "/api/client-exercise-media",
+        "function": {
+          "functionId": "clientExerciseMedia",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "/api/fatsecret/search",
         "function": {
           "functionId": "fatsecretSearch",

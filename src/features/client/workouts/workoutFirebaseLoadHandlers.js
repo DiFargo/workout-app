@@ -1,5 +1,6 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { programDraftSnapshot } from "../../../utils/trainerProgramDraft.js";
+import { loadClientExerciseMedia, withClientExerciseMedia } from "../../../utils/clientExerciseMedia.js";
 
 import {
   safeReadUserJsonStorage,
@@ -90,10 +91,11 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     });
 
     // Client sees only workouts assigned by trainer in users/{uid}/workouts.
-    const [querySnapshot, profileSnapshot, historySnapshot] = await Promise.all([
+    const [querySnapshot, profileSnapshot, historySnapshot, exerciseMedia] = await Promise.all([
       getDocs(collection(db, "users", targetUserId, "workouts")),
       getDoc(doc(db, "users", targetUserId)),
-      getDocs(collection(db, "users", targetUserId, "history"))
+      getDocs(collection(db, "users", targetUserId, "history")),
+      requestedMode === "individual" ? loadClientExerciseMedia(targetUserId) : Promise.resolve([])
     ]);
     if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return { workouts: [] };
     const profileData = profileSnapshot.exists() ? profileSnapshot.data() : {};
@@ -107,7 +109,8 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     const individualWorkoutDocuments = [];
 
     querySnapshot.forEach((workoutDoc) => {
-      const data = workoutDoc.data();
+      const rawData = workoutDoc.data();
+      const data = withClientExerciseMedia({ ...rawData, id: workoutDoc.id }, exerciseMedia);
       const taskBlocks = Array.isArray(data.taskBlocks) ? data.taskBlocks : [];
       const groupExerciseMetadata = getGroupExerciseMetadata(taskBlocks);
       const workoutAssignmentVersion = String(data.assignedProgramUpdatedAt || assignedProgramUpdatedAt || "").trim();
@@ -125,7 +128,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
       if (!isCurrentAssignment) return;
 
       workoutsFromDb.push({
-        _editorSnapshot: programDraftSnapshot(data),
+        _editorSnapshot: programDraftSnapshot(rawData),
         id: workoutDoc.id,
         source: data.source || "",
         name: data.name || "Без названия",

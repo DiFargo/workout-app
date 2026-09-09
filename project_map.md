@@ -100,7 +100,7 @@
 | Cloud Functions | `functions/index.js` и соседние модули в `functions/` |
 | Storage файлов | `src/utils/firebaseStorage.js`, `src/utils/imageCompression.js` |
 | Каталог продуктов | `src/data/nutrition-catalog/`, `public/nutrition-catalog/`, `scripts/build-nutrition-catalog.mjs` |
-| Медиа упражнений и замеров | `public/videos/`, `public/measurements/`, `public/basic-workout/illustrations/` |
+| Медиа упражнений и замеров | `public/videos/`, `public/measurements/`, `public/basic-workout/illustrations/`; видео библиотеки в назначенном плане: `functions/clientExerciseMedia.js`, `src/utils/clientExerciseMedia.js` |
 | Android | `capacitor.config.ts`, `android/`, `docs/android-build.md` |
 
 Не помещать секреты в эти документы или в клиентский код. Секреты Functions определены через Firebase `defineSecret`.

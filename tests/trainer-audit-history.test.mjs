@@ -11,7 +11,7 @@ test('client history uses stable pages, preserves results on failure and drops l
   const snapshot=(items)=>({size:items.length,docs:items,forEach:callback=>items.forEach(callback)});
   const item=(id)=>({id,data:()=>({date:`2026-09-${String(30-Number(id)%28).padStart(2,'0')}`})});
   const setHistory=(update)=>{history=typeof update==='function'?update(history):update;};
-  const context={WeakMap, Map, Set, String, Number, Date, Promise, console, programDraftSnapshot, withSummaryDeadline,
+  const context={WeakMap, Map, Set, String, Number, Date, Promise, console, programDraftSnapshot, withSummaryDeadline, loadClientExerciseMedia:async()=>[], withClientExerciseMedia:workout=>workout,
     APP_PAGES:{ADMIN_USERS:'clients'},collection:(_db,...parts)=>({path:parts.join('/')}),doc:(_db,...parts)=>({path:parts.join('/')}),query:(ref,...constraints)=>({...ref,constraints}),orderBy:(...args)=>({order:args}),limit:n=>({limit:n}),startAfter:cursor=>({cursor}),
     getDoc:async ref=>({exists:()=>ref.path.split('/').length===2,id:ref.path.split('/')[1],data:()=>({role:'client'})}),
     getDocs:async ref=>{

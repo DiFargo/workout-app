@@ -1,6 +1,7 @@
 import { collection, doc, getDoc, getDocs, query, orderBy, limit, startAfter } from "firebase/firestore";
 import { programDraftSnapshot } from "../../utils/trainerProgramDraft.js";
 import { withSummaryDeadline } from "../../utils/trainerSummaryReadState.js";
+import { loadClientExerciseMedia, withClientExerciseMedia } from "../../utils/clientExerciseMedia.js";
 
 const historyRequests = new WeakMap();
 const HISTORY_PAGE_SIZE = 80;
@@ -157,6 +158,7 @@ export function createTrainerClientOverviewLoader({
       let nutritionSnap = null;
       let measurementsSnap = null;
       let workoutsSnap = null;
+      const exerciseMediaRequest = loadClientExerciseMedia(client.id);
 
       try {
         historySnap = await withSummaryDeadline(() => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), limit(HISTORY_PAGE_SIZE))), 8000);
@@ -202,12 +204,14 @@ export function createTrainerClientOverviewLoader({
       const clientHistory = getDocsAsItems(historySnap);
       clientHistory.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-      const loadedWorkouts = getDocsAsItems(workoutsSnap, true).map((workout) => ({
+      const exerciseMedia = await exerciseMediaRequest;
+      if (!isCurrentClientRequest()) return;
+      const loadedWorkouts = getDocsAsItems(workoutsSnap, true).map((workout) => withClientExerciseMedia({
         ...workout,
         name: workout.name || "\u0411\u0435\u0437 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f",
         status: workout.status || "planned",
         exercises: (workout.exercises || []).map(normalizeExercise)
-      }));
+      }, exerciseMedia));
       const clientWorkouts = sortWorkoutDays(
         filterTrainerCurrentPlanWorkouts(
           loadedWorkouts.filter((workout) => isTrainerProgramClientVisible({
