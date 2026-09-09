@@ -1358,25 +1358,33 @@ function ClientMeasurements({ measurements = [], separated = false, detailed = f
 
   if (isTrainerV2Path(window.location.pathname) && !detailed) {
     return (
-      <section className="trainerNextSimplePanel trainerClientMeasurementsSection">
-        <div className="trainerNextPanelTitle"><div><h2>Замеры</h2><p>{latest ? `Последний замер: ${formatCompactDate(latestDate)}` : "Клиент ещё не добавил замеры"}</p></div></div>
+      <AppleGroup title="Замеры" className={appleStyles.measurements}>
         {latest ? <>
-          <table className="trainerClientMeasurementTable">
-            <thead><tr><th>Показатель</th><th>Сейчас</th><th>Изменение</th></tr></thead>
-            <tbody>{(expanded ? measurementRows : measurementRows.filter(({ field }) => ["weight", "belly", "chest", "pelvis"].includes(field.id))).map(({ field, current, delta }) => (
-              <tr key={field.id}><th scope="row">{field.label}</th><td>{formatMeasurementValue(current, field.unit)}</td><td>{formatSignedDelta(delta, field.unit)}</td></tr>
-            ))}</tbody>
-          </table>
-          <button type="button" className="trainerClientTextAction" onClick={() => setExpanded((value) => !value)}>{expanded ? "Свернуть замеры" : `Все показатели · ${measurementRows.length}`}</button>
-          <p className="trainerClientMeasurementNote">{previous ? `Изменение относительно ${formatCompactDate(getMeasurementDate(previous))}.` : "Для сравнения нужен ещё один замер."}</p>
-          <TrainerClientDisclosure title="Подробная динамика и выводы">
-            <ClientMeasurements measurements={measurements} detailed />
-          </TrainerClientDisclosure>
-          <TrainerClientDisclosure title="История замеров">
-            <div className="trainerMeasurementTimeline">{sortedMeasurements.map((item, index) => <article key={item.id || index}><time>{formatCompactDate(getMeasurementDate(item))}</time><strong>{formatMeasurementValue(getMeasurementFieldValue(item, weightField), "кг")}</strong><span>Талия {formatMeasurementValue(getMeasurementFieldValue(item, bellyField), "см")}</span></article>)}</div>
-          </TrainerClientDisclosure>
-        </> : <div className="trainerNextEmpty">Замеры появятся после заполнения клиентом.</div>}
-      </section>
+          <div className={appleStyles.measurementIntro}>
+            <strong>Последний замер · {formatCompactDate(latestDate)}</strong>
+            <span>{previous ? `Изменения с ${formatCompactDate(getMeasurementDate(previous))}` : "После следующего замера появится сравнение"}</span>
+          </div>
+          <div className={appleStyles.measurementList}>
+            {(expanded ? measurementRows : measurementRows.filter(({ current }) => current !== null).slice(0, 4)).map(({ field, current, delta }) => (
+              <div className={appleStyles.measurementItem} key={field.id}>
+                <span>{field.label}</span>
+                <strong>{current !== null ? formatMeasurementValue(current, field.unit) : "Не заполнено"}</strong>
+                {delta !== null ? <small>{delta === 0 ? "Без изменений" : formatSignedDelta(delta, field.unit)}</small> : null}
+              </div>
+            ))}
+          </div>
+          {!measurementRows.some(({ current }) => current !== null) ? <p className={appleStyles.measurementIntro}>В этой записи показатели не заполнены.</p> : null}
+          <button type="button" className={appleStyles.measurementToggle} aria-expanded={expanded} onClick={() => setExpanded((value) => !value)}>{expanded ? "Скрыть полный список" : "Все 12 показателей"}<ChevronDown size={16} aria-hidden="true" /></button>
+          <div className={appleStyles.measurementDetails}>
+            <TrainerClientDisclosure title="История замеров">
+              <div className="trainerMeasurementTimeline">{sortedMeasurements.map((item, index) => <article key={item.id || index}><time>{formatCompactDate(getMeasurementDate(item))}</time><strong>{formatMeasurementValue(getMeasurementFieldValue(item, weightField), "кг")}</strong><span>Талия {formatMeasurementValue(getMeasurementFieldValue(item, bellyField), "см")}</span></article>)}</div>
+            </TrainerClientDisclosure>
+            <TrainerClientDisclosure title="График и анализ">
+              <ClientMeasurements measurements={measurements} detailed />
+            </TrainerClientDisclosure>
+          </div>
+        </> : <div className={appleStyles.measurementIntro}>Замеры появятся после заполнения клиентом.</div>}
+      </AppleGroup>
     );
   }
 

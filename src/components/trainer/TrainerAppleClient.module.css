@@ -293,3 +293,20 @@
 :global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-missed) {color:#b53745!important;background:#fff0f1!important;}
 :global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-shifted) {color:#915800!important;background:#fff4df!important;}
 :global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-pastCompleted) {color:#636366!important;background:#efeff4!important;}
+/* Measurement summary keeps the value and its change together. */
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementIntro {display:flex!important;flex-direction:column!important;gap:5px!important;padding:18px!important;margin:0!important;font-size:14px!important;line-height:1.45!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementIntro strong {font-size:14px!important;font-weight:600!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementIntro span {font-size:12px!important;color:#636366!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementList {display:grid!important;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))!important;gap:10px!important;padding:0 18px!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem {display:flex!important;flex-direction:column!important;gap:6px!important;padding:14px!important;border-radius:12px!important;background:#f2f2f7!important;min-width:0!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem span {font-size:13px!important;color:#636366!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem strong {font-size:22px!important;font-weight:600!important;line-height:1.3!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem small {font-size:12px!important;color:#636366!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementToggle {display:flex!important;align-items:center!important;gap:8px!important;min-height:48px!important;padding:12px 18px!important;border:0!important;background:transparent!important;color:#3f73b8!important;font-size:14px!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementToggle[aria-expanded="true"] svg {transform:rotate(180deg);}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementDetails {padding:0 18px!important;}
+@media(max-width:480px){
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementList {grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem:only-child {grid-column:1/-1!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem strong {font-size:18px!important;}
+}
