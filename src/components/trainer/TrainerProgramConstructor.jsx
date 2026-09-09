@@ -1,9 +1,10 @@
+import TrainerEditorSheet from "./TrainerEditorSheet";
+import TrainerExerciseQuickFields from "./TrainerExerciseQuickFields";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CalendarDays,
   ChevronDown,
   ChevronRight,
-  X,
   ChevronUp,
   Clock3,
   Copy,
@@ -33,13 +34,7 @@ import { isTrainerV2Path } from "../../app/cssVariant";
 import { getTrainerLibraryMuscle, TRAINER_LIBRARY_MUSCLES } from "../../utils/trainerLibraryMuscleGroups";
 
 function ConstructorSheet({ styles, title, onClose, children }) {
-  const ref = useRef(null);
-  useEffect(() => { const dialog = ref.current; dialog.showModal(); return () => dialog.close(); }, []);
-  return <dialog ref={ref} className={styles.appleSheet} onKeyDown={(event) => { if (event.key === "Escape") event.stopPropagation(); }} onCancel={(event) => { event.preventDefault(); event.stopPropagation(); onClose(); }} aria-label={title}>
-    <header><h2>{title}</h2><button type="button" onClick={onClose} aria-label="Закрыть настройки"><X size={20} /></button></header>
-    <div className={styles.appleSheetBody}>{children}</div>
-    <footer><span>Изменения войдут в сохранение программы</span><button type="button" onClick={onClose}>Готово</button></footer>
-  </dialog>;
+  return <TrainerEditorSheet title={title} onClose={onClose} className={styles.appleSheet} bodyClassName={styles.appleSheetBody}>{children}</TrainerEditorSheet>;
 }
 
 const DAY_COLORS = Object.freeze(["violet", "blue", "green", "orange", "rose"]);
@@ -66,15 +61,6 @@ function getCompactWorkoutName(workout = {}, index = 0) {
     .replace(/^День\s*\d+\s*[-–—:]?\s*/i, "")
     .replace(/^Тренировка\s*\d+\s*[-–—:]?\s*/i, "")
     .trim() || `Тренировка ${index + 1}`;
-}
-
-function getSetValue(sets = [], field, fallback = "—") {
-  const values = sets
-    .map((set) => String(field === "weight" ? sanitizeExerciseWeightInput(set?.[field]) ?? "" : set?.[field] ?? "").trim())
-    .filter(Boolean);
-  if (!values.length) return fallback;
-  const unique = [...new Set(values)];
-  return unique.length === 1 ? unique[0] : `${unique[0]}–${unique.at(-1)}`;
 }
 
 function createGeneratedExerciseId() {
@@ -474,23 +460,6 @@ export default function TrainerProgramConstructor({
     });
   }
 
-  function updateAllSets(exercise, field, value) {
-    if (!activeContext) return;
-    const sets = exercise.sets || [];
-    if (!sets.length) {
-      onAddExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id);
-      return;
-    }
-    sets.forEach((_, setIndex) => onUpdateExerciseSet(
-      activeContext.cycle.id,
-      activeContext.week.id,
-      activeContext.workout.id,
-      exercise.id,
-      setIndex,
-      sanitizeExerciseSetPatch({ [field]: value })
-    ));
-  }
-
   function getEnabledSetFields(exercise) {
     return exercise.enabledFields?.length ? exercise.enabledFields : DEFAULT_SET_FIELDS;
   }
@@ -508,25 +477,6 @@ export default function TrainerProgramConstructor({
       targetIndex,
       sanitizeExerciseSetPatch(patch)
     ));
-  }
-
-  function changeSetCount(exercise, nextValue) {
-    if (!activeContext) return;
-    const currentCount = Math.max(1, exercise.sets?.length || 0);
-    const nextCount = Math.min(12, Math.max(1, Number(nextValue) || 1));
-    if (nextCount > currentCount) {
-      onAddExerciseSet(
-        activeContext.cycle.id,
-        activeContext.week.id,
-        activeContext.workout.id,
-        exercise.id,
-        { count: nextCount - currentCount }
-      );
-    } else if (nextCount < currentCount) {
-      for (let index = currentCount - 1; index >= nextCount; index -= 1) {
-        onRemoveExerciseSet(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, index);
-      }
-    }
   }
 
   function requestDeleteExercise(exercise) {
@@ -855,12 +805,7 @@ export default function TrainerProgramConstructor({
                               <strong>{exercise.name || "Упражнение"}</strong>
                               <small className={video ? styles.videoReady : ""}>{apple ? (exercise.muscleGroup || TRAINER_LIBRARY_MUSCLES.find(([id]) => id === getTrainerLibraryMuscle(exercise))?.[1] || (video ? "Видео добавлено" : "")) : video ? "◉ Видео добавлено" : "Без видео"}{alternativeCount ? ` · ${alternativeCount} альт.` : ""}</small>
                             </button>
-                            <div className={styles.exerciseMetrics}>
-                              <label className={styles.metricField}><span className={styles.metricLabel}>Подходы</span><input className={styles.metricInput} type="number" min="1" max="12" value={Math.max(1, exercise.sets?.length || 0)} onChange={(event) => changeSetCount(exercise, event.target.value)} aria-label={`Подходы: ${exercise.name || "упражнение"}`} /></label>
-                              <label className={styles.metricField}><span className={styles.metricLabel}>Повторы</span><input className={styles.metricInput} value={getSetValue(sets, "reps", "")} onChange={(event) => updateAllSets(exercise, "reps", event.target.value)} aria-label={`Повторения: ${exercise.name || "упражнение"}`} /></label>
-                              <label className={styles.metricField}><span className={styles.metricLabel}>Вес</span><span className={styles.metricWithSuffix}><input className={styles.metricInput} inputMode="decimal" disabled={!usesWeight} value={usesWeight ? getSetValue(sets, "weight", "") : "—"} onChange={(event) => updateAllSets(exercise, "weight", sanitizeExerciseWeightInput(event.target.value))} aria-label={`Вес: ${exercise.name || "упражнение"}`} />{usesWeight ? <small>кг</small> : null}</span></label>
-                              <label className={styles.metricField}><span className={styles.metricLabel}>Отдых</span><input className={styles.metricInput} value={exercise.rest || "90 сек"} onChange={(event) => updateExercise(exercise.id, { rest: event.target.value })} aria-label={`Отдых: ${exercise.name || "упражнение"}`} /></label>
-                            </div>
+                            <TrainerExerciseQuickFields className={styles.exerciseMetrics} exercise={exercise} onChange={(patch) => updateExercise(exercise.id, patch)} onDetails={() => setExpandedExerciseId(exercise.id)} />
                             <div className={styles.exerciseActions}>
                               <button className={apple ? styles.appleHidden : undefined} type="button" onClick={(event) => { event.stopPropagation(); onDuplicateExercise?.(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id); }} aria-label="Дублировать упражнение"><Copy size={15} /></button>
                               <button type="button" onClick={(event) => { event.stopPropagation(); setExpandedExerciseId(expanded ? "" : exercise.id); }} aria-label="Дополнительные параметры">{apple ? <ChevronRight size={18} /> : <MoreVertical size={16} />}</button>

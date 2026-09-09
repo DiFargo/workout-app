@@ -1,0 +1,12 @@
+.dialog { border:0; border-radius:24px; padding:24px; width:min(520px, calc(100vw - 24px)); box-sizing:border-box; max-height:calc(100dvh - 24px); color:#1c1c1e; background:#fff; box-shadow:0 20px 60px #0003; }
+.dialog::backdrop { background:#1c1c1e55; }
+.dialog header { display:flex; align-items:flex-start; gap:12px; }
+.dialog h2 { font-size:22px; line-height:1.25; margin:8px 0; }
+.dialog header button { flex:0 0 44px; height:44px; border:0; border-radius:50%; background:#f2f2f7; color:#636366; }
+.body p { font-size:16px; line-height:1.5; color:#636366; margin:12px 0 24px; }
+.actions { display:grid; gap:8px; }
+.actions button { min-height:44px; padding:12px; border:1px solid #3c3c431f; border-radius:12px; background:#fff; color:#1c1c1e; font:inherit; }
+.actions button:nth-child(2) { color:#c93a4a; }
+.actions button:last-child { background:#3f73b8; color:#fff; border:0; }
+.dialog button { cursor:pointer; }
+.dialog button:focus-visible { outline:2px solid #3f73b8; outline-offset:2px; }

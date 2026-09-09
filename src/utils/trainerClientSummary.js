@@ -326,6 +326,7 @@ export function buildTrainerClientRecentEvents({
 }
 
 export function getClientActivityStatus(summary = {}) {
+  if (summary.assignedProgramId && summary.trainerSummaryState && summary.trainerSummaryState !== "fresh") return { id: "unknown", label: "Данные обновляются" };
   if (!summary.assignedProgramId) {
     return { id: "noProgram", label: "Без программы" };
   }
@@ -369,6 +370,7 @@ export function getTrainerDayWord(value) {
 
 export function getClientAttentionReasons(summary = {}) {
   if (!summary.assignedProgramId) return ["нет программы"];
+  if (summary.trainerSummaryState && summary.trainerSummaryState !== "fresh") return ["данные обновлены не полностью"];
 
   const reasons = [];
   const workoutDays = getTrainerSummaryDaysSince(summary.lastWorkoutAt);

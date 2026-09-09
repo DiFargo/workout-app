@@ -349,12 +349,15 @@ service cloud.firestore {
         resource.data.assignedProgramVisibility == "client_active" &&
         resource.data.assignedProgramAssignedByUid == request.auth.uid &&
         request.resource.data.assignedProgramId == resource.data.assignedProgramId &&
-        request.resource.data.assignedProgramName == resource.data.assignedProgramName &&
+        request.resource.data.assignedProgramName is string &&
+        request.resource.data.assignedProgramName.size() > 0 &&
+        request.resource.data.assignedProgramName.size() <= 80 &&
         request.resource.data.assignedProgramUpdatedAt == resource.data.assignedProgramUpdatedAt &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly([
           "workoutCalendar",
           "assignedWorkoutCount",
-          "updatedAt"
+          "updatedAt",
+          "assignedProgramName"
         ]);
     }
 
@@ -713,6 +716,21 @@ service cloud.firestore {
           get(/databases/$(database)/documents/trainingTemplates/$(request.resource.data.assignedProgramId)).data.name;
     }
 
+    // Adding a day to an existing client copy does not require its library
+    // template to still exist. The active assignment and trainer stay fixed.
+    function isTrainerClientProgramDayCreate(uid) {
+      let client = getAfter(/databases/$(database)/documents/users/$(uid)).data;
+      return isTrainer() && isAssignedTrainer(uid) &&
+        client.assignedProgramAssignedByUid == request.auth.uid &&
+        client.assignedProgramLifecycleStatus == "active" &&
+        client.assignedProgramVisibility == "client_active" &&
+        request.resource.data.assignedBy == request.auth.uid &&
+        request.resource.data.assignedProgramId == client.assignedProgramId &&
+        request.resource.data.assignedProgramUpdatedAt == client.assignedProgramUpdatedAt &&
+        request.resource.data.assignedProgramName == client.assignedProgramName &&
+        !isTrainerWorkoutStarted(request.resource.data);
+    }
+
     function isTrainerWorkoutStarted(data) {
       return
         (data.keys().hasAll(["completed"]) && data.completed == true) ||
@@ -731,10 +749,14 @@ service cloud.firestore {
     function isTrainerUnfinishedProgramWorkoutUpdateFields() {
       return resource.data.assignedBy == request.auth.uid &&
         !isTrainerWorkoutStarted(resource.data) &&
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(["assignedProgramName"]) || (
+          request.resource.data.assignedProgramName is string &&
+          request.resource.data.assignedProgramName.size() > 0 &&
+          request.resource.data.assignedProgramName.size() <= 80
+        )) &&
         !request.resource.data.diff(resource.data).affectedKeys().hasAny([
           "assignedBy",
           "assignedProgramId",
-          "assignedProgramName",
           "assignedProgramAddedAt"
         ]) &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly([
@@ -748,7 +770,8 @@ service cloud.firestore {
           "status",
           "statusUpdatedAt",
           "movedToDate",
-          "updatedAt"
+          "updatedAt",
+          "assignedProgramName"
         ]);
     }
 
@@ -884,7 +907,7 @@ service cloud.firestore {
 
       match /workouts/{workoutId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
-        allow create: if isOwnerOrAdmin(uid) || isTrainerOwnedProgramWorkoutCreate(uid);
+        allow create: if isOwnerOrAdmin(uid) || isTrainerClientProgramDayCreate(uid) || isTrainerOwnedProgramWorkoutCreate(uid);
       // Restore is deliberately checked first. A client program can contain
       // many archived workout documents, restored in one batch. Evaluating
       // the broad edit/archive branches for every document first can exceed

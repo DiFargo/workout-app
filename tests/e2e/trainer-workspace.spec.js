@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
+test.beforeEach(async ({ page }) => page.setDefaultTimeout(10000));
 
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => {
@@ -67,9 +68,10 @@ async function clientTabControl(page, name) {
 
   const utilityLabels = {
     "Сообщения": "Сообщения клиента",
-    "Уведомления": "Уведомления клиента"
+    "Уведомления": "🔔 Настроить уведомления"
   };
-  const utilityAction = page.getByRole("button", { name: utilityLabels[name], exact: true });
+  if (name === "Уведомления") await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
+  const utilityAction = page.getByRole("button", { name: utilityLabels[name] || name, exact: true });
   return { button: utilityAction, utility: true };
 }
 
@@ -80,7 +82,7 @@ async function expectClientNavigation(page) {
     await expect(clientTabs(page).getByRole("button", { name: "Сообщения", exact: true })).toHaveCount(0);
     await expect(clientTabs(page).getByRole("button", { name: "Заметки", exact: true })).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Сообщения клиента", exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Уведомления клиента", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Действия с клиентом", exact: true })).toBeVisible();
     await expect(page.locator(".trainerNextClientTabs button[aria-pressed='true']")).toHaveCount(1);
     return;
   }
@@ -89,7 +91,7 @@ async function expectClientNavigation(page) {
   await expect(mobileNav.getByRole("button")).toHaveCount(4);
   await expect(mobileNav.getByRole("button", { name: "Тренировки", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Сообщения клиента", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Уведомления клиента", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Действия с клиентом", exact: true })).toBeVisible();
   await expect(mobileNav.locator("button[aria-current='page']")).toHaveCount(1);
 }
 
@@ -136,9 +138,10 @@ async function openHarnessClient(page) {
 }
 
 async function openExerciseSection(page, name) {
-  await openClientTab(page, "Тренировки");
+  await closeClientUtilitySheet(page, "Прогресс упражнений");
+  await openClientTab(page, name === "Прогресс упражнений" ? "Сводка" : "Тренировки");
   if (name === "Прогресс упражнений") {
-    const button = page.getByRole("button", { name: "Открыть прогресс упражнений", exact: true });
+    const button = page.getByRole("button", { name: /^(Открыть )?прогресс упражнений/i });
     await expect(button).toBeVisible();
     await button.click();
     await expect(page.getByRole("dialog", { name: "Прогресс упражнений", exact: true })).toBeVisible();
@@ -150,7 +153,7 @@ async function openExerciseSection(page, name) {
 }
 
 async function openWorkoutInsights(page) {
-  const button = page.getByRole("button", { name: "Открыть разбор и историю тренировок", exact: false });
+  const button = page.getByRole("button", { name: /^Открыть разбор и историю тренировок/, exact: false });
   await expect(button).toBeVisible();
   await button.click();
 
@@ -160,7 +163,7 @@ async function openWorkoutInsights(page) {
 }
 
 async function openProgramAssignmentHistory(page) {
-  const button = page.getByRole("button", { name: /^История программ/ });
+  const button = page.getByRole("button", { name: /^История( программ(?: · \d+)?)?$/ });
   await expect(button).toBeVisible();
   await button.click();
 
@@ -201,18 +204,19 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
   assertNoRuntimeErrors();
 
   await openHarnessClient(page);
-  await openClientTab(page, "Обзор");
+  await openClientTab(page, "Сводка");
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
   await expectClientNavigation(page);
   const subscriptionStatus = page.locator(".trainerNextClientSubscriptionStatus");
   const subscriptionStatusBox = await subscriptionStatus.boundingBox();
   expect(subscriptionStatusBox).not.toBeNull();
   expect(subscriptionStatusBox.width).toBeLessThanOrEqual(280);
-  await expect(page.getByTestId("trainer-client-progress-dashboard").locator("button[aria-pressed='true']")).toHaveCount(1);
+  await expect(page.getByTestId("trainer-client-progress-dashboard").locator("button[aria-pressed='true']")).toHaveCount(2);
 
-  await page.getByRole("button", { name: "Открыть редактирование абонемента" }).click();
-  const subscriptionDialog = page.getByRole("dialog", { name: "Редактирование абонемента" });
-  await expect(subscriptionDialog).toBeVisible();
+  await page.getByRole("button", { name: "Открыть абонемент клиента" }).click();
+  const subscriptionDialog = page.getByRole("dialog", { name: "Календарь тренировок" });
+  await expect(subscriptionDialog.getByRole("region", { name: "Параметры абонемента" })).toBeVisible();
+  await expect(subscriptionDialog.getByLabel("Куплено тренировок")).toBeEditable();
   await subscriptionDialog.getByRole("button", { name: "Закрыть", exact: true }).click();
   await expect(subscriptionDialog).toBeHidden();
 
@@ -230,8 +234,9 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
   await expect(page.locator(".trainerWorkoutEditorModal")).toBeVisible();
   await expect(page.locator(".trainerWorkoutEditorModalBody")).toBeVisible();
   await expect(page.locator(".trainerWorkoutEditorModal")).toContainText("tren+");
-  await page.locator(".trainerWorkoutEditorModal header button").click();
+  await page.getByRole("button", { name: "Закрыть редактор", exact: true }).click();
   await expect(page.locator(".trainerWorkoutEditorModal")).toBeHidden();
+  await expect.poll(() => page.evaluate(() => document.body.style.position)).not.toBe("fixed");
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
@@ -252,7 +257,7 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
   await expect(composeDialog).toBeHidden();
   await expect(messagesUtilitySheet).toBeHidden();
 
-  await page.getByRole("button", { name: "Действия", exact: true }).click();
+  await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
   await expect(page.locator(".trainerClientActionSheet")).toBeVisible();
   await expect(page.getByRole("button", { name: /Архивировать клиента|Восстановить клиента/ })).toBeVisible();
   await page.locator(".trainerClientActionSheet header button").click();
@@ -264,17 +269,17 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
   const nutritionControl = await clientTabControl(page, "Питание");
   await expect(nutritionControl.button).toHaveAttribute(nutritionControl.activeAttribute, nutritionControl.activeValue);
   await expect(page.locator(".trainerNutritionPeriodButtons button[aria-pressed='true']")).toHaveCount(1);
-  await page.locator(".trainerNutritionDiaryCollapsed").click();
-  const diaryModal = page.getByRole("dialog", { name: "Записи клиента" });
+  await page.getByRole("button", { name: /^Открыть дневник питания/ }).click();
+  const diaryModal = page.getByRole("dialog", { name: "Дневник питания" });
   await expect(diaryModal).toBeVisible();
-  await expect(diaryModal.locator(".trainerNutritionDiary aside button[aria-pressed='true']")).toHaveCount(1);
-  await diaryModal.getByRole("button", { name: "Закрыть дневник" }).click();
+  await expect(diaryModal.locator("button[aria-pressed='true']")).toHaveCount(1);
+  await diaryModal.getByRole("button", { name: "Закрыть", exact: true }).click();
   await expect(diaryModal).toBeHidden();
   await openClientTab(page, "Уведомления");
   await expect(page.locator(".trainerNotificationCalendarGrid")).toBeVisible();
   await expect(page.locator(".trainerNotificationLegend")).toBeVisible();
   await expect(page.locator(".trainerReminderPeriod button[aria-pressed='true']")).toHaveCount(2);
-  await expect(page.locator(".trainerNotificationCalendarGrid button[aria-pressed='true']")).not.toHaveCount(0);
+  await expect(page.locator(".trainerNotificationCalendarGrid button")).toHaveCount(42);
   await page.locator(".trainerNotificationOffsets label").first().click();
   await page.locator(".trainerNotificationActions .trainerNextPrimary").click();
   await expectNoHorizontalOverflow(page);
@@ -327,7 +332,7 @@ test("client messages can be processed without a reply and assignments open from
   await expect(page.locator(".trainerNextRoot")).toBeVisible();
   await clickTrainerNav(page, "clients");
   await openHarnessClient(page);
-  await openClientTab(page, "Обзор");
+  await openClientTab(page, "Сводка");
 
   const tasksButton = page.getByRole("button", { name: "Задания клиенту", exact: true });
   await expect(tasksButton).toBeVisible();
@@ -590,8 +595,8 @@ test("trainer archives and restores assignments without deleting client programs
   const currentProgram = assignmentHistory.locator("article").filter({ hasText: "tren+" });
   const futureProgram = assignmentHistory.locator("article").filter({ hasText: "Поддержка" });
 
-  await expect(pastProgram).toContainText("Программа сохранена в истории клиента");
-  await expect(pastProgram.getByRole("button")).toHaveCount(0);
+  await expect(pastProgram).toContainText("Архив");
+  await expect(pastProgram.getByRole("button", { name: "Достать из архива" })).toBeVisible();
   await expect(currentProgram.getByRole("button", { name: "Архивировать", exact: true })).toBeVisible();
   await expect(futureProgram.getByRole("button", { name: "Архивировать", exact: true })).toBeVisible();
 
@@ -605,7 +610,7 @@ test("trainer archives and restores assignments without deleting client programs
   const archiveDialog = page.getByRole("dialog", { name: "Архивировать программу?" });
   await expect(archiveDialog).toBeVisible();
   await archiveDialog.getByRole("button", { name: "Архивировать", exact: true }).click();
-  await expect(assignmentHistory.locator("article").filter({ hasText: "tren+" })).toHaveCount(0);
+  await expect(assignmentHistory.locator("article").filter({ hasText: "tren+" })).toContainText("Архив");
   await expect(page.locator('[class*="currentProgram"]').filter({ hasText: "Нет активной программы" }).first()).toBeVisible();
   assertNoRuntimeErrors();
 });
@@ -625,7 +630,8 @@ test("trainer calendar is isolated to the current assignment", async ({ page }) 
 
 test("trainer schedules a newly assigned program in a modal and it stays future until completion", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  await page.goto("/?trainerHarness=1");
+  await page.clock.install({ time: new Date("2026-08-01T12:00:00.000Z") });
+  await page.goto("/?trainerHarness=1&scheduleReady=1");
   await clickTrainerNav(page, "clients");
   await openHarnessClient(page);
   await openExerciseSection(page, "План тренировок");
@@ -645,7 +651,7 @@ test("trainer schedules a newly assigned program in a modal and it stays future 
   await scheduleModal.locator('button[title="2026-08-19"]').click();
   await scheduleModal.locator('button[title="2026-08-21"]').click();
   await expect(scheduleModal).toContainText("3/3");
-  await scheduleModal.getByRole("button", { name: "Сохранить расписание", exact: true }).click();
+  await scheduleModal.getByRole("button", { name: "Сохранить даты", exact: true }).click();
   await expect(scheduleModal).toBeHidden();
 
   const assignmentHistory = await openProgramAssignmentHistory(page);
@@ -684,9 +690,9 @@ test("trainer calendar and assignment history hide client basic plans until expl
   await expect(basicProgram).toHaveCount(0);
   const schedule = page.locator(".trainerWorkoutSchedulePlanner");
   await expect(schedule).toContainText("3/3");
-  await expect(schedule).toContainText("Фиолетовый — плановая дата");
+  await expect(schedule.locator(".trainerWorkoutScheduleLegend")).toContainText("В срок");
   await expect(schedule.locator(".trainerWorkoutScheduleLegend")).toContainText("Плановая дата");
-  await expect(schedule.locator('button[title="2026-06-04"]')).toBeVisible();
+  await expect(schedule.locator('button[title="2026-06-04"]')).toHaveCount(0);
   await toggle.check();
   await expect(basicProgram).toBeVisible();
   await expect(basicProgram).toContainText("Самостоятельно");
@@ -707,6 +713,7 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
   await expect(page.locator(".trainerNextWorkoutDaySelect[aria-pressed='true']")).toHaveCount(1);
   await expect(page.locator(".trainerNextExerciseList article")).toHaveCount(2);
   await expect(page.locator(".trainerNextExerciseName").first()).toBeVisible();
+  await page.locator(".trainerNextWorkoutDaySelect").nth(2).click();
   await page.locator(".trainerNextExerciseName").first().click();
   await expect(page.locator(".trainerNextExerciseEditor")).toBeVisible();
   await page.locator(".trainerNextSetEditor input").first().fill("10");
@@ -739,9 +746,9 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
   await expectNoHorizontalOverflow(page);
 
   await page.getByRole("button", { name: /Редактировать/ }).click();
-  const programEditor = page.getByRole("dialog", { name: "tren+", exact: true });
+  const programEditor = page.getByRole("dialog", { name: "РЕДАКТОР ПРОГРАММЫ", exact: true });
   await expect(programEditor).toBeVisible();
-  await expect(programEditor.getByRole("heading", { name: "tren+", exact: true })).toBeVisible();
+  await expect(programEditor.getByRole("textbox").first()).toHaveValue("tren+");
   await expect(programEditor.getByRole("heading", { name: "Дни программы" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();

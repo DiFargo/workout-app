@@ -64,9 +64,9 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.locator('.trainerPhotoCompareGrid button').first().click();
     await expect(page.getByRole('dialog', { name: 'Просмотр фото клиента' })).toBeVisible();
     await page.getByRole('dialog', { name: 'Просмотр фото клиента' }).getByRole('button', { name: 'Закрыть', exact: true }).click();
-    await expect(page.locator('.trainerClientMeasurementTable tbody tr')).toHaveCount(4);
-    await page.getByRole('button', { name: 'Все показатели · 12' }).click();
-    await expect(page.locator('.trainerClientMeasurementTable tbody tr')).toHaveCount(12);
+    await expect(page.locator('[class*=measurementList] > div')).toHaveCount(3);
+    await page.getByRole('button', { name: 'Все 12 показателей' }).click();
+    await expect(page.locator('[class*=measurementList] > div')).toHaveCount(12);
     await tab('Тренировки');
     await expect(page.getByRole('button', {name:'Календарь',exact:true})).toHaveCount(0);
     await page.getByRole('button', {name:/^История программ/}).click();

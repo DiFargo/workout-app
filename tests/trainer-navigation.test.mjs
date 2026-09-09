@@ -152,7 +152,7 @@ test("trainer day editor keeps all exercise controls within the mobile sheet", a
   const styles = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.module.css", import.meta.url), "utf8");
 
   assert.match(source, /className=\{styles\.exerciseMetrics\}/);
-  assert.match(source, /className=\{styles\.metricField\}/);
+  assert.match(source, /TrainerExerciseQuickFields/);
   assert.match(styles, /\.dayStats \{ width: 100%;[\s\S]*?grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(styles, /\.exerciseMetrics \{ grid-area: metrics; display: grid; grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(styles, /:global\(\.trainerNextRoot\):has\(\.dayEditorModal\) :global\(\.trainerNextMobileNav\) \{ display: none; \}/);
@@ -175,9 +175,11 @@ test("trainer program editor keeps mobile back and save actions reachable", asyn
   assert.match(manager, /const saved = await saveMonthProgramToLibrary\(\)/);
   assert.match(manager, /if \(saved === false\)[\s\S]*?setEditorSaveState\("idle"\)/);
   assert.match(manager, /function closeEditor\(\)[\s\S]*?hasEditorUnsavedChanges[\s\S]*?setEditorExitConfirmOpen\(true\)/);
-  assert.match(manager, /Есть несохранённые изменения/);
-  assert.match(manager, /Выйти без сохранения/);
-  assert.match(manager, /Сохранить и выйти/);
+  const exitDialog = await readFile(new URL("../src/components/trainer/TrainerProgramUnsavedDialog.jsx", import.meta.url), "utf8");
+  assert.match(manager, /TrainerProgramUnsavedDialog/);
+  assert.match(exitDialog, /Есть несохранённые изменения/);
+  assert.match(exitDialog, /Выйти без сохранения/);
+  assert.match(exitDialog, /Сохранить и выйти/);
   assert.match(manager, /function discardEditorChanges\(\)[\s\S]*?restoreSavedProgram: isPersistedEditorProgram/);
   assert.match(manager, /readTrainerProgramEditorDraft/);
   assert.match(manager, /Восстановить несохранённые изменения/);

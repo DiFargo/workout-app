@@ -7,6 +7,9 @@ import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/tr
 function TrainerE2EHarness({ ProgramManagerView }) {
   const sparsePreview = new URLSearchParams(window.location.search).has("sparsePreview");
   const assignmentPreview = new URLSearchParams(window.location.search).has("assignmentPreview");
+  const draftAudit = new URLSearchParams(window.location.search).has("draftAudit");
+  const draftSaveAttempts = useRef(0);
+  const [summaryRetried, setSummaryRetried] = useState(false);
   const [yesterday] = useState(() => new Date(Date.now() - 86400000).toISOString().slice(0, 10));
   const APP_VERSION = appConfig?.APP_VERSION || "v0";
   const includeProgramAssignmentHistory = new URLSearchParams(window.location.search).get("programAssignments") === "1";
@@ -37,6 +40,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
     assignedWorkoutCount: 4,
     firstSetupCompleted: true,
+    ...(new URLSearchParams(window.location.search).has("scheduleReady") ? { subscription: { startDate: "2026-08-01", endDate: "2026-08-31", purchasedSessions: 3, usedSessions: 0 } } : {}),
     trainerSetupChecklist: {
       completedSteps: {
         program: true,
@@ -160,7 +164,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramAddedAt: "2026-06-10T10:00:00.000Z",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
-        { id: "e3", name: "Жим лёжа с гантелями", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "20" }] }
+        { id: "e3", name: new URLSearchParams(window.location.search).has("mixedSets") ? "Жим лёжа с гантелями на наклонной скамье с медленным опусканием и паузой" : "Жим лёжа с гантелями", video: "", requiresWeight: true, rest: "90 сек", sets: new URLSearchParams(window.location.search).has("mixedSets") ? [{ reps: "12", weight: "20" }, { reps: "10", weight: "25" }, { reps: "8", weight: "30" }] : [{ reps: "12", weight: "20" }] }
       ]
     },
     {
@@ -443,7 +447,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       trainerName="Beta"
       clients={clients}
       summariesLoading={new URLSearchParams(window.location.search).get("syncPreview") === "1"}
-      clientSummaries={clientSummaries}
+      onRetrySummary={() => setSummaryRetried(true)}
+      clientSummaries={new URLSearchParams(window.location.search).has("partialSummary") && !summaryRetried ? { ...clientSummaries, client_e2e: { ...clientSummaries.client_e2e, trainerSummaryState: "partial", trainerSummaryReady: false, failedSources: ["history", "measurements"], sources: { history: { state: "error" }, measurements: { state: "error" } }, workouts7: null, lastWorkoutAt: null, completedWorkoutCount: null, nutritionDays7: null } } : clientSummaries}
       counts={{ active: 1, attention: 0 }}
       selectedClient={selectedClient}
       selectedProfile={{
@@ -622,10 +627,9 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         };
       }}
       onArchiveProgramAssignment={(assignment) => {
-        setWorkouts((current) => current.filter((workout) => (
-          workout.assignedProgramAddedAt !== assignment.assignedAt ||
-          workout.assignedProgramId !== assignment.programId
-        )));
+        setWorkouts((current) => current.map((workout) => workout.assignedProgramAddedAt === assignment.assignedAt && workout.assignedProgramId === assignment.programId
+          ? { ...workout, assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "trainer_archived" } : workout));
+        if (assignment.status === "current") setSelectedClient((current) => ({ ...current, assignedProgramId: "", assignedProgramName: "", assignedWorkoutCount: 0, assignedProgramLifecycleStatus: "archived" }));
         return true;
       }}
       onDeleteProgramAssignment={(assignment) => {
@@ -709,7 +713,15 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       onAddDay={() => {}}
       onDuplicateDay={() => {}}
       onRemoveDay={removeHarnessDay}
-      onSaveWorkouts={() => true}
+      onSaveWorkouts={async (nextPlan, options = {}) => {
+        draftSaveAttempts.current += 1;
+        document.documentElement.dataset.draftSaveAttempts = String(draftSaveAttempts.current);
+        if (draftAudit && new URLSearchParams(window.location.search).has("saveFailure") && draftSaveAttempts.current === 1) throw new Error("Synthetic save failure");
+        if (!nextPlan?.workouts) return false;
+        const ids = new Set(options.editorDraft?.baseline.workouts.map((workout) => workout.id) || []);
+        setWorkouts((current) => [...current.filter((workout) => !ids.has(workout.id)), ...nextPlan.workouts]);
+        return { plan: nextPlan };
+      }}
       onLogout={() => {}}
     />
   );

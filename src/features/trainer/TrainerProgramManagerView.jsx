@@ -1,3 +1,4 @@
+import TrainerProgramUnsavedDialog from "../../components/trainer/TrainerProgramUnsavedDialog";
 import { useEffect, useRef, useState } from "react";
 import { TrainerProgramConstructorStyleScope } from "../../components/trainer/TrainerWorkspace";
 import TrainerProgramConstructor from "../../components/trainer/TrainerProgramConstructor";
@@ -110,6 +111,7 @@ export default function TrainerProgramManagerView({
   const isNextWorkspace = isTrainerNextWorkspace();
   const isEditorModalOpen = isNextWorkspace && adminProgramLibraryTab === "editor";
   const [editorSaveState, setEditorSaveState] = useState("idle");
+  const [editorSaveError, setEditorSaveError] = useState("");
   const [editorExitConfirmOpen, setEditorExitConfirmOpen] = useState(false);
   const [editorDraftRecovery, setEditorDraftRecovery] = useState(null);
   const editorSaveCloseTimerRef = useRef(null);
@@ -318,10 +320,12 @@ export default function TrainerProgramManagerView({
     if (isEditorSaveInProgress) return;
 
     if (hasEditorUnsavedChanges) persistCurrentEditorDraft();
+    setEditorSaveError("");
     setEditorSaveState("saving");
     try {
       const saved = await saveMonthProgramToLibrary();
       if (saved === false) {
+        setEditorSaveError("Не удалось сохранить. Правки остались в редакторе; повторите попытку.");
         setEditorSaveState("idle");
         return;
       }
@@ -336,6 +340,7 @@ export default function TrainerProgramManagerView({
       }, 420);
     } catch (error) {
       console.error("Save program editor error:", error);
+      setEditorSaveError("Не удалось сохранить. Правки остались в редакторе; повторите попытку.");
       setEditorSaveState("idle");
     }
   }
@@ -487,6 +492,7 @@ export default function TrainerProgramManagerView({
             data-trainer-modal-surface="true"
             data-trainer-modal-frame="true"
             aria-busy={isEditorSaveInProgress}
+            onKeyDown={(event) => { if (event.key === "Escape" && !document.querySelector("dialog[open]")) { event.stopPropagation(); closeEditor(); } }}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <header className={styles.editorModalHeader} data-trainer-modal-header="true">
@@ -507,6 +513,7 @@ export default function TrainerProgramManagerView({
             </header>
             <div className={`${styles.editorModalBody} ${styles.editorModalBodyProgram}`} data-trainer-modal-content="true">{nextProgramConstructor}</div>
             <footer className={styles.editorModalFooter} data-trainer-modal-footer="true">
+              {editorSaveError ? <p role="alert">{editorSaveError}</p> : null}
               <button className={styles.editorModalDelete} type="button" onClick={deleteSelectedProgramFromLibrary} disabled={isEditorSaveInProgress}>
                 <Trash2 size={17} />Удалить
               </button>
@@ -551,39 +558,7 @@ export default function TrainerProgramManagerView({
               </section>
             </div>
           ) : null}
-          {editorExitConfirmOpen ? (
-            <div
-              className={styles.editorExitConfirmBackdrop} data-modal-backdrop="true"
-              role="presentation"
-              onMouseDown={(event) => event.stopPropagation()}
-            >
-              <section
-                className={styles.editorExitConfirm}
-                role="alertdialog"
-                aria-modal="true"
-                aria-labelledby="trainer-program-editor-exit-title"
-                aria-describedby="trainer-program-editor-exit-description"
-                onMouseDown={(event) => event.stopPropagation()}
-              >
-                <span className={styles.editorExitConfirmEyebrow}>РЕДАКТОР ПРОГРАММЫ</span>
-                <h3 id="trainer-program-editor-exit-title">Есть несохранённые изменения</h3>
-                <p id="trainer-program-editor-exit-description">
-                  Сохраните программу, чтобы не потерять добавленные тренировки и упражнения.
-                </p>
-                <div className={styles.editorExitConfirmActions}>
-                  <button type="button" onClick={() => setEditorExitConfirmOpen(false)}>
-                    Продолжить редактирование
-                  </button>
-                  <button type="button" onClick={discardEditorChanges}>
-                    Выйти без сохранения
-                  </button>
-                  <button type="button" onClick={handleEditorProgramSave}>
-                    <Save size={16} />Сохранить и выйти
-                  </button>
-                </div>
-              </section>
-            </div>
-          ) : null}
+          {editorExitConfirmOpen ? <TrainerProgramUnsavedDialog onContinue={() => setEditorExitConfirmOpen(false)} onDiscard={discardEditorChanges} onSave={handleEditorProgramSave} saving={isEditorSaveInProgress} status={editorSaveError} /> : null}
         </div>
       ) : null}
 

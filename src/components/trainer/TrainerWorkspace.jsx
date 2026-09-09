@@ -1,4 +1,8 @@
+import TrainerExerciseQuickFields from "./TrainerExerciseQuickFields";
+import TrainerSummaryStatus from "./TrainerSummaryStatus";
 import TrainerClientExerciseSheet from "./TrainerClientExerciseSheet";
+import TrainerProgramUnsavedDialog from "./TrainerProgramUnsavedDialog";
+import { useTrainerProgramDraft } from "../../features/trainer/useTrainerProgramDraft";
 import { getTrainerLibraryMuscle, TRAINER_LIBRARY_MUSCLES } from "../../utils/trainerLibraryMuscleGroups.js";
 import { isBodyMeasurementRecord } from "../../utils/bodyMeasurementRecords.js";
 import appleStyles from "./TrainerAppleClient.module.css";
@@ -784,8 +788,8 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
               <b>{progressScore === null ? "—" : `${progressScore} /100`}</b>
               <small className="trainerNextClientMetricLabel">Прогресс</small>
             </span>
-            <span className="trainerNextClientMetric"><b>{assignedWorkoutCount ? `${completedWorkoutCount} / ${assignedWorkoutCount}` : "—"}</b><small>тренировки</small></span>
-            <span className="trainerNextClientMetric"><b>{summary.nutritionDays7 || 0} / 7</b><small>питание</small></span>
+            <span className="trainerNextClientMetric"><b>{assignedWorkoutCount && !(summary.sources && summary.completedWorkoutCount == null) ? `${completedWorkoutCount} / ${assignedWorkoutCount}` : "—"}</b><small>тренировки</small></span>
+            <span className="trainerNextClientMetric"><b>{summary.sources && summary.nutritionDays7 == null ? "—" : `${summary.nutritionDays7 || 0} / 7`}</b><small>питание</small></span>
             <span className="trainerNextClientActivity"><b>{formatCompactDate(summary.lastWorkoutAt || summary.lastNutritionAt)}</b><small>последнее</small></span>
             <ClientStatus status={statusAction} />
           </button>
@@ -908,7 +912,7 @@ function TrainerDashboard({ actionCenter, trainerName, onOpenClient }) {
 function getTrainerSyncProgress(clients = [], clientSummaries = {}) {
   const total = clients.length;
   const completed = clients.reduce((count, client) => (
-    clientSummaries[client.id]?.trainerSummaryReady ? count + 1 : count
+    (clientSummaries[client.id]?.trainerSummarySettled || clientSummaries[client.id]?.trainerSummaryReady) ? count + 1 : count
   ), 0);
 
   if (!total) {
@@ -2388,19 +2392,17 @@ function ClientWorkoutHistoryBlock({ history = [], showAll = false }) {
   const visibleHistory = showAll ? sortedHistory : sortedHistory.slice(0, 3);
   const olderHistory = showAll ? [] : sortedHistory.slice(3);
 
+  useBodyScrollLock(historyModalOpen, { lockHtml: true });
   useEffect(() => {
     if (!historyModalOpen || typeof document === "undefined") return undefined;
 
-    const previousOverflow = document.body.style.overflow;
     const closeOnEscape = (event) => {
       if (event.key === "Escape") setHistoryModalOpen(false);
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", closeOnEscape);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [historyModalOpen]);
@@ -2562,7 +2564,6 @@ function ClientWorkoutPlan({
   selectedProgramId,
   onSelectProgram,
   onAssignProgram,
-  onRenameProgramAssignment,
   onArchiveProgramAssignment,
   onRestoreProgramAssignment,
   onSaveWorkoutSchedule,
@@ -2571,12 +2572,15 @@ function ClientWorkoutPlan({
   adjustmentRequest,
   reviewEvents = [],
   onResolveWorkoutReview,
+  onLoadMoreHistory,
   editorProps
 }) {
   const [editorOpen, setEditorOpen] = useState(Boolean(adjustmentRequest?.token));
   const [editorWorkoutId, setEditorWorkoutId] = useState(adjustmentRequest?.workoutId || "");
   const [editorSaving, setEditorSaving] = useState(false);
   const [editorStatus, setEditorStatus] = useState("");
+  const [historyPageLoading, setHistoryPageLoading] = useState(false);
+  const [historyPageError, setHistoryPageError] = useState("");
   const [pendingReviewAdjustment, setPendingReviewAdjustment] = useState(null);
   const [reviewDecisionOpen, setReviewDecisionOpen] = useState(false);
   const [reviewSaving, setReviewSaving] = useState(false);
@@ -2588,7 +2592,7 @@ function ClientWorkoutPlan({
   const [programAssignmentStatus, setProgramAssignmentStatus] = useState("");
   const [programNameEditorOpen, setProgramNameEditorOpen] = useState(false);
   const [programNameDraft, setProgramNameDraft] = useState("");
-  const [programNameSaving, setProgramNameSaving] = useState(false);
+  const programNameSaving = editorSaving;
   const [programNameStatus, setProgramNameStatus] = useState("");
   const [showBasicWorkoutHistory, setShowBasicWorkoutHistory] = useState(false);
   const [programHistoryOpen, setProgramHistoryOpen] = useState(false);
@@ -2597,30 +2601,7 @@ function ClientWorkoutPlan({
   const workoutInsightsOpen = historyOpen ?? localWorkoutInsightsOpen;
   const setWorkoutInsightsOpen = onHistoryOpenChange || setLocalWorkoutInsightsOpen;
 
-  useEffect(() => {
-    if ((!editorOpen && !reviewDecisionOpen && !assignmentReviewOpen && !programAssignmentConfirm && !scheduleAssignmentRequest && !workoutInsightsOpen && !programHistoryOpen) || typeof document === "undefined") return undefined;
-
-    const scrollY = window.scrollY || window.pageYOffset || 0;
-    const previousBodyStyle = {
-      overflow: document.body.style.overflow,
-      position: document.body.style.position,
-      top: document.body.style.top,
-      width: document.body.style.width
-    };
-
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
-
-    return () => {
-      document.body.style.overflow = previousBodyStyle.overflow;
-      document.body.style.position = previousBodyStyle.position;
-      document.body.style.top = previousBodyStyle.top;
-      document.body.style.width = previousBodyStyle.width;
-      window.scrollTo(0, scrollY);
-    };
-  }, [assignmentReviewOpen, editorOpen, programAssignmentConfirm, programHistoryOpen, reviewDecisionOpen, scheduleAssignmentRequest, workoutInsightsOpen]);
+  useBodyScrollLock(Boolean(editorOpen || reviewDecisionOpen || assignmentReviewOpen || programAssignmentConfirm || scheduleAssignmentRequest || workoutInsightsOpen || programHistoryOpen), { lockHtml: true });
 
   const trainerWorkouts = useMemo(
     () => (Array.isArray(workouts) ? workouts : []).filter((workout) => !isTrainerClientBasicWorkout(workout)),
@@ -2682,7 +2663,12 @@ function ClientWorkoutPlan({
   }, [scheduleAssignmentRequest, trainerProgramTimeline]);
   const scheduleWorkouts = primaryProgramAssignment?.workouts || [];
   const scheduleHistory = primaryProgramAssignment?.history || [];
-  const scheduleCompletedWorkoutIds = primaryProgramAssignment?.completedWorkoutIds || [];
+  const scheduleCompletedWorkoutIds = [...new Set([
+    ...(primaryProgramAssignment?.completedWorkoutIds || []),
+    ...scheduleWorkouts.filter((workout) => isTrainerWorkoutCompleted(workout, getTrainerCompletedWorkoutKeys(history), { includeManualStatus: false })).map((workout) => workout.id)
+  ])];
+  const [editorExitConfirm, setEditorExitConfirm] = useState(false);
+  const programDraft = useTrainerProgramDraft({ open: editorOpen, client, workouts: scheduleWorkouts, completedWorkoutIds: scheduleCompletedWorkoutIds, exerciseLibrary: editorProps?.exerciseLibrary, onStatus: setEditorStatus });
   const visibleWorkoutSlots = useMemo(() => buildPlannedWorkoutSlots({ workouts: primaryProgramAssignment?.workouts || [], calendar: client?.workoutCalendar || {}, history: primaryProgramAssignment?.history || [], completedWorkoutIds: primaryProgramAssignment?.completedWorkoutIds || [] }), [primaryProgramAssignment, client?.workoutCalendar]);
   const scheduleArchivedWorkouts = useMemo(() => {
     const primaryKey = primaryProgramAssignment?.key || "";
@@ -2740,7 +2726,13 @@ function ClientWorkoutPlan({
   }), [workouts, client?.workoutCalendar, history]);
 
   function closeEditor() {
-    if (editorSaving || programNameSaving) return;
+    if (editorSaving || programNameSaving || programDraft.uploadingId) return;
+    if (programDraft.dirty) { setEditorExitConfirm(true); return; }
+    discardEditor();
+  }
+
+  function discardEditor() {
+    setEditorExitConfirm(false);
     setEditorOpen(false);
     setPendingReviewAdjustment(null);
     setEditorStatus("");
@@ -2760,7 +2752,7 @@ function ClientWorkoutPlan({
     setEditorWorkoutId(firstUpcomingWorkout?.id || scheduleWorkouts[0]?.id || "");
     setPendingReviewAdjustment(null);
     setEditorStatus("");
-    setProgramNameDraft(assignedName);
+    setProgramNameDraft(programDraft.draft?.plan.assignedProgramName || assignedName);
     setProgramNameStatus("");
     setProgramNameEditorOpen(false);
     setEditorOpen(true);
@@ -2784,27 +2776,12 @@ function ClientWorkoutPlan({
     return true;
   }
 
-  async function saveClientProgramName(event) {
+  function saveClientProgramName(event) {
     event.preventDefault();
     const nextName = String(programNameDraft || "").trim();
-    if (!nextName) {
-      setProgramNameStatus("Введите название программы.");
-      return;
-    }
-    if (!assignedProgramAssignment || programNameSaving) return;
-
-    setProgramNameSaving(true);
-    setProgramNameStatus("");
-    try {
-      const result = await onRenameProgramAssignment?.(assignedProgramAssignment, nextName);
-      if (result === false) throw new Error("program-rename-failed");
-      setProgramNameEditorOpen(false);
-    } catch (error) {
-      console.error("Client program rename failed:", error);
-      setProgramNameStatus("Не удалось сохранить название. Проверьте соединение и попробуйте ещё раз.");
-    } finally {
-      setProgramNameSaving(false);
-    }
+    if (!nextName) { setProgramNameStatus("Введите название программы."); return; }
+    programDraft.rename(nextName);
+    setProgramNameEditorOpen(false);
   }
 
   async function resolveWorkoutReview(decision, targetWorkoutId = "") {
@@ -2857,27 +2834,28 @@ function ClientWorkoutPlan({
   }
 
   async function saveEditorChanges() {
-    if (editorSaving) return;
+    if (editorSaving || programDraft.uploadingId || !programDraft.draft) return;
+    if (!programDraft.dirty && !pendingReviewAdjustment) { discardEditor(); return; }
     setEditorSaving(true);
     setEditorStatus("");
     try {
-      const result = await editorProps?.onSave?.();
-      if (result === false) {
+      const result = programDraft.dirty ? await editorProps?.onSave?.(programDraft.draft.plan, { editorDraft: programDraft.draft, throwOnError: true, silent: true }) : true;
+      if (!result) {
         setEditorStatus("Не удалось сохранить изменения.");
         return;
       }
+      if (programDraft.dirty) { programDraft.markSaved(result); setPendingReviewAdjustment((current) => current ? { ...current, saved: true } : current); }
       if (pendingReviewAdjustment) {
-        const resolved = await resolveWorkoutReview("adjusted", pendingReviewAdjustment.targetWorkoutId);
+        const resolved = await resolveWorkoutReview(programDraft.dirty || pendingReviewAdjustment.saved ? "adjusted" : "accepted", pendingReviewAdjustment.targetWorkoutId);
         if (!resolved) {
           setEditorStatus("Изменения сохранены, но не удалось закрыть сигнал.");
           return;
         }
       }
-      setEditorOpen(false);
-      setPendingReviewAdjustment(null);
+      discardEditor();
     } catch (error) {
       console.error("Trainer workout editor save failed:", error);
-      setEditorStatus("Не удалось сохранить изменения.");
+      setEditorStatus(error?.code === "program/conflict" ? error.message : "Не удалось сохранить изменения. Правки остаются в редакторе — попробуйте ещё раз.");
     } finally {
       setEditorSaving(false);
     }
@@ -3169,6 +3147,16 @@ function ClientWorkoutPlan({
               <div className="trainerNextEmpty">Разбор появится после первой завершённой тренировки клиента.</div>
             ))}
             <ClientWorkoutHistoryBlock history={history} showAll />
+            {client.trainerHistoryHasMore ? <div className="trainerNextEmpty">
+              <p>Показаны последние {history.length} тренировок. Более ранние записи можно загрузить отдельно.</p>
+              {historyPageError ? <p role="alert">{historyPageError}</p> : null}
+              <button type="button" disabled={historyPageLoading} onClick={async () => {
+                setHistoryPageLoading(true); setHistoryPageError("");
+                try { if (!await onLoadMoreHistory?.()) setHistoryPageError("Не удалось загрузить записи. Попробуйте ещё раз."); }
+                catch { setHistoryPageError("Не удалось загрузить записи. Попробуйте ещё раз."); }
+                finally { setHistoryPageLoading(false); }
+              }}>{historyPageLoading ? "Загружаю…" : "Загрузить более ранние тренировки"}</button>
+            </div> : null}
           </div>
         </TrainerClientUtilitySheet>
       ) : null}
@@ -3222,22 +3210,22 @@ function ClientWorkoutPlan({
       ) : null}
 
       {editorOpen ? (
-        <div className="trainerClientModalBackdrop trainerWorkoutEditorModalBackdrop" data-trainer-modal-backdrop="true" role="dialog" aria-modal="true" aria-label="Редактор программы клиента" onClick={closeEditor}>
+        <div className="trainerClientModalBackdrop trainerWorkoutEditorModalBackdrop" data-trainer-modal-backdrop="true" role="dialog" aria-modal="true" aria-label="Редактор программы клиента" onClick={closeEditor} onKeyDown={(event) => { if (event.key === "Escape" && !document.querySelector("dialog[open]")) { event.stopPropagation(); closeEditor(); } }}>
           <section className={`trainerWorkoutEditorModal trainerClientProgramEditorModal ${trainerClientWorkoutPlanStyles.editorModal}`} data-trainer-modal-surface="true" data-trainer-modal-frame="true" onClick={(event) => event.stopPropagation()}>
             <header data-trainer-modal-header="true">
               <div className={trainerClientWorkoutPlanStyles.programEditorHeaderContent}>
                 <span>РЕДАКТОР ПРОГРАММЫ</span>
                 <div className={trainerClientWorkoutPlanStyles.programEditorTitleRow}>
-                  <h2>{assignedName}</h2>
+                  <h2>{programDraft.draft?.plan.assignedProgramName || assignedName}</h2>
                   <button
                     className={trainerClientWorkoutPlanStyles.programRenameHeaderButton}
                     type="button"
                     onClick={() => {
-                      setProgramNameDraft(assignedName);
+                      setProgramNameDraft(programDraft.draft?.plan.assignedProgramName || assignedName);
                       setProgramNameStatus("");
                       setProgramNameEditorOpen(true);
                     }}
-                    disabled={!onRenameProgramAssignment || programNameSaving}
+                    disabled={!editorProps.onSave || programNameSaving}
                   >
                     <Pencil size={16} aria-hidden="true" />
                     <span>Переименовать</span>
@@ -3261,7 +3249,7 @@ function ClientWorkoutPlan({
                     </label>
                     <div>
                       <button type="button" onClick={() => setProgramNameEditorOpen(false)} disabled={programNameSaving}>Отмена</button>
-                      <button type="submit" disabled={programNameSaving}>{programNameSaving ? "Сохраняю…" : "Сохранить"}</button>
+                      <button type="submit" disabled={programNameSaving}>Готово</button>
                     </div>
                     {programNameStatus ? <p role="alert">{programNameStatus}</p> : null}
                   </form>
@@ -3277,10 +3265,16 @@ function ClientWorkoutPlan({
                 client={client}
                 history={scheduleHistory}
                 progressHistory={history}
-                workouts={scheduleWorkouts}
+                workouts={programDraft.draft?.plan.workouts || scheduleWorkouts}
                 archivedWorkouts={[]}
                 completedWorkoutIds={scheduleCompletedWorkoutIds}
                 {...editorProps}
+                {...programDraft.handlers}
+                onUpdateLibraryExercise={editorProps.onUpdateLibraryExercise}
+                onRemoveLibraryExercise={editorProps.onRemoveLibraryExercise}
+                onCreateLibraryExercise={editorProps.onCreateLibraryExercise}
+                onUploadLibraryExerciseVideo={editorProps.onUploadLibraryExerciseVideo}
+                exerciseVideoUploadingId={programDraft.uploadingId}
                 initialWorkoutId={editorWorkoutId}
                 onSave={saveEditorChanges}
               />
@@ -3288,13 +3282,14 @@ function ClientWorkoutPlan({
             <footer className={trainerClientWorkoutPlanStyles.editorFooter} data-trainer-modal-footer="true">
               {editorStatus ? <p role="status">{editorStatus}</p> : null}
               <button type="button" onClick={closeEditor} disabled={editorSaving}>Отмена</button>
-              <button type="button" onClick={saveEditorChanges} disabled={editorSaving}>
+              <button type="button" onClick={saveEditorChanges} disabled={editorSaving || Boolean(programDraft.uploadingId)}>
                 {editorSaving ? "Сохраняю…" : "Сохранить"}
               </button>
             </footer>
           </section>
         </div>
       ) : null}
+      {editorExitConfirm ? <TrainerProgramUnsavedDialog onContinue={() => setEditorExitConfirm(false)} onDiscard={discardEditor} onSave={saveEditorChanges} saving={editorSaving} status={editorStatus} /> : null}
     </div>
   );
 }
@@ -4848,7 +4843,7 @@ function ClientWorkSummary({
     const trackedDays = nutritionDays.filter(day => { const date = getNutritionDayDate(day.date); return date && date >= cutoff && date < today && Number(day.totals?.calories) > 0; }).length;
     const weight = latestMeasurement ? getMeasurementFieldValue(latestMeasurement, MEASUREMENT_FIELDS[0]) : null;
     cards.splice(0, cards.length,
-      { id: "workout", target: "workouts", icon: CalendarDays, label: "Тренировки", value: assignment ? `${assignment.completedCount || 0} из ${assignment.workoutCount}` : "Нет программы", detail: snapshot?.lastWorkoutAt ? `Последняя — ${formatCompactDate(snapshot.lastWorkoutAt)}` : "Пока нет завершённых тренировок" },
+      { id: "workout", target: "workouts", icon: CalendarDays, label: "Тренировки", value: assignment ? `${assignment.completedCount || 0} из ${assignment.workoutCount}` : "Нет программы", detail: snapshot?.lastWorkoutAt ? `Последняя — ${formatCompactDate(snapshot.lastWorkoutAt)}` : assignment?.completedCount ? "Тренировки выполнены · дата уточняется" : client?.trainerHistoryLoadError ? "Не удалось загрузить историю" : "Пока нет завершённых тренировок" },
       { id: "nutrition", target: "nutrition", icon: Utensils, label: "Дневник питания", value: `${trackedDays} из 7 дней`, detail: "За последнюю неделю" },
       { id: "measurements", target: "bodyProgress", icon: Ruler, label: "Последний вес", value: weight !== null && weight !== undefined ? `${weight} кг` : "Нет записи", detail: latestMeasurement ? formatCompactDate(getMeasurementDate(latestMeasurement)) : "Клиент ещё не добавлял замеры" }
     );
@@ -4990,6 +4985,7 @@ function TrainerClientDetail({
   onDuplicateDay,
   onRemoveDay,
   onSaveWorkouts,
+  onLoadMoreHistory,
   onSaveNotifications,
   onSaveClientSetupProgress,
   showSetupWizard = true,
@@ -5578,6 +5574,7 @@ function TrainerClientDetail({
               adjustmentRequest={adjustmentRequest}
               reviewEvents={exerciseProgressReviews}
               onResolveWorkoutReview={(payload) => onClientAction?.("resolve_workout_review", client, payload)}
+              onLoadMoreHistory={onLoadMoreHistory}
               editorProps={{
                 exerciseLibrary,
                 programTemplates,
@@ -6892,7 +6889,7 @@ function TrainerWorkoutEditor({
                 const estimatedOneRepMax = formatTrainerEstimatedOneRepMax(progress?.lastSession);
                 return (
                   <article className={isExpanded ? "expanded" : ""} key={exercise.id || index}>
-                    <div className="trainerNextExerciseRow">
+                    <div className={appleClientEditor ? trainerClientWorkoutPlanStyles.clientExerciseRow : "trainerNextExerciseRow"}>
                       <span className="trainerNextExerciseMove">
                         <GripVertical size={15} />
                         <button type="button" disabled={selectedWorkoutReadOnly || index === 0} onClick={() => onMoveExercise(selectedWorkout.id, exercise.id, -1)} aria-label="Поднять упражнение"><ChevronUp size={13} /></button>
@@ -6914,12 +6911,7 @@ function TrainerWorkoutEditor({
                         </span>
                       </button>
                       <span className="trainerNextExerciseStats">
-                        {appleClientEditor ? <>
-                          <label className="clientQuickField"><span>Подходы</span><input aria-label={`Подходы: ${exercise.name}`} type="number" min="1" max="12" value={sets.length} disabled={selectedWorkoutReadOnly} onChange={(event) => { const count = Number(event.target.value); if (selectedWorkoutReadOnly || !Number.isInteger(count) || count < 1 || count > 12) return; onUpdateExercise(selectedWorkout.id, exercise.id, { sets: Array.from({ length: count }, (_, i) => sets[i] || { ...sets[sets.length - 1], id: `set_${Date.now()}_${i}` }) }); }} /></label>
-                          <label className="clientQuickField"><span>Повторы</span><input aria-label={`Повторы: ${exercise.name}`} value={getExerciseSetSummary(sets, "reps")} disabled={selectedWorkoutReadOnly} onChange={(event) => { if (!selectedWorkoutReadOnly) onUpdateExercise(selectedWorkout.id, exercise.id, { sets: sets.map((set) => ({ ...set, reps: event.target.value })) }); }} /></label>
-                          <label className="clientQuickField"><span>Вес, кг</span><input aria-label={`Вес: ${exercise.name}`} inputMode="decimal" value={requiresWeight ? getExerciseSetSummary(sets, "weight") : "—"} disabled={selectedWorkoutReadOnly || !requiresWeight} onChange={(event) => { if (!selectedWorkoutReadOnly && requiresWeight) onUpdateExercise(selectedWorkout.id, exercise.id, { sets: sets.map((set) => ({ ...set, ...sanitizeExerciseSetPatch({ weight: event.target.value }) })) }); }} /></label>
-                          <label className="clientQuickField"><span>Отдых</span><input aria-label={`Отдых: ${exercise.name}`} value={exercise.rest || ""} placeholder="90 сек" disabled={selectedWorkoutReadOnly} onChange={(event) => { if (!selectedWorkoutReadOnly) onUpdateExercise(selectedWorkout.id, exercise.id, { rest: event.target.value }); }} /></label>
-                        </> : <>
+                        {appleClientEditor ? <TrainerExerciseQuickFields key={exercise.id} exercise={exercise} disabled={selectedWorkoutReadOnly} onChange={(patch) => onUpdateExercise(selectedWorkout.id, exercise.id, patch)} onDetails={() => setExpandedExerciseId(exercise.id)} /> : <>
                         <span className="trainerNextExerciseMetric"><strong>{sets.length}</strong><small>подх.</small></span>
                         <span className="trainerNextExerciseMetric"><strong>{getExerciseSetSummary(sets, "reps")}</strong><small>повт.</small></span>
                         <span className="trainerNextExerciseMetric"><strong>{requiresWeight ? getExerciseSetSummary(sets, "weight", " кг") : "—"}</strong><small>вес</small></span>
@@ -7753,8 +7745,8 @@ function TrainerUtilityPage({
           <div className="trainerAnalyticsGrid">
             <article><span>Активные клиенты</span><strong>{activeUtilityClients}</strong><small>из {visibleClients.length || 0}</small></article>
             <article><span>Требуют внимания</span><strong>{attentionClients}</strong><small>нужна проверка</small></article>
-            <article><span>Тренировок за 7 дней</span><strong>{completedWeek}</strong><small>по всем клиентам</small></article>
-            <article><span>Дней питания за 7 дней</span><strong>{nutritionTrackedWeek}</strong><small>заполнено клиентами</small></article>
+            <article><span>Тренировок за 7 дней</span><strong>{visibleClients.some((client) => clientSummaries[client.id]?.sources && clientSummaries[client.id]?.workouts7 == null) ? "—" : completedWeek}</strong><small>по всем клиентам</small></article>
+            <article><span>Дней питания за 7 дней</span><strong>{visibleClients.some((client) => clientSummaries[client.id]?.sources && clientSummaries[client.id]?.nutritionDays7 == null) ? "—" : nutritionTrackedWeek}</strong><small>заполнено клиентами</small></article>
           </div>
           <section className="trainerAnalyticsPanel">
             <div>
@@ -7976,6 +7968,7 @@ export default function TrainerWorkspace({
   onDuplicateDay,
   onRemoveDay,
   onSaveWorkouts,
+  onLoadMoreHistory,
   onGenerateNutritionPlan,
   onSaveNutritionPlan,
   onSaveNotifications,
@@ -7999,6 +7992,7 @@ export default function TrainerWorkspace({
   canAdminManageProgramAssignments = false,
   onResolveExerciseProgress,
   onRefresh,
+  onRetrySummary,
   onLogout
 }) {
   const [syncMinimized, setSyncMinimized] = useState(true);
@@ -8110,6 +8104,7 @@ export default function TrainerWorkspace({
         canDeleteClient={canDeleteClients && !["admin", "trainer"].includes(selectedClient.role || "client")}
         onResolveExerciseProgress={onResolveExerciseProgress}
         onSaveWorkouts={onSaveWorkouts}
+        onLoadMoreHistory={onLoadMoreHistory}
       />
     );
   } else if (mode === "workouts") {
@@ -8199,6 +8194,7 @@ export default function TrainerWorkspace({
     );
   }
 
+  const summaryStatus = <TrainerSummaryStatus clients={clients} summaries={clientSummaries} loading={summariesLoading} onRetry={onRetrySummary || onRefresh} />;
   const syncStatus = showSyncStatus ? (
     <TrainerSyncStatus
       clients={clients}
@@ -8213,6 +8209,7 @@ export default function TrainerWorkspace({
     return (
       <div className={`trainerNextRoot ${workspaceStyles.workspaceRoot} ${cabinetStyles.scope} ${adaptiveStyles.root} ${responsiveStyles.scope} ${modalSystemStyles.scope} ${clientProfileSectionStyles.scope} ${programEditorStyles.scope} ${nutritionDiaryStyles.scope} ${clientWorkoutPlanStyles.scope} ${clientViewsStyles.scope} ${nutritionAnalyticsStyles.scope} ${clientNutritionStyles.scope} ${exerciseProgressStyles.scope} ${dashboardStyles.scope}`}>
         <TrainerModalScrollLock />
+        {summaryStatus}
         {content}
         {syncStatus}
       </div>
@@ -8221,6 +8218,7 @@ export default function TrainerWorkspace({
 
   return (
     <TrainerShell activeSection={activeSection} onNavigate={onNavigate} trainerName={trainerName} trainerAvatar={trainerAvatar} appVersion={appVersion}>
+      {summaryStatus}
       {content}
       <CreateClientModal state={createClientState} />
       {syncStatus}

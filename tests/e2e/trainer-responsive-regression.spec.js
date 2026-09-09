@@ -86,7 +86,7 @@ async function openTrainerSection(page, section) {
 
 async function openHarnessAt(page, viewport) {
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
-  await page.goto("/?trainerHarness=1");
+  await page.goto("/v2?trainerHarness=1");
   await expect(page.locator(".trainerNextRoot")).toBeVisible({ timeout: 40_000 });
 }
 
@@ -189,7 +189,7 @@ test("trainer workspace remains usable across the approved viewport matrix", asy
     await test.step(`${viewport.name}: dashboard and navigation`, async () => {
       await openHarnessAt(page, viewport);
       await expect(page.locator(".trainerNextDashboard")).toBeVisible();
-      await expectTouchTargets(page, [".trainerNextMobileNav button", ".trainerNextSidebar nav button"]);
+      await expectTouchTargets(page, ["[data-testid^=trainer-nav-]", "[data-testid^=trainer-desktop-nav-]"]);
       await expectNoHorizontalOverflow(page);
     });
 
@@ -269,8 +269,8 @@ test("trainer modal sheets keep insets, internal scroll and fixed controls", asy
       await openTrainerSection(page, "more");
       const links = page.locator(".trainerCabinetWorkspaceLinks > button");
 
-      for (const index of [0, 1]) {
-        await links.nth(index).click();
+      for (const [index, label] of ["Аналитика", "Уведомления"].entries()) {
+        await links.filter({ hasText: label }).click();
         const surface = page.locator("[data-trainer-modal-surface='true']");
         await expect(surface).toHaveCount(1);
         await expect(surface).toBeVisible();
@@ -286,6 +286,8 @@ test("trainer modal sheets keep insets, internal scroll and fixed controls", asy
       await openHarnessAt(page, viewport);
       await openTrainerSection(page, "clients");
       await page.locator(".trainerNextClientTable > button").first().click();
+      await page.locator(".trainerNextClientTabs:visible,.trainerNextClientMobileNav:visible").getByRole("button", { name: "Питание", exact: true }).click();
+      if (!await page.getByRole("dialog", { name: "Изменить план" }).isVisible()) await page.locator(".trainerNutritionPlanEditButton").click();
       const surface = page.getByRole("dialog", { name: "Изменить план" });
       await expect(surface).toBeVisible();
       await expectModalFrame(surface, { requiresFooter: true });

@@ -1,4 +1,7 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, orderBy, limit, where } from "firebase/firestore";
+import { TRAINER_SUMMARY_BATCH_TIMEOUT_MS, TRAINER_SUMMARY_CACHE_MS, TRAINER_SUMMARY_LIMITS, TRAINER_SUMMARY_SOURCES, withSummaryDeadline, reconcileTrainerSummary } from "../../utils/trainerSummaryReadState.js";
+
+const summaryCaches = new WeakMap();
 
 import {
   getActiveTrainerTasksCount,
@@ -9,7 +12,6 @@ import {
   buildTrainerClientRecentEvents,
   getTrainerAssignedWorkoutCount,
   canLoadTrainerClientDeepSummary,
-  getTrainerClientEmptySummary,
   getTrainerClientFastSummary,
   getTrainerCompletedWorkoutCountForAssignment,
   getTrainerLastMeasurementAt,
@@ -54,10 +56,18 @@ export function createTrainerClientSummaryLoader({
   setTrainerClientSummaries,
   setTrainerClientSummariesLoading
 }) {
-  async function loadTrainerClientSummaries(clients = []) {
+  async function loadTrainerClientSummaries(clients = [], { retryClientIds } = {}) {
     const requestId = trainerClientSummaryRequestRef.current + 1;
     trainerClientSummaryRequestRef.current = requestId;
     const safeClients = Array.isArray(clients) ? clients.filter((client) => client?.id) : [];
+    const startedAt = Date.now();
+    const cache = summaryCaches.get(trainerClientSummaryRequestRef) || new Map();
+    summaryCaches.set(trainerClientSummaryRequestRef, cache);
+    const visibleIds = new Set(safeClients.map((client) => client.id));
+    for (const id of cache.keys()) if (!visibleIds.has(id)) cache.delete(id);
+    const queuedClients = safeClients.filter((client) => !retryClientIds || retryClientIds.includes(client.id));
+    // A retry spends its deadline on clients that did not finish previously.
+    queuedClients.sort((a, b) => Number(cache.get(a.id)?.summary?.trainerSummaryReady || false) - Number(cache.get(b.id)?.summary?.trainerSummaryReady || false));
     setTrainerClientSummariesLoading(true);
 
     if (!safeClients.length) {
@@ -67,12 +77,16 @@ export function createTrainerClientSummaryLoader({
     }
 
     setTrainerClientSummaries((previous) => Object.fromEntries(
-      safeClients.map((client) => [client.id, {
-        ...getTrainerClientFastSummary(client, previous[client.id]),
-        trainerSummaryReady: false
-      }])
+      safeClients.map((client) => {
+        if (retryClientIds && !retryClientIds.includes(client.id)) return [client.id, previous[client.id]];
+        const sources = Object.fromEntries(TRAINER_SUMMARY_SOURCES.map((source) => [source, { state: "loading" }]));
+        return [client.id, {
+          ...reconcileTrainerSummary(getTrainerClientFastSummary(client, previous[client.id]), cache.get(client.id)?.summary || {}, sources),
+          trainerSummaryReady: false, trainerSummarySettled: false, trainerSummaryState: "loading"
+        }];
+      })
     ));
-    const nextSummaries = {};
+    const nextSummaries = Object.fromEntries(safeClients.map((client) => [client.id, cache.get(client.id)?.summary || getTrainerClientFastSummary(client)]));
     let nextClientIndex = 0;
     const { weekStart, sevenDayStart, thirtyDayStart } = getTrainerSummaryPeriodBounds();
 
@@ -80,18 +94,44 @@ export function createTrainerClientSummaryLoader({
       if (!canLoadTrainerClientDeepSummary(client)) {
         return {
           ...getTrainerClientFastSummary(client),
-          trainerSummaryReady: true
+          trainerSummaryReady: true, trainerSummarySettled: true
         };
       }
 
-      const [historyResult, nutritionResult, measurementsResult, paymentResult, workoutsResult, tasksResult] = await Promise.allSettled([
-        getDocs(collection(db, "users", client.id, "history")),
-        getDoc(doc(db, "users", client.id, "nutrition", "state")),
-        getDocs(collection(db, "users", client.id, "measurements")),
-        getDoc(doc(db, "users", client.id, "payments", "current")),
-        getDocs(collection(db, "users", client.id, "workouts")),
-        getDocs(collection(db, "users", client.id, "trainerTasks"))
-      ]);
+      const cached = cache.get(client.id);
+      const previous = { ...cached, sources: { ...cached?.sources } };
+      const cacheKey = JSON.stringify([client.updatedAt, client.assignedProgramUpdatedAt, client.workoutCalendar?.updatedAt]);
+      if (previous.summary?.trainerSummaryReady && previous.cacheKey === cacheKey && TRAINER_SUMMARY_SOURCES.every((source) => previous.sources[source]?.value && !previous.sources[source]?.error && Date.now() - previous.sources[source].at < TRAINER_SUMMARY_CACHE_MS)) return previous.summary;
+      const sources = {};
+      const version = client.assignedProgramUpdatedAt || client.assignedProgramAt;
+      const readers = [
+        () => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), limit(TRAINER_SUMMARY_LIMITS.history))),
+        () => getDoc(doc(db, "users", client.id, "nutrition", "state")),
+        () => getDocs(query(collection(db, "users", client.id, "measurements"), orderBy("date", "desc"), limit(TRAINER_SUMMARY_LIMITS.measurements))),
+        () => getDoc(doc(db, "users", client.id, "payments", "current")),
+        () => getDocs(query(collection(db, "users", client.id, "workouts"), ...(version ? [where("assignedProgramUpdatedAt", "==", version)] : []), limit(TRAINER_SUMMARY_LIMITS.workouts))),
+        () => getDocs(query(collection(db, "users", client.id, "trainerTasks"), limit(TRAINER_SUMMARY_LIMITS.tasks)))
+      ];
+      const results = await Promise.all(TRAINER_SUMMARY_SOURCES.map(async (source, index) => {
+        const saved = previous.sources[source];
+        if (saved?.value && !saved.error && previous.cacheKey === cacheKey && Date.now() - saved.at < TRAINER_SUMMARY_CACHE_MS) {
+          sources[source] = { state: "fresh", updatedAt: saved.at };
+          return { status: "fulfilled", value: saved.value };
+        }
+        try {
+          const value = await withSummaryDeadline(readers[index], Math.min(4000, TRAINER_SUMMARY_BATCH_TIMEOUT_MS - (Date.now() - startedAt)));
+          if (trainerClientSummaryRequestRef.current !== requestId) return { status: "rejected", reason: "superseded" };
+          previous.sources[source] = { value, at: Date.now() };
+          sources[source] = { state: "fresh", updatedAt: Date.now() };
+          return { status: "fulfilled", value };
+        } catch (reason) {
+          if (trainerClientSummaryRequestRef.current !== requestId) return { status: "rejected", reason };
+          previous.sources[source] = { ...saved, error: true };
+          sources[source] = { state: saved?.value ? "stale" : "error", updatedAt: saved?.at || null, code: reason?.code || "read-failed" };
+          return saved?.value ? { status: "fulfilled", value: saved.value } : { status: "rejected", reason };
+        }
+      }));
+      const [historyResult, nutritionResult, measurementsResult, paymentResult, workoutsResult, tasksResult] = results;
       const readFailures = getTrainerSummaryReadFailures({
         history: historyResult,
         nutrition: nutritionResult,
@@ -119,7 +159,7 @@ export function createTrainerClientSummaryLoader({
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
       const assignedProgramUpdatedAt = client.assignedProgramUpdatedAt || client.assignedProgramAt || "";
       const completedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(
-        clientHistory,
+        clientHistory.length < TRAINER_SUMMARY_LIMITS.history ? clientHistory : [],
         assignedProgramUpdatedAt,
         client.workoutCalendar || {},
         clientWorkouts
@@ -146,7 +186,11 @@ export function createTrainerClientSummaryLoader({
         thirtyDayStart
       });
 
-      return {
+      // Never turn a capped query into an all-time total or a complete monthly count.
+      if (clientWorkouts.length >= TRAINER_SUMMARY_LIMITS.workouts) sources.workouts.state = "limited";
+      if (clientTasks.length >= TRAINER_SUMMARY_LIMITS.tasks) sources.tasks.state = "limited";
+      if (clientHistory.length >= TRAINER_SUMMARY_LIMITS.history && new Date(clientHistory.at(-1)?.date).getTime() >= thirtyDayStart) sources.history.state = "limited";
+      const computed = {
         clientId: client.id,
         ...workoutActivitySummary,
         ...nutritionSummary,
@@ -182,23 +226,23 @@ export function createTrainerClientSummaryLoader({
         ),
         trainerSummaryReady: true
       };
+      const resolved = reconcileTrainerSummary(computed, previous.summary || {}, sources);
+      if (trainerClientSummaryRequestRef.current === requestId) cache.set(client.id, { ...previous, summary: resolved, cacheKey });
+      return resolved;
     };
 
     const workers = Array.from(
-      { length: Math.min(MAX_TRAINER_SUMMARY_CONCURRENCY, safeClients.length) },
+      { length: Math.min(MAX_TRAINER_SUMMARY_CONCURRENCY, queuedClients.length) },
       async () => {
-        while (trainerClientSummaryRequestRef.current === requestId && nextClientIndex < safeClients.length) {
-          const client = safeClients[nextClientIndex];
+        while (trainerClientSummaryRequestRef.current === requestId && nextClientIndex < queuedClients.length && Date.now() - startedAt < TRAINER_SUMMARY_BATCH_TIMEOUT_MS) {
+          const client = queuedClients[nextClientIndex];
           nextClientIndex += 1;
 
           try {
             nextSummaries[client.id] = await loadClientSummary(client);
           } catch (error) {
             console.warn(`Trainer summary load failed for ${client.id}:`, error);
-            nextSummaries[client.id] = {
-              ...getTrainerClientEmptySummary(client),
-              trainerSummaryReady: true
-            };
+            nextSummaries[client.id] = reconcileTrainerSummary(getTrainerClientFastSummary(client), cache.get(client.id)?.summary, Object.fromEntries(TRAINER_SUMMARY_SOURCES.map((source) => [source, { state: "error" }])));
           }
 
           if (trainerClientSummaryRequestRef.current === requestId) {
@@ -215,6 +259,10 @@ export function createTrainerClientSummaryLoader({
     await Promise.all(workers);
 
     if (trainerClientSummaryRequestRef.current === requestId) {
+      for (const client of queuedClients.slice(nextClientIndex)) {
+        const previous = cache.get(client.id)?.summary || getTrainerClientFastSummary(client);
+        nextSummaries[client.id] = reconcileTrainerSummary(previous, previous, Object.fromEntries(TRAINER_SUMMARY_SOURCES.map((source) => [source, { state: "stale", code: "summary/timeout" }])));
+      }
       setTrainerClientSummaries(nextSummaries);
       setTrainerClientSummariesLoading(false);
     }

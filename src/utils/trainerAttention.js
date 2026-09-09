@@ -191,6 +191,7 @@ export function getClientCriticalAttentionStatus(client = {}, summary = {}, now 
 }
 
 export function getClientAttentionItems(client = {}, summary = {}, now = new Date()) {
+  if (summary.assignedProgramId && summary.trainerSummaryState && summary.trainerSummaryState !== "fresh") return [];
   const hasProgram = Boolean(client.assignedProgramId || client.programId || summary.assignedProgramId);
   if (!hasProgram) {
     return [{ type: "program", reason: "Не назначена программа тренировок" }];

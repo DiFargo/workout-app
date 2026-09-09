@@ -1,4 +1,7 @@
 import fs from "node:fs/promises";
+import assert from "node:assert/strict";
+import { createProgramDraft, programDraftSnapshot } from "../src/utils/trainerProgramDraft.js";
+import { saveTrainerProgramDraft } from "../src/features/client/workouts/trainerProgramDraftPersistence.js";
 import { after, before, beforeEach, test } from "node:test";
 
 import {
@@ -25,6 +28,37 @@ beforeEach(async () => {
 
 after(async () => {
   await testEnv?.cleanup();
+});
+
+test("assigned editor transaction saves once, reloads, rejects stale tabs and revoked access", async () => {
+  const profile = { role: "client", trainerId: "trainer-1", assignedProgramId: "p1", assignedProgramName: "Plan", assignedProgramUpdatedAt: "v1", assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active", assignedProgramAssignedByUid: "trainer-1", workoutCalendar: { planRevision: 0 } };
+  const workout = { id: "w1", name: "Press", assignedProgramId: "p1", assignedProgramUpdatedAt: "v1", assignedProgramName: "Plan", assignedBy: "trainer-1", assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active", status: "planned", exercises: [{ id: "e1", name: "Press", sets: [{ reps: 12, weight: 20 }] }] };
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users", "trainer-2"), { role: "trainer" });
+    await setDoc(doc(db, "users", "client-1"), profile);
+    await setDoc(doc(db, "users", "client-1", "workouts", "w1"), workout);
+    await setDoc(doc(db, "users", "client-1", "history", "h1"), { date: "2026-09-01", exercises: [{ weight: 10 }] });
+  });
+  const db = testEnv.authenticatedContext("trainer-1").firestore();
+  const draft = createProgramDraft([{ ...workout, _editorSnapshot: programDraftSnapshot(workout) }], profile);
+  draft.plan.workouts[0].exercises[0].sets[0].weight = 25;
+  draft.plan.assignedProgramName = "New name";
+  const save = () => saveTrainerProgramDraft({ db, userId: "client-1", authorId: "trainer-1", draft });
+  const saved = await assertSucceeds(save());
+  assert.equal((await getDoc(doc(db, "users", "client-1", "workouts", "w1"))).data().exercises[0].sets[0].weight, 25);
+  assert.equal((await getDoc(doc(db, "users", "client-1"))).data().assignedProgramName, "New name");
+  assert.equal((await getDoc(doc(db, "users", "client-1", "history", "h1"))).data().exercises[0].weight, 10);
+  await assert.rejects(save, { code: "program/conflict" });
+  const addition = createProgramDraft(saved.plan.workouts, { ...profile, ...saved.clientPatch });
+  addition.plan.workouts.push({ id: "w2", name: "Another day", exercises: [] });
+  await assertSucceeds(saveTrainerProgramDraft({ db, userId: "client-1", authorId: "trainer-1", draft: addition }));
+  assert.equal((await getDoc(doc(db, "users", "client-1", "workouts", "w2"))).data().assignedBy, "trainer-1");
+  await assertFails(setDoc(doc(db, "users", "client-1", "workouts", "foreign"), { ...workout, id: "foreign", assignedProgramId: "foreign-template" }));
+  await assertFails(saveTrainerProgramDraft({ db: testEnv.authenticatedContext("trainer-2").firestore(), userId: "client-1", authorId: "trainer-2", draft }));
+  await testEnv.withSecurityRulesDisabled(async (context) => updateDoc(doc(context.firestore(), "users", "client-1"), { trainerId: "trainer-2" }));
+  await assertFails(save());
 });
 
 test("client profile creation requires a trainer invite", async () => {

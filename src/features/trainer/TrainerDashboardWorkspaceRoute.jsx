@@ -224,6 +224,8 @@ export default function TrainerDashboardWorkspaceRoute({
   saveTrainerClientSetupProgress,
   loadTrainerSubscriptionNotificationSettings,
   loadUsers,
+  loadAdminClientOverview,
+  loadTrainerClientSummaries,
   moveProfileAvatarCrop,
   saveTrainerSubscriptionNotificationSettings,
   saveTrainerClientWorkoutSchedule,
@@ -335,6 +337,7 @@ export default function TrainerDashboardWorkspaceRoute({
       activeSection={trainerNextActiveSection}
       onNavigate={navigateTrainerNext}
       onRefresh={refreshPage}
+      onRetrySummary={(retryClientIds) => loadTrainerClientSummaries?.(usersList, { retryClientIds })}
       trainerName={trainerName}
       trainerAvatar={telegramProfile.avatarUrl}
       clients={usersList}
@@ -437,6 +440,7 @@ export default function TrainerDashboardWorkspaceRoute({
       onDuplicateDay={trainerNextWorkspaceHandlers.onDuplicateDay}
       onRemoveDay={trainerNextWorkspaceHandlers.onRemoveDay}
       onSaveWorkouts={saveWorkoutsToFirebase}
+      onLoadMoreHistory={() => loadAdminClientOverview?.(selectedClient, { historyPage: true })}
       onLogout={logout}
       />
       <TrainerClientOverviewModals

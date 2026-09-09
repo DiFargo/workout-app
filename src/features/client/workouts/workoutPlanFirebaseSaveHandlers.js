@@ -1,4 +1,12 @@
-import { collection, doc, getDoc, getDocs, writeBatch } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, runTransaction } from "firebase/firestore";
+import { createKeyedSaveQueue } from "../../../utils/trainerProgramDraft.js";
+import { saveTrainerProgramDraft } from "./trainerProgramDraftPersistence.js";
+
+const enqueuePlanSave = createKeyedSaveQueue();
+export function saveWorkoutsToFirebaseWithDeps(args) {
+  const userId = args.selectedUserId || args.auth.currentUser?.uid || "";
+  return enqueuePlanSave(userId, () => savePlan(args));
+}
 
 import { addLocalBackup } from "../../../utils/storageSafety";
 import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
@@ -10,7 +18,7 @@ import {
   normalizeBasicWorkoutPlanState
 } from "../../../utils/basicWorkoutPlanBuilder";
 
-export async function saveWorkoutsToFirebaseWithDeps({
+async function savePlan({
   db,
   auth,
   selectedUserId,
@@ -37,7 +45,15 @@ export async function saveWorkoutsToFirebaseWithDeps({
     if (!userId) {
       if (silent) setAdminClientStatus("Пользователь не найден.");
       else showAppError("load", "Пользователь не найден");
-      return;
+      return false;
+    }
+
+    if (options.editorDraft) {
+      const result = await saveTrainerProgramDraft({ db, userId, authorId: auth.currentUser?.uid || "", draft: options.editorDraft });
+      setAdminSelectedClient((previous) => previous?.id === userId ? { ...previous, ...result.clientPatch } : previous);
+      setUsersList((previous) => previous.map((client) => client.id === userId ? { ...client, ...result.clientPatch } : client));
+      setAdminClientStatus("Изменения программы сохранены.");
+      return result;
     }
 
     addLocalBackup(workoutPlanBackupStorageKey, {
@@ -82,13 +98,15 @@ export async function saveWorkoutsToFirebaseWithDeps({
 
     const nowIso = new Date().toISOString();
     const currentWorkoutIds = new Set((planToSave.workouts || []).map((workout) => workout.id));
-    const batch = writeBatch(db);
+    const operations = [];
+    const batch = { set: (...args) => operations.push(["set", args]), delete: (...args) => operations.push(["delete", args]) };
     const nextWorkoutCalendar = syncWorkoutCalendarWithPlan(
       userData.workoutCalendar || {},
       planToSave.workouts || [],
       nowIso,
       auth.currentUser?.uid || ""
     );
+    nextWorkoutCalendar.planRevision = (Number(userData.workoutCalendar?.planRevision) || 0) + 1;
     const rootAssignmentInfo = {
       assignedProgramId: nextWorkoutCalendar.assignedProgramId || planToSave.assignedProgramId || userData.assignedProgramId || "",
       assignedProgramName: nextWorkoutCalendar.assignedProgramName || planToSave.assignedProgramName || userData.assignedProgramName || "",
@@ -139,7 +157,7 @@ export async function saveWorkoutsToFirebaseWithDeps({
         assignedProgramUpdatedAt: workout.assignedProgramUpdatedAt || rootAssignmentInfo.assignedProgramUpdatedAt
       };
       batch.set(doc(db, "users", userId, "workouts", workout.id), {
-        ...workout,
+        ...Object.fromEntries(Object.entries(workout).filter(([key]) => !key.startsWith("_editor"))),
         id: workout.id,
         name: workout.name || `День ${workoutIndex + 1}`,
         order: workoutIndex + 1,
@@ -201,7 +219,13 @@ export async function saveWorkoutsToFirebaseWithDeps({
         };
     batch.set(userRef, rootPatch, { merge: true });
 
-    await batch.commit();
+    await runTransaction(db, async (transaction) => {
+      const current = (await transaction.get(userRef)).data() || {};
+      if ((Number(current.workoutCalendar?.planRevision) || 0) !== (Number(userData.workoutCalendar?.planRevision) || 0) || current.assignedProgramUpdatedAt !== userData.assignedProgramUpdatedAt) {
+        throw Object.assign(new Error("Программа изменилась во время сохранения. Откройте актуальную версию."), { code: "program/conflict" });
+      }
+      for (const [method, args] of operations) transaction[method](...args);
+    });
     const clientPatch = isOwnBasicPlan
       ? { workoutCalendar: nextWorkoutCalendar }
       : {
@@ -224,5 +248,7 @@ export async function saveWorkoutsToFirebaseWithDeps({
     console.error("Ошибка сохранения тренировок:", err);
     if (options?.silent) setAdminClientStatus("Не получилось сохранить изменения тренировки.");
     else showAppError("firebase", "Не получилось сохранить тренировки.");
+    if (options.throwOnError) throw err;
+    return false;
   }
 }

@@ -237,3 +237,10 @@ test("calendar repairs duplicate planned dates without changing workout order", 
   ]);
   assert.deepEqual(calendar.scheduledDates, ["2026-09-01", "2026-09-03", "2026-09-06", "2026-09-08"]);
 });
+
+
+test("a new assignment never inherits dates from unrelated old workout ids", () => {
+  const calendar = getWorkoutScheduleCalendarForWorkouts({ scheduledDates: ["2026-06-15"], plannedWorkouts: [{ workoutId: "old", date: "2026-06-15" }] }, [{ id: "new", assignedProgramUpdatedAt: "v2" }]);
+  assert.equal(calendar.plannedWorkouts[0]?.date || "", "");
+  assert.deepEqual(calendar.scheduledDates, []);
+});

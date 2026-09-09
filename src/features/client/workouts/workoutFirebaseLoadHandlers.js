@@ -1,4 +1,5 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { programDraftSnapshot } from "../../../utils/trainerProgramDraft.js";
 
 import {
   safeReadUserJsonStorage,
@@ -124,6 +125,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
       if (!isCurrentAssignment) return;
 
       workoutsFromDb.push({
+        _editorSnapshot: programDraftSnapshot(data),
         id: workoutDoc.id,
         source: data.source || "",
         name: data.name || "Без названия",

@@ -2930,6 +2930,7 @@ function AppRuntime() {
     leaveWorkoutToPlan,
     loadAdminClientOverview,
     loadAdminTrainingTemplates,
+    loadTrainerClientSummaries,
     loadUsers,
     loadClientTrainerTasks,
     loadHistory,

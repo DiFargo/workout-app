@@ -1,4 +1,9 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, orderBy, limit, startAfter } from "firebase/firestore";
+import { programDraftSnapshot } from "../../utils/trainerProgramDraft.js";
+import { withSummaryDeadline } from "../../utils/trainerSummaryReadState.js";
+
+const historyRequests = new WeakMap();
+const HISTORY_PAGE_SIZE = 80;
 
 import { APP_PAGES } from "../../app/appPages";
 import { buildAdminClientNutritionStateFromRoot } from "../../utils/trainerClientMirror";
@@ -11,7 +16,7 @@ import { filterTrainerCurrentPlanWorkouts } from "./trainerCurrentPlanWorkouts";
 
 const STATUS_LOAD_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0434\u0430\u043d\u043d\u044b\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 
-function getDocsAsItems(snapshot) {
+function getDocsAsItems(snapshot, withEditorSnapshot = false) {
   const items = [];
   if (snapshot?.forEach) {
     snapshot.forEach((itemDoc) => {
@@ -19,7 +24,7 @@ function getDocsAsItems(snapshot) {
       // Some older assignments also contain a stale `id` field in their data;
       // it must not replace the document id or an edit/delete can target a
       // different workout with the same legacy id.
-      items.push({ ...itemDoc.data(), id: itemDoc.id });
+      items.push({ ...itemDoc.data(), id: itemDoc.id, ...(withEditorSnapshot ? { _editorSnapshot: programDraftSnapshot(itemDoc.data()) } : {}) });
     });
   }
   return items;
@@ -64,13 +69,32 @@ export function createTrainerClientOverviewLoader({
   mirrorClientForTrainer,
   loadAdminTrainingTemplates
 }) {
-  let requestedClientId = "";
+  async function loadHistoryPage(client) {
+    const request = historyRequests.get(setAdminClientHistory);
+    if (!request || request.clientId !== client.id || !request.cursor || request.loading || !request.hasMore) return false;
+    request.loading = true;
+    try {
+      const snapshot = await withSummaryDeadline(() => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), startAfter(request.cursor), limit(HISTORY_PAGE_SIZE))), 8000);
+      if (historyRequests.get(setAdminClientHistory) !== request) return false;
+      const items = getDocsAsItems(snapshot);
+      request.cursor = snapshot.docs.at(-1) || request.cursor;
+      request.hasMore = snapshot.size === HISTORY_PAGE_SIZE;
+      setAdminClientHistory((previous) => [...new Map([...previous, ...items].map((item) => [item.id, item])).values()]);
+      setAdminSelectedClient((previous) => previous?.id === client.id ? { ...previous, trainerHistoryHasMore: request.hasMore } : previous);
+      return true;
+    } catch (error) {
+      console.warn("Earlier client history load failed:", error);
+      return false;
+    } finally { request.loading = false; }
+  }
 
   async function loadAdminClientOverview(client, openClientPage = false) {
     if (!client?.id) return;
+    if (openClientPage?.historyPage) return loadHistoryPage(client);
 
-    requestedClientId = client.id;
-    const isCurrentClientRequest = () => requestedClientId === client.id;
+    const request = { clientId: client.id, cursor: null, hasMore: false, loading: false };
+    historyRequests.set(setAdminClientHistory, request);
+    const isCurrentClientRequest = () => historyRequests.get(setAdminClientHistory) === request;
 
     setSelectedUserId(client.id);
     setAdminSelectedClient(client);
@@ -135,7 +159,9 @@ export function createTrainerClientOverviewLoader({
       let workoutsSnap = null;
 
       try {
-        historySnap = await getDocs(collection(db, "users", client.id, "history"));
+        historySnap = await withSummaryDeadline(() => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), limit(HISTORY_PAGE_SIZE))), 8000);
+        request.cursor = historySnap.docs.at(-1) || null;
+        request.hasMore = historySnap.size === HISTORY_PAGE_SIZE;
       } catch (historyError) {
         console.error("Client history load failed:", historyError);
         historyLoadFailed = true;
@@ -176,7 +202,7 @@ export function createTrainerClientOverviewLoader({
       const clientHistory = getDocsAsItems(historySnap);
       clientHistory.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-      const loadedWorkouts = getDocsAsItems(workoutsSnap).map((workout) => ({
+      const loadedWorkouts = getDocsAsItems(workoutsSnap, true).map((workout) => ({
         ...workout,
         name: workout.name || "\u0411\u0435\u0437 \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u044f",
         status: workout.status || "planned",
@@ -250,7 +276,8 @@ export function createTrainerClientOverviewLoader({
       // failure back into the client's Firestore profile.
       const clientView = {
         ...fullClientForView,
-        trainerHistoryLoadError: historyLoadFailed
+        trainerHistoryLoadError: historyLoadFailed,
+        trainerHistoryHasMore: request.hasMore
       };
 
       if (!isCurrentClientRequest()) return;
@@ -259,6 +286,7 @@ export function createTrainerClientOverviewLoader({
       setUsersList((prev) => prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item));
       setAdminAllUsersList((prev) => prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item));
       await mirrorClientForTrainer(fullClientForView, mergedNutritionState);
+      if (!isCurrentClientRequest()) return;
 
       setAdminClientHistory(clientHistory);
       setAdminSelectedHistoryIds([]);

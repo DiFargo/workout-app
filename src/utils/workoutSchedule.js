@@ -238,9 +238,14 @@ export function getWorkoutScheduleCalendarForWorkouts(calendar = {}, workouts = 
         return !workoutId && Boolean(assignmentVersion) && assignmentVersions.has(assignmentVersion);
       });
   const assignmentVersion = [...assignmentVersions][0] || "";
+  const datesBelongToAnotherPlan = allPlannedWorkouts.length > 0 || Boolean(
+    assignmentVersion && safeCalendar.assignedProgramUpdatedAt && assignmentVersion !== safeCalendar.assignedProgramUpdatedAt
+  );
+  const scopedDates = scopedPlannedWorkouts.map((item) => item?.movedToDate || item?.date).filter(Boolean);
 
   return normalizeWorkoutCalendarSchedule({
     ...safeCalendar,
+    ...(datesBelongToAnotherPlan ? { scheduledDates: scopedDates, monthlyTrainingDates: scopedDates } : {}),
     assignedProgramUpdatedAt: assignmentVersion || safeCalendar.assignedProgramUpdatedAt || "",
     plannedWorkouts: scopedPlannedWorkouts
   }, safeWorkouts);

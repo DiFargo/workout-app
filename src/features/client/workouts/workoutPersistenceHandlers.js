@@ -100,7 +100,7 @@ export function createWorkoutPersistenceHandlers(getContext) {
       showAppError
     } = getContext();
 
-    return saveWorkoutsToFirebaseWithDeps({
+    const result = await saveWorkoutsToFirebaseWithDeps({
       db,
       auth,
       selectedUserId,
@@ -117,6 +117,11 @@ export function createWorkoutPersistenceHandlers(getContext) {
       planOverride,
       options
     });
+    if (result && options.editorDraft && getContext().selectedUserId === selectedUserId) {
+      const editedIds = new Set(options.editorDraft.baseline.workouts.map((workout) => workout.id));
+      getContext().setPlan((current) => ({ ...current, workouts: [...current.workouts.filter((workout) => !editedIds.has(workout.id)), ...result.plan.workouts] }));
+    }
+    return result;
   }
 
   async function saveTrainerNextPlan(nextWorkouts, options = {}) {

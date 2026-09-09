@@ -84,7 +84,8 @@ export function createTrainerPlanEditorHandlers({
   setAdminTrainingTemplates,
   db,
   doc,
-  setDoc
+  setDoc,
+  draftOnly = false
 }) {
   const persistPlan = (nextPlan) => {
     setPlan(nextPlan);
@@ -166,7 +167,7 @@ export function createTrainerPlanEditorHandlers({
 
     try {
       await setDoc(doc(db, "users", ownerUid, "workouts", nextWorkout.id), {
-        ...nextWorkout,
+        ...Object.fromEntries(Object.entries(nextWorkout).filter(([key]) => !key.startsWith("_editor"))),
         id: nextWorkout.id,
         order: Number(nextWorkout.order || resolvedWorkoutIndex + 1),
         sortOrder: Number(nextWorkout.sortOrder || resolvedWorkoutIndex + 1),
@@ -511,13 +512,19 @@ export function createTrainerPlanEditorHandlers({
       );
       const url = uploadedVideo.url;
 
-      const nextWorkouts = mapTrainerNextWorkoutSetExercise(getPlanWorkouts(plan), workoutId, exerciseId, (exercises) => exercises.map((exercise) => (
+      const applyVideo = (currentPlan) => createTrainerNextPlan(currentPlan, mapTrainerNextWorkoutSetExercise(getPlanWorkouts(currentPlan), workoutId, exerciseId, (exercises) => exercises.map((exercise) => (
         exercise.id === exerciseId ? { ...exercise, video: url, videoAutoFilledFrom: "" } : exercise
-      )));
+      ))));
 
-      const nextPlan = createTrainerNextPlan(plan, nextWorkouts);
+      if (draftOnly) {
+        setPlan(applyVideo);
+        setAdminClientStatus("Видео добавлено в черновик. Сохраните программу, чтобы применить его.");
+        return url;
+      }
+      const nextPlan = applyVideo(plan);
       setPlan(nextPlan);
-      await saveWorkoutsToFirebase(nextPlan, { silent: true });
+      const saved = await saveWorkoutsToFirebase(nextPlan, { silent: true });
+      if (saved === false) return false;
       setAdminClientStatus("\u0412\u0438\u0434\u0435\u043e \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043d\u043e \u0438 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e.");
       return url;
     } catch (error) {
