@@ -17,9 +17,8 @@ import {
   saveTrainerProgramEditorDraft
 } from "../../utils/trainerProgramEditorDraft";
 
-export function getTrainerProgramEditorSnapshot(program) {
-  return JSON.stringify(program || null);
-}
+import { getTrainerProgramEditorSnapshot } from "../../utils/trainerProgramEditorSnapshot.js";
+export { getTrainerProgramEditorSnapshot };
 
 export default function TrainerProgramManagerView({
   usersList = [],
