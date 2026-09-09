@@ -1,3 +1,4 @@
+import { getTrainerLibraryMuscle, TRAINER_LIBRARY_MUSCLES } from "../../utils/trainerLibraryMuscleGroups.js";
 import { isBodyMeasurementRecord } from "../../utils/bodyMeasurementRecords.js";
 import appleStyles from "./TrainerAppleClient.module.css";
 import { AppleSchedule, AppleRecent, AppleGroup, AppleRow } from "./TrainerAppleClientParts";
@@ -6414,6 +6415,7 @@ function TrainerWorkoutEditor({
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(initialWorkoutId || workouts[0]?.id || "");
   const [expandedExerciseId, setExpandedExerciseId] = useState("");
   const [librarySearch, setLibrarySearch] = useState("");
+  const [libraryMuscle, setLibraryMuscle] = useState("");
   const [libraryEditorTarget, setLibraryEditorTarget] = useState(null);
   const [libraryEditorDraft, setLibraryEditorDraft] = useState(null);
   const [libraryEditorSaving, setLibraryEditorSaving] = useState(false);
@@ -6518,7 +6520,8 @@ function TrainerWorkoutEditor({
     return [...map.values()];
   }, [exerciseLibrary, workouts]);
   const filteredLibrary = library.filter((exercise) =>
-    !librarySearch || String(exercise.name || "").toLowerCase().includes(librarySearch.toLowerCase())
+    (!libraryMuscle || getTrainerLibraryMuscle(exercise) === libraryMuscle) &&
+    (!librarySearch || String(exercise.name || "").toLowerCase().includes(librarySearch.toLowerCase()))
   );
   const selectedWorkoutIndex = selectedWorkout
     ? displayWorkouts.findIndex((item) => item.id === selectedWorkout.id)
@@ -6984,6 +6987,13 @@ function TrainerWorkoutEditor({
               </button>
             </div>
           </div>
+          <label className={appleStyles.libraryMuscleFilter}>
+            <span>Группа мышц</span>
+            <select aria-label="Группа мышц" value={libraryMuscle} onChange={(event) => setLibraryMuscle(event.target.value)}>
+              <option value="">Все группы · {library.length}</option>
+              {TRAINER_LIBRARY_MUSCLES.map(([id, label]) => <option value={id} key={id}>{label} · {library.filter((exercise) => getTrainerLibraryMuscle(exercise) === id).length}</option>)}
+            </select>
+          </label>
           <div>
             {filteredLibrary.map((exercise, index) => {
               const video = getExerciseVideo(exercise);

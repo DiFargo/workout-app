@@ -1,3 +1,4 @@
+import { getProgramLibraryStatusMeta } from "../../utils/trainerProgramLibraryStatus.js";
 import {
   Check as ProgramCheckIcon,
   Copy as ProgramCopyIcon,
@@ -13,7 +14,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import {
-  getTrainerProgramStatusMeta,
   TRAINER_PROGRAM_STATUSES
 } from "../../utils/trainerProgramLifecycle.js";
 import { getTrainerProgramFormatMeta, TRAINER_PROGRAM_FORMATS } from "../../utils/trainerProgramFormat.js";
@@ -27,37 +27,6 @@ function ProgramClientAvatar({ client }) {
   return <span className={styles.clientAvatar} title={name} aria-label={name}>
     {photo && !failed ? <img src={photo} alt="" loading="lazy" onError={() => setFailed(true)} /> : initials}
   </span>;
-}
-
-function getProgramLibraryStatusMeta(program = {}) {
-  const status = getTrainerProgramStatusMeta(program);
-
-  if (status.id === "draft") {
-    return {
-      ...status,
-      label: "Черновик",
-      description: "Не назначается клиентам, пока не подготовлена"
-    };
-  }
-
-  if (status.id === "archived") {
-    return { ...status, label: "Архив", description: "Программу нельзя назначить клиенту" };
-  }
-
-  if (
-    status.id === "assigned" ||
-    status.id === "active" ||
-    (Array.isArray(program.assignedClientIds) && program.assignedClientIds.length > 0)
-  ) {
-    return { ...status, tone: "used", label: "Используется", description: "Программа назначена одному или нескольким клиентам" };
-  }
-
-  return {
-    ...status,
-    tone: "ready",
-    label: "Готова к назначению",
-    description: "Программу можно назначать клиентам"
-  };
 }
 
 export default function TrainerProgramOverviewPage({
@@ -204,7 +173,7 @@ export default function TrainerProgramOverviewPage({
           const stats = getTemplateStats(template);
           const isSelected = adminSelectedTemplateId === template.id;
           const assignedClients = clients.filter((client) => client.assignedProgramId === template.id);
-          const statusMeta = getProgramLibraryStatusMeta(assignedClients.length ? { ...template, assignedClientIds: assignedClients.map((client) => client.id) } : template);
+          const statusMeta = getProgramLibraryStatusMeta(template, assignedClients.length);
           const isDraft = statusMeta.id === TRAINER_PROGRAM_STATUSES.DRAFT;
               const formatMeta = getTrainerProgramFormatMeta(template.trainingFormat);
               const createdAt = template.createdAt ? new Date(template.createdAt) : null;

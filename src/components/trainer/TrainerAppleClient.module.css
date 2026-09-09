@@ -310,3 +310,5 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem:only-child {grid-column:1/-1!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .measurementItem strong {font-size:18px!important;}
 }
+.libraryMuscleFilter.libraryMuscleFilter { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:0 0 16px; font-size:14px; color:#636366; }
+.libraryMuscleFilter.libraryMuscleFilter select { min-height:44px; width:min(100%,280px); padding:8px 12px; border:1px solid rgba(60,60,67,.12); border-radius:10px; background:#fff; color:#1c1c1e; font-size:16px; }
