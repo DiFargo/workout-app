@@ -6916,7 +6916,7 @@ function TrainerWorkoutEditor({
                         {hasExerciseHistory ? <small>{[estimatedOneRepMax, progressComparison].filter(Boolean).join(" · ")}</small> : null}
                       </span>
                       <div className="trainerNextExerciseActions">
-                        <button type="button" onClick={() => setExpandedExerciseId(isExpanded ? "" : exercise.id)} aria-label={isExpanded ? "Свернуть упражнение" : "Редактировать упражнение"}><EllipsisVertical size={17} /></button>
+                        <button type="button" onClick={() => setExpandedExerciseId(isExpanded ? "" : exercise.id)} title={isExpanded ? "Свернуть упражнение" : "Редактировать упражнение"} aria-label={isExpanded ? "Свернуть упражнение" : "Редактировать упражнение"}>{isExpanded ? <ChevronUp size={17} /> : <Pencil size={17} />}</button>
                         <button type="button" disabled={selectedWorkoutReadOnly} onClick={() => confirmRemoveExercise(exercise, index)} aria-label="Удалить упражнение"><Trash2 size={15} /></button>
                       </div>
                     </div>
