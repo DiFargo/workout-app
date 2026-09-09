@@ -1,5 +1,5 @@
 import appleStyles from "./TrainerAppleClient.module.css";
-import { AppleSchedule, AppleRecent } from "./TrainerAppleClientParts";
+import { AppleSchedule, AppleRecent, AppleGroup, AppleRow } from "./TrainerAppleClientParts";
 import TrainerWorkoutList from "./TrainerWorkoutList";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -1260,12 +1260,12 @@ function ClientOverview({
       />
 
       {isTrainerV2Path(window.location.pathname) ? <AppleRecent note={getWorkoutNoteItems(history)[0]} lastMeasurement={measurements?.length ? formatCompactDate(getMeasurementDate([...measurements].sort((a,b) => (getMeasurementDate(b)?.getTime() || 0) - (getMeasurementDate(a)?.getTime() || 0))[0])) : ""} onFeedback={onOpenFeedback} onMeasurements={() => onTabChange("bodyProgress")} onTraining={() => onTabChange("workouts")} onProgress={onOpenExerciseProgress} /> : null}
-      {isTrainerV2Path(window.location.pathname) ? <aside className="trainerClientOverviewTools">
-        <h2>Работа с клиентом</h2>
-        <ClientSectionLaunchButton icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
-        <ClientSectionLaunchButton icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
-        <ClientSectionLaunchButton icon={MessageSquare} title="Сообщения" description="Переписка с клиентом" onClick={onOpenMessages} />
-      </aside> : null}
+      {isTrainerV2Path(window.location.pathname) ? <AppleGroup title="Работа с клиентом">
+        
+        <AppleRow icon={CalendarDays} title="Расписание и абонемент" description="Даты занятий и оставшиеся тренировки" onClick={onOpenCalendar} />
+        <AppleRow icon={ClipboardList} title="Задания клиенту" description="Текущие задания и результаты" onClick={onOpenTasks} />
+        <AppleRow icon={MessageSquare} title="Сообщения" description="Переписка с клиентом" onClick={onOpenMessages} />
+      </AppleGroup> : null}
       {!isTrainerV2Path(window.location.pathname) ? <ClientSectionLaunchButton
         icon={BarChart3}
         title="Открыть прогресс упражнений"
