@@ -23,6 +23,7 @@
 }
 
 .modal *, .modal *::before, .modal *::after { box-sizing: border-box; }
+.modal.assignmentSheet[data-trainer-modal-frame="true"] { border-radius: 24px !important; box-sizing: border-box; }
 .modal button, .modal input { font: inherit; }
 
 .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 22px 15px; border-bottom: 1px solid var(--trainer-v2-line, #efebf3); }

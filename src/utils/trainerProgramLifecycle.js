@@ -66,6 +66,13 @@ export function isTrainerProgramArchived(program = {}) {
   return normalizeTrainerProgramStatus(program.lifecycleStatus || program.programStatus) === TRAINER_PROGRAM_STATUSES.ARCHIVED;
 }
 
+export function canAssignTrainerProgram(program) {
+  return Boolean(program) && ![
+    TRAINER_PROGRAM_STATUSES.DRAFT,
+    TRAINER_PROGRAM_STATUSES.ARCHIVED
+  ].includes(getTrainerProgramStatusMeta(program).id);
+}
+
 export function isTrainerProgramClientVisible(program = {}) {
   return [
     TRAINER_PROGRAM_STATUSES.ASSIGNED,

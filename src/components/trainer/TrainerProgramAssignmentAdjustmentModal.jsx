@@ -16,6 +16,7 @@ import {
   getTrainerProgramAssignmentExercises
 } from "../../utils/trainerProgramAssignmentAdjustment.js";
 import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
+import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus.js";
 import {
   buildTrainerClientProgramName,
   normalizeTrainerClientProgramName
@@ -23,7 +24,8 @@ import {
 import styles from "./TrainerProgramAssignmentAdjustmentModal.module.css";
 
 function formatWeightRange(item = {}) {
-  if (!item.usesWeight || item.plannedMinWeight === null) return "Без дополнительного веса";
+  if (!item.usesWeight) return "Без дополнительного веса";
+  if (item.plannedMinWeight === null) return "Рабочий вес не указан";
   if (item.plannedMinWeight === item.plannedMaxWeight) return `${item.plannedMinWeight} кг в плане`;
   return `${item.plannedMinWeight}–${item.plannedMaxWeight} кг в плане`;
 }
@@ -78,6 +80,7 @@ export default function TrainerProgramAssignmentAdjustmentModal({
   onConfirm
 }) {
   const confirmButtonRef = useRef(null);
+  const errorRef = useRef(null);
   const [adjustments, setAdjustments] = useState({});
   const [programName, setProgramName] = useState(() => buildTrainerClientProgramName(template?.name, client));
   const [saving, setSaving] = useState(false);
@@ -87,6 +90,10 @@ export default function TrainerProgramAssignmentAdjustmentModal({
     analyzeExerciseProgress(history).map((item) => [String(item.name || "").normalize("NFKC").toLocaleLowerCase("ru-RU").trim(), item])
   ), [history]);
   const adjustedCount = Object.values(adjustments).filter((value) => Number.parseFloat(String(value).replace(",", ".")) > 0).length;
+
+  useEffect(() => {
+    if (error) errorRef.current?.scrollIntoView({ block: "nearest" });
+  }, [error]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => confirmButtonRef.current?.focus(), 60);
@@ -129,7 +136,8 @@ export default function TrainerProgramAssignmentAdjustmentModal({
       onClose?.();
     } catch (saveError) {
       console.error("Program assignment adjustment failed:", saveError);
-      setError("Не удалось назначить программу. Проверьте соединение и попробуйте ещё раз.");
+      setError(saveError?.assignmentMessage || getTrainerActionErrorStatus(saveError,
+        "Не удалось назначить программу. Проверьте выбранную программу и повторите попытку."));
     } finally {
       setSaving(false);
     }
@@ -141,7 +149,7 @@ export default function TrainerProgramAssignmentAdjustmentModal({
     <div className={styles.backdrop} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => {
       if (event.target === event.currentTarget && !saving) onClose?.();
     }}>
-      <section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="trainer-program-assignment-title" data-trainer-modal-surface="true" data-trainer-modal-frame="true">
+      <section className={`${styles.modal} ${styles.assignmentSheet}`} role="dialog" aria-modal="true" aria-labelledby="trainer-program-assignment-title" data-trainer-modal-surface="true" data-trainer-modal-frame="true">
         <header className={styles.header} data-trainer-modal-header="true">
           <div>
             <span>НАЗНАЧЕНИЕ ПРОГРАММЫ</span>
@@ -194,7 +202,7 @@ export default function TrainerProgramAssignmentAdjustmentModal({
                     <b className={`${styles.status} ${styles[meta.tone]}`}>{meta.label}</b>
                   </div>
                   <p>{meta.description}</p>
-                  {exercise.usesWeight ? (
+                  {exercise.usesWeight && exercise.plannedMinWeight !== null ? (
                     <label className={styles.adjustment}>
                       <span>Поправка к весам</span>
                       <input
@@ -206,16 +214,17 @@ export default function TrainerProgramAssignmentAdjustmentModal({
                         onChange={(event) => updateAdjustment(exercise.key, event.target.value)}
                         placeholder="0"
                         aria-label={`Поправка веса для упражнения ${exercise.name}`}
+                        disabled={saving}
                       />
                       <em>кг</em>
                     </label>
-                  ) : <small className={styles.bodyweight}>Коррекция веса не нужна</small>}
+                  ) : <small className={styles.bodyweight}>{exercise.usesWeight ? "Для поправки сначала укажите рабочие веса в программе." : "Коррекция веса не нужна"}</small>}
                 </article>
               );
             })}
             {!programExercises.length ? <div className={styles.empty}>В программе пока нет упражнений для корректировки.</div> : null}
           </section>
-          {error ? <p className={styles.error} role="alert"><CircleAlert size={16} />{error}</p> : null}
+          {error ? <p ref={errorRef} className={styles.error} role="alert"><CircleAlert size={16} />{error}</p> : null}
         </div>
 
         <footer className={styles.footer} data-trainer-modal-footer="true">

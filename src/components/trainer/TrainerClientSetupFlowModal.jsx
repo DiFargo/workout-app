@@ -4,6 +4,8 @@ import { CalendarDays, Check, ChevronLeft, ChevronRight, CircleAlert, ClipboardL
 import { getTrainerProgramAssignmentExercises } from "../../utils/trainerProgramAssignmentAdjustment";
 import { buildClientWorkoutsFromTemplate } from "../../utils/workoutPlanNormalization";
 import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
+import { canAssignTrainerProgram } from "../../utils/trainerProgramLifecycle.js";
+import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus.js";
 import styles from "./TrainerClientSetupFlowModal.module.css";
 
 const STEPS = ["program", "schedule", "nutrition", "notifications"];
@@ -147,9 +149,10 @@ function NumberField({ label, value, suffix, onChange, min = 0, disabled = false
 }
 
 function formatPlannedWeight(exercise) {
-  if (!exercise?.usesWeight || exercise.plannedMinWeight == null) {
+  if (!exercise?.usesWeight) {
     return "Без дополнительного веса";
   }
+  if (exercise.plannedMinWeight == null) return "Рабочий вес не указан";
   if (exercise.plannedMinWeight === exercise.plannedMaxWeight) {
     return `В программе: ${exercise.plannedMinWeight} кг`;
   }
@@ -187,9 +190,10 @@ export default function TrainerClientSetupFlowModal({
   ).trim());
   const [nutrition, setNutrition] = useState(() => buildNutritionDraft(client, nutritionGoals));
   const [notifications, setNotifications] = useState(() => buildNotificationsDraft(client));
+  const assignablePrograms = useMemo(() => programTemplates.filter(canAssignTrainerProgram), [programTemplates]);
   const selectedProgram = useMemo(
-    () => programTemplates.find((item) => item.id === selectedProgramId) || null,
-    [programTemplates, selectedProgramId]
+    () => assignablePrograms.find((item) => item.id === selectedProgramId) || null,
+    [assignablePrograms, selectedProgramId]
   );
   const nutritionPresetOptions = useMemo(
     () => (Array.isArray(nutritionPlanOptions) ? nutritionPlanOptions : []).filter((option) => (
@@ -320,7 +324,7 @@ export default function TrainerClientSetupFlowModal({
           setProgramAdjustmentOpen(true);
           return;
         }
-        saved = await onAssignProgram?.({ loadAdjustments, skipConfirmation: true });
+        saved = await onAssignProgram?.({ loadAdjustments, skipConfirmation: true, throwOnError: true });
         const assignmentKey = String(
           saved?.assignment?.assignedAt || saved?.assignment?.assignmentKey || saved?.assignedAt || ""
         ).trim();
@@ -353,7 +357,7 @@ export default function TrainerClientSetupFlowModal({
       if (saved === false) throw new Error("Setup step was not saved");
     } catch (saveError) {
       console.error("Trainer client setup step failed:", saveError);
-      setError("Не удалось сохранить настройки. Проверьте соединение и повторите попытку.");
+      setError(saveError?.assignmentMessage || getTrainerActionErrorStatus(saveError, "Не удалось сохранить настройки. Проверьте данные и повторите попытку."));
     } finally {
       setSaving(false);
     }
@@ -392,9 +396,9 @@ export default function TrainerClientSetupFlowModal({
             <div className={styles.fields}>
               <label className={styles.selectField}>
                 <span>Программа тренировок</span>
-                <select value={selectedProgramId} onChange={(event) => onSelectProgram?.(event.target.value)}>
+                <select value={selectedProgram?.id || ""} onChange={(event) => onSelectProgram?.(event.target.value)}>
                   <option value="">Выберите программу</option>
-                  {programTemplates.map((program) => <option key={program.id} value={program.id}>{program.name || "Без названия"}</option>)}
+                  {assignablePrograms.map((program) => <option key={program.id} value={program.id}>{program.name || "Без названия"}</option>)}
                 </select>
               </label>
               {selectedProgram ? <div className={styles.summary}><strong>{selectedProgram.name || "Без названия"}</strong><span>{programWorkouts.length} тренировок · клиент получит отдельную копию</span></div> : <div className={styles.hint}>Можно выбрать только программу из личной библиотеки тренера.</div>}
@@ -415,7 +419,7 @@ export default function TrainerClientSetupFlowModal({
                         <strong title={exercise.name}>{exercise.name}</strong>
                         <small>{formatPlannedWeight(exercise)}</small>
                       </span>
-                      {exercise.usesWeight ? (
+                      {exercise.usesWeight && exercise.plannedMinWeight != null ? (
                         <span className={styles.adjustmentInput}>
                           <span className={styles.adjustmentInputLabel}>Прибавить</span>
                           <span className={styles.adjustmentInputControl}>
@@ -437,7 +441,7 @@ export default function TrainerClientSetupFlowModal({
                             <small>кг</small>
                           </span>
                         </span>
-                      ) : <em>Без веса</em>}
+                      ) : <em>{exercise.usesWeight ? "Без поправки" : "Без веса"}</em>}
                     </label>
                   ))}
                 </div>

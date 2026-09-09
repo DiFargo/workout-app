@@ -993,43 +993,43 @@ export function createTrainerProgramTemplateHandlers({
 
   async function assignSavedProgramToClient(clientId = selectedUserId, templateId = adminSelectedTemplateId, options = {}) {
     const assignmentOptions = options && typeof options === "object" ? options : {};
+    const failAssignment = (message) => {
+      setAdminClientStatus(message);
+      if (assignmentOptions.throwOnError) {
+        throw Object.assign(new Error(message), { assignmentMessage: message });
+      }
+      return false;
+    };
     const selectedTemplate = adminTrainingTemplates.find((item) => item.id === templateId);
     const client = adminSelectedClient?.id === clientId
       ? adminSelectedClient
       : usersList.find((item) => item.id === clientId);
 
     if (!clientId || !selectedTemplate) {
-      setAdminClientStatus(STATUS_SELECT_CLIENT_PROGRAM);
-      return false;
+      return failAssignment(STATUS_SELECT_CLIENT_PROGRAM);
     }
     if (!canManageTrainingTemplate(selectedTemplate) || !canManageClientProgram(client)) {
-      setAdminClientStatus(STATUS_OWN_PROGRAMS_ONLY);
-      return false;
+      return failAssignment(STATUS_OWN_PROGRAMS_ONLY);
     }
     if (getTrainerProgramStatusMeta(selectedTemplate).id === TRAINER_PROGRAM_STATUSES.DRAFT) {
-      setAdminClientStatus("Сначала подготовьте программу к назначению.");
-      return false;
+      return failAssignment("Сначала подготовьте программу к назначению.");
     }
 
     try {
       const templateSnapshot = await getDoc(doc(db, "trainingTemplates", templateId));
       if (!templateSnapshot.exists()) {
-        setAdminClientStatus(STATUS_SAVED_PROGRAM_NOT_FOUND);
-        return false;
+        return failAssignment(STATUS_SAVED_PROGRAM_NOT_FOUND);
       }
 
       const template = { id: templateSnapshot.id, ...templateSnapshot.data() };
       if (!canManageTrainingTemplate(template)) {
-        setAdminClientStatus(STATUS_OWN_PROGRAMS_ONLY);
-        return false;
+        return failAssignment(STATUS_OWN_PROGRAMS_ONLY);
       }
       if (getTrainerProgramStatusMeta(template).id === TRAINER_PROGRAM_STATUSES.DRAFT) {
-        setAdminClientStatus("Сначала подготовьте программу к назначению.");
-        return false;
+        return failAssignment("Сначала подготовьте программу к назначению.");
       }
       if (isTrainerProgramArchived(template)) {
-        setAdminClientStatus(STATUS_PROGRAM_ARCHIVED);
-        return false;
+        return failAssignment(STATUS_PROGRAM_ARCHIVED);
       }
 
       const assignedTemplate = {
@@ -1051,8 +1051,7 @@ export function createTrainerProgramTemplateHandlers({
       });
 
       if (!programValidation.ok) {
-        setAdminClientStatus(programValidation.message);
-        return false;
+        return failAssignment(programValidation.message);
       }
 
       const confirmed = assignmentOptions.skipConfirmation
@@ -1094,10 +1093,9 @@ export function createTrainerProgramTemplateHandlers({
       };
     } catch (error) {
       console.error("Saved program assign failed:", error);
-      setAdminClientStatus(error?.code === "workout-assignment-batch-limit"
+      return failAssignment(error?.assignmentMessage || (error?.code === "workout-assignment-batch-limit"
         ? error.message
-        : getTrainerActionErrorStatus(error, STATUS_ASSIGN_SAVED_FAILED));
-      return false;
+        : getTrainerActionErrorStatus(error, STATUS_ASSIGN_SAVED_FAILED)));
     }
   }
 

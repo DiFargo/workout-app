@@ -6,6 +6,7 @@ import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/tr
 
 function TrainerE2EHarness({ ProgramManagerView }) {
   const sparsePreview = new URLSearchParams(window.location.search).has("sparsePreview");
+  const assignmentPreview = new URLSearchParams(window.location.search).has("assignmentPreview");
   const [yesterday] = useState(() => new Date(Date.now() - 86400000).toISOString().slice(0, 10));
   const APP_VERSION = appConfig?.APP_VERSION || "v0";
   const includeProgramAssignmentHistory = new URLSearchParams(window.location.search).get("programAssignments") === "1";
@@ -248,7 +249,15 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   if (layoutPreview) {
     clients.slice(1).forEach(client => { clientSummaries[client.id] = { ...clientSummaries.client_e2e }; });
   }
-  const programTemplates = [
+  const programTemplates = assignmentPreview ? [
+    { id: "program_tren_plus", name: "Черновик программы", lifecycleStatus: "draft" },
+    { id: "program_archived", name: "Архивная программа", lifecycleStatus: "archived" },
+    { id: "program_ready", name: "Готовая программа", lifecycleStatus: "ready", workouts: [{ id: "ready_day", name: "День 1", exercises: [
+      { id: "weighted", name: "Жим ногами", requiresWeight: true, sets: [{ reps: "12", weight: "50" }] },
+      { id: "unset", name: "Разгибание рук на верхнем блоке", requiresWeight: true, sets: [{ reps: "12", weight: "" }] },
+      { id: "bodyweight", name: "Скручивания", requiresWeight: false, sets: [{ reps: "12", weight: "" }] }
+    ] }] }
+  ] : [
     { id: "program_tren_plus", name: "tren+", workoutsCount: 4 },
     { id: "program_support", name: "Поддержка", workoutsCount: 3 }
   ];
@@ -586,6 +595,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       selectedProgramId={selectedProgramId}
       onSelectProgram={setSelectedProgramId}
       onAssignProgram={() => {
+        if (assignmentPreview) throw Object.assign(new Error("template-changed"), { assignmentMessage: "Сначала подготовьте программу к назначению." });
         const assignedAt = new Date().toISOString();
         const template = programTemplates.find((item) => item.id === selectedProgramId) || programTemplates[0];
         const assignmentWorkouts = [1, 2, 3].map((day) => ({

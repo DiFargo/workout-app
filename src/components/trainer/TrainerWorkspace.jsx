@@ -85,6 +85,7 @@ import {
 } from "../../utils/trainerClientProgramAssignments.js";
 import {
   getTrainerProgramStatusMeta,
+  canAssignTrainerProgram,
   TRAINER_PROGRAM_STATUSES
 } from "../../utils/trainerProgramLifecycle.js";
 import {
@@ -2703,7 +2704,8 @@ function ClientWorkoutPlan({
     : 0;
   const assignedProgramName = assignedProgramAssignment?.name || client?.assignedProgramName || "Индивидуальная программа";
   const assignedName = primaryProgramAssignment?.name || client?.assignedProgramName || (workouts.length ? "Индивидуальная программа" : "Программа не назначена");
-  const selectedTemplate = programTemplates.find((program) => program.id === selectedProgramId);
+  const assignableTemplates = programTemplates.filter(canAssignTrainerProgram);
+  const selectedTemplate = assignableTemplates.find((program) => program.id === selectedProgramId);
   const latestWorkoutHistory = [...history]
     .sort((a, b) => {
       const dateA = getWorkoutHistoryDate(a)?.getTime() || 0;
@@ -2769,7 +2771,8 @@ function ClientWorkoutPlan({
       ...(assignmentOptions && typeof assignmentOptions === "object" ? assignmentOptions : {
         loadAdjustments: assignmentOptions
       }),
-      skipConfirmation: true
+      skipConfirmation: true,
+      throwOnError: true
     });
     if (result === false) return false;
 
@@ -2982,24 +2985,24 @@ function ClientWorkoutPlan({
               <span>Назначить программу</span>
             <div className={trainerClientWorkoutPlanStyles.assignmentRow}>
               <div className={trainerClientWorkoutPlanStyles.selectField}>
-                <select aria-label="Назначить программу клиенту" value={selectedProgramId || ""} onChange={(event) => onSelectProgram(event.target.value)}>
+                <select aria-label="Назначить программу клиенту" value={selectedTemplate?.id || ""} onChange={(event) => onSelectProgram(event.target.value)}>
                   <option value="">Выберите программу</option>
-                  {programTemplates
-                    .filter((program) => getTrainerProgramStatusMeta(program).id !== TRAINER_PROGRAM_STATUSES.DRAFT)
+                  {assignableTemplates
                     .map((program) => <option value={program.id} key={program.id}>{program.name || "Без названия"}</option>)}
                 </select>
                 <ChevronDown size={16} aria-hidden="true" />
               </div>
-              <button className={trainerClientWorkoutPlanStyles.assignButton} type="button" disabled={!selectedProgramId || !client} onClick={() => setAssignmentReviewOpen(true)}>
+              <button className={trainerClientWorkoutPlanStyles.assignButton} type="button" disabled={!selectedTemplate || !client} onClick={() => setAssignmentReviewOpen(true)}>
                 <Check size={16} />Назначить
               </button>
             </div>
+            {!assignableTemplates.length ? <small className={trainerClientWorkoutPlanStyles.hint}>Нет готовых программ. Откройте раздел «Программы» и подготовьте программу к назначению.</small> : null}
+            {selectedTemplate && selectedProgramId !== client?.assignedProgramId
+              ? <small className={trainerClientWorkoutPlanStyles.hint}>Будет назначена программа «{selectedTemplate.name || "Без названия"}».</small>
+              : null}
           </div>
           </TrainerClientDisclosure>
         </div>
-        {selectedTemplate && selectedProgramId !== client?.assignedProgramId
-          ? <small className={trainerClientWorkoutPlanStyles.hint}>Будет назначена программа «{selectedTemplate.name || "Без названия"}».</small>
-          : null}
         {programStatus ? <p className={trainerClientWorkoutPlanStyles.status}>{programStatus}</p> : null}
       </section>
 

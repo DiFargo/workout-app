@@ -92,7 +92,7 @@ test("trainer setup adjusts the client copy before assigning a selected program"
   assert.match(source, /buildClientWorkoutsFromTemplate\(selectedProgram \|\| \{\}\)/);
   assert.match(source, /getTrainerProgramAssignmentExercises\(programWorkouts\)/);
   assert.match(source, /setProgramAdjustmentOpen\(true\)/);
-  assert.match(source, /onAssignProgram\?\.\(\{ loadAdjustments, skipConfirmation: true \}\)/);
+  assert.match(source, /onAssignProgram\?\.\(\{ loadAdjustments, skipConfirmation: true, throwOnError: true \}\)/);
   assert.match(source, /const STEPS = \["program", "schedule", "nutrition", "notifications"\]/);
   assert.match(source, /title: "Назначьте даты тренировок"/);
   assert.match(source, /onSaveWorkoutSchedule\?\.\(scheduleDates, \{ assignmentKey: assignedProgramKey \}\)/);
