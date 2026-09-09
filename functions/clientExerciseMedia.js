@@ -24,7 +24,7 @@ function uniqueVideo(candidates) {
 // Resolve only missing/inherited media. Sets, schedule and completed history
 // stay snapshots of the assigned programme; private overrides remain private.
 export function resolveClientExerciseMedia(workouts, templates, trainerId) {
-  const library = templates.filter((template) => template.ownerUid === trainerId).flatMap(templateExercises).filter((exercise) => videoOf(exercise));
+  const library = templates.filter((template) => template.ownerUid === trainerId).flatMap(templateExercises).filter((exercise) => videoOf(exercise) && !exercise.libraryDeletedAt);
   const media = [];
   for (const workout of workouts) {
     if (workout.source === "basic" || String(workout.assignedProgramUpdatedAt || "").startsWith("basic:")) continue;

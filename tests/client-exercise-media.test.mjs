@@ -10,6 +10,15 @@ const exercise = { id: "assigned-exercise", name: "Жим лёжа", sets: [{ re
 const workout = { id: "day", assignedBy: "trainer", assignedProgramId: "program", assignedProgramUpdatedAt: "v1", status: "planned", exercises: [exercise] };
 const template = { id: "library", ownerUid: "trainer", blocks: [{ weeks: [{ workouts: [{ exercises: [{ id: "library-exercise", name: "Жим лежа", video: "https://example.com/new.mp4", sets: [] }] }] }] }] };
 
+test("deleted library videos stop autofilling but existing workout media and history remain intact", () => {
+  const removed = structuredClone(template);
+  removed.blocks[0].weeks[0].workouts[0].exercises[0].libraryDeletedAt = "2026-09-09";
+  const privateWorkout = { ...workout, exercises: [{ ...exercise, video: "https://example.com/private.mp4" }] };
+  const before = structuredClone(privateWorkout);
+  assert.deepEqual(resolveClientExerciseMedia([workout, privateWorkout], [removed], "trainer"), []);
+  assert.deepEqual(privateWorkout, before);
+});
+
 test("new library videos resolve for existing copies without changing sets or stored history", () => {
   const before = structuredClone(workout);
   const media = resolveClientExerciseMedia([workout], [template], "trainer");

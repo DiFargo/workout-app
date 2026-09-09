@@ -14,9 +14,9 @@ import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
 import { sanitizeExerciseSetPatch } from "../../utils/exerciseWeightInput";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
 import {
-  patchExerciseInTrainerTemplate,
-  removeExerciseFromTrainerTemplate
+  patchExerciseInTrainerTemplate
 } from "../../utils/trainerExerciseLibrary.js";
+import { persistTrainerLibraryVisibility } from "../../utils/trainerLibraryVisibility.js";
 
 const DEFAULT_EXERCISE_NAME = "\u041d\u043e\u0432\u043e\u0435 \u0443\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
 const DEFAULT_DAY_NAME = "\u0414\u0435\u043d\u044c";
@@ -82,6 +82,7 @@ export function createTrainerPlanEditorHandlers({
   setAdminClientStatus,
   adminTrainingTemplates,
   setAdminTrainingTemplates,
+  canManageTrainingTemplate,
   db,
   doc,
   setDoc,
@@ -212,28 +213,17 @@ export function createTrainerPlanEditorHandlers({
     }
   }
 
-  async function removeTrainerLibraryExercise(exercise) {
-    const source = exercise?.librarySource;
-    if (!source || !exercise?.id) return false;
-
-    if (source.type === "plan" && source.workoutId) {
-      removeTrainerNextExercise(source.workoutId, exercise.id);
-      return true;
-    }
-
-    if (source.type !== "template" || !source.templateId) return false;
-    const template = (adminTrainingTemplates || []).find((item) => item.id === source.templateId);
-    if (!template) return false;
-
-    const nextTemplate = removeExerciseFromTrainerTemplate(template, exercise.id);
-    setAdminTrainingTemplates((current) => current.map((item) => item.id === source.templateId ? nextTemplate : item));
+  async function removeTrainerLibraryExercise(exercise, { restore = false } = {}) {
     try {
-      await setDoc(doc(db, "trainingTemplates", source.templateId), nextTemplate, { merge: true });
+      const updates = await persistTrainerLibraryVisibility({ db, templates: adminTrainingTemplates || [], exercise,
+        uid: auth.currentUser?.uid, canManage: canManageTrainingTemplate, restore });
+      setAdminTrainingTemplates((current) => current.map((item) => updates.find((updated) => updated.id === item.id) || item));
+      setAdminClientStatus(restore ? "Упражнение восстановлено в библиотеке." : "Упражнение перемещено в удалённые. Программы клиентов сохранены.");
       return true;
     } catch (error) {
       console.error("Trainer library exercise delete error:", error);
-      setAdminClientStatus("Не удалось удалить упражнение из библиотеки.");
-      return false;
+      setAdminClientStatus("Не удалось изменить упражнение в библиотеке.");
+      throw error;
     }
   }
 

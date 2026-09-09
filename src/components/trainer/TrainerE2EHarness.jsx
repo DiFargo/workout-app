@@ -1,4 +1,5 @@
 import { isTrainerV2Path } from "../../app/cssVariant.js";
+import { setTrainerLibraryVariantDeleted } from "../../utils/trainerExerciseLibrary.js";
 import { useRef, useState } from "react";
 import TrainerWorkspace, { TrainerShell } from "./TrainerWorkspace";
 import * as appConfig from "../../constants/appConfig";
@@ -318,13 +319,12 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     return true;
   }
 
-  function removeHarnessLibraryExercise(sourceExercise) {
+  function removeHarnessLibraryExercise(sourceExercise, { restore = false } = {}) {
     const workoutId = sourceExercise?.librarySource?.workoutId || sourceExercise?.sourceWorkoutId;
     if (!workoutId || !sourceExercise?.id) return false;
 
-    setWorkouts((current) => current.map((workout) => workout.id === workoutId
-      ? { ...workout, exercises: (workout.exercises || []).filter((exercise) => exercise.id !== sourceExercise.id) }
-      : workout));
+    if (new URLSearchParams(window.location.search).has("libraryDeleteFail")) return false;
+    setWorkouts((current) => setTrainerLibraryVariantDeleted({ workouts: current }, sourceExercise, restore ? "" : new Date().toISOString()).workouts);
 
     return true;
   }

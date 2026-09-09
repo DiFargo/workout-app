@@ -3,6 +3,11 @@
   backdrop-filter: blur(5px);
 }
 
+.libraryFilters {display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;}
+.deletedToggle {min-height:44px;padding:8px 12px;border:1px solid rgba(60,60,67,.12);border-radius:10px;background:#fff;color:#3f73b8;font:inherit;font-size:14px;cursor:pointer;}
+.deletedToggle[aria-pressed="true"] {background:#edf3fa;}
+.error {grid-column:1/-1;margin:0;color:#b5444c;font-size:13px;line-height:1.4;}
+
 .modal {
   position: relative;
   box-sizing: border-box;

@@ -6419,6 +6419,8 @@ function TrainerWorkoutEditor({
   const [expandedExerciseId, setExpandedExerciseId] = useState("");
   const [librarySearch, setLibrarySearch] = useState("");
   const [libraryMuscle, setLibraryMuscle] = useState("");
+  const [libraryShowDeleted, setLibraryShowDeleted] = useState(false);
+  const [libraryEditorError, setLibraryEditorError] = useState("");
   const [libraryEditorTarget, setLibraryEditorTarget] = useState(null);
   const [libraryEditorDraft, setLibraryEditorDraft] = useState(null);
   const [libraryEditorSaving, setLibraryEditorSaving] = useState(false);
@@ -6503,13 +6505,14 @@ function TrainerWorkoutEditor({
       getExerciseActualProgress(progressHistory, exercise)
     ]));
   }, [progressHistory, workouts]);
-  const library = useMemo(() => mergeTrainerExerciseLibraryItems([
+  const libraryItems = useMemo(() => mergeTrainerExerciseLibraryItems([
     ...(exerciseLibrary || []),
     ...workouts.flatMap((workout) => (workout.exercises || []).map((exercise) => ({
       ...exercise, sourceWorkoutId: workout.id,
       librarySource: { type: "plan", workoutId: workout.id }
     })))
-  ]), [exerciseLibrary, workouts]);
+  ], { includeDeleted: true }), [exerciseLibrary, workouts]);
+  const library = libraryItems.filter((exercise) => Boolean(exercise.libraryDeletedAt) === libraryShowDeleted);
   const filteredLibrary = library.filter((exercise) =>
     (!libraryMuscle || getTrainerLibraryMuscle(exercise) === libraryMuscle) &&
     (!librarySearch || String(exercise.name || "").toLowerCase().includes(librarySearch.toLowerCase()) || exerciseLibraryNameKey(exercise.name).includes(exerciseLibraryNameKey(librarySearch)))
@@ -6522,7 +6525,7 @@ function TrainerWorkoutEditor({
     ? workouts.find((workout) => workout.id === libraryEditorTarget.workoutId)
     : null;
   const libraryEditorExercise = libraryEditorWorkout?.exercises?.find((exercise) => exercise.id === libraryEditorTarget?.exerciseId)
-    || library.find((exercise) => exercise.id === libraryEditorTarget?.exerciseId && exercise.librarySource?.templateId === libraryEditorTarget?.templateId && getExerciseVideo(exercise) === getExerciseVideo(libraryEditorTarget?.exercise))
+    || libraryItems.find((exercise) => exercise.id === libraryEditorTarget?.exerciseId && exercise.librarySource?.templateId === libraryEditorTarget?.templateId && getExerciseVideo(exercise) === getExerciseVideo(libraryEditorTarget?.exercise))
     || libraryEditorTarget?.exercise
     || null;
   const libraryEditorSourceExercise = libraryEditorExercise && libraryEditorWorkout
@@ -6532,6 +6535,7 @@ function TrainerWorkoutEditor({
     }
     : libraryEditorExercise;
   const activeLibraryEditorExercise = libraryEditorDraft || libraryEditorExercise;
+  const libraryEditorReadOnly = libraryEditorSaving || Boolean(activeLibraryEditorExercise?.libraryDeletedAt);
 
   function createLibraryEditorDraft(exercise) {
     if (!exercise) return null;
@@ -6547,6 +6551,7 @@ function TrainerWorkoutEditor({
 
   function openLibraryEditor(exercise) {
     if (!exercise) return;
+    setLibraryEditorError("");
     setLibraryEditorTarget({ workoutId: exercise.sourceWorkoutId || "", exerciseId: exercise.id, templateId: exercise.librarySource?.templateId || "", exercise });
     setLibraryEditorDraft(createLibraryEditorDraft(exercise));
   }
@@ -6608,29 +6613,37 @@ function TrainerWorkoutEditor({
   async function saveLibraryEditor() {
     if (!libraryEditorExercise || !libraryEditorDraft || libraryEditorSaving) return;
     setLibraryEditorSaving(true);
+    setLibraryEditorError("");
     const patch = { ...libraryEditorDraft };
     delete patch.librarySource;
     delete patch.sourceWorkoutId;
     try {
       const saved = await onUpdateLibraryExercise?.(libraryEditorSourceExercise, patch);
-      if (saved !== false) {
+      if (saved === true) {
         setLibraryEditorTarget(null);
         setLibraryEditorDraft(null);
-      }
+      } else setLibraryEditorError("Не удалось сохранить упражнение. Попробуйте ещё раз.");
+    } catch {
+      setLibraryEditorError("Не удалось сохранить упражнение. Проверьте соединение и попробуйте ещё раз.");
     } finally {
       setLibraryEditorSaving(false);
     }
   }
 
-  async function removeLibraryEditor() {
+  async function removeLibraryEditor(restore = false) {
     if (!libraryEditorExercise || libraryEditorSaving) return;
     setLibraryEditorSaving(true);
+    setLibraryEditorError("");
     try {
-      const removed = await onRemoveLibraryExercise?.(libraryEditorSourceExercise);
-      if (removed !== false) {
+      const removed = await onRemoveLibraryExercise?.(libraryEditorSourceExercise, { restore });
+      if (removed === true) {
         setLibraryEditorTarget(null);
         setLibraryEditorDraft(null);
-      }
+      } else setLibraryEditorError("Не удалось изменить упражнение. Попробуйте ещё раз.");
+    } catch (error) {
+      setLibraryEditorError(error?.code === "permission-denied"
+        ? "Нет доступа. Тренер может удалять только свои упражнения."
+        : "Не удалось изменить упражнение. Проверьте соединение и попробуйте ещё раз.");
     } finally {
       setLibraryEditorSaving(false);
     }
@@ -6640,7 +6653,7 @@ function TrainerWorkoutEditor({
     if (!libraryEditorExercise) return;
     setConfirmAction({
       title: "Удалить упражнение",
-      text: `Упражнение «${libraryEditorExercise.name || "Без названия"}» будет удалено из библиотеки и связанного плана.`,
+      text: `Упражнение «${libraryEditorExercise.name || "Без названия"}» переместится в «Удалённые». Этот вариант видео можно восстановить. Упражнения в программах и истории клиентов сохранятся.`,
       onConfirm: () => {
         setConfirmAction(null);
         void removeLibraryEditor();
@@ -6987,6 +7000,7 @@ function TrainerWorkoutEditor({
               </button>
             </div>
           </div>
+          <div className={exerciseLibraryEditorStyles.libraryFilters}>
           <label className={appleStyles.libraryMuscleFilter}>
             <span>Группа мышц</span>
             <select aria-label="Группа мышц" value={libraryMuscle} onChange={(event) => setLibraryMuscle(event.target.value)}>
@@ -6994,6 +7008,10 @@ function TrainerWorkoutEditor({
               {TRAINER_LIBRARY_MUSCLES.map(([id, label]) => <option value={id} key={id}>{label} · {library.filter((exercise) => getTrainerLibraryMuscle(exercise) === id).length}</option>)}
             </select>
           </label>
+          <button type="button" className={exerciseLibraryEditorStyles.deletedToggle} aria-pressed={libraryShowDeleted} onClick={() => { setLibraryShowDeleted((current) => !current); setLibraryMuscle(""); }}>
+            {libraryShowDeleted ? "К библиотеке" : `Удалённые · ${libraryItems.filter((exercise) => exercise.libraryDeletedAt).length}`}
+          </button>
+          </div>
           <div>
             {filteredLibrary.map((exercise, index) => {
               const video = getExerciseVideo(exercise);
@@ -7029,26 +7047,26 @@ function TrainerWorkoutEditor({
             <header className={exerciseLibraryEditorStyles.header} data-trainer-modal-header="true">
               <small>БИБЛИОТЕКА УПРАЖНЕНИЙ</small>
               <h2 id="trainer-library-editor-title">Редактирование упражнения</h2>
-              <p>Изменения применятся после нажатия кнопки «Сохранить».</p>
+              <p>{activeLibraryEditorExercise.libraryDeletedAt ? "Удалено из библиотеки. Упражнение можно восстановить." : "Изменения применятся после нажатия кнопки «Сохранить»."}</p>
             </header>
             <div className={exerciseLibraryEditorStyles.body} data-trainer-modal-content="true">
               <div className={exerciseLibraryEditorStyles.fields}>
-                <label className={exerciseLibraryEditorStyles.nameField}><span>Название</span><input value={activeLibraryEditorExercise.name || ""} onChange={(event) => updateLibraryEditorExercise({ name: event.target.value })} disabled={libraryEditorSaving} /></label>
+                <label className={exerciseLibraryEditorStyles.nameField}><span>Название</span><input value={activeLibraryEditorExercise.name || ""} onChange={(event) => updateLibraryEditorExercise({ name: event.target.value })} disabled={libraryEditorReadOnly} /></label>
                 <label className={exerciseLibraryEditorStyles.nameField}>
                   <span>Группа мышц</span>
-                  <select aria-label="Группа мышц" value={getTrainerLibraryMuscle(activeLibraryEditorExercise)} onChange={(event) => updateLibraryEditorExercise({ muscleGroup: event.target.value })} disabled={libraryEditorSaving}>
+                  <select aria-label="Группа мышц" value={getTrainerLibraryMuscle(activeLibraryEditorExercise)} onChange={(event) => updateLibraryEditorExercise({ muscleGroup: event.target.value })} disabled={libraryEditorReadOnly}>
                     {TRAINER_LIBRARY_MUSCLES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
                   </select>
                 </label>
-                <label className={exerciseLibraryEditorStyles.restField}><span>Отдых</span><input value={activeLibraryEditorExercise.rest || ""} onChange={(event) => updateLibraryEditorExercise({ rest: event.target.value })} placeholder="90 сек" disabled={libraryEditorSaving} /></label>
+                <label className={exerciseLibraryEditorStyles.restField}><span>Отдых</span><input value={activeLibraryEditorExercise.rest || ""} onChange={(event) => updateLibraryEditorExercise({ rest: event.target.value })} placeholder="90 сек" disabled={libraryEditorReadOnly} /></label>
                 <label className={exerciseLibraryEditorStyles.weightToggle}>
                   <span>Используется вес</span>
-                  <input type="checkbox" checked={activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true} onChange={(event) => updateLibraryEditorExercise({ requiresWeight: event.target.checked, usesWeight: event.target.checked })} disabled={libraryEditorSaving} />
+                  <input type="checkbox" checked={activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true} onChange={(event) => updateLibraryEditorExercise({ requiresWeight: event.target.checked, usesWeight: event.target.checked })} disabled={libraryEditorReadOnly} />
                 </label>
                 <label className={exerciseLibraryEditorStyles.videoUpload}>
                   <Upload size={16} />
                   <span>{exerciseVideoUploadingId === libraryEditorExercise.id ? "Загрузка..." : getExerciseVideo(activeLibraryEditorExercise) ? "Заменить видео" : "Загрузить видео"}</span>
-                  <input type="file" accept="video/*" disabled={libraryEditorSaving || exerciseVideoUploadingId === libraryEditorExercise.id} onChange={uploadLibraryEditorVideo} />
+                  <input type="file" accept="video/*" disabled={libraryEditorReadOnly || exerciseVideoUploadingId === libraryEditorExercise.id} onChange={uploadLibraryEditorVideo} />
                 </label>
                 <div className={exerciseLibraryEditorStyles.videoPreview} aria-label="Предпросмотр видео упражнения">
                   {getExerciseVideo(activeLibraryEditorExercise) ? (
@@ -7067,17 +7085,23 @@ function TrainerWorkoutEditor({
                 {(activeLibraryEditorExercise.sets?.length ? activeLibraryEditorExercise.sets : [{ reps: "", weight: "" }]).map((set, setIndex, sets) => (
                   <div className={exerciseLibraryEditorStyles.setRow} key={set.id || setIndex}>
                     <strong>{setIndex + 1}</strong>
-                    <input aria-label={`Повторы, подход ${setIndex + 1}`} value={set.reps ?? ""} onChange={(event) => updateLibraryEditorSet(setIndex, { reps: event.target.value })} disabled={libraryEditorSaving} />
-                    <input aria-label={`Вес, подход ${setIndex + 1}`} inputMode="decimal" value={sanitizeExerciseWeightInput(set.weight) ?? ""} disabled={libraryEditorSaving || !(activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true)} onChange={(event) => updateLibraryEditorSet(setIndex, { weight: event.target.value })} />
-                    <button type="button" disabled={libraryEditorSaving || sets.length <= 1} onClick={() => removeLibraryEditorSet(setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
+                    <input aria-label={`Повторы, подход ${setIndex + 1}`} value={set.reps ?? ""} onChange={(event) => updateLibraryEditorSet(setIndex, { reps: event.target.value })} disabled={libraryEditorReadOnly} />
+                    <input aria-label={`Вес, подход ${setIndex + 1}`} inputMode="decimal" value={sanitizeExerciseWeightInput(set.weight) ?? ""} disabled={libraryEditorReadOnly || !(activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true)} onChange={(event) => updateLibraryEditorSet(setIndex, { weight: event.target.value })} />
+                    <button type="button" disabled={libraryEditorReadOnly || sets.length <= 1} onClick={() => removeLibraryEditorSet(setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
                   </div>
                 ))}
-                <button className={exerciseLibraryEditorStyles.addSet} type="button" disabled={libraryEditorSaving} onClick={addLibraryEditorSet}><Plus size={15} />Добавить подход</button>
+                <button className={exerciseLibraryEditorStyles.addSet} type="button" disabled={libraryEditorReadOnly} onClick={addLibraryEditorSet}><Plus size={15} />Добавить подход</button>
               </div>
             </div>
             <footer className={exerciseLibraryEditorStyles.footer} data-trainer-modal-footer="true">
-              <button className={exerciseLibraryEditorStyles.deleteButton} type="button" disabled={libraryEditorSaving} onClick={confirmRemoveLibraryEditor}><Trash2 size={16} />Удалить</button>
-              <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorSaving} onClick={() => void saveLibraryEditor()}><Save size={16} />{libraryEditorSaving ? "Сохраняем..." : "Сохранить"}</button>
+              {libraryEditorError ? <p className={exerciseLibraryEditorStyles.error} role="alert">{libraryEditorError}</p> : null}
+              {activeLibraryEditorExercise.libraryDeletedAt ? <>
+                <button className={exerciseLibraryEditorStyles.deletedToggle} type="button" disabled={libraryEditorSaving} onClick={closeLibraryEditor}>Закрыть</button>
+                <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorSaving} onClick={() => void removeLibraryEditor(true)}><RefreshCw size={16} />{libraryEditorSaving ? "Восстанавливаем…" : "Восстановить"}</button>
+              </> : <>
+                <button className={exerciseLibraryEditorStyles.deleteButton} type="button" disabled={libraryEditorSaving} onClick={confirmRemoveLibraryEditor}><Trash2 size={16} />{libraryEditorSaving ? "Сохранение…" : "Удалить"}</button>
+                <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorSaving} onClick={() => void saveLibraryEditor()}><Save size={16} />{libraryEditorSaving ? "Сохраняем..." : "Сохранить"}</button>
+              </>}
             </footer>
           </section>
         </div>

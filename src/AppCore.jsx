@@ -1815,6 +1815,7 @@ function AppRuntime() {
   });
 
   const trainerPlanEditorHandlers = createTrainerPlanEditorHandlers({
+    canManageTrainingTemplate,
     plan,
     setPlan,
     saveWorkoutsToFirebase,

@@ -23,3 +23,7 @@ export function exerciseLibraryNameKey(name = "") {
   const key = normalizedName(name);
   return aliases.get(key) || key;
 }
+
+export function exerciseLibraryVariantKey(exercise = {}) {
+  return JSON.stringify([exerciseLibraryNameKey(exercise.name), String(exercise.video || exercise.videoUrl || exercise.videoURL || "").trim()]);
+}

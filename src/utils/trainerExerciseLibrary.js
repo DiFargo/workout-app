@@ -1,10 +1,10 @@
-import { exerciseLibraryNameKey } from "../../functions/exerciseLibraryIdentity.js";
+import { exerciseLibraryNameKey, exerciseLibraryVariantKey } from "../../functions/exerciseLibraryIdentity.js";
 
 function getExerciseVideo(exercise = {}) {
   return String(exercise?.video || exercise?.videoUrl || exercise?.videoURL || "").trim();
 }
 
-export function mergeTrainerExerciseLibraryItems(exercises = []) {
+export function mergeTrainerExerciseLibraryItems(exercises = [], { includeDeleted = false } = {}) {
   const hasSource = (exercise) => Boolean(exercise.librarySource || exercise.sourceWorkoutId);
   const groups = new Map();
   for (const exercise of exercises) {
@@ -30,7 +30,7 @@ export function mergeTrainerExerciseLibraryItems(exercises = []) {
       }
       return item;
     });
-  });
+  }).filter((exercise) => includeDeleted || !exercise.libraryDeletedAt);
 }
 
 function getTemplateWorkouts(template = {}) {
@@ -46,7 +46,7 @@ function getTemplateWorkouts(template = {}) {
   ];
 }
 
-export function buildTrainerExerciseLibraryItems(plan = {}, templates = []) {
+export function buildTrainerExerciseLibraryItems(plan = {}, templates = [], options = {}) {
   const sources = [
     ...(plan.workouts || []).flatMap((workout) => (workout.exercises || []).map((exercise) => ({
       exercise,
@@ -59,7 +59,20 @@ export function buildTrainerExerciseLibraryItems(plan = {}, templates = []) {
       }))
     ))
   ];
-  return mergeTrainerExerciseLibraryItems(sources.map(({ exercise, librarySource }) => ({ ...exercise, librarySource })));
+  return mergeTrainerExerciseLibraryItems(sources.map(({ exercise, librarySource }) => ({ ...exercise, librarySource })), options);
+}
+
+// Library visibility is separate from the exercise's place in a programme.
+// Match the exact video variant across repeated days and copied templates.
+export function setTrainerLibraryVariantDeleted(value, exercise, deletedAt) {
+  if (Array.isArray(value)) return value.map((item) => setTrainerLibraryVariantDeleted(item, exercise, deletedAt));
+  if (!value || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) return value;
+  return Object.fromEntries(Object.entries(value).map(([key, item]) => [key,
+    key === "exercises" && Array.isArray(item)
+      ? item.map((entry) => exerciseLibraryVariantKey(entry) === exerciseLibraryVariantKey(exercise)
+        ? { ...entry, libraryDeletedAt: deletedAt } : entry)
+      : setTrainerLibraryVariantDeleted(item, exercise, deletedAt)
+  ]));
 }
 
 export function patchExerciseInTrainerTemplate(value, exerciseId, patch) {

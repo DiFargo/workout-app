@@ -45,7 +45,7 @@ export default function TrainerAdminWorkoutsNextRoute({
   const activeWorkoutClient = isExerciseLibraryTab ? null : selectedWorkoutClient || null;
   const activeWorkouts = isExerciseLibraryTab ? [] : sortWorkoutDays(plan.workouts || []);
   const activeExerciseLibrary = isExerciseLibraryTab
-    ? buildTrainerExerciseLibraryItems({}, visibleProgramTemplates)
+    ? buildTrainerExerciseLibraryItems({}, visibleProgramTemplates, { includeDeleted: true })
     : trainerExerciseLibraryItems;
 
   const handleWorkoutTabChange = () => {
