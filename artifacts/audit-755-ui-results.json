@@ -1,0 +1,1394 @@
+[
+  {
+    "id": "client-main",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-main.png",
+    "headings": [
+      "Сегодня",
+      "Доброе утро, Илья",
+      "Ноги и ягодицы",
+      "Ваши показатели",
+      "Тренер рядом"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nСегодня\n\nСреда, 9 сентября\n\nДоброе утро, Илья\nСегодня по плану\nВаш план\nНоги и ягодицы\n\nТренировка по вашему плану\n\n7 упражнений\nОткрыть тренировку\nВаши показатели\nТренировки\n12\nзавершено\nПитание\n1 840\nиз 2 500 ккал\nВес\n89\n-0,5 кг\nТренер рядом\nТР\nВаш тренер\n1 сообщение от тренера",
+    "errors": []
+  },
+  {
+    "id": "client-workouts",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-workouts.png",
+    "headings": [
+      "Тренировки",
+      "Сегодня",
+      "Ваша программа"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Тренировки\nПн\n7\nВт\n8\nСр\n9\nЧт\n10\nПт\n11\nСб\n12\nВс\n13\nСегодня\nРасписание\nИНДИВИДУАЛЬНАЯ ПРОГРАММА\n9 сент\n01\nДень 1 — Верх тела\nТренировка 1\n\n2 упражнений · 2 подходов\n\nНачать тренировку\nВаша программа\nТестовая программа\nПрограмма от тренера\n0 из 2 тренировок\n2 осталось\nОткрыть программу\nИстория и рекорды\nВыполнено тренировок: 0\n\nВы выбираете дни. Порядок тренировок в программе сохраняется.\n\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-nutrition",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-nutrition.png",
+    "headings": [
+      "Питание",
+      "1 534 ккал",
+      "Добавить еду"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Питание\nПн\n22\nВт\n23\nСр\n24\nЧт\n25\nПт\n26\nСб\n27\nВс\n28\n980\nиз 2514 ккал\n\nОсталось на сегодня\n\n1 534 ккал\n4 дня подряд\nБелки\n76 / 172 г\nЖиры\n36 / 62 г\nУглеводы\n83 / 317 г\nДобавить еду\nПродукт\nФото AI\nГолос\nКалендарь\nПриёмы пищи\nЗавтрак\nОмлет\n360\nОбед\nКурица с рисом\n620\nУжин\nНе добавлено\n—\nАнализ питания\nБелка пока мало, добавь белковый продукт.\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-progress",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-progress.png",
+    "headings": [
+      "Прогресс",
+      "Достижения",
+      "Контроль тела"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nПрогресс\nМесяц\n6 месяцев\nГод\nТекущий вес\n88,8 кг\n−1,3 кг\nс прошлого замера\n90,1\n88,8\n22.05.2026\n22.06.2026\nПоследний замер: 22.06.2026\nДобавить вес\nДостижения\n12 тренировок завершено\nКаждое занятие — шаг вперёд\nКонтроль тела\nФото прогресса\nДобавьте первое фото\nЗамеры тела\nПоследний замер: 22.06.2026\n\nВес и замеры помогают наблюдать динамику. Отдельное значение — только часть картины.",
+    "errors": []
+  },
+  {
+    "id": "client-cabinet",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-cabinet.png",
+    "headings": [
+      "Кабинет",
+      "МОЙ ПЛАН",
+      "ПРИЛОЖЕНИЕ"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nКабинет\nИ\nИлья\nathlete@example.com\nИндивидуальный план\nМОЙ ПЛАН\nПараметры тела\nЦели питания\nРасписание тренировок\nРежим тренировок\nС тренером\n\nДни занятий выбираете вы. Тренер может скорректировать расписание.\n\nПРИЛОЖЕНИЕ\nУведомления\nНастройка напоминаний\nПодключение аккаунтов\nПочта и Telegram\nПомощь и обратная связь\nВыйти из аккаунта\nv.3.0.753",
+    "errors": []
+  },
+  {
+    "id": "client-workoutPlan",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutPlan",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-workoutPlan.png",
+    "headings": [
+      "План тренировок",
+      "Неделя 1"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Назад\nПрограмма тренера\nПлан тренировок\n\nТестовая программа\n\n1\nнедель\n2\nтренировок\n1\nвыполнено\nНеделя 1\nНеделя 1 · День 1\nВерх тела\n2 упр. · 2 подходов\n✓\nНеделя 1 · День 2\nНиз тела\n1 упр. · 1 подходов\n›\nГлавная\nТренировки\nПлан\nИстория",
+    "errors": []
+  },
+  {
+    "id": "client-workoutHistory",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutHistory",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-workoutHistory.png",
+    "headings": [
+      "История тренировок"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Развернуть",
+        "tag": "BUTTON",
+        "w": 40,
+        "h": 40
+      },
+      {
+        "name": "Развернуть",
+        "tag": "BUTTON",
+        "w": 40,
+        "h": 40
+      }
+    ],
+    "smallCount": 2,
+    "unlabelled": 0,
+    "text": "Назад\nИстория тренировок\n\nПоследняя: 20 июн 2026 г.\n\n2\nтрен.\n7\nподходов\n3\nупр.\nПОСЛЕДНЯЯ\nВерх тела\n20 июн · 4 подходов · Жим гантелей\nУдалить\n20 июн · 21:00\nВерх тела\nДень 1 · 2 упр. · 4 подходов\n⏬\n1185 кг объём\n🔥 Хорошо\nУдалить\n17 июн · 20:30\nНиз тела\nДень 2 · 1 упр. · 3 подходов\n⏬\n3110 кг объём\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-workoutMode",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutMode",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-workoutMode.png",
+    "headings": [
+      "Режим тренировок"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Назад\nКабинет\nРежим тренировок\n\nВыбери, по какой программе тренироваться. Режим можно изменить в кабинете в любой момент.\n\nСАМОСТОЯТЕЛЬНО\nБазовые тренировки\nТренировка на сегодня или программа на четыре недели.\nС ТРЕНЕРОМ\nИндивидуальный план\nТренировки, которые создал и назначил тренер.\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-basicQuiz",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=basicQuiz",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-basicQuiz.png",
+    "headings": [
+      "План на 4 недели",
+      "Введи код доступа"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Назад\nБазовые тренировки\nПлан на 4 недели\nНа сегодня\nБыстрая тренировка\nНа 4 недели\nПолная программа\nПРОГРАММА НА 4 НЕДЕЛИ\nВведи код доступа\n\nКод нужен только один раз, чтобы перейти к подбору базовой программы.\n\nКод доступа\n\nПосле активации код больше не понадобится на этом устройстве.\n\nПродолжить\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-basicWorkoutToday",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=basicWorkoutToday",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-basicWorkoutToday.png",
+    "headings": [
+      "Базовые тренировки",
+      "Что тренируем сегодня?"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Назад\nСамостоятельный режим\nБазовые тренировки\nНа сегодня\nБыстрая тренировка\nНа 4 недели\nПолная программа\nВЫБЕРИ ЗОНЫ\nЧто тренируем сегодня?\n\nВыбери до трёх зон или Full body. ИИ подберёт упражнения под место, время и твоё состояние.\n\nГрудь\nСпина\nПлечи\nНоги\nЯгодицы\nБицепс\nТрицепс\nПресс\nFull body\nСколько времени есть?\n30 мин\n45 мин\n60 мин\n90 мин\nКак самочувствие?\nСпокойно\nОбычно\nЕсть силы\nГде тренируешься?\nЗал\nДома\nНастроить под себя\n\nМожно выбрать от одной до 3 зон.\n\nПодборок на сегодня осталось: 3 из 3.\n\nСоставить тренировку\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-basicExerciseExplainer",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=basicExerciseExplainer",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-basicExerciseExplainer.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Открыть раздел «Техника»",
+        "tag": "BUTTON",
+        "w": 115,
+        "h": 42
+      },
+      {
+        "name": "Заменить упражнение",
+        "tag": "BUTTON",
+        "w": 115,
+        "h": 42
+      },
+      {
+        "name": "Открыть заметку тренеру",
+        "tag": "BUTTON",
+        "w": 115,
+        "h": 42
+      }
+    ],
+    "smallCount": 3,
+    "unlabelled": 0,
+    "text": "Жим штанги лёжа\nДень 1 · Упражнение 1 из 4\nТехника\nТехника\nЗаменить\nЗаметки",
+    "errors": []
+  },
+  {
+    "id": "client-exerciseSets",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=exerciseSets",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-exerciseSets.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Изменить подход 1",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Выполнить подход 1",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Изменить подход 2",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Выполнить подход 2",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Изменить подход 3",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Выполнить подход 3",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      }
+    ],
+    "smallCount": 6,
+    "unlabelled": 0,
+    "text": "Жим штанги лёжа\nДень 1 · Упражнение 1 из 4\nТехника\n1\n10 повторений\n60 кг\n2\n10 повторений\n62.5 кг\n3\n8 повторений\n65 кг",
+    "errors": []
+  },
+  {
+    "id": "client-measurementWizard",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=measurementWizard",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-measurementWizard.png",
+    "headings": [
+      "Замеры тела",
+      "Как выполнять замеры"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Замеры тела\nШаг 1 из 14\nПодготовка\nКак выполнять замеры\n\nМерь утром, одной и той же лентой, в спокойном состоянии. Не втягивай живот и не затягивай ленту слишком сильно.\n\nОдинаковое время\nОдна лента\nБез натяжения\nФото можно делать отдельно\nТолько вес\nБыстрая отметка без остальных замеров\nПолный замер\nВес и параметры тела\nНазад\nПолный замер",
+    "errors": []
+  },
+  {
+    "id": "client-measurementPanel",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=measurementPanel",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-measurementPanel.png",
+    "headings": [
+      "Достижения",
+      "Контроль тела"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Месяц\n6 месяцев\nГод\nТекущий вес\n88,8 кг\n−1,3 кг\nс прошлого замера\n90,1\n88,8\n22.05.2026\n22.06.2026\nДостижения\nПервая тренировка впереди\nКаждое занятие — шаг вперёд\nКонтроль тела\nФото прогресса\nДобавьте первое фото\nЗамеры тела\nПоследний замер: 22.06.2026\n\nВес и замеры помогают наблюдать динамику. Отдельное значение — только часть картины.\n\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-profileRoleActions",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=profileRoleActions",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-profileRoleActions.png",
+    "headings": [
+      "Сегодня"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nСегодня\n\nПроверка переходов для расширенных ролей.\n\n⚙️ Тренерская\n🛠️ Админ-панель",
+    "errors": []
+  },
+  {
+    "id": "client-profileSettingsTab",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=profileSettingsTab",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-profileSettingsTab.png",
+    "headings": [
+      "НАСТРОЙКИ"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "ПРОФИЛЬ\nПараметры тела\nВес, рост, возраст, активность и тренировочные дни\n+\nНАСТРОЙКИ\nПочта\nilya@example.com · привязана\nTelegram\n@harness_coach · подключён\nПодключен\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-nutritionDishIngredients",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=nutritionDishIngredients",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-nutritionDishIngredients.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Ингредиенты\n2 шт\nДобавить\n🍗\nКуриная грудка\n180 г\n297 ккал\n🍚\nРис басмати\n120 г\n156 ккал",
+    "errors": []
+  },
+  {
+    "id": "client-nutritionMealModal",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=nutritionMealModal",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-nutritionMealModal.png",
+    "headings": [
+      "Питание",
+      "1 534 ккал",
+      "Добавить еду",
+      "Завтрак"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Питание\nПн\n22\nВт\n23\nСр\n24\nЧт\n25\nПт\n26\nСб\n27\nВс\n28\n980\nиз 2514 ккал\n\nОсталось на сегодня\n\n1 534 ккал\n4 дня подряд\nБелки\n76 / 172 г\nЖиры\n36 / 62 г\nУглеводы\n83 / 317 г\nДобавить еду\nПродукт\nФото AI\nГолос\nКалендарь\nПриёмы пищи\nЗавтрак\nОмлет\n360\nОбед\nКурица с рисом\n620\nУжин\nНе добавлено\n—\nАнализ питания\nБелка пока мало, добавь белковый продукт.\n🌅\n1 продуктов\nЗавтрак\n360 ккал\n×\n🗑️\n🥚\n360\nккал\nОмлет\nг\nДобавить продукт",
+    "errors": []
+  },
+  {
+    "id": "client-aiCoach",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=aiCoach",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-aiCoach.png",
+    "headings": [
+      "AI-помощник",
+      "AI-анализ восстановления",
+      "Анализ",
+      "Что сделать"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Назад\nПерсональные рекомендации\nAI-помощник\nAI ASSISTANT CORE\n\nУмные подсказки по питанию, тренировкам, восстановлению и прогрессу на основе твоей истории.\n\n🧘\nAI-анализ восстановления\n\nГотов к нагрузке\n\n90%\nАнализ\n\nПоследняя тренировка: 81 дн. назад.\n\nЗа неделю нагрузка не найдена.\n\nПо белку сегодня осталось примерно 180 г.\n\nЧто сделать\n\nМожно планировать обычную силовую работу.\n\nДобавь 7–10 минут разминки и 1 лёгкий подход на первое упражнение.\n\nЕсли сон/энергия плохие — оставь RPE около 7/10.\n\n⚡\nAI-помощник тренировки\nПодсказки перед и во время тренировки\n🧘\nВосстановление\nОценка отдыха и готовности\n🎯\nПрограмма под мышцы\nЧто качать следующим\n🍽️\nПлан питания\nКалории, белки и фокус дня\n🔥\nМотивация\nКороткий настрой перед залом\n📈\nПрогресс\nАнализ истории тренировок\n🛡️\nПерегрузка мышц\nГде стоит снизить нагрузку\n🔁\nАвтозамена упражнений\nЗамены без потери смысла",
+    "errors": []
+  },
+  {
+    "id": "client-run-warmup",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=warmup",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-run-warmup.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Разминка\nПОДГОТОВКА\nНеделя 1 · День 1\n1 из 3 шагов · около 5 минут\ni\nПодготовь тело к нагрузке\n\nРазогрей суставы и подготовься к рабочим подходам.\n\n✓\nКардио · 2–3 минуты\nДорожка, велосипед или быстрая ходьба\n02\nСуставная разминка\nПлечи, локти и лопатки\n03\nЛёгкий разминочный подход\nПодготовься к упражнению «Жим штанги лёжа» с меньшим весом\nТАЙМЕР РАЗМИНКИ\n3:00\n3 мин\n5 мин\nСтарт\nНазад\nНачать тренировку",
+    "errors": []
+  },
+  {
+    "id": "client-run-exercise",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=exercise",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-run-exercise.png",
+    "headings": [
+      "План на сегодня"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Открыть раздел «Техника»",
+        "tag": "BUTTON",
+        "w": 115,
+        "h": 42
+      },
+      {
+        "name": "Заменить упражнение",
+        "tag": "BUTTON",
+        "w": 115,
+        "h": 42
+      },
+      {
+        "name": "Открыть заметку тренеру",
+        "tag": "BUTTON",
+        "w": 115,
+        "h": 42
+      },
+      {
+        "name": "Изменить подход 1",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Подход 1 выполнен",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Изменить подход 2",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Выполнить подход 2",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Изменить подход 3",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Выполнить подход 3",
+        "tag": "BUTTON",
+        "w": 38,
+        "h": 38
+      },
+      {
+        "name": "Остановить таймер отдыха",
+        "tag": "BUTTON",
+        "w": 150,
+        "h": 34
+      },
+      {
+        "name": "Остановить таймер отдыха",
+        "tag": "BUTTON",
+        "w": 59,
+        "h": 30
+      },
+      {
+        "name": "Убавить 15 секунд",
+        "tag": "BUTTON",
+        "w": 42,
+        "h": 30
+      },
+      {
+        "name": "Добавить 15 секунд",
+        "tag": "BUTTON",
+        "w": 42,
+        "h": 30
+      }
+    ],
+    "smallCount": 13,
+    "unlabelled": 0,
+    "text": "Жим штанги лёжа\n1 из 2\nТехника\nЗаменить\nЗаметки\nПлан на сегодня\n1\n10 повторений\n60 кг\n2\n10 повторений\n60 кг\n3\n8 повторений\n65 кг\nТаймер отдыха\n1:59\nСтоп\n−15\n+15\nПредыдущее\nСледующее",
+    "errors": []
+  },
+  {
+    "id": "client-run-finish",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=finish",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-run-finish.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Итоги тренировки\nГОТОВА К СОХРАНЕНИЮ\nНЕДЕЛЯ 1 · ДЕНЬ 1\n\nПроверь результат\n\nВРЕМЯ\n42 мин\nУПРАЖНЕНИЯ\n1\nПОДХОДЫ\n1\nОБЪЁМ\n600 кг\nПРОГРЕСС\nВыполнено 1 из 2 упражнений\n\nОбъём -49% к прошлой тренировке.\n\nОстались без данных\nТяга верхнего блока\nКомментарий тренеру\n\nВосстановись и оставь 1–2 повтора в запасе на следующей тренировке.\n\nСохранено локально · ждёт синхронизации\nНазад\nСохранить и завершить",
+    "errors": []
+  },
+  {
+    "id": "client-run-saved",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=saved",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-run-saved.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Тренировка завершена\nТренировка сохранена\nОтличная работа\nВЫПОЛНЕНА\nНЕДЕЛЯ 1 · ДЕНЬ 1\n\nОтличная работа\n\nВРЕМЯ\n42 мин\nУПРАЖНЕНИЯ\n1\nПОДХОДЫ\n1\nОБЪЁМ\n600 кг\nПРОГРЕСС\nВыполнено 1 из 2 упражнений\n\nОбъём -49% к прошлой тренировке.\n\nВосстановись и оставь 1–2 повтора в запасе на следующей тренировке.\n\nВернуться в меню",
+    "errors": []
+  },
+  {
+    "id": "client-cabinet-measurements",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientCabinetModal=measurements",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-cabinet-measurements.png",
+    "headings": [
+      "Кабинет",
+      "МОЙ ПЛАН",
+      "ПРИЛОЖЕНИЕ",
+      "Замеры тела и фото"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nКабинет\nИ\nИлья\nathlete@example.com\nИндивидуальный план\nМОЙ ПЛАН\nПараметры тела\nЦели питания\nРасписание тренировок\nРежим тренировок\nС тренером\n\nДни занятий выбираете вы. Тренер может скорректировать расписание.\n\nПРИЛОЖЕНИЕ\nУведомления\nНастройка напоминаний\nПодключение аккаунтов\nПочта и Telegram\nПомощь и обратная связь\nВыйти из аккаунта\nЗамеры тела и фото\n\nПоследний замер: 22.06.2026\n\nВес\n88.8 кгкг\nГрудь\n108 смсм\nЖивот\n91 смсм\nБедро\n61 смсм\nНачать замер\nv.3.0.753",
+    "errors": []
+  },
+  {
+    "id": "client-cabinet-photos",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientCabinetModal=photos",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-cabinet-photos.png",
+    "headings": [
+      "Кабинет",
+      "МОЙ ПЛАН",
+      "ПРИЛОЖЕНИЕ",
+      "Фото прогресса"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Добавить фото: Спереди",
+        "tag": "INPUT",
+        "w": 1,
+        "h": 44
+      },
+      {
+        "name": "Добавить фото: Сбоку",
+        "tag": "INPUT",
+        "w": 1,
+        "h": 44
+      },
+      {
+        "name": "Добавить фото: Со спины",
+        "tag": "INPUT",
+        "w": 1,
+        "h": 44
+      }
+    ],
+    "smallCount": 3,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nКабинет\nИ\nИлья\nathlete@example.com\nИндивидуальный план\nМОЙ ПЛАН\nПараметры тела\nЦели питания\nРасписание тренировок\nРежим тренировок\nС тренером\n\nДни занятий выбираете вы. Тренер может скорректировать расписание.\n\nПРИЛОЖЕНИЕ\nУведомления\nНастройка напоминаний\nПодключение аккаунтов\nПочта и Telegram\nПомощь и обратная связь\nВыйти из аккаунта\nФото прогресса\n\nВстань в полный рост, используй одинаковое освещение и держи камеру на одном уровне.\n\nПоследняя фотосессия\n22.06.2026\n01\nСпереди\nНажми, чтобы сделать фото\n02\nСбоку\nНажми, чтобы сделать фото\n03\nСо спины\nНажми, чтобы сделать фото\nСравнить фотосессии\n2026-05-22 → 2026-06-22\nСохранить фото\nv.3.0.753",
+    "errors": []
+  },
+  {
+    "id": "client-cabinet-telegram",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientCabinetModal=telegram",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-cabinet-telegram.png",
+    "headings": [
+      "Кабинет",
+      "МОЙ ПЛАН",
+      "ПРИЛОЖЕНИЕ",
+      "Telegram подключён"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nКабинет\nИ\nИлья\nathlete@example.com\nИндивидуальный план\nМОЙ ПЛАН\nПараметры тела\nЦели питания\nРасписание тренировок\nРежим тренировок\nС тренером\n\nДни занятий выбираете вы. Тренер может скорректировать расписание.\n\nПРИЛОЖЕНИЕ\nУведомления\nНастройка напоминаний\nПодключение аккаунтов\nПочта и Telegram\nПомощь и обратная связь\nВыйти из аккаунта\nTelegram подключён\n\nHarness Athlete · @harness_coach\n\nИзменить Telegram\nОтключить\nNotifications enabled\nЗакрыть\nv.3.0.753",
+    "errors": []
+  },
+  {
+    "id": "client-desktop-main",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 1366,
+    "screenshot": "artifacts/audit-755-screens/client-desktop-main.png",
+    "headings": [
+      "Сегодня",
+      "Доброе утро, Илья",
+      "Ноги и ягодицы",
+      "Ваши показатели",
+      "Тренер рядом"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nСегодня\n\nСреда, 9 сентября\n\nДоброе утро, Илья\nСегодня по плану\nВаш план\nНоги и ягодицы\n\nТренировка по вашему плану\n\n7 упражнений\nОткрыть тренировку\nВаши показатели\nТренировки\n12\nзавершено\nПитание\n1 840\nиз 2 500 ккал\nВес\n89\n-0,5 кг\nТренер рядом\nТР\nВаш тренер\n1 сообщение от тренера",
+    "errors": []
+  },
+  {
+    "id": "client-desktop-workouts",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 1366,
+    "screenshot": "artifacts/audit-755-screens/client-desktop-workouts.png",
+    "headings": [
+      "Тренировки",
+      "Сегодня",
+      "Ваша программа"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Тренировки\nПн\n7\nВт\n8\nСр\n9\nЧт\n10\nПт\n11\nСб\n12\nВс\n13\nСегодня\nРасписание\nИНДИВИДУАЛЬНАЯ ПРОГРАММА\n9 сент\n01\nДень 1 — Верх тела\nТренировка 1\n\n2 упражнений · 2 подходов\n\nНачать тренировку\nВаша программа\nТестовая программа\nПрограмма от тренера\n0 из 2 тренировок\n2 осталось\nОткрыть программу\nИстория и рекорды\nВыполнено тренировок: 0\n\nВы выбираете дни. Порядок тренировок в программе сохраняется.\n\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-desktop-nutrition",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 1366,
+    "screenshot": "artifacts/audit-755-screens/client-desktop-nutrition.png",
+    "headings": [
+      "Питание",
+      "1 534 ккал",
+      "Добавить еду"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Питание\nПн\n22\nВт\n23\nСр\n24\nЧт\n25\nПт\n26\nСб\n27\nВс\n28\n980\nиз 2514 ккал\n\nОсталось на сегодня\n\n1 534 ккал\n4 дня подряд\nБелки\n76 / 172 г\nЖиры\n36 / 62 г\nУглеводы\n83 / 317 г\nДобавить еду\nПродукт\nФото AI\nГолос\nКалендарь\nПриёмы пищи\nЗавтрак\nОмлет\n360\nОбед\nКурица с рисом\n620\nУжин\nНе добавлено\n—\nАнализ питания\nБелка пока мало, добавь белковый продукт.\nСегодня\nТренировки\nПитание\nПрогресс\nКабинет",
+    "errors": []
+  },
+  {
+    "id": "client-desktop-progress",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 1366,
+    "screenshot": "artifacts/audit-755-screens/client-desktop-progress.png",
+    "headings": [
+      "Прогресс",
+      "Достижения",
+      "Контроль тела"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nПрогресс\nМесяц\n6 месяцев\nГод\nТекущий вес\n88,8 кг\n−1,3 кг\nс прошлого замера\n90,1\n88,8\n22.05.2026\n22.06.2026\nПоследний замер: 22.06.2026\nДобавить вес\nДостижения\n12 тренировок завершено\nКаждое занятие — шаг вперёд\nКонтроль тела\nФото прогресса\nДобавьте первое фото\nЗамеры тела\nПоследний замер: 22.06.2026\n\nВес и замеры помогают наблюдать динамику. Отдельное значение — только часть картины.",
+    "errors": []
+  },
+  {
+    "id": "client-desktop-cabinet",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientWorkoutOverviewState=today",
+    "width": 1366,
+    "screenshot": "artifacts/audit-755-screens/client-desktop-cabinet.png",
+    "headings": [
+      "Кабинет",
+      "МОЙ ПЛАН",
+      "ПРИЛОЖЕНИЕ"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nКабинет\nИ\nИлья\nathlete@example.com\nИндивидуальный план\nМОЙ ПЛАН\nПараметры тела\nЦели питания\nРасписание тренировок\nРежим тренировок\nС тренером\n\nДни занятий выбираете вы. Тренер может скорректировать расписание.\n\nПРИЛОЖЕНИЕ\nУведомления\nНастройка напоминаний\nПодключение аккаунтов\nПочта и Telegram\nПомощь и обратная связь\nВыйти из аккаунта\nv.3.0.753",
+    "errors": []
+  },
+  {
+    "id": "trainer-overview",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-overview.png",
+    "headings": [
+      "Хронология событий"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Главная\nКлиенты\nПрограммы\nКабинет\nДашборд\nЖУРНАЛ ДНЯ\nХронология событий\n\nСобытия дня и уже проверенные сигналы по данным клиентов.\n\nВсё просмотрено\nВсе события\n0\nПроверенные\n0\nЗаписи\n0\nВ журнале пока нет событий. Незакрытые задачи показаны выше.",
+    "errors": []
+  },
+  {
+    "id": "trainer-clients",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-clients.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Поиск клиента...",
+        "tag": "INPUT",
+        "w": 187,
+        "h": 42
+      }
+    ],
+    "smallCount": 1,
+    "unlabelled": 0,
+    "text": "Главная\nКлиенты\nПрограммы\nКабинет\nКлиенты\nДобавить\nВсе\nВнимание\nБез программы\nНеактивные\nGermes\nРекомпозиция\n82 /100\nПрогресс\n1 / 4\nтренировки\n2 / 7\nпитание\nВсё в порядке",
+    "errors": []
+  },
+  {
+    "id": "trainer-client-overview",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-client-overview.png",
+    "headings": [
+      "Germes",
+      "Сводка",
+      "Динамика",
+      "Вес",
+      "Замеры",
+      "Сила",
+      "Питание"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Действия с клиентом",
+        "tag": "BUTTON",
+        "w": 40,
+        "h": 44
+      },
+      {
+        "name": "Открыть абонемент клиента",
+        "tag": "BUTTON",
+        "w": 361,
+        "h": 35
+      }
+    ],
+    "smallCount": 2,
+    "unlabelled": 0,
+    "text": "Клиенты\nGermes\n\n28 лет · 180 см · 88.8 кг\n\nЦель: Рекомпозиция\nАбонемент не активен\nНастроить абонемент ›\nСводка\nТренировки\nПитание\nФото и замеры\nСводка\n\nВсё важное о клиенте\n\nТренировки\n1 из 3\nТренировки выполнены · дата уточняется\nДневник питания\n0 из 7 дней\nЗа последнюю неделю\nПоследний вес\n88.8 кг\n16 июн.\nДинамика\n1 месяц\n3 месяца\n6 месяцев\nДинамика веса\n88,8 кг\n1 июн.\n16 июн.\nВес\nЗамеры\nСила\nПитание\n\nОценивайте вес вместе с замерами и силовыми показателями. Данные питания — только за завершённые дни.\n\nПоследние события\nКомментарий после тренировки\nПовторы выполнил, но рабочий вес пришлось снизить.\nРасписание занятий\nБлижайшие тренировки клиента\nДобавлены замеры\n16 июн.\nПрогресс упражнений\nНагрузка, история и решения тренера\nРабота с клиентом\nРасписание и абонемент\nДаты занятий и оставшиеся тренировки\nЗадания клиенту\nТекущие задания и результаты\nСообщения\nПереписка с клиентом",
+    "errors": []
+  },
+  {
+    "id": "trainer-client-workouts",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-client-workouts.png",
+    "headings": [
+      "Germes",
+      "Тренировки",
+      "Текущая программа",
+      "tren+",
+      "Тренировки программы",
+      "Ближайшие занятия"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Действия с клиентом",
+        "tag": "BUTTON",
+        "w": 40,
+        "h": 44
+      },
+      {
+        "name": "Открыть абонемент клиента",
+        "tag": "BUTTON",
+        "w": 361,
+        "h": 35
+      },
+      {
+        "name": "",
+        "tag": "BUTTON",
+        "w": 321,
+        "h": 38
+      },
+      {
+        "name": "7 сентября",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 77
+      },
+      {
+        "name": "8 сентября",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 77
+      },
+      {
+        "name": "9 сентября",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 77
+      },
+      {
+        "name": "10 сентября",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 77
+      },
+      {
+        "name": "11 сентября",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 77
+      },
+      {
+        "name": "12 сентября",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 77
+      },
+      {
+        "name": "13 сентября",
+        "tag": "BUTTON",
+        "w": 39,
+        "h": 77
+      }
+    ],
+    "smallCount": 10,
+    "unlabelled": 2,
+    "text": "Клиенты\nGermes\n\n28 лет · 180 см · 88.8 кг\n\nЦель: Рекомпозиция\nАбонемент не активен\nНастроить абонемент ›\nСводка\nТренировки\nПитание\nФото и замеры\nТренировки\n\nПрограмма, результаты и ближайшие занятия\n\nТекущая программа\nНАЗНАЧЕННАЯ ПРОГРАММА\ntren+\n\n3 тренировки · выполнено 33%\n\nРедактировать\nТренировки программы\n33% выполнено\nНазначить другую программу\n⌄\nБлижайшие занятия\nКалендарь\nпн\n7\n \nвт\n8\n \nср\n9\n \nчт\n10\n \nпт\n11\n \nсб\n12\n \nвс\n13\n \nРасписание и абонемент\nРедактировать\nУправление\nИстория тренировок\nЗавершённые занятия и результаты\nИстория программ\nНазначенные программы и изменения",
+    "errors": []
+  },
+  {
+    "id": "trainer-client-nutrition",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-client-nutrition.png",
+    "headings": [
+      "Germes",
+      "Питание",
+      "Питание за 7 дней",
+      "Баланс за период"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Действия с клиентом",
+        "tag": "BUTTON",
+        "w": 40,
+        "h": 44
+      },
+      {
+        "name": "Открыть абонемент клиента",
+        "tag": "BUTTON",
+        "w": 361,
+        "h": 35
+      },
+      {
+        "name": "7 дней",
+        "tag": "BUTTON",
+        "w": 86,
+        "h": 38
+      },
+      {
+        "name": "14 дней",
+        "tag": "BUTTON",
+        "w": 86,
+        "h": 38
+      },
+      {
+        "name": "30 дней",
+        "tag": "BUTTON",
+        "w": 86,
+        "h": 38
+      },
+      {
+        "name": "Период",
+        "tag": "BUTTON",
+        "w": 86,
+        "h": 38
+      }
+    ],
+    "smallCount": 6,
+    "unlabelled": 0,
+    "text": "Клиенты\nGermes\n\n28 лет · 180 см · 88.8 кг\n\nЦель: Рекомпозиция\nАбонемент не активен\nНастроить абонемент ›\nСводка\nТренировки\nПитание\nФото и замеры\nПитание\n\nДневник, цели и соблюдение плана\n\nДневник\n7 дней\n14 дней\n30 дней\nПериод\nДней заполнено\n0/7\nтолько завершённые дни\nСредние калории\n—\nцель 2300 ккал\nСредний белок\n— г\nцель 180 г\nПитание за 7 дней\nцель 2300\nВ завершённых днях выбранного периода нет записей.\nБаланс за период\nБелки\n— г\nЦель 180 г\nЖиры\n— г\nЦель 70 г\nУглеводы\n— г\nЦель 235 г\n\nНедостаточно данных для устойчивого вывода. Попросите клиента чаще заполнять дневник.\n\nПлан питания\nПЛАН ПИТАНИЯ КЛИЕНТА\nИндивидуальный план\n2300 ккал\n180 г\n70 г\n235 г\nИзменить план питания",
+    "errors": []
+  },
+  {
+    "id": "trainer-client-measurements",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-client-measurements.png",
+    "headings": [
+      "Germes",
+      "Фото и замеры",
+      "Сравнение фото"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Действия с клиентом",
+        "tag": "BUTTON",
+        "w": 40,
+        "h": 44
+      },
+      {
+        "name": "Открыть абонемент клиента",
+        "tag": "BUTTON",
+        "w": 361,
+        "h": 35
+      },
+      {
+        "name": "Спереди",
+        "tag": "BUTTON",
+        "w": 106,
+        "h": 38
+      },
+      {
+        "name": "Сбоку",
+        "tag": "BUTTON",
+        "w": 106,
+        "h": 38
+      },
+      {
+        "name": "Со спины",
+        "tag": "BUTTON",
+        "w": 106,
+        "h": 38
+      }
+    ],
+    "smallCount": 5,
+    "unlabelled": 0,
+    "text": "Клиенты\nGermes\n\n28 лет · 180 см · 88.8 кг\n\nЦель: Рекомпозиция\nАбонемент не активен\nНастроить абонемент ›\nСводка\nТренировки\nПитание\nФото и замеры\nФото и замеры\n\nСравнение дат и изменение показателей\n\nСравнение фото\nСпереди\nСбоку\nСо спины\nДо\nПервая дата\n16 июн.\n1 июн.\nПосле\nВторая дата\n16 июн.\n1 июн.\nНет фото спереди\n1 июн.\nНет фото спереди\n16 июн.\nВсе фотосессии · 2\n⌄\nЗамеры тела\nПоследний замер тела · 16 июн.\nИзменения с 1 июн.\nВес\n88.8 кг\n-0.7 кг\nГрудь\n104 см\n+1 см\nТалия\n88 см\n-2 см\nВсе 12 показателей\nИстория замеров\n⌄\nГрафик и анализ\n⌄",
+    "errors": []
+  },
+  {
+    "id": "trainer-programs",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-programs.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Загрузить программу клиенту",
+        "tag": "SELECT",
+        "w": 319,
+        "h": 42
+      },
+      {
+        "name": "Назначить",
+        "tag": "BUTTON",
+        "w": 319,
+        "h": 42
+      },
+      {
+        "name": "День 1\n✓\nТренировка 1\n2 упр.\nВыполнена",
+        "tag": "BUTTON",
+        "w": 31,
+        "h": 76
+      },
+      {
+        "name": "Копировать тренировку",
+        "tag": "BUTTON",
+        "w": 35,
+        "h": 34
+      },
+      {
+        "name": "Название тренировки",
+        "tag": "INPUT",
+        "w": 319,
+        "h": 42
+      }
+    ],
+    "smallCount": 5,
+    "unlabelled": 0,
+    "text": "Главная\nКлиенты\nПрограммы\nКабинет\nПлан тренировок\nПрограммы\nМоя библиотека упражнений\nНазначенная программа\ntren+\nЗагрузить программу клиенту\nВыберите из библиотеки\ntren+\nПоддержка\nНазначить\nДень 1\n✓\nТренировка 1\n2 упр.\nВыполнена\nДень 2\nТренировка 2\n1 упр.\nПропущена\nДень 3\nТренировка 3\n1 упр.\nПропущена\nДень 4\nБудущая тренировка\n1 упр.\nПропущена\nПРЕДЫДУЩАЯ ПРОГРАММАПредыдущая программа2 тренировки · только просмотр\nДобавить день\nНазвание тренировки\n2 упражнений\nСтатус тренировки\nЗапланирована\nВыполнена\nНе выполнена\nПропущена\nПеренесена\n✅ Выполнена\n\nВыполненная тренировка доступна только для просмотра. Корректируйте следующие дни программы.\n\nЖим ногами\nБез видео\n7 июл. · 2 × 12 · 70 кг1ПМ ≈ 98 кг · Вес -20 кг\nТяга нижнего блока\nБез видео\n15 июн. · 1 × 12 · 35 кг1ПМ ≈ 49 кг · Истории выполнения пока нет\nДобавить упражнение",
+    "errors": []
+  },
+  {
+    "id": "trainer-library",
+    "url": "http://127.0.0.1:4194/v2?trainerHarness=1&photoCompare=1&programAssignments=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/trainer-library.png",
+    "headings": [
+      "Моя библиотека упражнений"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Найти упражнение...",
+        "tag": "INPUT",
+        "w": 142,
+        "h": 42
+      },
+      {
+        "name": "Группа мышц",
+        "tag": "SELECT",
+        "w": 266,
+        "h": 42
+      }
+    ],
+    "smallCount": 2,
+    "unlabelled": 0,
+    "text": "Главная\nКлиенты\nПрограммы\nКабинет\nМоя библиотека\nПрограммы\nМоя библиотека упражнений\nМоя библиотека упражнений\n\nЛичные упражнения, видео и параметры из ваших программ\n\nДобавить\nГруппа мышц\nВсе группы · 4\nГрудь · 1\nСпина · 2\nПлечи · 0\nНоги и ягодицы · 1\nИкры · 0\nБицепс · 0\nТрицепс · 0\nПресс · 0\nБез группы · 0\nУдалённые · 0\nЖим ногами\n2 подх. · без видео\nТяга нижнего блока\n1 подх. · без видео\nЖим лёжа с гантелями\n1 подх. · без видео\nТяга верхнего блока\n1 подх. · без видео",
+    "errors": []
+  },
+  {
+    "id": "client-avatarCrop",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=avatarCrop",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-avatarCrop.png",
+    "headings": [
+      "Область фото"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Масштаб аватара",
+        "tag": "INPUT",
+        "w": 275,
+        "h": 16
+      }
+    ],
+    "smallCount": 1,
+    "unlabelled": 0,
+    "text": "Область фото\n\nПеремещай фото пальцем, чтобы лицо оказалось внутри круга.\n\nОтмена\nГотово",
+    "errors": []
+  },
+  {
+    "id": "client-nutritionSearchHistory",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=nutritionSearchHistory",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-nutritionSearchHistory.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "История поиска\nHarness Greek Yogurt\nHarness Salmon Bowl\nHarness Oat Bar",
+    "errors": []
+  },
+  {
+    "id": "client-nutritionPhotoPreview",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=nutritionPhotoPreview",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-nutritionPhotoPreview.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Примерная оценка ИИ\n92%\nПроверьте КБЖУ и порцию перед добавлением в дневник\n🍗\nКуриная грудка\n🥩\nФиле индейки\n🐟\nБелая рыба",
+    "errors": []
+  },
+  {
+    "id": "client-voiceReview",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=voiceReview",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-voiceReview.png",
+    "headings": [
+      "Готово"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "ГОЛОСОВОЙ ВВОД · ТЕСТ\n\nГотово\n\nПроверьте добавленные продукты. Ошибочную позицию можно удалить.\n\nДОБАВЛЕНО\n\nОвощи и продукты из них: Томаты свежие с зеленью\nОбед · 400 г · 72 ккал · Б 3.5 · Ж 0.8 · У 15.6\n\nВыберите точный вариант\n\n«тунец» · Обед\n\nТунец в собственном соку, консервированный\nТочное совпадение · проверенная база · 92 ккал на 100 г\nТунец в растительном масле, консервированный\nТочное совпадение · проверенная база · 198 ккал на 100 г\n\nНажмите «Готово», когда всё верно.\n\nДобавить ещё\nГотово",
+    "errors": []
+  },
+  {
+    "id": "client-dialog-draft",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutDialogs&clientWorkoutDialog=draft",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-dialog-draft.png",
+    "headings": [
+      "Продолжить тренировку?"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Продолжить тренировку?\n\nНайден незавершённый черновик. Можно восстановить прогресс или начать заново.\n\nНачать заново\nВосстановить",
+    "errors": []
+  },
+  {
+    "id": "client-dialog-readiness",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutDialogs&clientWorkoutDialog=readiness",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-dialog-readiness.png",
+    "headings": [],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Как ты себя чувствуешь?\n\nВыбор влияет только на рабочий вес этой тренировки.\n\n😤\nОтлично\nНемного увеличить рабочий вес\n🙂\nНормально\nОставить план тренера без изменений\n😵\nПлохо\nНемного снизить нагрузку\n\nПлановые веса тренера останутся без изменений.\n\nНазад\nПродолжить",
+    "errors": []
+  },
+  {
+    "id": "client-dialog-post",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutDialogs&clientWorkoutDialog=post",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-dialog-post.png",
+    "headings": [
+      "Как прошла тренировка?"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "САМОЧУВСТВИЕ\nКак прошла тренировка?\n\nОтвет поможет точнее подобрать восстановление и следующую нагрузку.\n\n🔥\nХорошо\nМожно прогрессировать\n🙂\nНормально\nСтабильная тренировка\n😵\nПлохо\nНужно восстановление",
+    "errors": []
+  },
+  {
+    "id": "client-dialog-exit",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutDialogs&clientWorkoutDialog=exit",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-dialog-exit.png",
+    "headings": [
+      "Выйти из тренировки?"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Выйти из тренировки?\n\nВведённые данные сохранены в черновике. Ты сможешь продолжить позже.\n\nОстаться\nВыйти",
+    "errors": []
+  },
+  {
+    "id": "client-dialog-incomplete",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutDialogs&clientWorkoutDialog=incomplete",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-dialog-incomplete.png",
+    "headings": [
+      "Сохранить неполную тренировку?"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сохранить неполную тренировку?\n\nВыполнено подходов: 2 из 5. Остальные подходы будут отмечены как невыполненные.\n\nПродолжить тренировку\nСохранить неполную",
+    "errors": []
+  },
+  {
+    "id": "client-sheet-profile",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=profileSheets&sheet=profile",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-sheet-profile.png",
+    "headings": [
+      "Анкета"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Личный кабинет\nАнкета\nПараметры тела\nВес, рост, возраст и активность\nТекущий вес\nЦелевой вес\nРост\nВозраст\nМужчина\nЖенщина\nТвоя цель\nПохудение\nНабор массы\nРекомпозиция\nПоддержание\nАктивность\nНизкая\nСредняя\nВысокая\nОчень высокая\nСохранить анкету",
+    "errors": []
+  },
+  {
+    "id": "client-sheet-nutrition",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=profileSheets&sheet=nutrition",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-sheet-nutrition.png",
+    "headings": [
+      "Цели питания"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Калории и макронутриенты\nЦели питания\nВаша цель\nПоддержка\nРекомпозиция\nПохудение\nСушка\nНабор\nРекомпозиция: небольшой дефицит и сбалансированный рацион для снижения жира с сохранением мышц.\nКкал\n2522\nБелки\n213 г\nЖиры\n77 г\nУгл.\n244 г\nСохранить план питания\n‹\n7–13 сентября\n›\nПн\nВт\nСр\nЧт\nПт\nСб\nВс\n7\n1280\nфакт\n8\n—\n9\n2522\nплан\n10\n2522\nплан\n11\n2522\nплан\n12\n2522\nплан\n13\n2522\nплан\nФакт\nПлан\n\nЗаписано за день: 1280 ккал",
+    "errors": []
+  },
+  {
+    "id": "client-sheet-settings",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=profileSheets&sheet=settings",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-sheet-settings.png",
+    "headings": [
+      "Уведомления"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Личный кабинет\nУведомления\n\nНАПОМИНАНИЯ\n\nНапоминания в Telegram\nТренировки, замеры и фото прогресса\nTelegram подключён\n\nНапоминания приходят по вашему расписанию. Их можно отключить, сохранив подключение Telegram.\n\nСообщения от тренера и уведомления внутри приложения остаются доступными.",
+    "errors": []
+  },
+  {
+    "id": "client-sheet-connections",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=profileSheets&sheet=connections",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-sheet-connections.png",
+    "headings": [
+      "Подключение аккаунтов"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Личный кабинет\nПодключение аккаунтов\nПочта\ntest@invite.tren-85720.app · привязана\nTelegram\n@telegram · подключён",
+    "errors": []
+  },
+  {
+    "id": "client-workout-sheet-calendar",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutSheets&sheet=calendar",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-workout-sheet-calendar.png",
+    "headings": [
+      "Тренировки"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Расписание и история\nТренировки\nКалендарь\nИстория\n‹\nСентябрь 2026 Г.\n›\nПлан на месяц\nВы выбираете дни, а тренер видит изменения.\nИзменить расписание\nПн\nВт\nСр\nЧт\nПт\nСб\nВс\n31\n1\n2\n3\n4\n5\n6\n7\n№1\n8\n9\n10\n11\n№2\n12\n13\n14\n15\n№3\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\nПлан\nВ срок\nПрошлые\nДругой день\nПропущена\nСмещена\nВыбранный день\n7 сентября 2026 г.\nТренировка запланирована\nТренировка 8\n14:00 · 50 мин",
+    "errors": []
+  },
+  {
+    "id": "client-workout-sheet-history",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutSheets&sheet=history",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-workout-sheet-history.png",
+    "headings": [
+      "Тренировки"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Расписание и история\nТренировки\nКалендарь\nИстория\nТренировка 8\n7 сент 2026 г. · 50 мин\nТренировка для грудных мышц, ног и бицепса с дополнительными упражнениями\n6 сент 2026 г. · 50 мин\nТренировка 6\n5 сент 2026 г. · 50 мин\nТренировка 5\n4 сент 2026 г. · 50 мин\nТренировка 4\n3 сент 2026 г. · 50 мин\nТренировка 3\n2 сент 2026 г. · 50 мин\nТренировка 2\n1 сент 2026 г. · 50 мин\nТренировка 1\n31 авг 2026 г. · 50 мин",
+    "errors": []
+  },
+  {
+    "id": "client-workout-sheet-mode",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutSheets&sheet=mode",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-workout-sheet-mode.png",
+    "headings": [
+      "Режим тренировок"
+    ],
+    "overflow": 0,
+    "smallControls": [
+      {
+        "name": "Запомнить выбор",
+        "tag": "INPUT",
+        "w": 20,
+        "h": 20
+      }
+    ],
+    "smallCount": 1,
+    "unlabelled": 0,
+    "text": "Режим тренировок\nБазовые тренировки\nПодбор готовой программы по цели и опыту\nИндивидуальный план\nПрограмма, назначенная вашим тренером\nЗапомнить выбор",
+    "errors": []
+  },
+  {
+    "id": "client-cabinet-notifications",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientCabinetModal=notifications",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-cabinet-notifications.png",
+    "headings": [
+      "Сегодня",
+      "Доброе утро, Илья",
+      "Ноги и ягодицы",
+      "Ваши показатели",
+      "Тренер рядом",
+      "Уведомления"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Сегодня\nТренировки\nПитание\nПрогресс\nКабинет\nСегодня\n\nСреда, 9 сентября\n\nДоброе утро, Илья\nСегодня по плану\nВаш план\nНоги и ягодицы\n\nТренировка по вашему плану\n\n7 упражнений\nОткрыть тренировку\nВаши показатели\nТренировки\n12\nзавершено\nПитание\n1 840\nиз 2 500 ккал\nВес\n89\n-0,5 кг\nТренер рядом\nТР\nВаш тренер\n1 сообщение от тренера\nУведомления\n\n1 активная задача\n\nСообщение от тренера\nНовое",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-1",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=1",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-1.png",
+    "headings": [
+      "Выберите пол"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Шаг 2 из 10\nВыберите пол\n\nЭто поможет учитывать ваши особенности.\n\nМужчина\nЖенщина\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-2",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=2",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-2.png",
+    "headings": [
+      "Как вас зовут?"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Шаг 3 из 10\nКак вас зовут?\n\nВведите ваше имя.\n\nВаше имя\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-3",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=3",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-3.png",
+    "headings": [
+      "Сколько вам лет?"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 1,
+    "text": "Шаг 4 из 10\nСколько вам лет?\n\nВведите ваш возраст.\n\nВозраст\n32 лет\n14\n35\n80\nлет\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-4",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=4",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-4.png",
+    "headings": [
+      "Ваш текущий вес"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 1,
+    "text": "Шаг 5 из 10\nВаш текущий вес\n\nВведите ваш текущий вес.\n\nТекущий вес\n88 кг\n48\n88\n128\nкг\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-5",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=5",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-5.png",
+    "headings": [
+      "Ваш рост"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 1,
+    "text": "Шаг 6 из 10\nВаш рост\n\nВведите ваш рост.\n\nРост\n181 см\n140\n175\n210\nсм\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-6",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=6",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-6.png",
+    "headings": [
+      "Уровень активности"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Шаг 7 из 10\nУровень активности\n\nВыберите, насколько вы активны.\n\nМинимальный\nМало движения\nУмеренный\n1–3 тренировки в неделю\nАктивный\n3–5 тренировок в неделю\nОчень активный\nСпорт почти каждый день\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-7",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=7",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-7.png",
+    "headings": [
+      "Ваша цель"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Шаг 8 из 10\nВаша цель\n\nВыберите вашу основную цель.\n\nПохудение\nСнизить вес\nНабор массы\nНабрать мышечную массу\nРекомпозиция\nСнизить жир и набрать мышцы\nПоддержание формы\nСохранить текущую форму\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-8",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=8",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-8.png",
+    "headings": [
+      "Целевой вес"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 1,
+    "text": "Шаг 9 из 10\nЦелевой вес\n\nУкажите вес, к которому будем вести питание и прогресс.\n\nЦелевой вес\n84 кг\n40\n75\n250\nкг\nНазад\nДалее",
+    "errors": []
+  },
+  {
+    "id": "client-onboarding-9",
+    "url": "http://127.0.0.1:4194/v2?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=9",
+    "width": 393,
+    "screenshot": "artifacts/audit-755-screens/client-onboarding-9.png",
+    "headings": [
+      "Проверьте ваши данные"
+    ],
+    "overflow": 0,
+    "smallControls": [],
+    "smallCount": 0,
+    "unlabelled": 0,
+    "text": "Шаг 10 из 10\nПроверьте ваши данные\n\nПроверьте и подтвердите данные перед созданием профиля.\n\nПол\nМужчина\nИмя\nHarness Athlete\nВозраст\n32 лет\nВес\n88 кг\nРост\n181 см\nУровень активности\nУмеренный\nЦель\nРекомпозиция\nЦелевой вес\n84 кг\nНазад\nСоздать профиль",
+    "errors": []
+  }
+]

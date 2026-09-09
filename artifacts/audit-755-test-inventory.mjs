@@ -1,0 +1,6 @@
+import fs from 'node:fs/promises';
+async function scan(dir) { const out=[]; for(const e of await fs.readdir(dir,{withFileTypes:true})) {const p=`${dir}/${e.name}`;if(e.isDirectory())out.push(...await scan(p));else if(/\.(?:test\.mjs|spec\.js)$/.test(p))out.push(p);}return out;}
+const files=await scan('tests');const records=[];
+for(const file of files){const s=await fs.readFile(file,'utf8');records.push({file,browser:file.includes('/e2e/'),readsSource:/readFileSync|readFile\(/.test(s),regexAssertions:(s.match(/assert\.(?:match|doesNotMatch)/g)||[]).length,setsViewport:/setViewportSize/.test(s),projectGuard:/project\.name|testInfo\.project/.test(s),declaredTests:(s.match(/\btest\(/g)||[]).length});}
+const summary={files:records.length,nodeFiles:records.filter(x=>!x.browser).length,browserFiles:records.filter(x=>x.browser).length,nodeFilesReadingSource:records.filter(x=>!x.browser&&x.readsSource).length,regexAssertionsInNode:records.filter(x=>!x.browser).reduce((a,x)=>a+x.regexAssertions,0),browserViewportFilesWithoutProjectGuard:records.filter(x=>x.browser&&x.setsViewport&&!x.projectGuard).map(x=>x.file)};
+await fs.writeFile('artifacts/audit-755-test-inventory.json',JSON.stringify({summary,records},null,2));console.log(JSON.stringify(summary,null,2));

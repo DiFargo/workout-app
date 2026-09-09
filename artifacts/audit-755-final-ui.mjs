@@ -1,0 +1,32 @@
+import {chromium} from '@playwright/test';
+import fs from 'node:fs/promises';
+const browser=await chromium.launch();
+const page=await browser.newPage({viewport:{width:393,height:852}});
+const base='http://127.0.0.1:4194/v2';
+const results=[];
+await page.goto(`${base}?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=0`);
+await page.getByRole('button',{name:'Начать',exact:true}).waitFor();
+await page.screenshot({path:'artifacts/audit-755-screens/client-onboarding-0.png'});
+results.push({id:'client-onboarding-0',text:await page.locator('body').innerText()});
+await page.goto(`${base}?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=nutritionMealModal`);
+await page.getByTestId('nutrition-meal-food').waitFor();
+results.push({id:'meal-row-layout',layout:await page.getByTestId('nutrition-meal-food').evaluate(e=>({columns:getComputedStyle(e).gridTemplateColumns,children:[...e.children].map(c=>({part:c.dataset.nutritionMealPart,width:c.getBoundingClientRect().width,text:c.innerText}))}))});
+results.push({id:'notification-destination',status:'not covered: current fixture has a message, not destination-bearing tasks; stale spec never reaches the intended flow'});
+for (const width of [320,393,1366]) {
+  await page.setViewportSize({width,height:852});
+  await page.goto(`${base}?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=workoutHistory`);
+  const refresh=page.getByTestId('workout-history-refresh');await refresh.waitFor();
+  const box=await refresh.boundingBox();
+  results.push({id:'history-refresh-bounds',width,box,clipped:box.x+box.width>width});
+}
+await page.setViewportSize({width:393,height:852});
+await page.goto(`${base}?clientHarness=1&clientHarnessTheme=warm-light&clientHarnessPage=firstSetup&clientFirstSetupStep=3`);
+await page.locator('input').first().waitFor();
+results.push({id:'onboarding-input-labels',inputs:await page.locator('input').evaluateAll(elements=>elements.map(e=>({type:e.type,ariaLabel:e.getAttribute('aria-label'),labels:[...e.labels||[]].map(l=>l.innerText)})))});
+await page.goto(`${base}?trainerHarness=1`);
+await page.getByTestId('trainer-nav-more').click();
+await page.locator('.trainerNextCabinetPage').waitFor();
+await page.screenshot({path:'artifacts/audit-755-screens/trainer-cabinet.png'});
+results.push({id:'trainer-cabinet',text:await page.locator('body').innerText()});
+await fs.writeFile('artifacts/audit-755-final-ui-results.json',JSON.stringify(results,null,2));
+console.log(JSON.stringify(results,null,2));await browser.close();

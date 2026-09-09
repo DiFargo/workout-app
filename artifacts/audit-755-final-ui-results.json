@@ -1,0 +1,87 @@
+[
+  {
+    "id": "client-onboarding-0",
+    "text": "Шаг 1 из 10\nДобро пожаловать!\n\nДавайте настроим ваш профиль, чтобы тренировки и рекомендации были максимально точными.\n\nТренировки\nВаш план и результаты занятий\nПитание\nДневник и цели на каждый день\nПрогресс\nВес, замеры и ваши достижения\nНачать"
+  },
+  {
+    "id": "meal-row-layout",
+    "layout": {
+      "columns": "219px 50px 16px",
+      "children": [
+        {
+          "part": "food-icon-wrap",
+          "width": 52,
+          "text": "🥚\n360\nккал"
+        },
+        {
+          "part": "info",
+          "width": 50,
+          "text": "Омлет\nг"
+        },
+        {
+          "part": "arrow",
+          "width": 24,
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "notification-destination",
+    "status": "not covered: current fixture has a message, not destination-bearing tasks; stale spec never reaches the intended flow"
+  },
+  {
+    "id": "history-refresh-bounds",
+    "width": 320,
+    "box": {
+      "x": 292,
+      "y": 8,
+      "width": 44,
+      "height": 44
+    },
+    "clipped": true
+  },
+  {
+    "id": "history-refresh-bounds",
+    "width": 393,
+    "box": {
+      "x": 361,
+      "y": 8,
+      "width": 44,
+      "height": 44
+    },
+    "clipped": true
+  },
+  {
+    "id": "history-refresh-bounds",
+    "width": 1366,
+    "box": {
+      "x": 1139,
+      "y": 8,
+      "width": 44,
+      "height": 44
+    },
+    "clipped": false
+  },
+  {
+    "id": "onboarding-input-labels",
+    "inputs": [
+      {
+        "type": "range",
+        "ariaLabel": null,
+        "labels": [
+          "Возраст\n32 лет\n14\n35\n80\nлет"
+        ]
+      },
+      {
+        "type": "text",
+        "ariaLabel": null,
+        "labels": []
+      }
+    ]
+  },
+  {
+    "id": "trainer-cabinet",
+    "text": "Главная\nКлиенты\nПрограммы\nКабинет\nv.3.0.753\nКабинет\nТренер\nBeta\n\nПрофиль и настройки\n\nВсего клиентов\n1\nАктивных\n1\nТребуют внимания\n0\nМои программы и упражнения\nЛичная библиотека и шаблоны для клиентов\nАналитика\nСводка по активности и рискам клиентов\nУведомления\nСобытия и настройки напоминаний\nПодключения\nПочта и Telegram для доступа и связи\nВыйти из аккаунта"
+  }
+]

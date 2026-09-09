@@ -1,0 +1,1799 @@
+{
+  "summary": {
+    "files": 197,
+    "nodeFiles": 158,
+    "browserFiles": 39,
+    "nodeFilesReadingSource": 50,
+    "regexAssertionsInNode": 1062,
+    "browserViewportFilesWithoutProjectGuard": [
+      "tests/e2e/basic-workout-questionnaire.spec.js",
+      "tests/e2e/client-ai-coach-visual.spec.js",
+      "tests/e2e/client-bottom-safe-area.spec.js",
+      "tests/e2e/client-native-refinement.spec.js",
+      "tests/e2e/client-rest-timer.spec.js",
+      "tests/e2e/food-screens-compact.spec.js",
+      "tests/e2e/modal-layer.spec.js",
+      "tests/e2e/nutrition-voice-sheet.spec.js",
+      "tests/e2e/onboarding-refinement.spec.js",
+      "tests/e2e/profile-edit-button.spec.js",
+      "tests/e2e/profile-sheets-refinement.spec.js",
+      "tests/e2e/trainer-nutrition-layout.spec.js",
+      "tests/e2e/workout-sheets-refinement.spec.js"
+    ]
+  },
+  "records": [
+    {
+      "file": "tests/admin-basic-program-lifecycle.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/admin-client-calendar.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/admin-client-deletion.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 13,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/admin-client-profile.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/admin-client-progress.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/admin-operational-ui.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 21,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/admin-trainer-invite-ui.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 9,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/admin-trainer-materials-shell.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 15,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/admin-trainer-profile-route.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 10,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/admin-users-role-promotion.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 10,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/app-bootstrap-workout-calendar.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/app-check.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/app-structure.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 23,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 10
+    },
+    {
+      "file": "tests/app-theme.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/app-version.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/appcore-props-scope.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/audit-safety.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 15
+    },
+    {
+      "file": "tests/basic-workout-ai-catalogue.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 5,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/basic-workout-alternatives.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 8
+    },
+    {
+      "file": "tests/basic-workout-cloud-save-contract.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 9,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/basic-workout-compact-library.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/basic-workout-equipment-assets.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/basic-workout-exercise-order.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/basic-workout-exercise-presentation.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 9
+    },
+    {
+      "file": "tests/basic-workout-fallback-plan.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/basic-workout-full-catalogue.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/basic-workout-long-plan-access.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/basic-workout-mannequin-assets.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/basic-workout-mannequin-resolver.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 11
+    },
+    {
+      "file": "tests/basic-workout-plan-builder.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 12
+    },
+    {
+      "file": "tests/basic-workout-quiz-draft.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/basic-workout-schedule-progression.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/basic-workout-start.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/basic-workout-starting-weights.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/basic-workout-today-fallback.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/basic-workout-today-generation-limit.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/body-measurement-records.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/client-assigned-workout-refresh.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/client-exercise-media.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 11
+    },
+    {
+      "file": "tests/client-startup-resilience.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 26,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/client-telegram-profile.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/client-ux.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/css-variant.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/admin-visual.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/basic-notifications.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/basic-workout-completion.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/e2e/basic-workout-questionnaire.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/e2e/basic-workout-save-actions.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/e2e/client-ai-coach-visual.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/client-bottom-safe-area.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/client-harness.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 11
+    },
+    {
+      "file": "tests/e2e/client-ios-reference.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/client-ios-system.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/client-native-refinement.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 7
+    },
+    {
+      "file": "tests/e2e/client-nutrition-visual.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 33
+    },
+    {
+      "file": "tests/e2e/client-primary-header-size.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/client-primary-visual.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 14
+    },
+    {
+      "file": "tests/e2e/client-rest-timer.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/client-smoke.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/client-trainer-notification-navigation.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/client-workout-visual.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 16
+    },
+    {
+      "file": "tests/e2e/food-screens-compact.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/e2e/modal-layer.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/e2e/native-protected-smoke.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/nutrition-voice-sheet.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/e2e/onboarding-refinement.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/profile-edit-button.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/profile-sheets-refinement.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/e2e/trainer-assignment-empty.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/trainer-audit-editor.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/e2e/trainer-library-cleanup.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": true,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/trainer-library-delete.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/trainer-nutrition-layout.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/trainer-responsive-regression.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/trainer-v2-adaptive.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/trainer-v2-client-four.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/trainer-v2-palette.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/trainer-v2-sparse.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": true,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/trainer-v2.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": true,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/e2e/trainer-visual.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/e2e/trainer-workspace.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": true,
+      "declaredTests": 14
+    },
+    {
+      "file": "tests/e2e/workout-sheets-refinement.spec.js",
+      "browser": true,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": true,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/error-reporting.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/exercise-progress.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 15
+    },
+    {
+      "file": "tests/exercise-weight-input.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/firebase-release-artifact.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 9,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/firebase-storage.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/first-setup-handlers.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/first-setup-metric-scale.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/import-openfoodfacts-catalog.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/invite-page-presentation.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/login-resolution.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/nutrition-advice.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 5,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/nutrition-barcode-catalog.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-calendar.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 7
+    },
+    {
+      "file": "tests/nutrition-catalog-artifacts.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-catalog-builder.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/nutrition-catalog-search.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 5,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/nutrition-food-model.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/nutrition-food-presentation.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-food-totals.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-legacy-compatibility.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/nutrition-numbers.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-offline-search.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/nutrition-performance-paths.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 11,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/nutrition-portions.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-search-deadline.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-voice-feedback.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/nutrition-voice-input.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 154,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 10
+    },
+    {
+      "file": "tests/nutrition-voice-item-editor.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/nutrition-voice-portions.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/p0-account-data-isolation.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 11,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/profile-dashboard-schedule.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/profile-measurements.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 7,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 9
+    },
+    {
+      "file": "tests/profile-nutrition-handlers.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/profile-quick-weight.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/profile-save-feedback.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 8,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/profile-workout-schedule.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/progress-insight.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 7
+    },
+    {
+      "file": "tests/refactor-domain.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 5,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 13
+    },
+    {
+      "file": "tests/reminder-schedule.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 7
+    },
+    {
+      "file": "tests/role-access.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/security-boundaries.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 111,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 16
+    },
+    {
+      "file": "tests/storage-safety.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/subscription-reminders-backend.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 8
+    },
+    {
+      "file": "tests/telegram-notification-settings.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 8
+    },
+    {
+      "file": "tests/telegram-profile.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/trainer-action-center.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 9
+    },
+    {
+      "file": "tests/trainer-action-status.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 9,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/trainer-assignment-errors.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/trainer-attention.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 12
+    },
+    {
+      "file": "tests/trainer-audit-draft.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/trainer-audit-history.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-audit-summary.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/trainer-client-export.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-client-loading-route.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-client-message-resolution-action.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/trainer-client-message-resolution.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-client-mirror.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-client-program-assignments.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 10
+    },
+    {
+      "file": "tests/trainer-client-program-editor-modal.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 14,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-client-program-name.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-client-progress-dashboard.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 11,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/trainer-client-questionnaire-gate.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-client-setup-checklist.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 23,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 8
+    },
+    {
+      "file": "tests/trainer-client-setup-persistence-route.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-client-summary.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 27
+    },
+    {
+      "file": "tests/trainer-create-client-state.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/trainer-current-plan-workouts.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 8
+    },
+    {
+      "file": "tests/trainer-daily-journal.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 10,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/trainer-exercise-alternatives.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/trainer-exercise-library.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 7
+    },
+    {
+      "file": "tests/trainer-exercise-presentation-identity.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/trainer-exercise-progress-review.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/trainer-library-muscle-groups.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-library-visibility.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/trainer-load-bounds.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/trainer-month-exercise-sets.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/trainer-month-program-normalization.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-navigation.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 384,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 42
+    },
+    {
+      "file": "tests/trainer-nonnegative-loads.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-nutrition-insights.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/trainer-nutrition-plan.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/trainer-program-access.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/trainer-program-assignment.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 33,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 10
+    },
+    {
+      "file": "tests/trainer-program-editor-draft.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 1,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-program-editor-snapshot.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/trainer-program-library-status.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-program-lifecycle.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 2,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 6
+    },
+    {
+      "file": "tests/trainer-program-readiness.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 8,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-program-stats.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/trainer-program-validation.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 7,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 9
+    },
+    {
+      "file": "tests/trainer-style-variant.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-summary-dates.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/trainer-user-lists.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 7
+    },
+    {
+      "file": "tests/trainer-user-load-performance.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/trainer-workout-review-decision.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/universal-workout-blocks.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/user-display-name.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/voice-food-safety.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/workout-completion.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 9
+    },
+    {
+      "file": "tests/workout-countdown.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/workout-draft-state.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 6,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/workout-entry-navigation.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 3
+    },
+    {
+      "file": "tests/workout-finish-comment-flow.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 12,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/workout-history-dedupe.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/workout-history-presentation.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 4,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/workout-last-exercise-text.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/workout-plan-mode-isolation.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 5
+    },
+    {
+      "file": "tests/workout-plan-normalization.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/workout-plan-progression.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/workout-presentation.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 4
+    },
+    {
+      "file": "tests/workout-readiness-start.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 3,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/workout-reschedule.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    },
+    {
+      "file": "tests/workout-schedule.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 14
+    },
+    {
+      "file": "tests/workout-timer-runtime.test.mjs",
+      "browser": false,
+      "readsSource": true,
+      "regexAssertions": 7,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 1
+    },
+    {
+      "file": "tests/workout-triset-runtime.test.mjs",
+      "browser": false,
+      "readsSource": false,
+      "regexAssertions": 0,
+      "setsViewport": false,
+      "projectGuard": false,
+      "declaredTests": 2
+    }
+  ]
+}

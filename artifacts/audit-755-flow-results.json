@@ -1,0 +1,21 @@
+[
+  {
+    "id": "WORKOUT-TIMER-ADJUST",
+    "before": 89,
+    "adjusted": 104,
+    "afterTwoSeconds": 104,
+    "running": true,
+    "defectPresent": true
+  },
+  {
+    "id": "NUTRITION-LIBRARY-DELETES-HISTORY",
+    "pastDayFoods": 0,
+    "defectPresent": true
+  },
+  {
+    "id": "VOICE-CANCEL-COMMITS",
+    "cancelRequested": true,
+    "added": 1,
+    "defectPresent": true
+  }
+]

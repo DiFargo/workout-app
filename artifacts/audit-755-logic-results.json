@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-09-09T14:24:34.929Z",
+  "environment": "synthetic source execution; no production writes",
+  "results": [
+    {
+      "id": "DATA-QUOTA",
+      "defectPresent": true,
+      "saved": true,
+      "persisted": "[]"
+    },
+    {
+      "id": "DATA-REPLAY",
+      "defectPresent": true,
+      "cloud": [
+        "A"
+      ],
+      "remaining": []
+    },
+    {
+      "id": "DATA-NUTRITION-REPLAY",
+      "defectPresent": true,
+      "remaining": null
+    },
+    {
+      "id": "DATA-NUTRITION-LOAD",
+      "defectPresent": true,
+      "visibleFoods": []
+    },
+    {
+      "id": "DATA-NUTRITION-MERGE",
+      "defectPresent": true,
+      "foods": [
+        "food-B"
+      ]
+    },
+    {
+      "id": "DATA-DELETED-RESURRECTS",
+      "defectPresent": true,
+      "favorites": [
+        "old"
+      ],
+      "myFoods": [
+        "old"
+      ]
+    },
+    {
+      "id": "TRAINER-LIBRARY-SAVE",
+      "defectPresent": true,
+      "reportedSuccess": false,
+      "displayedName": "Unsaved",
+      "updatedByUid": "admin"
+    },
+    {
+      "id": "TRAINER-SUMMARY",
+      "defectPresent": true,
+      "staleProfileCount": 9,
+      "currentDays": 8,
+      "displayedCount": 9,
+      "completedSameIdAfterVersionChange": 0
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "MEASUREMENT-REPLAY-ORDER",
+    "newestWeight": 78,
+    "finalProfileWeight": 79,
+    "defectPresent": true
+  },
+  {
+    "id": "NEGATIVE-INGREDIENT",
+    "grams": [
+      200,
+      -50
+    ],
+    "weight": 150,
+    "calories": 100,
+    "defectPresent": true
+  },
+  {
+    "id": "ALIAS-profileUpdateEmail",
+    "status": 200,
+    "victimWrite": {
+      "kind": "set",
+      "ref": {
+        "name": "loginAliases",
+        "id": "victim-alias"
+      },
+      "uid": "synthetic-attacker"
+    },
+    "defectPresent": true
+  },
+  {
+    "id": "ALIAS-profileUpdateLogin",
+    "status": 200,
+    "victimWrite": {
+      "kind": "delete",
+      "ref": {
+        "name": "loginAliases",
+        "id": "victim-alias"
+      }
+    },
+    "defectPresent": true
+  }
+]

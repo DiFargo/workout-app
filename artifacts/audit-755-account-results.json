@@ -1,0 +1,7 @@
+{
+  "environment": "synthetic; no network/production writes",
+  "oldAuthTime": 1,
+  "response": 200,
+  "accountChanged": true,
+  "revokedLegacyTrainerAllowed": true
+}
