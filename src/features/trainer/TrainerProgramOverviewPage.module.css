@@ -962,3 +962,22 @@
 }
 .clientAvatar img { width: 100%; height: 100%; object-fit: cover; }
 .cardSelect footer { flex-wrap: wrap; }
+
+/* Reserve the same title, metrics and status rows on every library card. */
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect {
+  display: grid;
+  grid-template-rows: 80px 60px 56px;
+  gap: 12px;
+  height: 248px;
+  box-sizing: border-box;
+  align-content: start;
+}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle {
+  align-content: start;
+  overflow: hidden;
+}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer {
+  align-content: center;
+  align-items: center;
+  row-gap: 4px;
+}
