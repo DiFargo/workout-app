@@ -1684,3 +1684,6 @@
 
 :global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseStats) {width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important}
 :global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientQuickField input) {box-sizing:border-box!important;max-width:100%!important}
+
+/* The legacy action rail reserves two buttons; the client editor shows one. */
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseActions) {width:44px!important;min-width:0!important;max-width:44px!important;box-sizing:border-box!important;justify-self:stretch!important;align-self:start!important;padding:0!important;margin:0!important}
