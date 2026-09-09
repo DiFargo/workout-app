@@ -2193,6 +2193,15 @@ function WorkoutSchedulePlanner({
               );
             })}
           </div>
+          {isTrainerV2Path(window.location.pathname) ? <div className="trainerNotificationLegend" aria-label="Типы календарных отметок">
+            <span><i aria-hidden="true" className="subscription">―</i>Период абонемента</span>
+            <span><i aria-hidden="true" className="plannedWorkout">○</i>Плановая тренировка</span>
+            <span><i aria-hidden="true" className="completed">✓</i>В срок</span>
+            <span><i aria-hidden="true" className="completedOffDate">↗</i>Выполнено в другой день</span>
+            <span><i aria-hidden="true" className="missed">!</i>Пропущена</span>
+            <span><i aria-hidden="true" className="shifted">↪</i>Смещена</span>
+            <span><i aria-hidden="true" className="pastWorkout">✓</i>Прошлая тренировка</span>
+          </div> : (
           <div className="trainerWorkoutScheduleLegend trainerWorkoutScheduleStats trainerWorkoutScheduleCalendarStatusLegend" aria-label="Статусы тренировок">
             <span className="is-planned">Плановая дата</span>
             <span className="is-completed">В срок</span>
@@ -2201,6 +2210,7 @@ function WorkoutSchedulePlanner({
             <span className="is-shifted">Смещена</span>
             <span className="is-pastCompleted">Прошлая тренировка</span>
           </div>
+          )}
         </div>
 
         {!slots.length ? <div className="trainerNextEmpty">Сначала назначьте клиенту программу тренировок.</div> : null}
@@ -2908,7 +2918,7 @@ function ClientWorkoutPlan({
             <h2>{isTrainerV2Path(window.location.pathname) ? "Текущая программа" : "Программа тренировок клиента"}</h2>
             <p>Текущий план, следующее назначение и история клиента.</p>
           </div>
-          {programTimeline.length || hasBasicProgramHistory ? (
+          {!isTrainerV2Path(window.location.pathname) && (programTimeline.length || hasBasicProgramHistory) ? (
             <button
               className={trainerClientWorkoutPlanStyles.programHistoryButton}
               type="button"
@@ -3082,7 +3092,7 @@ function ClientWorkoutPlan({
         onClick={() => setWorkoutInsightsOpen(true)}
       />) : null}
       </TrainerClientColumn>
-      {isTrainerV2Path(window.location.pathname) ? <AppleSchedule slots={visibleWorkoutSlots} client={client} onOpenHistory={() => setWorkoutInsightsOpen(true)}>
+      {isTrainerV2Path(window.location.pathname) ? <AppleSchedule slots={visibleWorkoutSlots} onOpenProgramHistory={() => setProgramHistoryOpen(true)} onOpenHistory={() => setWorkoutInsightsOpen(true)}>
       <WorkoutSchedulePlanner
         key={getWorkoutSchedulePlannerKey(client, scheduleWorkouts)}
         client={client}

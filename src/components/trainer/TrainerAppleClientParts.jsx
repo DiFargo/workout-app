@@ -11,9 +11,8 @@ export function AppleRow({ title, description, onClick, icon: Icon = CalendarDay
 export function AppleGroup({ title, action, children, className = "" }) {
   return <section className={`${styles.group} ${className}`}><header><h3>{title}</h3>{action}</header><div className={styles.surface}>{children}</div></section>;
 }
-export function AppleSchedule({ slots, client, children, onOpenHistory }) {
+export function AppleSchedule({ slots, children, onOpenHistory, onOpenProgramHistory }) {
   const [open, setOpen] = useState(false);
-  const [historyOpen, setHistoryOpen] = useState(false);
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const todayKey = toWorkoutDateKey(today);
   const next = slots.find(slot => !slot.isCompleted && slot.plannedDate >= todayKey);
@@ -22,21 +21,12 @@ export function AppleSchedule({ slots, client, children, onOpenHistory }) {
   const start = new Date(`${selected}T12:00:00`);
   start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
   const days = Array.from({ length: 7 }, (_, i) => { const date = new Date(start); date.setDate(date.getDate() + i); return date; });
-  const subscriptionHistory = Array.isArray(client?.subscription?.history) ? [...client.subscription.history].reverse() : [];
-  const formatDate = value => {
-    if (!value) return "Не указана";
-    const date = typeof value?.toDate === "function" ? value.toDate() : new Date(value);
-    return Number.isNaN(date.getTime()) ? "Не указана" : date.toLocaleDateString("ru-RU");
-  };
   return <>
     <AppleGroup title="Ближайшие занятия" action={<span className={styles.calendarLabel}>Календарь</span>}>
       <div className={styles.week}>{days.map(date => { const key = toWorkoutDateKey(date); const scheduled = slots.some(slot => slot.plannedDate === key); return <button key={key} type="button" aria-label={`${date.toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}${scheduled ? ", есть тренировка" : ""}`} aria-pressed={selected === key} onClick={() => setPicked(key)}><small>{date.toLocaleDateString("ru-RU", { weekday: "short" })}</small><strong>{date.getDate()}</strong><span aria-hidden="true">{scheduled ? "•" : " "}</span></button>; })}</div>
       <div className={styles.scheduleEditRow}><span className={styles.symbol}><CalendarDays size={20} /></span><strong>Расписание и абонемент</strong><button type="button" onClick={() => setOpen(true)}>Редактировать</button></div>
     </AppleGroup>
-    <AppleGroup title="Управление"><div className={styles.twoActions}><AppleRow title="История тренировок" description="Завершённые занятия и результаты" onClick={onOpenHistory} /><AppleRow title="История абонементов" description="Продления и сохранённые записи" icon={ClipboardList} onClick={() => setHistoryOpen(true)} /></div></AppleGroup>
-    {historyOpen ? <TrainerClientUtilitySheet title="История абонементов" onRequestClose={() => setHistoryOpen(false)}><div className={styles.subscriptionHistory}>
-      {subscriptionHistory.length ? subscriptionHistory.map((entry, index) => <article key={entry.id || `${entry.date}-${index}`}><header><strong>{entry.type === "renewal" ? "Продление абонемента" : "Изменение абонемента"}</strong><time>{formatDate(entry.date)}</time></header><dl>{entry.purchasedSessions !== undefined ? <><dt>Занятий</dt><dd>{entry.purchasedSessions}</dd></> : null}{entry.endDate ? <><dt>Действует до</dt><dd>{formatDate(entry.endDate)}</dd></> : null}{entry.previousEndDate ? <><dt>Предыдущий срок</dt><dd>{formatDate(entry.previousEndDate)}</dd></> : null}{entry.previousRemainingSessions !== undefined ? <><dt>Остаток до продления</dt><dd>{entry.previousRemainingSessions}</dd></> : null}</dl>{entry.paymentNote ? <p>{entry.paymentNote}</p> : null}</article>) : <p>История абонементов пока пуста. Здесь появятся сохранённые записи о продлениях.</p>}
-    </div></TrainerClientUtilitySheet> : null}
+    <AppleGroup title="Управление"><div className={styles.twoActions}><AppleRow title="История тренировок" description="Завершённые занятия и результаты" onClick={onOpenHistory} /><AppleRow title="История программ" description="Назначенные программы и изменения" icon={ClipboardList} onClick={onOpenProgramHistory} /></div></AppleGroup>
     {open ? <TrainerClientUtilitySheet title="Расписание и абонемент" variant="wide" onRequestClose={() => setOpen(false)}><div className={styles.calendarContent}>{children}</div></TrainerClientUtilitySheet> : null}
   </>;
 }
