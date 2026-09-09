@@ -1,4 +1,4 @@
-import { doc, setDoc } from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
 
 import {
@@ -60,25 +60,16 @@ export function createAiNutritionPlanHandlers({
       carbs: Math.round(Number(weekOne.carbs) || defaultNutritionState.goals.carbs)
     } : null;
 
-    setAiNutritionProfile(profile);
-    setAiNutritionProfileDraft(profile);
-    setAiNutritionSavedPlan(nextPlan);
-
-    try {
-      if (user?.uid) {
-        safeWriteUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, user.uid, profile);
-        safeWriteUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, user.uid, nextPlan);
-      }
-    } catch {
-      // ignore localStorage errors
-    }
-
-    if (auth.currentUser?.uid) {
+    const savingUid = auth.currentUser?.uid;
+    if (savingUid) {
       try {
-        await setDoc(doc(db, "users", auth.currentUser.uid), {
+        const batch = writeBatch(db);
+        profile.updatedAt = new Date().toISOString();
+        batch.set(doc(db, "users", auth.currentUser.uid), {
           ...(profile.name ? { name: profile.name } : {}),
           profile,
           aiNutritionProfile: profile,
+          measurementWeightUpdatedAt: profile.updatedAt,
           aiNutritionPlan: nextPlan,
           ...(nextGoals ? { nutritionGoals: nextGoals } : {}),
           ...(completeFirstSetup ? {
@@ -90,7 +81,7 @@ export function createAiNutritionPlanHandlers({
         }, { merge: true });
 
         if (nextGoals) {
-          await setDoc(doc(db, "users", auth.currentUser.uid, "nutrition", "state"), {
+          batch.set(doc(db, "users", auth.currentUser.uid, "nutrition", "state"), {
             goals: {
               ...nutrition.goals,
               ...nextGoals
@@ -99,6 +90,9 @@ export function createAiNutritionPlanHandlers({
             updatedAt: new Date().toISOString()
           }, { merge: true });
         }
+
+        await batch.commit();
+        if (auth.currentUser?.uid !== savingUid) return false;
 
         if (completeFirstSetup) {
           setFirstSetupCompletedInCloud(true);
@@ -125,6 +119,20 @@ export function createAiNutritionPlanHandlers({
     } else {
       return false;
     }
+
+    setAiNutritionProfile(profile);
+    setAiNutritionProfileDraft(profile);
+    setAiNutritionSavedPlan(nextPlan);
+
+    try {
+      if (user?.uid) {
+        safeWriteUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, user.uid, profile);
+        safeWriteUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, user.uid, nextPlan);
+      }
+    } catch {
+      // ignore localStorage errors
+    }
+
 
     if (nextGoals) {
       setNutrition((prev) => ({

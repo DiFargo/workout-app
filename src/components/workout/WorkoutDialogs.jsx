@@ -240,19 +240,11 @@ export function WorkoutDraftRestoreDialog({
         </p>
 
         <div className={styles.draftActions}>
-          <button
-            type="button"
-            className={styles.restartButton}
-            onClick={onRestart}
-          >
-            Начать заново
+          <button type="button" className={styles.restoreButton} onClick={onRestore} data-modal-autofocus="true" autoFocus>
+            Продолжить тренировку
           </button>
-          <button
-            type="button"
-            className={styles.restoreButton}
-            onClick={onRestore}
-          >
-            Восстановить
+          <button type="button" className={styles.restartButton} onClick={onRestart}>
+            Начать заново
           </button>
         </div>
       </div>

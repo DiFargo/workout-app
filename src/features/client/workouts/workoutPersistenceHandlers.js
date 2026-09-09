@@ -79,6 +79,10 @@ export function createWorkoutPersistenceHandlers(getContext) {
       showAppError,
       setPlan,
       userIdFromClick,
+      isCurrentRequest: () => {
+        const current = getContext().workoutLoadContextRef?.current || getContext();
+        return current.selectedUserId === selectedUserId && !current.workoutStarted;
+      },
       options
     });
   }

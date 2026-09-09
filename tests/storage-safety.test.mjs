@@ -36,29 +36,31 @@ function createQuotaStorage({ maxValueLength = Infinity, failFirstWrite = false 
   };
 }
 
-test("safeWriteJsonStorage compacts backup arrays when localStorage quota is full", () => {
+test("quota failure never silently truncates a pending array", () => {
   globalThis.localStorage = createQuotaStorage({ maxValueLength: 160, failFirstWrite: true });
   const backups = Array.from({ length: 20 }, (_, index) => ({
     id: `backup-${index}`,
     payload: "x".repeat(20)
   }));
 
-  assert.equal(safeWriteJsonStorage("workout_nutrition_backup_v1:user", backups), true);
+  localStorage.seed("workout_nutrition_backup_v1:user", [{ id: "previous" }]);
+  assert.equal(safeWriteJsonStorage("workout_nutrition_backup_v1:user", backups), false);
 
   const stored = JSON.parse(globalThis.localStorage.getItem("workout_nutrition_backup_v1:user"));
-  assert.ok(stored.length < backups.length);
-  assert.equal(stored[0].id, "backup-0");
+  assert.deepEqual(stored, [{ id: "previous" }]);
 });
 
-test("safeWriteJsonStorage drops disposable backups before retrying primary data", () => {
+test("quota retry evicts only reproducible search caches, preserving pending backups", () => {
   globalThis.localStorage = createQuotaStorage({ failFirstWrite: true });
   globalThis.localStorage.seed("workout_nutrition_backup_v1:user", [{ payload: "old backup" }]);
   globalThis.localStorage.seed("workout_history_pending_backup_v1:user", [{ payload: "old sync" }]);
+  globalThis.localStorage.seed("workout_food_search_cache_v1:user", { results: [] });
 
   assert.equal(safeWriteJsonStorage("workout_nutrition_v1:user", { diary: { today: [] } }), true);
 
-  assert.equal(globalThis.localStorage.getItem("workout_nutrition_backup_v1:user"), null);
-  assert.equal(globalThis.localStorage.getItem("workout_history_pending_backup_v1:user"), null);
+  assert.notEqual(globalThis.localStorage.getItem("workout_nutrition_backup_v1:user"), null);
+  assert.notEqual(globalThis.localStorage.getItem("workout_history_pending_backup_v1:user"), null);
+  assert.equal(globalThis.localStorage.getItem("workout_food_search_cache_v1:user"), null);
   assert.deepEqual(JSON.parse(globalThis.localStorage.getItem("workout_nutrition_v1:user")), {
     diary: { today: [] }
   });

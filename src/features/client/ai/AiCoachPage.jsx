@@ -61,7 +61,7 @@ export default function AiCoachPage({
       />
 
       <section className={styles.hero} data-testid="ai-coach-hero">
-        <div className={styles.badge}>AI ASSISTANT CORE</div>
+        <div className={styles.badge}>Помощник</div>
         <p>Умные подсказки по питанию, тренировкам, восстановлению и прогрессу на основе твоей истории.</p>
       </section>
 
@@ -280,12 +280,12 @@ export default function AiCoachPage({
               <h2>{aiResult.title}</h2>
               <p>{aiResult.status}</p>
             </div>
-            <strong>{aiResult.score}%</strong>
+            {Number.isFinite(aiResult.score) && <strong>{aiResult.score}%</strong>}
           </div>
 
-          <div className={styles.meter} aria-hidden="true">
+          {Number.isFinite(aiResult.score) && <div className={styles.meter} aria-hidden="true">
             <i className={styles.meterFill} style={{ width: `${Math.min(100, Math.max(4, aiResult.score))}%` }} />
-          </div>
+          </div>}
 
           <div className={styles.blocks}>
             <div className={styles.miniBlock}>

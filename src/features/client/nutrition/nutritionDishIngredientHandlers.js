@@ -34,7 +34,12 @@ export function createNutritionDishIngredientHandlers({
 
   function addSelectedDishIngredientFromFood(food, gramsValue = 100) {
     const normalizedFood = normalizeNutritionFood(food);
-    const grams = parseNutritionNumber(gramsValue, 100) || 100;
+    const grams = Number(String(gramsValue ?? "").trim().replace(",", "."));
+    if (!Number.isFinite(grams) || grams <= 0) {
+      setNutritionProductErrors((current) => ({ ...current, ingredientAmount: "Укажите вес ингредиента больше нуля." }));
+      return false;
+    }
+    setNutritionProductErrors((current) => ({ ...current, ingredientAmount: "" }));
     const baseAmount = normalizedFood.type === "dish"
       ? (Number(normalizedFood.totalWeight) || Number(normalizedFood.portionAmount) || getFoodPortionAmount(normalizedFood) || 100)
       : 100;
@@ -78,6 +83,7 @@ export function createNutritionDishIngredientHandlers({
 
     setDishIngredientPickerOpen(false);
     setDishIngredientSearch("");
+    return true;
   }
 
   function removeSelectedDishIngredient(ingredientId) {

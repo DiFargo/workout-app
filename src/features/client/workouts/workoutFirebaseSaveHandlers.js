@@ -1,17 +1,16 @@
-import { doc, setDoc } from "firebase/firestore";
+import { buildWorkoutCompletionOperation, persistWorkoutCompletion } from "./workoutCompletionPersistence.js";
 import {
   enqueueFailedHistorySave,
+  forgetPendingHistorySave,
   removePendingHistoryBackups,
   WORKOUT_HISTORY_BACKUP_STORAGE_KEY
 } from "../../../utils/offlineSyncStorage";
 import { addUserLocalBackup } from "../../../utils/userScopedStorage";
 import { clearWorkoutDraft } from "../../../utils/workoutDraftStorage";
-import { shiftBasicWorkoutScheduleAfterCompletion } from "../../../utils/basicWorkoutSchedule";
 import {
   getWorkoutCompletion,
   isWorkoutSetCompleted
 } from "../../../utils/auditSafety";
-import { applyWorkoutProgressionToFuturePlan } from "./workoutPlanUpdateHandlers";
 
 export async function saveCompletedWorkoutToFirebase({
   db,
@@ -37,7 +36,6 @@ export async function saveCompletedWorkoutToFirebase({
   setShowWorkoutSavedCard,
   setHistory,
   setPlan,
-  saveWorkoutsToFirebase,
   feedbackOverride = null,
   allowIncomplete = false
 }) {
@@ -152,10 +150,12 @@ export async function saveCompletedWorkoutToFirebase({
   };
 
   const backupId = historySaveId;
+  const completion = buildWorkoutCompletionOperation(plan, workout);
 
   addUserLocalBackup(WORKOUT_HISTORY_BACKUP_STORAGE_KEY, currentUser.uid, {
     id: backupId,
     entry: historyEntry,
+    completion,
     reason: "before_history_save"
   });
 
@@ -164,7 +164,9 @@ export async function saveCompletedWorkoutToFirebase({
       throw new Error("workout_history_offline");
     }
 
-    await setDoc(doc(db, "users", currentUser.uid, "history", historySaveId), historyEntry);
+    const result = await persistWorkoutCompletion({ db, uid: currentUser.uid, entry: historyEntry, completion });
+    forgetPendingHistorySave(currentUser.uid, historySaveId);
+    if (result.plan && typeof setPlan === "function") setPlan(result.plan);
     removePendingHistoryBackups(currentUser.uid, backupId);
 
     await loadHistory();
@@ -174,37 +176,18 @@ export async function saveCompletedWorkoutToFirebase({
     setShowWorkoutSavedCard(true);
     navigator.vibrate?.([100, 70, 150]);
 
-    const progression = applyWorkoutProgressionToFuturePlan(plan, workout, {
-      updatedAt: historyEntry.finishedAt
-    });
-    const shouldPersistFullBasicPlan = plan?.source === "basic" || workout?.source === "basic";
-    const progressedPlan = progression.changed ? progression.plan : plan;
-    const planToPersist = shouldPersistFullBasicPlan
-      ? shiftBasicWorkoutScheduleAfterCompletion(progressedPlan, workout.id, historyEntry.finishedAt)
-      : progressedPlan;
-    const basicScheduleShifted = planToPersist !== progressedPlan;
-
-    if ((progression.changed || basicScheduleShifted) && typeof setPlan === "function") {
-      setPlan(planToPersist);
-    }
-
-    if ((progression.changed || basicScheduleShifted || shouldPersistFullBasicPlan) && typeof saveWorkoutsToFirebase === "function") {
-      try {
-        const saveResult = await saveWorkoutsToFirebase(planToPersist, { silent: true });
-        if (shouldPersistFullBasicPlan && saveResult?.plan?.source === "basic" && typeof setPlan === "function") {
-          setPlan(saveResult.plan);
-        }
-      } catch (progressionError) {
-        console.warn("Failed to save workout progression update", progressionError);
-      }
-    }
-
     setTimeout(() => {
       setShowWorkoutSavedCard(false);
     }, 1800);
   } catch (e) {
     console.error(e);
-    enqueueFailedHistorySave(currentUser.uid, historyEntry, "history_save_failed");
+    try {
+      enqueueFailedHistorySave(currentUser.uid, historyEntry, "history_save_failed", completion);
+    } catch {
+      setWorkoutHistorySyncState("error");
+      showAppError("storage", "Не удалось сохранить тренировку ни в облаке, ни на устройстве. Освободите место или восстановите сеть и нажмите сохранение ещё раз.");
+      return;
+    }
     setHistory((prev) => [
       { id: historySaveId, ...historyEntry, pendingSync: true },
       ...prev.filter((item) => (item?.clientSaveId || item?.id) !== historySaveId)

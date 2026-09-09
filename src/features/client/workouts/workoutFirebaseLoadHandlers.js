@@ -21,6 +21,8 @@ import {
   isTrainerClientCurrentAssignmentWorkout
 } from "../../../utils/trainerClientProgramAssignments.js";
 
+const loadGenerations = new Map();
+
 function getGroupExerciseMetadata(taskBlocks = []) {
   const metadataByExerciseId = new Map();
 
@@ -59,12 +61,15 @@ export async function loadWorkoutsFromFirebaseWithDeps({
   showAppError,
   setPlan,
   userIdFromClick,
-  options = {}
+  options = {},
+  isCurrentRequest = () => true
 }) {
   const preserveCurrentPlanOnError = options.preserveCurrentPlanOnError === true;
   const currentUser = auth.currentUser;
   const targetUserId = userIdFromClick || selectedUserId || currentUser?.uid;
   const isOwnPlan = currentUser?.uid === targetUserId;
+  const generation = (loadGenerations.get(targetUserId) || 0) + 1;
+  loadGenerations.set(targetUserId, generation);
   const storedWorkoutModePreference = isOwnPlan && currentUser?.uid && workoutModeStorageKey
     ? safeReadUserJsonStorage(workoutModeStorageKey, currentUser.uid, null)
     : null;
@@ -74,6 +79,13 @@ export async function loadWorkoutsFromFirebaseWithDeps({
         workoutModePreference: storedWorkoutModePreference || workoutModePreference
       })
     : "individual";
+
+  const requestIsCurrent = () => {
+    if (loadGenerations.get(targetUserId) !== generation || !isCurrentRequest()) return false;
+    if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return false;
+    const currentPreference = isOwnPlan ? safeReadUserJsonStorage(workoutModeStorageKey, targetUserId, null) : null;
+    return !currentPreference?.mode || currentPreference.mode === requestedMode;
+  };
 
   try {
     if (!targetUserId) {
@@ -246,6 +258,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
       }
     }
 
+    if (!requestIsCurrent()) return { workouts: [] };
     if (isOwnPlan && currentUser?.uid && requestedMode === "individual") {
       clearStaleWorkoutCaches(currentUser.uid, assignedProgramUpdatedAt);
     }
@@ -265,6 +278,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     });
     return nextPlan;
   } catch (err) {
+    if (!requestIsCurrent()) return { workouts: [] };
     console.error("Ошибка загрузки тренировок:", err);
     if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return { workouts: [] };
     const currentPlanMatchesMode = requestedMode === "basic"

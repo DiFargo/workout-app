@@ -5,19 +5,19 @@ test("five primary client page titles use the shared native size", async ({ page
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
   await page.goto("/?clientHarness=1");
-  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "28px");
+  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "32px");
 
   await page.getByTestId("client-nav-workouts").click();
-  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "28px");
+  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "32px");
 
   await page.getByTestId("client-nav-nutrition").click();
-  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "28px");
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "32px");
 
   await page.getByTestId("client-nav-progress").click();
-  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "28px");
+  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "32px");
 
   await page.getByTestId("client-nav-cabinet").click();
-  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "28px");
+  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "32px");
 
   assertNoRuntimeErrors();
 });

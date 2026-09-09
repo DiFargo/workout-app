@@ -174,6 +174,14 @@ export async function handleTrainerClientActionWithDeps({
   }
 
   try {
+    if (action === "mark_test" || action === "mark_real") {
+      const patch = { isTest: action === "mark_test", updatedAt: new Date().toISOString() };
+      await setDoc(doc(db, "users", client.id), patch, { merge: true });
+      setUsersList((items) => items.map((item) => item.id === client.id ? { ...item, ...patch } : item));
+      setAdminSelectedClient((item) => item?.id === client.id ? { ...item, ...patch } : item);
+      setAdminClientStatus(patch.isTest ? "Тестовый клиент исключён из общей статистики." : "Клиент снова учитывается в статистике.");
+      return true;
+    }
     if (action === "resolve_client_messages") {
       const rawSourceCommentIds = Array.isArray(payload?.sourceCommentIds)
         ? payload.sourceCommentIds

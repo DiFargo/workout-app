@@ -1,6 +1,7 @@
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
-import { getFailedHistoryQueue } from "../../../utils/offlineSyncStorage";
+import { deleteOwnWorkoutHistory } from "./workoutCompletionPersistence.js";
+import { getFailedHistoryQueue, forgetPendingHistorySave } from "../../../utils/offlineSyncStorage";
 import { dedupeWorkoutHistory } from "./workoutHistoryDedupe";
 
 const HISTORY_LOAD_LABEL = "Firebase \u00b7 history load";
@@ -120,7 +121,9 @@ export function createWorkoutHistoryHandlers({
     setHistoryDeletingId(workoutItem.id);
 
     try {
-      await deleteDoc(doc(db, "users", currentUser.uid, "history", workoutItem.id));
+      await deleteOwnWorkoutHistory({ db, uid: currentUser.uid, id: workoutItem.id, clientSaveId: workoutItem.clientSaveId || workoutItem.id });
+      forgetPendingHistorySave(currentUser.uid, workoutItem.clientSaveId || workoutItem.id);
+      forgetPendingHistorySave(currentUser.uid, workoutItem.id);
       setHistory((prev) => prev.filter((item) => item.id !== workoutItem.id));
       setOpenHistoryKey((prev) => (prev === workoutItem.id ? null : prev));
       setHistoryDeleteCandidate(null);

@@ -1,8 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 async function openTrainerNotifications(page) {
-  await page.goto("/?clientHarness=1&clientCabinetModal=notifications");
-  await page.getByTestId("client-nav-cabinet").click();
+  await page.goto("/?clientHarness=1&clientHarnessPage=cabinet&clientCabinetModal=notifications");
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toBeVisible();
 }
 

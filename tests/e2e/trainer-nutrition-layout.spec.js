@@ -59,3 +59,6 @@ test("client nutrition fills its content column at phone, tablet and desktop wid
   expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(1);
   assertNoRuntimeErrors();
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

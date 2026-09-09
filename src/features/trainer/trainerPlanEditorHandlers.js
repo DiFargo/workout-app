@@ -13,9 +13,7 @@ import {
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
 import { sanitizeExerciseSetPatch } from "../../utils/exerciseWeightInput";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
-import {
-  patchExerciseInTrainerTemplate
-} from "../../utils/trainerExerciseLibrary.js";
+import { patchLibraryExercise, persistTrainerTemplateEdit } from "../../utils/trainerLibraryEditing.js";
 import { persistTrainerLibraryVisibility } from "../../utils/trainerLibraryVisibility.js";
 
 const DEFAULT_EXERCISE_NAME = "\u041d\u043e\u0432\u043e\u0435 \u0443\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
@@ -192,23 +190,18 @@ export function createTrainerPlanEditorHandlers({
     const source = exercise?.librarySource;
     if (!source || !exercise?.id || !patch || typeof patch !== "object") return false;
 
-    if (source.type === "plan" && source.workoutId) {
-      updateTrainerNextExercise(source.workoutId, exercise.id, patch);
-      return true;
+    if (source.type !== "template" || !source.templateId) {
+      setAdminClientStatus("Это упражнение из плана клиента. Откройте редактор программы для изменения.");
+      return false;
     }
-
-    if (source.type !== "template" || !source.templateId) return false;
-    const template = (adminTrainingTemplates || []).find((item) => item.id === source.templateId);
-    if (!template) return false;
-
-    const nextTemplate = patchExerciseInTrainerTemplate(template, exercise.id, patch);
-    setAdminTrainingTemplates((current) => current.map((item) => item.id === source.templateId ? nextTemplate : item));
     try {
-      await setDoc(doc(db, "trainingTemplates", source.templateId), nextTemplate, { merge: true });
+      const nextTemplate = await persistTrainerTemplateEdit({ db, templateId: source.templateId, uid: auth.currentUser?.uid,
+        canManage: canManageTrainingTemplate, mutate: (current) => patchLibraryExercise(current, exercise, patch) });
+      setAdminTrainingTemplates((current) => current.map((item) => item.id === source.templateId ? nextTemplate : item));
       return true;
     } catch (error) {
       console.error("Trainer library exercise save error:", error);
-      setAdminClientStatus("Не удалось сохранить упражнение в библиотеке.");
+      setAdminClientStatus(error.message || "Не удалось сохранить упражнение в библиотеке.");
       return false;
     }
   }
@@ -229,8 +222,8 @@ export function createTrainerPlanEditorHandlers({
 
   async function createTrainerLibraryExercise(templateId = "", patch = {}) {
     const template = (adminTrainingTemplates || []).find((item) => item.id === templateId)
-      || (adminTrainingTemplates || [])[0];
-    if (!template?.id) return false;
+      || (adminTrainingTemplates || []).find((item) => canManageTrainingTemplate?.(item));
+    if (!template?.id || !canManageTrainingTemplate?.(template)) return false;
 
     const name = String(patch?.name || DEFAULT_EXERCISE_NAME).trim() || DEFAULT_EXERCISE_NAME;
     const exercise = {
@@ -243,25 +236,15 @@ export function createTrainerPlanEditorHandlers({
       sets: [createEmptySet(getDefaultExerciseReps(name))],
       ...patch
     };
-    const targetWorkout = getTemplateWorkouts(template)[0];
-    const nextTemplate = targetWorkout?.id
-      ? appendExerciseToTrainerTemplate(template, targetWorkout.id, exercise)
-      : {
-        ...template,
-        workouts: [
-          ...(template.workouts || []),
-          {
-            id: `workout_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-            name: `${DEFAULT_WORKOUT_NAME} 1`,
-            status: "planned",
-            exercises: [exercise]
-          }
-        ]
-      };
-
-    setAdminTrainingTemplates((current) => current.map((item) => item.id === template.id ? nextTemplate : item));
     try {
-      await setDoc(doc(db, "trainingTemplates", template.id), nextTemplate, { merge: true });
+      const nextTemplate = await persistTrainerTemplateEdit({ db, templateId: template.id, uid: auth.currentUser?.uid,
+        canManage: canManageTrainingTemplate, mutate: (current) => {
+          const targetWorkout = getTemplateWorkouts(current)[0];
+          return targetWorkout?.id ? appendExerciseToTrainerTemplate(current, targetWorkout.id, exercise) : {
+            ...current, workouts: [...(current.workouts || []), { id: `workout_${exercise.id}`, name: `${DEFAULT_WORKOUT_NAME} 1`, status: "planned", exercises: [exercise] }]
+          };
+        } });
+      setAdminTrainingTemplates((current) => current.map((item) => item.id === template.id ? nextTemplate : item));
       return {
         ...exercise,
         librarySource: { type: "template", templateId: template.id }

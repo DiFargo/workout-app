@@ -104,6 +104,8 @@ test("email change keeps the active Firebase session instead of forcing a sign-o
   );
 
   assert.doesNotMatch(source, /await verifiedUser\.reload\(\)/);
-  assert.doesNotMatch(source, /verifiedUser\.getIdToken\(true\)/);
+  const request = source.slice(source.indexOf("async function requestProfileEmailChange"), source.indexOf("async function syncProfileVerifiedEmail"));
+  assert.ok(request.indexOf("verifiedUser.getIdToken(true)") < request.indexOf("await fetchAuthorizedWithTimeout"));
+  assert.doesNotMatch(request.slice(request.indexOf("await fetchAuthorizedWithTimeout")), /getIdToken\(true\)|signOut\(/);
   assert.match(source, /Вы остаётесь в аккаунте/);
 });

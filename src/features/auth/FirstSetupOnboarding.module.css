@@ -548,7 +548,7 @@
   box-shadow: none;
 }
 
-.firstSetupReview > div {
+.firstSetupReview > button {
   min-height: 43px;
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr) auto;
@@ -557,11 +557,11 @@
   border-bottom: 1px solid var(--setup-border);
 }
 
-.firstSetupReview > div:last-child {
+.firstSetupReview > button:last-child {
   border-bottom: 0;
 }
 
-.firstSetupReview > div > span {
+.firstSetupReview > button > span {
   width: 22px;
   height: 22px;
   display: grid;
@@ -570,7 +570,7 @@
   text-align: center;
 }
 
-.firstSetupReview > div > span svg {
+.firstSetupReview > button > span svg {
   width: 16px;
   height: 16px;
   stroke-width: 2;
@@ -771,7 +771,7 @@
     font-size: 12px;
   }
 
-  .firstSetupReview > div {
+  .firstSetupReview > button {
     min-height: 37px;
   }
 
@@ -799,3 +799,5 @@
   min-height: 44px;
   max-height: none;
 }
+
+.firstSetupReview > button { width: 100%; min-height: 44px; text-align: left; font: inherit; cursor: pointer; }

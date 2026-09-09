@@ -442,6 +442,8 @@ function AppRuntime() {
   const [swipeDirection, setSwipeDirection] = useState("");
 
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const workoutLoadContextRef = useRef({ selectedUserId, workoutStarted });
+  useEffect(() => { workoutLoadContextRef.current = { selectedUserId, workoutStarted }; }, [selectedUserId, workoutStarted]);
   const [usersList, setUsersList] = useState([]);
   const [adminAllUsersList, setAdminAllUsersList] = useState([]);
   const [adminNewUserName, setAdminNewUserName] = useState("");
@@ -844,6 +846,7 @@ function AppRuntime() {
     replayFailedNutritionSync,
     saveWorkoutsToFirebase
   } = createWorkoutPersistenceHandlers(() => ({
+    workoutLoadContextRef,
     BASIC_WORKOUT_PLAN_STORAGE_KEY,
     STORAGE_KEY,
     WORKOUT_CALENDAR_STORAGE_KEY,

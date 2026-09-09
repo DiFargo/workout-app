@@ -92,3 +92,6 @@ test("small and landscape layouts keep controls reachable and text scalable", as
     await expect(card.getByText("Шаг 2 из 7")).toBeVisible();
   }
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

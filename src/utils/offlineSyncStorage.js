@@ -41,6 +41,24 @@ export function setFailedNutritionSync(uid, nutritionState = null) {
   );
 }
 
+export function acknowledgeNutritionSync(uid, snapshot) {
+  const current = getFailedNutritionSync(uid);
+  if (JSON.stringify(current?.nutrition) !== JSON.stringify(snapshot?.nutrition || snapshot)) return false;
+  return setFailedNutritionSync(uid, null);
+}
+
+export function acknowledgeHistorySave(uid, item) {
+  return setFailedHistoryQueue(uid, getFailedHistoryQueue(uid).filter((current) => (
+    current.id !== item.id || JSON.stringify(current.entry) !== JSON.stringify(item.entry)
+  )));
+}
+
+export function acknowledgeMeasurementSave(uid, item) {
+  return setFailedMeasurementQueue(uid, getFailedMeasurementQueue(uid).filter((current) => (
+    current.id !== item.id || JSON.stringify(current.measurement) !== JSON.stringify(item.measurement)
+  )));
+}
+
 export function removePendingHistoryBackups(uid, clientSaveId) {
   if (!uid || !clientSaveId) return;
 
@@ -65,7 +83,7 @@ export function setFailedHistoryQueue(uid, queue = []) {
   return safeWriteUserJsonStorage(WORKOUT_FAILED_HISTORY_QUEUE_KEY, uid, Array.isArray(queue) ? queue : []);
 }
 
-export function enqueueFailedHistorySave(uid, entry, reason = "failed_save") {
+export function enqueueFailedHistorySave(uid, entry, reason = "failed_save", completion = null) {
   const queue = getFailedHistoryQueue(uid);
   const saveId = entry?.clientSaveId || "";
 
@@ -76,10 +94,19 @@ export function enqueueFailedHistorySave(uid, entry, reason = "failed_save") {
   const nextItem = {
     id: saveId || entry?.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,
     entry,
+    completion,
     reason,
     createdAt: new Date().toISOString()
   };
 
-  setFailedHistoryQueue(uid, [nextItem, ...queue].slice(0, 25));
-  return [nextItem, ...queue].slice(0, 25);
+  const next = [nextItem, ...queue];
+  if (!setFailedHistoryQueue(uid, next)) throw new Error("local-storage-full");
+  return next;
+}
+
+export function forgetPendingHistorySave(uid, saveId) {
+  removePendingHistoryBackups(uid, saveId);
+  return setFailedHistoryQueue(uid, getFailedHistoryQueue(uid).filter((item) => (
+    item.id !== saveId && item.entry?.clientSaveId !== saveId
+  )));
 }

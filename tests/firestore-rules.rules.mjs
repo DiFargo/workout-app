@@ -2,6 +2,9 @@ import fs from "node:fs/promises";
 import assert from "node:assert/strict";
 import { createProgramDraft, programDraftSnapshot } from "../src/utils/trainerProgramDraft.js";
 import { saveTrainerProgramDraft } from "../src/features/client/workouts/trainerProgramDraftPersistence.js";
+import { persistWorkoutCompletion, deleteOwnWorkoutHistory } from "../src/features/client/workouts/workoutCompletionPersistence.js";
+import { persistMeasurement } from "../src/features/client/profile/measurementPersistence.js";
+import { patchLibraryExercise, persistTrainerTemplateEdit } from "../src/utils/trainerLibraryEditing.js";
 import { after, before, beforeEach, test } from "node:test";
 
 import {
@@ -28,6 +31,126 @@ beforeEach(async () => {
 
 after(async () => {
   await testEnv?.cleanup();
+});
+
+test("owner task permissions cannot bypass trainer-only fields, payments or private collections", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/client-1"), { role: "client", trainerId: "trainer-1", loginLower: "own", accountProfile: { login: "own", email: "client@example.test" } });
+    await setDoc(doc(db, "users/trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users/trainer-2"), { role: "trainer" });
+    await setDoc(doc(db, "users/client-1/trainerTasks/task"), { title: "Coach task", status: "pending" });
+  });
+  const db = testEnv.authenticatedContext("client-1").firestore();
+  await assertSucceeds(updateDoc(doc(db, "users/client-1/trainerTasks/task"), { status: "completed" }));
+  await assertFails(updateDoc(doc(db, "users/client-1/trainerTasks/task"), { title: "Forged" }));
+  await assertFails(deleteDoc(doc(db, "users/client-1/trainerTasks/task")));
+  await assertFails(setDoc(doc(db, "users/client-1/payments/current"), { paid: true }));
+  await assertFails(setDoc(doc(db, "users/client-1/serverOnly/secret"), { value: true }));
+  await assertFails(updateDoc(doc(db, "users/client-1"), { loginLower: "victim" }));
+  await assertFails(updateDoc(doc(db, "users/client-1"), { "accountProfile.login": "victim" }));
+  await assertFails(updateDoc(doc(db, "users/client-1"), { "accountProfile.email": "victim@example.test" }));
+  await assertFails(updateDoc(doc(db, "users/client-1"), { profileIdentityOperation: { email: "victim@example.test" } }));
+  await assertSucceeds(updateDoc(doc(db, "users/client-1"), { "accountProfile.displayName": "New name" }));
+  for (const name of ["history", "nutrition", "measurements"]) await assertSucceeds(setDoc(doc(db, "users", "client-1", name, "new"), { date: "2026-09-09" }));
+  await assertSucceeds(setDoc(doc(testEnv.authenticatedContext("trainer-1").firestore(), "users/client-1/payments/current"), { paid: true }));
+  await assertFails(setDoc(doc(testEnv.authenticatedContext("trainer-2").firestore(), "users/client-1/payments/current"), { paid: true }));
+});
+
+test("only the assigned trainer can mark test clients without changing their workouts", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    for (const id of ["trainer-1", "trainer-2"]) await setDoc(doc(context.firestore(), "users", id), { role: "trainer" });
+    await setDoc(doc(context.firestore(), "users/client-1"), { role: "client", trainerId: "trainer-1" });
+    await setDoc(doc(context.firestore(), "users/client-1/workouts/keep"), { name: "Keep this workout" });
+  });
+  const own = testEnv.authenticatedContext("client-1").firestore();
+  const trainer = testEnv.authenticatedContext("trainer-1").firestore();
+  await assertFails(updateDoc(doc(own, "users/client-1"), { isTest: true }));
+  await assertFails(updateDoc(doc(testEnv.authenticatedContext("trainer-2").firestore(), "users/client-1"), { isTest: true }));
+  await assertSucceeds(updateDoc(doc(trainer, "users/client-1"), { isTest: true }));
+  await assertSucceeds(updateDoc(doc(trainer, "users/client-1"), { isTest: false }));
+  assert.equal((await getDoc(doc(own, "users/client-1/workouts/keep"))).data().name, "Keep this workout");
+});
+
+test("basic offline completion persists the shifted calendar and profile plan in the same transaction", async () => {
+  const day = (id, date) => ({ id, scheduledDate: date, plannedDate: date, exercises: [{ id: "ex", name: "Press", sets: [{ weight: "20", reps: "10" }] }] });
+  const plan = { source: "basic", basicPlanId: "basic-test", workouts: [day("one", "2026-09-01"), day("two", "2026-09-03")] };
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/client-1"), { role: "client", basicWorkoutPlan: plan });
+    for (const item of plan.workouts) await setDoc(doc(db, "users/client-1/workouts", item.id), item);
+  });
+  const db = testEnv.authenticatedContext("client-1").firestore();
+  const workout = { ...plan.workouts[0], exercises: [{ id: "ex", name: "Press", sets: [{ enteredWeight: "25", reps: "10", completed: true }] }] };
+  const entry = { clientSaveId: "basic-save", workoutId: "one", finishedAt: "2026-09-05T12:00:00Z" };
+  await assertSucceeds(persistWorkoutCompletion({ db, uid: "client-1", entry, completion: { plan, workout } }));
+  const user = (await getDoc(doc(db, "users/client-1"))).data();
+  const nextDay = (await getDoc(doc(db, "users/client-1/workouts/two"))).data();
+  assert.equal(nextDay.scheduledDate, "2026-09-07");
+  assert.equal(nextDay.exercises[0].sets[0].weight, "25");
+  assert.equal(user.basicWorkoutPlan.workouts[1].scheduledDate, nextDay.scheduledDate);
+  assert.ok(user.workoutCalendar.scheduledDates.includes(nextDay.scheduledDate));
+  assert.equal((await getDoc(doc(db, "users/client-1/history/basic-save"))).exists(), true);
+});
+
+test("offline completion applies progression once, preserves a changed prescription, and cannot resurrect a deleted history record", async () => {
+  const day = (id, weight) => ({ id, name: id, assignedProgramId: "plan", assignedProgramUpdatedAt: "version", exercises: [{ id: "press", name: "Press", sets: [{ reps: "12", weight: String(weight) }] }] });
+  const plan = { assignedProgramId: "plan", assignedProgramUpdatedAt: "version", workouts: [day("w1", 20), day("w2", 20)] };
+  const workout = { ...plan.workouts[0], exercises: [{ id: "press", name: "Press", sets: [{ reps: "12", weight: "25", enteredWeight: "25", completed: true }] }] };
+  const entry = { clientSaveId: "save1", workoutId: "w1", assignedProgramId: "plan", assignedProgramUpdatedAt: "version", finishedAt: "2026-09-09T10:00:00Z", exercises: workout.exercises };
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/client-1"), { role: "client", assignedProgramId: "plan", assignedProgramUpdatedAt: "version" });
+    for (const workout of plan.workouts) await setDoc(doc(db, "users/client-1/workouts", workout.id), workout);
+  });
+  const db = testEnv.authenticatedContext("client-1").firestore();
+  const save = () => persistWorkoutCompletion({ db, uid: "client-1", entry, completion: { plan, workout } });
+  await assertSucceeds(save());
+  assert.equal((await getDoc(doc(db, "users/client-1/workouts/w2"))).data().exercises[0].sets[0].weight, "25");
+  await updateDoc(doc(db, "users/client-1/workouts/w2"), { exercises: day("w2", 30).exercises });
+  await save();
+  assert.equal((await getDoc(doc(db, "users/client-1/workouts/w2"))).data().exercises[0].sets[0].weight, "30");
+  await persistWorkoutCompletion({ db, uid: "client-1", entry: { ...entry, clientSaveId: "save2" }, completion: { plan, workout } });
+  assert.equal((await getDoc(doc(db, "users/client-1/workouts/w2"))).data().exercises[0].sets[0].weight, "30");
+  await deleteOwnWorkoutHistory({ db, uid: "client-1", id: "save1" });
+  assert.equal((await save()).deleted, true);
+  assert.equal((await getDoc(doc(db, "users/client-1/history/save1"))).exists(), false);
+  assert.equal((await getDoc(doc(db, "users/client-1/history/save2"))).exists(), true);
+  assert.equal((await getDoc(doc(db, "users/client-1/workouts/w1"))).exists(), true);
+});
+
+test("measurement replay in newest-first order preserves latest weight and unrelated profile fields", async () => {
+  await testEnv.withSecurityRulesDisabled(async (context) => setDoc(doc(context.firestore(), "users/client-1"), { role: "client", aiNutritionProfile: { weight: "80", goal: "recomp" } }));
+  const db = testEnv.authenticatedContext("client-1").firestore();
+  for (const [id, weight, date] of [["new", "78", "2026-09-09T10:00:00Z"], ["old", "79", "2026-09-08T10:00:00Z"]]) {
+    await assertSucceeds(persistMeasurement({ db, uid: "client-1", item: { id, profileWeight: weight, aiNutritionProfile: { goal: "stale" }, measurement: { id, weight, date } } }));
+  }
+  const profile = (await getDoc(doc(db, "users/client-1"))).data().aiNutritionProfile;
+  assert.equal(profile.weight, "78");
+  assert.equal(profile.goal, "recomp");
+  assert.equal((await getDoc(doc(db, "users/client-1/measurements/old"))).data().weight, "79");
+});
+
+test("library edit reads a fresh template, stamps the actor, rejects a conflicting edit and leaves client workouts unchanged", async () => {
+  const exercise = { id: "e1", name: "Жим ногами", rest: "90 сек", video: "https://example.test/video.mp4", sets: [{ reps: 12, weight: 30 }] };
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users/trainer-2"), { role: "trainer" });
+    await setDoc(doc(db, "users/client-1"), { role: "client", trainerId: "trainer-1" });
+    await setDoc(doc(db, "trainingTemplates/template"), { ownerUid: "trainer-1", createdByUid: "trainer-1", updatedByUid: "trainer-1", name: "Fresh name", workouts: [{ id: "day", exercises: [exercise] }] });
+    await setDoc(doc(db, "users/client-1/workouts/day"), { exercises: [exercise] });
+  });
+  const db = testEnv.authenticatedContext("trainer-1").firestore();
+  const args = { db, templateId: "template", uid: "trainer-1", canManage: (template) => template.ownerUid === "trainer-1", mutate: (template) => patchLibraryExercise(template, exercise, { rest: "60 сек" }) };
+  await assertSucceeds(persistTrainerTemplateEdit(args));
+  const saved = (await getDoc(doc(db, "trainingTemplates/template"))).data();
+  assert.equal(saved.name, "Fresh name");
+  assert.equal(saved.updatedByUid, "trainer-1");
+  assert.equal(saved.workouts[0].exercises[0].rest, "60 сек");
+  await assert.rejects(persistTrainerTemplateEdit({ ...args, mutate: (template) => patchLibraryExercise(template, exercise, { rest: "120 сек" }) }), /другом окне/);
+  await assertFails(persistTrainerTemplateEdit({ ...args, db: testEnv.authenticatedContext("trainer-2").firestore(), uid: "trainer-2" }));
+  assert.equal((await getDoc(doc(db, "users/client-1/workouts/day"))).data().exercises[0].rest, "90 сек");
 });
 
 test("assigned editor transaction saves once, reloads, rejects stale tabs and revoked access", async () => {
@@ -223,7 +346,7 @@ test("managed base program versions are append-only and private to administrator
   await assertFails(deleteDoc(versionRef));
 });
 
-test("login aliases are private and writable only by the owner", async () => {
+test("login aliases are private and client mutations require the server", async () => {
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const db = context.firestore();
     await setDoc(doc(db, "users", "client-1"), { role: "client" });
@@ -235,13 +358,14 @@ test("login aliases are private and writable only by the owner", async () => {
   const adminDb = testEnv.authenticatedContext("admin-1", { admin: true }).firestore();
   const publicDb = testEnv.unauthenticatedContext().firestore();
 
-  await assertSucceeds(setDoc(doc(ownerDb, "loginAliases", "client"), {
+  await assertFails(setDoc(doc(ownerDb, "loginAliases", "client"), {
     email: "client@example.com",
     uid: "client-1",
     createdAt: "2026-07-09T00:00:00.000Z",
     updatedAt: "2026-07-09T00:00:00.000Z"
   }));
 
+  await assertSucceeds(setDoc(doc(adminDb, "loginAliases", "client"), { uid: "client-1", email: "client@example.com" }));
   await assertFails(getDoc(doc(publicDb, "loginAliases", "client")));
   await assertFails(getDoc(doc(strangerDb, "loginAliases", "client")));
   await assertSucceeds(getDoc(doc(ownerDb, "loginAliases", "client")));

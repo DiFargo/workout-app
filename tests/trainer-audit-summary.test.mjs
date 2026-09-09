@@ -33,8 +33,7 @@ async function fixture({ deadline = 12000, delay = 0 } = {}) {
     getTrainerSettledDocumentData: (result) => result.status === "fulfilled" ? result.value.data() : null,
     getTrainerSummaryReadFailures: () => ({ names: [], reasons: [] }),
     getTrainerNutritionSummary: () => ({ nutritionDays7: 5 }),
-    getTrainerCompletedWorkoutCountForAssignment: (history) => { assert.equal(history.length, 0, "Never derive all-time completion from capped history"); return 2; },
-    getTrainerAssignedWorkoutCount: () => 8, getClientEffectiveNutritionGoals: () => ({}), buildProgressInsight: () => ({ score: 80 }),
+    getTrainerAssignmentProgress: () => ({ assignedWorkoutCount: 8, completedWorkoutCount: 2 }), getClientEffectiveNutritionGoals: () => ({}), buildProgressInsight: () => ({ score: 80 }),
     getTrainerWorkoutActivitySummary: (items) => ({ lastWorkoutAt: items[0]?.date || "", workouts7: items.length ? 3 : 0 }),
     getTrainerLastMeasurementAt: (items) => items[0]?.date, getClientPlateauInfo: () => ({}), getClientPaymentAttention: () => ({}),
     getSubscriptionStatus: () => ({}), getSubscriptionAttentionLabel: () => "", getActiveTrainerTasksCount: (items) => items.length,
@@ -107,6 +106,7 @@ test("5 / 50 / 200 clients with annual history stay within read and latency budg
     const state = f.state();
     assert.equal(Object.keys(state.summaries).length, count);
     assert.ok(Object.values(state.summaries).every((summary) => summary.trainerSummaryReady));
+    assert.ok(Object.values(state.summaries).every((summary) => summary.completedWorkoutCount === null), "Capped history must not be presented as an all-time total");
     assert.ok(state.reads <= count * 92);
     assert.ok(state.firstUsefulAt < 1000);
     assert.ok(performance.now() - start < 4000);

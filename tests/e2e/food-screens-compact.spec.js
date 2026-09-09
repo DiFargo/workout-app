@@ -300,3 +300,6 @@ for (const type of ["food", "dish"]) {
     checkErrors();
   });
 }
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

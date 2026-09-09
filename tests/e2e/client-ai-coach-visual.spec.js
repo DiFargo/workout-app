@@ -122,3 +122,6 @@ test("client AI coach visual audit covers insights and nutrition plan states", a
 
   assertNoRuntimeErrors();
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

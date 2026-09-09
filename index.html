@@ -1,23 +1,42 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>workout-app</title>
+    <title>Свой ритм</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#F2F2F7" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Workout" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-    <style>html,body,#root{min-height:100%;margin:0;background:#f2f2f7}</style>
+    <style>
+      html,body,#root{min-height:100%;margin:0;background:#f2f2f7}
+      #startup{box-sizing:border-box;min-height:100dvh;display:grid;align-content:center;justify-items:center;gap:16px;padding:24px;color:#1c1c1e;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-align:center}
+      #startup h1{font-size:24px;margin:0}#startup p{max-width:340px;margin:0;color:#636366}
+      #startup button{min-height:48px;padding:12px 24px;border:0;border-radius:14px;background:#3f73b8;color:white;font:inherit;cursor:pointer}
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><main id="startup" aria-live="polite"><h1>Свой ритм</h1><p id="startup-message">Загружаем приложение…</p><button id="startup-retry" hidden type="button">Повторить загрузку</button><noscript>Для работы приложения включите JavaScript в браузере.</noscript></main></div>
+    <script>
+      (() => {
+        const retry = document.getElementById('startup-retry');
+        retry.addEventListener('click', () => location.reload());
+        window.showStartupFailure = () => {
+          const message = document.getElementById('startup-message');
+          if (!message) return;
+          message.textContent = 'Загрузка задерживается. Проверьте соединение и попробуйте ещё раз.';
+          retry.hidden = false;
+        };
+        window.addEventListener('error', window.showStartupFailure, true);
+        setTimeout(window.showStartupFailure, 15000);
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

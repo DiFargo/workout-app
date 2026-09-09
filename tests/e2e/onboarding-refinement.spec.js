@@ -79,3 +79,6 @@ test("invitation password form retains validation, retry and success in the calm
   const width = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(width).toBeLessThanOrEqual(375);
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

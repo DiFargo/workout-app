@@ -15,6 +15,8 @@ export function createTrainerMonthProgramStructureHandlers({
   setMonthProgram,
   showAppConfirm
 }) {
+  function updateMonthProgramTestFlag(isTest) { setMonthProgram((program) => ({ ...program, isTest: Boolean(isTest) })); }
+
   function updateMonthProgramName(name) {
     setMonthProgram((program) => ({ ...program, name }));
   }
@@ -368,6 +370,7 @@ export function createTrainerMonthProgramStructureHandlers({
     toggleMonthProgramBlock,
     toggleMonthProgramWeek,
     updateMonthProgramName,
+    updateMonthProgramTestFlag,
     updateProgramMonth
   };
 }

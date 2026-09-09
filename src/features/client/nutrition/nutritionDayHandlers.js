@@ -1,3 +1,4 @@
+import { stampNutritionDayChange } from "../../../utils/nutritionSyncModel.js";
 import {
   makeEmptyNutritionDay,
   todayNutritionKey
@@ -39,15 +40,13 @@ export function createNutritionDayHandlers({
   function updateNutritionDay(updater) {
     setNutrition((prev) => {
       const currentDay = prev.days?.[nutritionDateKey] || makeEmptyNutritionDay();
-      const nextDay = updater(currentDay);
+      const nextDay = stampNutritionDayChange(currentDay, updater(currentDay));
       return {
         ...prev,
+        updatedAt: nextDay.updatedAt,
         days: {
           ...prev.days,
-          [nutritionDateKey]: {
-            ...nextDay,
-            updatedAt: new Date().toISOString()
-          }
+          [nutritionDateKey]: nextDay
         }
       };
     });
@@ -56,8 +55,11 @@ export function createNutritionDayHandlers({
   function toggleNutritionFavorite(foodId) {
     setNutrition((prev) => {
       const isFavorite = prev.favorites.includes(foodId);
+      const updatedAt = new Date(Math.max(Date.now(), Date.parse(prev.favoriteChanges?.[foodId]?.updatedAt || 0) + 1 || 0)).toISOString();
       return {
         ...prev,
+        updatedAt,
+        favoriteChanges: { ...prev.favoriteChanges, [foodId]: { present: !isFavorite, updatedAt } },
         favorites: isFavorite
           ? prev.favorites.filter((id) => id !== foodId)
           : [foodId, ...prev.favorites]

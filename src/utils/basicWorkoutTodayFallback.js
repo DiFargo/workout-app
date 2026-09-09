@@ -1,3 +1,4 @@
+import { toWorkoutDateKey } from "./workoutSchedule.js";
 import { BASIC_WORKOUT_EXERCISE_LIBRARY } from "../data/basicWorkoutExerciseLibrary.js";
 
 export const BASIC_WORKOUT_TODAY_TARGETS = Object.freeze([
@@ -187,7 +188,7 @@ export function buildBasicWorkoutTodayLocalFallback({
   supportExercises.forEach(addUnique);
   candidates.forEach(addUnique);
 
-  const todayKey = new Date().toISOString().slice(0, 10);
+  const todayKey = toWorkoutDateKey(new Date());
   const planId = `basic_today_local_${Date.now().toString(36)}`;
   const workoutId = `${planId}_workout`;
   const exercises = selected.slice(0, exerciseCount).map((exercise, index) => ({

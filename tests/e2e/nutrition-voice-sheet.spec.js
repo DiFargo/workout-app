@@ -5,10 +5,13 @@ test("voice results fit phone screens with one scrolling list and fixed actions"
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/?clientHarness=1&clientHarnessPage=voiceReview&clientHarnessTheme=warm-light");
+  await page.getByTestId("nutrition-orbit-audio-search").click();
+  await page.getByTestId("nutrition-voice-record").click();
     const sheet = page.getByTestId("nutrition-voice-sheet");
     const body = page.getByTestId("nutrition-voice-results");
     const actions = page.getByTestId("nutrition-voice-actions");
     await expect(sheet).toBeVisible({ timeout: 20_000 });
+    await sheet.evaluate((node) => Promise.all(node.getAnimations().map((animation) => animation.finished)));
     const sheetBox = await sheet.boundingBox();
     expect(sheetBox.y).toBeGreaterThanOrEqual(0);
     expect(sheetBox.y + sheetBox.height).toBeLessThanOrEqual(viewport.height);
@@ -39,6 +42,8 @@ test("voice result review keeps editing, candidate selection, removal and comple
   await page.setViewportSize({ width: 375, height: 667 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/?clientHarness=1&clientHarnessPage=voiceReview");
+  await page.getByTestId("nutrition-orbit-audio-search").click();
+  await page.getByTestId("nutrition-voice-record").click();
   await page.getByTestId("nutrition-voice-candidate").first().click();
   await expect(page.getByTestId("nutrition-voice-candidate")).toHaveCount(0);
   await page.getByRole("button", { name: "Редактировать Овощи и продукты из них: Томаты свежие с зеленью", exact: true }).click();
@@ -64,6 +69,8 @@ test("long voice results remain reachable without moving the close and done butt
   await page.setViewportSize({ width: 320, height: 568 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/?clientHarness=1&clientHarnessPage=voiceReview&clientVoiceLongList=1");
+  await page.getByTestId("nutrition-orbit-audio-search").click();
+  await page.getByTestId("nutrition-voice-record").click();
   const body = page.getByTestId("nutrition-voice-results");
   await expect(body).toBeVisible();
   expect(await body.evaluate(node => node.scrollHeight > node.clientHeight)).toBe(true);
@@ -159,3 +166,6 @@ test("voice waveform responds to sound, stays quiet in silence and respects redu
   expect(levels[1]).toBeGreaterThan(levels[0]);
   expect(levels[2]).toBeGreaterThan(levels[1] * 2);
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

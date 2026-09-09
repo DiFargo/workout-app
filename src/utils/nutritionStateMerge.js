@@ -1,3 +1,4 @@
+import { mergeDeletionTimes, mergeMyFoods, mergeFavoriteChanges } from "./nutritionSyncModel.js";
 import { defaultNutritionState } from "../data/nutritionDefaults";
 import { getTimestampValue, mergeNutritionDays } from "./auditSafety";
 
@@ -15,7 +16,7 @@ export function pickNutritionGoalNumbers(source = {}) {
   }, {});
 }
 
-export function mergeNutritionStates(localState = {}, cloudState = {}, personalMyFoods = {}) {
+export function mergeNutritionStates(localState = {}, cloudState = {}, personalMyFoods = {}, personalDeletedFoods = {}) {
   const localIsNewer =
     getNutritionUpdatedAt(localState) > getNutritionUpdatedAt(cloudState);
   const primaryState = localIsNewer ? localState : cloudState;
@@ -40,6 +41,13 @@ export function mergeNutritionStates(localState = {}, cloudState = {}, personalM
     cloudState.updatedAt
   );
 
+  const deletedMyFoods = mergeDeletionTimes(mergeDeletionTimes(localState.deletedMyFoods, cloudState.deletedMyFoods), personalDeletedFoods);
+  const favoriteChanges = mergeFavoriteChanges(localState.favoriteChanges, cloudState.favoriteChanges);
+  const favorites = new Set([...(localState.favorites || []), ...(cloudState.favorites || [])]);
+  for (const [id, change] of Object.entries(favoriteChanges)) change.present ? favorites.add(id) : favorites.delete(id);
+  for (const [id, deletedAt] of Object.entries(deletedMyFoods)) {
+    if (getTimestampValue(favoriteChanges[id]?.updatedAt) <= getTimestampValue(deletedAt)) favorites.delete(id);
+  }
   return {
     ...defaultNutritionState,
     ...secondaryState,
@@ -52,22 +60,15 @@ export function mergeNutritionStates(localState = {}, cloudState = {}, personalM
     },
     nutritionPlan: preferredNutritionPlan,
     days: mergedDays,
-    favorites: [
-      ...new Set([
-        ...(primaryState.favorites || defaultNutritionState.favorites),
-        ...(secondaryState.favorites || [])
-      ])
-    ],
+    deletedMyFoods,
+    favoriteChanges,
+    favorites: [...favorites],
     recent: [
       ...new Set([
         ...(primaryState.recent || []),
         ...(secondaryState.recent || [])
       ])
     ].slice(0, 80),
-    myFoods: {
-      ...(secondaryState.myFoods || {}),
-      ...(primaryState.myFoods || {}),
-      ...(personalMyFoods || {})
-    }
+    myFoods: mergeMyFoods(mergeMyFoods(secondaryState.myFoods, primaryState.myFoods, deletedMyFoods), personalMyFoods, deletedMyFoods)
   };
 }

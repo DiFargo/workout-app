@@ -1,3 +1,4 @@
+import { createLatestAsyncRequest } from "../../../utils/latestAsyncRequest.js";
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import {
   findExistingPhotoFood,
@@ -18,6 +19,8 @@ import {
   findLocalNutritionFoodByBarcode,
   searchLocalNutritionFoods
 } from "../../../utils/localNutritionCatalog";
+
+const photoRequestScopes = new WeakMap();
 
 export function createNutritionPhotoAiHandlers({
   fatSecretFoods,
@@ -53,7 +56,11 @@ export function createNutritionPhotoAiHandlers({
   setSelectedNutritionFood,
   setShowRecentNutritionFoods
 }) {
+  if (!photoRequestScopes.has(nutritionPhotoLastFileRef)) photoRequestScopes.set(nutritionPhotoLastFileRef, createLatestAsyncRequest());
+  const requests = photoRequestScopes.get(nutritionPhotoLastFileRef);
+
   function resetNutritionPhotoAiSearch() {
+    requests.cancel();
     setNutritionPhotoName("");
     setNutritionPhotoPreview((currentPreview) => {
       if (currentPreview?.startsWith("blob:")) {
@@ -187,6 +194,7 @@ export function createNutritionPhotoAiHandlers({
   }
 
   function resetNutritionPhotoAiState() {
+    requests.cancel();
     setNutritionPhotoPreview((currentPreview) => {
       if (currentPreview?.startsWith("blob:")) {
         URL.revokeObjectURL(currentPreview);
@@ -223,6 +231,7 @@ export function createNutritionPhotoAiHandlers({
       return;
     }
 
+    const request = requests.start();
     nutritionPhotoLastFileRef.current = file;
     setNutritionPhotoName(file.name || "Фото продукта");
     setNutritionPhotoPreview((currentPreview) => {
@@ -244,10 +253,12 @@ export function createNutritionPhotoAiHandlers({
       startPerformanceCheck("AI photo · total", { fileSizeMb: Math.round((file.size / 1024 / 1024) * 10) / 10 });
       startPerformanceCheck("AI photo · prepare image");
       const imageData = await prepareNutritionPhotoForAi(file);
+      if (!request.isCurrent()) return;
       endPerformanceCheck("AI photo · prepare image", { imageLengthKb: Math.round((imageData.length / 1024) * 10) / 10 });
 
       startPerformanceCheck("AI photo · function request");
       const response = await fetchAuthorizedWithTimeout("/api/ai-food-photo", {
+        signal: request.signal,
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -260,6 +271,7 @@ export function createNutritionPhotoAiHandlers({
       }, 45000);
 
       const data = await response.json().catch(() => ({}));
+      if (!request.isCurrent()) return;
       endPerformanceCheck("AI photo · function request", { status: response.status, apiVersion: data.apiVersion || "" });
 
       if (!response.ok) {
@@ -288,6 +300,7 @@ export function createNutritionPhotoAiHandlers({
       // reviewable draft only after the strict verification above.
       setNutritionPhotoAiConfidence(getNutritionPhotoAiConfidenceText(product.confidence));
       const existingFood = await findExistingNutritionFoodFromPhoto(product);
+      if (!request.isCurrent()) return;
       if (existingFood) {
         resetNutritionPhotoAiState();
         setNutritionSearch(existingFood.name || product.name);
@@ -311,6 +324,7 @@ export function createNutritionPhotoAiHandlers({
 
       openNutritionCreateProductFromPhoto({ ...product, rawAiResponse: data }, product.name);
     } catch (error) {
+      if (!request.isCurrent()) return;
       console.error(error);
       showAppError(
         error.name === "AbortError"
@@ -329,7 +343,7 @@ export function createNutritionPhotoAiHandlers({
       );
     } finally {
       endPerformanceCheck("AI photo · total");
-      setNutritionPhotoAnalyzing(false);
+      if (request.isCurrent()) setNutritionPhotoAnalyzing(false);
     }
   }
 

@@ -69,6 +69,7 @@ export function normalizeTrainerMonthProgram(program = {}, options = {}) {
   return {
     id: program.id || getFallbackId(),
     name: program.name || "Программа на месяц",
+    isTest: program.isTest === true,
     description: program.description || "",
     trainingFormat: normalizeTrainerProgramFormat(program.trainingFormat),
     ownerUid: program.ownerUid || "",

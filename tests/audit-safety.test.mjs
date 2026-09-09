@@ -268,8 +268,10 @@ test("nutrition days merge independently by their own update time", () => {
   };
 
   const merged = mergeNutritionDays(localDays, cloudDays);
-  assert.equal(merged["2026-06-10"].foods[0].id, "local-new");
-  assert.equal(merged["2026-06-11"].foods[0].id, "cloud-new");
+  assert.deepEqual(merged["2026-06-10"].foods.map((food) => food.id).sort(), ["cloud-old", "local-new"]);
+  assert.deepEqual(merged["2026-06-11"].foods.map((food) => food.id).sort(), ["cloud-new", "local-old"]);
+  assert.equal(merged["2026-06-10"].updatedAt, localDays["2026-06-10"].updatedAt);
+  assert.equal(merged["2026-06-11"].updatedAt, cloudDays["2026-06-11"].updatedAt);
 });
 
 test("nutrition streak is counted from the selected day", () => {

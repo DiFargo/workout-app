@@ -199,3 +199,6 @@ test("release navigation keeps admin sections and denied access intact", async (
   await expect(page.getByRole("region", { name: "Разделы админки" })).toHaveCount(0);
   assertNoErrors();
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

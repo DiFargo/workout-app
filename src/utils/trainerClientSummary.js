@@ -1,3 +1,4 @@
+import { buildTrainerClientProgramTimeline } from "./trainerClientProgramAssignments.js";
 import { sumNutritionFoods } from "./nutritionFoodTotals.js";
 import {
   getClientCriticalAttentionItems,
@@ -252,6 +253,16 @@ export function getTrainerProgramEndingAttention(
   return null;
 }
 
+export function getTrainerAssignmentProgress(client = {}, workouts = [], history = []) {
+  const timeline = buildTrainerClientProgramTimeline({ workouts, history, clientProfile: client });
+  const assignment = timeline.find((item) => item.status === "current") ||
+    timeline.find((item) => item.status === "future") || timeline.at(-1);
+  return {
+    assignedWorkoutCount: assignment?.workoutCount || 0,
+    completedWorkoutCount: assignment?.completedCount || 0
+  };
+}
+
 export function getTrainerAssignedWorkoutCount(client = {}, workouts = []) {
   const rootCount = Number(client.assignedWorkoutCount) || 0;
   const workoutCount = Array.isArray(workouts) ? workouts.length : 0;
@@ -259,7 +270,7 @@ export function getTrainerAssignedWorkoutCount(client = {}, workouts = []) {
     ? client.workoutCalendar.plannedWorkouts.length
     : 0;
 
-  return Math.max(rootCount, workoutCount, calendarPlannedCount);
+  return workoutCount || calendarPlannedCount || rootCount;
 }
 
 export function getTrainerSummaryReadFailures(readResults = {}) {
@@ -533,7 +544,7 @@ export function getTrainerClientFastSummary(client = {}, previousSummary = {}) {
 }
 
 export function buildTrainerDashboardSummary(clients = [], summaries = {}) {
-  const summaryItems = (Array.isArray(clients) ? clients : []).map((client) => {
+  const summaryItems = (Array.isArray(clients) ? clients : []).filter((client) => !client.archived && !client.isTest).map((client) => {
     const summary = getTrainerClientSummaryFromMap(client, summaries);
     return {
       client,

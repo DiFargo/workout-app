@@ -29,3 +29,6 @@ test("rest timer promotes the next exercise after the final set", async ({ page 
     "Остановить таймер отдыха"
   );
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

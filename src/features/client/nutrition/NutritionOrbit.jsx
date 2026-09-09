@@ -165,7 +165,7 @@ export default function NutritionOrbit({
         <button type="button" data-testid="nutrition-orbit-calendar" onClick={onOpenCalendar}><span><CalendarDays aria-hidden="true" /></span>Календарь</button>
         <input ref={photoSearchInputRef} className={styles.photoSearchInput} data-testid="nutrition-orbit-photo-input" type="file" accept="image/*" capture="environment" onChange={onPhotoSearch}/>
       </div>
-      <NutritionVoiceModal open={voiceModalOpen} origin={voiceButtonOrigin} voiceState={voiceState} audioLevel={voiceAudioLevel} feedback={voiceFeedback} voiceAddedItems={voiceAddedItems} onClose={closeVoiceModal} onVoiceStart={onVoiceStart} onVoiceEnd={onVoiceEnd} onVoiceAddedItemRemove={onVoiceAddedItemRemove} onVoiceAddedItemUpdate={onVoiceAddedItemUpdate} onVoiceDone={() => { onVoiceDone?.(); closeVoiceModal(); }}/>
+      <NutritionVoiceModal open={voiceModalOpen} origin={voiceButtonOrigin} voiceState={voiceState} audioLevel={voiceAudioLevel} feedback={voiceFeedback} voiceAddedItems={voiceAddedItems} onClose={closeVoiceModal} onVoiceStart={onVoiceStart} onVoiceEnd={onVoiceEnd} onVoiceAddedItemRemove={onVoiceAddedItemRemove} onVoiceAddedItemUpdate={onVoiceAddedItemUpdate} onVoiceDone={(options) => { onVoiceDone?.(options); closeVoiceModal(); }}/>
     </>;
   }
 
@@ -296,8 +296,8 @@ export default function NutritionOrbit({
         onVoiceEnd={onVoiceEnd}
         onVoiceAddedItemRemove={onVoiceAddedItemRemove}
         onVoiceAddedItemUpdate={onVoiceAddedItemUpdate}
-        onVoiceDone={() => {
-          onVoiceDone?.();
+        onVoiceDone={(options) => {
+          onVoiceDone?.(options);
           closeVoiceModal();
         }}
       />

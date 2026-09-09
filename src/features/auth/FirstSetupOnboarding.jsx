@@ -155,11 +155,12 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
   }
 
   return (
-    <label className={styles.firstSetupMetricSlider} style={{ "--slider-progress": `${sliderProgress}%` }}>
+    <div role="group" aria-label={config.label} className={styles.firstSetupMetricSlider} style={{ "--slider-progress": `${sliderProgress}%` }}>
       <span className={styles.firstSetupMetricLabel}>{config.label}</span>
       <strong className={styles.firstSetupMetricValue}>{formatNumberValue(sliderValue, config.step)} <small>{config.unit}</small></strong>
       <input
         type="range"
+        aria-label={`${config.label}, шкала`}
         min={nativeSliderMin}
         max={nativeSliderMax}
         step={nativeSliderStep}
@@ -184,6 +185,7 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
         <input
           inputMode={config.step < 1 ? "decimal" : "numeric"}
           type="text"
+          aria-label={`${config.label}, ${config.unit}`}
           value={value ?? ""}
           onChange={(event) => {
             const nextValue = event.target.value;
@@ -196,7 +198,7 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
         />
         <em>{config.unit}</em>
       </div>
-    </label>
+    </div>
   );
 }
 
@@ -211,6 +213,7 @@ export default function FirstSetupOnboarding({
   onExit
 }) {
   const [exitConfirmOpen, setExitConfirmOpen] = useState(false);
+  const [editingReview, setEditingReview] = useState(false);
   const initializedMetricStepsRef = useRef(new Set());
 
   const profileName = limitUserDisplayName(profileDraft.name);
@@ -271,7 +274,8 @@ export default function FirstSetupOnboarding({
     if (!stepCanContinue) return;
 
     event.currentTarget.blur();
-    setOnboardingStep((currentStep) => Math.min(currentStep + 1, TOTAL_STEPS - 1));
+    setOnboardingStep((currentStep) => editingReview ? 9 : Math.min(currentStep + 1, TOTAL_STEPS - 1));
+    setEditingReview(false);
   }
 
   if (!open) return null;
@@ -443,12 +447,12 @@ export default function FirstSetupOnboarding({
                 [Activity, "Уровень активности", activityLabel],
                 [Target, "Цель", goalLabel],
                 [MoveHorizontal, "Целевой вес", profileDraft.targetWeight ? `${profileDraft.targetWeight} кг` : "Не указан"]
-              ].map(([Icon, label, value]) => (
-                <div key={label}>
+              ].map(([Icon, label, value], index) => (
+                <button type="button" key={label} aria-label={`Изменить: ${label}`} onClick={() => { setEditingReview(true); setOnboardingStep(index + 1); }}>
                   <span><Icon aria-hidden="true" /></span>
                   <small>{label}</small>
                   <strong>{value}</strong>
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -459,7 +463,7 @@ export default function FirstSetupOnboarding({
             <button
               type="button"
               className={styles.firstSetupSecondary}
-              onClick={() => setOnboardingStep((prev) => prev - 1)}
+              onClick={() => { setOnboardingStep((prev) => editingReview ? 9 : prev - 1); setEditingReview(false); }}
             >
               Назад
             </button>
@@ -470,9 +474,9 @@ export default function FirstSetupOnboarding({
               type="button"
               className={styles.firstSetupPrimary}
               disabled={!stepCanContinue}
-              onClick={() => setOnboardingStep((prev) => prev + 1)}
+              onClick={() => { setOnboardingStep((prev) => editingReview ? 9 : prev + 1); setEditingReview(false); }}
             >
-              {onboardingStep === 0 ? "Начать" : "Далее"}
+              {editingReview ? "Готово" : onboardingStep === 0 ? "Начать" : "Далее"}
             </button>
           ) : (
             <button

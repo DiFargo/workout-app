@@ -122,3 +122,6 @@ test("disconnected Telegram cannot enable reminders and offers the connection se
   await expect(dialog).toHaveAttribute("data-profile-settings-section", "connections");
   await expect(dialog.getByTestId("profile-settings-telegram")).toContainText("Нажми, чтобы подключить");
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

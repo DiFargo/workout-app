@@ -1,7 +1,14 @@
 import { spawn } from "node:child_process";
 
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
-const includeE2e = process.argv.includes("--e2e");
+const option = (name) => process.argv.findLast((arg) => arg.startsWith(`--${name}=`))?.slice(name.length + 3);
+const profile = option("profile") || "release";
+const focusedTests = (option("tests") || "").split(",").filter(Boolean);
+const browserTests = (option("browser") || "").split(",").filter(Boolean);
+const profiles = ["docs", "ui", "domain", "persistence", "auth", "release", "full"];
+if (!profiles.includes(profile)) throw new Error(`Unknown verification profile: ${profile}`);
+if (["domain", "persistence", "auth"].includes(profile) && !focusedTests.length) throw new Error("Specify --tests=tests/relevant.test.mjs for this risk profile.");
+if (process.argv.includes("--e2e") && profile !== "full" && !browserTests.length) throw new Error("Specify --browser=affected.spec.js or choose --profile=full.");
 
 function quoteWindowsCommandArgument(value) {
   const raw = String(value);
@@ -42,24 +49,21 @@ const isolatedFirebaseEnvironment = {
   VITE_FIREBASE_APP_ID: "1:000000000000:web:staging"
 };
 
-const checks = [
-  ["Full ESLint", npmCommand, ["run", "lint"]],
-  ["Unit tests", npmCommand, ["test"]],
-  ["Firestore Rules tests", npmCommand, ["run", "test:rules"]],
-  ["Functions syntax", npmCommand, ["run", "check:functions"]],
-  ["Isolated staging build", npmCommand, ["run", "build:staging"], {
-    env: { ...process.env, ...isolatedFirebaseEnvironment }
-  }],
-  ["Production build", npmCommand, ["run", "build:production"]],
-  ["Bundle budget", npmCommand, ["run", "check:bundle"]],
-  ["Root production dependency audit", npmCommand, ["run", "audit:production"]],
-  ["Functions production dependency audit", npmCommand, ["run", "audit:functions"]],
-  ["Whitespace errors", "git", ["diff", "--check"]]
-];
-
-if (includeE2e) {
-  checks.push(["Playwright E2E", npmCommand, ["run", "test:e2e"]]);
+const checks = [];
+if (profile === "full") checks.push(["ESLint", npmCommand, ["run", "lint"]]);
+if (focusedTests.length) checks.push(["Focused behavior", process.execPath, ["--test", ...focusedTests]]);
+else if (profile === "full") checks.push(["Unit tests", npmCommand, ["test"]]);
+if (["persistence", "auth", "full"].includes(profile)) checks.push(["Relevant access boundaries", npmCommand, ["run", "test:rules"]]);
+if (["auth", "full"].includes(profile)) checks.push(["Functions syntax", npmCommand, ["run", "check:functions"]]);
+if (profile === "full") checks.push(["Isolated staging build", npmCommand, ["run", "build:staging"], { env: { ...process.env, ...isolatedFirebaseEnvironment } }]);
+if (profile !== "docs") checks.push(["Production build", npmCommand, ["run", "build:production"]]);
+if (["release", "full"].includes(profile)) checks.push(["Bundle budget", npmCommand, ["run", "check:bundle"]]);
+if (profile === "full" || process.argv.includes("--dependencies")) {
+  checks.push(["Root production dependencies", npmCommand, ["run", "audit:production"]], ["Functions production dependencies", npmCommand, ["run", "audit:functions"]]);
 }
+checks.push(["Whitespace errors", "git", ["diff", "--check"]]);
+if (browserTests.length || (profile === "full" && process.argv.includes("--e2e"))) checks.push(["Browser behavior", npmCommand, ["run", "test:e2e", "--", ...browserTests]]);
+console.log(`Verification profile: ${profile}. Release smoke and device acceptance are recorded separately.`);
 
 try {
   for (const [label, command, args, options] of checks) {
@@ -67,7 +71,7 @@ try {
     await run(command, args, options);
   }
 
-  console.log("\nAll release verification checks passed.");
+  console.log("\nSelected verification checks passed.");
 } catch (error) {
   console.error(`\nRelease verification stopped: ${error.message}`);
   process.exitCode = 1;

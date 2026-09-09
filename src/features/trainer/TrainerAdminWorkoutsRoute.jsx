@@ -344,6 +344,7 @@ export default function TrainerAdminWorkoutsRoute({
     toggleMonthProgramBlock,
     toggleMonthProgramWeek,
     updateMonthProgramName,
+    updateMonthProgramTestFlag,
     updateProgramMonth
   } = createTrainerMonthProgramStructureHandlers({
     adminActiveDayId,
@@ -578,6 +579,7 @@ export default function TrainerAdminWorkoutsRoute({
       updateMonthExerciseName={updateMonthExerciseName}
       updateMonthExerciseSet={updateMonthExerciseSet}
       updateMonthProgramName={updateMonthProgramName}
+      updateMonthProgramTestFlag={updateMonthProgramTestFlag}
       updateMonthWorkout={updateMonthWorkout}
       updateProgramMonth={updateProgramMonth}
       uploadMonthExerciseVideo={uploadMonthExerciseVideo}

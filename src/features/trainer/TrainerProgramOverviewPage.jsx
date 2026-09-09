@@ -56,12 +56,14 @@ export default function TrainerProgramOverviewPage({
   const [aiImportLoading, setAiImportLoading] = useState(false);
   const [aiImportError, setAiImportError] = useState("");
   const [programSearch, setProgramSearch] = useState("");
+  const [testProgramsOnly, setTestProgramsOnly] = useState(false);
   const normalizedProgramSearch = programSearch.trim().toLocaleLowerCase("ru-RU");
-  const visibleTrainingTemplates = normalizedProgramSearch
+  const matchingTemplates = normalizedProgramSearch
     ? adminTrainingTemplates.filter((template) => [template.name, template.description]
       .filter(Boolean)
       .some((value) => String(value).toLocaleLowerCase("ru-RU").includes(normalizedProgramSearch)))
     : adminTrainingTemplates;
+  const visibleTrainingTemplates = matchingTemplates.filter((program) => Boolean(program.isTest) === testProgramsOnly);
 
   function closeCreateChoice() {
     if (aiImportLoading) return;
@@ -132,6 +134,11 @@ export default function TrainerProgramOverviewPage({
             </div>
           </div>
         ) : null}
+
+        <label className={styles.testFilter} onClick={(event) => event.stopPropagation()}>
+          <input type="checkbox" checked={testProgramsOnly} onChange={(event) => { setTestProgramsOnly(event.target.checked); setAdminSelectedTemplateId(""); }} />
+          Тестовые программы
+        </label>
 
         {isNextWorkspace ? (
           <div className={styles.toolbar} onClick={(event) => event.stopPropagation()}>

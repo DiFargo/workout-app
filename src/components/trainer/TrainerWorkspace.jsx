@@ -1,3 +1,4 @@
+import { buildTrainerDashboardSummary } from "../../utils/trainerClientSummary.js";
 import { mergeTrainerExerciseLibraryItems } from "../../utils/trainerExerciseLibrary.js";
 import { exerciseLibraryNameKey } from "../../../functions/exerciseLibraryIdentity.js";
 import TrainerExerciseQuickFields from "./TrainerExerciseQuickFields";
@@ -782,7 +783,7 @@ function DashboardClientList({ clients, summaries, filter, search, onOpenClient 
             <span className="trainerNextClientIdentity">
               <TrainerAvatar client={client} size="small" />
               <span>
-                <strong>{client.name || client.email || "Клиент"}</strong>
+                <strong>{client.name || client.email || "Клиент"}{client.isTest ? " · Тестовый" : ""}</strong>
                 <small>{clientDetail}</small>
               </span>
             </span>
@@ -912,7 +913,7 @@ function TrainerDashboard({ actionCenter, trainerName, onOpenClient }) {
 }
 
 function getTrainerSyncProgress(clients = [], clientSummaries = {}) {
-  const total = clients.length;
+  const total = clients.filter((client) => !client.archived && !client.isTest).length;
   const completed = clients.reduce((count, client) => (
     (clientSummaries[client.id]?.trainerSummarySettled || clientSummaries[client.id]?.trainerSummaryReady) ? count + 1 : count
   ), 0);
@@ -5084,6 +5085,7 @@ function TrainerClientDetail({
   const clientNotificationsEnabled = client.telegramNotificationsEnabled !== false &&
     client.workoutCalendar?.reminderEnabled !== false;
   const clientActions = [
+    { id: client.isTest ? "mark_real" : "mark_test", label: client.isTest ? "Убрать отметку тестового" : "Отметить как тестового", icon: "⚙️" },
     client.archived
       ? { id: "restore", label: "Восстановить клиента", icon: "♻️" }
       : { id: "archive", label: "Архивировать клиента", icon: "📦" },
@@ -5814,7 +5816,8 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
     ["all", "Все"],
     ["attention", "Внимание"],
     ["noProgram", "Без программы"],
-    ["inactive", "Неактивные"]
+    ["inactive", "Неактивные"],
+    ["test", "Тестовые"]
   ];
   return (
     <div className="trainerNextPage trainerNextClientsPage">
@@ -5897,9 +5900,8 @@ function formatTrainerEstimatedOneRepMax(session) {
 }
 
 function formatTrainerExerciseComparison(progress) {
-  if (!progress?.lastSession || Number(progress.sessionCount || 0) < 2) {
-    return "Истории выполнения пока нет";
-  }
+  if (!progress?.lastSession) return "Истории выполнения пока нет";
+  if (Number(progress.sessionCount || 0) < 2) return "Сравнение появится после следующего выполнения";
 
   const comparison = progress.comparison || {};
   const weightDelta = comparison.weightDelta;
@@ -6881,13 +6883,13 @@ function TrainerWorkoutEditor({
                 const hasExerciseHistory = Boolean(progress?.lastSession);
                 const hasComparison = Number(progress?.sessionCount || 0) >= 2;
                 const progressTitle = hasExerciseHistory
-                  ? formatTrainerExerciseSession(progress.lastSession)
+                  ? `Последнее выполнение: ${formatTrainerExerciseSession(progress.lastSession)}`
                   : client?.trainerHistoryLoadError
                     ? "Не удалось загрузить историю выполнения"
                   : Number(progress?.matchedHistoryCount || 0) > 0
                     ? "Запись есть, но рабочие подходы не сохранены"
                     : "Истории выполнения пока нет";
-                const progressComparison = formatTrainerExerciseComparison(progress);
+                const progressComparison = `${formatTrainerExerciseComparison(progress)}${hasComparison && progress?.previousSession?.date ? ` · к ${formatCompactDate(progress.previousSession.date)}` : ""}`;
                 const estimatedOneRepMax = formatTrainerEstimatedOneRepMax(progress?.lastSession);
                 return (
                   <article className={isExpanded ? "expanded" : ""} key={exercise.id || index}>
@@ -7291,7 +7293,7 @@ function TrainerCabinetPage({
           </button>
 
           <section className="trainerCabinetStats" aria-label="Сводка тренера">
-            <article><span>Всего клиентов</span><strong>{clients.length}</strong></article>
+            <article><span>Всего клиентов</span><strong>{clients.filter((client) => !client.archived && !client.isTest).length}</strong></article>
             <article><span>Активных</span><strong>{activeCount}</strong></article>
             <article><span>Требуют внимания</span><strong>{attentionCount}</strong></article>
           </section>
@@ -7582,15 +7584,16 @@ function TrainerUtilityPage({
     }, ...current].slice(0, 4));
     setMessageStatus("Ответ сохранен и отправлен клиенту.");
   }
-  const visibleClients = clients.filter((client) => !client.archived);
+  const visibleClients = clients.filter((client) => !client.archived && !client.isTest);
+  const utilityMetrics = buildTrainerDashboardSummary(visibleClients, clientSummaries);
   const attentionItems = visibleClients
     .map((client) => {
       const summary = clientSummaries[client.id] || {};
       return { client, summary, attention: getClientAttentionState(client, summary) };
     })
     .filter((item) => Boolean(item.attention));
-  const attentionClients = attentionItems.length;
-  const activeUtilityClients = Math.max(0, visibleClients.length - attentionClients);
+  const attentionClients = utilityMetrics.statusCounts.critical;
+  const activeUtilityClients = utilityMetrics.statusCounts.active;
   const activePercent = visibleClients.length ? Math.round((activeUtilityClients / visibleClients.length) * 100) : 0;
   const noProgramCount = attentionItems.filter((item) => item.attention.type === "program").length;
   const workoutAttentionCount = attentionItems.filter((item) => item.attention.type === "workout").length;

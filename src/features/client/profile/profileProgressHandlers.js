@@ -1,4 +1,6 @@
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { persistProgressPhotos } from "./progressPhotoPersistence.js";
+import { persistMeasurement } from "./measurementPersistence.js";
+import { collection, getDocs } from "firebase/firestore";
 
 import { createClientResourceId } from "../../../domain/clientInsights";
 import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
@@ -6,6 +8,7 @@ import { uploadStorageFile } from "../../../utils/firebaseStorage";
 import { compressProgressPhoto } from "../../../utils/imageCompression";
 import {
   getFailedMeasurementQueue,
+  acknowledgeMeasurementSave,
   setFailedMeasurementQueue
 } from "../../../utils/offlineSyncStorage";
 import {
@@ -135,34 +138,15 @@ export function createProfileProgressHandlers({
 
     setProfileProgressPhotoUploading(true);
     setProfileProgressPhotoStatus("");
-    const photoId = createClientResourceId("progress");
 
     try {
-      const uploadedEntries = await Promise.all(requiredViews.map(async (view) => {
-        const compressed = await compressProgressPhoto(profileProgressPhotoFiles[view]);
-        const uploadedPhoto = await uploadStorageFile(`progress-photos/${uid}/${photoId}/${view}.webp`, compressed, {
-          contentType: "image/webp",
-          cacheControl: "public,max-age=31536000,immutable"
-        });
-        return [`${view}Url`, uploadedPhoto.url];
-      }));
-      const photoUrls = Object.fromEntries(uploadedEntries);
-      const now = new Date().toISOString();
-      const photo = {
-        date: now.slice(0, 10),
-        ...photoUrls,
-        createdAt: now,
-        createdByUid: uid,
-        createdByRole: "client",
-        source: "client"
-      };
-
-      await setDoc(doc(db, "users", uid, "progressPhotos", photoId), photo);
-      setClientProgressPhotos((current) => [{ id: photoId, ...photo }, ...current]);
+      const photo = await persistProgressPhotos({ db, uid, files: profileProgressPhotoFiles, upload: uploadStorageFile, compress: compressProgressPhoto, createId: () => createClientResourceId("progress") });
+      setClientProgressPhotos((current) => [photo, ...current.filter((item) => item.id !== photo.id)]);
       setProfileProgressPhotoFiles({ front: null, side: null, back: null });
       setProfileProgressPhotoPreviews({ front: "", side: "", back: "" });
       setProfileProgressPhotoStatus("Фото прогресса сохранены.");
-      await recordTrainerEvent(uid, "photo", "Клиент добавил фото прогресса");
+      await recordTrainerEvent(uid, "photo", "Клиент добавил фото прогресса")
+        .catch((error) => console.warn("Photos saved; trainer event was not recorded", error));
     } catch (error) {
       console.error("Client progress photos upload failed:", error);
       setProfileProgressPhotoStatus("Не получилось загрузить фото. Проверь соединение и попробуй ещё раз.");
@@ -237,9 +221,7 @@ export function createProfileProgressHandlers({
     const completeFirstSetupVersion = String(options?.completeFirstSetupVersion || "").trim();
     const isOffline = () => typeof navigator !== "undefined" && navigator.onLine === false;
     const applyLocalMeasurement = (queueForSync = false) => {
-      setProfileMeasurements(nextMeasurements);
-      safeWriteUserJsonStorage(MEASUREMENTS_STORAGE_KEY, uid, nextMeasurements);
-      setFailedMeasurementQueue(
+      const queued = setFailedMeasurementQueue(
         uid,
         queueForSync
           ? [
@@ -249,6 +231,12 @@ export function createProfileProgressHandlers({
           : getFailedMeasurementQueue(uid).filter((item) => item?.id !== measurementId)
       );
 
+      if (!queued && queueForSync) {
+        setProfileMeasurementStatus("Недостаточно места на устройстве. Замер не сохранён — восстановите сеть и повторите.");
+        return false;
+      }
+      setProfileMeasurements(nextMeasurements);
+      safeWriteUserJsonStorage(MEASUREMENTS_STORAGE_KEY, uid, nextMeasurements);
       if (normalizedMeasurementDraft.weight) {
         setAiNutritionProfileDraft((prev) => ({ ...prev, weight: normalizedMeasurementDraft.weight }));
         setAiNutritionProfile((prev) => ({
@@ -257,6 +245,7 @@ export function createProfileProgressHandlers({
           weight: normalizedMeasurementDraft.weight
         }));
       }
+      return true;
     };
     if (isOffline()) {
       setProfileMeasurementSaving(false);
@@ -265,25 +254,13 @@ export function createProfileProgressHandlers({
         return false;
       }
 
-      applyLocalMeasurement(true);
+      if (!applyLocalMeasurement(true)) return false;
       setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
       return true;
     }
 
     try {
-      await setDoc(doc(db, "users", uid, "measurements", measurementId), measurement);
-
-      if (normalizedMeasurementDraft.weight) {
-        await setDoc(doc(db, "users", uid), {
-          aiNutritionProfile: queuedMeasurement.aiNutritionProfile,
-          ...(completeFirstSetupVersion ? {
-            firstSetupCompleted: true,
-            firstSetupCompletedVersion: completeFirstSetupVersion,
-            firstSetupCompletedAt: new Date().toISOString()
-          } : {}),
-          updatedAt: new Date().toISOString()
-        }, { merge: true });
-      }
+      await persistMeasurement({ db, uid, item: queuedMeasurement, completeFirstSetupVersion });
 
       applyLocalMeasurement(false);
       setProfileMeasurementStatus("Замер сохранён. Эти данные можно использовать для коррекции плана.");
@@ -291,7 +268,7 @@ export function createProfileProgressHandlers({
       console.error("Ошибка сохранения замера:", error);
 
       if (!requireCloudSave && isOffline()) {
-        applyLocalMeasurement(true);
+        if (!applyLocalMeasurement(true)) return false;
         setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
         return true;
       }
@@ -316,7 +293,6 @@ export function createProfileProgressHandlers({
     if (!queue.length) return;
 
     measurementReplayInProgressRef.current = true;
-    const remaining = [];
     let syncedCount = 0;
 
     try {
@@ -324,22 +300,16 @@ export function createProfileProgressHandlers({
         try {
           if (!item?.id || !item?.measurement) continue;
 
-          await setDoc(doc(db, "users", uid, "measurements", item.id), item.measurement);
-
-          if (item.aiNutritionProfile) {
-            await setDoc(doc(db, "users", uid), {
-              aiNutritionProfile: item.aiNutritionProfile,
-              updatedAt: new Date().toISOString()
-            }, { merge: true });
-          }
+          await persistMeasurement({ db, uid, item });
+          acknowledgeMeasurementSave(uid, item);
 
           syncedCount += 1;
         } catch {
-          remaining.push(item);
+          // Keep failed and newly enqueued measurements for the next replay.
         }
       }
 
-      setFailedMeasurementQueue(uid, remaining);
+      const remaining = getFailedMeasurementQueue(uid);
 
       if (syncedCount > 0) {
         await loadProfileMeasurements(uid);

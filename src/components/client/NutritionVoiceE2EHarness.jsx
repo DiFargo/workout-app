@@ -1,9 +1,8 @@
 import { useState } from "react";
-import NutritionVoiceModal from "../../features/client/nutrition/NutritionVoiceModal";
+import NutritionOrbit from "../../features/client/nutrition/NutritionOrbit";
 import { buildUpdatedNutritionVoiceItem } from "../../features/client/nutrition/nutritionVoiceItemEditor.js";
 
 export default function NutritionVoiceE2EHarness({ longList = false }) {
-  const [open, setOpen] = useState(true);
   const [voiceState, setVoiceState] = useState("idle");
   const [result, setResult] = useState("");
   const [items, setItems] = useState(() => [
@@ -19,11 +18,10 @@ export default function NutritionVoiceE2EHarness({ longList = false }) {
 
   return <>
     <output data-testid="voice-harness-result">{result}</output>
-    <NutritionVoiceModal
-      open={open}
+    <NutritionOrbit
+      voiceEnabled
       voiceState={voiceState}
       voiceAddedItems={items}
-      onClose={() => setOpen(false)}
       onVoiceStart={() => setVoiceState("recording")}
       onVoiceEnd={() => setVoiceState("idle")}
       onVoiceDone={({ commit }) => setResult(commit ? `saved:${items.length}` : "cancelled")}

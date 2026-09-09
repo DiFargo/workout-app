@@ -25,8 +25,8 @@ test("admin client csv lines include workout and nutrition totals", () => {
   ]);
 
   assert.equal(lines[0], "type,date,name,calories,protein,fat,carbs,duration,feedback");
-  assert.equal(lines[1], 'workout,2026-06-20,"Плечи ""А""",,,,,3600,Хорошо');
-  assert.equal(lines[2], 'nutrition,2026-06-20,"day totals",1200,91,42,181,,score 8');
+  assert.equal(lines[1], 'workout,"2026-06-20","Плечи ""А""",,,,,"3600","Хорошо"');
+  assert.equal(lines[2], 'nutrition,"2026-06-20","day totals",1200,91,42,181,,"score 8"');
 });
 
 test("trainer client export rows include measurements and csv quoting", () => {

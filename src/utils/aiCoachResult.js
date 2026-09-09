@@ -59,18 +59,17 @@ export function buildAiCoachResult(featureId, { history = [], nutrition = defaul
       ]
     },
     recovery: {
-      title: "AI-анализ восстановления",
-      status: lastWorkoutDays === null ? "Нет данных" : lastWorkoutDays <= 1 ? "Низкое восстановление" : lastWorkoutDays <= 3 ? "Нормально" : "Готов к нагрузке",
-      score: lastWorkoutDays === null ? 40 : lastWorkoutDays <= 1 ? 58 : lastWorkoutDays <= 3 ? 78 : 90,
+      title: "Активность и самочувствие",
+      status: lastWorkoutDays === null ? "Нет истории тренировок" : lastWorkoutDays > 14 ? "Нет свежих записей" : "По истории тренировок",
+      score: null,
       bullets: [
         lastWorkoutDays === null ? "История тренировок пока пустая." : `Последняя тренировка: ${baseStats.lastWorkoutText}.`,
-        Object.keys(load7).length ? `За 7 дней больше всего работали: ${Object.entries(load7).sort((a, b) => b[1] - a[1])[0][0]}.` : "За неделю нагрузка не найдена.",
-        proteinLeft > 0 ? `По белку сегодня осталось примерно ${proteinLeft} г.` : "Белок сегодня выглядит закрытым."
+        Object.keys(load7).length ? `Больше всего подходов за 7 дней: ${Object.entries(load7).sort((a, b) => b[1] - a[1])[0][0]}.` : "За последние 7 дней тренировок не записано.",
+        "По перерыву между тренировками нельзя определить степень восстановления."
       ],
       actions: [
-        lastWorkoutDays !== null && lastWorkoutDays <= 1 ? "Сегодня не делай отказные подходы." : "Можно планировать обычную силовую работу.",
-        "Добавь 7–10 минут разминки и 1 лёгкий подход на первое упражнение.",
-        "Если сон/энергия плохие — оставь RPE около 7/10."
+        "Перед занятием отметь своё самочувствие.",
+        "Если история неполная, добавь выполненные тренировки для точного учёта нагрузки."
       ]
     },
     muscleProgram: {
@@ -165,5 +164,6 @@ export function buildAiCoachResult(featureId, { history = [], nutrition = defaul
     }
   };
 
-  return results[featureId] || results.liveCoach;
+  const result = results[featureId] || results.liveCoach;
+  return { ...result, score: featureId === "nutritionPlan" ? result.score : null };
 }

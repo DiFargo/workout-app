@@ -104,6 +104,7 @@ export default function TrainerProgramManagerView({
   updateMonthExerciseName,
   updateMonthExerciseSet,
   updateMonthProgramName,
+  updateMonthProgramTestFlag,
   updateMonthWorkout,
   updateProgramMonth,
   uploadMonthExerciseVideo
@@ -511,7 +512,9 @@ export default function TrainerProgramManagerView({
                 <X size={20} />
               </button>
             </header>
-            <div className={`${styles.editorModalBody} ${styles.editorModalBodyProgram}`} data-trainer-modal-content="true">{nextProgramConstructor}</div>
+            <div className={`${styles.editorModalBody} ${styles.editorModalBodyProgram}`} data-trainer-modal-content="true">
+              <label className={styles.editorTestFlag}><input type="checkbox" checked={Boolean(normalizedMonthProgram?.isTest)} onChange={(event) => updateMonthProgramTestFlag?.(event.target.checked)} disabled={isEditorSaveInProgress} />Тестовая программа</label>
+              {nextProgramConstructor}</div>
             <footer className={styles.editorModalFooter} data-trainer-modal-footer="true">
               {editorSaveError ? <p role="alert">{editorSaveError}</p> : null}
               <button className={styles.editorModalDelete} type="button" onClick={deleteSelectedProgramFromLibrary} disabled={isEditorSaveInProgress}>

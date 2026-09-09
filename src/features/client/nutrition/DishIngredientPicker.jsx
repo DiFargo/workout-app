@@ -109,6 +109,8 @@ export default function DishIngredientPicker({
     getFoodIcon
   });
 
+  const grams = Number(String(pendingGrams ?? "").trim().replace(",", "."));
+  const validGrams = Number.isFinite(grams) && grams > 0;
   const clearPendingIngredient = () => {
     onPendingIngredientChange(null);
     onPendingGramsChange("100");
@@ -282,6 +284,8 @@ export default function DishIngredientPicker({
                   className={styles.confirmInput}
                   data-css-module-control="dish-ingredient-picker"
                   value={pendingGrams}
+                  aria-invalid={!validGrams}
+                  aria-describedby={!validGrams ? "ingredient-grams-error" : undefined}
                   onChange={(event) => onPendingGramsChange(event.target.value)}
                   placeholder="100"
                   inputMode="decimal"
@@ -298,6 +302,7 @@ export default function DishIngredientPicker({
               </div>
             </label>
 
+            {!validGrams && <p id="ingredient-grams-error" role="alert">Укажите вес больше нуля.</p>}
             <div className={styles.confirmActions} data-testid="dish-ingredient-confirm-actions">
               <button
                 type="button"
@@ -314,9 +319,9 @@ export default function DishIngredientPicker({
                 className={`${styles.confirmButton} ${styles.confirmAdd}`}
                 data-css-module-control="dish-ingredient-picker"
                 data-dish-ingredient-action="add"
+                disabled={!validGrams}
                 onClick={() => {
-                  onAddIngredientFromFood(pendingIngredient, pendingGrams);
-                  clearPendingIngredient();
+                  if (onAddIngredientFromFood(pendingIngredient, pendingGrams) !== false) clearPendingIngredient();
                 }}
               >
                 Добавить

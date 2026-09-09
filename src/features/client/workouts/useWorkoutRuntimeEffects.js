@@ -13,7 +13,7 @@ function getSafeCountdownSeconds(value) {
   return Number.isFinite(seconds) && seconds > 0 ? Math.ceil(seconds) : 0;
 }
 
-function useWallClockCountdown({
+export function useWallClockCountdown({
   completionVibration,
   running,
   seconds,
@@ -45,11 +45,12 @@ function useWallClockCountdown({
     deadlineRef.current = deadline;
     lastReportedSecondsRef.current = initialSeconds;
     let completed = false;
+    let active = true;
 
     const syncCountdown = () => {
-      if (deadlineRef.current !== deadline) return;
+      if (!active || !deadlineRef.current) return;
 
-      const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadline);
+      const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadlineRef.current);
       secondsRef.current = remainingSeconds;
       lastReportedSecondsRef.current = remainingSeconds;
       setSeconds((current) => (current === remainingSeconds ? current : remainingSeconds));
@@ -76,9 +77,10 @@ function useWallClockCountdown({
       window.removeEventListener("pageshow", syncCountdown);
       window.removeEventListener("pagehide", syncCountdown);
 
-      if (deadlineRef.current !== deadline) return;
+      active = false;
+      if (!deadlineRef.current) return;
 
-      const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadline);
+      const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadlineRef.current);
       deadlineRef.current = 0;
       secondsRef.current = remainingSeconds;
       lastReportedSecondsRef.current = remainingSeconds;

@@ -10,10 +10,9 @@ import {
 } from "../../domain/clientInsights";
 import {
   buildTrainerClientRecentEvents,
-  getTrainerAssignedWorkoutCount,
+  getTrainerAssignmentProgress,
   canLoadTrainerClientDeepSummary,
   getTrainerClientFastSummary,
-  getTrainerCompletedWorkoutCountForAssignment,
   getTrainerLastMeasurementAt,
   getTrainerNutritionSummary,
   getTrainerProgramCompletionPercent,
@@ -158,13 +157,7 @@ export function createTrainerClientSummaryLoader({
       const nutritionState = getTrainerSettledDocumentData(nutritionResult, client?.nutritionState || null);
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
       const assignedProgramUpdatedAt = client.assignedProgramUpdatedAt || client.assignedProgramAt || "";
-      const completedWorkoutCount = getTrainerCompletedWorkoutCountForAssignment(
-        clientHistory.length < TRAINER_SUMMARY_LIMITS.history ? clientHistory : [],
-        assignedProgramUpdatedAt,
-        client.workoutCalendar || {},
-        clientWorkouts
-      );
-      const assignedWorkoutCount = getTrainerAssignedWorkoutCount(client, clientWorkouts);
+      const { completedWorkoutCount, assignedWorkoutCount } = getTrainerAssignmentProgress(client, clientWorkouts, clientHistory);
       const payment = getTrainerSettledDocumentData(paymentResult);
       const weeklyProgressGoals = getClientEffectiveNutritionGoals(
         client,
@@ -199,6 +192,7 @@ export function createTrainerClientSummaryLoader({
         assignedProgramUpdatedAt,
         assignedWorkoutCount,
         completedWorkoutCount,
+        assignmentHistoryComplete: clientHistory.length < TRAINER_SUMMARY_LIMITS.history,
         weeklyProgressScore: weeklyProgress.score,
         plateau: getClientPlateauInfo(clientMeasurements),
         payment,

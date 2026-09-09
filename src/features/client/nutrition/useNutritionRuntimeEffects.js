@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { saveNutritionStateWithMerge } from "../../../utils/nutritionStateStorage";
-import { setFailedNutritionSync } from "../../../utils/offlineSyncStorage";
+import { setFailedNutritionSync, acknowledgeNutritionSync } from "../../../utils/offlineSyncStorage";
 import {
   addUserLocalBackup,
   removeUserLocalBackup,
@@ -33,19 +33,22 @@ export function useNutritionRuntimeEffects({
   }, [nutritionUndoTimerRef]);
 
   useEffect(() => {
-    if (!user?.uid || !nutritionCloudReady) return;
+    if (!user?.uid || (nutrition.__uid && nutrition.__uid !== user.uid)) return;
+    if (!nutrition.__uid && !nutrition.updatedAt) return;
 
     const localNutrition = {
       ...nutrition,
       __uid: user.uid,
-      updatedAt: new Date().toISOString()
+      updatedAt: nutrition.updatedAt || ""
     };
     const nutritionBackup = { ...localNutrition };
     delete nutritionBackup.myFoods;
 
-    safeWriteUserJsonStorage(nutritionStorageKey, user.uid, localNutrition);
+    if (!safeWriteUserJsonStorage(nutritionStorageKey, user.uid, localNutrition)) {
+      showAppError("storage", "Не удалось сохранить питание на устройстве. Освободите место и повторите сохранение.");
+    }
     addUserLocalBackup(nutritionBackupStorageKey, user.uid, { nutrition: nutritionBackup }, 12);
-  }, [nutrition, nutritionCloudReady, nutritionBackupStorageKey, nutritionStorageKey, user?.uid]);
+  }, [nutrition, nutritionCloudReady, nutritionBackupStorageKey, nutritionStorageKey, showAppError, user?.uid]);
 
   useEffect(() => {
     if (!barcodeScannerOpen || !barcodeSearchEnabled) return undefined;
@@ -118,16 +121,15 @@ export function useNutritionRuntimeEffects({
 
   useEffect(() => {
     const currentUser = auth.currentUser;
-    if (!currentUser || !nutritionCloudReady) return undefined;
+    if (!currentUser || !nutritionCloudReady || !nutrition.updatedAt || (nutrition.__uid && nutrition.__uid !== currentUser.uid)) return undefined;
 
     const timer = setTimeout(() => {
       const userNutritionState = { ...nutrition };
-      delete userNutritionState.myFoods;
       const backupId = `nutrition_${Date.now()}`;
       const nutritionPayload = {
         ...userNutritionState,
         __uid: currentUser.uid,
-        updatedAt: new Date().toISOString()
+        updatedAt: nutrition.updatedAt || ""
       };
 
       addUserLocalBackup(nutritionBackupStorageKey, currentUser.uid, {
@@ -136,15 +138,17 @@ export function useNutritionRuntimeEffects({
         reason: "before_cloud_save"
       });
 
+      const queued = setFailedNutritionSync(currentUser.uid, nutritionPayload);
+      if (!queued) showAppError("storage", "Локальная копия не сохранена: недостаточно места. Отправляю данные в облако.");
       saveNutritionStateWithMerge(currentUser.uid, nutritionPayload)
         .then(() => {
           removeUserLocalBackup(nutritionBackupStorageKey, currentUser.uid, backupId);
-          setFailedNutritionSync(currentUser.uid, null);
+          acknowledgeNutritionSync(currentUser.uid, nutritionPayload);
         })
         .catch((error) => {
           console.error("Nutrition save error", error);
           showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase");
-          setFailedNutritionSync(currentUser.uid, nutritionPayload);
+          // The pending snapshot was written before dispatch. Never replace a newer edit here.
           addUserLocalBackup(nutritionBackupStorageKey, currentUser.uid, {
             nutrition: nutritionPayload,
             reason: "cloud_save_failed",

@@ -94,6 +94,7 @@ export function createNutritionFoodCommitHandlers({
 
       return {
         ...prev,
+        updatedAt: new Date().toISOString(),
         myFoods: nextMyFoods,
         recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId && id !== sourceFood.id)].slice(0, 20)
       };
@@ -183,6 +184,7 @@ export function createNutritionFoodCommitHandlers({
 
       return {
         ...prev,
+        updatedAt: new Date().toISOString(),
         myFoods: nextMyFoods,
         recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId && id !== sourceFood.id)].slice(0, 20)
       };
@@ -274,6 +276,7 @@ export function createNutritionFoodCommitHandlers({
 
       return {
         ...prev,
+        updatedAt: new Date().toISOString(),
         myFoods: nextMyFoods,
         recent: [myFoodId, ...(prev.recent || []).filter((id) => id !== myFoodId && id !== sourceFood.id)].slice(0, 20)
       };

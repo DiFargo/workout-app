@@ -742,6 +742,11 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
   await page.locator(".trainerNextPageTabs button").first().click();
   await expect(page.getByRole("searchbox", { name: "Найти программу" })).toBeVisible();
   await expect(page.getByRole("button", { name: /tren\+/ })).toBeVisible();
+  await page.getByRole("checkbox", { name: "Тестовые программы", exact: true }).check();
+  await expect(page.getByRole("button", { name: /tren\+/ })).toHaveCount(0);
+  await page.getByRole("checkbox", { name: "Тестовые программы", exact: true }).uncheck();
+  await page.getByRole("button", { name: /tren\+/ }).click();
+  await expect(page.getByRole("button", { name: /tren\+/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Добавить" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
 

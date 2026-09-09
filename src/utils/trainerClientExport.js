@@ -1,5 +1,9 @@
 function escapeCsvText(value = "") {
-  return String(value ?? "").replaceAll('"', '""');
+  const text = String(value ?? "");
+  // CSV consumers can skip leading control characters before evaluating formulas.
+  // eslint-disable-next-line no-control-regex
+  const safe = typeof value === "number" ? text : (/^[\s\u0000-\u001f]*[=+\-@]/.test(text) || /^[\t\r\n]/.test(text) ? "'" + text : text);
+  return safe.replaceAll('"', '""');
 }
 
 export function buildAdminClientCsvLines(history = [], nutritionDays = []) {
@@ -10,28 +14,28 @@ export function buildAdminClientCsvLines(history = [], nutritionDays = []) {
   (Array.isArray(history) ? history : []).forEach((item) => {
     rows.push([
       "workout",
-      item?.date || "",
+      `"${escapeCsvText(item?.date || "")}"`,
       `"${escapeCsvText(item?.workout || "Тренировка")}"`,
       "",
       "",
       "",
       "",
-      item?.durationSeconds || "",
-      item?.postWorkoutFeedback?.title || item?.readiness?.title || ""
+      `"${escapeCsvText(item?.durationSeconds || "")}"`,
+      `"${escapeCsvText(item?.postWorkoutFeedback?.title || item?.readiness?.title || "")}"`
     ].join(","));
   });
 
   (Array.isArray(nutritionDays) ? nutritionDays : []).forEach((day) => {
     rows.push([
       "nutrition",
-      day?.date || "",
+      `"${escapeCsvText(day?.date || "")}"`,
       '"day totals"',
       Math.round(Number(day?.totals?.calories) || 0),
       Math.round(Number(day?.totals?.protein) || 0),
       Math.round(Number(day?.totals?.fat) || 0),
       Math.round(Number(day?.totals?.carbs) || 0),
       "",
-      `score ${day?.score ?? ""}`
+      `"${escapeCsvText(`score ${day?.score ?? ""}`)}"`
     ].join(","));
   });
 

@@ -197,23 +197,10 @@ export default function WorkoutListPage({
   const incompleteWorkoutIndexes = sortedWorkouts
     .map((workoutItem, workoutIndex) => ({ workoutItem, workoutIndex, date: getScheduledWorkoutDate(workoutItem, workoutIndex, scopedWorkoutCalendar) }))
     .filter(({ workoutItem }) => !isWorkoutCompleted(workoutItem));
-  const todayWorkoutIndex = incompleteWorkoutIndexes.find(({ date }) => date === todayKey)?.workoutIndex ?? -1;
   const missedWorkoutIndexes = incompleteWorkoutIndexes.filter(({ date }) => date && date < todayKey);
-  const nextFutureWorkoutIndex = incompleteWorkoutIndexes.find(({ date }) => date && date > todayKey)?.workoutIndex ?? -1;
-  const unscheduledWorkoutIndex = incompleteWorkoutIndexes.find(({ date }) => !date)?.workoutIndex ?? -1;
-  const overviewWorkoutIndex = draftWorkoutIndex >= 0
-    ? draftWorkoutIndex
-    : todayWorkoutIndex >= 0
-      ? todayWorkoutIndex
-      : missedWorkoutIndexes[0]?.workoutIndex ?? (
-          individualWorkoutIndexInitialized && unscheduledWorkoutIndex >= 0
-            ? activeWorkoutIndex
-            : nextFutureWorkoutIndex >= 0
-              ? nextFutureWorkoutIndex
-              : unscheduledWorkoutIndex >= 0
-                ? unscheduledWorkoutIndex
-                : activeWorkoutIndex
-        );
+  const overviewWorkoutIndex = individualWorkoutIndexInitialized
+    ? activeWorkoutIndex
+    : draftWorkoutIndex >= 0 ? draftWorkoutIndex : (incompleteWorkoutIndexes[0]?.workoutIndex ?? activeWorkoutIndex);
   const overviewWorkout = sortedWorkouts[overviewWorkoutIndex];
   const overviewWorkoutDate = getScheduledWorkoutDate(overviewWorkout, overviewWorkoutIndex, scopedWorkoutCalendar);
   const shouldShiftBasicWorkoutToToday = Boolean(

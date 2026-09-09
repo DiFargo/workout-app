@@ -579,7 +579,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .restoreButton.restoreButton {
   color: #ffffff;
-  background: var(--apple-secondary, #636366);
+  background: var(--apple-action, #3f73b8);
 }
 
 /* Exit and partial-save use the current light lavender iOS sheet. */
@@ -1317,4 +1317,39 @@
   .readinessActions > button:active {
     transform: none;
   }
+}
+
+/* One sheet contains both the readiness choices and their actions. */
+:global(:root[data-app-theme="warm-light"]) .readinessOverlay.readinessOverlay {
+  display: flex; align-items: center; justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  background: rgba(28, 28, 30, .3);
+}
+:global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage {
+  width: min(100%, 480px); max-width: 480px; height: auto; min-height: 0;
+  max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  margin: 0; padding: 0; border-radius: 24px; background: #fff;
+  box-shadow: 0 16px 48px rgba(28,28,30,.18); align-items: stretch;
+}
+:global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  flex: 0 0 auto; min-height: 0; padding: 20px 20px 8px; text-align: left;
+}
+:global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > span { display: block; font-size: 20px; line-height: 1.25; }
+:global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > small { display: block; margin: 0; font-size: 12px; line-height: 1.4; }
+:global(:root[data-app-theme="warm-light"]) .readinessCard.readinessCard {
+  box-sizing: border-box; width: 100%; max-height: none; min-height: 0;
+  margin: 0; padding: 12px 20px; flex: 1 1 auto; overflow-y: auto;
+  border: 0; border-radius: 0; box-shadow: none;
+}
+:global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions {
+  position: static; inset: auto; transform: none; flex: 0 0 auto;
+  width: 100%; max-width: none; height: auto; min-height: 0; max-height: none;
+  margin: 0; padding: 12px 20px 20px; border: 0; border-top: 1px solid rgba(60,60,67,.12);
+  border-radius: 0; background: #fff; box-shadow: none;
+  grid-template-columns: minmax(80px, 1fr) minmax(0, 2fr);
+}
+:global(:root[data-app-theme="warm-light"]) .draftActions.draftActions { grid-template-columns: 1fr; }
+@media (max-width: 640px) {
+  :global(:root[data-app-theme="warm-light"]) .readinessOverlay.readinessOverlay { align-items: flex-end; }
 }

@@ -171,3 +171,6 @@ test("missed and recovery workouts require the correct decision and preserve res
   await expect(page.getByTestId("workout-history-dialog")).toBeVisible();
   assertNoErrors();
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

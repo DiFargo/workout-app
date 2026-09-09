@@ -178,7 +178,7 @@ function getUniqueActionItems(items = []) {
 }
 
 export function buildTrainerActionCenter(clients = [], summaries = {}, now = Date.now()) {
-  const items = (Array.isArray(clients) ? clients : []).map((client) => {
+  const items = (Array.isArray(clients) ? clients : []).filter((client) => !client.archived && !client.isTest).map((client) => {
     const summary = getTrainerClientSummaryFromMap(client, summaries);
     return buildActionItem(client, summary, getClientCriticalAttentionState(client, summary, now), now);
   });
@@ -253,6 +253,7 @@ export function buildTrainerClientListItems(clients = [], summaries = {}, {
   const searchText = String(search || "").trim().toLowerCase();
 
   return (Array.isArray(clients) ? clients : [])
+    .filter((client) => filter === "test" ? client.isTest : !client.isTest)
     .map((client) => {
       const summary = getTrainerClientSummaryFromMap(client, summaries);
       const activityStatus = getClientActivityStatus(summary);
@@ -284,7 +285,7 @@ export function buildTrainerClientListItems(clients = [], summaries = {}, {
         ...item.reasons
       ].filter(Boolean).join(" ").toLowerCase();
       if (searchText && !haystack.includes(searchText)) return false;
-      if (filter === "all") return true;
+      if (filter === "all" || filter === "test") return true;
       if (filter === "active") return item.status.id === "active";
       if (filter === "attention") return Boolean(item.attention);
       if (filter === "inactive") return item.activityStatus.id === "lost";

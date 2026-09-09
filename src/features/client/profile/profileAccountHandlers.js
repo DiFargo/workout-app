@@ -224,9 +224,8 @@ export function createProfileAccountHandlers({
       };
       await setDoc(doc(db, "users", currentUser.uid), {
         name: displayName,
-        email: currentEmail,
         avatarUrl,
-        accountProfile,
+        accountProfile: { displayName, avatarUrl, updatedAt: accountProfile.updatedAt },
         updatedAt: accountProfile.updatedAt
       }, { merge: true });
 
@@ -320,6 +319,7 @@ export function createProfileAccountHandlers({
 
     try {
       const verifiedUser = await reauthenticateForEmailChange(currentUser, options.currentPassword || "");
+      await verifiedUser.getIdToken(true);
       const response = await fetchAuthorizedWithTimeout(getProfileUpdateEmailEndpoint(), {
         method: "POST",
         headers: {
@@ -416,22 +416,12 @@ export function createProfileAccountHandlers({
         updatedAt
       };
 
-      await setDoc(doc(db, "users", currentUser.uid), {
-        email,
-        loginLower: accountProfile.login || loginAlias,
-        accountProfile,
-        pendingEmail: "",
-        pendingEmailRequestedAt: "",
-        updatedAt
-      }, { merge: true });
-
-      if (accountProfile.login || loginAlias) {
-        await setDoc(doc(db, "loginAliases", accountProfile.login || loginAlias), {
-          email,
-          uid: currentUser.uid,
-          updatedAt
-        }, { merge: true });
-      }
+      const response = await fetchAuthorizedWithTimeout(getProfileUpdateEmailEndpoint(), {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email })
+      }, 16000);
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || "Email sync failed");
+      Object.assign(accountProfile, result.accountProfile);
 
       setProfileAccount(accountProfile);
       setProfileAccountDraft({

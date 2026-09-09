@@ -1,3 +1,4 @@
+import { toWorkoutDateKey } from "../../../utils/workoutSchedule.js";
 import { useEffect, useRef, useState } from "react";
 import { CalendarDays, Check, ChevronLeft, Dumbbell, KeyRound, Sparkles } from "lucide-react";
 
@@ -236,7 +237,7 @@ export default function BasicWorkoutQuizPage({
   const [scheduleStatus, setScheduleStatus] = useState("");
   const [scheduleMonth, setScheduleMonth] = useState(() => getBasicWorkoutScheduleMonthKey(initialScheduleDates));
   const [scheduleSelectedDate, setScheduleSelectedDate] = useState(() => (
-    initialScheduleDates[0] || new Date().toISOString().slice(0, 10)
+    initialScheduleDates[0] || toWorkoutDateKey(new Date())
   ));
   const quiz = getBasicWorkoutQuizDraft(basicWorkoutQuiz);
   const isReviewStep = stepIndex === QUIZ_STEPS.length;
@@ -359,7 +360,7 @@ export default function BasicWorkoutQuizPage({
       setScheduleEditing(false);
       setScheduleStatus("");
       setScheduleMonth(getBasicWorkoutScheduleMonthKey(defaultScheduleDates));
-      setScheduleSelectedDate(defaultScheduleDates[0] || new Date().toISOString().slice(0, 10));
+      setScheduleSelectedDate(defaultScheduleDates[0] || toWorkoutDateKey(new Date()));
     } catch (error) {
       console.warn("Basic workout AI request failed; using local fallback plan.", error);
       try {
@@ -441,7 +442,7 @@ export default function BasicWorkoutQuizPage({
     setScheduleEditing(false);
     setScheduleStatus("");
     setScheduleMonth(getBasicWorkoutScheduleMonthKey(defaultScheduleDates));
-    setScheduleSelectedDate(defaultScheduleDates[0] || new Date().toISOString().slice(0, 10));
+    setScheduleSelectedDate(defaultScheduleDates[0] || toWorkoutDateKey(new Date()));
     setGenerationError("");
     setPlanSaveError("");
     setOwnPlanNotice(notice);
@@ -615,7 +616,7 @@ export default function BasicWorkoutQuizPage({
         <section className={styles.resultActionBar} aria-label="Сохранение плана">
           {planSaveError ? <p className={styles.errorMessage} role="alert">{planSaveError}</p> : null}
           <button className={styles.primaryButton} data-testid="basic-quiz-save-plan" type="button" onClick={saveGeneratedPlan} disabled={isSavingPlan}>
-            <Dumbbell aria-hidden="true" /> {isSavingPlan ? "Сохраняем план…" : "Сохранить план и начать"}
+            <Dumbbell aria-hidden="true" /> {isSavingPlan ? "Сохраняем план…" : "Сохранить программу"}
           </button>
         </section>
         </>

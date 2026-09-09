@@ -14,7 +14,7 @@ document.body.dataset.appTheme = 'warm-light'
 installGlobalErrorReporting()
 
 async function startApplication() {
-  await loadCssVariant().catch(() => {})
+  await loadCssVariant()
   const { default: App } = await import('./App.jsx')
 
   createRoot(document.getElementById('root')).render(
@@ -29,4 +29,7 @@ async function startApplication() {
   registerServiceWorker();
 }
 
-void startApplication()
+void startApplication().catch((error) => {
+  console.error('Application startup failed:', error)
+  window.showStartupFailure?.()
+})

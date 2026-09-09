@@ -1,3 +1,4 @@
+import { useWallClockCountdown } from "../../features/client/workouts/useWorkoutRuntimeEffects.js";
 import { useEffect, useRef, useState } from "react";
 import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
@@ -562,6 +563,7 @@ export default function ClientE2EHarness() {
   }, [harnessThemeParam]);
 
   const [page, setPage] = useState(
+    harnessPageParam === "cabinet" ? "cabinet" :
     nutritionPhotoNotFoundParam || nutritionPhotoAnalyzingParam || nutritionBarcodeParam || harnessPageParam === "nutritionMealModal"
       ? "nutrition"
       : harnessPageParam === "aiCoach"
@@ -662,6 +664,8 @@ export default function ClientE2EHarness() {
   const [harnessRunWarmupTimerSeconds, setHarnessRunWarmupTimerSeconds] = useState(180);
   const [harnessRunRestTimerRunning, setHarnessRunRestTimerRunning] = useState(true);
   const [harnessRunRestTimerSeconds, setHarnessRunRestTimerSeconds] = useState(119);
+  useWallClockCountdown({ completionVibration: "rest", running: harnessRunRestTimerRunning, seconds: harnessRunRestTimerSeconds, setRunning: setHarnessRunRestTimerRunning, setSeconds: setHarnessRunRestTimerSeconds });
+  const [deletedHistoryIds, setDeletedHistoryIds] = useState([]);
   const [harnessRunClientComment, setHarnessRunClientComment] = useState("");
   const [harnessRunSaved, setHarnessRunSaved] = useState(harnessRunStageParam === "saved");
   const [harnessRunSavedCard, setHarnessRunSavedCard] = useState(harnessRunStageParam === "saved");
@@ -1226,7 +1230,7 @@ export default function ClientE2EHarness() {
           }}
           user={{ assignedProgramName: "Тестовая программа" }}
           onGoBackToMain={() => setPage("main")}
-          onOpenWorkoutIndex={() => setPage("workouts")}
+          onOpenWorkoutIndex={(index) => { setIndividualWorkoutIndex(index); setIndividualWorkoutIndexInitialized(true); setPage("workouts"); }}
           onOpenWorkouts={() => setPage("workouts")}
           onOpenPlan={() => setPage("workoutPlan")}
           onOpenHistory={() => setPage("cabinet")}
@@ -1238,7 +1242,7 @@ export default function ClientE2EHarness() {
   }
 
   if (page === "workoutHistory") {
-    const visibleHistory = workoutHistoryHarnessState === "empty" ? [] : harnessWorkoutHistory;
+    const visibleHistory = workoutHistoryHarnessState === "empty" ? [] : harnessWorkoutHistory.filter((item) => !deletedHistoryIds.includes(item.id));
 
     return (
       <main data-testid="client-harness-workout-history">
@@ -1263,7 +1267,7 @@ export default function ClientE2EHarness() {
           requestDeleteOwnHistoryWorkout={setWorkoutHistoryDeleteCandidate}
           setOpenHistoryKey={setWorkoutHistoryOpenId}
           closeHistoryDeleteConfirm={() => setWorkoutHistoryDeleteCandidate(null)}
-          confirmDeleteOwnHistoryWorkout={() => setWorkoutHistoryDeleteCandidate(null)}
+          confirmDeleteOwnHistoryWorkout={() => { setDeletedHistoryIds((ids) => [...ids, workoutHistoryDeleteCandidate.id]); setWorkoutHistoryDeleteCandidate(null); }}
         />
       </main>
     );

@@ -5,6 +5,8 @@ import { defineBoolean, defineSecret, defineString } from "firebase-functions/pa
 import admin from "firebase-admin";
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
+import { resolveAssignedTrainerId } from "./trainerAssignment.js";
+import { requireRecentIdentityAuth, updateProfileEmail, updateProfileLogin } from "./profileIdentity.js";
 import { readClientExerciseMedia } from "./clientExerciseMedia.js";
 import { INVITE_PAGE_STYLES, formatInviteAccountLabel } from "./invitePageStyles.js";
 import { getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout } from "./reminderSchedule.js";
@@ -244,22 +246,7 @@ async function verifyAppCheckRequest(req) {
 }
 
 function isAssignedTrainerData(data = {}, uid = "") {
-  const assignedTrainerId = String(data.assignedTrainerId || "").trim();
-  const trainerId = String(data.trainerId || "").trim();
-  const coachId = String(data.coachId || "").trim();
-  const createdByUid = String(data.createdByUid || "").trim();
-  const assignmentState = String(data.trainerAssignmentState || "").trim().toLowerCase();
-  const canonicalTrainerId = assignedTrainerId || trainerId || coachId;
-  const legacyTrainerId = coachId || createdByUid;
-
-  // New administrative assignments deliberately keep the historical creator
-  // fields for auditability. The explicit state prevents those legacy fields
-  // from keeping a previous trainer authorized after reassignment/unassignment.
-  const resolvedTrainerId = ["assigned", "unassigned"].includes(assignmentState)
-    ? (assignmentState === "assigned" ? canonicalTrainerId : "")
-    : (assignedTrainerId || trainerId || legacyTrainerId);
-
-  return Boolean(uid) && resolvedTrainerId === uid;
+  return Boolean(uid) && resolveAssignedTrainerId(data) === uid;
 }
 
 function normalizeAdminUserId(value, fieldName = "uid", { optional = false } = {}) {
@@ -276,16 +263,7 @@ function getUserRole(userData = {}) {
 }
 
 function getAssignedTrainerId(userData = {}) {
-  const assignmentState = String(userData.trainerAssignmentState || "").trim().toLowerCase();
-  const assignedTrainerId = String(userData.assignedTrainerId || "").trim();
-  const trainerId = String(userData.trainerId || "").trim();
-  const coachId = String(userData.coachId || "").trim();
-
-  if (["assigned", "unassigned"].includes(assignmentState)) {
-    return assignmentState === "assigned" ? (assignedTrainerId || trainerId || coachId) : "";
-  }
-
-  return assignedTrainerId || trainerId || coachId || String(userData.createdByUid || "").trim();
+  return resolveAssignedTrainerId(userData);
 }
 
 function isClientAssignedToTrainer(userData = {}, trainerId = "") {
@@ -539,12 +517,6 @@ function normalizeAccountEmail(value) {
 
 function getInternalInviteEmail(login) {
   return normalizeLoginAlias(login) + "@" + getInviteLoginEmailDomain();
-}
-
-function getDefaultLoginAliasForEmail(email) {
-  const cleanEmail = normalizeAccountEmail(email);
-  const [localPart] = cleanEmail.split("@");
-  return /^[a-z0-9._-]{3,32}$/.test(localPart || "") ? localPart : "";
 }
 
 function escapeHtml(value) {
@@ -3808,79 +3780,12 @@ export const profileUpdateEmail = onRequest(
         windowMs: 24 * 60 * 60 * 1000
       });
 
-      const nextEmail = normalizeAccountEmail(req.body?.email);
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nextEmail)) {
-        return json(res, 400, { ok: false, error: "invalid-email", message: "Invalid email" });
-      }
-
-      const authUser = await admin.auth().getUser(context.uid);
-      const currentEmail = normalizeAccountEmail(authUser.email || context.userData.email);
-      if (nextEmail === currentEmail) {
-        return json(res, 200, { ok: true, email: nextEmail, unchanged: true });
-      }
-
-      const existingUser = await admin.auth().getUserByEmail(nextEmail).catch((error) => {
-        if (error?.code === "auth/user-not-found") return null;
-        throw error;
+      requireRecentIdentityAuth(context.token);
+      const result = await updateProfileEmail({
+        db: admin.firestore(), auth: admin.auth(), uid: context.uid,
+        email: req.body?.email, operationId: crypto.randomUUID()
       });
-      if (existingUser && existingUser.uid !== context.uid) {
-        return json(res, 409, { ok: false, error: "email-already-in-use", message: "Email already in use" });
-      }
-
-      const updatedAt = new Date().toISOString();
-      const accountProfile = context.userData.accountProfile || {};
-      const displayName = accountProfile.displayName || context.userData.name || authUser.displayName || "";
-      const avatarUrl = accountProfile.avatarUrl || context.userData.avatarUrl || authUser.photoURL || "";
-      const previousDefaultLoginAlias = getDefaultLoginAliasForEmail(currentEmail);
-      const nextDefaultLoginAlias = getDefaultLoginAliasForEmail(nextEmail);
-      const currentLoginAlias = normalizeLoginAlias(context.userData.loginLower || accountProfile.login || previousDefaultLoginAlias);
-      const nextLoginAlias = currentLoginAlias && currentLoginAlias !== previousDefaultLoginAlias
-        ? currentLoginAlias
-        : nextDefaultLoginAlias;
-      const nextAccountProfile = {
-        ...accountProfile,
-        displayName,
-        avatarUrl,
-        email: nextEmail,
-        login: nextLoginAlias,
-        updatedAt
-      };
-
-      await admin.auth().updateUser(context.uid, {
-        email: nextEmail,
-        emailVerified: false
-      });
-
-      const db = admin.firestore();
-      const batch = db.batch();
-      batch.set(db.collection("users").doc(context.uid), {
-        email: nextEmail,
-        loginLower: nextLoginAlias,
-        accountProfile: nextAccountProfile,
-        pendingEmail: "",
-        pendingEmailRequestedAt: "",
-        updatedAt
-      }, { merge: true });
-
-      if (nextLoginAlias) {
-        batch.set(db.collection("loginAliases").doc(nextLoginAlias), {
-          email: nextEmail,
-          uid: context.uid,
-          updatedAt
-        }, { merge: true });
-      }
-      if (previousDefaultLoginAlias && previousDefaultLoginAlias !== nextLoginAlias) {
-        batch.delete(db.collection("loginAliases").doc(previousDefaultLoginAlias));
-      }
-
-      await batch.commit();
-
-      return json(res, 200, {
-        ok: true,
-        email: nextEmail,
-        loginAlias: nextLoginAlias,
-        accountProfile: nextAccountProfile
-      });
+      return json(res, 200, result);
     } catch (error) {
       console.error("profileUpdateEmail error:", error);
       return json(res, getHttpErrorStatus(error), { ok: false, error: error.message });
@@ -3980,66 +3885,10 @@ export const profileUpdateLogin = onRequest(
         windowMs: 10 * 60 * 1000
       });
 
-      const nextLoginAlias = normalizeLoginAlias(req.body?.login);
-      if (!isValidLoginAlias(nextLoginAlias)) {
-        return json(res, 400, {
-          ok: false,
-          error: "invalid-login",
-          message: "Login must be 3-32 latin characters, numbers, dot, dash or underscore"
-        });
-      }
-
-      const authUser = await admin.auth().getUser(context.uid);
-      const email = normalizeAccountEmail(authUser.email || context.userData.email);
-      if (!email) {
-        return json(res, 400, { ok: false, error: "missing-email", message: "Account email is required" });
-      }
-
-      const accountProfile = context.userData.accountProfile || {};
-      const currentLoginAlias = normalizeLoginAlias(context.userData.loginLower || accountProfile.login || getDefaultLoginAliasForEmail(email));
-      if (nextLoginAlias === currentLoginAlias) {
-        return json(res, 200, { ok: true, login: nextLoginAlias, unchanged: true });
-      }
-
-      const db = admin.firestore();
-      const nextAliasRef = db.collection("loginAliases").doc(nextLoginAlias);
-      const nextAliasSnapshot = await nextAliasRef.get();
-      const nextAliasData = nextAliasSnapshot.exists ? nextAliasSnapshot.data() || {} : {};
-      if (nextAliasData.uid && nextAliasData.uid !== context.uid) {
-        return json(res, 409, { ok: false, error: "login-already-in-use", message: "Login already in use" });
-      }
-
-      const updatedAt = new Date().toISOString();
-      const nextAccountProfile = {
-        ...accountProfile,
-        email,
-        login: nextLoginAlias,
-        updatedAt
-      };
-
-      const batch = db.batch();
-      batch.set(db.collection("users").doc(context.uid), {
-        loginLower: nextLoginAlias,
-        accountProfile: nextAccountProfile,
-        updatedAt
-      }, { merge: true });
-      batch.set(nextAliasRef, {
-        email,
-        uid: context.uid,
-        updatedAt,
-        ...(nextAliasSnapshot.exists ? {} : { createdAt: updatedAt })
-      }, { merge: true });
-      if (currentLoginAlias && currentLoginAlias !== nextLoginAlias) {
-        batch.delete(db.collection("loginAliases").doc(currentLoginAlias));
-      }
-
-      await batch.commit();
-
-      return json(res, 200, {
-        ok: true,
-        login: nextLoginAlias,
-        accountProfile: nextAccountProfile
+      const result = await updateProfileLogin({
+        db: admin.firestore(), auth: admin.auth(), uid: context.uid, login: req.body?.login
       });
+      return json(res, 200, result);
     } catch (error) {
       console.error("profileUpdateLogin error:", error);
       return json(res, getHttpErrorStatus(error), { ok: false, error: error.message });

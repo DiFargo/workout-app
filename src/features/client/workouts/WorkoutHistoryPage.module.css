@@ -18,8 +18,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .header.header {
-  width: calc(100% + 32px);
-  margin: 0 -16px 12px;
+  width: var(--client-page-header-width, 100%);
+  margin: 0;
 }
 
 :global(:root[data-app-theme="warm-light"]) .lead.lead {
@@ -293,8 +293,8 @@
 }
 
 .header {
-  width: calc(100% + 28px);
-  margin: 0 -14px 12px;
+  width: var(--client-page-header-width, 100%);
+  margin: 0;
 }
 
 .lead {

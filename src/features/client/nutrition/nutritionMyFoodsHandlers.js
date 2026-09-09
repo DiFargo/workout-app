@@ -1,4 +1,6 @@
-import { setDoc } from "firebase/firestore";
+import { runTransaction } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { mergeDeletionTimes, mergeMyFoods } from "../../../utils/nutritionSyncModel.js";
 
 import { makePersonalFoodKey } from "../../../utils/nutritionFoodModel";
 import {
@@ -42,7 +44,7 @@ export function createNutritionMyFoodsHandlers({
   }
 
   function persistPersonalMyFoods(job) {
-    const { uid, myFoods, change } = job;
+    const { uid, myFoods, change, deletedMyFoods = {} } = job;
     const activeUid = auth.currentUser?.uid || user?.uid;
     if (!uid || activeUid !== uid) return;
 
@@ -51,11 +53,13 @@ export function createNutritionMyFoodsHandlers({
       ? {
           id: backupId,
           changes: [{ id: change.id, food: change.food }],
+          deletedMyFoods,
           reason: "before_personal_my_foods_save"
         }
       : {
           id: backupId,
           myFoods: myFoods || {},
+          deletedMyFoods,
           reason: "before_personal_my_foods_save"
         };
     const payload = change?.id && change.food
@@ -66,17 +70,24 @@ export function createNutritionMyFoodsHandlers({
         }
       : {
           myFoods: myFoods || {},
+          deletedMyFoods,
           updatedAt: new Date().toISOString(),
           ownerUid: uid
         };
 
     addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, backup, 12);
 
-    setDoc(getPersonalMyFoodsDocRef(uid), payload, { merge: true })
+    runTransaction(db, async (transaction) => {
+      const ref = getPersonalMyFoodsDocRef(uid);
+      const snapshot = await transaction.get(ref);
+      const current = snapshot.exists() ? snapshot.data() : {};
+      const deleted = mergeDeletionTimes(current.deletedMyFoods, deletedMyFoods);
+      transaction.set(ref, { ...current, ...payload, deletedMyFoods: deleted, myFoods: mergeMyFoods(current.myFoods, payload.myFoods, deleted) });
+    })
       .then(() => removeUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, backupId))
       .catch((error) => {
         console.error("Personal my foods save error", error);
-        showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase", "Моя база сохранена локально.");
+        showAppError(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase", "Не удалось синхронизировать мою базу. Повторим при восстановлении соединения.");
         addUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, {
           ...backup,
           id: `my_foods_failed_${Date.now()}`,
@@ -103,7 +114,7 @@ export function createNutritionMyFoodsHandlers({
     changes.forEach(persistPersonalMyFoods);
   }
 
-  function savePersonalMyFoodsToFirebase(myFoods, change = null) {
+  function savePersonalMyFoodsToFirebase(myFoods, change = null, deletedMyFoods = {}) {
     const currentUser = auth.currentUser || user;
     const uid = currentUser?.uid;
 
@@ -122,18 +133,19 @@ export function createNutritionMyFoodsHandlers({
 
     const job = {
       uid,
+      deletedMyFoods,
       myFoods: myFoods || {},
       change: change?.id && change.food ? change : null
     };
 
     if (job.change) {
       if (queue.fullSave) {
-        queue.fullSave = job;
+        queue.fullSave = { ...job, deletedMyFoods: mergeDeletionTimes(queue.fullSave?.deletedMyFoods, job.deletedMyFoods) };
       } else {
         queue.changes.set(job.change.id, job);
       }
     } else {
-      queue.fullSave = job;
+      queue.fullSave = { ...job, deletedMyFoods: mergeDeletionTimes(queue.fullSave?.deletedMyFoods, job.deletedMyFoods) };
       queue.changes.clear();
     }
 
@@ -180,32 +192,22 @@ export function createNutritionMyFoodsHandlers({
       const nextRecent = (prev.recent || []).filter((id) => !idsToRemove.has(id));
       const nextFavorites = (prev.favorites || []).filter((id) => !idsToRemove.has(id));
 
-      const nextDays = Object.fromEntries(
-        Object.entries(prev.days || {}).map(([dayKey, day]) => [
-          dayKey,
-          {
-            ...day,
-            foods: (day.foods || []).filter((item) => {
-              const itemFoodId = String(item?.foodId || "");
-              const itemId = String(item?.id || "");
-              const itemName = String(item?.name || "").trim().toLowerCase();
-
-              return !(
-                idsToRemove.has(itemFoodId) ||
-                idsToRemove.has(itemId) ||
-                (cleanFoodName && itemName === cleanFoodName && item?.source === "Моя база")
-              );
-            })
-          }
-        ])
-      );
+      const updatedAt = new Date().toISOString();
+      const deletedMyFoods = { ...prev.deletedMyFoods };
+      const favoriteChanges = { ...prev.favoriteChanges };
+      idsToRemove.forEach((id) => {
+        deletedMyFoods[id] = updatedAt;
+        favoriteChanges[id] = { present: false, updatedAt };
+      });
 
       const nextState = {
         ...prev,
         myFoods: nextMyFoods,
         recent: nextRecent,
         favorites: nextFavorites,
-        days: nextDays
+        deletedMyFoods,
+        favoriteChanges,
+        updatedAt
       };
 
       const currentUserForLocal = auth.currentUser || user;
@@ -213,7 +215,7 @@ export function createNutritionMyFoodsHandlers({
         safeWriteUserJsonStorage(NUTRITION_STORAGE_KEY, currentUserForLocal.uid, nextState);
       }
 
-      savePersonalMyFoodsToFirebase(nextMyFoods);
+      savePersonalMyFoodsToFirebase(nextMyFoods, null, deletedMyFoods);
 
       const currentUser = auth.currentUser;
       if (currentUser) {

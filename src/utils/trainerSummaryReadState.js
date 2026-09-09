@@ -16,7 +16,7 @@ const FIELD_SOURCES = {
   lastNutritionAt: ["nutrition"], nutritionDays7: ["nutrition"], averageCalories7: ["nutrition"],
   lastMeasurementAt: ["measurements"], plateau: ["measurements"], payment: ["payment"], paymentAttention: ["payment"],
   activeTrainerTasksCount: ["tasks"], workoutFeedbackAttention: ["history"],
-  completedWorkoutCount: ["workouts"], programCompletionPercent: ["workouts"], programEndingAttention: ["workouts"],
+  completedWorkoutCount: ["workouts", "history"], programCompletionPercent: ["workouts", "history"], programEndingAttention: ["workouts", "history"],
   weeklyProgressScore: ["history", "nutrition", "measurements", "workouts"], recentEvents: ["history", "nutrition", "measurements"]
 };
 
@@ -24,6 +24,9 @@ export function reconcileTrainerSummary(computed, previous = {}, sources, now = 
   const result = { ...computed };
   for (const [field, required] of Object.entries(FIELD_SOURCES)) {
     if (required.some((source) => sources[source]?.state !== "fresh")) result[field] = previous[field] ?? null;
+  }
+  if (computed.assignmentHistoryComplete === false) {
+    for (const field of ["completedWorkoutCount", "programCompletionPercent", "programEndingAttention"]) result[field] = null;
   }
   const failedSources = TRAINER_SUMMARY_SOURCES.filter((source) => sources[source]?.state !== "fresh");
   return { ...result, sources, failedSources, trainerSummaryState: failedSources.length ? "partial" : "fresh", trainerSummarySettled: true,

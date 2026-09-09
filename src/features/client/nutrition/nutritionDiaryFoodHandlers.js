@@ -1,3 +1,4 @@
+import { stampNutritionDayChange } from "../../../utils/nutritionSyncModel.js";
 import { makeEmptyNutritionDay } from "../../../domain/nutritionPresentation";
 import { addUserLocalBackup } from "../../../utils/userScopedStorage";
 
@@ -75,11 +76,7 @@ export function createNutritionDiaryFoodHandlers({
         ...prev,
         days: {
           ...prev.days,
-          [dateKey]: {
-            ...currentDay,
-            foods: nextFoods,
-            updatedAt: new Date().toISOString()
-          }
+          [dateKey]: stampNutritionDayChange(currentDay, { ...currentDay, foods: nextFoods })
         }
       };
     });

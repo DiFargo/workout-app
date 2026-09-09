@@ -981,3 +981,15 @@
   align-items: center;
   row-gap: 4px;
 }
+
+.testFilter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  width: fit-content;
+  margin-bottom: 8px;
+  color: var(--text-secondary, #636366);
+  font-size: 14px;
+}
+.testFilter input { width: 18px; height: 18px; accent-color: #3f73b8; }

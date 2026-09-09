@@ -7,7 +7,9 @@ function isQuotaExceeded(error) {
 }
 
 function isDisposableBackupKey(key) {
-  return /backup|failed_sync|pending/i.test(String(key || ""));
+  // Only reproducible search caches are disposable. Backups and pending
+  // operations may be the only surviving copy of a user's work.
+  return /^workout_(?:food_search_cache|nutrition_search_cache|barcode_cache)/i.test(String(key || ""));
 }
 
 function removeDisposableBackups(exceptKey) {
@@ -43,18 +45,6 @@ export function safeWriteJsonStorage(key, value) {
     return true;
   } catch (error) {
     if (isQuotaExceeded(error)) {
-      if (Array.isArray(value)) {
-        const compactLimits = [12, 6, 3, 1, 0].filter((limit) => limit < value.length);
-        for (const limit of compactLimits) {
-          try {
-            writeJsonStorage(key, value.slice(0, limit));
-            return true;
-          } catch {
-            // Try a smaller backup snapshot before dropping unrelated backups.
-          }
-        }
-      }
-
       if (removeDisposableBackups(key)) {
         try {
           writeJsonStorage(key, value);
@@ -79,10 +69,10 @@ export function addLocalBackup(key, item, limit = DATA_SAFETY_MAX_BACKUPS) {
       ...item
     },
     ...(Array.isArray(current) ? current : [])
-  ].slice(0, limit);
+  ];
+  const bounded = /pending|failed|queue/i.test(key) ? next : next.slice(0, limit);
 
-  safeWriteJsonStorage(key, next);
-  return next;
+  return safeWriteJsonStorage(key, bounded) ? bounded : null;
 }
 
 export function removeLocalBackup(key, backupId) {

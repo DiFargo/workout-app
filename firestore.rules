@@ -49,6 +49,10 @@ service cloud.firestore {
 
     function protectedUserFields() {
       return [
+        "loginLower",
+        "email",
+        "profileIdentityOperation",
+        "isTest",
         "role",
         "trainerId",
         "assignedTrainerId",
@@ -126,7 +130,8 @@ service cloud.firestore {
 
     function isSafeOwnerUpdate(uid) {
       return isOwner(uid) &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedUserFields());
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedUserFields()) &&
+        !request.resource.data.get("accountProfile", {}).diff(resource.data.get("accountProfile", {})).affectedKeys().hasAny(["login", "email"]);
     }
 
     // Some profiles created before role-based access did not receive a role or
@@ -419,6 +424,7 @@ service cloud.firestore {
           "active",
           "archivedAt",
           "restoredAt",
+          "isTest",
           "updatedAt"
         ]);
     }
@@ -829,49 +835,8 @@ service cloud.firestore {
       allow read: if isActiveMember() && (
         isAdmin() || resource.data.uid == request.auth.uid
       );
-      allow create: if signedIn() &&
-        request.resource.data.keys().hasOnly([
-          "email",
-          "uid",
-          "createdAt",
-          "updatedAt"
-        ]) &&
-        (
-          (
-            isOwner(request.resource.data.uid) &&
-            request.resource.data.email == request.auth.token.email
-          ) ||
-          (
-            isAdmin() ||
-            (
-              isTrainer() &&
-              isAssignedTrainer(request.resource.data.uid)
-            )
-          )
-        );
-      allow update: if signedIn() &&
-        request.resource.data.keys().hasOnly([
-          "email",
-          "uid",
-          "createdAt",
-          "updatedAt"
-        ]) &&
-        (
-          (
-            isOwner(resource.data.uid) &&
-            request.resource.data.uid == request.auth.uid &&
-            request.resource.data.email == request.auth.token.email
-          ) ||
-          (
-            isAdmin() ||
-            (
-              isTrainer() &&
-              resource.data.uid == request.resource.data.uid &&
-              isAssignedTrainer(resource.data.uid)
-            )
-          )
-        );
-      allow delete: if isAdmin();
+      // Login identity is mutated only by the ownership-checked server transaction.
+      allow write: if isAdmin();
     }
 
     match /clientInvites/{inviteId} {
@@ -926,6 +891,10 @@ service cloud.firestore {
       match /history/{historyId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
         allow write: if isOwnerOrAdmin(uid);
+      }
+
+      match /historyTombstones/{historyId} {
+        allow read, write: if isOwnerOrAdmin(uid);
       }
 
       match /nutrition/{docId} {
@@ -984,7 +953,15 @@ service cloud.firestore {
       }
 
       match /{collectionId}/{subPath=**} {
-        allow read, write: if isOwnerOrAdmin(uid);
+        allow read, write: if isAdmin();
+      }
+
+      match /feedback/{feedbackId} {
+        allow read, create: if isOwnerOrAdmin(uid);
+      }
+
+      match /trainerClients/{clientId} {
+        allow read, write: if isAdmin() || (isTrainer() && isOwner(uid));
       }
     }
 

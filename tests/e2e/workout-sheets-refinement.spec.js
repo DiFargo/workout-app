@@ -101,3 +101,6 @@ test("feedback retains attachment, validation, retry and completion", async ({ p
   await expect(page.getByTestId("workout-sheets-result")).toContainText('"file":"feedback-example.txt"');
   await expect(dialog).toHaveCount(0);
 });
+
+// This file owns its viewport matrix; avoid repeating it in the second project.
+test.beforeEach(() => { test.skip(test.info().project.name !== "mobile-chromium", "Viewport matrix runs once"); });

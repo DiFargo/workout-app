@@ -43,7 +43,8 @@ export function createNutritionCloudLoader({
       const mergedNutrition = mergeNutritionStates(
         safeLocalNutrition,
         userData,
-        personalMyFoodsData.myFoods || {}
+        personalMyFoodsData.myFoods || {},
+        personalMyFoodsData.deletedMyFoods || {}
       );
 
       const scopedNutrition = {
@@ -51,8 +52,12 @@ export function createNutritionCloudLoader({
         __uid: uid
       };
 
-      setNutrition(scopedNutrition);
-      safeWriteUserJsonStorage(NUTRITION_STORAGE_KEY, uid, scopedNutrition);
+      setNutrition((current) => {
+        if (auth.currentUser?.uid !== uid) return current;
+        const next = { ...mergeNutritionStates(current?.__uid && current.__uid !== uid ? {} : current, scopedNutrition), __uid: uid };
+        safeWriteUserJsonStorage(NUTRITION_STORAGE_KEY, uid, next);
+        return next;
+      });
 
       endPerformanceCheck(NUTRITION_LOAD_LABEL, {
         days: Object.keys(mergedNutrition.days || {}).length,

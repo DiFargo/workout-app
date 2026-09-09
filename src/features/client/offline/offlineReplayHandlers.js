@@ -1,10 +1,10 @@
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { persistWorkoutCompletion } from "../workouts/workoutCompletionPersistence.js";
 import {
   getFailedHistoryQueue,
   getFailedNutritionSync,
+  acknowledgeHistorySave,
+  acknowledgeNutritionSync,
   removePendingHistoryBackups,
-  setFailedHistoryQueue,
-  setFailedNutritionSync
 } from "../../../utils/offlineSyncStorage";
 import { mergeNutritionStates } from "../../../utils/nutritionStateMerge";
 import { saveNutritionStateWithMerge } from "../../../utils/nutritionStateStorage";
@@ -23,7 +23,6 @@ export async function replayFailedHistorySavesWithDeps({
   if (!Array.isArray(queue) || !queue.length) return;
 
   historyReplayInProgressRef.current = true;
-  const remaining = [];
   let syncedCount = 0;
 
   try {
@@ -32,19 +31,17 @@ export async function replayFailedHistorySavesWithDeps({
         if (!item?.entry) continue;
         const saveId = item.entry.clientSaveId || item.id;
 
-        if (saveId) {
-          await setDoc(doc(db, "users", uid, "history", saveId), item.entry);
-          removePendingHistoryBackups(uid, saveId);
-        } else {
-          await addDoc(collection(db, "users", uid, "history"), item.entry);
-        }
+        if (!saveId) continue;
+        await persistWorkoutCompletion({ db, uid, entry: { ...item.entry, clientSaveId: saveId }, completion: item.completion });
+        removePendingHistoryBackups(uid, saveId);
+        acknowledgeHistorySave(uid, item);
         syncedCount += 1;
       } catch {
-        remaining.push(item);
+        // Failed and newly enqueued operations remain in the durable queue.
       }
     }
 
-    setFailedHistoryQueue(uid, remaining);
+    const remaining = getFailedHistoryQueue(uid);
 
     if (syncedCount > 0) {
       setWorkoutHistorySyncState(remaining.length ? "local" : "synced");
@@ -72,7 +69,7 @@ export async function replayFailedNutritionSyncWithDeps({
 
   try {
     const savedNutrition = await saveNutritionStateWithMerge(uid, queuedNutrition);
-    setFailedNutritionSync(uid, null);
+    acknowledgeNutritionSync(uid, queuedSync);
     setNutrition((current) => ({
       ...mergeNutritionStates(current, savedNutrition, current.myFoods || {}),
       __uid: uid

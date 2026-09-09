@@ -1,3 +1,4 @@
+import { mergeNutritionDay } from "./nutritionSyncModel.js";
 import { exerciseLibraryNameKey } from "../../functions/exerciseLibraryIdentity.js";
 
 export function exerciseUsesExternalWeight(exercise) {
@@ -170,8 +171,6 @@ export function mergeNutritionDays(
     ...Object.keys(cloudDays || {}),
     ...Object.keys(localDays || {})
   ]);
-  const localStateTimestamp = getTimestampValue(localStateUpdatedAt);
-  const cloudStateTimestamp = getTimestampValue(cloudStateUpdatedAt);
 
   dayKeys.forEach((key) => {
     const localDay = localDays?.[key];
@@ -187,9 +186,7 @@ export function mergeNutritionDays(
       return;
     }
 
-    const localTimestamp = getTimestampValue(localDay.updatedAt) || localStateTimestamp;
-    const cloudTimestamp = getTimestampValue(cloudDay.updatedAt) || cloudStateTimestamp;
-    mergedDays[key] = localTimestamp > cloudTimestamp ? localDay : cloudDay;
+    mergedDays[key] = mergeNutritionDay(localDay, cloudDay, localStateUpdatedAt, cloudStateUpdatedAt);
   });
 
   return mergedDays;

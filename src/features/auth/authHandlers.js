@@ -13,6 +13,7 @@ import {
   validateLoginFields
 } from "../../utils/clientUx";
 import { limitUserDisplayName } from "../../utils/userDisplayName.js";
+import { fetchAuthorizedWithTimeout } from "../../utils/apiClient";
 import { resolveEmailForLogin } from "./loginResolution";
 
 const googleProvider = new GoogleAuthProvider();
@@ -42,20 +43,10 @@ async function ensureLoginAlias(db, user, preferredAlias = "") {
 
   if (!db || !email || !uid || !alias) return;
 
-  const aliasRef = doc(db, "loginAliases", alias);
-  const aliasSnapshot = await getDoc(aliasRef);
-  const current = aliasSnapshot.exists() ? aliasSnapshot.data() : null;
-
-  if (current?.email && current.email !== email) {
-    return;
-  }
-
-  await setDoc(aliasRef, {
-    email,
-    uid,
-    updatedAt: new Date().toISOString(),
-    ...(aliasSnapshot.exists() ? {} : { createdAt: new Date().toISOString() })
-  }, { merge: true });
+  const response = await fetchAuthorizedWithTimeout("/api/profile/update-login", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ login: alias })
+  }, 12000);
+  if (!response.ok) throw new Error("Login alias sync failed");
 }
 
 function getInviteIdForEmail(email) {
@@ -122,11 +113,7 @@ async function updateExistingUserProfile(db, user, userSnapshot) {
   if (!db || !user?.uid || !userSnapshot?.exists?.()) return;
 
   const userRef = doc(db, "users", user.uid);
-  const email = String(user.email || userSnapshot.data()?.email || "").trim().toLowerCase();
-  const currentLoginLower = String(userSnapshot.data()?.loginLower || "").trim().toLowerCase();
   await setDoc(userRef, {
-    email,
-    loginLower: currentLoginLower || getDefaultLoginAlias(email),
     updatedAt: new Date().toISOString(),
     ...(user.displayName ? { name: limitUserDisplayName(user.displayName) } : {})
   }, { merge: true });
@@ -177,7 +164,8 @@ export function createAuthHandlers({
       }, { merge: true });
     }
 
-    await ensureLoginAlias(db, user, preferredAlias);
+    await ensureLoginAlias(db, user, userSnapshot.data()?.loginLower || userSnapshot.data()?.accountProfile?.login || preferredAlias)
+      .catch((error) => console.warn("Alias sync deferred:", error.message));
 
     setPage(APP_PAGES.MAIN);
     setLoginError("");
