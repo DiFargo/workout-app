@@ -911,7 +911,7 @@
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField { min-width: 0; min-height: 46px; padding: 0 12px; gap: 8px; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField input { min-width: 0 ; padding: 0 ; background: transparent ; border: 0 ; border-radius: 0 ; box-shadow: none ; font-size: 14px; font-weight: 400; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .addButton { min-height: 46px; padding: 0 12px; font-size: 13px; font-weight: 600; }
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .grid { gap: 12px; align-items: start; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .grid { gap: 12px; align-items: stretch; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card { height: auto ; min-height: 0 ; box-shadow: none ; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect { flex: none; padding: 14px ; gap: 12px; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle { grid-template-columns: 36px minmax(0,1fr); gap: 10px; }
