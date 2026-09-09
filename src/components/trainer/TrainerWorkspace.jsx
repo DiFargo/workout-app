@@ -3702,7 +3702,7 @@ function NutritionDiary({ nutritionDays }) {
     : "Нет записей";
 
   return (
-    <div className="trainerNutritionDiary">
+    <div className={`trainerNutritionDiary ${nutritionDiaryStyles.calendarDiary}`}>
       <aside aria-label="Календарь дневника питания">
         <div className="trainerNutritionDiaryCalendarHeader">
           <button

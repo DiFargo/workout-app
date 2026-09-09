@@ -8,7 +8,6 @@ import {
 import styles from "./TrainerClientProgressDashboard.module.css";
 
 const PERIODS = [
-  { id: "1w", label: "1 неделя", days: 7 },
   { id: "1m", label: "1 месяц", days: 30 },
   { id: "3m", label: "3 месяца", days: 90 },
   { id: "6m", label: "6 месяцев", days: 180 }
@@ -123,8 +122,8 @@ export default function TrainerClientProgressDashboard({
   }), [history, measurements, nutritionDays]);
   const [manualPeriod, setManualPeriod] = useState("");
   const [selectedMetric, setSelectedMetric] = useState("weight");
-  const period = manualPeriod || autoPeriod;
-  const selectedPeriod = PERIODS.find((item) => item.id === period) || PERIODS[2];
+  const period = manualPeriod || (autoPeriod === "1w" ? "1m" : autoPeriod);
+  const selectedPeriod = PERIODS.find((item) => item.id === period) || PERIODS[0];
   const dashboard = useMemo(() => buildTrainerClientProgressDashboard({
     measurements,
     history,
