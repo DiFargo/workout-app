@@ -915,6 +915,10 @@ export default function TrainerProgramConstructor({
                                 })() : null}
                               </div>
                               <label><span>Фокус / группа мышц</span><input value={exercise.muscleGroup || ""} onChange={(event) => updateExercise(exercise.id, { muscleGroup: event.target.value })} placeholder="Например, грудные" /></label>
+                              {apple && video ? <section className={styles.appleVideoPreview} aria-label="Видео упражнения">
+                                <strong>Текущее видео</strong>
+                                <video key={video} src={video} poster={exercise.image || exercise.thumbnail || undefined} controls playsInline preload="metadata" aria-label={`Видео: ${exercise.name || "упражнение"}`} />
+                              </section> : null}
                               <label className={styles.videoUpload}><span>{exerciseVideoUploadingId === exercise.id ? "Загрузка…" : video ? "Заменить видео" : "Добавить видео"}</span><input type="file" accept="video/*" disabled={exerciseVideoUploadingId === exercise.id} onChange={(event) => onUploadExerciseVideo(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, event.target.files?.[0])} /></label>
                               <span className={styles.moveButtons}>
                                 <button type="button" disabled={exerciseIndex === 0} onClick={() => onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, -1)}><ChevronUp size={15} />Выше</button>

@@ -1409,3 +1409,8 @@
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .metricInput {font-size:16px !important}
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayEditorSurface {padding:16px !important}
 }
+
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview {display:grid!important;gap:10px!important;margin:0!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview strong {font-size:13px!important;font-weight:500!important;color:#636366!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview video {display:block!important;width:100%!important;max-width:100%!important;height:220px!important;object-fit:contain!important;background:#1c1c1e!important;border-radius:12px!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .videoUpload > span {font-size:14px!important;font-weight:500!important}
