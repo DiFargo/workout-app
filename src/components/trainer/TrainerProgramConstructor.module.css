@@ -1389,3 +1389,23 @@
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .specialBlockMenu {margin-left:auto !important}
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .metricInput:focus-visible {outline:2px solid #8caed7 !important;outline-offset:2px !important}
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleSheet button:focus-visible {outline:2px solid #8caed7 !important;outline-offset:2px !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayEditor {container-type:inline-size !important;container-name:program-day !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseHead, :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseRow, :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseTable {min-width:0 !important;width:100% !important;max-width:100% !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseMetrics {min-width:0 !important;max-width:100% !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .metricField {display:block !important;min-width:0 !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayCard {min-height:66px !important;padding:8px 6px !important;gap:8px !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayCard > button strong {display:none !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayCard > button span {font-size:13px !important;line-height:1.35 !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .daysPanel {padding:20px 12px !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayEditorSurface {padding:24px !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayEditorContent {min-width:0 !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseName strong {overflow-wrap:anywhere !important}
+@container program-day (max-width:650px){
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseHead {display:none !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseRow {grid-template-columns:32px minmax(0,1fr) 44px !important;grid-template-areas:"media name actions" "metrics metrics metrics" !important;gap:10px !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseOrder {display:none !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .exerciseMetrics {grid-template-columns:repeat(4,minmax(0,1fr)) !important;width:100% !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .metricLabel {display:block !important;font-size:11px !important;color:#636366 !important;margin-bottom:4px !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .metricInput {font-size:16px !important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .dayEditorSurface {padding:16px !important}
+}

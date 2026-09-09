@@ -63,6 +63,7 @@ function getExerciseVideo(exercise = {}) {
 function getCompactWorkoutName(workout = {}, index = 0) {
   return String(workout.name || "")
     .replace(/^Неделя\s*\d+\s*[-–—]\s*/i, "")
+    .replace(/^День\s*\d+\s*[-–—:]?\s*/i, "")
     .replace(/^Тренировка\s*\d+\s*[-–—:]?\s*/i, "")
     .trim() || `Тренировка ${index + 1}`;
 }
