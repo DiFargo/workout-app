@@ -2727,6 +2727,7 @@ function AppRuntime() {
     adminClientEvents,
     adminClientFilter,
     adminClientHistory,
+    adminClientLoading,
     adminClientMeasurements,
     adminClientNutrition,
     adminClientPageOpen,
