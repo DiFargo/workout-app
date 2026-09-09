@@ -1649,3 +1649,38 @@
 :global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientEditorMobileActions) {display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px}
 :global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientEditorMobileActions button) {min-height:44px;border:0;background:#efeff4;color:#3f73b8;border-radius:9px;padding:8px 12px;font-size:12px}
 }
+
+/* Final iOS polish: restrained selection, quiet separators and clear input targets. */
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutLayout) {border-radius:16px !important;overflow:hidden !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutDays) {background:#efeff4 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutDayItem.active) {background:#fff !important;border-color:#c1d3e9 !important;box-shadow:0 1px 3px #00000004 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutDaySelect) {gap:4px !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutDaySelect small) {font-weight:500 !important;line-height:1.35 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutDaySelect i) {font-style:normal !important;font-weight:400 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutDaySelect strong) {font-weight:400 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientEditorDaysTitle) {font-weight:600 !important;font-size:14px !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseList) {border-color:rgba(60,60,67,.1) !important;box-shadow:none !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseList > article) {border:0 !important;border-bottom:1px solid rgba(60,60,67,.1) !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseList > article:last-child) {border-bottom:0 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseRow) {border:0 !important;box-shadow:none !important;column-gap:12px !important;row-gap:6px !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseName) {padding:0 !important;text-align:left !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseName strong) {font-weight:500 !important;line-height:1.4 !important;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;overflow-wrap:anywhere !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseMeta small) {font-size:11px !important;font-weight:400 !important;color:#76767c !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseProgress strong) {font-size:11px !important;font-weight:400 !important;color:#76767c !important;line-height:1.4 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseProgress small) {font-size:11px !important;color:#76767c !important;line-height:1.4 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseImage) {background:#f2f2f7 !important;border-radius:9px !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientQuickField > span) {font-size:10px !important;font-weight:400 !important;color:#636366 !important;line-height:1.3 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientQuickField input) {background:#f5f5f9 !important;border:1px solid rgba(60,60,67,.04) !important;border-radius:9px !important;font-weight:400 !important;font-variant-numeric:tabular-nums !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientQuickField input:focus) {outline:2px solid #8caed7 !important;outline-offset:1px !important;background:#fff !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseActions button:first-child) {width:44px !important;min-width:44px !important;height:44px !important;min-height:44px !important;border-radius:9px !important;color:#3c6faa !important;background:#f7f7fa !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseActions button:hover) {background:#eaf1fa !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutName input) {font-weight:600 !important;letter-spacing:-.4px !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerWorkoutStatusPanel select) {border:1px solid rgba(60,60,67,.1) !important;border-radius:10px !important;font-size:13px !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextOutlineAdd) {display:flex !important;align-items:center !important;justify-content:flex-start !important;gap:8px !important;padding:12px 4px !important;font-weight:500 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextWorkoutDays > .add) {display:flex !important;gap:8px !important;align-items:center !important;justify-content:flex-start !important;background:transparent !important;border:0 !important;font-weight:500 !important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal .programEditorTitleRow {justify-content:flex-start!important;gap:16px!important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal .programRenameHeaderButton {border:0!important;box-shadow:none!important;background:transparent!important;font-weight:500!important;font-size:13px!important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal .programEditorHeaderContent > p {font-size:12px!important;line-height:1.45!important;color:#636366!important}
+
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.trainerNextExerciseStats) {width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important}
+:global(html[data-trainer-variant="v2"] body) .editorModal.editorModal :global(.clientQuickField input) {box-sizing:border-box!important;max-width:100%!important}
