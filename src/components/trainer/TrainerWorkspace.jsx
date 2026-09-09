@@ -1122,7 +1122,7 @@ export function ClientSubscriptionCard({ client, onSave, onSaved, open: controll
   );
 }
 
-function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onSaved, editing, onEdit, onCancel, showEditAction = true, showStatus = true }) {
+function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onSaved, editing, onEdit, onCancel, showEditAction = true, showStatus = true, showRemaining = true }) {
   const subscription = client?.subscription || {};
   const status = getSubscriptionStatus({ ...subscription, ...draft }, new Date());
   const [saving, setSaving] = useState(false);
@@ -1167,11 +1167,11 @@ function ClientCalendarSubscriptionFields({ client, draft, onChange, onSave, onS
           <span>Окончание: <b>{formatSubscriptionDate(draft.endDate)}</b></span>
           {showStatus ? <i className={status.tone}>{status.label}</i> : null}
         </div>
-        <footer>
-          <span>Осталось: <b>{remainingSessions}</b> тренировок</span>
+        {showRemaining || draft.frozen || showEditAction ? <footer>
+          {showRemaining ? <span>Осталось: <b>{remainingSessions}</b> тренировок</span> : null}
           {draft.frozen ? <span>Заморожен</span> : null}
           {showEditAction ? <button type="button" className="trainerCalendarSubscriptionEdit" onClick={onEdit}>Изменить абонемент</button> : null}
-        </footer>
+        </footer> : null}
       </section>
     );
   }
@@ -2275,6 +2275,7 @@ function WorkoutSchedulePlanner({
                 onCancel={cancelSubscriptionEditing}
                 showEditAction={false}
                 showStatus={false}
+                showRemaining={false}
               />
             ) : null}
           </div>
