@@ -273,3 +273,23 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow strong {flex:1;font-size:15px;font-weight:600;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow button {min-height:44px;padding:10px 16px;border:0;border-radius:10px;background:#3f73b8;color:white;font:inherit;font-size:14px;font-weight:600;box-shadow:none;}
 @media(max-width:480px){:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow {flex-wrap:wrap;padding:14px;} :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .scheduleEditRow button {width:100%;}}
+
+/* Subscription editing is rendered in a portal: keep its fields self-contained. */
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionFields) {display:grid!important;gap:14px!important;font-size:14px!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionRange) {display:grid!important;gap:8px!important;font-size:14px!important;line-height:1.5!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionInputs) {display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionInputs label) {display:grid!important;gap:6px!important;min-width:0!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionInputs small) {font-size:12px!important;color:#636366!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionInputs input) {width:100%!important;min-width:0!important;box-sizing:border-box!important;height:44px!important;padding:8px 12px!important;border:1px solid #d1d1d6!important;border-radius:10px!important;background:white!important;font-size:16px!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionFields footer) {display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:12px!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerCalendarSubscriptionFields button) {min-height:44px!important;padding:10px 14px!important;border-radius:10px!important;border:1px solid #d1d1d6!important;font-size:14px!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerWorkoutScheduleGrid button.subscriptionStart),
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerWorkoutScheduleGrid button.subscriptionEnd) {background:#dce9f8!important;color:#1c1c1e!important;box-shadow:inset 0 -3px 0 #7194bd!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges) {display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:2px!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i) {display:inline-flex!important;padding:2px 4px!important;line-height:1.2!important;font-size:11px!important;font-style:normal!important;border:1px solid currentColor!important;border-radius:4px!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-planned) {color:#3c6faa!important;background:#edf3fc!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-completed) {color:#237a42!important;background:#eaf6ed!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-completed_off_date) {color:#146b70!important;background:#e7f5f4!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-missed) {color:#b53745!important;background:#fff0f1!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-shifted) {color:#915800!important;background:#fff4df!important;}
+:global(html[data-trainer-variant="v2"] body) .calendarContent.calendarContent :global(.trainerScheduleDayBadges i.status-pastCompleted) {color:#636366!important;background:#efeff4!important;}

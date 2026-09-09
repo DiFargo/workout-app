@@ -2188,7 +2188,7 @@ function WorkoutSchedulePlanner({
                   title={editingSubscription ? `Выбрать ${formatSubscriptionDate(day.key)} для абонемента` : getWorkoutScheduleCalendarTitle(day.key, entries)}
                 >
                   <b>{day.label}</b>
-                  {entries.length ? <i>{entryLabel}</i> : selected ? <i>№{selectedOrder[day.key]}</i> : null}
+                  {entries.length ? (isTrainerV2Path(window.location.pathname) ? <span className="trainerScheduleDayBadges">{entries.map((entry, index) => <i key={entry.id || index} className={`status-${entry.status}`} title={WORKOUT_SCHEDULE_DAY_STATUS_TEXT[entry.status]}>{({ planned: "○", completed: "✓", completed_off_date: "↗", missed: "!", shifted: "↪", pastCompleted: "✓" })[entry.status] || "○"} №{entry.order}</i>)}</span> : <i>{entryLabel}</i>) : selected ? <i>№{selectedOrder[day.key]}</i> : null}
                 </button>
               );
             })}
