@@ -1,3 +1,4 @@
+import TrainerClientExerciseSheet from "./TrainerClientExerciseSheet";
 import { getTrainerLibraryMuscle, TRAINER_LIBRARY_MUSCLES } from "../../utils/trainerLibraryMuscleGroups.js";
 import { isBodyMeasurementRecord } from "../../utils/bodyMeasurementRecords.js";
 import appleStyles from "./TrainerAppleClient.module.css";
@@ -6419,6 +6420,7 @@ function TrainerWorkoutEditor({
   const [libraryEditorTarget, setLibraryEditorTarget] = useState(null);
   const [libraryEditorDraft, setLibraryEditorDraft] = useState(null);
   const [libraryEditorSaving, setLibraryEditorSaving] = useState(false);
+  const appleClientEditor = embedded && isTrainerV2Path(window.location.pathname);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
   const [expandedArchivedProgramKeys, setExpandedArchivedProgramKeys] = useState(() => new Set());
@@ -6743,6 +6745,7 @@ function TrainerWorkoutEditor({
         {showProgramControl && programStatus ? <p className="trainerNextProgramStatus">{programStatus}</p> : null}
         <div className="trainerNextWorkoutLayout">
           <aside className="trainerNextWorkoutDays">
+            {appleClientEditor ? <h2 className="clientEditorDaysTitle">Дни программы <small>{displayWorkouts.length}</small></h2> : null}
             {displayWorkouts.map((workout, index) => {
               const isActive = selectedWorkout?.id === workout.id;
               const visualStatus = workout.displayStatus || workout.status || "planned";
@@ -6812,8 +6815,10 @@ function TrainerWorkoutEditor({
             <button className="add" type="button" onClick={onAddDay}><Plus size={17} />Добавить день</button>
           </aside>
           <section className="trainerNextExercisePanel">
+            {appleClientEditor ? <div className="clientEditorMobileDays"><select aria-label="День программы" value={selectedWorkout?.id || ""} onChange={(event) => { setSelectedWorkoutId(event.target.value); setExpandedExerciseId(""); }}>{displayWorkouts.map((workout, index) => <option key={workout.id} value={workout.id}>День {index + 1} · {getWorkoutTitle(workout, index)} · {getWorkoutStatusMeta(workout.displayStatus || workout.status || "planned").label}</option>)}</select><button type="button" onClick={onAddDay} aria-label="Добавить день"><Plus size={18} /></button></div> : null}
             {selectedWorkout ? (
               <>
+              {appleClientEditor ? <div className="clientEditorMobileActions"><button type="button" disabled={selectedWorkoutReadOnly} onClick={() => onDuplicateDay(selectedWorkout.id)}><Copy size={16} />Копия дня</button><button type="button" disabled={selectedWorkoutReadOnly} onClick={() => confirmRemoveWorkout(selectedWorkout)} aria-label="Удалить тренировку"><Trash2 size={16} /></button></div> : null}
               <div className="trainerNextWorkoutName">
                 <label>
                   <span>Название тренировки</span>
@@ -6906,10 +6911,17 @@ function TrainerWorkoutEditor({
                         </span>
                       </button>
                       <span className="trainerNextExerciseStats">
+                        {appleClientEditor ? <>
+                          <label className="clientQuickField"><span>Подходы</span><input aria-label={`Подходы: ${exercise.name}`} type="number" min="1" max="12" value={sets.length} disabled={selectedWorkoutReadOnly} onChange={(event) => { const count = Number(event.target.value); if (selectedWorkoutReadOnly || !Number.isInteger(count) || count < 1 || count > 12) return; onUpdateExercise(selectedWorkout.id, exercise.id, { sets: Array.from({ length: count }, (_, i) => sets[i] || { ...sets[sets.length - 1], id: `set_${Date.now()}_${i}` }) }); }} /></label>
+                          <label className="clientQuickField"><span>Повторы</span><input aria-label={`Повторы: ${exercise.name}`} value={getExerciseSetSummary(sets, "reps")} disabled={selectedWorkoutReadOnly} onChange={(event) => { if (!selectedWorkoutReadOnly) onUpdateExercise(selectedWorkout.id, exercise.id, { sets: sets.map((set) => ({ ...set, reps: event.target.value })) }); }} /></label>
+                          <label className="clientQuickField"><span>Вес, кг</span><input aria-label={`Вес: ${exercise.name}`} inputMode="decimal" value={requiresWeight ? getExerciseSetSummary(sets, "weight") : "—"} disabled={selectedWorkoutReadOnly || !requiresWeight} onChange={(event) => { if (!selectedWorkoutReadOnly && requiresWeight) onUpdateExercise(selectedWorkout.id, exercise.id, { sets: sets.map((set) => ({ ...set, ...sanitizeExerciseSetPatch({ weight: event.target.value }) })) }); }} /></label>
+                          <label className="clientQuickField"><span>Отдых</span><input aria-label={`Отдых: ${exercise.name}`} value={exercise.rest || ""} placeholder="90 сек" disabled={selectedWorkoutReadOnly} onChange={(event) => { if (!selectedWorkoutReadOnly) onUpdateExercise(selectedWorkout.id, exercise.id, { rest: event.target.value }); }} /></label>
+                        </> : <>
                         <span className="trainerNextExerciseMetric"><strong>{sets.length}</strong><small>подх.</small></span>
                         <span className="trainerNextExerciseMetric"><strong>{getExerciseSetSummary(sets, "reps")}</strong><small>повт.</small></span>
                         <span className="trainerNextExerciseMetric"><strong>{requiresWeight ? getExerciseSetSummary(sets, "weight", " кг") : "—"}</strong><small>вес</small></span>
                         <span className="trainerNextExerciseMetric"><strong>{exercise.rest || "90 сек"}</strong><small>отдых</small></span>
+                        </>}
                       </span>
                       <span className={`trainerNextExerciseProgress${hasComparison ? " hasComparison" : " needsHistory"}`} title={hasComparison ? progressComparison : "Для сравнения нужны две выполненные тренировки с этим упражнением"}>
                         <strong>{progressTitle}</strong>
@@ -6922,6 +6934,7 @@ function TrainerWorkoutEditor({
                     </div>
 
                     {isExpanded ? (
+                      <TrainerClientExerciseSheet enabled={appleClientEditor} onClose={() => setExpandedExerciseId("")}>
                       <div className="trainerNextExerciseEditor">
                         <div className="trainerNextExerciseFields">
                           <label className="wide"><span>Название</span><input value={exercise.name || ""} disabled={selectedWorkoutReadOnly} onChange={(event) => onUpdateExercise(selectedWorkout.id, exercise.id, { name: event.target.value })} /></label>
@@ -6937,6 +6950,7 @@ function TrainerWorkoutEditor({
                           </label>
                         </div>
 
+                        {appleClientEditor && video ? <section className="clientEditorVideo"><span>Текущее видео</span><video key={video} src={video} poster={exercise.image || exercise.thumbnail || undefined} controls playsInline preload="metadata" /></section> : null}
                         <div className="trainerNextSetEditor">
                           <div className="trainerNextSetEditorHead"><span>Подход</span><span>Повторы</span><span>Вес, кг</span><span /></div>
                           {sets.map((set, setIndex) => (
@@ -6950,6 +6964,8 @@ function TrainerWorkoutEditor({
                           <button className="trainerNextAddSet" type="button" disabled={selectedWorkoutReadOnly} onClick={() => onAddExerciseSet(selectedWorkout.id, exercise.id)}><Plus size={15} />Добавить подход</button>
                         </div>
                       </div>
+                      {appleClientEditor ? <button className="clientSheetDelete" type="button" disabled={selectedWorkoutReadOnly} onClick={() => { setExpandedExerciseId(""); confirmRemoveExercise(exercise, index); }}><Trash2 size={16} />Удалить упражнение</button> : null}
+                      </TrainerClientExerciseSheet>
                     ) : null}
                   </article>
                 );

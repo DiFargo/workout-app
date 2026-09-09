@@ -670,7 +670,11 @@ function TrainerE2EHarness({ ProgramManagerView }) {
           : workout));
         return true;
       }}
-      onUpdateExercise={() => {}}
+      onUpdateExercise={(workoutId, exerciseId, patch) => {
+        setWorkouts((current) => current.map((workout) => workout.id === workoutId
+          ? { ...workout, exercises: (workout.exercises || []).map((exercise) => exercise.id === exerciseId ? { ...exercise, ...patch } : exercise) }
+          : workout));
+      }}
       onSaveExerciseProgressAdjustment={({ workoutId, exerciseId, patch }) => {
         setWorkouts((current) => current.map((workout) => workout.id === workoutId
           ? {
