@@ -1,3 +1,4 @@
+import { isBodyMeasurementRecord } from "../../utils/bodyMeasurementRecords.js";
 import appleStyles from "./TrainerAppleClient.module.css";
 import { AppleSchedule, AppleRecent, AppleGroup, AppleRow } from "./TrainerAppleClientParts";
 import TrainerWorkoutList from "./TrainerWorkoutList";
@@ -1278,7 +1279,7 @@ function ClientOverview({
 
 function ClientMeasurements({ measurements = [], separated = false, detailed = false }) {
   const [expanded, setExpanded] = useState(false);
-  const safeMeasurements = (Array.isArray(measurements) ? measurements : []).filter((item) => item && typeof item === "object");
+  const safeMeasurements = (Array.isArray(measurements) ? measurements : []).filter(isBodyMeasurementRecord);
   const sortedMeasurements = safeMeasurements
     .slice()
     .sort((a, b) => (getMeasurementDate(b)?.getTime() || 0) - (getMeasurementDate(a)?.getTime() || 0));
@@ -1358,10 +1359,10 @@ function ClientMeasurements({ measurements = [], separated = false, detailed = f
 
   if (isTrainerV2Path(window.location.pathname) && !detailed) {
     return (
-      <AppleGroup title="Замеры" className={appleStyles.measurements}>
+      <AppleGroup title="Замеры тела" className={appleStyles.measurements}>
         {latest ? <>
           <div className={appleStyles.measurementIntro}>
-            <strong>Последний замер · {formatCompactDate(latestDate)}</strong>
+            <strong>Последний замер тела · {formatCompactDate(latestDate)}</strong>
             <span>{previous ? `Изменения с ${formatCompactDate(getMeasurementDate(previous))}` : "После следующего замера появится сравнение"}</span>
           </div>
           <div className={appleStyles.measurementList}>
@@ -1383,7 +1384,7 @@ function ClientMeasurements({ measurements = [], separated = false, detailed = f
               <ClientMeasurements measurements={measurements} detailed />
             </TrainerClientDisclosure>
           </div>
-        </> : <div className={appleStyles.measurementIntro}>Замеры появятся после заполнения клиентом.</div>}
+        </> : <div className={appleStyles.measurementIntro}>Полных замеров пока нет. Отдельные записи веса доступны в сводке, в разделе «Динамика → Вес».</div>}
       </AppleGroup>
     );
   }
