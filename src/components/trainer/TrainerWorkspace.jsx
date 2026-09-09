@@ -6759,7 +6759,7 @@ function TrainerWorkoutEditor({
                     </strong>
                     <small>{getWorkoutTitle(workout, index).replace(/^День\s*\d+\s*[-–—:]?\s*/i, "") || "Тренировка"}</small>
                     <em>{workout.exercises?.length || 0} упр.</em>
-                    <i>{statusMeta.icon} {statusMeta.label}</i>
+                    <i>{isTrainerV2Path(window.location.pathname) ? null : statusMeta.icon} {statusMeta.label}</i>
                   </button>
                   {isActive ? (
                     <div className="trainerNextWorkoutDayActions">
@@ -6839,7 +6839,7 @@ function TrainerWorkoutEditor({
                     })}
                   >
                     {WORKOUT_STATUS_OPTIONS.map((option) => (
-                      <option value={option.id} key={option.id}>{option.icon} {option.label}</option>
+                      <option value={option.id} key={option.id}>{isTrainerV2Path(window.location.pathname) ? null : option.icon} {option.label}</option>
                     ))}
                   </select>
                 </label>
