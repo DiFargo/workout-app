@@ -123,3 +123,5 @@
 - [production smoke checklist](docs/production-smoke-checklist.md) — ручная проверка.
 - [android build](docs/android-build.md) — сборка Android.
 - [product audit](docs/APP_AUDIT_2026-09-06.md) — текущий продуктовый аудит.
+
+Библиотека упражнений тренера: `src/utils/trainerExerciseLibrary.js` объединяет повторы с сохранением видео; `src/utils/trainerLibraryMuscleGroups.js` определяет группы. Чистый модуль `functions/exerciseLibraryIdentity.js` используется и клиентской сборкой, и серверным поиском видео для единых правил названий.

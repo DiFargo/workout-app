@@ -1,3 +1,5 @@
+import { mergeTrainerExerciseLibraryItems } from "../../utils/trainerExerciseLibrary.js";
+import { exerciseLibraryNameKey } from "../../../functions/exerciseLibraryIdentity.js";
 import TrainerExerciseQuickFields from "./TrainerExerciseQuickFields";
 import TrainerSummaryStatus from "./TrainerSummaryStatus";
 import TrainerClientExerciseSheet from "./TrainerClientExerciseSheet";
@@ -6501,29 +6503,16 @@ function TrainerWorkoutEditor({
       getExerciseActualProgress(progressHistory, exercise)
     ]));
   }, [progressHistory, workouts]);
-  const library = useMemo(() => {
-    const map = new Map();
-    const addExercise = (exercise, sourceWorkoutId = "") => {
-      const key = String(exercise.name || "").trim().toLowerCase();
-      if (!key) return;
-      const current = map.get(key);
-      const candidate = sourceWorkoutId ? { ...exercise, sourceWorkoutId } : exercise;
-      if (!current || (!getExerciseVideo(current) && getExerciseVideo(exercise))) {
-        map.set(key, candidate);
-      } else if (sourceWorkoutId && !current.sourceWorkoutId) {
-        map.set(key, { ...current, sourceWorkoutId, id: exercise.id || current.id });
-      }
-    };
-
-    (exerciseLibrary || []).forEach((exercise) => addExercise(exercise));
-    workouts.forEach((workout) => {
-      (workout.exercises || []).forEach((exercise) => addExercise(exercise, workout.id));
-    });
-    return [...map.values()];
-  }, [exerciseLibrary, workouts]);
+  const library = useMemo(() => mergeTrainerExerciseLibraryItems([
+    ...(exerciseLibrary || []),
+    ...workouts.flatMap((workout) => (workout.exercises || []).map((exercise) => ({
+      ...exercise, sourceWorkoutId: workout.id,
+      librarySource: { type: "plan", workoutId: workout.id }
+    })))
+  ]), [exerciseLibrary, workouts]);
   const filteredLibrary = library.filter((exercise) =>
     (!libraryMuscle || getTrainerLibraryMuscle(exercise) === libraryMuscle) &&
-    (!librarySearch || String(exercise.name || "").toLowerCase().includes(librarySearch.toLowerCase()))
+    (!librarySearch || String(exercise.name || "").toLowerCase().includes(librarySearch.toLowerCase()) || exerciseLibraryNameKey(exercise.name).includes(exerciseLibraryNameKey(librarySearch)))
   );
   const selectedWorkoutIndex = selectedWorkout
     ? displayWorkouts.findIndex((item) => item.id === selectedWorkout.id)
@@ -6533,7 +6522,7 @@ function TrainerWorkoutEditor({
     ? workouts.find((workout) => workout.id === libraryEditorTarget.workoutId)
     : null;
   const libraryEditorExercise = libraryEditorWorkout?.exercises?.find((exercise) => exercise.id === libraryEditorTarget?.exerciseId)
-    || library.find((exercise) => exercise.id === libraryEditorTarget?.exerciseId && exercise.librarySource?.templateId === libraryEditorTarget?.templateId)
+    || library.find((exercise) => exercise.id === libraryEditorTarget?.exerciseId && exercise.librarySource?.templateId === libraryEditorTarget?.templateId && getExerciseVideo(exercise) === getExerciseVideo(libraryEditorTarget?.exercise))
     || libraryEditorTarget?.exercise
     || null;
   const libraryEditorSourceExercise = libraryEditorExercise && libraryEditorWorkout
@@ -7045,6 +7034,12 @@ function TrainerWorkoutEditor({
             <div className={exerciseLibraryEditorStyles.body} data-trainer-modal-content="true">
               <div className={exerciseLibraryEditorStyles.fields}>
                 <label className={exerciseLibraryEditorStyles.nameField}><span>Название</span><input value={activeLibraryEditorExercise.name || ""} onChange={(event) => updateLibraryEditorExercise({ name: event.target.value })} disabled={libraryEditorSaving} /></label>
+                <label className={exerciseLibraryEditorStyles.nameField}>
+                  <span>Группа мышц</span>
+                  <select aria-label="Группа мышц" value={getTrainerLibraryMuscle(activeLibraryEditorExercise)} onChange={(event) => updateLibraryEditorExercise({ muscleGroup: event.target.value })} disabled={libraryEditorSaving}>
+                    {TRAINER_LIBRARY_MUSCLES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+                  </select>
+                </label>
                 <label className={exerciseLibraryEditorStyles.restField}><span>Отдых</span><input value={activeLibraryEditorExercise.rest || ""} onChange={(event) => updateLibraryEditorExercise({ rest: event.target.value })} placeholder="90 сек" disabled={libraryEditorSaving} /></label>
                 <label className={exerciseLibraryEditorStyles.weightToggle}>
                   <span>Используется вес</span>

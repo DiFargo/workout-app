@@ -1,3 +1,5 @@
+import { exerciseLibraryNameKey } from "../../functions/exerciseLibraryIdentity.js";
+
 export function exerciseUsesExternalWeight(exercise) {
   if (!exercise || typeof exercise !== "object") return false;
 
@@ -12,11 +14,7 @@ export function exerciseUsesExternalWeight(exercise) {
 }
 
 export function normalizeExerciseLibraryName(value = "") {
-  return String(value || "")
-    .trim()
-    .toLocaleLowerCase("ru")
-    .replace(/ё/g, "е")
-    .replace(/\s+/g, " ");
+  return exerciseLibraryNameKey(value);
 }
 
 export function findExerciseLibraryMatch(exercises = [], name = "", excludeId = "") {
@@ -28,9 +26,10 @@ export function findExerciseLibraryMatch(exercises = [], name = "", excludeId = 
     normalizeExerciseLibraryName(exercise?.name) === normalizedName
   ));
 
-  return matches.find((exercise) => String(exercise?.video || exercise?.videoUrl || exercise?.videoURL || "").trim())
-    || matches[0]
-    || null;
+  const filmed = matches.filter((exercise) => String(exercise?.video || exercise?.videoUrl || exercise?.videoURL || "").trim());
+  const videos = new Set(filmed.map((exercise) => String(exercise.video || exercise.videoUrl || exercise.videoURL).trim()));
+  // Different filmed variants require an explicit choice in the library.
+  return videos.size > 1 ? null : filmed[0] || matches[0] || null;
 }
 
 export function applyExerciseLibraryDefaults(exercise = {}, library = []) {

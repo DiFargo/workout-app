@@ -143,6 +143,9 @@ test("the application shell keeps the startup splash under one runtime owner", a
 
 test("source modules are reachable and acyclic", async () => {
   const allSources = await collectFiles("src", SOURCE_EXTENSIONS);
+  // This pure module ships with Functions and is bundled by Vite too, so
+  // library deduplication and client video lookup use the same identities.
+  allSources.push(path.normalize("functions/exerciseLibraryIdentity.js"));
   const reachable = await collectReachableSources();
 
   assert.deepEqual(allSources.sort(), [...reachable].sort());

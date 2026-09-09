@@ -141,7 +141,20 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     { date: "2026-06-17", totals: { calories: 2210, protein: 172, fat: 66, carbs: 228 }, foods: [] },
     { date: "2026-06-16", totals: { calories: 2290, protein: 181, fat: 69, carbs: 236 }, foods: [] }
   ];
+  const libraryAuditExercises = new URLSearchParams(window.location.search).has("libraryAudit") ? [
+    { id: "library-press", name: "Жим гантелей лёжа", video: "/e2e-media/press.mp4" },
+    { id: "library-front", name: "Подъём гантелей вперёд", video: "/e2e-media/front.mp4" },
+    { id: "library-climber", name: "Шаги альпиниста" },
+    { id: "library-fly", name: "Свеление рук с гантелями на наклонной скамье" },
+    { id: "library-leg", name: "Жим одной ногой" },
+    { id: "library-abduct", name: "Разведение ног в тренажере" },
+    { id: "library-adduct", name: "Сведение ног в тренажере" },
+    { id: "library-side-a", name: "Отведение рук с гантелями", video: "/e2e-media/side-a.mp4" },
+    { id: "library-side-b", name: "Разведения гантелей в стороны", video: "/e2e-media/side-b.mp4" },
+    { id: "library-custom", name: "Авторское упражнение" }
+  ].map((exercise) => ({ ...exercise, sets: [{ reps: "12", weight: "20" }], requiresWeight: true })) : [];
   const [workouts, setWorkouts] = useState([
+    ...(libraryAuditExercises.length ? [{ id: "library-audit", name: "Библиотека", exercises: libraryAuditExercises }] : []),
     {
       id: "e2e_day_1",
       name: "Тренировка 1",
@@ -595,7 +608,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }}
       workouts={sparsePreview ? [] : workouts}
       archivedWorkouts={sparsePreview ? [] : archivedWorkouts}
-      exerciseLibrary={workouts.flatMap((workout) => workout.exercises)}
+      exerciseLibrary={workouts.flatMap((workout) => workout.exercises.map((exercise) => ({ ...exercise, librarySource: { type: "plan", workoutId: workout.id } })))}
       programTemplates={programTemplates}
       selectedProgramId={selectedProgramId}
       onSelectProgram={setSelectedProgramId}

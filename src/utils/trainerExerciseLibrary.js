@@ -1,13 +1,36 @@
-function normalizeExerciseLibraryName(name = "") {
-  return String(name || "")
-    .trim()
-    .toLocaleLowerCase("ru")
-    .replace(/ё/g, "е")
-    .replace(/\s+/g, " ");
-}
+import { exerciseLibraryNameKey } from "../../functions/exerciseLibraryIdentity.js";
 
 function getExerciseVideo(exercise = {}) {
-  return exercise?.video || exercise?.videoUrl || exercise?.videoURL || "";
+  return String(exercise?.video || exercise?.videoUrl || exercise?.videoURL || "").trim();
+}
+
+export function mergeTrainerExerciseLibraryItems(exercises = []) {
+  const hasSource = (exercise) => Boolean(exercise.librarySource || exercise.sourceWorkoutId);
+  const groups = new Map();
+  for (const exercise of exercises) {
+    const key = exerciseLibraryNameKey(exercise?.name);
+    if (!key) continue;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(exercise);
+  }
+  return [...groups.values()].flatMap((candidates) => {
+    const videos = new Map();
+    for (const exercise of candidates) {
+      const video = getExerciseVideo(exercise);
+      if (video && (!videos.has(video) || (!hasSource(videos.get(video)) && hasSource(exercise)))) videos.set(video, exercise);
+    }
+    // Keep every distinct video. Empty copies never replace a filmed version.
+    // Keep the winning source/id together so editing opens that exact record.
+    return [...(videos.size ? videos.values() : [candidates.find(hasSource) || candidates[0]])].map((exercise) => {
+      const item = { ...exercise };
+      for (const field of ["muscleGroup", "groupId", "basicExerciseGroupId", "basicExerciseGroupTitle"]) {
+        if (item[field]) continue;
+        const values = [...new Set(candidates.map((entry) => entry[field]).filter(Boolean))];
+        if (values.length === 1) item[field] = values[0];
+      }
+      return item;
+    });
+  });
 }
 
 function getTemplateWorkouts(template = {}) {
@@ -36,19 +59,7 @@ export function buildTrainerExerciseLibraryItems(plan = {}, templates = []) {
       }))
     ))
   ];
-  const library = new Map();
-
-  sources.forEach(({ exercise, librarySource }) => {
-    const key = normalizeExerciseLibraryName(exercise?.name);
-    if (!key) return;
-
-    const current = library.get(key);
-    const currentVideo = getExerciseVideo(current);
-    const nextVideo = getExerciseVideo(exercise);
-    if (!current || (!currentVideo && nextVideo)) library.set(key, { ...exercise, librarySource });
-  });
-
-  return [...library.values()];
+  return mergeTrainerExerciseLibraryItems(sources.map(({ exercise, librarySource }) => ({ ...exercise, librarySource })));
 }
 
 export function patchExerciseInTrainerTemplate(value, exerciseId, patch) {

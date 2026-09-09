@@ -103,6 +103,7 @@
   grid-column: 1 / -1;
 }
 
+.fields select,
 .fields input:not([type="checkbox"]):not([type="file"]) {
   box-sizing: border-box;
   width: 100%;
@@ -117,6 +118,7 @@
   background: #fff;
 }
 
+.fields select:focus-visible,
 .fields input:focus-visible,
 .setRow input:focus-visible {
   border-color: var(--tn-purple);

@@ -45,6 +45,14 @@ test("ambiguous names do not attach a different demonstration", () => {
   assert.deepEqual(resolveClientExerciseMedia([workout], [template, duplicate], "trainer"), []);
 });
 
+test("reviewed aliases fill old client copies but distinct filmed variants stay ambiguous", () => {
+  const clientWorkout = { ...workout, exercises: [{ id: "legacy-copy", name: "Жим гантелей лёжа", sets: [{ reps: 12, weight: 40 }] }] };
+  const libraryTemplate = { id: "library", ownerUid: "trainer", workouts: [{ exercises: [{ id: "filmed", name: "Жим лёжа с гантелями", video: "press.mp4" }] }] };
+  assert.equal(resolveClientExerciseMedia([clientWorkout], [libraryTemplate], "trainer")[0]?.video, "press.mp4");
+  libraryTemplate.workouts[0].exercises.push({ id: "variant", name: "Жим гантелей лёжа", video: "variant.mp4" });
+  assert.deepEqual(resolveClientExerciseMedia([clientWorkout], [libraryTemplate], "trainer"), []);
+});
+
 function database(profile = {}, reassign = false) {
   let profileReads = 0;
   const queries = [];

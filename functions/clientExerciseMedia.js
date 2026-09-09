@@ -1,5 +1,6 @@
+import { exerciseLibraryNameKey as nameKey } from "./exerciseLibraryIdentity.js";
+
 const text = (value) => typeof value === "string" ? value.trim() : "";
-const nameKey = (value) => text(value).toLocaleLowerCase("ru").replace(/ё/g, "е").replace(/\s+/g, " ");
 const videoOf = (exercise) => text(exercise?.video || exercise?.videoUrl || exercise?.videoURL);
 const fail = (status, message) => { throw Object.assign(new Error(message), { status }); };
 
