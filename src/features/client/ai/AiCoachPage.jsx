@@ -36,7 +36,7 @@ export default function AiCoachPage({
   const activeAiFeature = AI_COACH_FEATURES.find((feature) => feature.id === selectedAiFeatureId) || AI_COACH_FEATURES[0];
   const aiResult = buildAiCoachResult(activeAiFeature.id, { history, nutrition, plan });
   const isNutritionPlanFeature = activeAiFeature.id === "nutritionPlan";
-  const aiNutritionDay = buildAiNutritionDayModel(nutrition, nutrition.days?.[nutritionDateKey], history);
+  const aiNutritionDay = buildAiNutritionDayModel(nutrition, nutrition.days?.[nutritionDateKey] || { foods: [] }, { dateKey: nutritionDateKey });
   const activeAiNutritionPlan = aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
   const activeAiNutritionWeekNumber = getAiNutritionCurrentWeek(activeAiNutritionPlan);
   const activeAiNutritionWeek = activeAiNutritionPlan?.weeks?.[activeAiNutritionWeekNumber - 1] || activeAiNutritionPlan?.weeks?.[0];
@@ -176,7 +176,7 @@ export default function AiCoachPage({
                   <h2>{activeAiNutritionPlan.goalLabel}</h2>
                   <p>{activeAiNutritionPlan.comment}</p>
                 </div>
-                <strong>{aiNutritionDay.score}/10</strong>
+                <strong>{aiNutritionDay.hasEnoughDataForScore ? `${aiNutritionDay.score}/10` : "Пока без оценки"}</strong>
               </div>
 
               <div className={styles.todayMacros}>

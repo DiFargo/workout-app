@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 444 444" fill="none">
+  <title>Zmena</title>
+  <defs><linearGradient id="ownset-gradient" x1="0" y1="0" x2="1" y2="0.466"><stop stop-color="#467B72"/><stop offset="0.54" stop-color="#3E748B"/><stop offset="1" stop-color="#3565A3"/></linearGradient></defs>
+  <rect width="444" height="444" rx="96" fill="url(#ownset-gradient)"/>
+  <g transform="translate(-137 -95)" fill="#fff">
+    <path d="m207 343-20 15q-11 8-3 22l47 64q8 12 19 6l22-14z"/>
+    <path d="M241 293q11-6 19 6l75 111q9 13-4 22l-23 15q-12 8-19-3l-78-115q-10-15 3-23z"/>
+    <path d="m390 188 17-12q14-8 24 6l78 118q9 13-4 22l-19 13q-11 7-20-5l-83-117q-8-14 7-25z"/>
+    <path d="m443 179 6-3q18-8 29 8l51 72q8 14-3 24l-12 7z"/>
+    <path d="m294 316 9-6q5-3 9 2l16 15q3 3 7-1l64-63q4-4 8 1l15 20q3 4-1 8l-86 77q-8 7-14-2l-29-42q-3-5 2-9z"/>
+  </g>
+</svg>

@@ -49,8 +49,8 @@
   border: 0;
   border-radius: 50%;
   background: rgba(123, 118, 130, 0.1);
-  color: var(--apple-text, #1c1c1e);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: none;
   font-size: 0;
   pointer-events: auto;
@@ -87,7 +87,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   transform: translateX(-50%);
   pointer-events: none;
 }
@@ -95,7 +95,7 @@
   max-width: 258px;
   display: block;
   overflow: hidden;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
@@ -162,7 +162,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
@@ -206,10 +206,10 @@
     calc(50% - min(201px, 50vw) + 68px)
   );
   z-index: 103;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
   background: #fff;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: 0 2px 7px rgba(27, 35, 31, 0.05);
   line-height: 1;
 }
@@ -516,8 +516,8 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: max(58px, calc(env(safe-area-inset-top, 0px) + 3px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-canvas, #f2f2f7);
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-canvas, #f5f7f8);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -531,16 +531,16 @@
   align-items: stretch;
   justify-content: center;
   gap: 18px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   text-align: center;
 }
 
 :global(:root[data-app-theme="warm-light"]) .notFoundTitle.notFoundTitle {
   padding: 0 18px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.3px;
@@ -557,7 +557,7 @@
   position: static;
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
   box-shadow: none;
@@ -633,4 +633,78 @@
       calc(50% - var(--workout-run-content-half) + 68px)
     );
   }
+}
+
+/* Navigation and large title follow the approved session mockup. */
+:global(:root[data-app-theme="warm-light"]) .topHeader.topHeader {
+  width: var(--workout-run-content-width, min(760px, 100vw)); max-width: none;
+  height: calc(60px + env(safe-area-inset-top)); min-height: calc(60px + env(safe-area-inset-top)); max-height: none;
+  background: var(--apple-canvas, #f5f7f8); backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton,
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton { top: max(8px, env(safe-area-inset-top)); }
+:global(:root[data-app-theme="warm-light"]) .closeButton.closeButton {
+  right: calc(50% - var(--workout-run-content-half, min(380px, 50vw)) + 20px);
+  width: 48px; min-width: 48px; height: 48px; min-height: 48px; max-height: none;
+  background: #fff; color: #617078; -webkit-text-fill-color: #617078; box-shadow: 0 1px 3px #1c282e0a, 0 5px 16px #1c282e05;
+}
+:global(:root[data-app-theme="warm-light"]) .backButton.backButton {
+  left: calc(50% - var(--workout-run-content-half, min(380px, 50vw)) + 16px);
+  width: 90px; max-width: 90px; display: flex; justify-content: flex-start; gap: 3px;
+  background: transparent; border-radius: 12px; color: #376b91; -webkit-text-fill-color: #376b91; font-size: 1.0625rem; font-weight: 400;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle,
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow {
+  display: block; width: var(--workout-run-content-width, min(760px, 100vw)); max-width: none;
+  position: relative; left: auto; top: auto; transform: none; flex: 0 0 auto; margin: 0 auto;
+  height: auto; min-height: 0; padding: calc(66px + env(safe-area-inset-top)) 20px 16px;
+  overflow: visible; background: transparent; text-align: left;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleContent { align-items: stretch; width: 100%; }
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleText {
+  max-width: none; max-height: none; font-size: 1.875rem; font-weight: 700; line-height: 1.1; letter-spacing: -1px;
+  text-align: left; white-space: normal; text-wrap: balance; -webkit-line-clamp: 2;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleProgress {
+  position: absolute; top: max(8px,env(safe-area-inset-top)); left: 104px; right: 104px; min-height: 44px;
+  display: flex; align-items: center; justify-content: center; color: #1c282e; font-size: 0.9375rem; font-weight: 600; line-height: 1.125rem;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleProgress svg { display: none; }
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleText.exerciseTitle { font-size: 1.625rem; letter-spacing: -.6px; }
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow {
+  min-height: calc(72px + env(safe-area-inset-top, 0px));
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 72px 12px;
+  display: flex;
+  align-items: center;
+  background: var(--apple-canvas, #f5f7f8);
+  text-align: center;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow .stageTitleContent {
+  align-items: center;
+  gap: 4px;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow .stageTitleText.exerciseTitle {
+  display: block;
+  overflow: visible;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.25px;
+  text-align: center;
+  -webkit-line-clamp: unset;
+  overflow-wrap: anywhere;
+}
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow .stageTitleProgress {
+  position: static;
+  min-height: 0;
+  color: var(--apple-action, #396ba6);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.125rem;
+  font-variant-numeric: tabular-nums;
+}
+@media(max-width:350px) {
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleText { font-size: clamp(1.375rem, 7.5vw, 1.875rem); }
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleText.exerciseTitle { font-size: 1.5rem; }
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle { padding-inline: 16px; }
 }

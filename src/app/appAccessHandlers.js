@@ -11,7 +11,7 @@ export function createAppAccessHandlers({
   canManageTrainerClientProgram
 }) {
   function canUseAdminFeatures() {
-    return getCanUseAdminFeatures({ isAdminClaim });
+    return getCanUseAdminFeatures({ isAdminClaim, currentUserRole });
   }
 
   function canUseTrainerFeatures() {

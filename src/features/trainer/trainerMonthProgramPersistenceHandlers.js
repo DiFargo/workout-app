@@ -1,4 +1,5 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { refreshTemplateExerciseCards } from "../../utils/trainerExerciseCards.js";
 
 import { createSingleDayWorkoutProgramBlocks } from "../../utils/auditSafety";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
@@ -535,7 +536,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
         return;
       }
 
-      const template = { id: templateSnapshot.id, ...templateSnapshot.data() };
+      const template = await refreshTemplateExerciseCards({ id: templateSnapshot.id, ...templateSnapshot.data() });
       const nextProgram = normalizeMonthProgram({
         id: template.id,
         name: template.name || "Программа на месяц",

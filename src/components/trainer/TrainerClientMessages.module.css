@@ -42,7 +42,7 @@
   flex: 0 0 auto;
   place-items: center;
   color: var(--tn-purple);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .chatAvatar {
@@ -181,7 +181,7 @@
 .filters button[aria-pressed="true"],
 .filters button[data-selected="true"] {
   border-color: var(--trainer-v2-accent, #806bb6);
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 5px 12px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.24);
 }
@@ -320,7 +320,7 @@
 
 .replyPrimary {
   border-color: var(--trainer-v2-accent, #806bb6);
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 5px 12px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.24);
 }
@@ -473,8 +473,8 @@
 :global(html[data-trainer-variant="v2"] body) .panel.panel .toolbar {display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .filters {flex:1 1 330px!important;padding:4px!important;background:#e7e7ed!important;border-radius:11px!important;gap:3px!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .filters button {font-size:12px!important;min-height:44px!important;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:8px!important;padding:4px!important;}
-:global(html[data-trainer-variant="v2"] body) .panel.panel .filters button.active {background:white!important;color:#3c6faa!important;}
-:global(html[data-trainer-variant="v2"] body) .panel.panel .filters button span {color:#636366!important;background:#efeff4!important;}
+:global(html[data-trainer-variant="v2"] body) .panel.panel .filters button.active {background:white!important;color:#376b91!important;}
+:global(html[data-trainer-variant="v2"] body) .panel.panel .filters button span {color:#617078!important;background:#edf1f3!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .resolveAllButton {width:auto!important;font-size:13px!important;min-height:44px!important;border:0!important;background:transparent!important;padding:8px!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .card {padding:14px 16px!important;border:0!important;border-radius:14px!important;box-shadow:none!important;background:white!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .messageTitle strong {font-size:15px!important;white-space:normal!important;}
@@ -482,7 +482,7 @@
 :global(html[data-trainer-variant="v2"] body) .panel.panel .cardHeader time {font-size:12px!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .bubble {padding:8px 0!important;background:transparent!important;border:0!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .text {font-size:15px!important;line-height:1.45!important;overflow-wrap:anywhere!important;}
-:global(html[data-trainer-variant="v2"] body) .panel.panel .reply {font-size:14px!important;min-height:44px!important;padding:8px 12px!important;background:#edf3fa!important;color:#3c6faa!important;border:0!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body) .panel.panel .reply {font-size:14px!important;min-height:44px!important;padding:8px 12px!important;background:#e8f1f2!important;color:#376b91!important;border:0!important;box-shadow:none!important;}
 :global(html[data-trainer-variant="v2"] body) .panel.panel .pendingBadge,
 :global(html[data-trainer-variant="v2"] body) .panel.panel .processedBadge {font-size:11px!important;min-height:24px!important;font-weight:600!important;}
 

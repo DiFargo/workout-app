@@ -1,9 +1,8 @@
 import { ChevronRight, Dumbbell } from "lucide-react";
 import styles from "./ProfileWorkoutCalendarModal.module.css";
+import { getWorkoutCalendarDayStatuses, WORKOUT_CALENDAR_STATUSES } from "./workoutCalendarPresentation.js";
 
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-
-const STATUS_ORDER = ["missed", "completed_off_date", "completed", "shifted", "planned"];
 
 export function ProfileWorkoutCalendarContent({
   monthDate,
@@ -30,6 +29,8 @@ export function ProfileWorkoutCalendarContent({
   const currentDates = editing ? draftDates : scheduledDates;
   const scheduledThisMonth = scheduledDates.filter((dateKey) => dateKey.startsWith(monthKey)).length;
   const selectedDayScheduled = currentDates.includes(selectedDate);
+  const selectedDay = calendarDays.find((day) => day.key === selectedDate);
+  const selectedStatuses = getWorkoutCalendarDayStatuses(selectedDay, editing);
   const scheduleCountLabel = scheduleRequiredCount === 1
     ? "1 дату"
     : `${scheduleRequiredCount} дат`;
@@ -68,10 +69,21 @@ export function ProfileWorkoutCalendarContent({
                 : `${scheduledThisMonth} дней запланировано`}
           </small>
         </div>
-        {!editing && canEditSchedule && (
-          <button className={styles.plannerButton} data-testid="profile-workout-calendar-edit" type="button" onClick={onStartEdit}>
-            Изменить расписание
-          </button>
+        {canEditSchedule && (
+          editing ? (
+            <div className={styles.editActions} data-testid="profile-workout-calendar-edit-actions">
+              <button className={`${styles.actionButton} ${styles.secondaryAction}`} type="button" disabled={saving} onClick={onCancelEdit}>
+                Отмена
+              </button>
+              <button className={styles.actionButton} type="button" disabled={saving} onClick={onSave}>
+                {saving ? "Сохраняю..." : "Сохранить"}
+              </button>
+            </div>
+          ) : (
+            <button className={styles.plannerButton} data-testid="profile-workout-calendar-edit" type="button" onClick={onStartEdit}>
+              Изменить расписание
+            </button>
+          )
         )}
       </div>
 
@@ -89,26 +101,25 @@ export function ProfileWorkoutCalendarContent({
 
       <div className={styles.grid}>
         {calendarDays.map((day) => {
-          const statusClass = STATUS_ORDER
-            .find((candidate) => day.scheduleEntries.some((entry) => entry.status === candidate));
+          const dayStatuses = getWorkoutCalendarDayStatuses(day, editing);
           const hasHistoryWorkouts = !editing && day.workouts.length > 0;
-          const visualStatus = statusClass === "completed_off_date"
-            ? "completedOffDate"
-            : statusClass || (hasHistoryWorkouts ? "historyCompleted" : "");
+          const visualStatus = WORKOUT_CALENDAR_STATUSES[dayStatuses[0]]?.className || "";
           const entryLabel = day.scheduleEntries.map((entry) => `№${entry.order}`).join(", ");
-          const historyLabel = day.workouts.length > 1 ? `${day.workouts.length}×` : "✓";
+          const historyLabel = day.workouts.length > 1 ? `${day.workouts.length}×` : "";
 
           return (
             <button
               type="button"
               data-testid="profile-workout-calendar-day"
+              data-date={day.key}
+              data-status={dayStatuses.join(" ")}
               key={day.key}
               className={[
                 styles.dayButton,
                 day.isCurrentMonth ? "" : styles.outside,
                 day.isToday ? styles.today : "",
                 day.scheduleEntries.length ? styles.hasWorkout : "",
-                day.isScheduled ? styles.scheduled : "",
+                editing && day.isScheduled ? styles.scheduled : "",
                 visualStatus ? styles[visualStatus] : "",
                 editing ? styles.editing : "",
                 editing && day.isScheduleLocked ? styles.locked : "",
@@ -121,37 +132,35 @@ export function ProfileWorkoutCalendarContent({
               aria-label={[
                 day.date.toLocaleDateString("ru-RU"),
                 entryLabel ? `тренировка ${entryLabel}` : "",
+                ...dayStatuses.map((status) => WORKOUT_CALENDAR_STATUSES[status].description),
                 day.workouts.length ? `тренировок выполнено: ${day.workouts.length}` : "",
                 day.isScheduleLocked ? "дата выполненной тренировки недоступна для изменения" : ""
               ].filter(Boolean).join(", ")}
             >
               <span>{day.date.getDate()}</span>
-              {day.scheduleEntries.length > 0 && <i className={styles.dayBadge}>{entryLabel}</i>}
-              {!day.scheduleEntries.length && hasHistoryWorkouts && <i className={styles.dayBadge}>{historyLabel}</i>}
+              {(dayStatuses.length > 0 || entryLabel || hasHistoryWorkouts) && (
+                <span className={styles.dayStatusMarks}>
+                  {dayStatuses.map((status) => (
+                    <i key={status} className={`${styles.statusMark} ${styles[WORKOUT_CALENDAR_STATUSES[status].className]}`} aria-hidden="true">
+                      {WORKOUT_CALENDAR_STATUSES[status].symbol}
+                    </i>
+                  ))}
+                  {(entryLabel || historyLabel) && <i className={styles.dayBadge}>{entryLabel || historyLabel}</i>}
+                </span>
+              )}
             </button>
           );
         })}
       </div>
 
       <div className={styles.legend} aria-label="Легенда статусов тренировок">
-        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.planned}`} />План</span>
-        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.completed}`} />В срок</span>
-        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.historyCompleted}`} />Прошлые</span>
-        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.completedOffDate}`} />Другой день</span>
-        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.missed}`} />Пропущена</span>
-        <span className={styles.legendItem}><i className={`${styles.legendDot} ${styles.shifted}`} />Смещена</span>
+        {Object.entries(WORKOUT_CALENDAR_STATUSES).map(([status, definition]) => (
+          <span key={status} className={styles.legendItem} title={definition.description} data-calendar-legend={status}>
+            <i className={`${styles.statusMark} ${styles[definition.className]}`} aria-hidden="true">{definition.symbol}</i>
+            {definition.label}
+          </span>
+        ))}
       </div>
-
-      {editing && canEditSchedule && (
-        <div className={styles.editActions} data-testid="profile-workout-calendar-edit-actions">
-          <button className={`${styles.actionButton} ${styles.secondaryAction}`} type="button" disabled={saving} onClick={onCancelEdit}>
-            Отмена
-          </button>
-          <button className={styles.actionButton} type="button" disabled={saving} onClick={onSave}>
-            {saving ? "Сохраняю..." : "Сохранить"}
-          </button>
-        </div>
-      )}
 
       {status && (
         <p className={`${styles.status} ${(status.includes("сохранены") || status.includes("сохранено")) ? styles.success : ""}`} role="status" aria-live="polite">
@@ -169,9 +178,12 @@ export function ProfileWorkoutCalendarContent({
               year: "numeric"
             })}
           </strong>
-          {currentDates.includes(selectedDate) && (
-            <em className={styles.scheduledBadge}>Тренировка запланирована</em>
-          )}
+          {selectedStatuses.map((status) => (
+            <em key={status} className={styles.scheduledBadge} data-testid="profile-workout-calendar-selected-status">
+              <i className={`${styles.statusMark} ${styles[WORKOUT_CALENDAR_STATUSES[status].className]}`} aria-hidden="true">{WORKOUT_CALENDAR_STATUSES[status].symbol}</i>
+              {WORKOUT_CALENDAR_STATUSES[status].description}
+            </em>
+          ))}
         </div>
 
         {selectedItems.length ? (
@@ -199,7 +211,15 @@ export function ProfileWorkoutCalendarContent({
           ))
         ) : (
           <p className={styles.emptyDay}>
-            {selectedDayScheduled ? "Тренировка запланирована. Её номер указан в календаре." : "В этот день тренировок нет."}
+            {selectedStatuses.includes("missed")
+              ? "Записи о выполнении нет. Если тренировка была, проверь её в истории."
+              : selectedStatuses.includes("completed") || selectedStatuses.includes("completed_off_date")
+                ? "Выполнение отмечено в расписании. Подробной записи в истории нет."
+                : selectedStatuses.includes("shifted")
+                  ? "Чтобы выбрать новую дату, нажми «Изменить расписание»."
+                  : selectedStatuses.includes("planned") || (editing && selectedDayScheduled)
+                    ? "Номер тренировки указан в календаре."
+                    : "В этот день нет записей о тренировках."}
           </p>
         )}
       </div>

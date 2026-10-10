@@ -84,7 +84,7 @@
   max-height: 44px;
   border: 0;
   border-radius: 50%;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-secondary, #636366);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-secondary, #617078);
   box-shadow: none;
 }

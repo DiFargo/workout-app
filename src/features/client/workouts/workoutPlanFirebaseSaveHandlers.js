@@ -13,6 +13,7 @@ import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
 import { syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule";
 import { makeThreeSets } from "../../../utils/workoutPlanNormalization";
 import { exerciseUsesExternalWeight } from "../../../utils/auditSafety";
+import { exerciseCardReference } from "../../../../functions/exerciseCards.js";
 import {
   mergeBasicWorkoutPlanWithSavedWorkouts,
   normalizeBasicWorkoutPlanState
@@ -176,6 +177,7 @@ async function savePlan({
             ? { id: exercise.id }
             : {}),
           name: exercise.name,
+          ...exerciseCardReference(exercise),
           video: exercise.video || exercise.videoUrl || exercise.videoURL || "",
           videoAutoFilledFrom: exercise.videoAutoFilledFrom || "",
           rest: exercise.rest || "90 сек",

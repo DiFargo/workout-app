@@ -45,3 +45,29 @@ export function createTelegramNotificationHandler({ auth, telegramDraft, setTele
     }
   };
 }
+
+export function createClientReminderHandlers({ auth, request, onCalendarSaved }) {
+  async function post(url, body) {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return null;
+    try {
+      const response = await request(url, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || data.ok !== true || auth.currentUser?.uid !== uid) return null;
+      return { data, uid };
+    } catch { return null; }
+  }
+  return {
+    async saveReminderSettings(reminderSettings) {
+      const result = await post("/api/telegram/update-notifications", { reminderSettings });
+      if (!result?.data.workoutCalendar) return false;
+      onCalendarSaved(result.data.workoutCalendar, result.uid);
+      return true;
+    },
+    async sendTestReminder() {
+      return Boolean(await post("/api/telegram/test-workout-reminder", {}));
+    }
+  };
+}

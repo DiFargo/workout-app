@@ -13,6 +13,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Начинайте движение лопатками и тяните локти вниз."
@@ -31,6 +32,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Поднимайтесь до прямой линии корпуса без переразгибания поясницы."
@@ -48,9 +50,31 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Фиксируйте плечи и выпрямляйте руки плавно."
+  },
+  {
+    "id": "barbell_bench_press",
+    "name": "Жим штанги лёжа",
+    "aliases": [
+      "жим лёжа",
+      "жим лежа",
+      "жим лёжа со штангой",
+      "жим штанги от груди лёжа"
+    ],
+    "groupId": "chest_press",
+    "movementRole": "chestPress",
+    "equipment": "Скамья и штанга",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 105,
+    "durationSeconds": 0,
+    "note": "Сведите лопатки, поставьте стопы устойчиво и опускайте гриф под контролем."
   },
   {
     "id": "barbell_curl",
@@ -66,9 +90,28 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Выберите вес, при котором корпус остаётся неподвижным."
+  },
+  {
+    "id": "barbell_row",
+    "name": "Тяга штанги в наклоне",
+    "aliases": [
+      "тяга в наклоне"
+    ],
+    "groupId": "horizontal_pull",
+    "movementRole": "horizontalPull",
+    "equipment": "Штанга",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 90,
+    "durationSeconds": 0,
+    "note": "Сохраняйте наклон корпуса стабильным и не дёргайте вес."
   },
   {
     "id": "bench_dip",
@@ -84,9 +127,27 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Работайте только в комфортной для плеч глубине."
+  },
+  {
+    "id": "bicycle_crunch",
+    "name": "Пресс · велосипед",
+    "aliases": [],
+    "groupId": "core",
+    "movementRole": "core",
+    "equipment": "Коврик",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": false,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "bulgarian_split_squat",
@@ -102,6 +163,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Начните с небольшой амплитуды и удерживайте баланс у опоры."
@@ -119,6 +181,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Скручивайте корпус, а не тяните рукоять руками."
@@ -136,6 +199,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не выводите локти вперёд и не помогайте корпусом."
@@ -153,6 +217,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Сводите руки по дуге без рывка и не поднимайте плечи."
@@ -170,9 +235,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Двигайтесь от плеча и не помогайте себе наклоном корпуса."
+  },
+  {
+    "id": "chest_dip",
+    "name": "Отжимания на брусьях",
+    "aliases": [],
+    "groupId": "chest_press",
+    "movementRole": "chestPress",
+    "equipment": "Брусья",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": false,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "chest_supported_row",
@@ -188,6 +270,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Не поднимайте плечи и не раскачивайте корпус."
@@ -206,9 +289,27 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Контролируйте опускание гантелей и не теряйте положение лопаток."
+  },
+  {
+    "id": "db_box_squat",
+    "name": "Присед с гантелью на скамью",
+    "aliases": [],
+    "groupId": "quads",
+    "movementRole": "kneeDominantCompound",
+    "equipment": "Гантели и скамья",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "db_curl",
@@ -224,6 +325,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Держите локти рядом с корпусом и не раскачивайтесь."
@@ -243,9 +345,27 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Сохраняйте лёгкий сгиб локтей и небольшую комфортную амплитуду."
+  },
+  {
+    "id": "db_front_raise",
+    "name": "Подъём гантелей вперёд",
+    "aliases": [],
+    "groupId": "shoulder_front",
+    "movementRole": "shoulderAccessory",
+    "equipment": "Гантели",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "db_lateral_raise",
@@ -262,9 +382,27 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Поднимайте руки до уровня плеч без раскачивания корпуса."
+  },
+  {
+    "id": "db_lunge",
+    "name": "Выпады с гантелями — вариант тренера",
+    "aliases": [],
+    "groupId": "quads",
+    "movementRole": "kneeDominantCompound",
+    "equipment": "Гантели",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "db_rdl",
@@ -280,6 +418,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Отводите таз назад и не округляйте поясницу."
@@ -299,6 +438,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Используйте лёгкий вес и удерживайте предплечья неподвижно."
@@ -318,6 +458,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Опирайте предплечья и двигайте только кистями без рывка."
@@ -337,9 +478,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Прижимайте поясницу к полу и двигайте противоположные руку и ногу медленно."
+  },
+  {
+    "id": "decline_machine_press",
+    "name": "Жим хаммера на низ груди",
+    "aliases": [],
+    "groupId": "chest_press",
+    "movementRole": "chestPress",
+    "equipment": "Рычажный тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "face_pull",
@@ -355,6 +513,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Ведите канат к уровню лица, разводя концы в стороны."
@@ -374,6 +533,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Держите корпус ровно, плечи опущенными и идите спокойным шагом."
@@ -393,9 +553,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Не тяните шею руками и выдыхайте в верхней точке."
+  },
+  {
+    "id": "french_press",
+    "name": "Французский жим",
+    "aliases": [],
+    "groupId": "triceps",
+    "movementRole": "triceps",
+    "equipment": "Штанга и скамья",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "glute_bridge",
@@ -412,6 +589,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Поднимайте таз до ровной линии корпуса и контролируйте движение."
@@ -430,6 +608,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Держите гантель у груди, а колени направляйте по линии стоп."
@@ -448,6 +627,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Сохраняйте нейтральный хват и контролируйте опускание."
@@ -466,6 +646,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Не раскачивайте корпус и тяните рукояти к рёбрам."
@@ -484,9 +665,42 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не раскачивайтесь: начинайте подъём с подкручивания таза."
+  },
+  {
+    "id": "hip_abduction_machine",
+    "name": "Разведение ног в тренажёре",
+    "aliases": [],
+    "groupId": "hip_abduction",
+    "movementRole": "lowerAccessory",
+    "equipment": "Тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
+  },
+  {
+    "id": "hip_adduction_machine",
+    "name": "Сведение ног в тренажёре",
+    "aliases": [],
+    "groupId": "hip_adduction",
+    "movementRole": "lowerAccessory",
+    "equipment": "Тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "hip_thrust",
@@ -502,9 +716,42 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "В верхней точке напрягите ягодицы, не переразгибая поясницу."
+  },
+  {
+    "id": "incline_barbell_press",
+    "name": "Жим лёжа на наклонной скамье со штангой",
+    "aliases": [],
+    "groupId": "chest_incline",
+    "movementRole": "chestPress",
+    "equipment": "Наклонная скамья и штанга",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
+  },
+  {
+    "id": "incline_cable_curl",
+    "name": "Сгибание рук в кроссовере на наклонной скамье",
+    "aliases": [],
+    "groupId": "biceps",
+    "movementRole": "biceps",
+    "equipment": "Кроссовер и наклонная скамья",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "incline_db_fly",
@@ -519,6 +766,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не опускайте локти слишком глубоко и ведите вес плавно."
@@ -536,6 +784,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Выберите умеренный наклон и контролируйте положение лопаток."
@@ -554,6 +803,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Держите корпус прямой линией и опускайтесь в комфортной амплитуде."
@@ -571,6 +821,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Опускайте гриф плавно к верхней части груди."
@@ -589,6 +840,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Тяните рукоять к верхней части груди и не поднимайте плечи."
@@ -606,9 +858,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не поднимайте плечи и сохраняйте ровный темп."
+  },
+  {
+    "id": "leaning_hip_abduction_machine",
+    "name": "Разведение ног в тренажёре с наклоном корпуса вперёд",
+    "aliases": [],
+    "groupId": "hip_abduction",
+    "movementRole": "lowerAccessory",
+    "equipment": "Тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "leg_curl",
@@ -624,6 +893,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Не отрывайте таз от опоры и опускайте вес медленно."
@@ -641,6 +911,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Поднимайте вес плавно, не выпрямляя колени с рывком."
@@ -658,6 +929,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Плотно прижмите спину к опоре и ведите колени по линии стоп."
@@ -675,9 +947,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Двигайте только стопой и не блокируйте колени."
+  },
+  {
+    "id": "low_cable_fly",
+    "name": "Сведение рук в кроссовере снизу вверх",
+    "aliases": [],
+    "groupId": "chest_fly",
+    "movementRole": "chestAccessory",
+    "equipment": "Кроссовер",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "machine_chest_press",
@@ -693,9 +982,93 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Настройте сиденье так, чтобы рукояти были на уровне середины груди."
+  },
+  {
+    "id": "machine_hip_thrust",
+    "name": "Ягодичный мост в тренажёре",
+    "aliases": [],
+    "groupId": "posterior_chain",
+    "movementRole": "hipDominantCompound",
+    "equipment": "Тренажёр для ягодичного моста",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
+  },
+  {
+    "id": "machine_preacher_curl",
+    "name": "Сгибание рук в тренажёре Скотта",
+    "aliases": [],
+    "groupId": "biceps",
+    "movementRole": "biceps",
+    "equipment": "Тренажёр Скотта",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
+  },
+  {
+    "id": "machine_row",
+    "name": "Тяга в рычажном тренажёре",
+    "aliases": [
+      "тяга в тренажёре"
+    ],
+    "groupId": "horizontal_pull",
+    "movementRole": "horizontalPull",
+    "equipment": "Рычажный тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Сводите лопатки без рывка и контролируйте возврат рукоятей."
+  },
+  {
+    "id": "machine_triceps_extension",
+    "name": "Разгибание рук в тренажёре",
+    "aliases": [],
+    "groupId": "triceps",
+    "movementRole": "triceps",
+    "equipment": "Тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
+  },
+  {
+    "id": "mountain_climber",
+    "name": "Пресс · шаги альпиниста",
+    "aliases": [],
+    "groupId": "core",
+    "movementRole": "core",
+    "equipment": "Коврик",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": false,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "neutral_lat_pulldown",
@@ -710,9 +1083,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Ведите локти вниз и сохраняйте устойчивый корпус."
+  },
+  {
+    "id": "one_arm_chest_supported_machine_row",
+    "name": "Тяга рычажного тренажёра одной рукой с упором грудью",
+    "aliases": [],
+    "groupId": "vertical_pull",
+    "movementRole": "verticalPull",
+    "equipment": "Рычажный тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "one_arm_db_row",
@@ -731,9 +1121,42 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Зафиксируйте корпус у опоры и тяните локоть к тазу."
+  },
+  {
+    "id": "one_arm_machine_row",
+    "name": "Тяга хаммера по одной руке",
+    "aliases": [],
+    "groupId": "horizontal_pull",
+    "movementRole": "horizontalPull",
+    "equipment": "Рычажный тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
+  },
+  {
+    "id": "one_arm_seated_cable_row",
+    "name": "Тяга нижнего блока по одной руке",
+    "aliases": [],
+    "groupId": "horizontal_pull",
+    "movementRole": "horizontalPull",
+    "equipment": "Блочный тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "overhead_cable_extension",
@@ -748,6 +1171,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Встаньте устойчиво и держите локти направленными вперёд."
@@ -766,6 +1190,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не разводите локти широко и контролируйте амплитуду."
@@ -784,6 +1209,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Держите грудь у опоры и возвращайте рукояти медленно."
@@ -802,6 +1228,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 30,
     "note": "Держите корпус ровной линией и дышите спокойно."
@@ -819,6 +1246,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не выпрямляйте локти до жёсткой блокировки."
@@ -839,6 +1267,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Начинайте движение лопатками и тяните локти вниз без раскачивания корпуса."
@@ -859,6 +1288,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не проваливайтесь в пояснице и сохраняйте контроль на всём движении."
@@ -876,6 +1306,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Держите плечи опущенными и разводите руки плавно."
@@ -894,6 +1325,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Сохраните лёгкий сгиб локтей и не раскачивайте корпус."
@@ -912,6 +1344,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Не тяните трапецией: ведите локти назад и в стороны."
@@ -930,6 +1363,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Подкручивайте таз плавно, не раскачиваясь ногами."
@@ -950,6 +1384,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Сделайте контролируемый шаг назад и держите корпус устойчиво."
@@ -967,6 +1402,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 105,
     "durationSeconds": 0,
     "note": "Отводите таз назад и удерживайте нейтральное положение спины."
@@ -985,9 +1421,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Держите локти у корпуса и не наклоняйтесь за весом."
+  },
+  {
+    "id": "scott_triceps_extension",
+    "name": "Разгибание рук на скамье Скотта",
+    "aliases": [],
+    "groupId": "triceps",
+    "movementRole": "triceps",
+    "equipment": "Скамья Скотта",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "seated_cable_row",
@@ -1005,6 +1458,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Сначала сведите лопатки, затем ведите рукоять к животу."
@@ -1022,6 +1476,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Работайте в полной комфортной амплитуде без рывка."
@@ -1041,9 +1496,27 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Опирайтесь на спинку и не переразгибайте поясницу."
+  },
+  {
+    "id": "seated_rear_delt_db_fly",
+    "name": "Отведение рук с гантелями сидя в наклоне",
+    "aliases": [],
+    "groupId": "rear_delts",
+    "movementRole": "shoulderAccessory",
+    "equipment": "Гантели и скамья",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "shoulder_press_machine",
@@ -1058,6 +1531,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Настройте сиденье так, чтобы рукояти стартовали чуть ниже уровня ушей."
@@ -1076,9 +1550,26 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Держитесь за опору и сохраняйте ровный темп."
+  },
+  {
+    "id": "single_leg_press",
+    "name": "Жим одной ногой",
+    "aliases": [],
+    "groupId": "quads",
+    "movementRole": "kneeDominantCompound",
+    "equipment": "Тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
   },
   {
     "id": "smith_bench_press",
@@ -1093,9 +1584,42 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Сохраните устойчивую опору стоп и плавно ведите гриф."
+  },
+  {
+    "id": "smith_incline_pushup",
+    "name": "Отжимания от грифа в тренажёре Смита",
+    "aliases": [],
+    "groupId": "chest_press",
+    "movementRole": "chestPress",
+    "equipment": "Машина Смита",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": false,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
+  },
+  {
+    "id": "smith_lunge",
+    "name": "Выпады в тренажёре Смита",
+    "aliases": [],
+    "groupId": "quads",
+    "movementRole": "kneeDominantCompound",
+    "equipment": "Машина Смита",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "smith_shoulder_press",
@@ -1110,6 +1634,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Ведите гриф плавно и держите рёбра под контролем."
@@ -1127,6 +1652,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 90,
     "durationSeconds": 0,
     "note": "Сохраняйте опору на всю стопу и контролируйте глубину без боли."
@@ -1146,6 +1672,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 45,
     "durationSeconds": 0,
     "note": "Сделайте паузу вверху и опускайте пятки под контролем."
@@ -1164,6 +1691,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": false,
+    "hasVideo": false,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Отталкивайтесь пяткой рабочей ноги и не спешите внизу."
@@ -1181,9 +1709,43 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Оставьте мягкий сгиб локтей и опускайте рукоять к бёдрам."
+  },
+  {
+    "id": "straight_leg_crunch",
+    "name": "Скручивания с поднятыми прямыми ногами",
+    "aliases": [],
+    "groupId": "core",
+    "movementRole": "core",
+    "equipment": "Коврик",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": false,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
+  },
+  {
+    "id": "supinated_lat_pulldown",
+    "name": "Тяга верхнего блока обратным хватом",
+    "aliases": [],
+    "groupId": "vertical_pull",
+    "movementRole": "verticalPull",
+    "equipment": "Блочный тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   },
   {
     "id": "supported_lateral_raise",
@@ -1200,6 +1762,7 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "home"
     ],
     "requiresWeight": true,
+    "hasVideo": false,
     "restSeconds": 60,
     "durationSeconds": 0,
     "note": "Используйте лёгкий вес и контролируйте движение без рывка."
@@ -1218,8 +1781,91 @@ export const BASIC_WORKOUT_AI_CATALOGUE = [
       "gym"
     ],
     "requiresWeight": true,
+    "hasVideo": true,
     "restSeconds": 75,
     "durationSeconds": 0,
     "note": "Держите грудь у опоры и плавно ведите локти назад."
+  },
+  {
+    "id": "trainer_db_squat",
+    "name": "Приседания с гантелью",
+    "aliases": [],
+    "groupId": "quads",
+    "movementRole": "kneeDominantCompound",
+    "equipment": "Гантель",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": true,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
+  },
+  {
+    "id": "v_up",
+    "name": "Пресс · складка",
+    "aliases": [],
+    "groupId": "core",
+    "movementRole": "core",
+    "equipment": "Коврик",
+    "locations": [
+      "gym",
+      "home"
+    ],
+    "requiresWeight": false,
+    "hasVideo": false,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": "Выполняйте движение плавно, в комфортной амплитуде. При боли остановитесь."
+  },
+  {
+    "id": "weighted_back_extension",
+    "name": "Гиперэкстензия с диском",
+    "aliases": [],
+    "groupId": "posterior_chain",
+    "movementRole": "lowerAccessory",
+    "equipment": "Римский стул и диск",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
+  },
+  {
+    "id": "wide_chest_supported_tbar_row",
+    "name": "Тяга Т-грифа с упором грудью широким хватом",
+    "aliases": [],
+    "groupId": "horizontal_pull",
+    "movementRole": "horizontalPull",
+    "equipment": "Тренажёр Т-гриф",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
+  },
+  {
+    "id": "wide_seated_cable_row",
+    "name": "Тяга нижнего блока широким хватом",
+    "aliases": [],
+    "groupId": "horizontal_pull",
+    "movementRole": "horizontalPull",
+    "equipment": "Блочный тренажёр",
+    "locations": [
+      "gym"
+    ],
+    "requiresWeight": true,
+    "hasVideo": true,
+    "restSeconds": 75,
+    "durationSeconds": 0,
+    "note": ""
   }
 ];

@@ -39,11 +39,19 @@
 
 ## Команды
 
+Использовать Node 22 и Java 21. Зависимости устанавливаются в корне, `functions` и `functions-telegram-auth`. После чистого `npm ci` установить браузеры проверки:
+
+```powershell
+npx.cmd playwright install chromium webkit
+```
+
+Chromium нужен также одному тесту реального React DOM в `npm test` и `verify:core`; WebKit — целевым браузерным проверкам. В Linux CI установка использует `--with-deps`.
+
 ```powershell
 npm.cmd run build        # production-сборка
-npm.cmd run verify:core  # build + unit tests + critical lint + budget
+npm.cmd run verify:core  # lint, unit, rules, Functions, сборки, budget, npm audit
 npm.cmd run test:e2e     # Playwright UI-regression
-npm.cmd run test:rules   # Firestore rules
+npm.cmd run test:rules   # Firestore + Storage rules в локальном demo-проекте
 npm.cmd run android:build # production build + sync Capacitor Android
 ```
 

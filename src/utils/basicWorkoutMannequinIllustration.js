@@ -52,6 +52,8 @@ export function getBasicWorkoutMannequinIllustrationSource(
   { allowGroupFallback = true } = {}
 ) {
   const libraryExercise = getBasicWorkoutLibraryExercise(exercise);
+  // Do not fabricate an exercise image when only a muscle map is available.
+  if (libraryExercise?.illustrationUnavailable) return "";
   const catalogueSource = getFullCatalogueIllustrationSource(libraryExercise)
     || (exercise?.replacementId ? "" : getFullCatalogueIllustrationSource(exercise));
   if (catalogueSource) return catalogueSource;

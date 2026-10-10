@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 const COLD_LOAD_TIMEOUT = 40_000;
@@ -104,29 +104,27 @@ async function expectTapTargets(page, selectors, minSize = 40) {
 test("admin panel hub visual audit covers cards and denied state", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await openAdminHarness(page, "/?adminHarness=1", page.locator(".adminPanelHubPage"));
-  await expect(page.locator(".adminPanelHubHero h1")).toBeVisible();
-  await expect(page.locator(".adminPanelHubCard")).toHaveCount(3);
-  await expectTapTargets(page, [".adminFixedMainBack", ".adminPanelHubCard"]);
+  const sectionCards = page.getByTestId("admin-overview-sections").getByRole("button");
+  await openAdminHarness(page, "/?adminHarness=1", page.getByRole("heading", { name: "Обзор", exact: true }));
+  await expect(sectionCards).toHaveCount(3);
+  await expectTapTargets(page, ["[data-testid='admin-overview-sections'] button"]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "admin-panel-hub.png");
 
-  await page.locator(".adminPanelHubCard").nth(0).click();
+  await sectionCards.nth(0).click();
   await expect(page.getByTestId("admin-harness-action")).toHaveText("page:adminUsers");
-  await page.locator(".adminPanelHubCard").nth(1).click();
+  await sectionCards.nth(1).click();
   await expect(page.getByTestId("admin-harness-action")).toHaveText("programs");
-  await page.locator(".adminPanelHubCard").nth(2).click();
-  await expect(page.getByTestId("admin-harness-action")).toHaveText("page:admin");
-  await page.locator(".adminFixedMainBack").click();
-  await expect(page.getByTestId("admin-harness-action")).toHaveText("page:main");
+  await sectionCards.nth(2).click();
+  await expect(page.getByTestId("admin-harness-action")).toHaveText("page:adminLibrary");
   assertNoRuntimeErrors();
 
-  await openAdminHarness(page, "/?adminHarness=1&adminAccess=denied", page.locator(".historyEmptyCard"));
-  await expect(page.locator(".historyEmptyCard")).toContainText("Доступ");
-  await expectTapTargets(page, [".backBtn"]);
+  await openAdminHarness(page, "/?adminHarness=1&adminAccess=denied", page.getByRole("heading", { name: "Доступ закрыт", exact: true }));
+  await expect(page.getByRole("heading", { name: "Доступ закрыт", exact: true })).toBeVisible();
+  await expectTapTargets(page, ["[aria-label='Главное меню']"]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "admin-panel-denied.png");
-  await page.locator(".backBtn").click();
+  await page.getByRole("button", { name: "Главное меню", exact: true }).click();
   await expect(page.getByTestId("admin-harness-action")).toHaveText("page:main");
   assertNoRuntimeErrors();
 });

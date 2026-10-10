@@ -1,16 +1,38 @@
 .root {
   --search-input-surface: var(--color-surface);
-  --search-input-text: var(--apple-text, #1c1c1e);
+  --search-input-text: var(--apple-text, #1c282e);
   --search-input-icon: var(--color-heading);
   --search-input-placeholder: #8a8f9e;
-  --search-input-border: var(--apple-canvas, #f2f2f7);
+  --search-input-border: var(--apple-canvas, #f5f7f8);
 
   width: 100%;
   align-items: center;
   border: 1px solid var(--search-input-border);
   background: var(--search-input-surface);
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
+
+.submitButton {
+  flex: none;
+  min-width: 64px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--color-primary, #396ba6);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.submitButton:disabled { opacity: .5; cursor: default; }
+.root.search.gemini { display: grid; grid-template-columns: 24px minmax(0, 1fr) 44px 64px; gap: 6px; }
+.root.search.gemini .submitButton { grid-column: 4; }
+.submitButton:focus-visible { outline: 2px solid var(--apple-text, #1c282e); outline-offset: 2px; }
+.search .input { min-width: 0; font-size: 16px; }
+.search .clearButton { min-width: 44px; min-height: 44px; }
 
 .search {
   min-height: 54px;
@@ -23,7 +45,7 @@
 }
 
 .myProducts {
-  --search-input-text: var(--apple-text, #1c1c1e);
+  --search-input-text: var(--apple-text, #1c282e);
 
   min-height: 62px;
   margin: 0 0 18px;
@@ -31,7 +53,7 @@
   display: grid;
   grid-template-columns: 26px minmax(0, 1fr) 38px;
   gap: 9px;
-  border-color: var(--client-card-border, var(--apple-separator, rgba(60,60,67,.12)));
+  border-color: var(--client-card-border, var(--apple-separator, rgba(57, 82, 91,.12)));
   border-radius: 17px;
   box-shadow: 0 10px 28px rgba(27, 35, 31, 0.1);
 }
@@ -160,7 +182,7 @@
 
 @media (max-width: 40rem) {
   .myProducts {
-    border-color: var(--client-border, var(--apple-separator, rgba(60,60,67,.12)));
+    border-color: var(--client-border, var(--apple-separator, rgba(57, 82, 91,.12)));
   }
 }
 
@@ -180,10 +202,10 @@
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr) auto;
   gap: 8px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
@@ -192,7 +214,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .searchIcon {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 20px;
   font-weight: 500;
 }
@@ -200,15 +222,15 @@
 :global(:root[data-app-theme="warm-light"]) .input,
 :global(:root[data-app-theme="warm-light"]) .myProducts .input {
   min-height: 48px;
-  color: var(--apple-text, #1c1c1e);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
-  font-size: 15px;
+  color: var(--apple-text, #1c282e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
+  font-size: 16px;
   font-weight: 450;
 }
 
 :global(:root[data-app-theme="warm-light"]) .input::placeholder {
-  color: var(--apple-secondary, #636366);
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
 }
 
 :global(:root[data-app-theme="warm-light"]) .clearButton {
@@ -217,12 +239,19 @@
   height: 44px;
   min-height: 44px;
   border-radius: 50%;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-secondary, #636366);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-secondary, #617078);
   font-size: 20px;
 }
 
-.root:focus-within {
-  border-color: var(--apple-action, #3f73b8) !important;
-  box-shadow: 0 0 0 3px rgba(47, 125, 104, 0.24) !important;
+/* Keep the search field calm even inside the modal's shared focus styles. */
+:global(html:root[data-app-theme="warm-light"]) .root .input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+:global(html:root[data-app-theme="warm-light"]) .root .input:is(:autofill, :-webkit-autofill) {
+  -webkit-box-shadow: 0 0 0 1000px var(--search-input-surface, #fff) inset !important;
+  box-shadow: 0 0 0 1000px var(--search-input-surface, #fff) inset !important;
 }

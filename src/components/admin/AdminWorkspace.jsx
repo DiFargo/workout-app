@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ChevronRight,
   ClipboardList,
@@ -7,7 +7,6 @@ import {
   AlertCircle,
   LayoutDashboard,
   LogOut,
-  ShieldCheck,
   UserRound,
   UsersRound,
   X
@@ -18,24 +17,28 @@ export const ADMIN_WORKSPACE_SECTIONS = [
   {
     id: "overview",
     label: "Обзор",
+    shortLabel: "Обзор",
     description: "Главные административные задачи",
     icon: LayoutDashboard
   },
   {
     id: "users",
     label: "Пользователи и роли",
+    shortLabel: "Люди",
     description: "Доступы, клиенты и тренеры",
     icon: UsersRound
   },
   {
     id: "programs",
     label: "Базовые программы",
+    shortLabel: "Программы",
     description: "Общие программы приложения",
     icon: ClipboardList
   },
   {
     id: "exercises",
     label: "Базовые упражнения",
+    shortLabel: "Упражнения",
     description: "Общая библиотека упражнений",
     icon: Dumbbell
   },
@@ -73,18 +76,6 @@ function AdminWorkspaceOverview({ onOverviewQueueAction, onSectionChange, overvi
 
   return (
     <>
-      <section className={styles.introCard}>
-        <span className={styles.eyebrow}>
-          <ShieldCheck size={15} strokeWidth={2} aria-hidden="true" />
-          Администрирование
-        </span>
-        <h2>Рабочее место администратора</h2>
-        <p>
-          Здесь находятся только системные разделы: пользователи, роли и общие материалы.
-          Личные программы и упражнения тренеров остаются в их рабочих местах.
-        </p>
-      </section>
-
       {visibleStats.length ? (
         <section className={styles.metricGrid} aria-label="Ключевые показатели">
           {visibleStats.map((item) => {
@@ -105,8 +96,7 @@ function AdminWorkspaceOverview({ onOverviewQueueAction, onSectionChange, overvi
         <section className={styles.actionQueue} aria-label="Требуют внимания">
           <header className={styles.queueHeader}>
             <div>
-              <p className={styles.eyebrow}>Требует внимания</p>
-              <h2>Очередь действий</h2>
+              <h2>Требуют внимания</h2>
             </div>
             <span>{visibleQueue.reduce((total, item) => total + Number(item.count || 0), 0)}</span>
           </header>
@@ -129,7 +119,7 @@ function AdminWorkspaceOverview({ onOverviewQueueAction, onSectionChange, overvi
         </section>
       ) : null}
 
-      <section className={styles.sectionGrid} aria-label="Разделы админки">
+      <section className={styles.sectionGrid} aria-label="Разделы админки" data-testid="admin-overview-sections">
         {overviewSections.map((section) => {
           const Icon = section.icon;
 
@@ -180,6 +170,14 @@ export default function AdminWorkspace({
   testId
 }) {
   const [accountOpen, setAccountOpen] = useState(false);
+  useEffect(() => {
+    if (!accountOpen) return undefined;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setAccountOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [accountOpen]);
   const activeItem = getSection(activeSection);
   const content = children ?? renderContent?.(activeItem.id);
   const accountName = adminName || "Администратор";
@@ -204,10 +202,10 @@ export default function AdminWorkspace({
     <div className={`${styles.workspace} ${className}`.trim()} data-testid={testId}>
       <aside className={styles.sidebar} aria-label="Навигация администратора">
         <div className={styles.brand}>
-          <span className={styles.brandMark} aria-hidden="true">A</span>
+          <img className={styles.brandMark} src="/brand/ownset.svg?v=gradient-1" width="38" height="38" alt="" />
           <span>
-            <strong>{title}</strong>
-            <small>Панель управления</small>
+            <strong>Zmena</strong>
+            <small>{title === "Админка" ? "Кабинет администратора" : title}</small>
           </span>
         </div>
 
@@ -254,8 +252,7 @@ export default function AdminWorkspace({
       <main className={styles.mainContent}>
         <header className={styles.header}>
           <div>
-            <p className={styles.headerEyebrow}>{activeItem.label}</p>
-            <h1>{headerTitle || title}</h1>
+            <h1>{headerTitle || (activeItem.id === "overview" ? "Обзор" : activeItem.label)}</h1>
             <span>{subtitle}</span>
           </div>
           {canOpenAccount ? (
@@ -281,10 +278,11 @@ export default function AdminWorkspace({
                 key={section.id}
                 type="button"
                 aria-current={isActive ? "page" : undefined}
+                aria-label={section.label}
                 onClick={() => handleSectionChange(section.id)}
               >
                 <Icon size={18} strokeWidth={1.9} aria-hidden="true" />
-                <span>{section.label}</span>
+                <span>{section.shortLabel}</span>
               </button>
             );
           })}

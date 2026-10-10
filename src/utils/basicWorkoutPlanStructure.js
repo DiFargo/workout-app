@@ -15,7 +15,7 @@ function getWorkoutOrder(workout = {}, index = 0) {
 
 export function getBasicWorkoutMicrocycles(plan = {}) {
   const workouts = Array.isArray(plan?.workouts) ? plan.workouts : [];
-  const showAllWorkouts = plan?.structure === "variants_then_progression";
+  const showAllWorkouts = ["variants_then_progression", "variants_then_repeat"].includes(plan?.structure);
   const configuredDays = Number(plan?.profile?.days || plan?.quizProfile?.days);
   const inferredDays = Math.max(1, Math.round(workouts.length / 4) || 1);
   const daysPerWeek = Number.isFinite(configuredDays) && configuredDays > 0

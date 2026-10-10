@@ -1,6 +1,7 @@
 import { formatProfileWorkoutDateKey, formatProfileWorkoutMonthKey } from "./profileWorkoutSchedule.js";
 
 const DEFAULT_TRAINING_WEEKDAYS = {
+  1: [0],
   2: [1, 4],
   3: [0, 2, 4],
   4: [0, 1, 3, 4],

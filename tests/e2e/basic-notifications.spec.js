@@ -1,4 +1,13 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
+
+test.setTimeout(60_000);
+
+async function openNotifications(page, query) {
+  await page.goto(`/?clientHarness=1&${query}`);
+  // Cold Vite compilation can outlast the assertion timeout. Wait for the
+  // actual screen before checking its copy and notification interactions.
+  await expect(page.getByTestId("profile-summary-notifications-button")).toBeVisible({ timeout: 40_000 });
+}
 
 test("basic plan keeps a neutral, working notification card and inbox", async ({ page }, testInfo) => {
   const cases = [
@@ -8,7 +17,7 @@ test("basic plan keeps a neutral, working notification card and inbox", async ({
     ["empty", "Новых уведомлений нет", null]
   ];
   for (const [state, label, badge] of cases) {
-    await page.goto(`/?clientHarness=1&clientWorkoutProgramMode=basic&clientCoachNotificationState=${state}`);
+    await openNotifications(page, `clientWorkoutProgramMode=basic&clientCoachNotificationState=${state}`);
     await expect(page.getByRole("heading", { name: "Сообщения и напоминания" })).toBeVisible();
     const card = page.getByTestId("profile-summary-notifications-button");
     await expect(card).toContainText("Уведомления");
@@ -35,7 +44,7 @@ test("basic plan keeps a neutral, working notification card and inbox", async ({
 });
 
 test("individual plan retains trainer copy and notifications", async ({ page }) => {
-  await page.goto("/?clientHarness=1&clientWorkoutProgramMode=individual&clientCoachNotificationState=message");
+  await openNotifications(page, "clientWorkoutProgramMode=individual&clientCoachNotificationState=message");
   await expect(page.getByRole("heading", { name: "Тренер рядом" })).toBeVisible();
   await expect(page.getByTestId("profile-summary-notifications-button")).toContainText("Ваш тренер");
   await expect(page.getByTestId("profile-summary-trainer-status")).toHaveText("1 сообщение от тренера");

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
@@ -16,9 +16,13 @@ async function expectRect(locator, expected) {
 }
 
 async function expectWorkoutTimerReachable(page) {
+  // The current timer belongs to the fixed action panel. Verify that scrolling
+  // a shorter phone reveals the last set above it without moving the timer.
+  await page.setViewportSize({ width: 402, height: 600 });
   const metrics = await page.getByTestId("workout-run-stage").evaluate(async (deck) => {
     const timer = document.querySelector('[data-testid="workout-rest-timer"]');
     const panel = document.querySelector('[data-css-module-scope="workout-stage-action-panel"]');
+    const lastSet = [...deck.querySelectorAll('[data-testid="workout-exercise-set-row"]')].at(-1);
 
     deck.scrollTo({ top: deck.scrollHeight });
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -27,19 +31,27 @@ async function expectWorkoutTimerReachable(page) {
       clientHeight: deck.clientHeight,
       scrollHeight: deck.scrollHeight,
       scrollTop: deck.scrollTop,
-      timerBottom: Math.round(timer?.getBoundingClientRect().bottom || 0),
-      panelTop: Math.round(panel?.getBoundingClientRect().top || 0)
+      lastSetBottom: Math.round(lastSet?.getBoundingClientRect().bottom || 0),
+      timerTop: Math.round(timer.getBoundingClientRect().top),
+      timerBottom: Math.round(timer.getBoundingClientRect().bottom),
+      panelTop: Math.round(panel.getBoundingClientRect().top),
+      panelBottom: Math.round(panel.getBoundingClientRect().bottom)
     };
   });
 
   expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight);
   expect(metrics.scrollTop).toBeGreaterThan(0);
-  expect(metrics.timerBottom).toBeLessThanOrEqual(metrics.panelTop);
+  expect(metrics.lastSetBottom).toBeLessThanOrEqual(metrics.panelTop);
+  expect(metrics.timerTop).toBeGreaterThanOrEqual(metrics.panelTop);
+  expect(metrics.timerBottom).toBeLessThanOrEqual(metrics.panelBottom);
+  expect(metrics.panelBottom).toBe(600);
+  await expect(page.getByTestId("workout-rest-timer-start")).toBeInViewport();
+  await page.setViewportSize({ width: 402, height: 874 });
 }
 
 async function expectStickyHeaderWhileScrolling(header) {
   const metrics = await header.evaluate(async (node) => {
-    const shell = node.closest('[data-css-module-scope="profile-dashboard-shell"]');
+    const shell = node.closest('[data-client-adaptive-shell="true"]');
     if (!shell) return null;
 
     const initialY = node.getBoundingClientRect().y;
@@ -110,111 +122,99 @@ async function expectHorizontalGap(left, right, minimumGap = 0) {
   expect(rightBox.x - (leftBox.x + leftBox.width)).toBeGreaterThanOrEqual(minimumGap);
 }
 
-async function expectVerticallyCentered(item, container) {
-  const [itemBox, containerBox] = await Promise.all([item.boundingBox(), container.boundingBox()]);
-  expect(itemBox).not.toBeNull();
-  expect(containerBox).not.toBeNull();
-  const itemCenter = itemBox.y + itemBox.height / 2;
-  const containerCenter = containerBox.y + containerBox.height / 2;
-  expect(Math.abs(itemCenter - containerCenter)).toBeLessThanOrEqual(1);
-}
-
 test("calm iOS client screens match the 402 by 874 reference geometry", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "The reference uses one deterministic mobile browser.");
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
+  await expect(page.getByTestId("profile-summary-dashboard")).toBeVisible({ timeout: 40_000 });
 
   const mainHeader = page.getByTestId("profile-main-header");
   await expect(mainHeader).toHaveCSS("position", "fixed");
-  await expect(mainHeader).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(mainHeader).toHaveCSS("background-color", "rgb(245, 247, 248)");
   await expect(mainHeader).toHaveCSS("backdrop-filter", "none");
   expect(await mainHeader.evaluate((node) => getComputedStyle(node, "::after").content)).toBe("none");
   await expect(page.locator("html")).toHaveCSS("overscroll-behavior-y", "none");
   await expect(page.locator("body")).toHaveCSS("overscroll-behavior-y", "none");
-  await expectRect(page.getByTestId("profile-main-title"), { x: 20, y: 16, width: 79, height: 28 });
-  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "20px");
-  await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 8, width: 44, height: 44 });
-  await expectRect(page.getByTestId("profile-main-hero"), { x: 16, y: 72, width: 370, height: 142 });
-  await expectRect(page.getByTestId("profile-main-next-workout"), { x: 16, y: 228, width: 370, height: 142 });
-  await expectRect(page.getByTestId("profile-progress-card"), { x: 16, y: 384, width: 370, height: 142 });
-  await expectRect(page.getByTestId("profile-measurement-snapshot"), { x: 16, y: 540, width: 370, height: 148 });
-  await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
-  await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
-  await expectAlignedLeft(
-    page.getByTestId("profile-main-hero-greeting"),
-    page.getByTestId("profile-main-hero-title")
-  );
-  await expect(page.getByTestId("profile-main-hero-greeting")).not.toContainText(",");
-  await expect(page.getByTestId("profile-main-hero-goal")).toHaveCount(0);
-  await expectAlignedLeft(
-    page.getByTestId("profile-main-next-eyebrow"),
-    page.getByTestId("profile-main-next-title"),
-    page.getByTestId("profile-main-next-meta")
-  );
-  await expectHorizontalGap(
-    page.getByTestId("profile-main-next-meta-text"),
-    page.getByTestId("profile-main-next-open"),
-    14
-  );
-  await expect(page.getByTestId("profile-main-next-open")).toHaveCSS("width", "120px");
-  await expect(page.getByTestId("profile-main-next-open")).toHaveCSS("height", "54px");
-  await expect(page.getByTestId("profile-main-next-open")).toHaveCSS("white-space", "normal");
-  await expect(page.getByTestId("profile-main-next-workout").locator("h2")).toHaveCSS("font-size", "21px");
-  await expectVerticallyCentered(
-    page.getByTestId("profile-main-next-workout").locator("h2"),
-    page.getByTestId("profile-main-next-workout")
-  );
-  await expectVerticallyCentered(
-    page.getByTestId("profile-main-next-open"),
-    page.getByTestId("profile-main-next-workout")
-  );
-  await expect(page.getByTestId("profile-progress-more")).toHaveCount(0);
+  await expectRect(mainHeader, { x: 0, y: 0, width: 402, height: 82 });
+  await expectRect(page.getByTestId("profile-main-title"), { x: 20, y: 26, width: 122, height: 36 });
+  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "32px");
+  await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 23, width: 44, height: 44 });
+  const dashboard = page.getByTestId("profile-summary-dashboard");
+  const hero = dashboard.locator("section").filter({ has: page.getByTestId("profile-summary-hero-title") });
+  await expectRect(page.getByTestId("profile-summary-greeting"), { x: 22, y: 104, width: 358, height: 26 });
+  await expect(page.getByTestId("profile-summary-greeting")).toContainText("Илья");
+  await expectRect(hero, { x: 20, y: 147, width: 362, height: 288 });
+  await expectRect(page.getByTestId("profile-summary-primary"), { x: 36, y: 371, width: 330, height: 48 });
+  await expectAlignedLeft(page.getByTestId("profile-summary-hero-title"), page.getByTestId("profile-summary-primary"));
+  await expect(page.getByTestId("profile-summary-hero-title")).toHaveCSS("font-size", "27px");
+  await expectRect(page.getByTestId("profile-summary-workout-log"), { x: 20, y: 486, width: 115, height: 99 });
+  await expectRect(page.getByTestId("profile-summary-nutrition"), { x: 143, y: 486, width: 115, height: 99 });
+  await expectHorizontalGap(page.getByTestId("profile-summary-workout-log"), page.getByTestId("profile-summary-nutrition"), 8);
+  await expectRect(page.getByTestId("profile-summary-notifications-button"), { x: 20, y: 636, width: 362, height: 64 });
+  await expect(page.getByTestId("profile-summary-workout-log")).toContainText("12");
+  await expect(page.getByTestId("profile-summary-nutrition")).toContainText("1 840");
+  await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
   await expectStickyHeaderWhileScrolling(mainHeader);
 
   await page.getByTestId("client-nav-cabinet").click();
   await expect(page.getByTestId("profile-cabinet-title")).toHaveText("Кабинет");
-  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "20px");
-  await expectRect(page.getByTestId("profile-cabinet-title-row"), { x: 20, y: 8, width: 362, height: 44 });
-  await expectRect(page.getByTestId("profile-cabinet-action-account"), { x: 16, y: 96, width: 370, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-body-control"), { x: 17, y: 217, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 17, y: 357, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 17, y: 427, width: 368, height: 70 });
-  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 17, y: 619, width: 368, height: 70 });
-  await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
+  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "32px");
+  await expectRect(page.locator('[data-css-module-scope="profile-cabinet-title-row"]'), { x: 0, y: 0, width: 402, height: 82 });
+  await expectRect(page.locator('[data-client-page-header] > [data-testid="profile-cabinet-title-row"]'), { x: 20, y: 23, width: 362, height: 42 });
+  await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 20, y: 233, width: 362, height: 54 });
+  await expectRect(page.getByTestId("profile-cabinet-action-nutrition"), { x: 20, y: 287, width: 362, height: 54 });
+  await expectRect(page.getByTestId("profile-cabinet-action-workout-journal"), { x: 20, y: 341, width: 362, height: 54 });
+  await expectRect(page.getByTestId("profile-cabinet-action-account"), { x: 20, y: 594, width: 362, height: 57 });
+  await expectRect(page.getByTestId("profile-cabinet-action-feedback"), { x: 20, y: 652, width: 362, height: 54 });
+  await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
   await expectStickyHeaderWhileScrolling(page.locator('[data-css-module-scope="profile-cabinet-title-row"]'));
   await expectCabinetLogoutReachable(page);
 
   await page.getByTestId("client-nav-nutrition").click();
   await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveText("Питание");
-  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "20px");
-  await expectRect(page.locator('[data-nutrition-header-part="title-row"]'), { x: 20, y: 8, width: 362, height: 44 });
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "32px");
+  await expectRect(page.locator('[data-nutrition-header-part="title-row"]'), { x: 20, y: 23, width: 362, height: 42 });
   await expect(page.getByTestId("nutrition-header-calendar")).toHaveCount(0);
   await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
-  await expectRect(page.locator('[data-nutrition-header-part="week"]'), { x: 16, y: 64, width: 370, height: 64 });
-  await expectRect(page.getByTestId("nutrition-orbit"), { x: 16, y: 140, width: 370, height: 270 });
-  await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 16, y: 422, width: 370, height: 35 });
-  await expectRect(page.getByTestId("nutrition-diary-list"), { x: 16, y: 457, width: 370, height: 150 });
-  await expectRect(page.getByTestId("nutrition-summary"), { x: 16, y: 623, width: 370, height: 72 });
-  await expectRect(page.getByTestId("client-bottom-nav"), { x: 10, y: 784, width: 382, height: 76 });
+  await expectRect(page.locator('[data-nutrition-header-part="week"]'), { x: 20, y: 84, width: 362, height: 67 });
+  await expectRect(page.getByTestId("nutrition-orbit"), { x: 20, y: 163, width: 362, height: 185 });
+  await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 20, y: 463, width: 362, height: 44 });
+  await expectRect(page.getByTestId("nutrition-diary-list"), { x: 20, y: 507, width: 362, height: 171 });
+  await expectRect(page.getByTestId("nutrition-summary"), { x: 20, y: 690, width: 362, height: 76 });
+  await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
 
   await page.getByTestId("client-nav-workouts").click();
-  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "20px");
+  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "32px");
+  await expectRect(page.getByTestId("workout-week-calendar"), { x: 20, y: 84, width: 362, height: 67 });
+  await expectRect(page.getByTestId("workout-today-card"), { x: 20, y: 204, width: 362, height: 332 });
+  await expectRect(page.getByTestId("workout-start-button"), { x: 35, y: 419, width: 332, height: 48 });
+  await expectStickyHeaderWhileScrolling(page.getByTestId("workout-list-header"));
+
+  await page.getByTestId("client-nav-progress").click();
+  await expect(page.getByTestId("profile-progress-title")).toHaveText("Прогресс");
+  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "32px");
+  await expectRect(page.getByTestId("profile-progress-header"), { x: 0, y: 0, width: 402, height: 82 });
+  await expect(page.getByTestId("profile-measurement-panel")).toBeVisible();
+  await expect(page.getByRole("tablist", { name: "Период графика веса" }).getByRole("tab")).toHaveCount(3);
+  await expect(page.getByRole("tab", { name: "Месяц", exact: true })).toHaveAttribute("aria-selected", "true");
+  await page.getByRole("tab", { name: "6 месяцев", exact: true }).click();
+  await expect(page.getByRole("tab", { name: "6 месяцев", exact: true })).toHaveAttribute("aria-selected", "true");
+  await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
 
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunStage=exercise&clientHarnessTheme=warm-light");
-  await expectRect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" }), { x: 16, y: 8, width: 44, height: 44 });
-  await expectRect(page.getByRole("button", { name: "Выйти из тренировки" }), { x: 342, y: 8, width: 44, height: 44 });
-  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 16, y: 64, width: 370, height: 27 });
-  await expect(page.locator('[data-css-module-scope="workout-stage-heading"]')).toHaveText("Жим штанги лёжа");
-  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 160, y: 99, width: 82, height: 25 });
+  await expect(page.getByRole("button", { name: "Вернуться к предыдущему экрану" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Выйти из тренировки" })).toBeInViewport();
+  await expectRect(page.locator('[data-css-module-scope="workout-stage-heading"]'), { x: 0, y: 0, width: 402, height: 72 });
+  await expect(page.locator('[data-css-module-scope="workout-stage-heading"]')).toContainText("Жим штанги лёжа");
+  await expectRect(page.getByTestId("workout-exercise-progress"), { x: 184, y: 39, width: 35, height: 18 });
   await expect(page.getByTestId("workout-exercise-progress")).toHaveText("1 из 2");
-  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 133, width: 370, height: 370 });
-  await expectRect(page.getByTestId("workout-exercise-video-frame").locator("video"), { x: 27, y: 144, width: 349, height: 349 });
-  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 564, width: 370, height: 249 });
-  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 597, width: 370, height: 216 });
-  await expectRect(page.getByTestId("workout-rest-timer"), { x: 16, y: 822, width: 370, height: 50 });
-  await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 797, width: 402, height: 77 });
+  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 20, y: 72, width: 362, height: 272 });
+  await expectRect(page.getByTestId("workout-plan-section"), { x: 20, y: 424, width: 362, height: 248 });
+  await expectRect(page.getByTestId("workout-plan-card"), { x: 20, y: 453, width: 362, height: 218 });
+  await expectRect(page.getByTestId("workout-rest-timer"), { x: 20, y: 738, width: 362, height: 48 });
+  await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 726, width: 402, height: 148 });
   await expectWorkoutTimerReachable(page);
 
   assertNoRuntimeErrors();
@@ -229,4 +229,9 @@ test("cabinet scroll keeps logout reachable above the iOS dock", async ({ page }
 
   await expect(page.getByTestId("profile-cabinet-logout")).toBeVisible();
   await expectCabinetLogoutReachable(page);
+  await page.setViewportSize({ width: 402, height: 600 });
+  const header = page.locator('[data-css-module-scope="profile-cabinet-title-row"]');
+  await expectStickyHeaderWhileScrolling(header);
+  await expectCabinetLogoutReachable(page);
+  await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 530, width: 402, height: 70 });
 });

@@ -32,6 +32,9 @@ import ProfileTrainerNotificationsModal from "./ProfileTrainerNotificationsModal
 import ProfileWorkoutJournalModal from "./ProfileWorkoutJournalModal";
 import { WorkoutModePickerDialog } from "../workouts/WorkoutListDialogs";
 import { uploadStorageFile } from "../../../utils/firebaseStorage";
+import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
+import { mergeReminderCalendarPatch } from "../../../utils/clientReminderSettings";
+import { createClientReminderHandlers } from "./profileNotificationHandlers";
 
 const MAX_FEEDBACK_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 
@@ -240,6 +243,16 @@ export default function ProfileDashboardRoute(ctx) {
   } = ctx;
 
   const loadClientTrainerTasksRef = useRef(loadClientTrainerTasks);
+  const { saveReminderSettings, sendTestReminder } = createClientReminderHandlers({
+    auth,
+    request: fetchAuthorizedWithTimeout,
+    onCalendarSaved: (patch, uid) => setProfileWorkoutCalendarData(current => {
+      if (auth.currentUser?.uid !== uid) return current;
+      const next = mergeReminderCalendarPatch(current, patch);
+      safeWriteUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, uid, next);
+      return next;
+    })
+  });
   const hasTrainerFeatures = canUseTrainerFeatures();
 
   useEffect(() => {
@@ -870,6 +883,9 @@ export default function ProfileDashboardRoute(ctx) {
         {profileSettingsModalSection === "settings" && (
           <ProfileNotificationSettingsSection
             telegramProfile={telegramProfile}
+            calendar={profileWorkoutCalendarData}
+            onSaveReminders={saveReminderSettings}
+            onTestReminder={sendTestReminder}
             onToggleNotifications={toggleTelegramNotifications}
             onOpenConnections={() => setProfileSettingsModalSection("connections")}
           />

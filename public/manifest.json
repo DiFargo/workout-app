@@ -1,21 +1,27 @@
 {
-  "name": "Workout App",
-  "short_name": "Workout",
+  "name": "Zmena",
+  "short_name": "Zmena",
   "start_url": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#F2F2F7",
-  "theme_color": "#F2F2F7",
+  "background_color": "#F5F7F8",
+  "theme_color": "#F5F7F8",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/icons/ownset-192.png?v=gradient-1",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/icons/ownset-512.png?v=gradient-1",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/icons/ownset-maskable-512.png?v=gradient-1",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

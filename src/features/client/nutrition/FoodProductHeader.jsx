@@ -110,7 +110,7 @@ export default function FoodProductHeader({
         <div className={styles.productCopy}>
           <strong className={styles.productName} data-css-module-text="food-product-header">{selectedFood.name}</strong>
           <small className={styles.source} data-css-module-text="food-product-header">
-            {selectedFood.source || selectedFood.portion || "Продукт"}
+            {selectedFood.brand || selectedFood.portion || "Продукт"}
           </small>
         </div>
       </div>

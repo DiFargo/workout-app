@@ -5,6 +5,20 @@ import { initializeClientAppCheck } from './app/appCheck.js'
 import { loadCssVariant } from './app/cssVariant.js'
 import { installGlobalErrorReporting } from './utils/errorReporting.js'
 import { registerServiceWorker } from './app/registerServiceWorker.js'
+import { initializeTelegramMiniApp } from './app/telegramMiniApp.js'
+
+let telegramMiniApp = initializeTelegramMiniApp()
+let applicationMounted = false
+
+function syncTelegramMiniApp() {
+  telegramMiniApp = initializeTelegramMiniApp() || telegramMiniApp
+  if (applicationMounted) telegramMiniApp?.ready()
+}
+
+if (!telegramMiniApp) {
+  const telegramSdkScript = document.getElementById('telegram-web-app-sdk')
+  telegramSdkScript?.addEventListener('load', syncTelegramMiniApp, { once: true })
+}
 
 // The startup splash must use the final interface palette from its first frame.
 // This prevents a second-looking loading screen while the app runtime mounts.
@@ -22,6 +36,9 @@ async function startApplication() {
       <App />
     </StrictMode>,
   )
+
+  applicationMounted = true
+  telegramMiniApp?.ready()
 
   void initializeClientAppCheck().catch((error) => {
     console.warn("App Check initialization failed:", error)

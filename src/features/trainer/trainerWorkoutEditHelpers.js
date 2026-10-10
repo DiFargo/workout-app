@@ -2,6 +2,7 @@ import {
   exerciseUsesExternalWeight,
   findExerciseLibraryMatch
 } from "../../utils/auditSafety.js";
+import { exerciseCardReference, exerciseTechnique } from "../../../functions/exerciseCards.js";
 
 const DEFAULT_EXERCISE_NAME = "\u041d\u043e\u0432\u043e\u0435 \u0443\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
 const ABS_EXERCISE_MARKER = "\u041f\u0440\u0435\u0441\u0441";
@@ -22,6 +23,9 @@ export function getTrainerExercisePresentationIdentity(sourceExercise = {}) {
   const basicExerciseGroupId = getExerciseText(source.basicExerciseGroupId)
     || getExerciseText(source.groupId);
   const fields = {
+    ...exerciseCardReference(source),
+    videoCrop: source.videoCrop || null,
+    technique: exerciseTechnique(source),
     libraryExerciseId,
     sourceId: getExerciseText(source.sourceId),
     basicExerciseId: getExerciseText(source.basicExerciseId),

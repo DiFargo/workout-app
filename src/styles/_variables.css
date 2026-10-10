@@ -1459,7 +1459,7 @@
   --background-workout-readiness-mobile-actions: rgba(255, 255, 255, 0.96);
   --shadow-workout-readiness-mobile-actions: 0 18px 48px rgba(27, 35, 31, 0.18);
   --color-workout-readiness-mobile-back-border: #e0e6e0;
-  --background-workout-readiness-mobile-back: #f7f9fe;
+  --background-workout-readiness-mobile-back: #f3f7f8;
   --color-workout-readiness-mobile-back: #67716b;
   --shadow-workout-readiness-mobile-primary: 0 12px 26px rgba(117, 97, 170, 0.23);
   --color-workout-finish-card-border: #e0e6e0;
@@ -2078,6 +2078,8 @@
   --color-profile-role-action-text: #2f7d68;
   --transition-fast: 160ms ease;
   --transition-standard: 240ms ease;
+  --ownset-action-gradient: linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%);
+  --ownset-soft-gradient: linear-gradient(120deg, #e5f1eb, #e9eff8);
 }
 
 @media (min-width: 700px) {

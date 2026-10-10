@@ -94,6 +94,40 @@ export function getDueReminderOffsets(calendar = {}, event, now = new Date()) {
   });
 }
 
+// When the calendar stores explicit workout slots, a date alone is not enough
+// to justify a reminder: that date must still point at a planned workout.
+// Returning undefined means the calendar is legacy and can use its weekly
+// schedule; returning null means an explicit plan exists but has no workout on
+// that date.
+export function getPlannedWorkoutForReminder(calendar = {}, event) {
+  const plannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
+  if (!plannedWorkouts.length) return undefined;
+  if (!event?.key) return null;
+
+  return plannedWorkouts.find((workout) => {
+    const date = workout?.movedToDate || workout?.date || workout?.scheduledDate || workout?.plannedDate;
+    const status = String(workout?.status || "planned").trim().toLowerCase();
+    return date === event.key && !["completed", "missed", "skipped", "cancelled", "canceled"].includes(status);
+  }) || null;
+}
+
+export function getActivePlanWorkouts(workouts = [], userData = {}, calendar = {}) {
+  if (Number(userData.assignedWorkoutCount) === 0) return [];
+
+  const basicPlanWorkouts = Array.isArray(userData.basicWorkoutPlan?.workouts)
+    ? userData.basicWorkoutPlan.workouts
+    : [];
+  if (basicPlanWorkouts.length) {
+    const basicWorkoutIds = new Set(basicPlanWorkouts.map((workout) => String(workout?.id || "").trim()).filter(Boolean));
+    return workouts.filter((workout) => basicWorkoutIds.has(String(workout?.id || "").trim()));
+  }
+
+  const assignmentVersion = String(calendar.assignedProgramUpdatedAt || userData.assignedProgramUpdatedAt || "").trim();
+  return assignmentVersion
+    ? workouts.filter((workout) => String(workout?.assignedProgramUpdatedAt || workout?.assignmentVersion || "").trim() === assignmentVersion)
+    : workouts;
+}
+
 export function getDueProgressReminderTypes(calendar = {}, lastActivity = {}, now = new Date()) {
   const settings = calendar.progressReminderSettings || {};
   const todayKey = getMinskDateKey(now);

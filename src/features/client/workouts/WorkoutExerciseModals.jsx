@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { hasCompletedExerciseSets } from "../../../utils/auditSafety.js";
 import styles from "./WorkoutExerciseModals.module.css";
 
 export default function WorkoutExerciseModals({
@@ -23,6 +24,7 @@ export default function WorkoutExerciseModals({
   }
 
   const alternativesGroupLabel = alternatives[0]?.groupLabel || "";
+  const swapLocked = hasCompletedExerciseSets(exercise);
 
   return (
     <>
@@ -164,12 +166,18 @@ export default function WorkoutExerciseModals({
                 ×
               </button>
             </header>
-            <p className={styles.swapHint}>
-              {alternativeSource === "trainer"
+            <p className={styles.swapHint} role={swapLocked ? "status" : undefined}>
+              {swapLocked
+                ? "У этого упражнения уже есть выполненные подходы. Заменить его можно только до первого выполненного подхода, чтобы результаты оставались у исходного упражнения. Можно продолжить тренировку или перейти к следующему упражнению."
+                : alternativeSource === "trainer"
                 ? "Тренер назначил эти варианты для замены. Подходы и повторы сохранятся."
                 : <>{alternativesGroupLabel ? `Похожие упражнения: ${alternativesGroupLabel}. ` : ""}Подходы и повторы сохранятся.</>}
             </p>
-            <div className={styles.alternativeList}>
+            {swapLocked ? (
+              <button type="button" className={styles.doneButton} onClick={onCloseSwap}>
+                Вернуться к упражнению
+              </button>
+            ) : <div className={styles.alternativeList}>
               {alternatives.map((alternative) => (
                 <button
                   key={alternative.id || alternative.name}
@@ -185,7 +193,7 @@ export default function WorkoutExerciseModals({
                   <b>Выбрать</b>
                 </button>
               ))}
-            </div>
+            </div>}
           </section>
         </div>,
         document.body

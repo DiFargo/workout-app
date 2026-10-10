@@ -1,7 +1,7 @@
 import { doc, runTransaction } from "firebase/firestore";
 import { applyWorkoutProgressionToFuturePlan } from "./workoutPlanUpdateHandlers.js";
 import { shiftBasicWorkoutScheduleAfterCompletion } from "../../../utils/basicWorkoutSchedule.js";
-import { syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule.js";
+import { mergeWorkoutCalendarScope, syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule.js";
 
 export function buildWorkoutCompletionOperation(plan, workout) {
   return { plan, workout };
@@ -64,7 +64,8 @@ export async function persistWorkoutCompletion({ db, uid, entry, completion = nu
           }
         }
         if (basic) {
-          const workoutCalendar = syncWorkoutCalendarWithPlan(user.workoutCalendar || {}, workouts, entry.finishedAt, uid);
+          const calendarScope = syncWorkoutCalendarWithPlan(user.workoutCalendar || {}, workouts, entry.finishedAt, uid);
+          const workoutCalendar = mergeWorkoutCalendarScope(user.workoutCalendar || {}, calendarScope, workouts, freshDays);
           workoutCalendar.planRevision = (Number(user.workoutCalendar?.planRevision) || 0) + 1;
           transaction.set(userRef, { basicWorkoutPlan: savedPlan, workoutCalendar }, { merge: true });
         }

@@ -28,6 +28,9 @@ function fixture(overrides = {}) {
     validateTrainerWorkoutsForAssignment: () => ({ ok: true }), auth: { currentUser: { uid: 'trainer' } },
     attachAssignedProgramToWorkouts: (_t,w) => w,
     appendClientAssignedWorkouts: async () => { writes++; return { nextWorkouts: [], clientPatch: {} }; },
+    requestTrainerExerciseCards: async () => ({ cards: [] }),
+    trainerExerciseCards: [],
+    mapTemplateExerciseCards: (value) => value,
     buildProgramAssignmentStatus: () => 'Назначена', setAdminSelectedClient() {}, setUsersList() {}, setPlan() {},
     sortWorkoutDays: w => w, recordTrainerEvent: async () => {}, ...overrides
   });

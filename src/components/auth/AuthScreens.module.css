@@ -8,8 +8,8 @@
     place-items: center;
     overflow: hidden;
     padding: 1.5rem;
-    color: var(--apple-text, #1c1c1e);
-    background: var(--apple-canvas, #f2f2f7);
+    color: var(--apple-text, #1c282e);
+    background: var(--apple-canvas, #f5f7f8);
   }
 
   .splashInner {
@@ -22,7 +22,7 @@
     justify-content: center;
     padding: 2.125rem 1.5rem;
     overflow: hidden;
-    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+    border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 2.375rem;
     background: rgba(255, 255, 255, 0.94);
     box-shadow:
@@ -48,22 +48,22 @@
     border: 1px solid #dce2e5;
     border-radius: 1.75rem;
     background: #ebf5ef;
-    color: var(--apple-blue-pressed, #3565a3);
+    color: var(--apple-blue-pressed, #315f91);
     box-shadow: none;
     font-size: 2.625rem;
   }
 
   .splashLogo {
-    color: var(--apple-text, #1c1c1e);
-    font-size: clamp(5.125rem, 22vw, 7.625rem);
+    color: var(--apple-text, #1c282e);
+    font-size: clamp(2rem, 10vw, 2.75rem);
     font-weight: 900;
     line-height: 0.92;
-    letter-spacing: 0.3125rem;
+    letter-spacing: -0.035em;
   }
 
   .splashText {
     margin-block-start: 0.875rem;
-    color: var(--apple-secondary, #636366);
+    color: var(--apple-secondary, #617078);
     font-size: 0.9375rem;
     font-weight: 800;
     letter-spacing: 0.02em;
@@ -74,9 +74,9 @@
     height: 0.5625rem;
     margin-block-start: 1.75rem;
     overflow: hidden;
-    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+    border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 999px;
-    background: var(--apple-separator, rgba(60,60,67,.12));
+    background: var(--apple-separator, rgba(57, 82, 91,.12));
   }
 
   .splashProgress > span {
@@ -84,7 +84,7 @@
     width: 42%;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
+    background: var(--ownset-action-gradient);
     box-shadow: none;
     animation: splash-loading 1.2s ease-in-out infinite;
   }
@@ -99,7 +99,7 @@
     width: 0.4375rem;
     height: 0.4375rem;
     border-radius: 50%;
-    background: var(--apple-action, #3f73b8);
+    background: var(--ownset-action-gradient);
     animation: splash-dot 1.1s ease-in-out infinite;
   }
 
@@ -123,7 +123,7 @@
 
   .splashRecovery p {
     margin: 0;
-    color: var(--apple-secondary, #636366);
+    color: var(--apple-secondary, #617078);
     font-size: 0.8125rem;
     font-weight: 650;
     line-height: 1.35;
@@ -134,7 +134,7 @@
     min-height: 44px;
     border: 1px solid #ded7e9;
     border-radius: 14px;
-    background: var(--apple-surface-muted, #efeff4);
+    background: var(--apple-surface-muted, #edf1f3);
     color: #4c4656;
     font: inherit;
     font-size: 0.875rem;
@@ -264,8 +264,8 @@
   justify-content: center;
   gap: 28px;
   overflow-x: hidden;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -282,14 +282,14 @@
   place-items: center;
   border: 0;
   border-radius: 20px;
-  background: linear-gradient(145deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: none;
 }
 
 .loginHero h1 {
   margin: 0;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 34px;
   font-weight: 760;
   line-height: 1.05;
@@ -299,7 +299,7 @@
 .loginHero p {
   max-width: 270px;
   margin: 8px auto 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 14px;
   line-height: 1.35;
 }
@@ -312,7 +312,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
   background: #fff;
   box-shadow: 0 3px 12px rgba(27, 35, 31, 0.07);
@@ -320,7 +320,7 @@
 
 .loginCard h2 {
   margin: 2px 0 0;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 21px;
   font-weight: 720;
   line-height: 1.15;
@@ -330,16 +330,97 @@
 
 .loginInviteNote {
   margin: 0 0 4px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
 }
 
+.telegramLoginIntro {
+  display: grid;
+  gap: 8px;
+}
+
+.telegramLoginEyebrow {
+  color: var(--apple-accent, #3c6faa);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .08em;
+}
+
+.loginTelegramBtn {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--ownset-action-gradient);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 720;
+  cursor: pointer;
+  transition: filter 140ms ease, opacity 140ms ease;
+}
+
+.loginTelegramBtn:hover:not(:disabled) {
+  filter: brightness(1.04);
+}
+
+.loginTelegramBtn:focus-visible,
+.loginAlternate summary:focus-visible {
+  outline: 3px solid rgba(60, 111, 170, .4);
+  outline-offset: 3px;
+}
+
+.loginTelegramBtn:disabled {
+  opacity: .58;
+  cursor: wait;
+}
+
+.loginAlternate {
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91, .12));
+  padding-top: 12px;
+}
+
+.loginAlternate summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--apple-secondary, #617078);
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.loginAlternateForm {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loginAlternateForm h3 {
+  margin: 0;
+  color: var(--apple-text, #1c282e);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loginTelegramBtn {
+    transition: none;
+  }
+}
+
 .loginField {
   display: grid;
   gap: 7px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 650;
 }
@@ -348,12 +429,12 @@
   width: 100%;
   min-height: 52px;
   padding: 0 14px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 14px;
   outline: 0;
   appearance: none;
   background: #f7f8f8;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 500;
 }
@@ -391,7 +472,7 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   box-shadow: none;
 }
 
@@ -433,7 +514,7 @@
 .loginBtn {
   margin-top: 4px;
   border: 0;
-  background: linear-gradient(135deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
   font-size: 16px;
@@ -445,9 +526,9 @@
   align-items: center;
   justify-content: center;
   gap: 9px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
 }
 
@@ -456,10 +537,10 @@
   height: 24px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 50%;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 13px;
   font-weight: 750;
 }
@@ -467,7 +548,7 @@
 .loginResetBtn {
   border: 0;
   background: transparent;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 14px;
 }
 
@@ -479,7 +560,7 @@
 .loginCard .loginBtn:disabled {
   opacity: 1;
   cursor: wait;
-  background: linear-gradient(135deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 8px 18px rgba(105, 82, 157, 0.18);
 }
@@ -499,47 +580,47 @@
     16px
     max(24px, calc(env(safe-area-inset-bottom) + 16px));
   gap: 28px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard {
   max-width: none;
   padding: 18px;
   gap: 12px;
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
   background: #fff;
   box-shadow: 0 3px 12px rgba(27, 35, 31, 0.07);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .appLogo.appLogo {
-  background: linear-gradient(145deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: none;
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginBtn.loginBtn {
-  background: linear-gradient(135deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard input {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   background: #f7f8f8;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginHero h1,
 :global(html:root[data-app-theme="warm-light"]) .loginCard h2 {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginHero p,
 :global(html:root[data-app-theme="warm-light"]) .loginInviteNote,
 :global(html:root[data-app-theme="warm-light"]) .loginHint {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 :global(:root[data-app-theme="legacy-inactive"]) .loginPage {
@@ -597,7 +678,7 @@
   .loginPage {
     min-height: calc(100dvh - 24px);
     margin: 12px auto;
-    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+    border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 30px;
   }
 }
@@ -607,8 +688,8 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: 16px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -616,7 +697,7 @@
   width: min(100%, 370px);
   min-height: 286px;
   padding: 30px 24px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 30px;
   background: #fff;
   box-shadow: 0 3px 12px rgba(27, 35, 31, 0.07);
@@ -633,12 +714,12 @@
   border: 0;
   border-radius: 20px;
   background: #ebf5ef;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashLogo {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 58px;
   line-height: 0.95;
   letter-spacing: 0.08em;
@@ -646,28 +727,28 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashText {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashProgress {
   height: 6px;
   margin-top: 24px;
   border: 0;
-  background: var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashProgress > span {
-  background: linear-gradient(90deg, #78ad9d, var(--apple-blue-pressed, #3565a3));
+  background: var(--ownset-action-gradient);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashDots > i {
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashRetry {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
-  background: var(--apple-surface-muted, #efeff4);
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
+  background: var(--apple-surface-muted, #edf1f3);
   color: #4c4656;
 }
 
@@ -686,7 +767,7 @@
 .loginEyebrow {
   display: inline-block;
   margin-bottom: 5px;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.06em;
@@ -712,12 +793,26 @@
   height: 68px;
   margin-bottom: 20px;
   border-radius: 22px;
-  background: var(--apple-blue-tint, #eef3fa);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashLogo {
   font-size: 44px;
-  letter-spacing: 0.12em;
+  letter-spacing: -0.035em;
+}
+
+/* Keep the approved artwork's background and corner geometry intact. */
+.appLogo.appLogo,
+.splashMark.splashMark,
+:global(html:root[data-app-theme="warm-light"]) .appLogo.appLogo,
+:global(html:root[data-app-theme="warm-light"]) .splashMark.splashMark {
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashProgress {

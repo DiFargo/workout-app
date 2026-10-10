@@ -61,8 +61,8 @@
   padding: 0 0 calc(76px + env(safe-area-inset-bottom, 0px));
   display: block;
   overflow: visible;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   font-family: var(--font-family-sans);
   scrollbar-color: transparent transparent;
   -webkit-text-fill-color: currentColor;

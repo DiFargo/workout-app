@@ -90,6 +90,12 @@ The calm, neutral iOS interface is the primary and current product design.
 - Do not restore the former bright-purple, heavy dark-card or saturated legacy colour systems.
 - Every new page must visually match the current light iOS interface.
 
+### Primary Mockup Device
+
+- All new mockups must target iPhone 17 Pro by default, unless the user explicitly requests another device.
+- Design and present the primary preview at the device's logical viewport, accounting for iOS safe areas, system bars, the keyboard when relevant, and fixed bottom controls. Verify device dimensions before setting a numeric preset; do not substitute a generic phone size.
+- Other viewport checks are secondary compatibility checks. Preserve the application's responsiveness on other phones, tablets and desktops.
+
 ### Design Principles
 
 - Compact layouts

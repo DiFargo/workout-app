@@ -4,13 +4,13 @@
 .sectionHead { display:flex; justify-content:space-between; align-items:center; min-height:24px; margin:18px 0 9px; padding:0 2px; }
 .sectionHead h2 { margin:0; font-size:18px; font-weight:680; line-height:1.25; letter-spacing:-.4px; }
 .sectionHead button { min-height:44px; margin-block:-9px; padding:0 3px; border:0; background:transparent; color:var(--apple-blue); font-size:12px; font-weight:550; }
-.workoutCard { padding:14px 15px 15px; border:0; border-radius:18px; background:var(--apple-surface); }
+.workoutCard { padding:14px 15px 15px; border:0; border-radius:18px; background:var(--ownset-soft-gradient); }
 .workoutLabel { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:12px; }
 .workoutLabel > span { color:var(--apple-secondary); font-size:10px; font-weight:650; letter-spacing:.045em; text-transform:uppercase; }
-.workoutLabel > small { padding:3px 7px; border-radius:6px; background:var(--apple-blue-tint); color:var(--apple-blue); font-size:10px; font-weight:600; white-space:nowrap; }
+.workoutLabel > small { padding:3px 7px; border-radius:6px; background:var(--ownset-soft-gradient); color:var(--apple-blue); font-size:10px; font-weight:600; white-space:nowrap; }
 .state_missed .workoutLabel > small { background:var(--apple-orange-tint); color:var(--apple-orange); }
 .workoutSummary { display:flex; align-items:center; gap:12px; }
-.order { min-width:46px; line-height:49px; border-right:0; color:var(--apple-blue); font-size:27px; font-weight:660; letter-spacing:-1.2px;  width:46px; height:49px; background:var(--apple-blue-tint); border-radius:12px; text-align:center;}
+.order { min-width:46px; line-height:49px; border-right:0; color:var(--apple-blue); font-size:27px; font-weight:660; letter-spacing:-1.2px;  width:46px; height:49px; background:var(--ownset-soft-gradient); border-radius:12px; text-align:center;}
 .workoutCopy { min-width:0; }
 .workoutCopy strong { display:block; font-size:21px; line-height:1.25; font-weight:680; letter-spacing:-.6px; overflow-wrap:anywhere; }
 .workoutCopy small { display:block; margin-top:4px; color:var(--apple-secondary); font-size:12px; }
@@ -23,7 +23,7 @@
 .progress span { flex:1; height:3px; border-radius:8px; background:var(--apple-rhythm-track); }
 .actions { display:grid; gap:10px; margin-top:12px; }
 .start, .secondary, .modalPrimary { display:flex; justify-content:center; align-items:center; gap:9px; min-height:48px; padding:10px 12px; border:0; border-radius:12px; font:inherit; font-size:15px; font-weight:620; cursor:pointer; }
-.start, .modalPrimary { background:var(--apple-action); color:#fff; }
+.start, .modalPrimary { background:var(--ownset-action-gradient); color:#fff; }
 .start svg { width:18px; height:18px; }
 .secondary { min-height:44px; background:var(--apple-surface-muted); color:var(--apple-blue); font-size:14px; }
 .start:active, .modalPrimary:active { background:var(--apple-action-pressed); transform:scale(.97); }
@@ -32,11 +32,11 @@
 .programHead > span:last-child { display:flex; flex-direction:column; gap:4px; min-width:0; }
 .programHead strong { font-size:14px; font-weight:600; }
 .programHead small { color:var(--apple-secondary); font-size:11px; }
-.programIcon, .historyIcon { display:grid; place-items:center; width:34px; height:34px; flex-shrink:0; border-radius:10px; color:var(--apple-blue); background:var(--apple-blue-tint); }
+.programIcon, .historyIcon { display:grid; place-items:center; width:34px; height:34px; flex-shrink:0; border-radius:10px; color:var(--apple-blue); background:var(--ownset-soft-gradient); }
 .programIcon svg, .historyIcon svg { width:19px; height:19px; }
 .programProgress { display:flex; justify-content:space-between; padding:12px 14px 7px; font-size:11px; color:var(--apple-secondary); }
 .programTrack { height:3px; margin:0 14px 11px; background:var(--apple-surface-muted); border-radius:9px; overflow:hidden; }
-.programTrack span { display:block; height:100%; background:var(--apple-blue); border-radius:9px; }
+.programTrack span { display:block; height:100%; background:var(--ownset-action-gradient); border-radius:9px; }
 .programBottom { display:flex; justify-content:space-between; padding:0 11px; border-top:1px solid var(--apple-separator); }
 .programBottom button { min-height:44px; display:flex; align-items:center; gap:6px; padding:0 3px; border:0; background:transparent; color:var(--apple-blue); font-size:12px; cursor:pointer; }
 .programBottom button:first-child { flex:1; justify-content:space-between; }
@@ -53,7 +53,7 @@
 .modal { width:100%; max-width:540px; max-height:90dvh; overflow-y:auto; position:relative; padding:24px 20px calc(28px + env(safe-area-inset-bottom,0px)); border-radius:25px 25px 0 0; background:var(--apple-canvas); box-shadow:0 -12px 45px #17212c15; }
 .modalClose { position:absolute; top:12px; right:14px; width:44px; height:44px; display:grid; place-items:center; border:0; border-radius:50%; color:var(--apple-text); background:var(--apple-surface-muted); }
 .modalClose svg { width:18px; height:18px; }
-.modalIcon { display:grid; place-items:center; width:46px; height:46px; margin-bottom:16px; border-radius:14px; background:var(--apple-blue-tint); color:var(--apple-blue); }
+.modalIcon { display:grid; place-items:center; width:46px; height:46px; margin-bottom:16px; border-radius:14px; background:var(--ownset-soft-gradient); color:var(--apple-blue); }
 .modal h2 { margin:0 38px 12px 0; font-size:22px; font-weight:660; letter-spacing:-.6px; }
 .modal p { margin:0 0 16px; color:var(--apple-secondary); font-size:13px; line-height:1.55; }
 .dateField { display:flex; flex-direction:column; gap:7px; margin-bottom:14px; color:var(--apple-secondary); font-size:12px; }

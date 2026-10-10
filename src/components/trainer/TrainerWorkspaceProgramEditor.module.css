@@ -83,7 +83,7 @@
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > header button:hover) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModalBody) {
@@ -145,7 +145,7 @@
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > footer button:last-child) {
   border-color: var(--tn-purple);
   color: #ffffff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 8px 17px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.22);
 }
 
@@ -155,7 +155,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > footer button:last-child:hover) {
-  background: var(--tn-purple-strong);
+  background: var(--ownset-action-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerWorkoutEditorModal > footer button:disabled),

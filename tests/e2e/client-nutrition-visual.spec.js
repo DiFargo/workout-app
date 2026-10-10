@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
@@ -174,13 +174,13 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
     await expect(header).toHaveAttribute("data-css-module-scope", "nutrition-header");
     await expect(header).toHaveAttribute("data-client-page-header", "true");
     await expect(header).toHaveCSS("position", "fixed");
-    await expect(title).toHaveCSS("font-size", "20px");
+    await expect(title).toHaveCSS("font-size", "32px");
     await expect(header.locator("[data-nutrition-header-action]")).toHaveCount(0);
     await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
-    await expect(week).toHaveCSS("height", "64px");
+    await expect(week).toHaveCSS("height", "67px");
     await expect(days).toHaveCount(7);
-    await expect(days.first()).toHaveCSS("height", "50px");
-    await expect(labels.first()).toHaveCSS("font-size", "9.5px");
+    await expect(days.first()).toHaveCSS("height", "54px");
+    await expect(labels.first()).toHaveCSS("font-size", "10px");
     await expect(dots.first()).toBeHidden();
     await expect(week.locator('[data-selected="true"][aria-pressed="true"]')).toHaveCount(1);
     await expect(page.locator(".nutritionHeroV4, .nutritionHeroTitleV4, .nutritionHeaderIconButton, .nutritionWeekV4, .nutritionDayV4, .nutritionStreakV4")).toHaveCount(0);
@@ -220,7 +220,7 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
   }
 });
 
-test("CSS V2 nutrition header eyebrow shows only the weekday", async ({ page }, testInfo) => {
+test("CSS V2 nutrition title stays plain while the week strip identifies dates", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers this copy.");
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
@@ -229,9 +229,9 @@ test("CSS V2 nutrition header eyebrow shows only the weekday", async ({ page }, 
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
 
-  const eyebrow = page.getByTestId("nutrition-header").locator("span").first();
-  await expect(eyebrow).toHaveText("понедельник");
-  await expect(eyebrow).not.toContainText(/\d/);
+  await expect(page.getByTestId("nutrition-header").locator("h1")).toHaveText("Питание");
+  await expect(page.locator('[data-nutrition-header-day][aria-pressed="true"]')).toHaveAccessibleName(/Выбрать .*22.*июн/i);
+  await expectNutritionWeekStripReadable(page);
   assertNoRuntimeErrors();
 });
 
@@ -239,11 +239,11 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
 
   const cases = [
-    { width: 360, height: 800, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
-    { width: 390, height: 844, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
-    { width: 430, height: 932, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
-    { width: 768, height: 1024, theme: "warm-light", navHeight: 76, strokeWidth: "2px" },
-    { width: 1440, height: 900, theme: "warm-light", navHeight: 76, strokeWidth: "2px" }
+    { width: 360, height: 800, theme: "warm-light", shellWidth: 360 },
+    { width: 390, height: 844, theme: "warm-light", shellWidth: 390 },
+    { width: 430, height: 932, theme: "warm-light", shellWidth: 430 },
+    { width: 768, height: 1024, theme: "warm-light", shellWidth: 720 },
+    { width: 1440, height: 900, theme: "warm-light", shellWidth: 1040 }
   ];
 
   for (const entry of cases) {
@@ -263,10 +263,10 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
     await expect(navigation).toHaveAttribute("data-css-module-scope", "nutrition-bottom-bar");
     await expect(navigation).not.toHaveClass(/nutritionBottomTabBar|clientBottomNav/);
     await expect(navigation.locator("..")).toHaveCSS("position", "fixed");
-    await expect(navigation).toHaveCSS("height", `${entry.navHeight}px`);
-    await expect(buttons).toHaveCount(4);
-    await expect(icons).toHaveCount(4);
-    await expect(icons.first()).toHaveCSS("stroke-width", entry.strokeWidth);
+    await expect(navigation).toHaveCSS("height", "70px");
+    await expect(buttons).toHaveCount(5);
+    await expect(icons).toHaveCount(5);
+    await expect(icons.first()).toHaveCSS("stroke-width", "1.8px");
     await expect(page.getByTestId("client-nav-nutrition")).toHaveAttribute("aria-current", "page");
 
     const geometry = await page.evaluate(() => {
@@ -295,10 +295,10 @@ test("CSS V2 nutrition page shell and bottom bar stay scoped across the viewport
     expect(geometry.navigation.right).toBeLessThanOrEqual(geometry.viewport.width);
     expect(geometry.navigation.top).toBeGreaterThanOrEqual(0);
     expect(geometry.navigation.bottom).toBeLessThanOrEqual(geometry.viewport.height);
-    expect(geometry.navigation.width).toBe(Math.min(382, entry.width - 20));
+    expect(geometry.navigation.width).toBe(entry.shellWidth);
     expect(geometry.buttonsInsideNavigation).toBe(true);
     expect(Math.max(...geometry.buttonWidths) - Math.min(...geometry.buttonWidths)).toBeLessThanOrEqual(1);
-    expect(geometry.root.width).toBe(Math.min(402, entry.width));
+    expect(geometry.root.width).toBe(entry.shellWidth);
   }
 });
 
@@ -351,15 +351,14 @@ test("client nutrition visual audit covers dense actions and modal entry points"
           width: close.width,
           height: close.height,
           rightInset: window.innerWidth - close.right,
-          expectedRightInset: Math.max(16, (window.innerWidth - 402) / 2 + 16)
+          expectedRightInset: Math.max(16, (window.innerWidth - 370) / 2) + 17
         }
       : null;
   });
   expect(createChoiceClosePlacement).not.toBeNull();
   expect(createChoiceClosePlacement.width).toBeCloseTo(44, 1);
   expect(createChoiceClosePlacement.height).toBeCloseTo(44, 1);
-  expect(createChoiceClosePlacement.rightInset).toBeGreaterThanOrEqual(createChoiceClosePlacement.expectedRightInset);
-  expect(createChoiceClosePlacement.rightInset).toBeLessThanOrEqual(40);
+  expect(createChoiceClosePlacement.rightInset).toBeCloseTo(createChoiceClosePlacement.expectedRightInset, 1);
   await expectTapTargets(page, [
     '[data-testid="nutrition-create-choice-close"]',
     '[data-testid="nutrition-create-choice-option"]'
@@ -423,6 +422,8 @@ test("client nutrition visual audit covers dense actions and modal entry points"
       bottomInset: sheet && actionBar ? Math.round(sheet.bottom - actionBar.bottom) : null,
       actionBarWidth: actionBar ? Math.round(actionBar.width) : null,
       actionBarHeight: actionBar ? Math.round(actionBar.height) : null,
+      contentBottom: document.querySelector('[data-food-edit-page-part="content"]')?.getBoundingClientRect().bottom,
+      actionBarTop: actionBar?.top,
       bottomOffset: actionBar ? Math.round(window.innerHeight - actionBar.bottom) : null,
       sheetWidth: sheet ? Math.round(sheet.width) : null,
       buttonRects: [...document.querySelectorAll('[data-food-edit-page-part="actions"] button')]
@@ -436,25 +437,33 @@ test("client nutrition visual audit covers dense actions and modal entry points"
       viewportHeight: window.innerHeight
     };
   });
-  expect(editActionBarMetrics.position).toBe("fixed");
+  expect(editActionBarMetrics.position).toBe("relative");
   expect(editActionBarMetrics.centerDelta).toBeLessThanOrEqual(1);
-  expect(editActionBarMetrics.leftInset).toBeGreaterThanOrEqual(8);
-  expect(editActionBarMetrics.rightInset).toBeGreaterThanOrEqual(8);
-  expect(editActionBarMetrics.bottomInset).toBeGreaterThanOrEqual(8);
-  expect(editActionBarMetrics.actionBarWidth).toBeLessThan(editActionBarMetrics.sheetWidth);
-  expect(editActionBarMetrics.actionBarHeight).toBe(76);
-  expect(editActionBarMetrics.bottomOffset)
-    .toBe(Math.max(0, editActionBarMetrics.viewportHeight - 874) + 14);
-  expect(editActionBarMetrics.buttonRects.every((button) => button.height === 58)).toBe(true);
+  expect(editActionBarMetrics.leftInset).toBe(0);
+  expect(editActionBarMetrics.rightInset).toBe(0);
+  expect(editActionBarMetrics.bottomInset).toBe(0);
+  expect(editActionBarMetrics.actionBarWidth).toBe(editActionBarMetrics.sheetWidth);
+  expect(editActionBarMetrics.actionBarHeight).toBe(65);
+  expect(editActionBarMetrics.bottomOffset).toBe(0);
+  expect(editActionBarMetrics.contentBottom).toBeLessThanOrEqual(editActionBarMetrics.actionBarTop);
+  expect(editActionBarMetrics.buttonRects.every((button) => button.height === 48)).toBe(true);
   expect(editActionBarMetrics.buttonOverflow).toBe(false);
-  await expect(page.getByTestId("food-edit-basic-presets").locator("button").first()).toHaveAttribute("aria-pressed", /^(true|false)$/);
-  const firstIconPreset = await page.getByTestId("food-edit-basic-presets").locator("button").first().textContent();
-  await page.getByTestId("food-edit-basic-icon").locator("input").fill(firstIconPreset || "");
-  await expect(page.getByTestId("food-edit-basic-presets").locator("button[aria-pressed='true']")).toHaveCount(1);
+  const editFooter = page.locator('[data-food-edit-page-part="actions"]');
+  const editorViewport = page.viewportSize();
+  await page.setViewportSize({ width: editorViewport.width, height: 420 });
+  const footerBeforeScroll = await editFooter.boundingBox();
+  await page.locator('[data-food-edit-page-part="content"]').evaluate((content) => { content.scrollTop = content.scrollHeight; });
+  expect(await page.locator('[data-food-edit-page-part="content"]').evaluate((content) => content.scrollTop)).toBeGreaterThan(0);
+  expect(await editFooter.boundingBox()).toEqual(footerBeforeScroll);
+  await page.setViewportSize(editorViewport);
+  const iconInput = page.getByTestId("food-edit-basic-icon").locator("input");
+  await expect(iconInput).toBeVisible();
+  await iconInput.fill("🍎");
+  await expect(iconInput).toHaveValue("🍎");
   await expect(page.locator('[data-food-edit-basic-action="toggle-unit"]')).toHaveAttribute("aria-pressed", /^(true|false)$/);
   await expectTapTargets(page, [
     '[data-food-edit-page-action="close"]',
-    '[data-testid="food-edit-basic-presets"] button',
+    '[data-testid="food-edit-basic-icon"] input',
     '[data-food-edit-page-part="actions"] button'
   ], 40);
   await expectNoHorizontalOverflow(page);
@@ -571,7 +580,7 @@ test("client nutrition delete confirmation keeps its scoped modal contract", asy
   await expect(page.getByTestId("client-harness-nutrition-delete-confirm")).toBeVisible();
   await expect(page.getByTestId("nutrition-delete-confirm-modal")).toBeVisible();
   const deleteSurface = page.locator('[data-testid="nutrition-delete-confirm-modal"] [data-modal-surface="true"]');
-  await expect(deleteSurface).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(deleteSurface).toHaveCSS("background-color", "rgb(245, 247, 248)");
   await expect(deleteSurface).toHaveCSS("backdrop-filter", "none");
   await expectTapTargets(page, [
     '[data-testid="nutrition-delete-confirm-close"]',
@@ -611,31 +620,31 @@ test("food edit page keeps its scoped responsive geometry", async ({ page }, tes
       name: "warm-360",
       viewport: { width: 360, height: 800 },
       theme: "warm-light",
-      expected: { sheetWidth: 360, sheetHeight: 800, contentWidth: 328, contentHeight: 586, actionWidth: 340, actionHeight: 76, closeSize: 44 }
+      expected: { sheetWidth: 360, sheetHeight: 800, contentWidth: 328, contentHeight: 671, actionWidth: 360, actionHeight: 65, closeSize: 44 }
     },
     {
       name: "warm-390",
       viewport: { width: 390, height: 844 },
       theme: "warm-light",
-      expected: { sheetWidth: 390, sheetHeight: 844, contentWidth: 358, contentHeight: 630, actionWidth: 370, actionHeight: 76, closeSize: 44 }
+      expected: { sheetWidth: 390, sheetHeight: 844, contentWidth: 358, contentHeight: 715, actionWidth: 390, actionHeight: 65, closeSize: 44 }
     },
     {
       name: "warm-430",
       viewport: { width: 430, height: 932 },
       theme: "warm-light",
-      expected: { sheetWidth: 402, sheetHeight: 932, contentWidth: 370, contentHeight: 718, actionWidth: 382, actionHeight: 76, closeSize: 44 }
+      expected: { sheetWidth: 402, sheetHeight: 932, contentWidth: 370, contentHeight: 803, actionWidth: 402, actionHeight: 65, closeSize: 44 }
     },
     {
       name: "warm-768",
       viewport: { width: 768, height: 1024 },
       theme: "warm-light",
-      expected: { sheetWidth: 402, sheetHeight: 1024, contentWidth: 370, contentHeight: 810, actionWidth: 382, actionHeight: 76, closeSize: 44 }
+      expected: { sheetWidth: 402, sheetHeight: 1024, contentWidth: 370, contentHeight: 907, actionWidth: 402, actionHeight: 65, closeSize: 44 }
     },
     {
       name: "warm-1440",
       viewport: { width: 1440, height: 900 },
       theme: "warm-light",
-      expected: { sheetWidth: 402, sheetHeight: 900, contentWidth: 370, contentHeight: 686, actionWidth: 382, actionHeight: 76, closeSize: 44 }
+      expected: { sheetWidth: 402, sheetHeight: 900, contentWidth: 370, contentHeight: 783, actionWidth: 402, actionHeight: 65, closeSize: 44 }
     }
   ];
 
@@ -655,8 +664,8 @@ test("food edit page keeps its scoped responsive geometry", async ({ page }, tes
     await expect(editClose).toHaveCSS("width", "44px");
     await expect(editClose).toHaveCSS("height", "44px");
     await expect(editClose).toHaveCSS("border-radius", "50%");
-    await expect(editClose).toHaveCSS("background-color", "rgba(123, 118, 130, 0.1)");
-    await expect(editClose).toHaveCSS("color", "rgb(40, 38, 46)");
+    await expect(editClose).toHaveCSS("background-color", "rgb(237, 241, 243)");
+    await expect(editClose).toHaveCSS("color", "rgb(55, 107, 145)");
     const editHeaderBox = await editHeader.boundingBox();
     const editCloseBox = await editClose.boundingBox();
     expect(editHeaderBox).not.toBeNull();
@@ -777,7 +786,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
     await page.getByTestId("nutrition-orbit-add").click();
 
     const header = page.getByTestId("food-search-header");
-    const headerFrame = header.locator("xpath=..");
+    const headerFrame = page.getByTestId("food-search-scroll");
     const title = header.locator("h1");
     const mealSelector = page.getByTestId("food-search-meal-selector");
     const mealButton = page.locator('[data-food-search-header-action="toggle-meal"]');
@@ -786,8 +795,8 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
     await expect(header).toHaveAttribute("data-css-module-scope", "food-search-header");
     await expect(header).toHaveAttribute("data-food-search-header-variant", "search");
     await expect(header).toHaveAttribute("data-client-page-header", "true");
-    await expect(header).toHaveCSS("position", "fixed");
-    await expect(header).toHaveCSS("height", "132px");
+    await expect(header).toHaveCSS("position", "relative");
+    await expect(header).toHaveCSS("height", "118px");
     await expect(header).toHaveCSS("margin-top", "0px");
     await expect(title).toHaveCSS("font-size", "16px");
     await expect(mealSelector).toHaveCSS("height", "64px");
@@ -815,7 +824,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
 
     await page.getByTestId("food-search-my-products-action").click();
     await expect(header).toHaveAttribute("data-food-search-header-variant", "my-products");
-    await expect(header).toHaveCSS("height", "132px");
+    await expect(header).toHaveCSS("height", "118px");
     await expect(header).toHaveCSS("margin-top", "0px");
     await expect(header.locator("h1")).toHaveCSS("font-size", "16px");
     await expect(page.getByTestId("food-search-meal-selector")).toBeVisible();
@@ -835,7 +844,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
       };
     });
     expect(myProductsRhythm).toEqual({
-      mealToInput: 12,
+      mealToInput: viewport.width <= 640 ? 12 : 0,
       inputToCreate: 12,
       createToFirstResult: 12
     });
@@ -849,7 +858,7 @@ test("CSS V2 food search header keeps stable scoped search and my-products layou
   assertNoRuntimeErrors();
 });
 
-test("CSS V2 food search page keeps stable scoped recent and photo-action layouts", async ({ page }, testInfo) => {
+test("CSS V2 food search page keeps recent foods and personal database action inside its sheet", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
@@ -872,41 +881,42 @@ test("CSS V2 food search page keeps stable scoped recent and photo-action layout
     const grid = page.getByTestId("food-search-recent-grid");
     const recentItems = page.locator("[data-food-search-recent-card]");
     const recentItem = recentItems.first();
-    const photoAction = page.getByTestId("food-search-photo-action");
+    const photoAction = page.getByTestId("food-search-my-products-action");
+    const screen = page.getByTestId("food-search-screen");
+    const scroll = page.getByTestId("food-search-scroll");
     const expectedCardHeight = viewport.width <= 380 ? "82px" : "88px";
-    const expectedPhotoWidth = `${Math.min(370, viewport.width - 32)}px`;
-    const expectedPhotoBottom = await page.evaluate(() => {
-      const dock = document.querySelector('[data-testid="food-search-bottom-bar"]')?.getBoundingClientRect();
-      if (!dock) throw new Error("Food search dock is unavailable");
-      // The photo action is deliberately tethered 14px above the responsive dock.
-      return `${Math.round(window.innerHeight - dock.top + 14)}px`;
-    });
+    const expectedPhotoWidth = Math.min(402, viewport.width - 32) - (viewport.width <= 380 ? 26 : 34);
 
     await expect(landing).toBeVisible();
     await expect(landing).toHaveAttribute("data-css-module-scope", "food-search-page");
     await expect(landing).toHaveCSS("display", "flex");
     await expect(grid).toHaveCSS("display", "grid");
     await expect(grid).toHaveCSS("gap", "8px");
-    await expect(recentItems).toHaveCount(6);
+    await expect(recentItems).toHaveCount(2);
+    await expect(recentItems).toHaveText(["GYHarness Greek Yogurt", "SBHarness Salmon Bowl"]);
     await expect(recentItem).toHaveCSS("height", expectedCardHeight);
     await expect(recentItem).toHaveCSS("border-radius", "18px");
-    await expect(recentItem).toHaveCSS("border-color", "rgb(239, 235, 243)");
+    await expect(recentItem).toHaveCSS("border-color", "rgba(57, 82, 91, 0.12)");
     await expect(recentItem.locator("strong")).toHaveCSS("font-size", "11px");
 
     await expect(photoAction).toBeVisible();
     await expect(photoAction).toHaveAttribute("data-css-module-scope", "food-search-page");
-    await expect(photoAction).toHaveCSS("position", "fixed");
-    await expect(photoAction).toHaveCSS("width", expectedPhotoWidth);
+    await expect(photoAction).toHaveCSS("position", "absolute");
+    expect((await photoAction.boundingBox()).width).toBeCloseTo(expectedPhotoWidth, 1);
     await expect(photoAction).toHaveCSS("height", "72px");
-    await expect(photoAction).toHaveCSS("bottom", expectedPhotoBottom);
-    await expect(photoAction).toHaveCSS("grid-template-columns", viewport.width <= 360 ? "44px 218px 18px" : viewport.width <= 390 ? "44px 248px 18px" : "44px 260px 18px");
-    await expect(photoAction.locator("strong")).toHaveCSS("color", "rgb(40, 38, 46)");
-    await expect(photoAction.locator("small")).toHaveCSS("color", "rgb(123, 118, 130)");
-    await expect(photoAction.locator("em")).toHaveCSS("color", "rgb(123, 118, 130)");
+    await expect(photoAction).toHaveCSS("bottom", viewport.width <= 380 ? "12px" : "16px");
+    await expect(photoAction).toHaveCSS("grid-template-columns", `44px ${expectedPhotoWidth - 110}px 18px`);
+    await expect(photoAction.locator("strong")).toHaveCSS("color", "rgb(28, 40, 46)");
+    await expect(photoAction.locator("small")).toHaveCSS("color", "rgb(97, 112, 120)");
+    await expect(photoAction.locator("em")).toHaveCSS("color", "rgb(97, 112, 120)");
     await expect(page.getByTestId("food-search-photo-input")).toBeHidden();
     await expect(page.locator(".foodSearchModernLanding, .foodSearchModernSectionHeader, .foodSearchRecentGrid, .foodSearchRecentCard, .foodSearchFixedPhotoAction, .foodSearchModernActionIcon, .fatPhotoAiInput")).toHaveCount(0);
-    await expectTapTargets(page, ["[data-food-search-recent-card]", '[data-testid="food-search-photo-action"]']);
-    await expectAboveBottomBar(page, '[data-testid="food-search-photo-action"]');
+    await expectTapTargets(page, ["[data-food-search-recent-card]", '[data-testid="food-search-my-products-action"]']);
+    const screenBox = await screen.boundingBox();
+    const actionBox = await photoAction.boundingBox();
+    const scrollBox = await scroll.boundingBox();
+    expect(actionBox.y + actionBox.height).toBeLessThanOrEqual(screenBox.y + screenBox.height);
+    expect(scrollBox.y + scrollBox.height).toBeLessThanOrEqual(actionBox.y);
     await expectNoHorizontalOverflow(page);
 
     const searchInputBox = await page.getByTestId("food-search-input").boundingBox();
@@ -931,7 +941,7 @@ test("CSS V2 recent food opens and adds immediately without waiting for the keyb
   await page.goto("/cssV2?clientHarness=1");
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
-  await page.getByRole("button", { name: "Поиск", exact: true }).click();
+  await page.getByTestId("nutrition-orbit-add").click();
 
   await page.locator("[data-food-search-recent-card]").first().click();
   const addButton = page.locator('[data-food-product-action="add"]');
@@ -1008,19 +1018,13 @@ test("CSS V2 food search results keep stable scoped search and my-products cards
     const portion = item.locator("em");
     const details = item.locator("small");
     const action = item.locator("[data-food-search-result-action]");
-    const expectedColumns = viewport.width === 360
-      ? "44px 210px 32px"
-      : viewport.width === 390
-        ? "44px 240px 32px"
-        // The middle track is minmax(0, 1fr), so its resolved width differs
-        // by 2px when the wide client shell gains a scrollbar.
-        : /^44px 25[02]px 32px$/;
+    const expectedColumns = `44px ${Math.min(402, viewport.width - 32) - 152}px 32px`;
 
     await expect(list).toBeVisible();
     await expect(list).toHaveAttribute("data-css-module-scope", "food-search-results");
     await expect(list).toHaveCSS("display", "grid");
     await expect(list).toHaveCSS("gap", "8px");
-    await expect(list).toHaveCSS("padding-bottom", "188px");
+    await expect(list).toHaveCSS("padding-bottom", "0px");
     await expect(items).toHaveCount(2);
     await expect(item).toHaveCSS("height", "70px");
     await expect(item).toHaveCSS("min-height", "70px");
@@ -1028,12 +1032,12 @@ test("CSS V2 food search results keep stable scoped search and my-products cards
     await expect(item).toHaveCSS("gap", "10px");
     await expect(item).toHaveCSS("padding", "9px 10px");
     await expect(item).toHaveCSS("border-radius", "18px");
-    await expect(item).toHaveCSS("border-color", "rgb(239, 235, 243)");
+    await expect(item).toHaveCSS("border-color", "rgba(57, 82, 91, 0.12)");
     await expect(item).toHaveCSS("background-color", "rgb(255, 255, 255)");
     await expect(icon).toHaveCSS("width", "44px");
     await expect(icon).toHaveCSS("height", "44px");
     await expect(icon).toHaveCSS("border-radius", "14px");
-    await expect(icon).toHaveCSS("background-color", "rgb(245, 242, 247)");
+    await expect(icon).toHaveCSS("background-color", "rgb(237, 241, 243)");
     await expect(title).toHaveCSS("font-size", "15px");
     await expect(title).toHaveCSS("font-weight", "650");
     await expect(meta).toHaveCSS("gap", "10px");
@@ -1053,7 +1057,7 @@ test("CSS V2 food search results keep stable scoped search and my-products cards
     await page.getByTestId("food-search-my-products-action").click();
     await expect(items).toHaveCount(1);
     await expect(list).toHaveAttribute("data-css-module-scope", "food-search-results");
-    await expect(list).toHaveCSS("padding-bottom", "188px");
+    await expect(list).toHaveCSS("padding-bottom", "0px");
     await expect(item).toHaveCSS("height", "70px");
     await expect(item).toHaveCSS("grid-template-columns", /44px .+ 32px/);
     await expectTapTargets(page, ["[data-food-search-result-card]"]);
@@ -1102,11 +1106,11 @@ test("CSS V2 food search input keeps stable scoped geometry", async ({ page }, t
     await expect(searchInput).toHaveCSS("display", "grid");
     await expect(searchInput).toHaveCSS("min-height", "50px");
     await expect(searchInput).toHaveCSS("border-radius", "16px");
-    await expect(input).toHaveCSS("min-height", "48px");
-    await expect(input).toHaveCSS("color", "rgb(40, 38, 46)");
+    await expect(input).toHaveCSS("min-height", "44px");
+    await expect(input).toHaveCSS("color", "rgb(28, 40, 46)");
     await expect(input).toHaveAccessibleName("Поиск еды, бренда или блюда");
     await input.focus();
-    await expect(searchInput).toHaveCSS("border-color", "rgb(143, 122, 200)");
+    await expect(searchInput).toHaveCSS("border-color", "rgba(57, 82, 91, 0.12)");
 
     const searchBox = await searchInput.boundingBox();
     expect(searchBox).not.toBeNull();
@@ -1128,8 +1132,8 @@ test("CSS V2 food search input keeps stable scoped geometry", async ({ page }, t
     await expect(searchInput).toHaveCSS("display", "grid");
     await expect(searchInput).toHaveCSS("min-height", "50px");
     await expect(searchInput).toHaveCSS("border-radius", "16px");
-    await expect(input).toHaveCSS("min-height", "48px");
-    await expect(input).toHaveCSS("color", "rgb(40, 38, 46)");
+    await expect(input).toHaveCSS("min-height", "44px");
+    await expect(input).toHaveCSS("color", "rgb(28, 40, 46)");
 
     const myProductsBox = await searchInput.boundingBox();
     expect(myProductsBox).not.toBeNull();
@@ -1146,97 +1150,57 @@ test("CSS V2 food search input keeps stable scoped geometry", async ({ page }, t
   assertNoRuntimeErrors();
 });
 
-test("CSS V2 food search bottom bar keeps stable scoped navigation", async ({ page }, testInfo) => {
+test("CSS V2 food search sheet preserves close, database, search and create navigation", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
-
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  const viewports = [
-    { width: 360, height: 800 },
-    { width: 390, height: 844 },
-    { width: 430, height: 932 },
-    { width: 768, height: 1024 },
-    { width: 1440, height: 900 }
-  ];
-
-  for (const viewport of viewports) {
+  for (const viewport of [{width:360,height:800},{width:390,height:844},{width:430,height:932},{width:768,height:1024},{width:1440,height:900}]) {
     await page.setViewportSize(viewport);
-    await page.goto("/cssV2?clientHarness=1");
-    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
-    await page.getByTestId("client-nav-nutrition").click();
+    await openClientNutritionHarness(page);
     await page.getByTestId("nutrition-orbit-add").click();
-
-    const bottomBar = page.getByTestId("food-search-bottom-bar");
-    const buttons = bottomBar.locator("button");
-    await expect(bottomBar).toBeVisible();
-    await expect(bottomBar).toHaveAttribute("data-css-module-scope", "food-search-bottom-bar");
-    await expect(page.locator(".fatSearchBottomBar, .fatSearchBackAction, .fatSearchSearchAction, .fatSearchCreateAction, .fatSearchMyProductsAction")).toHaveCount(0);
-    await expect(bottomBar).toHaveCSS("position", "fixed");
-    await expect(bottomBar).toHaveCSS("height", "76px");
-    await expect(bottomBar).toHaveCSS("padding", "6px");
-    await expect(bottomBar).toHaveCSS("border-radius", "28px");
-    await expect(buttons).toHaveCount(3);
-    await expect(bottomBar.locator('button[aria-pressed="true"]')).toHaveCount(1);
-    await expect(page.locator('[data-food-search-action="search"]')).toHaveAttribute("aria-pressed", "true");
-
-    for (const button of await buttons.all()) {
-      await expect(button).toHaveCSS("display", "grid");
-      await expect(button).toHaveCSS("height", "58px");
-      await expect(button).toHaveCSS("grid-template-rows", "28px 14px");
-      await expect(button.locator("svg")).toHaveCount(1);
-      await expect(button.locator("svg")).toHaveCSS("width", "24px");
-      await expect(button.locator("svg")).toHaveCSS("height", "24px");
-      await expect(button.locator("svg")).toHaveCSS("stroke-width", "2px");
-      await expect(button.locator("strong")).toHaveCSS("text-transform", "none");
-      const buttonBox = await button.boundingBox();
-      expect(buttonBox).not.toBeNull();
-      expect(buttonBox.height).toBeCloseTo(58, 1);
-    }
-
-    const bottomBarBox = await bottomBar.boundingBox();
-    expect(bottomBarBox).not.toBeNull();
-    expect(bottomBarBox.x).toBeGreaterThanOrEqual(0);
-    expect(bottomBarBox.x + bottomBarBox.width).toBeLessThanOrEqual(viewport.width + 1);
-    expect(bottomBarBox.width).toBeCloseTo(Math.min(382, viewport.width - 20), 1);
-    expect(viewport.height - bottomBarBox.y - bottomBarBox.height)
-      .toBeCloseTo(Math.max(0, viewport.height - 874) + 14, 1);
-    await expectNoHorizontalOverflow(page);
-
-    if (viewport.width === 390 || viewport.width === 1440) {
-      await attachScreenshot(page, testInfo, `client-food-search-bottom-bar-${viewport.width}.png`);
-    }
-
-    await page.locator('[data-food-search-action="my-products"]').click();
-    await expect(page.locator('[data-food-search-action="my-products"]')).toHaveAttribute("aria-pressed", "true");
-    await expect(bottomBar.locator('button[aria-pressed="true"]')).toHaveCount(1);
-
+    const screen=page.getByTestId("food-search-screen");
+    const close=page.locator('[data-food-search-header-action="close"]');
+    const database=page.getByTestId("food-search-my-products-action");
+    await expect(screen).toHaveAttribute("data-food-search-header-layout","search");
+    await expect(database).toHaveAccessibleName("Мои продукты");
+    await expect(close).toHaveCSS("width","44px");
+    await expect(close).toHaveCSS("height","44px");
+    await expectTapTargets(page,['[data-food-search-header-action="close"]','[data-testid="food-search-my-products-action"]']);
+    const sheetBox=await screen.boundingBox();
+    expect(sheetBox.width).toBeCloseTo(Math.min(402,viewport.width-32),1);
+    expect(sheetBox.x).toBeGreaterThanOrEqual(0);
+    expect(sheetBox.x+sheetBox.width).toBeLessThanOrEqual(viewport.width);
+    await database.click();
+    await expect(screen).toHaveAttribute("data-food-search-header-layout","my-products");
+    await expect(database).toHaveAccessibleName("Вернуться к поиску");
+    await expect(page.getByTestId("food-search-create-in-my")).toBeVisible();
+    await database.click();
+    await expect(screen).toHaveAttribute("data-food-search-header-layout","search");
+    await expect(page.getByTestId("food-search-modern-landing")).toBeVisible();
+    await database.click();
     await page.getByTestId("food-search-create-in-my").click();
-    await expect(page.getByTestId("nutrition-create-choice")).toBeVisible();
-
-    const createChoiceBar = page.getByTestId("nutrition-create-choice").locator('[role="dialog"]');
-    await expect(createChoiceBar).toHaveCSS("height", "76px");
-    await expect(createChoiceBar).toHaveCSS("padding", "6px");
-    await expect(createChoiceBar).toHaveCSS("border-radius", "28px");
-    await expect(createChoiceBar).toHaveCSS("background-color", "rgba(255, 255, 255, 0.96)");
-    const createChoiceButtons = createChoiceBar.locator("button");
-    const createChoiceOptions = createChoiceBar.getByTestId("nutrition-create-choice-option");
-    const createChoiceClose = createChoiceBar.getByTestId("nutrition-create-choice-close");
-    await expect(createChoiceButtons).toHaveCount(3);
-    await expect(createChoiceOptions).toHaveCount(2);
-    await expect(createChoiceClose).toHaveCSS("width", "44px");
-    await expect(createChoiceClose).toHaveCSS("height", "44px");
-    for (const button of await createChoiceOptions.all()) {
-      await expect(button).toHaveCSS("height", "58px");
-      await expect(button).toHaveCSS("border-radius", "20px");
+    const dialog=page.getByTestId("nutrition-create-choice").locator('[role="dialog"]');
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveCSS("padding","18px");
+    await expect(dialog).toHaveCSS("border-radius","26px");
+    await expect(dialog).toHaveCSS("background-color","rgb(245, 247, 248)");
+    const options=dialog.getByTestId("nutrition-create-choice-option");
+    await expect(options).toHaveCount(2);
+    await expect(dialog.locator("button")).toHaveCount(3);
+    for (const option of await options.all()) {
+      await expect(option).toHaveCSS("height","72px");
+      await expect(option).toHaveCSS("border-radius","18px");
     }
-
-    const createChoiceBox = await createChoiceBar.boundingBox();
-    expect(createChoiceBox).not.toBeNull();
-    expect(createChoiceBox.x).toBeCloseTo(bottomBarBox.x, 1);
-    expect(createChoiceBox.y).toBeCloseTo(bottomBarBox.y, 1);
-    expect(createChoiceBox.width).toBeCloseTo(bottomBarBox.width, 1);
-    expect(createChoiceBox.height).toBeCloseTo(bottomBarBox.height, 1);
+    const dialogBox=await dialog.boundingBox();
+    expect(dialogBox.width).toBeCloseTo(Math.min(370,viewport.width-32),1);
+    expect(viewport.height-dialogBox.y-dialogBox.height).toBeCloseTo(16,1);
+    await dialog.getByTestId("nutrition-create-choice-close").click();
+    await expect(dialog).toBeHidden();
+    await expect(screen).toHaveAttribute("data-food-search-header-layout","my-products");
+    await close.click();
+    await expect(screen).toBeHidden();
+    await expect(page.getByTestId("nutrition-page")).toBeVisible();
+    await expectNoHorizontalOverflow(page);
   }
-
   assertNoRuntimeErrors();
 });
 
@@ -1289,41 +1253,40 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(productHeader).toHaveAttribute("data-client-page-header", "true");
     await expect(productHeader).toHaveAttribute("data-client-page-header-controls", "workout");
     await expect(productHeader).toHaveCSS("position", "fixed");
-    await expect(productHeader).toHaveCSS("height", "132px");
+    await expect(productHeader).toHaveCSS("height", "124px");
     await expect(productHeader).toHaveCSS("display", "block");
-    await expect(productTitle).toHaveCSS("font-size", "16px");
+    await expect(productTitle).toHaveCSS("font-size", "17px");
     await expect(mealSelector).toBeVisible();
-    await expect(mealSelector).toHaveCSS("height", "60px");
-    await expect(mealButton).toHaveCSS("height", "33px");
+    await expect(mealSelector).toHaveCSS("height", "64px");
+    await expect(mealButton).toHaveCSS("height", "64px");
     await expect(mealButton).toHaveAttribute("aria-expanded", "false");
     await expect(productHero).toBeVisible();
     await expect(productHero).toHaveAttribute("data-css-module-scope", "food-product-header");
-    await expect(productHero).toHaveCSS("height", "116px");
-    await expect(productHero).toHaveCSS("padding", "14px");
-    await expect(productHero.locator('[data-food-product-hero-part="icon-stack"]')).toHaveCSS("width", "72px");
+    await expect(productHero).toHaveCSS("height", "84px");
+    await expect(productHero).toHaveCSS("padding", "16px");
+    await expect(productHero.locator('[data-food-product-hero-part="icon-stack"]')).toHaveCSS("width", "48px");
     await expect(productHero.locator('[data-food-product-hero-part="icon"]')).toHaveCSS("width", "46px");
-    await expect(productHero.locator("strong")).toHaveCSS("font-size", "20px");
+    await expect(productHero.locator("strong")).toHaveCSS("font-size", "18px");
     await expect(page.locator(".foodProductFlowHeader, .foodProductFlowTitle, .foodEditInlineMealHeader, .foodEditInlineMealButton, .foodEditMealPickerDropdown, .foodEditHeroRender, .foodEditIconSourceStack, .foodEditIconRender")).toHaveCount(0);
     await expect(topActions).toBeVisible();
     await expect(topActions).toHaveAttribute("data-css-module-scope", "food-product-top-actions");
     await expect(topActions).toHaveCSS("position", "static");
-    await expect(topActions).toHaveCSS("width", "96px");
+    await expect(topActions).toHaveCSS("width", "44px");
     await expect(topActions).toHaveCSS("height", "44px");
-    await expect(topActionButtons).toHaveCount(2);
-    await expect(topActionButtons.nth(0)).toHaveAttribute("data-food-product-top-action", "edit");
-    await expect(topActionButtons.nth(1)).toHaveAttribute("data-food-product-top-action", "close");
-    await expect(editAction.locator("svg")).toHaveCount(1);
+    await expect(topActionButtons).toHaveCount(1);
+    await expect(topActionButtons.nth(0)).toHaveAttribute("data-food-product-top-action", "close");
+    await expect(editAction.locator("svg")).toHaveCount(2);
     await expect(closeAction.locator("svg")).toHaveCount(1);
     await expect(closeAction).toHaveCSS("width", "44px");
     await expect(closeAction).toHaveCSS("height", "44px");
-    await expect(editAction).toHaveCSS("width", "44px");
-    await expect(editAction).toHaveCSS("height", "44px");
-    await expect(editAction).toHaveCSS("border-radius", "50%");
-    await expect(editAction).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(editAction).toHaveCSS("color", "rgb(143, 122, 200)");
+    await expect(editAction).toHaveCSS("width", await noteCard.evaluate(node => getComputedStyle(node).width));
+    await expect(editAction).toHaveCSS("height", "76px");
+    await expect(editAction).toHaveCSS("border-radius", "0px");
+    await expect(editAction).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await expect(editAction).toHaveCSS("color", "rgb(28, 40, 46)");
     await expect(closeAction).toHaveCSS("border-radius", "50%");
     await expect(closeAction).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(closeAction).toHaveCSS("color", "rgb(143, 122, 200)");
+    await expect(closeAction).toHaveCSS("color", "rgb(55, 107, 145)");
     await expect(closeAction).toBeEnabled();
     await expect(editAction).toBeEnabled();
     await expect(page.locator(".foodProductTopActions, .foodProductTopAction, .foodProductTopDelete, .foodProductTopEdit")).toHaveCount(0);
@@ -1333,6 +1296,9 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     const closeActionBox = await closeAction.boundingBox();
     const mealSelectorBox = await mealSelector.boundingBox();
     expect(headerBox).not.toBeNull();
+    expect(headerBox.x).toBeGreaterThanOrEqual(0);
+    expect(headerBox.x + headerBox.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(closeActionBox.x + closeActionBox.width).toBeLessThanOrEqual(viewport.width);
     expect(topActionsBox).not.toBeNull();
     expect(closeActionBox).not.toBeNull();
     expect(mealSelectorBox).not.toBeNull();
@@ -1374,15 +1340,15 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(amountCard).toHaveAttribute("data-css-module-scope", "food-product-nutrition");
     await expect(amountCard).toHaveAttribute("data-amount-mode", "weight");
     await expect(page.locator(".foodEditAmountCard, .foodProductAmountControls, .foodProductAmountStep, .foodProductAmountInputWrap, .foodEditMacrosCards, .foodEditRowsCard, .foodEditRow")).toHaveCount(0);
-    await expect(amountCard).toHaveCSS("min-height", "76px");
-    await expect(amountCard).toHaveCSS("padding", "12px 14px");
+    await expect(amountCard).toHaveCSS("min-height", "80px");
+    await expect(amountCard).toHaveCSS("padding", "16px");
     await expect(amountInput).toHaveCSS("font-size", "22px");
     await expect(macros).toHaveCSS("display", "grid");
     await expect(macros).toHaveCSS("grid-template-columns", /.+ .+ .+ .+/);
     await expect(macroCards).toHaveCount(4);
-    await expect(macroCards.first()).toHaveCSS("min-height", "74px");
-    await expect(noteCard).toHaveCSS("height", "70px");
-    await expect(noteCard.locator("button")).toHaveCSS("height", "70px");
+    await expect(macroCards.first()).toHaveCSS("min-height", "56px");
+    await expect(noteCard).toHaveCSS("height", "76px");
+    await expect(noteCard.locator("button")).toHaveCSS("height", "76px");
     await expect(noteIcon).toHaveCSS("width", "34px");
     const noteIconBox = await noteIcon.boundingBox();
     const noteLabelBox = await noteLabel.boundingBox();
@@ -1392,14 +1358,14 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     await expect(actionBar).toBeVisible();
     await expect(actionBar).toHaveAttribute("data-css-module-scope", "food-product-action-bar");
     await expect(actionBar).toHaveCSS("position", "fixed");
-    await expect(actionBar).toHaveCSS("height", "76px");
-    await expect(actionBar).toHaveCSS("padding", "6px");
-    await expect(actionBar).toHaveCSS("border-radius", "28px");
+    await expect(actionBar).toHaveCSS("height", "65px");
+    await expect(actionBar).toHaveCSS("padding", "8px 16px");
+    await expect(actionBar).toHaveCSS("border-radius", "0px");
     await expect(buttons).toHaveCount(2);
-    await expect(backButton).toHaveCSS("height", "58px");
-    await expect(backButton).toHaveCSS("color", "rgb(123, 118, 130)");
-    await expect(addButton).toHaveCSS("height", "58px");
-    await expect(addButton).toHaveCSS("background-color", "rgb(143, 122, 200)");
+    await expect(backButton).toHaveCSS("height", "48px");
+    await expect(backButton).toHaveCSS("color", "rgb(97, 112, 120)");
+    await expect(addButton).toHaveCSS("height", "48px");
+    await expect(addButton).toHaveCSS("background-image", "linear-gradient(115deg, rgb(70, 123, 114) 0%, rgb(62, 116, 139) 54%, rgb(53, 101, 163) 100%)");
     await expect(addButton).toHaveCSS("color", "rgb(255, 255, 255)");
 
     const backBox = await backButton.boundingBox();
@@ -1408,12 +1374,12 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
     expect(backBox).not.toBeNull();
     expect(addBox).not.toBeNull();
     expect(actionBarBox).not.toBeNull();
-    expect(addBox.width / backBox.width).toBeCloseTo(2, 1);
+    expect(addBox.width / backBox.width).toBeCloseTo(1.6, 1);
     expect(actionBarBox.x).toBeGreaterThanOrEqual(0);
     expect(actionBarBox.x + actionBarBox.width).toBeLessThanOrEqual(viewport.width + 1);
-    expect(actionBarBox.width).toBeCloseTo(Math.min(382, viewport.width - 20), 1);
+    expect(actionBarBox.width).toBeCloseTo(Math.min(402, viewport.width), 1);
     expect(viewport.height - actionBarBox.y - actionBarBox.height)
-      .toBeCloseTo(Math.max(0, viewport.height - 874) + 14, 1);
+      .toBeCloseTo(0, 1);
     await expectNoHorizontalOverflow(page);
 
     await portionMenuButton.click();
@@ -1454,7 +1420,7 @@ test("CSS V2 food product action bar keeps stable scoped actions", async ({ page
   await page.locator("[data-food-search-result-card]").first().click();
   const legacyTopActions = page.getByTestId("food-product-top-actions");
   await expect(legacyTopActions).toHaveAttribute("data-css-module-scope", "food-product-top-actions");
-  await expect(legacyTopActions.locator("button")).toHaveCount(2);
+  await expect(legacyTopActions.locator("button")).toHaveCount(1);
   await expect(page.locator('[data-food-product-top-action="close"]')).toBeVisible();
   await expect(page.locator('[data-food-product-action="edit-note"]')).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -1536,7 +1502,7 @@ test("CSS V2 dish ingredients stay scoped and responsive", async ({ page }, test
     await expect(ingredients).toHaveAttribute("data-css-module-scope", "dish-edit-ingredients");
     await expect(page.locator(".dishEditIngredientsBox, .dishEditIngredientsHeader, .dishEditIngredientsList, .dishEditIngredientRow")).toHaveCount(0);
     await expect(ingredients).toHaveCSS("padding", "12px");
-    await expect(ingredients).toHaveCSS("border-radius", "20px");
+    await expect(ingredients).toHaveCSS("border-radius", "18px");
     await expect(ingredients).toHaveCSS("background-color", "rgb(255, 255, 255)");
     await expect(addButton).toHaveCSS("min-height", "44px");
     await expect(removeButtons).toHaveCount(2);
@@ -1566,11 +1532,11 @@ test("CSS V2 food edit basic fields stay scoped and match the responsive referen
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const cases = [
-    { name: "warm-360", width: 360, height: 800, theme: "warm-light", fieldWidth: 328, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 92.2, macroWidth: 76.75, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-390", width: 390, height: 844, theme: "warm-light", fieldWidth: 358, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 92.2, macroWidth: 84.25, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-430", width: 430, height: 932, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 92.2, macroWidth: 87.25, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-768", width: 768, height: 1024, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 191.4, macroWidth: 181.5, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 },
-    { name: "warm-1440", width: 1440, height: 900, theme: "warm-light", fieldWidth: 370, fieldHeight: 70.2, iconHeight: 92.2, gridHeight: 191.4, macroWidth: 181.5, portionHeight: 89.2, presetDisplay: "none", toggleHeight: 50 }
+    { name: "warm-360", width: 360, height: 800, theme: "warm-light", fieldWidth: 296, fieldHeight: 70.39, iconHeight: 70.39, gridHeight: 69.39, macroWidth: 68, portionHeight: 70.39, presetDisplay: "none", toggleHeight: 46 },
+    { name: "warm-390", width: 390, height: 844, theme: "warm-light", fieldWidth: 326, fieldHeight: 70.39, iconHeight: 70.39, gridHeight: 69.39, macroWidth: 75.5, portionHeight: 70.39, presetDisplay: "none", toggleHeight: 46 },
+    { name: "warm-430", width: 430, height: 932, theme: "warm-light", fieldWidth: 338, fieldHeight: 70.39, iconHeight: 70.39, gridHeight: 69.39, macroWidth: 78.5, portionHeight: 70.39, presetDisplay: "none", toggleHeight: 46 },
+    { name: "warm-768", width: 768, height: 1024, theme: "warm-light", fieldWidth: 338, fieldHeight: 70.39, iconHeight: 70.39, gridHeight: 69.39, macroWidth: 78.5, portionHeight: 70.39, presetDisplay: "none", toggleHeight: 46 },
+    { name: "warm-1440", width: 1440, height: 900, theme: "warm-light", fieldWidth: 338, fieldHeight: 70.39, iconHeight: 70.39, gridHeight: 69.39, macroWidth: 78.5, portionHeight: 70.39, presetDisplay: "none", toggleHeight: 46 }
   ];
 
   for (const testCase of cases) {
@@ -1611,9 +1577,9 @@ test("CSS V2 food edit basic fields stay scoped and match the responsive referen
     expect(macroBox).not.toBeNull();
     expect(portionBox).not.toBeNull();
     expect(toggleBox).not.toBeNull();
-    expect(nameBox.width).toBeCloseTo(testCase.fieldWidth, 1);
+    expect(nameBox.width).toBeCloseTo(testCase.fieldWidth - 72, 1);
     expect(nameBox.height).toBeCloseTo(testCase.fieldHeight, 1);
-    expect(iconBox.width).toBeCloseTo(testCase.fieldWidth, 1);
+    expect(iconBox.width).toBeCloseTo(60, 1);
     expect(iconBox.height).toBeCloseTo(testCase.iconHeight, 1);
     expect(gridBox.width).toBeCloseTo(testCase.fieldWidth, 1);
     expect(gridBox.height).toBeCloseTo(testCase.gridHeight, 1);
@@ -1858,11 +1824,11 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and legacy-them
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { width: 360, height: 800, sheetWidth: 328, sheetHeight: 529, dayHeight: 44, radius: "26px" },
-    { width: 390, height: 844, sheetWidth: 358, sheetHeight: 536, dayHeight: 44, radius: "26px" },
-    { width: 430, height: 932, sheetWidth: 370, sheetHeight: 536, dayHeight: 44, radius: "26px" },
-    { width: 768, height: 1024, sheetWidth: 370, sheetHeight: 536, dayHeight: 44, radius: "26px" },
-    { width: 1440, height: 900, sheetWidth: 370, sheetHeight: 536, dayHeight: 44, radius: "26px" }
+    { width: 360, height: 800, sheetWidth: 328, sheetHeight: 530, dayHeight: 44, radius: "26px" },
+    { width: 390, height: 844, sheetWidth: 358, sheetHeight: 537, dayHeight: 44, radius: "26px" },
+    { width: 430, height: 932, sheetWidth: 370, sheetHeight: 537, dayHeight: 44, radius: "26px" },
+    { width: 768, height: 1024, sheetWidth: 370, sheetHeight: 537, dayHeight: 44, radius: "26px" },
+    { width: 1440, height: 900, sheetWidth: 370, sheetHeight: 537, dayHeight: 44, radius: "26px" }
   ];
 
   for (const viewport of viewports) {
@@ -1974,7 +1940,7 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and legacy-them
   const legacySheet = page.getByTestId("nutrition-calendar-sheet");
   const legacySelectedDay = page.locator('[data-nutrition-calendar-day][aria-pressed="true"]');
   const legacyTodayAction = page.locator('[data-nutrition-calendar-action="today"]');
-  await expect(legacySheet).toHaveCSS("border-color", "rgb(239, 235, 243)");
+  await expect(legacySheet).toHaveCSS("border-color", "rgba(57, 82, 91, 0.12)");
   await expect(legacySelectedDay).toHaveAttribute("aria-pressed", "true");
   await expect(legacyTodayAction).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -1983,80 +1949,46 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and legacy-them
   assertNoRuntimeErrors();
 });
 
-test("CSS V2 nutrition orbit keeps scoped reference geometry, motion and add flow", async ({ page }, testInfo) => {
+test("CSS V2 nutrition energy card keeps progress, macros and food actions readable", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop-chromium", "One deterministic browser covers the viewport matrix.");
-
-  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  const viewports = [
-    { name: "360", width: 360, height: 800, cardWidth: 328 },
-    { name: "390", width: 390, height: 844, cardWidth: 358 },
-    { name: "430", width: 430, height: 932, cardWidth: 370 },
-    { name: "768", width: 768, height: 1024, cardWidth: 370 },
-    { name: "768-short", width: 768, height: 800, cardWidth: 370 },
-    { name: "1440", width: 1440, height: 900, cardWidth: 370 }
-  ];
-
-  for (const viewport of viewports) {
-    await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.goto("/cssV2?clientHarness=1");
-    await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
-    await page.getByTestId("client-nav-nutrition").click();
-
-    const orbit = page.getByTestId("nutrition-orbit");
-    const card = page.locator('[data-nutrition-orbit-part="card"]');
-    const scene = page.locator('[data-nutrition-orbit-part="scene"]');
-    const addButton = page.getByTestId("nutrition-orbit-add");
-    const progressPaths = page.locator("[data-nutrition-orbit-progress]");
-    const halo = page.locator('[data-nutrition-orbit-halo="outer"]');
-
-    await expect(orbit).toBeVisible();
-    await expect(orbit).toHaveAttribute("data-css-module-scope", "nutrition-orbit");
-    await expect(progressPaths).toHaveCount(4);
-    await expect(page.locator(".nutritionOrbitPreview, .nutritionOrbitPreviewCard, .nutritionOrbitHitButton, .nutritionOrbitSvgTitle")).toHaveCount(0);
-    await expect(card).toHaveCSS("border-radius", "24px");
-    await expect(card).toHaveCSS("border-color", "rgb(239, 235, 243)");
-    await expect(card).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(orbit).toHaveCSS("margin-top", "12px");
-
-    const cardBox = await card.boundingBox();
-    const sceneBox = await scene.boundingBox();
-    const hitBox = await addButton.boundingBox();
-    expect(cardBox).not.toBeNull();
-    expect(sceneBox).not.toBeNull();
-    expect(hitBox).not.toBeNull();
-    expect(cardBox.width).toBeCloseTo(viewport.cardWidth, 0);
-    expect(cardBox.height).toBeCloseTo(270, 0);
-    expect(sceneBox.width).toBeCloseTo(160, 0);
-    expect(sceneBox.height).toBeCloseTo(160, 0);
-    expect(hitBox.width).toBeGreaterThanOrEqual(100);
-    expect(hitBox.height).toBeGreaterThanOrEqual(44);
+  const assertNoRuntimeErrors=failOnRuntimeErrors(page);
+  for(const viewport of [{width:360,height:800,cardWidth:330},{width:390,height:844,cardWidth:350},{width:430,height:932,cardWidth:390},{width:768,height:1024,cardWidth:680},{width:768,height:800,cardWidth:680},{width:1440,height:900,cardWidth:1000}]) {
+    await page.setViewportSize({width:viewport.width,height:viewport.height});
+    await openClientNutritionHarness(page);
+    const card=page.getByTestId("nutrition-orbit");
+    const ring=card.locator(":scope > div").first();
+    const macros=card.locator(":scope > div").last();
+    await expect(card).toBeVisible();
+    await expect(card).toHaveCSS("border-radius","18px");
+    await expect(card).toHaveCSS("background-color","rgb(255, 255, 255)");
+    await expect(card).toHaveCSS("margin-top","12px");
+    await expect(ring.locator("strong")).toHaveText("980");
+    await expect(ring.locator("small")).toHaveText("из 2514 ккал");
+    await expect(ring).toHaveCSS("width",viewport.width<=360 ? "88px" : "92px");
+    await expect(ring).toHaveCSS("height",viewport.width<=360 ? "88px" : "92px");
+    await expect(ring).toHaveCSS("background-image",/conic-gradient[(].+140[.]4deg/);
+    await expect(ring).toHaveCSS("animation-name","none");
+    await expect(page.getByTestId("nutrition-energy-heading-row").locator("h2")).toHaveText(/1\s534 ккал/);
+    await expect(macros.locator(":scope > div > span")).toHaveText(["Белки","Жиры","Углеводы"]);
+    await expect(macros.locator(":scope > div b")).toHaveText(["76 / 172 г","36 / 62 г","83 / 317 г"]);
+    await expect(macros.locator("i")).toHaveCount(3);
+    const cardBox=await card.boundingBox();
+    expect(cardBox.width).toBeCloseTo(viewport.cardWidth,1);
+    expect(cardBox.height).toBeCloseTo(viewport.width<=360 ? 180.8 : 184.8,1);
     expect(cardBox.x).toBeGreaterThanOrEqual(0);
-    expect(cardBox.x + cardBox.width).toBeLessThanOrEqual(viewport.width + 1);
-
-    await expect(halo).not.toHaveCSS("animation-name", "none");
+    expect(cardBox.x+cardBox.width).toBeLessThanOrEqual(viewport.width);
+    await expectTapTargets(page,['[data-testid="nutrition-orbit-add"]','[data-testid="nutrition-orbit-photo-search"]','[data-testid="nutrition-orbit-audio-search"]','[data-testid="nutrition-orbit-calendar"]']);
     await expectNoHorizontalOverflow(page);
-
-    if (viewport.name === "390" || viewport.name === "1440") {
-      await attachScreenshot(page, testInfo, `client-nutrition-orbit-scoped-${viewport.name}.png`);
-    }
+    await page.getByTestId("nutrition-orbit-add").click();
+    await expect(page.getByRole("dialog",{name:"Поиск еды"})).toBeVisible();
+    await page.locator('[data-food-search-header-action="close"]').click();
+    await expect(page.getByRole("dialog",{name:"Поиск еды"})).toBeHidden();
   }
-
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/cssV2?clientHarness=1&clientHarnessTheme=dark-green");
-  await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
+  await page.setViewportSize({width:390,height:844});
+  await openClientNutritionHarness(page,"dark-green");
   await expectLegacyThemeFallback(page);
-  await page.getByTestId("client-nav-nutrition").click();
-
-  const legacyCard = page.locator('[data-nutrition-orbit-part="card"]');
-  const legacyTitle = page.locator('[data-nutrition-orbit-text="title"]');
-  await expect(legacyCard).toHaveCSS("width", "358px");
-  await expect(legacyCard).toHaveCSS("height", "270px");
-  await expect(legacyTitle).toBeVisible();
-  await expectNoHorizontalOverflow(page);
-  await attachScreenshot(page, testInfo, "client-nutrition-orbit-scoped-legacy-warm-light.png");
-
-  await page.getByTestId("nutrition-orbit-add").click();
-  await expect(page.getByRole("dialog", { name: "Поиск еды" })).toBeVisible();
+  await expect(page.getByTestId("nutrition-orbit")).toHaveCSS("width","350px");
+  await expect(page.getByTestId("nutrition-orbit").locator(":scope > div").first().locator("strong")).toHaveText("980");
   assertNoRuntimeErrors();
 });
 
@@ -2075,7 +2007,7 @@ test("CSS V2 nutrition orbit starts and stops voice capture with taps", async ({
   const photoSearchInput = page.getByTestId("nutrition-orbit-photo-input");
 
   await expect(page.getByTestId("nutrition-orbit")).toBeVisible();
-  await expect(action).toHaveText("Добавить еду");
+  await expect(action).toHaveText("Продукт");
   await expect(audioSearchAction).toBeVisible();
   await expect(photoSearchAction).toBeVisible();
   await expect(photoSearchInput).toHaveAttribute("accept", "image/*");
@@ -2100,7 +2032,7 @@ test("CSS V2 nutrition orbit starts and stops voice capture with taps", async ({
   await expect(page.getByRole("heading", { name: "Слушаю вас" })).toBeVisible();
   await expect(anchoredRecord).toHaveAccessibleName("Завершить запись");
   await expect(anchoredRecord.locator('[data-morphing-icon="true"]')).toHaveAttribute("data-icon-state", "recording");
-  await expect(page.getByTestId("nutrition-voice-sheet")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(page.getByTestId("nutrition-voice-sheet")).toHaveCSS("background-color", "rgb(245, 247, 248)");
   const anchoredCloseBox = await page.getByTestId("nutrition-voice-close").boundingBox();
   expect(anchoredCloseBox).not.toBeNull();
   expect(anchoredCloseBox.width).toBeGreaterThanOrEqual(44);
@@ -2114,7 +2046,7 @@ test("CSS V2 nutrition orbit starts and stops voice capture with taps", async ({
   await expect(audioSearchAction).toBeFocused();
 
   await expect(page.getByTestId("nutrition-orbit")).toBeVisible();
-  await expect(action).toHaveText("Добавить еду");
+  await expect(action).toHaveText("Продукт");
   assertNoRuntimeErrors();
 });
 
@@ -2127,9 +2059,11 @@ test("CSS V2 nutrition orbit keeps narrow controls and macros inside the card", 
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-nutrition").click();
 
-  const card = page.locator('[data-nutrition-orbit-part="card"]');
-  const macros = page.locator('[data-nutrition-orbit-part="macros"]');
+  const card = page.getByTestId("nutrition-orbit");
+  const macros = card.locator(":scope > div").last();
   const action = page.getByTestId("nutrition-orbit-add");
+  await expect(macros.locator(":scope > div")).toHaveCount(3);
+  await expect(macros.locator(":scope > div > span")).toHaveText(["Белки", "Жиры", "Углеводы"]);
 
   await expectTapTargets(page, [
     '[data-testid="nutrition-orbit-add"]',
@@ -2138,7 +2072,7 @@ test("CSS V2 nutrition orbit keeps narrow controls and macros inside the card", 
   ]);
 
   const macroLayout = await macros.evaluate((node) => {
-    const cardNode = node.closest('[data-nutrition-orbit-part="card"]');
+    const cardNode = node.closest('[data-testid="nutrition-orbit"]');
     const cardRect = cardNode?.getBoundingClientRect();
     return {
       scrollWidth: node.scrollWidth,
@@ -2224,9 +2158,9 @@ test("CSS V2 nutrition meal modal keeps scoped reference geometry, legacy-theme 
     await expect(modal).toHaveCSS("z-index", "9997");
     await expect(sheet).toHaveAttribute("data-modal-surface", "true");
     await expect(sheet).toHaveCSS("border-radius", "26px");
-    await expect(sheet).toHaveCSS("background-color", "rgb(247, 246, 248)");
+    await expect(sheet).toHaveCSS("background-color", "rgb(245, 247, 248)");
     await expect(sheet).toHaveCSS("backdrop-filter", "none");
-    await expect(page.locator('[data-nutrition-meal-part="header"] h2')).toHaveCSS("color", "rgb(40, 38, 46)");
+    await expect(page.locator('[data-nutrition-meal-part="header"] h2')).toHaveCSS("color", "rgb(28, 40, 46)");
     await expect(row).toHaveCSS("transition-property", "transform, opacity, background");
 
     const sheetBox = await sheet.boundingBox();
@@ -2282,11 +2216,11 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, legacy-theme fal
 
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
-    { name: "360", width: 360, height: 800, widthExpected: 328 },
-    { name: "390", width: 390, height: 844, widthExpected: 358 },
-    { name: "430", width: 430, height: 932, widthExpected: 370 },
-    { name: "768", width: 768, height: 1024, widthExpected: 370 },
-    { name: "1440", width: 1440, height: 900, widthExpected: 370 }
+    { name: "360", width: 360, height: 800, widthExpected: 330 },
+    { name: "390", width: 390, height: 844, widthExpected: 350 },
+    { name: "430", width: 430, height: 932, widthExpected: 390 },
+    { name: "768", width: 768, height: 1024, widthExpected: 680 },
+    { name: "1440", width: 1440, height: 900, widthExpected: 1000 }
   ];
 
   for (const viewport of viewports) {
@@ -2304,21 +2238,21 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, legacy-theme fal
     await expect(summary).toHaveAttribute("data-css-module-scope", "nutrition-summary");
     await expect(summary).toHaveAttribute("data-state", "within-limit");
     await expect(page.locator(".nutritionAiPlanTopInline, .nutritionAiPlanTopCard, .nutritionAiPlanTopTitle")).toHaveCount(0);
-    await expect(card).toHaveCSS("height", "72px");
+    await expect(card).toHaveCSS("min-height", "59px");
     await expect(card).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(arrow).toHaveCSS("width", "20px");
-    await expect(arrow).toHaveCSS("height", "20px");
+    await expect(arrow).toHaveCSS("width", "16px");
+    await expect(arrow).toHaveCSS("height", "16px");
     await expect(arrow).toHaveCSS("border-top-width", "0px");
-    await expect(title).toHaveCSS("font-size", "14px");
+    await expect(title).toHaveCSS("font-size", "13px");
 
     const summaryBox = await summary.boundingBox();
     const cardBox = await card.boundingBox();
     expect(summaryBox).not.toBeNull();
     expect(cardBox).not.toBeNull();
     expect(summaryBox.width).toBeCloseTo(viewport.widthExpected, 0);
-    expect(summaryBox.height).toBeCloseTo(72, 0);
+    expect(summaryBox.height).toBeCloseTo(viewport.width >= 700 ? 60.89 : 76.28, 1);
     expect(cardBox.width).toBeCloseTo(viewport.widthExpected, 0);
-    expect(cardBox.height).toBeCloseTo(72, 0);
+    expect(cardBox.height).toBeCloseTo(viewport.width >= 700 ? 60.89 : 76.28, 1);
     expect(summaryBox.x).toBeGreaterThanOrEqual(0);
     expect(summaryBox.x + summaryBox.width).toBeLessThanOrEqual(viewport.width + 1);
     await expectNoHorizontalOverflow(page);
@@ -2339,17 +2273,17 @@ test("CSS V2 nutrition summary keeps scoped reference geometry, legacy-theme fal
   const legacyArrow = page.locator('[data-nutrition-summary-part="arrow"] svg');
   await expect(legacySummary).toBeVisible({ timeout: 40_000 });
   await expect(legacyCard).toHaveCSS("background-color", "rgb(255, 255, 255)");
-  await expect(legacyArrow).toHaveCSS("width", "20px");
-  await expect(legacyArrow).toHaveCSS("height", "20px");
+  await expect(legacyArrow).toHaveCSS("width", "16px");
+  await expect(legacyArrow).toHaveCSS("height", "16px");
   await expect(legacyArrow).toHaveCSS("border-top-width", "0px");
   const legacySummaryBox = await legacySummary.boundingBox();
   const legacyCardBox = await legacyCard.boundingBox();
   expect(legacySummaryBox).not.toBeNull();
   expect(legacyCardBox).not.toBeNull();
-  expect(legacySummaryBox.width).toBeCloseTo(358, 0);
-  expect(legacySummaryBox.height).toBeCloseTo(72, 0);
-  expect(legacyCardBox.width).toBeCloseTo(358, 0);
-  expect(legacyCardBox.height).toBeCloseTo(72, 0);
+  expect(legacySummaryBox.width).toBeCloseTo(350, 0);
+  expect(legacySummaryBox.height).toBeCloseTo(76.28, 1);
+  expect(legacyCardBox.width).toBeCloseTo(350, 0);
+  expect(legacyCardBox.height).toBeCloseTo(76.28, 1);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-nutrition-summary-scoped-legacy-warm-light.png");
 
@@ -2381,21 +2315,25 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, legacy-them
     await page.locator('[data-nutrition-summary-part="card"]').click();
 
     const modal = page.getByTestId("nutrition-plan-details");
-    const dialog = page.getByRole("dialog", { name: "План питания" });
+    const dialog = page.getByRole("dialog", { name: "Анализ питания" });
     const backdrop = page.getByTestId("nutrition-plan-backdrop");
     const close = page.getByTestId("nutrition-plan-close");
     const caloriePanel = page.locator('[data-nutrition-plan-part="calorie-progress"]');
-    const score = page.getByRole("img", { name: /Оценка питания:/ });
+    const score = page.locator('[data-nutrition-plan-part="score-block"]');
+    const scoreRing = page.getByRole("img", { name: "Соответствие плану по записям КБЖУ: 7.1 из 10" });
 
     await expect(modal).toBeVisible({ timeout: 40_000 });
     await expect(backdrop).toBeVisible();
     await expect(modal).toHaveAttribute("data-css-module-scope", "nutrition-plan-details");
     await expect(modal).toHaveAttribute("data-state", "within-limit");
     await expect(dialog).toHaveAttribute("aria-modal", "true");
+    await expect(scoreRing).toBeVisible();
+    await expect(scoreRing).toHaveCSS("width", viewport.width <= 370 ? "64px" : "72px");
+    await expect(scoreRing).toHaveCSS("height", viewport.width <= 370 ? "64px" : "72px");
     await expect(page.locator(".nutritionAiPlanDashboard, .nutritionAiPlanModal, .nutritionAiPlanToggleBtn")).toHaveCount(0);
     await expect(modal).toHaveCSS("position", "fixed");
-    await expect(modal).toHaveCSS("background-color", "rgb(247, 246, 248)");
-    await expect(modal).toHaveCSS("border-top-color", "rgb(239, 235, 243)");
+    await expect(modal).toHaveCSS("background-color", "rgb(245, 247, 248)");
+    await expect(modal).toHaveCSS("border-top-color", "rgba(57, 82, 91, 0.12)");
     await expect(modal).toHaveCSS("border-radius", viewport.width <= 370 ? "26px" : "30px");
     await expect(close).toHaveCSS("width", "44px");
     await expect(close).toHaveCSS("height", "44px");
@@ -2409,12 +2347,10 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, legacy-them
     expect(modalBox.width).toBeCloseTo(Math.min(406, viewport.width - 24), 0);
     expect(modalBox.height).toBeGreaterThan(500);
     expect(modalBox.height).toBeLessThanOrEqual(viewport.height - 32 + 0.5);
-    expect(panelBox.height).toBeGreaterThanOrEqual(110);
-    expect(panelBox.height).toBeLessThanOrEqual(125);
+    expect(panelBox.height).toBeCloseTo(viewport.width <= 370 ? 160 : 168, 0);
     expect(scoreBox.width).toBeGreaterThanOrEqual(94);
     expect(scoreBox.width).toBeLessThanOrEqual(107);
-    expect(scoreBox.height).toBeGreaterThanOrEqual(110);
-    expect(scoreBox.height).toBeLessThanOrEqual(125);
+    expect(scoreBox.height).toBeCloseTo(panelBox.height, 0);
     expect(modalBox.x).toBeGreaterThanOrEqual(0);
     expect(modalBox.x + modalBox.width).toBeLessThanOrEqual(viewport.width + 1);
     expect(modalBox.y).toBeGreaterThanOrEqual(0);
@@ -2422,12 +2358,21 @@ test("CSS V2 nutrition plan details keeps scoped reference geometry, legacy-them
     await expectNoHorizontalOverflow(page);
 
     if (viewport.name === "390") {
-      const calorieFill = page.locator('[class*="calorieFill"]');
-      await expect(calorieFill).toHaveCSS("background-color", "rgb(143, 122, 200)");
+      const calorieProgress = page.getByRole("progressbar", { name: "Калории: 980 из 2514 ккал" });
+      await expect(calorieProgress).toHaveJSProperty("value", 39);
+      await expect(calorieProgress).toHaveJSProperty("max", 100);
+      await expect(calorieProgress).toHaveCSS("height", "8px");
+      await expect(calorieProgress).toHaveCSS("--ownset-action-gradient", "linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)");
+      for (const [name, value] of [["Белки: 44%", 44], ["Жиры: 58%", 58], ["Углеводы: 26%", 26]]) {
+        const progress = page.getByRole("progressbar", { name });
+        await expect(progress).toHaveJSProperty("value", value);
+        await expect(progress).toHaveJSProperty("max", 100);
+        await expect(progress).toHaveCSS("background-image", "linear-gradient(115deg, rgb(70, 123, 114) 0%, rgb(62, 116, 139) 54%, rgb(53, 101, 163) 100%)");
+      }
       await expect(page.locator('[data-nutrition-plan-part="macro"]')).toHaveCount(3);
-      await expect(page.locator('[class*="macroTrack"]')).toHaveCount(3);
-      await expect(page.locator('[class*="macroTrack"] i')).toHaveCount(0);
-      await expect(page.locator('[class*="macroTrack"]').first()).toHaveCSS("height", "6px");
+      await expect(modal.locator('[class*="macroTrack"]')).toHaveCount(3);
+      await expect(modal.locator('[class*="macroTrack"] i')).toHaveCount(0);
+      await expect(modal.locator('[class*="macroTrack"]').first()).toHaveCSS("height", "6px");
       await expect(page.locator('[data-nutrition-plan-part="badge-icon"]')).toHaveCount(3);
       await expect(page.locator('[data-nutrition-plan-part="badge-icon"]').first()).toHaveJSProperty("localName", "svg");
     }

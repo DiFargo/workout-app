@@ -4,8 +4,8 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: max(22px, calc(env(safe-area-inset-top) + 16px)) 20px calc(42px + env(safe-area-inset-bottom));
-  color: #28262e;
-  background: #f7f6f8;
+  color: #1c282e;
+  background: #f5f7f8;
   font-family: var(--font-family-sans, inherit);
 }
 
@@ -27,8 +27,8 @@
   gap: 16px;
   margin: 0 0 22px;
   padding: 8px 0 16px;
-  border-bottom: 1px solid #efebf3;
-  background: #f7f6f8;
+  border-bottom: 1px solid #edf1f3;
+  background: #f5f7f8;
 }
 
 .headerMain {
@@ -54,7 +54,7 @@
   gap: 7px;
   border: 0;
   border-radius: 14px;
-  color: #5f5968;
+  color: #617078;
   font-size: 14px;
   font-weight: 750;
   background: transparent;
@@ -64,11 +64,11 @@
 .backButton svg {
   width: 21px;
   height: 21px;
-  color: #8f7ac8;
+  color: #376b91;
 }
 
 .backButton:hover {
-  background: #f0edf3;
+  background: #edf1f3;
 }
 
 .backButton:active,
@@ -83,7 +83,7 @@
 
 .eyebrow {
   margin: 0 0 4px;
-  color: #8f7ac8;
+  color: #376b91;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -92,7 +92,7 @@
 
 .titleBlock h1 {
   margin: 0;
-  color: #28262e;
+  color: #1c282e;
   font-size: clamp(24px, 3.2vw, 32px);
   font-weight: 800;
   letter-spacing: -0.028em;
@@ -106,25 +106,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e3daef;
+  border: 1px solid #edf1f3;
   border-radius: 13px;
-  color: #806bb6;
+  color: #376b91;
   font-size: 13px;
   font-weight: 750;
-  background: #f5f1fa;
+  background: #f5f7f8;
   cursor: pointer;
 }
 
 .workspaceButton:hover {
-  border-color: #d4c6e9;
-  background: #eee8f7;
+  border-color: rgba(57, 82, 91, .12);
+  background: #edf1f3;
 }
 
 .backButton:focus-visible,
 .workspaceButton:focus-visible,
 .tabButton:focus-visible,
 .searchField input:focus-visible {
-  outline: 3px solid rgba(143, 122, 200, 0.3);
+  outline: 3px solid rgba(63, 115, 184, 0.3);
   outline-offset: 2px;
 }
 
@@ -134,10 +134,10 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 22px;
-  background: linear-gradient(135deg, #ffffff 0%, #f7f3fc 100%);
-  box-shadow: 0 10px 28px rgba(72, 63, 87, 0.06);
+  background: linear-gradient(135deg, #ffffff 0%, #f5f7f8 100%);
+  box-shadow: 0 10px 28px rgba(28, 28, 30, 0.06);
 }
 
 .introIcon,
@@ -147,8 +147,8 @@
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: #806bb6;
-  background: #f0ebf9;
+  color: #376b91;
+  background: #edf1f3;
 }
 
 .introIcon {
@@ -164,7 +164,7 @@
 
 .introTitle {
   margin: 1px 0 3px;
-  color: #28262e;
+  color: #1c282e;
   font-size: 15px;
   font-weight: 800;
   line-height: 1.2;
@@ -173,7 +173,7 @@
 .introText {
   max-width: 680px;
   margin: 0;
-  color: #7b7682;
+  color: #617078;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.42;
@@ -181,10 +181,10 @@
 
 .catalogCard {
   padding: 16px;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 24px;
   background: #ffffff;
-  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.055);
+  box-shadow: 0 12px 30px rgba(28, 28, 30, 0.055);
 }
 
 .tabList {
@@ -193,7 +193,7 @@
   gap: 4px;
   padding: 4px;
   border-radius: 16px;
-  background: #f5f2f7;
+  background: #f5f7f8;
 }
 
 .tabButton {
@@ -206,7 +206,7 @@
   gap: 8px;
   border: 1px solid transparent;
   border-radius: 12px;
-  color: #706a78;
+  color: #617078;
   font-size: 14px;
   font-weight: 750;
   line-height: 1.15;
@@ -228,26 +228,26 @@
   display: inline-grid;
   place-items: center;
   border-radius: 999px;
-  color: #7b7682;
+  color: #617078;
   font-size: 11px;
-  background: #ebe7ef;
+  background: #edf1f3;
 }
 
 .tabButton:hover {
-  color: #5e5767;
+  color: #617078;
   background: rgba(255, 255, 255, 0.72);
 }
 
 .activeTab {
-  border-color: #e2d8ef;
-  color: #806bb6;
+  border-color: #edf1f3;
+  color: #376b91;
   background: #ffffff;
-  box-shadow: 0 3px 10px rgba(72, 63, 87, 0.08);
+  box-shadow: 0 3px 10px rgba(28, 28, 30, 0.08);
 }
 
 .activeTab b {
-  color: #806bb6;
-  background: #eee8f7;
+  color: #376b91;
+  background: #edf1f3;
 }
 
 .searchField {
@@ -257,15 +257,15 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  border: 1px solid #e8e3ec;
+  border: 1px solid #edf1f3;
   border-radius: 14px;
-  color: #8f7ac8;
-  background: #fbfafc;
+  color: #376b91;
+  background: #f5f7f8;
 }
 
 .searchField:focus-within {
-  border-color: #baa8dc;
-  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.12);
+  border-color: rgba(57, 82, 91, .12);
+  box-shadow: 0 0 0 3px rgba(63, 115, 184, 0.12);
 }
 
 .searchField svg {
@@ -281,7 +281,7 @@
   padding: 0;
   border: 0;
   outline: 0;
-  color: #28262e;
+  color: #1c282e;
   font: inherit;
   font-size: 14px;
   font-weight: 550;
@@ -289,7 +289,7 @@
 }
 
 .searchField input::placeholder {
-  color: #9a949f;
+  color: #617078;
 }
 
 .resultsHeading {
@@ -302,7 +302,7 @@
 
 .resultsHeading h2 {
   margin: 0;
-  color: #28262e;
+  color: #1c282e;
   font-size: 19px;
   font-weight: 800;
   letter-spacing: -0.018em;
@@ -311,7 +311,7 @@
 
 .resultsHeading p {
   margin: 4px 0 0;
-  color: #7b7682;
+  color: #617078;
   font-size: 13px;
   font-weight: 550;
   line-height: 1.3;
@@ -321,16 +321,16 @@
 .commonLabel,
 .metadata span,
 .exerciseMetadata span {
-  border: 1px solid #e8e1f1;
+  border: 1px solid #edf1f3;
   border-radius: 999px;
-  color: #776d87;
-  background: #f8f5fb;
+  color: #617078;
+  background: #f5f7f8;
 }
 
 .readOnlyBadge {
   flex: 0 0 auto;
   padding: 6px 9px;
-  color: #806bb6;
+  color: #376b91;
   font-size: 11px;
   font-weight: 750;
 }
@@ -338,17 +338,17 @@
 .catalogueStatus {
   margin: 0 0 12px;
   padding: 10px 12px;
-  border: 1px solid #e7ddf2;
+  border: 1px solid #edf1f3;
   border-radius: 13px;
-  color: #776d87;
+  color: #617078;
   font-size: 12px;
   font-weight: 650;
   line-height: 1.35;
-  background: #f8f5fb;
+  background: #f5f7f8;
 }
 
 .tabPanel:focus-visible {
-  outline: 2px solid #8f7ac8;
+  outline: 2px solid #376b91;
   outline-offset: 4px;
   border-radius: 18px;
 }
@@ -368,7 +368,7 @@
 .programCard,
 .exerciseCard {
   min-width: 0;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 18px;
   background: #ffffff;
 }
@@ -402,7 +402,7 @@
   width: fit-content;
   margin: 0 0 5px;
   padding: 3px 7px;
-  color: #806bb6;
+  color: #376b91;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.035em;
@@ -413,7 +413,7 @@
 .programCard h3,
 .exerciseCard h3 {
   margin: 0;
-  color: #28262e;
+  color: #1c282e;
   font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.012em;
@@ -423,7 +423,7 @@
 
 .cardDescription {
   margin: 13px 0 0;
-  color: #7b7682;
+  color: #617078;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.42;
@@ -431,7 +431,7 @@
 
 .programStatus {
   margin: 8px 0 0;
-  color: #8a8490;
+  color: #617078;
   font-size: 11px;
   font-weight: 650;
   line-height: 1.35;
@@ -446,13 +446,13 @@
   justify-content: center;
   align-self: flex-start;
   gap: 6px;
-  border: 1px solid #e3d8f0;
+  border: 1px solid #edf1f3;
   border-radius: 10px;
-  color: #806bb6;
+  color: #376b91;
   font: inherit;
   font-size: 11px;
   font-weight: 750;
-  background: #faf8fc;
+  background: #f5f7f8;
   cursor: pointer;
 }
 
@@ -462,8 +462,8 @@
 }
 
 .previewProgramButton:hover {
-  border-color: #cdbce5;
-  background: #f1ebf8;
+  border-color: rgba(57, 82, 91, .12);
+  background: #edf1f3;
 }
 
 .metadata {
@@ -491,8 +491,8 @@
 }
 
 .exerciseCard:hover {
-  border-color: #ddd1ed;
-  box-shadow: 0 8px 18px rgba(72, 63, 87, 0.07);
+  border-color: rgba(57, 82, 91, .12);
+  box-shadow: 0 8px 18px rgba(28, 28, 30, 0.07);
   transform: translateY(-1px);
 }
 
@@ -504,10 +504,10 @@
   overflow: hidden;
   display: grid;
   place-items: center;
-  border: 1px solid #eee8f3;
+  border: 1px solid #edf1f3;
   border-radius: 15px;
-  color: #806bb6;
-  background: #f5f2f8;
+  color: #376b91;
+  background: #f5f7f8;
 }
 
 .exerciseImage img {
@@ -517,7 +517,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: #f5f2f8;
+  background: #f5f7f8;
 }
 
 .exerciseImageFallback {
@@ -552,12 +552,12 @@
   flex: 0 0 auto;
   width: 13px;
   height: 13px;
-  color: #8f7ac8;
+  color: #376b91;
 }
 
 .exerciseFallback {
   margin: 8px 0 0;
-  color: #8e8893;
+  color: #617078;
   font-size: 12px;
   font-weight: 500;
   line-height: 1.35;
@@ -577,12 +577,12 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid #e3d8f0;
+  border: 1px solid #edf1f3;
   border-radius: 9px;
-  color: #806bb6;
+  color: #376b91;
   font-size: 11px;
   font-weight: 750;
-  background: #faf8fc;
+  background: #f5f7f8;
   cursor: pointer;
 }
 
@@ -592,8 +592,8 @@
 }
 
 .editExerciseButton:hover {
-  border-color: #cdbce5;
-  background: #f1ebf8;
+  border-color: rgba(57, 82, 91, .12);
+  background: #edf1f3;
 }
 
 .editExerciseButton:focus-visible,
@@ -602,7 +602,7 @@
 .cancelEditButton:focus-visible,
 .saveEditButton:focus-visible,
 .mediaActions button:focus-visible {
-  outline: 3px solid rgba(143, 122, 200, 0.3);
+  outline: 3px solid rgba(63, 115, 184, 0.3);
   outline-offset: 2px;
 }
 
@@ -613,7 +613,7 @@
   padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
   display: grid;
   place-items: center;
-  background: rgba(40, 38, 46, 0.46);
+  background: rgba(28, 28, 30, 0.46);
   backdrop-filter: blur(6px);
 }
 
@@ -622,11 +622,11 @@
   max-height: min(720px, calc(100dvh - 36px));
   overflow: auto;
   padding: 22px;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 24px;
-  color: #28262e;
+  color: #1c282e;
   background: #ffffff;
-  box-shadow: 0 24px 60px rgba(40, 38, 46, 0.25);
+  box-shadow: 0 24px 60px rgba(28, 28, 30, 0.25);
 }
 
 .previewSheet {
@@ -634,16 +634,16 @@
   max-height: min(720px, calc(100dvh - 36px));
   overflow: auto;
   padding: 22px;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 24px;
-  color: #28262e;
+  color: #1c282e;
   background: #ffffff;
-  box-shadow: 0 24px 60px rgba(40, 38, 46, 0.25);
+  box-shadow: 0 24px 60px rgba(28, 28, 30, 0.25);
 }
 
 .previewIntro {
   margin: 15px 0 0;
-  color: #625c69;
+  color: #617078;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.43;
@@ -661,13 +661,13 @@
   padding: 12px 13px;
   display: grid;
   gap: 5px;
-  border: 1px solid #ece6f2;
+  border: 1px solid #edf1f3;
   border-radius: 14px;
-  background: #fbfafc;
+  background: #f5f7f8;
 }
 
 .programOutline strong {
-  color: #393540;
+  color: #1c282e;
   font-size: 13px;
   font-weight: 800;
   line-height: 1.3;
@@ -675,7 +675,7 @@
 
 .programOutline span,
 .previewEmpty {
-  color: #7b7682;
+  color: #617078;
   font-size: 12px;
   font-weight: 550;
   line-height: 1.4;
@@ -685,7 +685,7 @@
   margin: 0;
   padding: 13px;
   border-radius: 14px;
-  background: #f7f4fa;
+  background: #f5f7f8;
 }
 
 .editHeader {
@@ -697,7 +697,7 @@
 
 .editHeader p {
   margin: 0 0 4px;
-  color: #8f7ac8;
+  color: #376b91;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.07em;
@@ -720,8 +720,8 @@
   place-items: center;
   border: 0;
   border-radius: 14px;
-  color: #514c58;
-  background: #f5f2f7;
+  color: #617078;
+  background: #f5f7f8;
   cursor: pointer;
 }
 
@@ -734,11 +734,11 @@
   margin: 15px 0 18px;
   padding: 11px 12px;
   border-radius: 13px;
-  color: #726b79;
+  color: #617078;
   font-size: 13px;
   font-weight: 550;
   line-height: 1.4;
-  background: #f7f4fa;
+  background: #f5f7f8;
 }
 
 .editField {
@@ -748,7 +748,7 @@
 }
 
 .editField > span {
-  color: #625c69;
+  color: #617078;
   font-size: 12px;
   font-weight: 750;
 }
@@ -758,15 +758,15 @@
   width: 100%;
   box-sizing: border-box;
   padding: 12px 13px;
-  border: 1px solid #e8e3ec;
+  border: 1px solid #edf1f3;
   border-radius: 13px;
   outline: 0;
-  color: #28262e;
+  color: #1c282e;
   font: inherit;
   font-size: 14px;
   font-weight: 550;
   line-height: 1.35;
-  background: #fbfafc;
+  background: #f5f7f8;
 }
 
 .editField textarea {
@@ -776,8 +776,8 @@
 
 .editField input:focus,
 .editField textarea:focus {
-  border-color: #bba8dc;
-  box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.12);
+  border-color: rgba(57, 82, 91, .12);
+  box-shadow: 0 0 0 3px rgba(63, 115, 184, 0.12);
 }
 
 .mediaFields {
@@ -792,16 +792,16 @@
   padding: 11px;
   display: grid;
   gap: 8px;
-  border: 1px solid #ece6f2;
+  border: 1px solid #edf1f3;
   border-radius: 16px;
-  background: #fbfafc;
+  background: #f5f7f8;
 }
 
 .mediaFieldHeading {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #4b4652;
+  color: #1c282e;
   font-size: 12px;
   font-weight: 800;
 }
@@ -809,7 +809,7 @@
 .mediaFieldHeading svg {
   width: 16px;
   height: 16px;
-  color: #8f7ac8;
+  color: #376b91;
 }
 
 .mediaPreview {
@@ -817,10 +817,10 @@
   overflow: hidden;
   display: grid;
   place-items: center;
-  border: 1px solid #e8e2ee;
+  border: 1px solid #edf1f3;
   border-radius: 12px;
-  color: #8f7ac8;
-  background: #f5f2f8;
+  color: #376b91;
+  background: #f5f7f8;
 }
 
 .mediaPreview > svg {
@@ -834,7 +834,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
-  background: #28262e;
+  background: #1c282e;
 }
 
 .mediaUploadButton {
@@ -846,9 +846,9 @@
   justify-content: center;
   gap: 6px;
   overflow: hidden;
-  border: 1px solid #ded3eb;
+  border: 1px solid rgba(57, 82, 91, .12);
   border-radius: 10px;
-  color: #806bb6;
+  color: #376b91;
   font-size: 11px;
   font-weight: 800;
   text-align: center;
@@ -857,12 +857,12 @@
 }
 
 .mediaUploadButton:hover {
-  border-color: #c9b8e1;
-  background: #f7f3fb;
+  border-color: rgba(57, 82, 91, .12);
+  background: #f5f7f8;
 }
 
 .mediaUploadButton:focus-within {
-  outline: 3px solid rgba(143, 122, 200, 0.3);
+  outline: 3px solid rgba(63, 115, 184, 0.3);
   outline-offset: 2px;
 }
 
@@ -898,9 +898,9 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  border: 1px solid #e5deec;
+  border: 1px solid #edf1f3;
   border-radius: 9px;
-  color: #746b7d;
+  color: #617078;
   font: inherit;
   font-size: 10px;
   font-weight: 750;
@@ -910,9 +910,9 @@
 }
 
 .mediaActions button:hover:not(:disabled) {
-  border-color: #cebde6;
-  color: #806bb6;
-  background: #f8f5fb;
+  border-color: rgba(57, 82, 91, .12);
+  color: #376b91;
+  background: #f5f7f8;
 }
 
 .mediaActions button:disabled {
@@ -927,7 +927,7 @@
 
 .mediaField p {
   margin: 0;
-  color: #857e8b;
+  color: #617078;
   font-size: 10px;
   font-weight: 600;
   line-height: 1.3;
@@ -936,7 +936,7 @@
 
 .mediaField .mediaState {
   min-height: 26px;
-  color: #71697a;
+  color: #617078;
   font-weight: 650;
 }
 
@@ -973,20 +973,20 @@
 }
 
 .cancelEditButton {
-  border: 1px solid #e8e3ec;
-  color: #635c69;
+  border: 1px solid #edf1f3;
+  color: #617078;
   background: #ffffff;
 }
 
 .saveEditButton {
   min-width: 145px;
-  border: 1px solid #806bb6;
+  border: 1px solid #376b91;
   color: #ffffff;
-  background: #8f7ac8;
+  background: var(--ownset-action-gradient);
 }
 
 .saveEditButton:hover:not(:disabled) {
-  background: #806bb6;
+  background: var(--ownset-action-gradient);
 }
 
 .cancelEditButton:disabled,
@@ -1016,11 +1016,11 @@
   align-content: center;
   justify-items: center;
   gap: 8px;
-  border: 1px dashed #dcd2e9;
+  border: 1px dashed rgba(57, 82, 91, .12);
   border-radius: 18px;
-  color: #7b7682;
+  color: #617078;
   text-align: center;
-  background: #fbfafc;
+  background: #f5f7f8;
 }
 
 .emptyIcon {
@@ -1036,7 +1036,7 @@
 }
 
 .emptyState strong {
-  color: #393640;
+  color: #1c282e;
   font-size: 15px;
   font-weight: 800;
   line-height: 1.25;
@@ -1181,4 +1181,30 @@
   .tabButton {
     transition: none;
   }
+}
+
+.root { color: #1c282e; background: #f5f7f8; }
+.root.embeddedRoot { padding: 0; min-height: 0; background: transparent; }
+.embeddedRoot .catalogCard { padding: 0; border: 0; box-shadow: none; background: transparent; }
+.searchField { min-height: 48px; border-radius: 14px; background: #fff; color: #617078; }
+.searchField input { font-size: 16px; font-weight: 400; }
+.searchField:focus-within { border-color: #396ba6; box-shadow: none; }
+.resultsHeading { margin-block: 18px 12px; flex-direction: row; align-items: center; }
+.resultsHeading h2 { font-size: 18px; font-weight: 650; }
+.readOnlyBadge { display: none; }
+.exerciseGrid { gap: 10px; }
+.exerciseCard { border: 0; border-radius: 18px; box-shadow: none; padding: 14px; gap: 12px; }
+.exerciseCard:hover { box-shadow: none; transform: none; }
+.exerciseCard h3 { font-size: 16px; font-weight: 600; line-height: 1.3; }
+.exerciseImage { border-radius: 12px; background: #edf1f3; }
+.exerciseMetadata span { font-size: 12px; font-weight: 500; background: #edf1f3; color: #617078; }
+.editExerciseButton { min-width: 44px; min-height: 44px; border-radius: 12px; background: #edf1f3; border: 0; color: #376b91; }
+.closeEditButton { width: 44px; height: 44px; flex-shrink: 0; }
+.editField input, .editField textarea { font-size: 16px; }
+.editSheet, .previewSheet { max-height: calc(100dvh - 32px); overflow-y: auto; }
+.mediaActions button, .mediaUploadButton { min-height: 44px; }
+.saveEditButton { background: var(--ownset-action-gradient); box-shadow: none; }
+@media (max-width: 720px) {
+  .exerciseGrid { grid-template-columns: minmax(0, 1fr); }
+  .editOverlay { align-items: end; padding: 12px; }
 }

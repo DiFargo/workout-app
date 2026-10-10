@@ -1,6 +1,7 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { programDraftSnapshot } from "../../../utils/trainerProgramDraft.js";
 import { loadClientExerciseMedia, withClientExerciseMedia } from "../../../utils/clientExerciseMedia.js";
+import { captureAuthSession } from "../../../utils/authSession.js";
 
 import {
   safeReadUserJsonStorage,
@@ -47,6 +48,7 @@ function getGroupExerciseMetadata(taskBlocks = []) {
 export async function loadWorkoutsFromFirebaseWithDeps({
   db,
   auth,
+  captureSession = () => captureAuthSession(auth),
   selectedUserId,
   plan,
   storageKey,
@@ -64,6 +66,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
   options = {},
   isCurrentRequest = () => true
 }) {
+  const session = captureSession();
   const preserveCurrentPlanOnError = options.preserveCurrentPlanOnError === true;
   const currentUser = auth.currentUser;
   const targetUserId = userIdFromClick || selectedUserId || currentUser?.uid;
@@ -81,18 +84,22 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     : "individual";
 
   const requestIsCurrent = () => {
+    if (!session.isCurrent()) return false;
     if (loadGenerations.get(targetUserId) !== generation || !isCurrentRequest()) return false;
     if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return false;
     const currentPreference = isOwnPlan ? safeReadUserJsonStorage(workoutModeStorageKey, targetUserId, null) : null;
     return !currentPreference?.mode || currentPreference.mode === requestedMode;
   };
+  const applyPlan = nextPlan => setPlan(current => requestIsCurrent() ? nextPlan : current);
 
   try {
     if (!targetUserId) {
       const emptyPlan = { workouts: [] };
-      setPlan(emptyPlan);
+      applyPlan(emptyPlan);
       return emptyPlan;
     }
+
+    if (!requestIsCurrent()) return { workouts: [] };
 
     const isAdminLoadingClient = Boolean(userIdFromClick || selectedUserId) && canUseAdminFeatures();
 
@@ -109,7 +116,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
       getDocs(collection(db, "users", targetUserId, "history")),
       requestedMode === "individual" ? loadClientExerciseMedia(targetUserId) : Promise.resolve([])
     ]);
-    if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return { workouts: [] };
+    if (!requestIsCurrent()) return { workouts: [] };
     const profileData = profileSnapshot.exists() ? profileSnapshot.data() : {};
     const assignedProgramUpdatedAt = profileData.assignedProgramUpdatedAt || profileData.assignedProgramAt || "";
     const workoutHistory = (historySnapshot?.docs || []).map((historyDoc) => ({
@@ -262,7 +269,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     if (isOwnPlan && currentUser?.uid && requestedMode === "individual") {
       clearStaleWorkoutCaches(currentUser.uid, assignedProgramUpdatedAt);
     }
-    setPlan(nextPlan);
+    applyPlan(nextPlan);
 
     if (isOwnPlan && currentUser?.uid) {
       if (requestedMode === "basic" && nextPlan.source === "basic") {
@@ -301,7 +308,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
         Array.isArray(cachedPlan?.workouts) &&
         cachedPlan.workouts.length > 0
       ) {
-        setPlan(cachedPlan);
+        applyPlan(cachedPlan);
         showAppError("savedLocal", "Нет соединения. Показываю последнюю сохранённую программу.");
         return cachedPlan;
       }
@@ -312,7 +319,7 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     }
 
     const emptyPlan = { workouts: [] };
-    setPlan(emptyPlan);
+    applyPlan(emptyPlan);
     showAppError("firebase", "Не получилось загрузить назначенные тренировки.");
     return emptyPlan;
   }

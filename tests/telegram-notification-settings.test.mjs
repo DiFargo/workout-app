@@ -118,8 +118,8 @@ test("enabled and legacy connected users retain workout and progress reminders",
   }
 });
 
-test("calendar opt-out and reminder deduplication remain effective", async () => {
-  assert.deepEqual(await scheduledDeliveries({}, { enabled: false }), []);
-  assert.deepEqual(await scheduledDeliveries({}, { reminderEnabled: false }), []);
+test("workout opt-out does not suppress independent progress reminders; deduplication remains effective", async () => {
+  assert.deepEqual(await scheduledDeliveries({}, { enabled: false }), ["photo", "measurements"]);
+  assert.deepEqual(await scheduledDeliveries({}, { reminderEnabled: false }), ["photo", "measurements"]);
   assert.deepEqual(await scheduledDeliveries({}, {}, true), []);
 });

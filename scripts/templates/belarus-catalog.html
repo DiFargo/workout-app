@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Продукты · Свой ритм</title>
+<style>
+:root{--canvas:#F2F2F7;--card:#fff;--surface:#EFEFF4;--text:#1C1C1E;--secondary:#636366;--accent:#3F73B8;--border:rgba(60,60,67,.12);--success:#237A42}
+*{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button,select,summary{cursor:pointer}button,a,input,select,summary{-webkit-tap-highlight-color:transparent}button:active{opacity:.7}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}a{color:var(--accent)}
+.shell{max-width:760px;margin:auto;padding:0 16px calc(28px + env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:2;background:var(--canvas);padding:calc(14px + env(safe-area-inset-top)) 0 12px}.heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}h1{font-size:29px;line-height:1.2;letter-spacing:-.7px;margin:0}.count{color:var(--secondary);font-size:14px}label{display:block;color:var(--secondary);font-size:13px;margin-bottom:6px}.searchbox{display:flex;align-items:center;border:1px solid var(--border);background:var(--card);border-radius:14px;padding-left:13px}.searchbox svg{width:20px;height:20px;color:var(--secondary);flex-shrink:0}input[type=search]{min-width:0;width:100%;height:50px;border:0;background:transparent;padding:0 12px;color:var(--text)}.clear{width:46px;height:46px;border:0;background:none;color:var(--secondary);font-size:24px}.tools{display:flex;gap:8px;margin-top:10px}.tools button,.filter-control,summary{min-height:44px;border:1px solid var(--border);border-radius:11px;background:var(--card);padding:10px 12px;color:var(--text)}.tools button{flex:1}.tools button[aria-pressed=true]{color:var(--accent);border-color:var(--accent);background:#eef3fa}.filter-panel{margin-top:10px;padding:14px;background:var(--card);border-radius:14px}.filter-panel>div{margin-bottom:12px}.filter-panel>div:last-child{margin:0}select{width:100%;min-height:44px;padding:9px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text)}.hint{margin:12px 0 6px;font-size:13px;color:var(--secondary)}.status{min-height:24px;display:flex;justify-content:space-between;align-items:center;margin:4px 0 10px;font-size:13px;color:var(--secondary)}#results{display:grid;gap:10px}.food{display:block;width:100%;text-align:left;border:1px solid var(--border);border-radius:16px;padding:15px;background:var(--card);color:var(--text)}.top{display:flex;gap:12px;align-items:flex-start}.title{flex:1;min-width:0}.title strong{display:block;font-weight:600;line-height:1.35;overflow-wrap:anywhere}.brand{color:var(--secondary);font-size:13px;margin-top:5px;overflow-wrap:anywhere}.energy{min-width:55px;text-align:right;font-variant-numeric:tabular-nums}.energy b{font-size:21px;font-weight:650;line-height:1.2}.energy small{display:block;font-size:12px;color:var(--secondary)}.nutrition{display:flex;flex-wrap:wrap;gap:8px 15px;margin-top:12px;font-size:13px;color:var(--secondary);font-variant-numeric:tabular-nums}.nutrition b{font-weight:500;color:var(--text)}.basis{font-size:12px;color:var(--secondary);margin-top:9px}.by{color:var(--success)}.empty{padding:28px 15px;text-align:center;color:var(--secondary)}#more{width:100%;min-height:46px;margin-top:14px;border:1px solid var(--border);border-radius:12px;color:var(--accent);background:var(--card)}footer{font-size:12px;color:var(--secondary);padding-top:24px;line-height:1.6}.download{display:inline-block;padding:8px 0;margin-right:20px}dialog{max-height:85dvh;max-width:530px;width:calc(100% - 24px);border:0;border-radius:24px;padding:24px;background:var(--card);color:var(--text);overflow:auto;box-shadow:0 18px 65px #0002}dialog::backdrop{background:#0005}dialog h2{font-size:21px;line-height:1.3;padding-right:24px;margin:8px 0}dialog p{color:var(--secondary);font-size:14px}.close-dialog{position:absolute;right:12px;top:10px;width:44px;height:44px;border:0;border-radius:50%;background:var(--surface);font-size:26px}.portion{padding-top:14px;border-top:1px solid var(--border)}.portion input{width:100%;height:46px;border:1px solid var(--border);border-radius:10px;padding:10px}.detail-nutrition{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:18px 0}.detail-nutrition div{padding:12px 3px;text-align:center;background:var(--surface);border-radius:10px;font-size:12px;color:var(--secondary)}.detail-nutrition b{display:block;font-size:19px;color:var(--text)}#details-source{overflow-wrap:anywhere}.skip{position:absolute;top:-100px}.skip:focus{top:0;background:white;z-index:5}[hidden]{display:none!important}@media(min-width:700px){.shell{padding-top:15px}#results{grid-template-columns:1fr 1fr}.food{height:100%}}@media(prefers-reduced-motion:no-preference){button{transition:background-color .15s,opacity .15s}}@media(max-width:440px){dialog{margin:auto 0 0;width:100%;max-width:100%;border-radius:24px 24px 0 0;padding-bottom:calc(24px + env(safe-area-inset-bottom))}}
+input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}.searchbox:focus-within{outline:2px solid var(--accent);outline-offset:1px}.searchbox input:focus-visible{outline:none}
+</style>
+</head>
+<body>
+<a class="skip" href="#results">К результатам поиска</a>
+<div class="shell">
+<header>
+  <div class="heading"><h1>Продукты</h1><span class="count">10 000 карточек</span></div>
+  <label for="query">Название, бренд или штрихкод</label>
+  <div class="searchbox"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="query" type="search" placeholder="Например, творог Савушкин" autocomplete="off" spellcheck="false"><button class="clear" id="clear" aria-label="Очистить поиск">×</button></div>
+  <div class="tools"><button id="by" aria-pressed="false" title="Беларусь указана в источнике">Беларусь</button><button id="filters" aria-expanded="false" aria-controls="filter-panel">Фильтры</button></div>
+  <div class="filter-panel" id="filter-panel" hidden>
+    <div><label for="category">Категория</label><select id="category"><option value="">Все категории</option></select></div>
+    <div><label for="source">Источник данных</label><select id="source"><option value="">Все источники</option><option value="openfoodfacts">Open Food Facts</option><option value="gemini">Мой список Gemini</option></select></div>
+  </div>
+</header>
+<main>
+  <p class="hint">Поиск по части слова, русскому или английскому названию бренда.</p>
+  <div class="status" role="status" aria-live="polite" aria-atomic="true" id="status">Подготавливаем быстрый поиск…</div>
+  <div id="results" aria-label="Найденные продукты" aria-busy="true"></div>
+  <button id="more" hidden>Показать ещё</button>
+</main>
+<footer>
+  <div>Беларусь — отметка в источнике, а не наличие в магазине сегодня. Для остальных карточек продажа в Беларуси не подтверждена.</div>
+  <div>КБЖУ из <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> (ODbL) и вашего списка Gemini. Единица расчёта указана в каждой карточке.</div>
+  <a class="download" href="products.json" download>Скачать JSON</a><a class="download" href="README.md">О составе базы</a>
+</footer>
+</div>
+<dialog id="details" aria-labelledby="details-title">
+  <button class="close-dialog" id="close-dialog" aria-label="Закрыть карточку">×</button>
+  <h2 id="details-title"></h2><p id="details-brand"></p>
+  <div class="detail-nutrition" id="details-nutrition"></div>
+  <p id="details-basis"></p><p id="details-market"></p><p id="details-source"></p>
+  <div class="portion" id="portion"><label for="amount">Масса порции, г</label><input id="amount" type="number" min="1" max="10000" step="1" value="100" inputmode="decimal"><p id="portion-result" role="status"></p></div>
+</dialog>
+<script>/*__CATALOG_DATA__*/</script>
+<script>
+/*__SEARCH_LIBRARY__*/
+const {products,manifest}=window.CATALOG;
+const $=s=>document.querySelector(s),rows=new Map(products.map(r=>[r.id,r]));
+const workerCode=/*__WORKER_CODE__*/;
+const workerUrl=URL.createObjectURL(new Blob([workerCode],{type:'text/javascript'}));
+const worker=new Worker(workerUrl);
+const number=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1});
+const fmt=n=>number.format(n);
+const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let ready=false,sequence=0,page=0,pendingFrame=0,activeRow=null,showBY=false;
+const basis=r=>r.nutrition.basis==='unknown'?'КБЖУ из списка · единица не указана':'На 100 г по источнику';
+Object.keys(manifest.categoryCounts).sort((a,b)=>a.localeCompare(b,'ru')).forEach(c=>{const opt=new Option(c,c);$('#category').add(opt)});
+function search(append=false){
+  if(!ready)return;
+  if(!append)page=0;
+  const id=++sequence;
+  window.__searchStarted=performance.now();
+  worker.postMessage({type:'search',id,query:$('#query').value,options:{market:showBY?'BY':'',category:$('#category').value,source:$('#source').value,offset:page*30,limit:30},append});
+}
+function schedule(){sequence++;cancelAnimationFrame(pendingFrame);pendingFrame=requestAnimationFrame(()=>search())}
+worker.onmessage=({data})=>{
+  if(data.type==='ready'){ready=true;window.__catalogReady=true;URL.revokeObjectURL(workerUrl);search();return}
+  if(data.id!==sequence)return;
+  const fragment=document.createDocumentFragment();
+  for(const id of data.ids){const r=rows.get(id),n=r.nutrition;const card=document.createElement('button');card.type='button';card.className='food';card.dataset.id=id;
+    card.innerHTML=`<div class="top"><div class="title"><strong>${escape(r.name)}</strong><div class="brand">${escape(r.brand||'Бренд не указан')}${r.market==='BY'?' · <span class="by">Беларусь</span>':''}</div></div><div class="energy"><b>${fmt(n.kcal)}</b><small>ккал</small></div></div><div class="nutrition"><span>Б <b>${fmt(n.protein)}</b></span><span>Ж <b>${fmt(n.fat)}</b></span><span>У <b>${fmt(n.carbs)}</b></span></div><div class="basis">${basis(r)}${r.nutritionConflict?' · Есть расхождения':''}</div>`;
+    card.onclick=()=>openDetails(r);fragment.append(card);
+  }
+  if(!data.append)$('#results').replaceChildren();
+  $('#results').append(fragment);$('#results').setAttribute('aria-busy','false');
+  if(!data.total)$('#results').innerHTML='<div class="empty">Ничего не найдено. Попробуйте короткое название или уберите фильтры.</div>';
+  $('#status').textContent=`${data.corrected?'Похожие совпадения · ':''}Найдено ${fmt(data.total)}`;
+  $('#more').hidden=(page+1)*30>=data.total;
+  window.__lastSearch={query:data.query,workerMs:data.ms,renderMs:performance.now()-window.__searchStarted,total:data.total};
+};
+worker.onerror=()=>{$('#status').textContent='Не удалось запустить поиск. Откройте файл в актуальном браузере.'};
+worker.postMessage({type:'init',rows:products});
+$('#query').addEventListener('input',schedule);$('#category').onchange=schedule;$('#source').onchange=schedule;
+$('#clear').onclick=()=>{$('#query').value='';$('#query').focus();schedule()};
+$('#by').onclick=()=>{showBY=!showBY;$('#by').setAttribute('aria-pressed',String(showBY));schedule()};
+$('#filters').onclick=()=>{const panel=$('#filter-panel');panel.hidden=!panel.hidden;$('#filters').setAttribute('aria-expanded',String(!panel.hidden))};
+$('#more').onclick=()=>{page++;search(true)};
+function openDetails(r){
+ activeRow=r;$('#details-title').textContent=r.name;$('#details-brand').textContent=[r.brand,r.category,r.quantity].filter(Boolean).join(' · ');
+ $('#details-nutrition').innerHTML=[['kcal','ккал'],['protein','белки, г'],['fat','жиры, г'],['carbs','углеводы, г']].map(([k,l])=>`<div><b>${fmt(r.nutrition[k])}</b>${l}</div>`).join('');
+ $('#details-basis').textContent=basis(r)+(r.nutritionConflict?'. У объединённых записей различаются КБЖУ; варианты сохранены в JSON.':'');
+ $('#details-market').textContent=r.market==='BY'?'Беларусь указана в источнике.':r.market==='RU'?'Россия указана в источнике. Наличие в Беларуси неизвестно.':'Наличие в Беларуси не подтверждено источником.';
+ $('#details-source').replaceChildren();
+ if(r.sourceUrl){const a=document.createElement('a');a.href=r.sourceUrl;a.target='_blank';a.rel='noopener';a.textContent='Карточка Open Food Facts';$('#details-source').append(a);$('#details-source').append(document.createTextNode(r.barcodes.length?' · '+r.barcodes.join(', '):''));}
+ else $('#details-source').textContent='Из вашего списка Gemini. Для расчёта порции нужно уточнить, к какой массе или объёму относятся КБЖУ.';
+ $('#portion').hidden=r.nutrition.basis==='unknown'||!!r.nutritionConflict;$('#amount').value='100';calculate();$('#details').showModal();
+}
+function calculate(){if(!activeRow)return;const n=portionNutrition(activeRow,Number($('#amount').value));$('#portion-result').textContent=n?`${fmt(n.kcal)} ккал · Б ${fmt(n.protein)} · Ж ${fmt(n.fat)} · У ${fmt(n.carbs)}`:'Введите массу больше нуля.'}
+$('#amount').oninput=calculate;$('#close-dialog').onclick=()=>$('#details').close();$('#details').addEventListener('click',e=>{if(e.target===$('#details')){const r=$('#details').getBoundingClientRect();if(e.clientY<r.top||e.clientY>r.bottom||e.clientX<r.left||e.clientX>r.right)$('#details').close()}});
+</script>
+</body>
+</html>

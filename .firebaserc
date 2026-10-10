@@ -1,5 +1,6 @@
 {
   "projects": {
-    "production": "tren-85720"
+    "production": "tren-85720",
+    "staging": "tren-85720-staging"
   }
 }

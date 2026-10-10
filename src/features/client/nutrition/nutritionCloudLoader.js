@@ -1,4 +1,5 @@
 import { doc, getDoc } from "firebase/firestore";
+import { captureAuthSession } from "../../../utils/authSession.js";
 
 import { mergeNutritionStates } from "../../../utils/nutritionStateMerge";
 import { getPersonalMyFoodsDocRef } from "../../../utils/personalMyFoodsStorage";
@@ -12,6 +13,7 @@ const ERROR_LOAD_NUTRITION = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\
 
 export function createNutritionCloudLoader({
   auth,
+  captureSession = () => captureAuthSession(auth),
   db,
   NUTRITION_STORAGE_KEY,
   startPerformanceCheck,
@@ -21,6 +23,8 @@ export function createNutritionCloudLoader({
   setNutritionCloudReady
 }) {
   async function loadNutritionFromFirebase(uid) {
+    const session = captureSession();
+    if (session.uid !== uid || !session.isCurrent()) return;
     startPerformanceCheck(NUTRITION_LOAD_LABEL, { userId: String(uid || "").slice(0, 6) });
 
     try {
@@ -28,7 +32,7 @@ export function createNutritionCloudLoader({
         getDoc(doc(db, "users", uid, "nutrition", "state")),
         getDoc(getPersonalMyFoodsDocRef(uid))
       ]);
-      if (auth.currentUser?.uid !== uid) return;
+      if (!session.isCurrent()) return;
 
       const userData = userSnap.exists() ? userSnap.data() : {};
       const personalMyFoodsData = personalMyFoodsSnap.exists() ? personalMyFoodsSnap.data() : {};
@@ -53,7 +57,7 @@ export function createNutritionCloudLoader({
       };
 
       setNutrition((current) => {
-        if (auth.currentUser?.uid !== uid) return current;
+        if (!session.isCurrent()) return current;
         const next = { ...mergeNutritionStates(current?.__uid && current.__uid !== uid ? {} : current, scopedNutrition), __uid: uid };
         safeWriteUserJsonStorage(NUTRITION_STORAGE_KEY, uid, next);
         return next;
@@ -64,13 +68,16 @@ export function createNutritionCloudLoader({
         myFoods: Object.keys(mergedNutrition.myFoods || {}).length
       });
     } catch (error) {
+      if (!session.isCurrent()) return;
       console.error("Nutrition load error", error);
       showAppError(
         typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "firebase",
         ERROR_LOAD_NUTRITION
       );
     } finally {
-      if (auth.currentUser?.uid === uid) setNutritionCloudReady(true);
+      if (session.isCurrent()) {
+        setNutritionCloudReady((current) => session.isCurrent() ? true : current);
+      }
     }
   }
 

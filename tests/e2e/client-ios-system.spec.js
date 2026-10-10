@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(120_000);
@@ -65,7 +65,7 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
       ));
       expect(hasVisibleHarnessContent).toBe(true);
       await expect(page.locator("body")).toBeAttached();
-      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(247, 246, 248)");
+      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(245, 247, 248)");
 
       const audit = await page.evaluate((blockedFragments) => {
         const html = document.documentElement;
@@ -110,7 +110,7 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
         };
       }, legacyAccentFragments);
 
-      expect(audit.background).toBe("rgb(247, 246, 248)");
+      expect(audit.background).toBe("rgb(245, 247, 248)");
       expect(audit.fontFamily.toLowerCase()).toContain("apple-system");
       expect(audit.horizontalOverflow).toBeLessThanOrEqual(1);
       expect(audit.offenders).toEqual([]);

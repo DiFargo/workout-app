@@ -52,7 +52,7 @@
   padding: 6px 9px;
   border-radius: 10px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 12px;
   white-space: nowrap;
 }

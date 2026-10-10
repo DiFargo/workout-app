@@ -4,6 +4,8 @@ import {
   getDueProgressReminderTypes,
   getDueReminderOffsets,
   getNextScheduledWorkout,
+  getActivePlanWorkouts,
+  getPlannedWorkoutForReminder,
   normalizeReminderOffsets
 } from "../functions/reminderSchedule.js";
 
@@ -35,6 +37,40 @@ test("moving an explicit workout date changes the next reminder event", () => {
 
   assert.equal(before.key, "2026-06-18");
   assert.equal(after.key, "2026-06-20");
+});
+
+test("workout reminder requires a non-completed workout in the explicit plan slot", () => {
+  const event = { key: "2026-06-18" };
+  const calendar = { plannedWorkouts: [
+    { workoutId: "workout-1", date: "2026-06-18", status: "planned" },
+    { workoutId: "workout-2", date: "2026-06-20", status: "planned" }
+  ] };
+
+  assert.equal(getPlannedWorkoutForReminder(calendar, event)?.workoutId, "workout-1");
+  assert.equal(getPlannedWorkoutForReminder(calendar, { key: "2026-06-19" }), null);
+  assert.equal(getPlannedWorkoutForReminder({ plannedWorkouts: [
+    { workoutId: "workout-1", date: event.key, status: "completed" }
+  ] }, event), null);
+});
+
+test("legacy calendars without explicit workout slots keep their weekly reminder behavior", () => {
+  assert.equal(getPlannedWorkoutForReminder({ scheduledDates: ["2026-06-18"] }, { key: "2026-06-18" }), undefined);
+});
+
+test("reminders only see workouts from the active plan, not archived assignments", () => {
+  const workouts = [
+    { id: "old-1", assignedProgramUpdatedAt: "assignment-old" },
+    { id: "new-1", assignedProgramUpdatedAt: "assignment-current" }
+  ];
+  assert.deepEqual(
+    getActivePlanWorkouts(workouts, { assignedProgramUpdatedAt: "assignment-current" }, {}),
+    [workouts[1]]
+  );
+  assert.deepEqual(getActivePlanWorkouts(workouts, { assignedWorkoutCount: 0 }, {}), []);
+  assert.deepEqual(
+    getActivePlanWorkouts(workouts, { basicWorkoutPlan: { workouts: [{ id: "new-1" }] } }, {}),
+    [workouts[1]]
+  );
 });
 
 test("only the currently due reminder offset is returned", () => {

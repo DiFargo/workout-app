@@ -10,7 +10,7 @@
   align-items: start;
   gap: 14px;
   overflow: hidden;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: var(--color-surface);
   color: var(--color-food-flow-text);
@@ -32,7 +32,7 @@
 .root.analyzing {
   min-height: 100px;
   align-items: center;
-  border-color: color-mix(in srgb, var(--color-accent) 30%, var(--apple-separator, rgba(60,60,67,.12)));
+  border-color: color-mix(in srgb, var(--color-accent) 30%, var(--apple-separator, rgba(57, 82, 91,.12)));
   background:
     radial-gradient(circle at 0% 50%, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 42%),
     var(--color-surface);
@@ -102,7 +102,7 @@
 .heading strong {
   min-width: 0;
   overflow: visible;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 900;
   line-height: 1.1;
@@ -127,7 +127,7 @@
   max-width: 100%;
   margin: 0;
   overflow: visible;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 750;
   line-height: 1.25;
@@ -207,7 +207,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--ownset-action-gradient);
   animation: dotPulse 1s ease-in-out infinite;
 }
 
@@ -367,10 +367,10 @@
   padding: 14px;
   grid-template-columns: 72px minmax(0, 1fr) 44px;
   gap: 14px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
@@ -387,28 +387,28 @@
   height: 72px;
   border: 0;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 :global(:root[data-app-theme="warm-light"]) .analyzing .image { border-color: #cfd7dc; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .scanLine { background: linear-gradient(180deg, transparent, rgba(47, 125, 104, 0.58), transparent); }
 
-:global(:root[data-app-theme="warm-light"]) .heading strong { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .description { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 450; }
-:global(:root[data-app-theme="warm-light"]) .confidence { background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); }
+:global(:root[data-app-theme="warm-light"]) .heading strong { color: var(--apple-text, #1c282e); -webkit-text-fill-color: var(--apple-text, #1c282e); font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .description { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .confidence { background: var(--apple-surface-muted, #edf1f3); color: var(--apple-action, #396ba6); }
 
 :global(:root[data-app-theme="warm-light"]) .candidate {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 14px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .candidateIcon,
 :global(:root[data-app-theme="warm-light"]) .resetButton {
   border-color: transparent;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
 }
 
-:global(:root[data-app-theme="warm-light"]) .dots i { background: var(--apple-action, #3f73b8); }
+:global(:root[data-app-theme="warm-light"]) .dots i { background: var(--ownset-action-gradient); }

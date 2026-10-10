@@ -2,6 +2,7 @@ import {
   BASIC_WORKOUT_EXERCISE_GROUPS,
   BASIC_WORKOUT_EXERCISE_LIBRARY
 } from "../data/basicWorkoutExerciseLibrary.js";
+import { hasCompletedExerciseSets } from "./auditSafety.js";
 
 const GROUP_MATCHERS = [
   ["posterior_chain", /румын|станов|сгибани[ея] ног|ягодич|гиперэкстензи|мост/iu],
@@ -163,17 +164,20 @@ export function getBasicWorkoutAlternatives(exercise = {}, workout = {}, plan = 
   ));
   const location = getPreferredLocation(plan);
   const localAlternatives = availableExercises.filter((item) => item.locations.includes(location));
-  const alternatives = localAlternatives.length >= 3 ? localAlternatives : availableExercises;
-  const orderedAlternatives = originalExercise && availableExercises.some((item) => item.id === originalExercise.id)
+  const alternatives = [...localAlternatives].sort((a, b) => Number(a.hasVideo) - Number(b.hasVideo));
+  const orderedAlternatives = originalExercise && localAlternatives.some((item) => item.id === originalExercise.id)
     ? [originalExercise, ...alternatives.filter((item) => item.id !== originalExercise.id)]
     : alternatives;
 
   return orderedAlternatives
-    .slice(0, 3)
+    .slice(0, 2)
     .map((item) => toAlternative(item, group));
 }
 
 export function replaceBasicWorkoutExerciseInPlan(plan = {}, workoutId = "", exerciseId = "", alternative = {}) {
+  const currentWorkout = (Array.isArray(plan?.workouts) ? plan.workouts : []).find((item) => item?.id === workoutId);
+  const currentExercise = (Array.isArray(currentWorkout?.exercises) ? currentWorkout.exercises : []).find((item) => item?.id === exerciseId);
+  if (hasCompletedExerciseSets(currentExercise)) return { plan, replacement: null };
   const changedAt = new Date().toISOString();
   let replacement = null;
   const workouts = (Array.isArray(plan?.workouts) ? plan.workouts : []).map((workout) => {

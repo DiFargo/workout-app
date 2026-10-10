@@ -11,7 +11,8 @@ import {
   calculateAiNutritionMacros,
   calculateAiNutritionTargetCalorieAdjustment,
   calculatePersonalAiNutritionCalories,
-  getAiNutritionActivityMultiplier
+  getAiNutritionActivityMultiplier,
+  parseAiNutritionProfileNumber
 } from "./aiNutritionCalculations.js";
 import {
   getAiNutritionActivityLabel,
@@ -23,12 +24,12 @@ import {
 } from "./aiNutritionSchedule.js";
 
 export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, profile = null, history = [], previousPlan = null) {
-  const weight = Number(profile?.weight) || 80;
-  const height = Number(profile?.height) || 180;
-  const age = Number(profile?.age) || 30;
+  const weight = parseAiNutritionProfileNumber(profile?.weight) || 80;
+  const height = parseAiNutritionProfileNumber(profile?.height) || 180;
+  const age = parseAiNutritionProfileNumber(profile?.age) || 30;
   const sex = profile?.sex || "male";
   const goal = profile?.goal || "recomp";
-  const targetWeight = Number(profile?.targetWeight);
+  const targetWeight = parseAiNutritionProfileNumber(profile?.targetWeight);
   const targetWeightIsValid = Number.isFinite(targetWeight) && targetWeight >= 35 && targetWeight <= 350;
   const targetDeltaKg = targetWeightIsValid ? Number((targetWeight - weight).toFixed(1)) : null;
   const targetCalorieAdjustment = calculateAiNutritionTargetCalorieAdjustment(profile);
@@ -49,10 +50,10 @@ export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, p
   // Only protect against accidental repeated cuts on refresh.
   // If profile data changed, the personal calculation wins.
   const sameBodyProfile =
-    String(previousPlan?.profile?.weight || "") === String(profile?.weight || "") &&
-    String(previousPlan?.profile?.height || "") === String(profile?.height || "") &&
-    String(previousPlan?.profile?.age || "") === String(profile?.age || "") &&
-    String(previousPlan?.profile?.targetWeight || "") === String(profile?.targetWeight || "") &&
+    parseAiNutritionProfileNumber(previousPlan?.profile?.weight) === parseAiNutritionProfileNumber(profile?.weight) &&
+    parseAiNutritionProfileNumber(previousPlan?.profile?.height) === parseAiNutritionProfileNumber(profile?.height) &&
+    parseAiNutritionProfileNumber(previousPlan?.profile?.age) === parseAiNutritionProfileNumber(profile?.age) &&
+    parseAiNutritionProfileNumber(previousPlan?.profile?.targetWeight) === parseAiNutritionProfileNumber(profile?.targetWeight) &&
     String(previousPlan?.profile?.sex || "") === String(sex) &&
     String(previousPlan?.profile?.activity || "medium") === String(activity);
 
@@ -61,12 +62,6 @@ export function buildAiNutritionMonthlyPlan(nutrition = defaultNutritionState, p
   }
 
   startCalories = Math.max(goal === "dry" ? 1800 : 1600, startCalories);
-
-  // Protection: refresh must not use already AI-reduced calories as a new base.
-  // If the goal did not change, do not auto-cut below the previous week-1 plan.
-  if (sameGoalAsPrevious && previousStartCalories > 0 && goal !== "mass") {
-    startCalories = Math.max(startCalories, previousStartCalories);
-  }
 
   const weekSteps = goal === "mass"
     ? [0, 100, 200, 250]

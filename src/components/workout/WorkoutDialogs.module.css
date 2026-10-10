@@ -26,6 +26,23 @@
   text-align: center;
 }
 
+.draftHeader {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.draftHeader .draftIcon.draftIcon {
+  grid-column: 2;
+  margin: 0 auto;
+}
+
+.draftHeader .exitCloseButton {
+  grid-column: 3;
+}
+
 .draftIcon {
   width: 52px;
   height: 52px;
@@ -526,9 +543,9 @@
   box-sizing: border-box;
   width: min(370px, 100%);
   padding: 20px 16px 16px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 18px 52px rgba(32, 35, 38, 0.18);
 }
@@ -537,15 +554,15 @@
   width: 50px;
   height: 50px;
   margin-bottom: 12px;
-  color: var(--apple-secondary, #636366);
-  background: var(--apple-separator, rgba(60,60,67,.12));
+  color: var(--apple-secondary, #617078);
+  background: var(--apple-separator, rgba(57, 82, 91,.12));
   border: 0;
   font-size: 22px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .draftCard.draftCard h2,
 :global(:root[data-app-theme="warm-light"]) .postCard.postCard h2 {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 20px;
   font-weight: 700;
   line-height: 25px;
@@ -555,7 +572,7 @@
 :global(:root[data-app-theme="warm-light"]) .draftCard.draftCard p,
 :global(:root[data-app-theme="warm-light"]) .postCard.postCard > p {
   margin: 8px auto 18px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 500;
   line-height: 17px;
@@ -568,8 +585,8 @@
 :global(:root[data-app-theme="warm-light"]) .draftActions.draftActions > button {
   min-height: 48px;
   padding: 0 10px;
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-separator, rgba(60,60,67,.12));
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-separator, rgba(57, 82, 91,.12));
   border: 0;
   border-radius: 17px;
   box-shadow: none;
@@ -579,7 +596,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .restoreButton.restoreButton {
   color: #ffffff;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 /* Exit and partial-save use the current light lavender iOS sheet. */
@@ -599,9 +616,9 @@
   box-sizing: border-box;
   width: min(100%, 384px);
   padding: 16px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
   box-shadow: 0 18px 48px rgba(27, 35, 31, 0.18);
   text-align: left;
@@ -618,9 +635,9 @@
   height: 44px;
   min-height: 44px;
   margin: 0;
-  color: var(--apple-action, #3f73b8);
-  background: var(--apple-surface-muted, #efeff4);
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  color: var(--apple-action, #396ba6);
+  background: var(--apple-surface-muted, #edf1f3);
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .exitIcon.exitIcon {
@@ -637,7 +654,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .exitCard.exitCard h2 {
   margin: 0;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 20px;
   font-weight: 750;
   line-height: 1.2;
@@ -647,7 +664,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .exitCard.exitCard p {
   margin: 8px 0 18px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.42;
@@ -666,11 +683,11 @@
 :global(:root[data-app-theme="warm-light"]) .exitActions.exitActions > button {
   min-height: 50px;
   padding: 0 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   box-shadow: none;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 700;
   line-height: 1.15;
@@ -679,13 +696,13 @@
 :global(:root[data-app-theme="warm-light"]) .exitCardExit .exitActions.exitActions > button:first-child,
 :global(:root[data-app-theme="warm-light"]) .exitCardIncomplete .exitActions.exitActions > button:last-child {
   color: #ffffff;
-  background: var(--apple-action, #3f73b8);
-  border-color: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
+  border-color: var(--apple-action, #396ba6);
   box-shadow: 0 8px 18px rgba(47, 125, 104, 0.24);
 }
 
 :global(:root[data-app-theme="warm-light"]) .exitCardExit .exitActions.exitActions > button:last-child {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   background: #ffffff;
 }
 
@@ -700,8 +717,8 @@
 
 :global(:root[data-app-theme="warm-light"]) .postBadge.postBadge {
   padding: 6px 10px;
-  color: var(--apple-secondary, #636366);
-  background: var(--apple-separator, rgba(60,60,67,.12));
+  color: var(--apple-secondary, #617078);
+  background: var(--apple-separator, rgba(57, 82, 91,.12));
   border: 0;
   border-radius: 13px;
   font-size: 9px;
@@ -716,15 +733,15 @@
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption {
   min-height: 106px;
   padding: 11px 6px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #f7f8f8;
   border: 1px solid transparent;
   border-radius: 18px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption:active {
-  background: var(--apple-separator, rgba(60,60,67,.12));
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-separator, rgba(57, 82, 91,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption > span {
@@ -732,13 +749,13 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 11px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption small {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 8px;
   font-weight: 500;
 }
@@ -746,8 +763,8 @@
 :global(:root[data-app-theme="warm-light"]) .readinessOverlay.readinessOverlay {
   padding: 0;
   align-items: stretch;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   backdrop-filter: none;
 }
 
@@ -771,7 +788,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > span {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 24px;
   font-weight: 750;
   letter-spacing: -0.55px;
@@ -780,7 +797,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > small {
   margin-top: 1px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 500;
 }
@@ -793,9 +810,9 @@
   flex-direction: column;
   gap: 10px;
   overflow: hidden auto;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
   scrollbar-width: none;
@@ -808,26 +825,26 @@
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro {
   min-height: 64px;
   padding: 10px 11px;
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-surface-muted, #edf1f3);
   border-radius: 17px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro > span {
-  color: var(--apple-action, #3f73b8);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #396ba6);
+  background: var(--apple-surface-muted, #edf1f3);
   border: 0;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 13px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro p {
   margin: 2px 0 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 500;
 }
@@ -845,16 +862,16 @@
   grid-template-columns: 38px minmax(0, 1fr);
   align-items: center;
   gap: 10px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption.active {
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-surface-muted, #edf1f3);
   border-color: #a9d2c3;
   box-shadow: 0 0 0 3px rgba(47, 125, 104, 0.08);
 }
@@ -865,14 +882,14 @@
 
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption strong {
   margin: 0;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 13px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption small {
   margin-top: 2px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9px;
   font-weight: 500;
 }
@@ -881,8 +898,8 @@
   min-height: 30px;
   margin: 0;
   padding: 7px 9px;
-  color: var(--apple-blue-pressed, #3565a3);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-blue-pressed, #315f91);
+  background: var(--apple-surface-muted, #edf1f3);
   border-radius: 12px;
   font-size: 10px;
   font-weight: 600;
@@ -907,7 +924,7 @@
   gap: 10px;
   background: rgba(255, 255, 255, 0.98);
   border: 0;
-  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
   box-shadow: none;
   transform: translateX(-50%);
@@ -926,14 +943,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions > button:first-child {
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-surface-muted, #edf1f3);
   border-radius: 24px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions > button:last-child {
   color: #ffffff;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 @media (min-width: 641px) {
@@ -1200,17 +1217,17 @@
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 50%;
   background: #ffffff;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
 }
 
 .postOptionIcon,
 .readinessOptionIcon {
   display: grid;
   place-items: center;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
 }
 
 .postOptionIcon {
@@ -1218,7 +1235,7 @@
   height: 42px;
   margin: 0 auto;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   font-size: 25px;
   line-height: 1;
 }
@@ -1227,7 +1244,7 @@
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   font-size: 23px;
   line-height: 1;
 }
@@ -1245,7 +1262,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .postCard.postCard > p {
   margin-bottom: 16px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.4;
@@ -1345,11 +1362,71 @@
 :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions {
   position: static; inset: auto; transform: none; flex: 0 0 auto;
   width: 100%; max-width: none; height: auto; min-height: 0; max-height: none;
-  margin: 0; padding: 12px 20px 20px; border: 0; border-top: 1px solid rgba(60,60,67,.12);
+  margin: 0; padding: 12px 20px 20px; border: 0; border-top: 1px solid rgba(57, 82, 91,.12);
   border-radius: 0; background: #fff; box-shadow: none;
   grid-template-columns: minmax(80px, 1fr) minmax(0, 2fr);
 }
 :global(:root[data-app-theme="warm-light"]) .draftActions.draftActions { grid-template-columns: 1fr; }
 @media (max-width: 640px) {
   :global(:root[data-app-theme="warm-light"]) .readinessOverlay.readinessOverlay { align-items: flex-end; }
+}
+
+/* The readiness and post-workout emoji choices are intentionally preserved. */
+:global(:root[data-app-theme="warm-light"]) .readinessOverlay.readinessOverlay,
+:global(:root[data-app-theme="warm-light"]) .postOverlay.postOverlay,
+:global(:root[data-app-theme="warm-light"]) .exitOverlay.exitOverlay,
+:global(:root[data-app-theme="warm-light"]) .draftOverlay.draftOverlay { display: grid; place-items: end center; padding: max(20px,env(safe-area-inset-top)) 0 0; background: rgba(28,28,30,.22); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+:global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage,
+:global(:root[data-app-theme="warm-light"]) .postCard.postCard,
+:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard,
+:global(:root[data-app-theme="warm-light"]) .draftCard.draftCard {
+  position: relative; width: min(100%,520px); max-width: 520px; height: auto; min-height: 0; max-height: calc(100dvh - 20px - env(safe-area-inset-top));
+  margin: 0; padding: 34px 24px max(24px,env(safe-area-inset-bottom)); border: 0; border-radius: 34px 34px 0 0; background: #f5f7f8;
+  box-shadow: 0 20px 60px #0002; overflow-y: auto; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+}
+.readinessStage::before,.postCard::before,.exitCard::before,.draftCard::before { content: ""; position: absolute; top: 10px; left: calc(50% - 16px); width: 32px; height: 4px; border-radius: 9px; background: #d1d1d8; }
+:global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader { padding: 0 0 20px; align-items: center; text-align: center; }
+:global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > span { font-size: 17px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > small { font-size: 13px; font-weight: 400; margin-top: 6px; }
+:global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage { display: block; }
+:global(:root[data-app-theme="warm-light"]) .readinessCard.readinessCard { padding: 0; background: transparent; overflow: visible; }
+:global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro { padding: 16px; border-radius: 20px; background: white; }
+:global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro strong { font-size: 17px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro p { font-size: 14px; font-weight: 400; line-height: 1.45; }
+:global(:root[data-app-theme="warm-light"]) .readinessGrid.readinessGrid { margin-top: 16px; gap: 10px; }
+:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption { min-height: 82px; padding: 16px; gap: 14px; background: white; border: 1px solid transparent; border-radius: 20px; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption.active { background: #e8f1f2; border-color: #396ba6; }
+:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption strong { font-size: 17px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption small { font-size: 13px; font-weight: 400; line-height: 1.4; }
+:global(:root[data-app-theme="warm-light"]) .readinessConfirmation.readinessConfirmation { margin-top: 14px; padding: 0 4px; background: transparent; font-size: 13px; font-weight: 400; line-height: 1.45; }
+:global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions { padding: 16px 0 0; border: 0; background: transparent; gap: 8px; }
+:global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions button,
+:global(:root[data-app-theme="warm-light"]) .exitActions.exitActions button,
+:global(:root[data-app-theme="warm-light"]) .draftActions.draftActions button { min-height: 52px; border-radius: 99px; font-size: 16px; font-weight: 600; border: 0; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .postCard.postCard h2 { font-size: 24px; font-weight: 600; line-height: 1.2; letter-spacing: -.5px; }
+:global(:root[data-app-theme="warm-light"]) .postCard.postCard > p,
+:global(:root[data-app-theme="warm-light"]) .exitCard.exitCard p,
+:global(:root[data-app-theme="warm-light"]) .draftCard.draftCard p { font-size: 15px; font-weight: 400; line-height: 1.45; }
+:global(:root[data-app-theme="warm-light"]) .draftOverlay.draftOverlay {
+  grid-template-columns: minmax(0, 1fr);
+  justify-content: stretch;
+}
+:global(:root[data-app-theme="warm-light"]) .draftActions.draftActions .restoreButton {
+  color: #ffffff;
+  background: var(--ownset-action-gradient);
+}
+:global(:root[data-app-theme="warm-light"]) .postGrid.postGrid { gap: 10px; }
+:global(:root[data-app-theme="warm-light"]) .postOption.postOption { min-height: 144px; background: white; border: 0; border-radius: 20px; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .postOption.postOption strong { font-size: 15px; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .postOption.postOption small { display: block; font-size: 12px; font-weight: 400; line-height: 1.35; white-space: normal; overflow: visible; text-overflow: clip; -webkit-line-clamp: unset; }
+.postOptionIcon.postOptionIcon { width: 48px; height: 48px; font-size: 32px; background: transparent; }
+.readinessOptionIcon.readinessOptionIcon { width: 44px; height: 44px; font-size: 29px; background: transparent; }
+.postCloseButton.postCloseButton,.exitCloseButton.exitCloseButton { color: #617078; background: #e5e5ea; border: 0; border-radius: 50%; box-shadow: none; }
+@media(max-width:350px) { :global(:root[data-app-theme="warm-light"]) .postCard.postCard,:global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage { padding-inline: 16px; } }
+@media (max-width: 350px) {
+  :global(:root[data-app-theme="warm-light"]) .postGrid.postGrid { grid-template-columns: 1fr; }
+  :global(:root[data-app-theme="warm-light"]) .postOption.postOption { display: grid; grid-template-columns: 48px minmax(0,1fr); grid-template-rows: auto auto; align-content: center; column-gap: 12px; min-height: 88px; padding: 12px; text-align: left; }
+  :global(:root[data-app-theme="warm-light"]) .postOption.postOption > .postOptionIcon { grid-row: 1 / 3; align-self: center; }
+  :global(:root[data-app-theme="warm-light"]) .postOption.postOption > strong { margin: 0; overflow: visible; white-space: normal; }
+  :global(:root[data-app-theme="warm-light"]) .postOption.postOption > small { grid-column: 2; margin: 3px 0 0; }
 }

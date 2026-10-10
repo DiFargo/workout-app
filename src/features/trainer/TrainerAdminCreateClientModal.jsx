@@ -68,14 +68,15 @@ export default function TrainerAdminCreateClientModal({
 
           {adminCreatedCredentials && (
             <div className={styles.credentials}>
-              <span>Ссылка активации</span>
+              <span>Доступ для клиента</span>
               <strong>Логин: {adminCreatedCredentials.login || adminCreatedCredentials.email}</strong>
               <code>{adminCreatedCredentials.shareUrl || adminCreatedCredentials.inviteUrl}</code>
+              <p>Отправь клиенту скопированный текст: там есть ссылка, логин и порядок первого входа.</p>
               <button
                 type="button"
-                onClick={() => navigator.clipboard?.writeText(adminCreatedCredentials.shareUrl || adminCreatedCredentials.activationUrl || credentialsText)}
+                onClick={() => navigator.clipboard?.writeText(credentialsText || "")}
               >
-                Скопировать ссылку
+                Скопировать инструкцию для клиента
               </button>
             </div>
           )}

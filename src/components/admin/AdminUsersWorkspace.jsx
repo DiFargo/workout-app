@@ -6,10 +6,8 @@ import {
   GraduationCap,
   RefreshCw,
   Search,
-  ShieldCheck,
   UserRound,
-  UserPlus,
-  UsersRound
+  UserPlus
 } from "lucide-react";
 import styles from "./AdminUsersWorkspace.module.css";
 
@@ -17,7 +15,7 @@ export const ADMIN_USER_ROLE_FILTERS = [
   { id: "all", label: "Все" },
   { id: "client", label: "Клиенты" },
   { id: "trainer", label: "Тренеры" },
-  { id: "admin", label: "Администраторы" }
+  { id: "admin", label: "Администраторы", shortLabel: "Админы" }
 ];
 
 function asText(value) {
@@ -138,10 +136,9 @@ function UserRow({
           <span className={`${styles.roleBadge} ${styles[`roleBadge${role}`] || ""}`.trim()}>{roleMeta.label}</span>
         </span>
         <span className={styles.userEmail}>{asText(user?.email) || "Email не указан"}</span>
-        <span className={styles.userDescription}>{roleMeta.description}</span>
+        <span className={`${styles.statusBadge} ${styles[`status${status.id}`] || ""}`.trim()}>{status.label}</span>
       </span>
       <span className={styles.userMeta}>
-        <span className={`${styles.statusBadge} ${styles[`status${status.id}`] || ""}`.trim()}>{status.label}</span>
         {isActionable ? <ChevronRight aria-hidden="true" size={20} strokeWidth={2} /> : null}
       </span>
     </>
@@ -162,6 +159,7 @@ function UserRow({
         <div className={styles.userOpenButton}>{content}</div>
       )}
 
+      {canPromoteToTrainer || canAssignTrainer ? <div className={styles.userActions}>
       {canPromoteToTrainer ? (
         <button
           aria-label={`Назначить ${name} тренером`}
@@ -186,6 +184,7 @@ function UserRow({
           <span>{assignedTrainerId ? "Изменить тренера" : "Назначить тренера"}</span>
         </button>
       ) : null}
+      </div> : null}
     </article>
   );
 }
@@ -285,20 +284,6 @@ export default function AdminUsersWorkspace({
 
   return (
     <section className={`${styles.root} ${className}`.trim()} data-testid="admin-users-workspace">
-      <header className={styles.intro}>
-        <span className={styles.introIcon} aria-hidden="true"><UsersRound size={24} strokeWidth={1.9} /></span>
-        <div>
-          <p className={styles.eyebrow}>Доступ и роли</p>
-          <h2>Пользователи и роли</h2>
-          <p>Клиенты, тренеры и администраторы — отдельные типы аккаунтов с разными рабочими правами.</p>
-        </div>
-      </header>
-
-      <section className={styles.roleNote} aria-label="Как устроены роли">
-        <ShieldCheck aria-hidden="true" size={20} strokeWidth={1.9} />
-        <p><strong>Тренер — отдельная сущность.</strong> Откройте его карточку, чтобы работать с назначенными клиентами, личными программами и библиотекой упражнений.</p>
-      </section>
-
       <section className={styles.directory} aria-label="Список пользователей">
         <div className={styles.directoryControls}>
           <div className={styles.roleTabs} role="tablist" aria-label="Фильтр по роли">
@@ -308,13 +293,14 @@ export default function AdminUsersWorkspace({
               return (
                 <button
                   aria-selected={isActive}
+                  aria-label={`${filter.label}: ${roleCounts[filter.id]}`}
                   className={`${styles.roleTab} ${isActive ? styles.roleTabActive : ""}`.trim()}
                   key={filter.id}
                   role="tab"
                   type="button"
                   onClick={() => setRole(filter.id)}
                 >
-                  <span>{filter.label}</span>
+                  <span>{filter.shortLabel || filter.label}</span>
                   <strong>{roleCounts[filter.id]}</strong>
                 </button>
               );
@@ -325,6 +311,7 @@ export default function AdminUsersWorkspace({
             <Search aria-hidden="true" size={20} strokeWidth={2} />
             <span className={styles.visuallyHidden}>Найти пользователя</span>
             <input
+              autoComplete="off"
               placeholder="Найти по имени или email"
               type="search"
               value={resolvedSearch}
@@ -335,7 +322,7 @@ export default function AdminUsersWorkspace({
 
         <div className={styles.listHeader}>
           <div>
-            <h3>{resolvedRole === "all" ? "Все пользователи" : getRoleMeta(resolvedRole).label}</h3>
+            <h2>{resolvedRole === "all" ? "Все пользователи" : ADMIN_USER_ROLE_FILTERS.find((item) => item.id === resolvedRole)?.label}</h2>
             <p>{isLoading ? "Обновляем список…" : `${visibleUsers.length} ${visibleUsers.length === 1 ? "аккаунт" : "аккаунтов"}`}</p>
           </div>
           {typeof onInviteTrainer === "function" ? (

@@ -5,6 +5,9 @@ import ProfileAppSettingsSection from "../../features/client/profile/ProfileAppS
 import ProfileNotificationSettingsSection from "../../features/client/profile/ProfileNotificationSettingsSection";
 import ProfileNutritionModal from "../../features/client/profile/ProfileNutritionModal";
 import { calculateAiNutritionMacros, calculatePersonalAiNutritionCalories } from "../../utils/aiNutritionCalculations";
+import { createClientReminderHandlers } from "../../features/client/profile/profileNotificationHandlers";
+import { mergeReminderCalendarPatch } from "../../utils/clientReminderSettings";
+import { buildClientReminderCalendarPatch } from "../../../functions/clientReminderSettings";
 
 // Stateful, local-only callbacks exercise the real sheets without writing user data.
 export default function ProfileSheetsE2EHarness({ section = "profile", failFirst = false, connected = true }) {
@@ -12,10 +15,30 @@ export default function ProfileSheetsE2EHarness({ section = "profile", failFirst
   const [open, setOpen] = useState(true);
   const [draft, setDraft] = useState({ weight: 99, targetWeight: 98.8, height: 181, age: 35, sex: "female", goal: "recomp", activity: "medium" });
   const [notifications, setNotifications] = useState(true);
+  const [calendar, setCalendar] = useState({ scheduledDates: ["2026-09-18"], workoutTime: "18:00", reminderOffsetsHours: [24] });
   const [status, setStatus] = useState("");
   const [result, setResult] = useState("");
   const [week, setWeek] = useState(0);
   const attempts = useRef(0);
+  function reminderHandlers() { return createClientReminderHandlers({
+    auth: { currentUser: { uid: "fixture-client" } },
+    request: async (url, options) => {
+      attempts.current += 1;
+      await new Promise(resolve => setTimeout(resolve, 250));
+      if (failFirst && attempts.current === 1) return { ok: false, json: async () => ({ ok: false }) };
+      if (url.endsWith("test-workout-reminder")) {
+        setResult(JSON.stringify({ testSent: true }));
+        return { ok: true, json: async () => ({ ok: true }) };
+      }
+      const patch = buildClientReminderCalendarPatch(JSON.parse(options.body).reminderSettings, calendar);
+      return { ok: true, json: async () => ({ ok: true, workoutCalendar: patch }) };
+    },
+    onCalendarSaved: patch => setCalendar(current => {
+      const next = mergeReminderCalendarPatch(current, patch);
+      setResult(JSON.stringify(next));
+      return next;
+    })
+  }); }
   const macros = calculateAiNutritionMacros(calculatePersonalAiNutritionCalories(draft), draft.weight, draft.goal);
   const weekDays = Array.from({ length: 7 }, (_, index) => {
     const date = new Date(2026, 8, 7 + week * 7 + index, 12);
@@ -30,12 +53,16 @@ export default function ProfileSheetsE2EHarness({ section = "profile", failFirst
   }
   return <>
     <output data-testid="profile-sheets-result">{result}</output>
+    {!open && <button type="button" onClick={() => setOpen(true)}>Открыть настройки</button>}
     <ProfileSettingsModal open={open && section !== "nutrition"} section={activeSection} onClose={() => setOpen(false)}>
       {section === "profile" ? <ProfileBodyMetricsSettingsSection
         draft={draft} onDraftChange={(key, value) => setDraft(current => ({ ...current, [key]: value }))}
         onSave={save} onSaved={() => setOpen(false)}
       /> : activeSection === "settings" ? <ProfileNotificationSettingsSection
         telegramProfile={{ connected, notificationsEnabled: notifications }}
+        calendar={calendar}
+        onSaveReminders={settings => reminderHandlers().saveReminderSettings(settings)}
+        onTestReminder={() => reminderHandlers().sendTestReminder()}
         onOpenConnections={() => setActiveSection("connections")}
         onToggleNotifications={async enabled => {
           attempts.current += 1;

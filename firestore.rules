@@ -34,8 +34,20 @@ service cloud.firestore {
 
     function isAdmin() {
       return isActiveMember() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin" &&
+        hasCurrentAdminClaimVersion(
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data
+        ) &&
         "admin" in request.auth.token &&
         request.auth.token.admin == true;
+    }
+
+    function hasCurrentAdminClaimVersion(data) {
+      return data.keys().hasAll(["adminClaimVersion"])
+        ? data.adminClaimVersion is string &&
+          "adminClaimVersion" in request.auth.token &&
+          request.auth.token.adminClaimVersion == data.adminClaimVersion
+        : !("adminClaimVersion" in request.auth.token);
     }
 
     function isTrainer() {
@@ -69,6 +81,7 @@ service cloud.firestore {
         "assignedProgramAssignedByUid",
         "assignedWorkoutCount",
         "adminClaimUpdatedAt",
+        "adminClaimVersion",
         "trainerRoleUpdatedAt",
         "subscription",
         "telegram",
@@ -267,8 +280,11 @@ service cloud.firestore {
           ) ||
           (
             isOwnedTrainingTemplateForTrainer(request.resource.data.assignedProgramId) &&
-            request.resource.data.assignedProgramName ==
-              get(/databases/$(database)/documents/trainingTemplates/$(request.resource.data.assignedProgramId)).data.name
+            // The client copy has its own editable name; the immutable
+            // template ID and ownership, not its display name, grant access.
+            request.resource.data.assignedProgramName is string &&
+            request.resource.data.assignedProgramName.size() > 0 &&
+            request.resource.data.assignedProgramName.size() <= 80
           )
         );
     }
@@ -694,6 +710,13 @@ service cloud.firestore {
 
     function isInvitedOwnerCreate(uid) {
       return isAuthenticatedOwner(uid) &&
+        request.resource.data.keys().hasOnly([
+          "email", "name", "role", "active", "createdAt", "updatedAt",
+          "authProvider", "inviteActivatedAt", "createdBy", "createdByEmail",
+          "createdByUid", "trainerId", "assignedTrainerId", "coachId",
+          "trainerEmail", "assignedTrainerEmail", "coachEmail"
+        ]) &&
+        request.resource.data.get("active", true) == true &&
         exists(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)) &&
         get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.status in ["active", "created"] &&
         (
@@ -1068,6 +1091,12 @@ service cloud.firestore {
         exists(/databases/$(database)/documents/trainingTemplates/$(templateId)) &&
         get(/databases/$(database)/documents/trainingTemplates/$(templateId)).data.ownerUid == request.auth.uid
       );
+    }
+
+    // Shared metadata is served by owner-scoped APIs, never by a client-wide
+    // catalogue query. Prescription and history remain in their existing paths.
+    match /trainerExerciseCards/{cardId} {
+      allow read, write: if false;
     }
 
     // По умолчанию всё закрыто.

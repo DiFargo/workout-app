@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./WorkoutStageActionPanel.module.css";
 
 export default function WorkoutStageActionPanel({
@@ -5,7 +6,8 @@ export default function WorkoutStageActionPanel({
   isWarmup,
   onNext,
   onPrevious,
-  onWarmupBack
+  onWarmupBack,
+  children
 }) {
   if (isWarmup) {
     return (
@@ -13,6 +15,7 @@ export default function WorkoutStageActionPanel({
         className={`${styles.panel} ${styles.warmupPanel}`}
         data-css-module-scope="workout-stage-action-panel"
       >
+        {children}
         <div className={`${styles.navigationRow} ${styles.warmupNavigationRow}`}>
           <button
             type="button"
@@ -20,7 +23,7 @@ export default function WorkoutStageActionPanel({
             data-css-module-control="workout-stage-action-panel"
             onClick={onWarmupBack}
           >
-            Назад
+            <ChevronLeft aria-hidden="true" />Назад
           </button>
 
           <button
@@ -41,6 +44,7 @@ export default function WorkoutStageActionPanel({
       className={`${styles.panel} ${styles.exercisePanel}`}
       data-css-module-scope="workout-stage-action-panel"
     >
+      {children}
       <div className={`${styles.navigationRow} ${styles.exerciseNavigationRow}`}>
         <button
           type="button"
@@ -48,7 +52,7 @@ export default function WorkoutStageActionPanel({
           data-css-module-control="workout-stage-action-panel"
           onClick={onPrevious}
         >
-          Предыдущее
+          <ChevronLeft aria-hidden="true" />Предыдущее
         </button>
 
         <button
@@ -58,6 +62,7 @@ export default function WorkoutStageActionPanel({
           onClick={onNext}
         >
           {isLastExercise ? "Завершить" : "Следующее"}
+          <ChevronRight aria-hidden="true" />
         </button>
       </div>
     </div>

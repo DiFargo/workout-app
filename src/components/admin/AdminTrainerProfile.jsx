@@ -503,6 +503,7 @@ export default function AdminTrainerProfile({
             aria-modal="true"
             className={styles.roleDialog}
             role="dialog"
+            onKeyDown={(event) => { if (event.key === "Escape") closeRoleDialog(); }}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <button className={styles.roleDialogClose} type="button" onClick={closeRoleDialog} aria-label="Закрыть" disabled={roleChangePending}>
@@ -547,6 +548,7 @@ export default function AdminTrainerProfile({
             aria-modal="true"
             className={styles.roleDialog}
             role="dialog"
+            onKeyDown={(event) => { if (event.key === "Escape") closeAccessDialog(); }}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <button className={styles.roleDialogClose} type="button" onClick={closeAccessDialog} aria-label="Закрыть" disabled={accessChangePending}>
@@ -586,6 +588,7 @@ export default function AdminTrainerProfile({
             aria-modal="true"
             className={styles.roleDialog}
             role="dialog"
+            onKeyDown={(event) => { if (event.key === "Escape") closeReassignDialog(); }}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <button className={styles.roleDialogClose} type="button" onClick={closeReassignDialog} aria-label="Закрыть" disabled={reassignPending}>

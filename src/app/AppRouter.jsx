@@ -154,7 +154,7 @@ export default function AppRouter({
         adminMeta="Системное управление"
         adminName={user?.displayName || user?.name || user?.email?.split("@")[0] || ""}
         adminEmail={user?.email || ""}
-        headerTitle="Базовые программы и упражнения"
+        headerTitle={activeAdminSection === "exercises" ? "Базовые упражнения" : "Базовые программы"}
         onLogout={onAdminLogout}
         onProfileClick={onAdminProfileClick}
         onSectionChange={openAdminSection}
@@ -239,6 +239,9 @@ export default function AppRouter({
         userId={user?.uid || ""}
         startingWeightProfile={aiNutritionProfile || aiNutritionProfileDraft}
         workoutHistory={history}
+        profileMeasurements={profileMeasurements}
+        workoutHistoryLoading={historyLoading}
+        onLoadWorkoutHistory={loadHistory}
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
         onOpenToday={() => onSetPage(APP_PAGES.BASIC_WORKOUT_TODAY)}
         onBackToWorkouts={() => onSetPage(APP_PAGES.WORKOUTS)}
@@ -265,6 +268,9 @@ export default function AppRouter({
         basicWorkoutQuiz={basicWorkoutQuiz}
         startingWeightProfile={aiNutritionProfile || aiNutritionProfileDraft}
         workoutHistory={history}
+        profileMeasurements={profileMeasurements}
+        workoutHistoryLoading={historyLoading}
+        onLoadWorkoutHistory={loadHistory}
         onBasicWorkoutQuizChange={onBasicWorkoutQuizChange}
         onApplyBasicWorkoutPlan={onApplyBasicWorkoutPlan}
         onOpenLongPlan={() => onSetPage(APP_PAGES.BASIC_WORKOUT_QUIZ)}

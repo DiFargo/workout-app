@@ -1,5 +1,6 @@
 import { getBasicWorkoutExerciseGroup } from "./basicWorkoutAlternatives.js";
 import { BASIC_WORKOUT_EXERCISE_LIBRARY } from "../data/basicWorkoutExerciseLibrary.js";
+import { normalizeExerciseVideoCrop } from "../../functions/exerciseVideoCrop.js";
 
 function normalizeExerciseName(name = "") {
   return String(name || "")
@@ -88,6 +89,7 @@ export function normalizeBasicWorkoutExerciseOverrides(overrides = {}) {
       note: getText(record.note),
       imageUrl: getText(record.imageUrl),
       videoUrl: getText(record.videoUrl),
+      videoCrop: normalizeExerciseVideoCrop(record.videoCrop),
       imageDisabled: record.imageDisabled === true,
       videoDisabled: record.videoDisabled === true,
       // This helper is intentionally idempotent: the client hook caches an
@@ -98,7 +100,8 @@ export function normalizeBasicWorkoutExerciseOverrides(overrides = {}) {
       hasEquipment: typeof record.hasEquipment === "boolean" ? record.hasEquipment : hasOwn(record, "equipment"),
       hasNote: typeof record.hasNote === "boolean" ? record.hasNote : hasOwn(record, "note"),
       hasImageUrl: typeof record.hasImageUrl === "boolean" ? record.hasImageUrl : hasOwn(record, "imageUrl"),
-      hasVideoUrl: typeof record.hasVideoUrl === "boolean" ? record.hasVideoUrl : hasOwn(record, "videoUrl")
+      hasVideoUrl: typeof record.hasVideoUrl === "boolean" ? record.hasVideoUrl : hasOwn(record, "videoUrl"),
+      hasVideoCrop: typeof record.hasVideoCrop === "boolean" ? record.hasVideoCrop : hasOwn(record, "videoCrop")
     };
 
     return normalized;
@@ -138,17 +141,34 @@ export function applyBasicWorkoutExerciseOverride(exercise = {}, overrides = {})
     basicExerciseVideoDisabled: override.videoDisabled,
     // A removed video intentionally clears only the rendered source. The
     // original plan object remains untouched for history and sync purposes.
-    video: override.videoDisabled ? "" : videoUrl || originalExercise.video
+    video: override.videoDisabled ? "" : videoUrl || originalExercise.video,
+    // A crop belongs to its video, not to the prescribed load or the old clip.
+    ...(override.hasVideoCrop || override.videoDisabled || videoUrl ? {
+      videoCrop: override.videoDisabled ? null : override.hasVideoCrop ? override.videoCrop : null
+    } : {})
   };
 }
 
 export function getBasicWorkoutExerciseTechniqueHint(exercise = {}, fallbackHint = "") {
-  return getText(exercise?.note) || fallbackHint;
+  if (exercise?.exerciseCardId) return getText(exercise.technique) || fallbackHint;
+  return getText(exercise?.technique || exercise?.note || exercise?.description) || fallbackHint;
 }
 
 // Every basic-workout movement group has its own original anatomy map.
 // Primary areas receive the main lavender colour; assisting muscles are lighter.
 const MUSCLE_PRESENTATIONS = {
+  hip_abduction: {
+    bodyZone: "glutes", view: "back", title: "Ягодицы",
+    description: "Основная нагрузка — мышцы, отводящие бедро.",
+    primaryMuscles: ["Средняя и малая ягодичные"], secondaryMuscles: [],
+    primaryAreas: ["glutes"], secondaryAreas: []
+  },
+  hip_adduction: {
+    bodyZone: "thighs", view: "front", title: "Внутренняя поверхность бедра",
+    description: "Основная нагрузка — приводящие мышцы бедра.",
+    primaryMuscles: ["Приводящие мышцы бедра"], secondaryMuscles: [],
+    primaryAreas: ["adductors"], secondaryAreas: []
+  },
   quads: {
     bodyZone: "quads",
     view: "front",
@@ -238,6 +258,11 @@ const MUSCLE_PRESENTATIONS = {
     secondaryMuscles: ["Трицепс"],
     primaryAreas: ["frontDelts", "sideDelts"],
     secondaryAreas: ["triceps"]
+  },
+  shoulder_front: {
+    bodyZone: "shoulders", view: "front", title: "Передняя дельта",
+    description: "Основная нагрузка — передняя часть плеч.",
+    primaryMuscles: ["Передняя дельта"], secondaryMuscles: [], primaryAreas: ["frontDelts"], secondaryAreas: []
   },
   side_delts: {
     bodyZone: "shoulders",

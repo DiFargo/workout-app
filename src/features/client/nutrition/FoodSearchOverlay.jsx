@@ -3,6 +3,7 @@ import FoodSearchHeader from "./FoodSearchHeader";
 import FoodSearchPage from "./FoodSearchPage";
 import NutritionBarcodeOverlay from "./NutritionBarcodeOverlay";
 import styles from "./FoodSearchOverlay.module.css";
+import { useEffect, useRef } from "react";
 
 export function FoodSearchSurface({
   children,
@@ -14,9 +15,55 @@ export function FoodSearchSurface({
   onDismiss
 }) {
   const hasHeaderLayout = layout === "search" || layout === "my-products";
+  const overlayRef = useRef(null);
+
+  useEffect(() => {
+    if (!dialog || !hasHeaderLayout) return undefined;
+    const overlay = overlayRef.current;
+    const viewport = window.visualViewport;
+    let fullHeight = window.innerHeight;
+    let fullWidth = window.innerWidth;
+    let frame = 0;
+    const syncViewport = () => {
+      if (window.innerWidth !== fullWidth) {
+        fullWidth = window.innerWidth;
+        fullHeight = window.innerHeight;
+      }
+      fullHeight = Math.max(fullHeight, window.innerHeight);
+      const height = viewport?.height ?? window.innerHeight;
+      const searchFocused = overlay.contains(document.activeElement)
+        && document.activeElement?.matches('[data-css-module-control="food-search-input"]');
+      const reduced = window.matchMedia("(any-pointer: coarse)").matches
+        && (viewport?.scale ?? 1) === 1 && fullHeight - height > 120;
+      // Keep the sheet stable when tapping a result while the keyboard closes.
+      const keyboardOpen = reduced && (searchFocused || overlay.dataset.foodSearchKeyboard === "true");
+      overlay.dataset.foodSearchKeyboard = String(Boolean(keyboardOpen));
+      overlay.style.setProperty("--food-search-visible-height", `${height}px`);
+      overlay.style.setProperty("--food-search-visible-top", `${viewport?.offsetTop ?? 0}px`);
+    };
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(syncViewport);
+    };
+    syncViewport();
+    viewport?.addEventListener("resize", schedule);
+    viewport?.addEventListener("scroll", schedule);
+    window.addEventListener("resize", schedule);
+    overlay.addEventListener("focusin", schedule);
+    overlay.addEventListener("focusout", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      viewport?.removeEventListener("resize", schedule);
+      viewport?.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      overlay.removeEventListener("focusin", schedule);
+      overlay.removeEventListener("focusout", schedule);
+    };
+  }, [dialog, hasHeaderLayout]);
 
   return (
     <div
+      ref={overlayRef}
       className={`${styles.searchOverlay} ${hasHeaderLayout ? "" : styles.fixtureOverlay}`}
       data-css-module-scope="food-search-overlay"
       data-modal-layer={dialog && onDismiss ? "true" : undefined}
@@ -61,6 +108,12 @@ export default function FoodSearchOverlay({
   searchProps,
   barcodeOpen
 }) {
+  const searchScrollStateRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) searchScrollStateRef.current = null;
+  }, [open]);
+
   if (!open) {
     return null;
   }
@@ -82,7 +135,7 @@ export default function FoodSearchOverlay({
         onDismiss={headerProps?.onClose}
       >
         <FoodSearchHeader {...headerProps} />
-        <FoodSearchPage {...searchProps} modal />
+        <FoodSearchPage {...searchProps} scrollStateRef={searchScrollStateRef} modal />
         <NutritionBarcodeOverlay open={barcodeOpen} />
       </FoodSearchSurface>
     );

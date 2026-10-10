@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
 }
 :global(:root[data-app-theme="warm-light"]) .accessoryOnly.accessoryOnly {
   height: 50px;
@@ -34,14 +34,14 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9.5px;
   font-weight: 500;
   line-height: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-:global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo::before { content: "◷"; margin-right: 7px; color: var(--apple-secondary, #636366); font-size: 16px; }
+:global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo::before { content: "◷"; margin-right: 7px; color: var(--apple-secondary, #617078); font-size: 16px; }
 :global(:root[data-app-theme="warm-light"]) .noteButton.noteButton {
   min-width: 66px;
   max-width: 80px;
@@ -52,7 +52,7 @@
   border: 0;
   border-radius: 13px;
   background: #f4f4f8;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9.5px;
   font-weight: 700;
 }
@@ -65,7 +65,7 @@
   border: 0;
   border-radius: 13px;
   background: #eee9fb;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font-size: 9.5px;
   font-weight: 700;
 }
@@ -80,7 +80,7 @@
 :global(:root[data-app-theme="warm-light"]) .startingWeightCheck > span {
   min-width: 0;
   flex: 1 1 auto;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9px;
   font-weight: 700;
   line-height: 1.1;
@@ -91,19 +91,19 @@
   padding: 0 7px;
   border: 0;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-secondary, #636366);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-secondary, #617078);
   font: inherit;
   font-size: 8.5px;
   font-weight: 750;
   line-height: 1;
 }
 :global(:root[data-app-theme="warm-light"]) .startingWeightCheck > button:nth-of-type(2) {
-  background: var(--apple-blue-tint, #eef3fa);
-  color: var(--apple-blue-pressed, #3565a3);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue-pressed, #315f91);
 }
 :global(:root[data-app-theme="warm-light"]) .startingWeightHint.startingWeightHint {
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font-weight: 650;
   white-space: normal;
 }
@@ -248,3 +248,9 @@
   line-height: 1.2;
   text-align: center;
 }
+
+:global(:root[data-app-theme="warm-light"]) .root.root { height: auto; min-height: 0; max-height: none; width: 100%; margin: 5px 0 0; padding: var(--workout-support-padding, 14px 16px 16px); display: flex; flex-direction: column; gap: 10px; border: 0; border-top: 1px solid rgba(57, 82, 91,.12); border-radius: 0 0 20px 20px; }
+:global(:root[data-app-theme="warm-light"]) .startingWeightCheck.startingWeightCheck { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 3px; width: 100%; height: auto; max-height: none; background: #e9e9ef; border-radius: 12px; padding: 3px; position: relative; margin-top: 28px; }
+:global(:root[data-app-theme="warm-light"]) .startingWeightCheck.startingWeightCheck > span { position: absolute; top: -28px; left: 0; color: #617078; font-size: 13px; font-weight: 400; }
+:global(:root[data-app-theme="warm-light"]) .startingWeightCheck.startingWeightCheck button { width: 100%; min-width: 0; height: 44px; min-height: 44px; padding: 0 5px; font-size: 14px; font-weight: 400; color: #1c282e; background: transparent; border: 0; border-radius: 9px; }
+:global(:root[data-app-theme="warm-light"]) .previousInfo.previousInfo { width: 100%; min-height: 44px; max-height: none; height: auto; padding: 0; font-size: 13px; font-weight: 400; line-height: 1.45; text-align: left; white-space: normal; background: transparent; color: #617078; }

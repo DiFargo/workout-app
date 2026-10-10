@@ -179,7 +179,7 @@
   place-items: center;
   border-radius: 18px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientQuestionnaireGateMessage strong) {
@@ -226,7 +226,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientTabs button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientTabs button[aria-pressed="true"]) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextPhotoGrid) {
@@ -402,7 +402,7 @@
 
 :global(.trainerNextRoot) :global(.trainerClientActionSheet > div button:hover) {
   border-color: var(--trainer-v2-line, #d9cdec);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerClientActionSheet > div button span) {

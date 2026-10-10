@@ -20,6 +20,7 @@ function RoleAccessVerificationScreen({ logout }) {
 
 export function AppStartupGate({
   appLoading,
+  currentUserRole,
   roleAccessGateState,
   firstSetupStillResolving,
   showFirstSetupOnboarding,
@@ -48,6 +49,7 @@ export function AppStartupGate({
   handleGoogleAuth,
   handleLogin,
   handleLoginPasswordReset,
+  handleTelegramMiniAppAuth,
   logout
 }) {
   if (appLoading || firstSetupStillResolving) {
@@ -62,7 +64,7 @@ export function AppStartupGate({
     return <RoleAccessVerificationScreen logout={logout} />;
   }
 
-  if ((showFirstSetupOnboarding || firstSetupRequiredNow) && isLoggedIn && !appLoading) {
+  if (currentUserRole === "client" && (showFirstSetupOnboarding || firstSetupRequiredNow) && isLoggedIn && !appLoading) {
     return (
       <FirstSetupOnboarding
         open={Boolean(showFirstSetupOnboarding || firstSetupRequiredNow)}
@@ -97,6 +99,7 @@ export function AppStartupGate({
         handleGoogleAuth={handleGoogleAuth}
         handleLogin={handleLogin}
         handleLoginPasswordReset={handleLoginPasswordReset}
+        handleTelegramMiniAppAuth={handleTelegramMiniAppAuth}
       />
     );
   }

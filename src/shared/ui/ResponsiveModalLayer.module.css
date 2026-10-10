@@ -39,19 +39,19 @@
 /* Client modal surfaces use one opaque visual contract. Backdrops may dim the
  * page, but content must never depend on glass blur for readability. */
 :global(:root[data-app-theme="warm-light"] body [data-modal-surface="true"]) {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
-  background: var(--apple-canvas, #f2f2f7);
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
+  background: var(--apple-canvas, #f5f7f8);
   background-image: none;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 24px 64px rgba(27, 35, 31, 0.22), 0 2px 8px rgba(27, 35, 31, 0.08);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
 
 :global(:root[data-app-theme="warm-light"] body [data-modal-surface="true"] button[aria-label^="Закрыть"]) {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   background: #ffffff;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -65,10 +65,10 @@
   padding: 0;
   display: inline-grid;
   place-items: center;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 50%;
   background: #ffffff;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: none;
 }
 
@@ -88,10 +88,10 @@
   max-width: 402px;
   padding: 16px;
   gap: 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 30px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 28px 72px rgba(27, 35, 31, 0.24), 0 4px 14px rgba(27, 35, 31, 0.08);
 }
 
@@ -99,7 +99,7 @@
 :global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] textarea),
 :global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] select) {
   background-color: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global([data-modal-surface="true"] button) {

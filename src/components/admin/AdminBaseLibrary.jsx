@@ -417,6 +417,8 @@ export default function AdminBaseLibrary({
         videoUrl,
         imageDisabled: draft.imageDisabled === true,
         videoDisabled: draft.videoDisabled === true,
+        // Framing is specific to the imported clip; do not reuse it on a new one.
+        ...(videoFile || !videoUrl || draft.videoDisabled ? { videoCrop: null } : {}),
         updatedAt: serverTimestamp()
       };
       await setDoc(doc(db, "basicExerciseOverrides", draft.id), update, { merge: true });
@@ -469,7 +471,7 @@ export default function AdminBaseLibrary({
         ) : null}
       </header> : null}
 
-      <section className={styles.introCard} aria-label="О каталоге">
+      {!embedded ? <section className={styles.introCard} aria-label="О каталоге">
         <span className={styles.introIcon} aria-hidden="true"><BookOpen /></span>
         <div>
           <p className={styles.introTitle}>Единая база для команды</p>
@@ -477,10 +479,10 @@ export default function AdminBaseLibrary({
             Здесь собраны общие шаблоны программ и базовые упражнения. Изменения карточек отделены от личных библиотек тренеров и не изменяют уже назначенные планы.
           </p>
         </div>
-      </section>
+      </section> : null}
 
       <section className={styles.catalogCard}>
-        <div className={styles.tabList} role="tablist" aria-label="Категории общего каталога">
+        {!embedded ? <div className={styles.tabList} role="tablist" aria-label="Категории общего каталога">
           <button
             id={programsTabId}
             className={`${styles.tabButton}${isProgramsTab ? ` ${styles.activeTab}` : ""}`}
@@ -507,7 +509,7 @@ export default function AdminBaseLibrary({
             <span>Базовые упражнения</span>
             <b>{exerciseRows.length}</b>
           </button>
-        </div>
+        </div> : null}
 
         {!isProgramsTab ? (
           <>
@@ -540,11 +542,12 @@ export default function AdminBaseLibrary({
           id={isProgramsTab ? programsPanelId : exercisesPanelId}
           className={styles.tabPanel}
           role="tabpanel"
-          aria-labelledby={isProgramsTab ? programsTabId : exercisesTabId}
+          aria-labelledby={embedded ? undefined : isProgramsTab ? programsTabId : exercisesTabId}
+          aria-label={embedded ? isProgramsTab ? "Базовые программы" : "Базовые упражнения" : undefined}
           tabIndex="0"
         >
           {isProgramsTab ? (
-            <AdminBasicProgramLifecycle fallbackPrograms={safeProgramTemplates} />
+            <AdminBasicProgramLifecycle fallbackPrograms={safeProgramTemplates} embedded={embedded} />
           ) : filteredExerciseRows.length ? (
             <>
               {overridesStatus ? <p className={styles.catalogueStatus} role="status">{overridesStatus}</p> : null}

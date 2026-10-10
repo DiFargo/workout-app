@@ -5,6 +5,7 @@ import {
 } from "./auditSafety";
 import { getNutritionFoodSearchText } from "./nutritionFoodPresentation";
 import { normalizeNutritionFood } from "./nutritionFoodModel";
+import { GEMINI_ONLY_FOOD_SEARCH } from "./nutritionSearchMode.js";
 
 export function buildMyNutritionFoods(myFoods = {}) {
   return Object.values(myFoods || {})
@@ -67,6 +68,10 @@ export function buildNutritionSearchResults({
       .slice(0, 20);
   }
 
+  if (GEMINI_ONLY_FOOD_SEARCH && nutritionSearchTab === "food") {
+    return query.length >= 2 ? fatSecretFoods.map(normalizeNutritionFood) : [];
+  }
+
   if (query.length >= 1) {
     const personalMatches = rankAndDedupeNutritionFoods(
       myFoods.filter((food) => getNutritionFoodSearchText(food).includes(query)),
@@ -75,6 +80,15 @@ export function buildNutritionSearchResults({
     );
 
     if (query.length >= 2 && fatSecretFoods.length > 0) {
+      // The worker already ranks spelling variants, brands and barcode matches.
+      // Family caps would hide distinct branded products from this catalogue.
+      if (fatSecretFoods.some(food => ["gemini_catalog", "openfoodfacts_catalog"].includes(food.sourceType))) {
+        const seen = new Set();
+        return [...personalMatches, ...fatSecretFoods.map(normalizeNutritionFood)].filter(food => {
+          if (seen.has(food.id)) return false;
+          seen.add(food.id); return true;
+        }).slice(0, 40);
+      }
       return limitSimilarNutritionFoods(
         rankAndDedupeNutritionFoods(
           [...personalMatches, ...fatSecretFoods.map(normalizeNutritionFood)],

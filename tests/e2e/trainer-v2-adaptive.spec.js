@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './app-test.js';
 import { failOnRuntimeErrors } from './runtime-errors.js';
 
 test.setTimeout(90000);
@@ -70,10 +70,15 @@ for (const [width,height] of [[320,740],[375,844],[430,932],[600,900],[768,1024]
 
 test('sync sheet uses the V2 palette and can continue in the background',async({page})=>{
   await page.goto('/v2?trainerHarness=1&syncPreview=1');
+  const expand=page.getByRole('button',{name:'Показать ход синхронизации',exact:true});
+  await expect(expand).toBeVisible({timeout:40000});
+  await expect(page.getByRole('status',{name:'Синхронизация: 12%',exact:true})).toBeVisible();
+  await expand.click();
   const dialog=page.getByRole('dialog',{name:'Обновляем рабочее пространство'});
   await expect(dialog).toBeVisible({timeout:40000});
   const background=dialog.getByRole('button',{name:'Продолжить в фоне',exact:true});
-  await expect(background).toHaveCSS('background-color','rgb(63, 115, 184)');
+  await expect(background).toHaveCSS('background-image','linear-gradient(115deg, rgb(70, 123, 114) 0%, rgb(62, 116, 139) 54%, rgb(53, 101, 163) 100%)');
+  await expect(background).toHaveCSS('color','rgb(255, 255, 255)');
   await page.screenshot({path:`artifacts/trainer-adaptive-sync-${test.info().project.name}.png`});
   await background.click();
   await expect(dialog).toBeHidden();

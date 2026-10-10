@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './app-test.js';
 
 for (const width of [320, 393, 1366, 1920]) {
   test(`empty client layout and assignment failure at ${width}px`, async ({ page }, info) => {

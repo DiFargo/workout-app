@@ -142,6 +142,10 @@ export function isWorkoutSetCompleted(set = {}) {
   return Boolean(set.completed);
 }
 
+export function hasCompletedExerciseSets(exercise = {}) {
+  return (Array.isArray(exercise?.sets) ? exercise.sets : []).some(isWorkoutSetCompleted);
+}
+
 export function getWorkoutCompletion(workout = {}) {
   const sets = (workout.exercises || []).flatMap((exercise) => exercise.sets || []);
   const completedSets = sets.filter(isWorkoutSetCompleted).length;

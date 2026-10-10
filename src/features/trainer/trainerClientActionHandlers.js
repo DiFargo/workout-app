@@ -4,7 +4,7 @@ import { createClientResourceId } from "../../domain/clientInsights.js";
 import {
   buildTrainerClientExportRows,
   trainerExportRowsToCsv,
-  trainerExportRowsToHtmlRows
+  buildTrainerClientPrintDocument
 } from "../../utils/trainerClientExport.js";
 
 export async function deleteClientFromTrainerPanelWithDeps({
@@ -92,7 +92,7 @@ export async function deleteClientFromTrainerPanelWithDeps({
   }
 }
 
-export function downloadTrainerClientExportWithDeps({
+export async function downloadTrainerClientExportWithDeps({
   adminClientHistory,
   adminClientMeasurements,
   getAdminNutritionDaysList,
@@ -101,19 +101,55 @@ export function downloadTrainerClientExportWithDeps({
   client,
   format = "excel"
 }) {
-  if (!client?.id) return;
+  if (!client?.id) return false;
   const nutritionDays = getAdminNutritionDaysList(adminClientNutrition);
   const rows = buildTrainerClientExportRows(adminClientHistory, adminClientMeasurements, nutritionDays);
 
   if (format === "pdf") {
-    const htmlRows = trainerExportRowsToHtmlRows(rows);
-    const popup = window.open("", "_blank", "noopener,noreferrer");
-    if (popup) {
-      popup.document.write(`<html><head><title>${client.name || client.email || "client"} report</title><style>body{font-family:Arial;padding:24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;font-size:12px}h1{font-size:22px}</style></head><body><h1>Отчёт клиента: ${client.name || client.email || client.id}</h1><table><thead><tr>${rows[0].map((cell) => `<th>${cell}</th>`).join("")}</tr></thead><tbody>${htmlRows}</tbody></table><script>window.print()</script></body></html>`);
-      popup.document.close();
+    if (typeof window.BroadcastChannel !== "function") {
+      setAdminClientStatus("Не удалось подготовить PDF-отчёт в этом браузере. Доступен CSV-экспорт.");
+      return false;
     }
-    setAdminClientStatus("PDF-отчёт открыт в новом окне для сохранения через печать.");
-    return;
+    let url;
+    let channel;
+    try {
+      const channelName = `trainer-report-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      channel = new window.BroadcastChannel(channelName);
+      url = URL.createObjectURL(new Blob([buildTrainerClientPrintDocument(client.name || client.email || client.id, rows, channelName)], { type: "text/html;charset=utf-8" }));
+      setAdminClientStatus("Подготавливаем PDF-отчёт…");
+      return await new Promise(resolve => {
+        let finished = false;
+        const finish = success => {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timeout);
+          // Keep the Blob alive while the new document and print UI use it.
+          if (!success) channel.close();
+          setTimeout(() => { channel.close(); URL.revokeObjectURL(url); }, 60000);
+          setAdminClientStatus(success
+            ? "PDF-отчёт открыт в новом окне для сохранения через печать."
+            : "Не удалось подтвердить открытие PDF-отчёта. Проверьте блокировку всплывающих окон и повторите.");
+          resolve(success);
+        };
+        const timeout = setTimeout(() => finish(false), 10000);
+        channel.onmessage = event => {
+          if (event.data?.type === "ready") finish(true);
+          else if (event.data?.type === "print-error") {
+            if (finished) setAdminClientStatus("Отчёт открыт, но печать не запустилась. В новом окне можно открыть печать вручную.");
+            else finish(false);
+          }
+        };
+        // With noopener a successful open returns null too. Do not treat that
+        // value as success or try to write into a nonexistent WindowProxy.
+        try { window.open(url, "_blank", "noopener,noreferrer"); }
+        catch { finish(false); }
+      });
+    } catch {
+      channel?.close();
+      if (url) URL.revokeObjectURL(url);
+      setAdminClientStatus("Не получилось подготовить PDF-отчёт. Попробуйте ещё раз.");
+      return false;
+    }
   }
 
   const csv = trainerExportRowsToCsv(rows);
@@ -125,6 +161,7 @@ export function downloadTrainerClientExportWithDeps({
   link.click();
   URL.revokeObjectURL(url);
   setAdminClientStatus("Excel-экспорт клиента подготовлен в CSV.");
+  return true;
 }
 
 async function deleteClientSubcollection(db, clientId, collectionName) {
@@ -340,7 +377,7 @@ export async function handleTrainerClientActionWithDeps({
     }
 
     if (action === "export_excel" || action === "export_pdf") {
-      downloadTrainerClientExportWithDeps({
+      const exported = await downloadTrainerClientExportWithDeps({
         adminClientHistory,
         adminClientMeasurements,
         getAdminNutritionDaysList,
@@ -349,6 +386,7 @@ export async function handleTrainerClientActionWithDeps({
         client,
         format: action === "export_pdf" ? "pdf" : "excel"
       });
+      if (!exported) return false;
       await recordTrainerEvent(client.id, "export", action === "export_pdf" ? "Экспорт PDF" : "Экспорт Excel");
       return true;
     }

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 
 test("completed basic workout ignores a phone draft and exposes plan management", async ({ page }, testInfo) => {
   await page.addInitScript(() => {
@@ -14,10 +14,11 @@ test("completed basic workout ignores a phone draft and exposes plan management"
   await page.getByTestId("client-nav-workouts").click();
   await expect(page.getByTestId("workout-today-card")).toHaveAttribute("data-state", "program-complete");
   await expect(page.getByTestId("workout-start-button")).toHaveText("Посмотреть результаты");
-  await expect(page.getByTestId("workout-program-button")).toContainText("Все тренировки выполнены");
+  await expect(page.getByTestId("workout-today-card")).toContainText("Все тренировки выполнены");
   const management = page.getByTestId("basic-workout-management");
-  await expect(management.getByRole("button")).toHaveCount(1);
-  await expect(management).toContainText("Создать или изменить план");
+  await expect(management.getByRole("button")).toHaveCount(2);
+  await expect(management.getByRole("button", { name: /Открыть программу/ })).toBeVisible();
+  await expect(management.getByRole("button", { name: /Изменить/ })).toBeVisible();
   await management.scrollIntoViewIfNeeded();
   const bounds = await management.evaluate((node) => ({
     left: node.getBoundingClientRect().left,
@@ -65,7 +66,7 @@ test("an overdue basic plan resumes from its first unfinished workout instead of
 
   const todayCard = page.getByTestId("workout-today-card");
   await expect(todayCard).toHaveAttribute("data-state", "shifted");
-  await expect(todayCard).toContainText("Программа продолжается");
+  await expect(todayCard).toContainText("план продолжится от сегодняшней тренировки");
   await expect(todayCard).toContainText("Пропущенные дни не меняют порядок");
   await expect(page.getByTestId("workout-start-button")).toHaveText("Начать тренировку");
 });

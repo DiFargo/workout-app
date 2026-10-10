@@ -145,3 +145,29 @@ test("next uncompleted workout index returns first item when everything is compl
     0
   );
 });
+
+test("actual exact completion overrides an earlier missed or not_completed status", () => {
+  for (const status of ["missed", "not_completed"]) {
+    const workouts = [
+      { id: "day-1", order: 1, status, assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1" },
+      { id: "day-2", order: 2, assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1" }
+    ];
+    const completed = buildCompletedWorkoutSet([
+      { workoutId: "day-1", assignedProgramId: "program-1", assignedProgramAddedAt: "assignment-1", assignedProgramUpdatedAt: "older-version" }
+    ], "current-version", {}, workouts);
+    assert.equal(isWorkoutCompletedWithSet(workouts[0], completed, "current-version"), true);
+    assert.equal(getNextUncompletedWorkoutIndex(workouts, completed, "current-version"), 1);
+  }
+});
+
+test("a miss remains pending when the saved result belongs to another assignment or only matches order/name", () => {
+  const workout = { id: "day-1", order: 1, name: "День 1", status: "missed", assignedProgramId: "program-1", assignedProgramAddedAt: "new-assignment" };
+  const old = buildCompletedWorkoutSet([
+    { workoutId: "day-1", assignedProgramId: "program-1", assignedProgramAddedAt: "old-assignment" }
+  ], "new-version", {}, [workout]);
+  assert.equal(isWorkoutCompletedWithSet(workout, old, "new-version"), false);
+  const positional = buildCompletedWorkoutSet([
+    { workoutName: "День 1", assignedProgramUpdatedAt: "new-version" }
+  ], "new-version");
+  assert.equal(isWorkoutCompletedWithSet(workout, positional, "new-version"), false);
+});

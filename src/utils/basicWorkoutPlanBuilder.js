@@ -15,7 +15,7 @@ function getFallbackWorkoutDays(basePlan = {}, plans = {}, requestedDays = 0) {
       seenIds.add(id);
       return true;
     });
-  const requestedCount = [2, 3, 4, 5].includes(Number(requestedDays))
+  const requestedCount = [1, 2, 3, 4, 5].includes(Number(requestedDays))
     ? Number(requestedDays)
     : primaryWorkouts.length;
 

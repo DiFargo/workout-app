@@ -489,13 +489,13 @@
 :global(html[data-trainer-variant="v2"]) .dashboardHeader {flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:12px}
 :global(html[data-trainer-variant="v2"]) .dashboardHeader h2 {font-size:16px!important;line-height:1.4}
 :global(html[data-trainer-variant="v2"]) .dashboardHeader p {display:none}
-:global(html[data-trainer-variant="v2"]) .periods {gap:3px;background:#efeff4;padding:3px;border-radius:10px;flex-wrap:nowrap;width:100%}
+:global(html[data-trainer-variant="v2"]) .periods {gap:3px;background:#edf1f3;padding:3px;border-radius:10px;flex-wrap:nowrap;width:100%}
 :global(html[data-trainer-variant="v2"]) .periods button {flex:1;min-width:0;min-height:38px;padding:6px 5px;border:0;background:transparent;font-size:11px;font-weight:500;white-space:nowrap}
 :global(html[data-trainer-variant="v2"]) .periods button.active {background:#fff}
 :global(html[data-trainer-variant="v2"]) .resultLayout {display:flex;flex-direction:column;gap:12px}
-:global(html[data-trainer-variant="v2"]) .signals {order:-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:3px;border-radius:10px;background:#efeff4}
+:global(html[data-trainer-variant="v2"]) .signals {order:-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:3px;border-radius:10px;background:#edf1f3}
 :global(html[data-trainer-variant="v2"]) .signal {display:block!important;text-align:center;min-width:0;min-height:38px;padding:6px 3px!important;background:transparent;border:0;border-radius:8px;box-shadow:none}
-:global(html[data-trainer-variant="v2"]) .signalActive {background:white;color:#3c6faa}
+:global(html[data-trainer-variant="v2"]) .signalActive {background:white;color:#376b91}
 :global(html[data-trainer-variant="v2"]) .signalIcon, :global(html[data-trainer-variant="v2"]) .signal small, :global(html[data-trainer-variant="v2"]) .signal > strong {display:none}
 :global(html[data-trainer-variant="v2"]) .signal h3 {font-size:12px;font-weight:500;white-space:normal;color:inherit}
 :global(html[data-trainer-variant="v2"]) .chartPanel {width:100%;min-height:0;padding:0;border:0;box-sizing:border-box;background:white}
@@ -505,14 +505,14 @@
 :global(html[data-trainer-variant="v2"]) .chartPanel .chartWrap {min-height:0;margin:10px 0 0}
 :global(html[data-trainer-variant="v2"]) .chartPanel .chartWrap svg {height:140px}
 :global(html[data-trainer-variant="v2"]) .chartDates {font-size:11px}
-:global(html[data-trainer-variant="v2"]) .caption {font-size:11px;line-height:1.5;margin-top:12px;color:#636366}
+:global(html[data-trainer-variant="v2"]) .caption {font-size:11px;line-height:1.5;margin-top:12px;color:#617078}
 @media(min-width:761px) {
  :global(html[data-trainer-variant="v2"]) .dashboard {padding:20px!important}
  :global(html[data-trainer-variant="v2"]) .periods {width:auto}
  :global(html[data-trainer-variant="v2"]) .periods button {padding:6px 8px}
 }
 
-:global(html[data-trainer-variant="v2"]) .emptyChart {min-height:0;height:auto;padding:20px 12px;font-size:13px;line-height:1.6;text-align:left;margin-top:12px;border-radius:12px;background:#f2f2f7}
+:global(html[data-trainer-variant="v2"]) .emptyChart {min-height:0;height:auto;padding:20px 12px;font-size:13px;line-height:1.6;text-align:left;margin-top:12px;border-radius:12px;background:#f5f7f8}
 
 :global(html[data-trainer-variant="v2"]) .caption {font-size:12px}
 :global(html[data-trainer-variant="v2"]) .periods button {min-height:44px;font-size:12px}

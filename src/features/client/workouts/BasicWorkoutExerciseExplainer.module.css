@@ -27,10 +27,10 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 14px;
   background: #fff;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font: inherit;
   font-size: 11.5px;
   font-weight: 750;
@@ -63,7 +63,7 @@
 }
 
 .tab:focus-visible {
-  outline: 2px solid var(--apple-action, #3f73b8);
+  outline: 2px solid var(--apple-action, #396ba6);
   outline-offset: 2px;
 }
 
@@ -71,7 +71,7 @@
   border-color: #ded3f3;
   border-radius: 16px;
   background: #eee9f7;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: 0 4px 10px rgba(27, 35, 31, 0.08);
 }
 
@@ -105,7 +105,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
@@ -119,7 +119,7 @@
 }
 
 .referenceCopy span {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.24px;
@@ -129,7 +129,7 @@
 .referenceCopy h2 {
   margin: 0;
   overflow: hidden;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 750;
   line-height: 1.16;
@@ -147,19 +147,19 @@
   border: 1px solid rgba(239, 235, 243, 0.9);
   border-radius: 11px;
   background: rgba(255, 255, 255, 0.84);
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 600;
   line-height: 1.34;
 }
 
 .referenceCard p strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-weight: 800;
 }
 
 .referenceCard p span {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-weight: 750;
 }
 
@@ -362,3 +362,14 @@
     height: 17px;
   }
 }
+
+/* One capsule for the three exercise tools. */
+.explainer.explainer { gap: var(--workout-exercise-tool-gap, 12px); grid-template-rows: auto auto; }
+.content.content { width: min(100%, calc(var(--workout-media-max-height, 10000px) * 4 / 3)); margin-inline: auto; padding: 0; border: 0; background: transparent; aspect-ratio: 4 / 3; height: auto; }
+:global(:root[data-app-theme="warm-light"]) .content.content :global([data-testid="workout-exercise-video-frame"]) { height: 100%; min-height: 0; max-height: none; aspect-ratio: 4 / 3; margin: 0; }
+.tabs.tabs { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; padding: 3px; border: 1px solid white; border-radius: 99px; background: white; box-shadow: 0 1px 3px #1c282e0a,0 5px 16px #1c282e05; overflow: visible; }
+.tab.tab { position: relative; min-height: var(--workout-exercise-tool-height, 48px); height: auto; padding: 8px 5px; border: 0; border-radius: 99px; background: transparent; color: #376b91; box-shadow: none; gap: 6px; font-size: 0.8125rem; font-weight: 500; line-height: 1.35; white-space: normal; overflow-wrap: anywhere; flex-wrap: wrap; }
+.tab.tab + .tab:before { content: ""; position: absolute; left: 0; top: 13px; bottom: 13px; width: 1px; background: rgba(57, 82, 91,.12); }
+.tab.tab svg { width: 19px; height: 19px; stroke-width: 1.75; }
+.tab.tab:disabled { opacity: .45; }
+@media(max-width:350px) { .tab.tab { font-size: 0.75rem; gap: 4px; }.tab.tab svg { width: 17px; height: 17px; } }

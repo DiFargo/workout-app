@@ -286,6 +286,8 @@ export function createWorkoutOpenHandlers({
     if (!pendingDraft) return;
 
     setWorkoutDraftRestorePrompt(null);
+    // Dismissal is neither restoration nor restart: keep the saved draft intact.
+    if (shouldRestoreDraft == null) return;
     const pendingWorkout = plan.workouts.find((item) => item.id === pendingDraft.workoutId);
     const assignmentVersion = getWorkoutAssignmentVersion(plan);
     const completed = isWorkoutCompletedWithSet(pendingWorkout,

@@ -8,25 +8,33 @@ import {
 } from "../../../utils/offlineSyncStorage";
 import { mergeNutritionStates } from "../../../utils/nutritionStateMerge";
 import { saveNutritionStateWithMerge } from "../../../utils/nutritionStateStorage";
+import { captureAuthSession } from "../../../utils/authSession.js";
 
 export async function replayFailedHistorySavesWithDeps({
   db,
+  auth,
+  captureSession = () => captureAuthSession(auth),
   uid,
   historyReplayInProgressRef,
   setWorkoutHistorySyncState,
   loadHistory,
   showAppError
 }) {
-  if (!uid || historyReplayInProgressRef.current) return;
+  const session = captureSession();
+  if (!uid || uid !== session.uid || !session.isCurrent()) return;
+  if (!(historyReplayInProgressRef.current instanceof Map)) historyReplayInProgressRef.current = new Map();
+  const inFlight = historyReplayInProgressRef.current;
+  if (inFlight.get(uid)?.isCurrent()) return;
 
   const queue = getFailedHistoryQueue(uid);
   if (!Array.isArray(queue) || !queue.length) return;
 
-  historyReplayInProgressRef.current = true;
+  inFlight.set(uid, session);
   let syncedCount = 0;
 
   try {
     for (const item of queue) {
+      if (!session.isCurrent()) break;
       try {
         if (!item?.entry) continue;
         const saveId = item.entry.clientSaveId || item.id;
@@ -43,41 +51,55 @@ export async function replayFailedHistorySavesWithDeps({
 
     const remaining = getFailedHistoryQueue(uid);
 
-    if (syncedCount > 0) {
-      setWorkoutHistorySyncState(remaining.length ? "local" : "synced");
+    if (syncedCount > 0 && session.isCurrent()) {
+      setWorkoutHistorySyncState(current => session.isCurrent() ? (remaining.length ? "local" : "synced") : current);
       await loadHistory();
-      showAppError("savedLocal", "Локальные тренировки синхронизированы.");
+      if (session.isCurrent()) showAppError("savedLocal", "Локальные тренировки синхронизированы.");
     }
   } finally {
-    historyReplayInProgressRef.current = false;
+    if (inFlight.get(uid) === session) inFlight.delete(uid);
   }
 }
 
 export async function replayFailedNutritionSyncWithDeps({
+  auth,
+  captureSession = () => captureAuthSession(auth),
   uid,
   nutritionReplayInProgressRef,
   setNutrition,
   showAppError
 }) {
-  if (!uid || nutritionReplayInProgressRef.current) return;
+  const session = captureSession();
+  if (!uid || session.uid !== uid || !session.isCurrent()) return;
+  // Different accounts/sessions must not block or unlock each other's replay.
+  if (!(nutritionReplayInProgressRef.current instanceof Map)) {
+    nutritionReplayInProgressRef.current = new Map();
+  }
+  const inFlight = nutritionReplayInProgressRef.current;
+  if (inFlight.get(uid)?.isCurrent()) return;
 
   const queuedSync = getFailedNutritionSync(uid);
   const queuedNutrition = queuedSync?.nutrition;
   if (!queuedNutrition) return;
 
-  nutritionReplayInProgressRef.current = true;
+  inFlight.set(uid, session);
 
   try {
     const savedNutrition = await saveNutritionStateWithMerge(uid, queuedNutrition);
     acknowledgeNutritionSync(uid, queuedSync);
-    setNutrition((current) => ({
-      ...mergeNutritionStates(current, savedNutrition, current.myFoods || {}),
-      __uid: uid
-    }));
+    if (!session.isCurrent()) return;
+    setNutrition((current) => {
+      // React can execute this updater after an auth change as well.
+      if (!session.isCurrent() || (current?.__uid && current.__uid !== uid)) return current;
+      return {
+        ...mergeNutritionStates(current, savedNutrition, current?.myFoods || {}),
+        __uid: uid
+      };
+    });
     showAppError("savedLocal", "Локальные данные питания синхронизированы.");
   } catch (error) {
     console.error("Nutrition replay error", error);
   } finally {
-    nutritionReplayInProgressRef.current = false;
+    if (inFlight.get(uid) === session) inFlight.delete(uid);
   }
 }

@@ -39,7 +39,7 @@
   place-items: center;
   border-radius: 13px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerCabinetWorkspaceLinks .trainerCabinetWorkspaceCopy) {

@@ -88,10 +88,13 @@ export function useModalFocusTrap() {
       const closeButton = dialog.querySelector(
         '[aria-label*="Закрыть"]:not([aria-label*="фону"]), [aria-label*="закрыть"]:not([aria-label*="фону"]), .modalCloseButton, .profileModalClose'
       );
+      const requestedFocus = dialog.querySelector('[data-modal-autofocus="true"]');
 
       window.requestAnimationFrame(() => {
         if (activeDialog !== dialog || !dialog.isConnected) return;
-        const focusTarget = closeButton instanceof HTMLElement ? closeButton : getFocusable()[0] || dialog;
+        const focusTarget = requestedFocus instanceof HTMLElement
+          ? requestedFocus
+          : closeButton instanceof HTMLElement ? closeButton : getFocusable()[0] || dialog;
         focusTarget.focus({ preventScroll: true });
       });
 

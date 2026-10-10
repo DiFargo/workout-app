@@ -136,6 +136,9 @@ function applyExerciseStartingWeight(exercise = {}, context = {}) {
 }
 
 export function applyBasicWorkoutStartingWeights(plan = {}, { profile = {}, quiz = {}, history = [] } = {}) {
+  // The hybrid pilot never estimates kilograms or imports another session's
+  // load. The client enters it explicitly; saved values remain untouched.
+  if (plan.startingWeightPolicy === "manual") return plan;
   const historyWeights = getHistoryWeightMap(history);
   const sourceProfile = profile && typeof profile === "object" ? profile : {};
 

@@ -206,7 +206,7 @@
 }
 
 .modal .description {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   line-height: 1.3;
 }
@@ -241,7 +241,7 @@
 }
 
 .modal .fieldLabel {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   font-weight: 400;
   letter-spacing: -0.1px;
@@ -250,24 +250,24 @@
 .modal .control {
   min-height: 46px;
   padding: 0 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 11px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   font-size: 17px;
   font-weight: 500;
 }
 
 .modal .selectGrid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .tab .selectGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 10px; }
-.modal .control:focus { border-color: var(--apple-blue, #3c6faa); box-shadow: none; outline: 2px solid var(--apple-blue-tint, #edf2f9); }
+.modal .control:focus { border-color: var(--apple-blue, #376b91); box-shadow: none; outline: 2px solid var(--apple-blue-tint, #e8f1f2); }
 
 .modal .sexPicker {
   gap: 4px;
   margin-top: 0;
   padding: 4px;
   border-radius: 12px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 .modal .sexButton {
@@ -275,14 +275,14 @@
   border: 0;
   border-radius: 9px;
   background: transparent;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 15px;
   font-weight: 500;
 }
 
 .modal .sexButton.active {
   background: #ffffff;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: none;
 }
 
@@ -290,7 +290,7 @@
   min-height: 50px;
   margin-top: 0;
   border-radius: 14px;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #ffffff;
   box-shadow: none;
   font-size: 16px;

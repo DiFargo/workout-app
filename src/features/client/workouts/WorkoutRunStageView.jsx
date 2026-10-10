@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 
 import { formatCompactTimer, getExerciseTechniqueHint } from "../../../domain/workoutPresentation";
+import { getTrainerExerciseTechniqueGuide } from "../../../utils/trainerExerciseTechnique";
 import { exerciseUsesExternalWeight, isWorkoutSetCompleted } from "../../../utils/auditSafety";
 import { getBasicWorkoutAlternatives } from "../../../utils/basicWorkoutAlternatives";
 import { getTrainerExerciseAlternatives } from "../../../utils/trainerExerciseAlternatives";
@@ -22,18 +22,6 @@ import { WorkoutWarmupBody, WorkoutWarmupHeader } from "./WorkoutWarmupStage";
 import { buildWorkoutRunStageModel } from "./workoutRunStageModel";
 import { useBasicWorkoutExerciseOverrides } from "./useBasicWorkoutExerciseOverrides";
 import styles from "./WorkoutRunStageView.module.css";
-
-function IosExerciseHeader({ title, progressLabel }) {
-  if (typeof document === "undefined") return null;
-
-  return createPortal(
-    <div className={styles.iosExerciseHeader} data-testid="workout-ios-exercise-header">
-      <span className={styles.iosExerciseHeaderTitle}>{title}</span>
-      <span className={styles.iosExerciseHeaderProgress}>{progressLabel}</span>
-    </div>,
-    document.body
-  );
-}
 
 export function WorkoutRunExercisePreview({
   children,
@@ -206,7 +194,7 @@ export default function WorkoutRunStageView({
   const isWarmup = exercise?.id === "warmup";
   const exerciseTechniqueHint = getBasicWorkoutExerciseTechniqueHint(
     exercise,
-    getExerciseTechniqueHint(exercise?.name)
+    getTrainerExerciseTechniqueGuide(exercise) || getExerciseTechniqueHint(exercise?.name)
   );
   const exerciseAlternatives = exercise && !isWarmup
     ? isBasicWorkout
@@ -330,12 +318,14 @@ export default function WorkoutRunStageView({
 
   return (
     <>
-      {!isWarmup && !isFinishSlide && !isStartSlide && exercise ? (
-        <IosExerciseHeader
-          title={exercise.name}
-          progressLabel={exerciseProgressLabel}
-        />
-      ) : null}
+      <WorkoutStageHeading
+        exercise={exercise}
+        isFinishSlide={isFinishSlide}
+        isStartSlide={isStartSlide}
+        isWorkoutSaved={isWorkoutSaved}
+        inFlow={!isWarmup && !isFinishSlide}
+        progressLabel={exerciseProgressLabel}
+      />
       <div
       ref={deckRef}
       className={`${styles.deck} ${
@@ -349,20 +339,6 @@ export default function WorkoutRunStageView({
       data-css-module-scope="workout-run-stage"
       data-workout-stage={isWarmup ? "warmup" : isFinishSlide ? "finish" : "exercise"}
     >
-      <WorkoutStageHeading
-        exercise={exercise}
-        isFinishSlide={isFinishSlide}
-        isStartSlide={isStartSlide}
-        isWorkoutSaved={isWorkoutSaved}
-        inFlow={!isWarmup && !isFinishSlide}
-        progressLabel={exerciseProgressLabel}
-        onOpenTechnique={(event) => openWorkoutExerciseModal(
-          setExerciseTechniqueOpenId,
-          exercise.id,
-          event.currentTarget
-        )}
-      />
-
       {isStartSlide ? null : isFinishSlide ? (
         <WorkoutFinishStage
           completedExercisesCount={completedExercisesCount}
@@ -463,7 +439,10 @@ export default function WorkoutRunStageView({
               />
             ) : (
               <section className={styles.planSection} data-testid="workout-plan-section">
-                <h2>План на сегодня</h2>
+                <div className={styles.planHeading}>
+                  <h2>План на сегодня</h2>
+                  <span>{exercise.sets.filter(isWorkoutSetCompleted).length} из {exercise.sets.length}</span>
+                </div>
                 <div className={styles.planCard} data-testid="workout-plan-card">
                   <WorkoutExerciseSets
                     exercise={exercise}
@@ -475,7 +454,7 @@ export default function WorkoutRunStageView({
                     visibleSetIndexes={Number.isInteger(exercise.runtimeSetIndex) ? [exercise.runtimeSetIndex] : null}
                   />
 
-                  <WorkoutExerciseSupport
+                  {startingWeightCheck?.awaitingFeedback && <WorkoutExerciseSupport
                     exercise={exercise}
                     exerciseAiWeightAdjustments={exerciseAiWeightAdjustments}
                     exerciseHistoryOpenId={exerciseHistoryOpenId}
@@ -492,19 +471,8 @@ export default function WorkoutRunStageView({
                     readinessVolumeText={workoutReadiness?.volumeText}
                     startingWeightCheck={startingWeightCheck}
                     showNoteButton={false}
-                    showPreviousInfo={!shouldShowGroupRest}
-                    accessory={shouldShowGroupRest ? (
-                      <WorkoutRestTimer
-                        compact
-                        duration={restTimerDuration}
-                        running={restTimerRunning}
-                        seconds={restTimerSeconds}
-                        onStart={startRestTimer}
-                        onSecondsChange={setRestTimerSeconds}
-                        onRunningChange={setRestTimerRunning}
-                      />
-                    ) : null}
-                  />
+                    showPreviousInfo={false}
+                  />}
 
                   <WorkoutExerciseModals
                     alternatives={exerciseAlternatives}
@@ -552,7 +520,23 @@ export default function WorkoutRunStageView({
             onNext={goToNextExercise}
             onPrevious={goToPreviousExercise}
             onWarmupBack={requestLeaveWorkout}
-          />
+          >
+            {!isWarmup && shouldShowGroupRest && (
+              <WorkoutRestTimer
+                docked
+                duration={restTimerDuration}
+                running={restTimerRunning}
+                seconds={restTimerSeconds}
+                onStart={startRestTimer}
+                onSecondsChange={setRestTimerSeconds}
+                onRunningChange={setRestTimerRunning}
+                onExpand={() => {
+                  if (restTimerSeconds <= 0) startRestTimer(restTimerDuration);
+                  setRestTimerExpanded(true);
+                }}
+              />
+            )}
+          </WorkoutStageActionPanel>
         </>
       )}
       </div>

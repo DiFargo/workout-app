@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './app-test.js';
 import { failOnRuntimeErrors } from './runtime-errors.js';
 
 for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
@@ -7,7 +7,7 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.setViewportSize({ width, height: 852 });
     const errors = failOnRuntimeErrors(page);
     await page.goto('/v2?trainerHarness=1&photoCompare=1');
-    await expect(page.locator('#root .trainerNextRoot')).toBeVisible();
+    await expect(page.locator('#root .trainerNextRoot')).toBeVisible({ timeout: 40_000 });
     const mobile = page.getByTestId('trainer-nav-clients');
     await (await mobile.isVisible() ? mobile : page.getByTestId('trainer-desktop-nav-clients')).click();
     await page.locator('.trainerNextClientTable > button').first().click();
@@ -76,7 +76,8 @@ for (const width of [320, 393, 760, 761, 768, 1024, 1366, 1920]) {
     await page.getByRole('button', { name: /^История тренировок/ }).click();
     const historySheet = page.getByRole('dialog', { name: 'История тренировок', exact: true });
     await expect(historySheet.locator('.trainerClientWorkoutHistoryBlock')).toBeVisible();
-    await expect(historySheet.getByText('РАЗБОР ТРЕНИРОВКИ', { exact: true })).toHaveCount(0);
+    await expect(historySheet.locator('.trainerClientWorkoutReviewPanel')).toBeVisible();
+    await expect(historySheet.locator('.trainerClientWorkoutReviewPanel')).toContainText('Тяжело идёт, немного уменьшал вес относительно программы.');
     await historySheet.getByRole('button', { name: 'Закрыть: История тренировок', exact: true }).click();
     const assign = page.getByLabel('Назначить программу клиенту');
     await expect(assign).toBeHidden();

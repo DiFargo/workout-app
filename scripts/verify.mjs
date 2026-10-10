@@ -59,7 +59,7 @@ if (profile === "full") checks.push(["Isolated staging build", npmCommand, ["run
 if (profile !== "docs") checks.push(["Production build", npmCommand, ["run", "build:production"]]);
 if (["release", "full"].includes(profile)) checks.push(["Bundle budget", npmCommand, ["run", "check:bundle"]]);
 if (profile === "full" || process.argv.includes("--dependencies")) {
-  checks.push(["Root production dependencies", npmCommand, ["run", "audit:production"]], ["Functions production dependencies", npmCommand, ["run", "audit:functions"]]);
+  checks.push(["Root runtime and development dependencies", npmCommand, ["run", "audit:all"]], ["Functions production dependencies", npmCommand, ["run", "audit:functions"]]);
 }
 checks.push(["Whitespace errors", "git", ["diff", "--check"]]);
 if (browserTests.length || (profile === "full" && process.argv.includes("--e2e"))) checks.push(["Browser behavior", npmCommand, ["run", "test:e2e", "--", ...browserTests]]);

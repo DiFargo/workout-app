@@ -14,7 +14,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 .overlay[data-modal-surface="true"] {
@@ -51,7 +51,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
   background: #fff;
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
@@ -73,7 +73,7 @@
 }
 .resultHeader .grabber { margin-inline: auto; }
 .resultHeader .closeButton { top: 0; right: 0; }
-.resultHeader .eyebrow { margin-right: 50px; color: var(--apple-secondary, #636366); font-size: 11px; }
+.resultHeader .eyebrow { margin-right: 50px; color: var(--apple-secondary, #617078); font-size: 11px; }
 .resultHeader .title { margin: 6px 48px 8px 0; font-size: 28px; line-height: 1.15; }
 .resultHeader .description { min-height: 0; font-size: 14px; line-height: 20px; }
 .resultBody {
@@ -89,7 +89,7 @@
 .resultFooter {
   flex: 0 0 auto;
   padding-top: 12px;
-  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   background: inherit;
 }
 .resultActions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; gap: 10px; }
@@ -103,8 +103,8 @@
   gap: 8px;
   padding: 10px 12px;
   border-radius: 16px;
-  background: var(--apple-blue-tint, #edf2f9);
-  color: var(--apple-blue, #3c6faa);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue, #376b91);
   box-shadow: none;
   touch-action: manipulation;
 }
@@ -125,7 +125,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
   background: #fff;
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
@@ -152,7 +152,7 @@
 
 .anchoredEyebrow {
   margin: 4px 44px 0;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font-size: 10px;
   font-weight: 800;
   line-height: 14px;
@@ -162,7 +162,7 @@
 
 .anchoredTitle {
   margin: 14px 0 8px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 26px;
   line-height: 31px;
   letter-spacing: -0.35px;
@@ -172,7 +172,7 @@
 .anchoredDescription {
   max-width: 300px;
   margin: 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 14px;
   line-height: 20px;
   text-wrap: balance;
@@ -197,8 +197,8 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-text, #1c282e);
   cursor: pointer;
 }
 
@@ -210,7 +210,7 @@
 
 .eyebrow {
   margin: 0;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-size: 10px;
   font-weight: 700;
   line-height: 16px;
@@ -220,7 +220,7 @@
 
 .title {
   margin: 5px 44px 6px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 23px;
   font-weight: 700;
   line-height: 29px;
@@ -230,7 +230,7 @@
 .description {
   min-height: 40px;
   margin: 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   font-weight: 450;
   line-height: 19px;
@@ -244,16 +244,16 @@
   width: 100%;
   margin-top: 0;
   padding: 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
   text-align: left;
   -webkit-overflow-scrolling: touch;
 }
 
 .addedItemsTitle {
   margin: 0 0 7px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -272,7 +272,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
   background: #fff;
   cursor: pointer;
@@ -281,8 +281,8 @@
 
 .addedItem:active {
   transform: scale(0.985);
-  border-color: var(--apple-blue, #3c6faa);
-  background: var(--apple-blue-tint, #edf2f9);
+  border-color: var(--apple-blue, #376b91);
+  background: var(--ownset-soft-gradient);
 }
 
 .addedItemCopy {
@@ -299,21 +299,21 @@
 }
 
 .addedItemCopy strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 750;
   line-height: 19px;
 }
 
 .addedItemCopy span {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 600;
   line-height: 17px;
 }
 
 .addedItemCopy .reviewSource {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-weight: 750;
 }
 
@@ -342,7 +342,7 @@
   width: 100%;
   margin-top: 0;
   padding: 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: var(--apple-surface, #fff);
   text-align: left;
@@ -354,7 +354,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font: inherit;
   font-size: 12px;
   font-weight: 750;
@@ -364,7 +364,7 @@
 .itemEditorEyebrow,
 .itemEditorMacroTitle {
   margin: 0;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.06em;
@@ -374,7 +374,7 @@
 
 .itemEditorTitle {
   margin: 3px 0 11px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 17px;
   line-height: 22px;
 }
@@ -384,7 +384,7 @@
   gap: 4px;
   min-width: 0;
   margin-top: 8px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 700;
   line-height: 14px;
@@ -395,18 +395,18 @@
   width: 100%;
   min-height: 44px;
   padding: 8px 10px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 11px;
   outline: 0;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   font: inherit;
   font-size: 16px;
   font-weight: 700;
 }
 
 .itemEditorField input:focus {
-  border-color: var(--apple-action, #3f73b8);
+  border-color: var(--apple-action, #396ba6);
   box-shadow: 0 0 0 3px rgba(47, 125, 104, 0.12);
 }
 
@@ -427,10 +427,10 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 11px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
@@ -441,7 +441,7 @@
   width: 18px;
   height: 18px;
   margin: 0;
-  accent-color: var(--apple-action, #3f73b8);
+  accent-color: var(--apple-action, #396ba6);
   cursor: pointer;
 }
 
@@ -459,7 +459,7 @@
   margin-top: 13px;
   border: 0;
   border-radius: 13px;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font: inherit;
   font-size: 13px;
@@ -472,16 +472,16 @@
   width: 100%;
   margin-top: 14px;
   padding: 11px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
   text-align: left;
   -webkit-overflow-scrolling: touch;
 }
 
 .candidateSectionTitle {
   margin: 0 0 8px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
@@ -490,12 +490,12 @@
 .candidateGroup + .candidateGroup {
   margin-top: 11px;
   padding-top: 11px;
-  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 .candidateQuery {
   margin: 0 0 7px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 600;
   line-height: 15px;
@@ -515,10 +515,10 @@
   align-items: flex-start;
   justify-content: center;
   gap: 2px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -527,14 +527,14 @@
 
 .candidateButton:active {
   transform: scale(0.985);
-  border-color: var(--apple-blue, #3c6faa);
-  background: var(--apple-blue-tint, #edf2f9);
+  border-color: var(--apple-blue, #376b91);
+  background: var(--ownset-soft-gradient);
 }
 
 .candidateName {
   width: 100%;
   overflow-wrap: anywhere;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 700;
   line-height: 19px;
@@ -544,7 +544,7 @@
 .candidateMeta {
   width: 100%;
   overflow-wrap: anywhere;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 600;
   line-height: 17px;
@@ -591,7 +591,7 @@
   gap: 10px;
   border: 0;
   border-radius: 12px;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   box-shadow: none;
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms ease, filter 180ms ease;
 }
@@ -621,7 +621,7 @@
 .anchoredRecordButton > * { position: relative; z-index: 1; }
 
 .anchoredRecordButton.analyzing {
-  background: var(--apple-blue-pressed, #3565a3);
+  background: var(--apple-blue-pressed, #315f91);
   box-shadow: 0 8px 18px rgba(27, 35, 31, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
@@ -657,7 +657,7 @@
 
 .anchoredRecordButton.recording {
   filter: none;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   box-shadow: none;
   animation: none;
   transform: none;
@@ -682,7 +682,7 @@
   max-width: 100%;
   margin: 0;
   padding: 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 450;
   line-height: 18px;
@@ -698,7 +698,7 @@
   padding: 14px 12px;
   border: 1px solid transparent;
   border-radius: 22px;
-  background: var(--apple-blue-tint, #edf2f9);
+  background: var(--ownset-soft-gradient);
 }
 
 .captureBars {
@@ -707,7 +707,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
 }
 
 .captureBar {
@@ -741,13 +741,13 @@
   align-items: center;
   gap: 6px;
   margin-top: 8px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 600;
   line-height: 18px;
 }
 
-.captureMeter[data-recording="true"] .captureStatus { color: var(--apple-blue-pressed, #3565a3); }
+.captureMeter[data-recording="true"] .captureStatus { color: var(--apple-blue-pressed, #315f91); }
 .captureMeter[data-recording="true"] .captureStatus::before {
   content: "";
   width: 6px;
@@ -811,7 +811,7 @@
   gap: 7px;
   border: 0;
   border-radius: 50%;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 12px 26px rgba(47, 125, 104, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   cursor: pointer;
@@ -897,7 +897,7 @@
 .hint {
   min-height: 34px;
   margin: 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 450;
   line-height: 16px;
@@ -909,7 +909,7 @@
   margin-top: 12px;
   border: 0;
   border-radius: 16px;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font: inherit;
   font-size: 15px;
@@ -918,7 +918,7 @@
 }
 
 .sheet[data-search-failure="true"] .doneButton {
-  background: var(--apple-blue-pressed, #3565a3);
+  background: var(--apple-blue-pressed, #315f91);
 }
 
 .closeButton:focus-visible,

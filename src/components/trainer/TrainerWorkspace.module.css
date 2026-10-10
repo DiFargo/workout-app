@@ -367,7 +367,7 @@
   margin-top: 5px;
   border: 0;
   border-radius: 14px;
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   color: #ffffff;
   font-size: 14px;
   font-weight: 800;
@@ -492,7 +492,7 @@
   place-items: center;
   border-radius: 7px;
   color: #fff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   font-size: 20px;
   font-weight: 900;
 }
@@ -535,7 +535,7 @@
 .workspaceRoot :global(.trainerNextSidebar nav button:hover),
 .workspaceRoot :global(.trainerNextSidebar nav button.active) {
   color: var(--tn-purple);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextNavIcon) {
@@ -553,7 +553,7 @@
   display: grid;
   place-items: center;
   border-radius: 9px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-size: 10px;
   font-style: normal;
@@ -647,7 +647,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-size: 9px;
   font-style: normal;
@@ -1326,7 +1326,7 @@
   width: 100%;
   border: 0;
   border-radius: 14px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-weight: 900;
   cursor: pointer;
@@ -1849,7 +1849,7 @@
   place-items: center;
   border: 1px solid rgb(var(--trainer-v2-line-rgb, 108 78 255) / .18);
   border-radius: 12px;
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   color: var(--tn-purple);
   font-size: 16px;
   font-weight: 900;
@@ -2009,7 +2009,7 @@
 .workspaceRoot :global(.trainerNextFilters button.active) {
   border-color: var(--tn-purple);
   color: var(--tn-purple);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextSearch) {
@@ -2385,7 +2385,7 @@
 .workspaceRoot :global(.trainerNotificationSwitch input:checked + i),
 .workspaceRoot :global(.trainerNotificationDayBadges i.workout),
 .workspaceRoot :global(.trainerNotificationLegend i.workout) {
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerNextClientOverview) {
@@ -2653,7 +2653,7 @@
   display: grid;
   place-items: center;
   border-radius: 7px;
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   color: var(--tn-purple);
 }
 
@@ -3410,7 +3410,7 @@
 }
 
 .workspaceRoot :global(.trainerNutritionQuickNav button:first-child) {
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   border-color: transparent;
 }
@@ -3605,7 +3605,7 @@
   height: 100%;
   display: block;
   border-radius: inherit;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerNextMacro.green em) {
@@ -3665,7 +3665,7 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   color: var(--tn-purple);
 }
 
@@ -3937,7 +3937,7 @@
   padding: 12px;
   border: 1px solid var(--tn-purple-border);
   border-radius: 7px;
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextCredentials strong),
@@ -4093,7 +4093,7 @@
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: var(--tn-purple);
+    background: var(--ownset-action-gradient);
     color: #fff;
     font-size: 9px;
     font-style: normal;
@@ -5255,7 +5255,7 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-size: 10px;
 }
@@ -6276,7 +6276,7 @@
   padding: 0 18px;
   border: 0;
   border-radius: 7px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-weight: 700;
 }
@@ -6387,7 +6387,7 @@
   gap: 7px;
   padding: 0 18px;
   border: 0;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-weight: 700;
   box-shadow: 0 12px 24px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.16);
@@ -6676,7 +6676,7 @@
   display: grid;
   gap: 1px;
   border-radius: 999px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerWorkoutMonthGrid i em) {
@@ -6783,7 +6783,7 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerWorkoutSchedulePlanner > header p) {
@@ -6963,7 +6963,7 @@
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerWorkoutScheduleFooter) {
@@ -7390,7 +7390,7 @@
 
 .workspaceRoot :global(.trainerMessageFilters button.active),
 .workspaceRoot :global(.trainerExerciseProgressToolbar button.active) {
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 100 55 245) / 0.16);
 }
@@ -7606,7 +7606,7 @@
   width: 8px;
   height: 8px;
   border-radius: 2px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerNutritionLegend span.protein::before) {
@@ -8101,7 +8101,7 @@
 .workspaceRoot :global(.trainerNutritionPeriodButtons button.active),
 .workspaceRoot :global(.trainerNotificationOffsets label.active > span) {
   border-color: var(--tn-purple);
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
 }
 
@@ -8504,13 +8504,13 @@
 
 .workspaceRoot :global(.trainerClientMessageBubble.outgoing) {
   align-self: flex-end;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: #fff;
 }
 
 .workspaceRoot :global(.trainerClientMessageBubble.incoming) {
   align-self: flex-start;
-  background: #f2f2f7;
+  background: #f5f7f8;
   color: var(--tn-text);
   border: 1px solid var(--tn-line);
 }
@@ -23463,7 +23463,7 @@
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminHistoryCheck input:checked + i) {
   border-color: var(--trainer-v2-accent, #806bb6);
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientMeasurementsEmpty span) {
@@ -23482,13 +23482,13 @@
 
 /* V2 uses the client spacing and surface system. */
 :global(html[data-trainer-variant="v2"] body) .overlay { padding: 20px; background: rgba(28,28,30,.3); }
-:global(html[data-trainer-variant="v2"] body) .overlayCard { width: min(380px,100%); max-height: calc(100dvh - 40px); overflow-y: auto; padding: 28px 20px 20px; border-radius: 22px; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); color: #1c1c1e; }
+:global(html[data-trainer-variant="v2"] body) .overlayCard { width: min(380px,100%); max-height: calc(100dvh - 40px); overflow-y: auto; padding: 28px 20px 20px; border-radius: 22px; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); color: #1c282e; }
 :global(html[data-trainer-variant="v2"] body) .overlayCard strong { font-size: 22px; line-height: 1.2; }
-:global(html[data-trainer-variant="v2"] body) .overlayCard p { font-size: 13px; font-weight: 400; color: #636366; }
-:global(html[data-trainer-variant="v2"] body) .spinner { border-color: #e8edf4; border-top-color: #3f73b8; width: 34px; height: 34px; }
-:global(html[data-trainer-variant="v2"] body) .eyebrow, :global(html[data-trainer-variant="v2"] body) .progressMeta b { color: #3c6faa; }
-:global(html[data-trainer-variant="v2"] body) .progressTrack { background: #efeff4; height: 6px; }
-:global(html[data-trainer-variant="v2"] body) .progressTrack i { background: #3f73b8; box-shadow: none; }
-:global(html[data-trainer-variant="v2"] body) .backgroundButton { background: #3f73b8; min-height: 46px; font-weight: 600; border-radius: 12px; }
-:global(html[data-trainer-variant="v2"] body) .close { background: #efeff4; color: #636366; width: 44px; height: 44px; }
-:global(html[data-trainer-variant="v2"] body) .toast { border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); background: #fff; color: #1c1c1e; }
+:global(html[data-trainer-variant="v2"] body) .overlayCard p { font-size: 13px; font-weight: 400; color: #617078; }
+:global(html[data-trainer-variant="v2"] body) .spinner { border-color: #e8edf4; border-top-color: #396ba6; width: 34px; height: 34px; }
+:global(html[data-trainer-variant="v2"] body) .eyebrow, :global(html[data-trainer-variant="v2"] body) .progressMeta b { color: #376b91; }
+:global(html[data-trainer-variant="v2"] body) .progressTrack { background: #edf1f3; height: 6px; }
+:global(html[data-trainer-variant="v2"] body) .progressTrack i { background: var(--ownset-action-gradient); box-shadow: none; }
+:global(html[data-trainer-variant="v2"] body) .backgroundButton { background: var(--ownset-action-gradient); min-height: 46px; font-weight: 600; border-radius: 12px; }
+:global(html[data-trainer-variant="v2"] body) .close { background: #edf1f3; color: #617078; width: 44px; height: 44px; }
+:global(html[data-trainer-variant="v2"] body) .toast { border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); background: #fff; color: #1c282e; }

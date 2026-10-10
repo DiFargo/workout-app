@@ -152,7 +152,7 @@
 
 .edit {
   border: 1px solid var(--trainer-v2-accent, #806bb6);
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 9px 24px var(--trainer-v2-shadow, rgb(99 48 245 / 20%));
 }

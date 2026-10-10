@@ -3,6 +3,7 @@ import {
   getAiWorkoutBaseWeight,
   getWorkoutReadinessOption
 } from "../../../domain/workoutPresentation";
+import { captureWorkoutSetPrescription } from "../../../utils/workoutPrescription.js";
 
 export function createWorkoutReadinessHandlers({
   selectedWorkoutId,
@@ -38,7 +39,8 @@ export function createWorkoutReadinessHandlers({
           ...workoutItem,
           exercises: workoutItem.exercises.map((exercise) => ({
             ...exercise,
-            sets: exercise.sets.map((set, index) => {
+            sets: exercise.sets.map((sourceSet, index) => {
+              const set = captureWorkoutSetPrescription(sourceSet);
               if (readiness.id === "good") return set;
 
               const isAssignedProgramWorkout = Boolean(

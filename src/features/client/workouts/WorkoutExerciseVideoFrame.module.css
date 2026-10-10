@@ -2,7 +2,7 @@
   box-sizing: border-box;
   position: relative;
   width: min(100%, clamp(230px, 33dvh, 286px));
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   margin: 0 auto;
   overflow: hidden;
   flex: 0 0 auto;
@@ -19,11 +19,11 @@
   height: auto;
   min-height: 0;
   max-height: none;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   margin: 0 auto;
   padding: 10px;
   overflow: hidden;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 2px 7px rgba(27, 35, 31, 0.07);
@@ -41,21 +41,26 @@
   width: 100%;
   height: 100%;
   border-radius: 16px;
-  background: var(--apple-text, #1c1c1e);
+  background: var(--apple-text, #1c282e);
   object-fit: cover;
 }
 :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl {
-  width: 62px;
-  min-width: 62px;
-  height: 62px;
-  min-height: 62px;
+  width: 72px;
+  min-width: 72px;
+  height: 72px;
+  min-height: 72px;
   opacity: 1;
-  background: rgba(0, 0, 0, 0.48);
 }
 :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl > svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 2.4;
+  width: 30px;
+  height: 30px;
+  stroke-width: 3;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .25));
+}
+:global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl > svg[data-icon-state="play"] {
+  fill: currentColor;
+  stroke-width: 1.5;
+  transform: translateX(1px);
 }
 :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl.hidden {
   opacity: 0;
@@ -72,14 +77,8 @@
   top: 12px;
   right: 12px;
   bottom: auto;
-  border-color: rgba(255, 255, 255, 0.92);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--apple-blue-pressed, #3565a3);
+  border-radius: 50%;
   opacity: 1;
-  box-shadow: 0 5px 14px rgba(17, 15, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 :global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton > svg {
   width: 20px;
@@ -100,7 +99,7 @@
   border: 0;
   border-radius: 14px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font: inherit;
   font-size: 10px;
   font-weight: 700;
@@ -164,11 +163,8 @@
   transition: opacity 160ms ease, transform 160ms ease, background 160ms ease;
 }
 
-.inlineControl:hover,
 .inlineControl:active {
-  opacity: 0.9;
-  background: var(--color-workout-video-control-surface-hover);
-  transform: translate(-50%, -50%) scale(1.04);
+  transform: translate(-50%, -50%) scale(0.97);
 }
 
 .inlineControl.hidden {
@@ -219,17 +215,8 @@
   font-size: 17px;
 }
 
-.fullscreenButton:hover,
 .fullscreenButton:active {
-  opacity: 0.95;
-  background: var(--color-workout-video-fullscreen-surface-hover);
-}
-
-:global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton:hover,
-:global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton:active {
-  background: rgba(245, 242, 251, 0.96);
-  opacity: 1;
-  transform: scale(0.96);
+  transform: scale(0.97);
 }
 
 .fallbackContent {
@@ -315,5 +302,68 @@
 @media (min-width: 701px) and (max-height: 740px) {
   .frame {
     width: min(100%, 190px);
+  }
+}
+
+/* Stable 4:3 media; its content scrolls independently of the fixed dock. */
+:global(:root[data-app-theme="warm-light"]) .frame.frame {
+  width: 100%; max-width: none; height: auto; min-height: 0; max-height: none; aspect-ratio: 4 / 3;
+  padding: 0; margin: 0; border: 0; border-radius: 26px; background: #f1eef5; box-shadow: none; overflow: hidden;
+}
+:global(:root[data-app-theme="warm-light"]) .video.video { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; margin: 0; border-radius: 26px; object-fit: contain; }
+:global(:root[data-app-theme="warm-light"]) .fallbackContent.fallbackContent { padding: 0; background: #f1eef5; }
+.fallbackIllustration.fallbackIllustration { opacity: 1; object-fit: contain; object-position: center; transform: scale(1.12); }
+.fallbackContent.fallbackContent::after { display: none; }
+.fallbackCopy.fallbackCopy { position: absolute; bottom: 12px; right: 12px; max-width: calc(100% - 24px); padding: 7px 10px; border-radius: 20px; background: #fffffff0; }
+.fallbackContent.fallbackContent strong { color: #617078; font-size: 11px; font-weight: 400; line-height: 1.4; }
+.fallbackContent.fallbackContent small { display: none; }
+.fallbackCopy .retryButton { color: #376b91; background: white; font-size: 13px; }
+:global(:root[data-app-theme="warm-light"]) .frame:has(.fallbackContent) .techniqueButton { top: 12px; left: 12px; right: auto; bottom: auto; font-size: 13px; font-weight: 500; }
+
+/* The glass is confined to the controls, leaving the exercise demonstration clear. */
+:global(:root[data-app-theme="warm-light"]) .frame.frame {
+  --workout-video-glass-surface: rgba(34, 34, 38, .78);
+  --workout-video-glass-highlight: linear-gradient(145deg, rgba(255,255,255,.24), rgba(255,255,255,.04) 42%, rgba(255,255,255,.02) 60%, rgba(255,255,255,.16));
+  --workout-video-glass-edge: rgba(255,255,255,.32);
+  --workout-video-glass-shadow: 0 8px 24px rgba(0,0,0,.2), inset 0 1px 1px rgba(255,255,255,.5), inset 0 -1px 1px rgba(255,255,255,.12);
+}
+:global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl,
+:global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton {
+  border: 1px solid var(--workout-video-glass-edge);
+  background: var(--workout-video-glass-highlight), var(--workout-video-glass-surface);
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  box-shadow: var(--workout-video-glass-shadow);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  backdrop-filter: blur(12px) saturate(1.3);
+  touch-action: manipulation;
+  transition: opacity 140ms ease, transform 140ms cubic-bezier(.23,1,.32,1), box-shadow 140ms ease;
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :global(:root[data-app-theme="warm-light"]) .frame.frame { --workout-video-glass-surface: rgba(18,18,20,.46); }
+}
+@media (hover: hover) and (pointer: fine) {
+  :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl:hover,
+  :global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton:hover {
+    box-shadow: var(--workout-video-glass-shadow), inset 0 0 0 1px rgba(255,255,255,.16);
+  }
+}
+:global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl:focus-visible,
+:global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .inlineControl, .fullscreenButton { transition: none !important; }
+  .inlineControl:active { transform: translate(-50%, -50%); }
+  .fullscreenButton:active { transform: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :global(:root[data-app-theme="warm-light"]) .frame.frame { --workout-video-glass-surface: rgba(34,34,38,.94); }
+  :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl,
+  :global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
@@ -138,6 +138,13 @@ test("compact product keeps meal selection, portions, live macros and add action
       await meal.click();
       const options = page.locator("[data-food-product-meal]");
       await expect(options).toHaveCount(4);
+      const menuBox = await page.getByTestId("food-product-meal-menu").boundingBox();
+      const headerBox = await header.boundingBox();
+      const dockBox = await page.getByTestId("food-product-action-bar").boundingBox();
+      expect(menuBox.x).toBeGreaterThanOrEqual(headerBox.x);
+      expect(menuBox.x + menuBox.width).toBeLessThanOrEqual(headerBox.x + headerBox.width);
+      expect(menuBox.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height);
+      expect(menuBox.y + menuBox.height).toBeLessThanOrEqual(dockBox.y - 1);
       const option = page.locator(`[data-food-product-meal="${id}"]`);
       const icon = await option.locator("span[aria-hidden]").textContent();
       const name = await option.locator("strong").textContent();

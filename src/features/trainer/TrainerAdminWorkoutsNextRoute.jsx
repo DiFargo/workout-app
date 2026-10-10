@@ -25,6 +25,7 @@ export default function TrainerAdminWorkoutsNextRoute({
   telegramProfile,
   trainerName,
   trainerExerciseLibraryItems,
+  trainerExerciseCards = [],
   trainerNextWorkspaceHandlers,
   trainerWorkoutTab,
   usersList,
@@ -45,7 +46,8 @@ export default function TrainerAdminWorkoutsNextRoute({
   const activeWorkoutClient = isExerciseLibraryTab ? null : selectedWorkoutClient || null;
   const activeWorkouts = isExerciseLibraryTab ? [] : sortWorkoutDays(plan.workouts || []);
   const activeExerciseLibrary = isExerciseLibraryTab
-    ? buildTrainerExerciseLibraryItems({}, visibleProgramTemplates, { includeDeleted: true })
+    ? buildTrainerExerciseLibraryItems({}, visibleProgramTemplates, { includeDeleted: true,
+        cards: isTrainerMaterials ? trainerExerciseCards.filter((card) => card.ownerUid === selectedTrainerId) : trainerExerciseCards })
     : trainerExerciseLibraryItems;
 
   const handleWorkoutTabChange = () => {

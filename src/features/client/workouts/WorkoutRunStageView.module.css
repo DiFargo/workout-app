@@ -60,7 +60,7 @@
     padding: 3px 0;
     overflow: hidden;
     pointer-events: none;
-    color: var(--apple-text, #1c1c1e);
+    color: var(--apple-text, #1c282e);
     text-align: center;
     transform: translate3d(-50%, 0, 0);
     -webkit-transform: translate3d(-50%, 0, 0);
@@ -80,7 +80,7 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .iosExerciseHeaderProgress {
-    color: var(--apple-action, #3f73b8);
+    color: var(--apple-action, #396ba6);
     font-size: 12px;
     font-weight: 600;
     line-height: 15px;
@@ -116,8 +116,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 13px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
@@ -133,7 +133,7 @@
   align-items: center;
   justify-content: center;
 }
-:global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta > span { color: var(--apple-action, #3f73b8); -webkit-text-fill-color: var(--apple-action, #3f73b8); }
+:global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta > span { color: var(--apple-action, #396ba6); -webkit-text-fill-color: var(--apple-action, #396ba6); }
 :global(:root[data-app-theme="warm-light"]) .exerciseMeta.exerciseMeta > span {
   width: 100%;
   display: block;
@@ -171,7 +171,7 @@
   padding: 0 4px;
   display: flex;
   align-items: center;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 700;
   line-height: 22px;
@@ -181,7 +181,7 @@
   width: 100%;
   height: 224px;
   overflow: hidden;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 2px 7px rgba(27, 35, 31, 0.05);
@@ -435,9 +435,9 @@
   padding: 14px;
   gap: 10px;
   overflow: hidden auto;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
   scrollbar-width: none;
@@ -462,4 +462,63 @@
   :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard {
     max-width: var(--workout-run-content-width);
   }
+}
+
+/* The title is outside the scrolling deck on every platform, including iOS. */
+:global(:root[data-app-theme="warm-light"]) .deck.deck {
+  width: var(--workout-run-content-width, min(760px, 100vw)); max-width: none; height: auto; max-height: none; min-height: 0; flex: 1 1 auto;
+  margin: 0 auto; padding: 0 max(var(--workout-inline-gutter, 20px), env(safe-area-inset-right)) calc(var(--workout-dock-height, 110px) + var(--workout-scroll-gap, 16px)) max(var(--workout-inline-gutter, 20px), env(safe-area-inset-left));
+  overflow: hidden auto; display: flex; align-items: stretch; justify-content: flex-start;
+  scroll-behavior: auto; overscroll-behavior: contain; touch-action: pan-y;
+}
+:global(:root[data-app-theme="warm-light"]) .card.card {
+  height: auto; min-height: 0; max-height: none; flex: 0 0 auto; width: 100%; max-width: none;
+  padding: 0; margin: 0; gap: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none;
+  overflow: visible; transform: none; will-change: auto; animation: none;
+}
+.planSection.planSection { height: auto; margin: clamp(8px, calc(var(--workout-stage-usable-height, 640px) * .025), 16px) 0 0; }
+.planHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 4px 10px; }
+.planHeading h2 { margin: 0; color: #617078; font-size: .8125rem; font-weight: 500; line-height: 1.4; letter-spacing: .35px; text-transform: uppercase; }
+.planHeading > span { font-size: .8125rem; color: #617078; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.planCard.planCard { height: auto; min-height: 0; overflow: visible; border: 0; border-radius: 20px; background: #fff; box-shadow: none; }
+
+/* Fit preparation to the measured space between the header and bottom dock.
+   Normal flow preserves the final scroll inset in WebKit for enlarged text. */
+:global(:root[data-app-theme="warm-light"]) .warmupDeck.warmupDeck {
+  --workout-scroll-gap: 10px;
+  --warmup-block-padding: clamp(6px, calc((var(--workout-stage-usable-height, 520px) - 350px) * .06), 18px);
+  --warmup-inline-padding: clamp(12px, calc(var(--workout-stage-usable-height, 520px) * .025), 16px);
+  --warmup-marker-size: clamp(28px, calc(var(--workout-stage-usable-height, 520px) * .06), 32px);
+  --warmup-item-gap: clamp(8px, calc(var(--workout-stage-usable-height, 520px) * .02), 12px);
+  --warmup-block-gap: clamp(8px, calc((var(--workout-stage-usable-height, 520px) - 400px) * .06), 16px);
+  --warmup-title-size: clamp(.9375rem, calc(var(--workout-stage-usable-height, 520px) * .03), 1.0625rem);
+  --warmup-copy-size: clamp(.8125rem, calc(var(--workout-stage-usable-height, 520px) * .025), .875rem);
+  display: block;
+}
+
+/* Give the finish stage a definite flex viewport. With large text and a short
+   screen, an auto flex-basis can otherwise grow past the fixed action dock and
+   leave the last rows unreachable. Normal flow preserves the scroll inset. */
+:global(:root[data-app-theme="warm-light"]) .finishDeck.finishDeck {
+  display: block;
+  flex: 1 1 0%;
+  height: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: calc(var(--workout-dock-height, 77px) + var(--workout-scroll-gap, 16px));
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+:global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
+  --workout-scroll-gap: 10px;
+  --workout-exercise-tool-gap: clamp(6px, calc(var(--workout-stage-usable-height, 500px) * .016), 8px);
+  --workout-exercise-tool-height: 48px;
+  --workout-support-padding: 4px 16px;
+  --workout-set-row-height: clamp(56px, calc(var(--workout-stage-usable-height, 522px) * .115), 64px);
+  --workout-set-value-size: clamp(1.1875rem, calc(var(--workout-stage-usable-height, 490px) * .045), 1.375rem);
+  --workout-set-label-padding: 6px 16px 2px;
+  display: block;
 }

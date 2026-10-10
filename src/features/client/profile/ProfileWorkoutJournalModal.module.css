@@ -30,13 +30,13 @@
   color: var(--color-profile-modal);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
-  --gradient-primary: var(--apple-action, #3f73b8);
+  --gradient-primary: var(--apple-action, #396ba6);
 }
 
 .dialog button { font-family: inherit; }
 .header.header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
 .dialog.dialog[data-cabinet-sheet="true"] .closeButton[data-profile-modal-close="true"] {
-  border: 0; color: var(--apple-secondary, #636366); background: var(--apple-surface-muted, #efeff4); box-shadow: none;
+  border: 0; color: var(--apple-secondary, #617078); background: var(--apple-surface-muted, #edf1f3); box-shadow: none;
 }
 
 .header {
@@ -53,7 +53,7 @@
   gap: 4px;
   border: 0;
   border-radius: 12px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 .tab {
@@ -63,7 +63,7 @@
   border: 0;
   border-radius: 9px;
   background: transparent;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 15px;
   font-weight: 500;
 }
@@ -71,7 +71,7 @@
 .activeTab {
   background: #ffffff;
   box-shadow: none;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 .body {

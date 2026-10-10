@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 
 test("voice results fit phone screens with one scrolling list and fixed actions", async ({ page }, testInfo) => {
   for (const viewport of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
@@ -94,7 +94,8 @@ test("voice sheet has clear recording controls across phone sizes", async ({ pag
     const record = page.getByTestId("nutrition-voice-record");
     await expect(sheet).toBeVisible();
     await expect(record).toHaveText("Завершить запись");
-    await expect(record).toHaveCSS("background-color", "rgb(63, 115, 184)");
+    await expect(record).toHaveCSS("background-image", "linear-gradient(115deg, rgb(70, 123, 114) 0%, rgb(62, 116, 139) 54%, rgb(53, 101, 163) 100%)");
+    await expect(record).toHaveCSS("color", "rgb(255, 255, 255)");
     await expect(page.getByTestId("nutrition-voice-meter")).toContainText("Запись идёт");
     await record.scrollIntoViewIfNeeded();
     const bounds = await record.boundingBox();

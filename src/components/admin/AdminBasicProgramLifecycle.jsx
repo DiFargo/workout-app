@@ -474,7 +474,7 @@ function ProgramCard({ program, onCreateVersion, onDuplicate, onEdit, onHistory,
   );
 }
 
-export default function AdminBasicProgramLifecycle({ fallbackPrograms = [] }) {
+export default function AdminBasicProgramLifecycle({ fallbackPrograms = [], embedded = false }) {
   const [managedPrograms, setManagedPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -645,11 +645,11 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [] }) {
   return (
     <section className={styles.lifecycle} data-testid="admin-basic-program-lifecycle">
       <div className={styles.lifecycleHeader}>
-        <div>
+        {!embedded ? <div>
           <p className={styles.eyebrow}>Управляемые версии</p>
           <h2>Базовые программы</h2>
           <p>Создавайте и публикуйте версии для будущих назначений. Назначенные клиентам планы и их история не меняются.</p>
-        </div>
+        </div> : null}
         <button className={styles.newProgramButton} type="button" onClick={() => { setSaveError(""); setEditor({ mode: "create", program: null }); }}>
           <FilePlus2 aria-hidden="true" />
           Новая программа
@@ -666,7 +666,7 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [] }) {
       <div className={styles.toolbar}>
         <label className={styles.searchField}>
           <span className={styles.srOnly}>Найти базовую программу</span>
-          <input value={search} onChange={(event) => setSearch(event.target.value)} type="search" placeholder="Найти базовую программу" />
+          <input value={search} onChange={(event) => setSearch(event.target.value)} type="search" autoComplete="off" placeholder="Найти базовую программу" />
         </label>
         <div className={styles.filterRow} aria-label="Статус программы">
           {FILTERS.map((item) => (

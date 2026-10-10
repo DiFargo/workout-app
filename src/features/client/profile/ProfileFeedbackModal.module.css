@@ -30,13 +30,13 @@
   color: var(--color-profile-modal);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
-  --gradient-primary: var(--apple-action, #3f73b8);
+  --gradient-primary: var(--apple-action, #396ba6);
 }
 
 .dialog button { font-family: inherit; }
 .header.header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
 .dialog.dialog[data-cabinet-sheet="true"] .closeButton[data-profile-modal-close="true"] {
-  border: 0; color: var(--apple-secondary, #636366); background: var(--apple-surface-muted, #efeff4); box-shadow: none;
+  border: 0; color: var(--apple-secondary, #617078); background: var(--apple-surface-muted, #edf1f3); box-shadow: none;
 }
 
 .header {
@@ -82,7 +82,7 @@
   border: 1px solid transparent;
   border-radius: 15px;
   background: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   text-align: left;
 }
 
@@ -93,8 +93,8 @@
   display: grid;
   place-items: center;
   border-radius: 11px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-blue, #3c6faa);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-blue, #376b91);
 }
 
 .typeIcon svg {
@@ -110,10 +110,10 @@
 }
 
 .activeType {
-  border-color: var(--apple-blue, #3c6faa);
-  background: var(--apple-blue-tint, #edf2f9);
+  border-color: var(--apple-blue, #376b91);
+  background: var(--ownset-soft-gradient);
   box-shadow: none;
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
 }
 
 .typeTitle {
@@ -124,23 +124,23 @@
 }
 
 .typeHint {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.35;
 }
 
 .activeType .typeTitle {
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
 }
 
 .activeType .typeHint {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 .activeType .typeIcon {
   background: #ffffff;
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
 }
 
 .field {
@@ -149,7 +149,7 @@
 }
 
 .fieldLabel {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   font-weight: 400;
 }
@@ -158,10 +158,10 @@
 .input {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 14px;
   background: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font: inherit;
   font-size: 16px;
   font-weight: 400;
@@ -181,13 +181,13 @@
 
 .textarea:focus,
 .input:focus {
-  border-color: var(--apple-blue, #3c6faa);
+  border-color: var(--apple-blue, #376b91);
   box-shadow: none;
 }
 
 .counter {
   justify-self: end;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 400;
 }
@@ -208,7 +208,7 @@
   border: 0;
   border-radius: 14px;
   background: #ffffff;
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
   cursor: pointer;
 }
 
@@ -231,7 +231,7 @@
 }
 
 .attachmentHint {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.4;
@@ -319,8 +319,8 @@
   }
 }
 
-.attachmentPicker:focus-within { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }
-.textarea::placeholder, .input::placeholder { color: var(--apple-secondary, #636366); opacity: 1; }
+.attachmentPicker:focus-within { outline: 2px solid var(--apple-blue, #376b91); outline-offset: 2px; }
+.textarea::placeholder, .input::placeholder { color: var(--apple-secondary, #617078); opacity: 1; }
 
 @media (max-height: 720px) {
   .dialog {

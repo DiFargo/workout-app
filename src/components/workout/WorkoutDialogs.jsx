@@ -214,6 +214,7 @@ export function WorkoutReadinessDialog({
 export function WorkoutDraftRestoreDialog({
   open,
   blocked,
+  onClose,
   onRestart,
   onRestore
 }) {
@@ -224,6 +225,15 @@ export function WorkoutDraftRestoreDialog({
       className={styles.draftOverlay} data-modal-backdrop="true"
       data-testid="workout-draft-restore-dialog"
       data-css-module-scope="workout-dialogs"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose?.();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          event.stopPropagation();
+          onClose?.();
+        }
+      }}
     >
       <div
         className={styles.draftCard}
@@ -233,7 +243,12 @@ export function WorkoutDraftRestoreDialog({
         aria-labelledby="workoutDraftRestoreTitle"
         aria-describedby="workoutDraftRestoreDescription"
       >
-        <span className={styles.draftIcon} aria-hidden="true"><RotateCcw /></span>
+        <div className={styles.draftHeader}>
+          <span className={styles.draftIcon} aria-hidden="true"><RotateCcw /></span>
+          <button type="button" className={styles.exitCloseButton} onClick={onClose} aria-label="Закрыть окно восстановления тренировки">
+            <X size={21} strokeWidth={2.5} aria-hidden="true" />
+          </button>
+        </div>
         <h2 id="workoutDraftRestoreTitle">Продолжить тренировку?</h2>
         <p id="workoutDraftRestoreDescription">
           Найден незавершённый черновик. Можно восстановить прогресс или начать заново.

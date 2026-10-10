@@ -40,7 +40,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientBackRow > div > button:not(.trainerNextPrimary):hover) {
   border-color: var(--trainer-v2-line, #d9cdec);
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNextClientHeader) {
@@ -97,7 +97,7 @@
   border: 1px solid var(--trainer-v2-line, #ded4f0);
   border-radius: 14px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 87 67 136) / 0.1);
   cursor: pointer;
   font: inherit;
@@ -136,7 +136,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNextClientTabs button[aria-pressed="true"]) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerClientWorkSummary) {
@@ -360,7 +360,7 @@
   padding: 12px 13px;
   border-radius: 14px;
   color: var(--tn-muted);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 13px;
   line-height: 1.45;
 }
@@ -485,7 +485,7 @@
 :global(.trainerNextRoot) :global(.trainerPhotoViewTabs button[aria-pressed="true"]) {
   border-color: var(--tn-purple);
   color: #ffffff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerPhotoComparePanel) {
@@ -596,7 +596,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNutritionQuickNav button:hover) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionUnifiedSection),
@@ -629,7 +629,7 @@
   place-items: center;
   border-radius: 13px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerClientBlockHeading h2) {
@@ -697,7 +697,7 @@
 :global(.trainerNextRoot) :global(.trainerNutritionPeriodButtons button[aria-pressed="true"]) {
   border-color: var(--tn-purple);
   color: #ffffff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNutritionMetricGrid) {
@@ -902,7 +902,7 @@
   place-items: center;
   border-radius: 13px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationIcon.connected) {
@@ -1039,7 +1039,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationSwitch input:checked + i) {
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationSwitch input:checked + i::after) {
@@ -1085,7 +1085,7 @@
 :global(.trainerNextRoot) :global(.trainerReminderPeriod button[aria-pressed="true"]) {
   border-color: var(--trainer-v2-line, #d7cbed);
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationCalendar) {
@@ -1233,7 +1233,7 @@
   height: 5px;
   overflow: hidden;
   border-radius: 50%;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   color: transparent;
   font-size: 0;
   line-height: 0;
@@ -1241,7 +1241,7 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationCalendarGrid button.active .trainerNotificationDayBadges i) {
-  background: var(--tn-purple-strong);
+  background: var(--ownset-action-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerNotificationDayBadges i.photo),

@@ -14,7 +14,7 @@ import { getBasicWorkoutLibraryExercise } from "../src/utils/basicWorkoutExercis
 import { getBasicWorkoutMannequinIllustrationSource } from "../src/utils/basicWorkoutMannequinIllustration.js";
 
 test("basic workout exercise library covers the main movement groups", () => {
-  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 99);
+  assert.equal(BASIC_WORKOUT_EXERCISE_LIBRARY.length, 131);
   assert.deepEqual(
     BASIC_WORKOUT_EXERCISE_GROUPS.map((group) => group.id),
     [
@@ -34,7 +34,10 @@ test("basic workout exercise library covers the main movement groups", () => {
       "forearms",
       "core",
       "mobility",
-      "cardio"
+      "cardio",
+      "hip_abduction",
+      "hip_adduction",
+      "shoulder_front"
     ]
   );
 });
@@ -61,7 +64,7 @@ test("basic workout alternatives preserve the movement group for AI exercise nam
   const alternatives = getBasicWorkoutAlternatives(exercise, { exercises: [exercise] });
 
   assert.equal(group?.id, "chest_press");
-  assert.equal(alternatives.length, 3);
+  assert.equal(alternatives.length, 2);
   assert.ok(alternatives.every((item) => item.groupId === "chest_press"));
   assert.ok(alternatives.every((item) => item.name !== "Жим штанги лёжа"));
 });
@@ -85,17 +88,17 @@ test("trainer exercise snapshots infer a basic movement group from muscleGroup",
   );
 });
 
-test("basic workout alternatives prioritise familiar beginner-friendly movements", () => {
+test("basic workout offers two non-video alternatives before other videos", () => {
   const bench = { id: "bench", name: "Жим штанги лёжа" };
   const posteriorChain = { id: "rdl", name: "Румынская тяга" };
 
   assert.deepEqual(
     getBasicWorkoutAlternatives(bench, { exercises: [bench] }).map((item) => item.name),
-    ["Жим от груди в тренажёре", "Жим гантелей лёжа", "Отжимания от высокой опоры"]
+    ["Отжимания от высокой опоры", "Жим лёжа в Смите"]
   );
   assert.deepEqual(
     getBasicWorkoutAlternatives(posteriorChain, { exercises: [posteriorChain] }).map((item) => item.name),
-    ["Ягодичный мост", "Сгибание ног лёжа в тренажёре", "Гиперэкстензия"]
+    ["Ягодичный мост", "Гиперэкстензия"]
   );
 });
 
@@ -118,7 +121,7 @@ test("basic workout alternatives safely ignore an empty workout stage", () => {
   assert.deepEqual(getBasicWorkoutAlternatives(null, { exercises: [] }), []);
 });
 
-test("basic exercise replacement keeps the plan structure and resets completed sets", () => {
+test("basic exercise replacement before completion keeps prescribed load and resets unconfirmed entries", () => {
   const plan = {
     source: "basic",
     workouts: [{
@@ -129,7 +132,7 @@ test("basic exercise replacement keeps the plan structure and resets completed s
         basicExerciseId: "leg_press",
         basicExerciseLibraryId: "leg_press",
         sourceId: "Leg_Press",
-        sets: [{ reps: 12, weight: "60", completed: true, enteredWeight: "65", enteredReps: "12" }]
+        sets: [{ reps: 12, weight: "60", completed: false, enteredWeight: "65", enteredReps: "12" }]
       }]
     }]
   };
@@ -163,4 +166,15 @@ test("basic exercise replacement keeps the plan structure and resets completed s
   assert.equal(replacement.equipment, "Гантель");
   assert.deepEqual(replacement.sets, [{ reps: 12, weight: "60", completed: false, enteredReps: "", enteredWeight: "" }]);
   assert.equal(nextPlan.workouts[0].exercises[0].id, "leg_press");
+});
+
+test("basic replacement never erases or reattributes completed results", () => {
+  const plan = { source: "basic", workouts: [{ id: "day", exercises: [{ id: "exercise", name: "Жим ногами",
+    sets: [{ completed: true, enteredWeight: "65", enteredReps: "12" }, { completed: true, enteredWeight: "60", enteredReps: "10" }, { reps: 12 }]
+  }] }] };
+  const snapshot = structuredClone(plan);
+  const result = replaceBasicWorkoutExerciseInPlan(plan, "day", "exercise", { id: "goblet_squat", name: "Гоблет-присед" });
+  assert.strictEqual(result.plan, plan);
+  assert.equal(result.replacement, null);
+  assert.deepEqual(plan, snapshot);
 });

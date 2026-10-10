@@ -13,6 +13,39 @@
   padding-left: 0;
 }
 
+:global(:root[data-app-theme="warm-light"] [data-food-search-keyboard="true"]) .root {
+  margin-bottom: 8px;
+}
+
+:global(:root[data-app-theme="warm-light"] [data-food-search-keyboard="true"]) .root h1 {
+  clip-path: inset(50%);
+}
+
+:global(:root[data-app-theme="warm-light"] [data-food-search-keyboard="true"]) .root .searchExtension {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 64px);
+  padding: 0;
+}
+
+:global(:root[data-app-theme="warm-light"] [data-food-search-keyboard="true"]) .root .mealWrap {
+  height: 44px;
+  min-height: 44px;
+  border: 0;
+  box-shadow: none;
+}
+
+:global(:root[data-app-theme="warm-light"] [data-food-search-keyboard="true"]) .root :global([data-food-search-header-action="toggle-meal"]) {
+  height: 44px;
+  min-height: 44px;
+  padding-block: 4px;
+}
+
+:global(:root[data-app-theme="warm-light"] [data-food-search-keyboard="true"]) .root :global([data-css-module-text="food-search-header"]) {
+  display: none;
+}
+
 .search,
 .myProducts {
   height: auto;
@@ -454,7 +487,7 @@
 :global(:root[data-app-theme="warm-light"]) .myProducts .heading {
   height: 44px;
   min-height: 44px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 28px;
   font-weight: 750;
   line-height: 44px;
@@ -474,7 +507,7 @@
   border: 0;
   border-radius: 12px;
   background: transparent;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   box-shadow: none;
   font-size: 16px;
   font-weight: 560;
@@ -521,28 +554,28 @@
   min-height: 60px;
   padding: 8px 14px;
   gap: 3px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealLabel {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 600;
   text-transform: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealName {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 15px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealName::after {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealDropdown {
@@ -551,10 +584,10 @@
   max-width: min(370px, calc(100vw - 32px));
   padding: 8px;
   gap: 2px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.98);
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 18px 50px rgba(27, 35, 31, 0.14);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -564,15 +597,15 @@
   height: 52px;
   min-height: 52px;
   border-radius: 14px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealOption.selected {
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 :global(:root[data-app-theme="warm-light"]) .mealIcon {
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionName {
@@ -580,8 +613,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .collapseButton {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
 }

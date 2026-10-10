@@ -1,17 +1,11 @@
 import { BASIC_WORKOUT_AI_CATALOGUE } from "./basicWorkoutAiCatalogue.generated.js";
+import { getEmphasisWorkoutTemplates, getWorkoutEmphasisOption, normalizeWorkoutEmphasis } from "./basicWorkoutEmphasis.js";
 
 const EXERCISE_TARGETS = {
   "30": 3,
   "45": 5,
   "60": 6,
   "90": 7
-};
-
-const SET_COUNTS = {
-  "30": 2,
-  "45": 3,
-  "60": 3,
-  "90": 3
 };
 
 const DAY_TEMPLATES = {
@@ -225,13 +219,8 @@ function getExerciseTarget(duration) {
   return EXERCISE_TARGETS[String(duration)] || EXERCISE_TARGETS["45"];
 }
 
-function getSetCount(duration, level) {
-  if (String(duration) === "45" && String(level) === "beginner") return 2;
-  return SET_COUNTS[String(duration)] || SET_COUNTS["45"];
-}
-
 function getTemplates(days, twoDayStructure, restrictions = "none") {
-  const dayCount = Math.max(2, Math.min(5, Number(days) || 3));
+  const dayCount = Math.max(1, Math.min(5, Number(days) || 3));
   const restrictedTemplates = RESTRICTION_DAY_TEMPLATES[restrictions];
   if (restrictedTemplates) return restrictedTemplates.slice(0, dayCount);
   if (dayCount === 2) {
@@ -315,24 +304,26 @@ export function buildBasicWorkoutFallbackDraft({
   location = "gym",
   days = 3,
   duration = "45",
-  level = "beginner",
   twoDayStructure = "recovery_split",
+  trainingEmphasis = "classic",
   restrictions = "none"
 } = {}) {
   const targetLocation = String(location || "gym") === "home" ? "home" : "gym";
   const targetRestrictions = ["back", "knees", "shoulders", "other"].includes(String(restrictions))
     ? String(restrictions)
     : "none";
-  const templates = getTemplates(days, twoDayStructure, targetRestrictions);
   const target = getExerciseTarget(duration);
-  const setCount = getSetCount(duration, level);
+  const emphasisTemplates = targetRestrictions === "none" ? getEmphasisWorkoutTemplates(trainingEmphasis, days, target) : null;
+  const templates = emphasisTemplates || getTemplates(days, twoDayStructure, targetRestrictions);
+  const setCount = 3;
   const pools = buildRolePools(targetLocation, targetRestrictions);
   const roleOffsets = new Map();
 
   const weeks = Array.from({ length: 2 }, () => ({
     workouts: templates.map((template) => {
       const usedIds = new Set();
-      const exercises = getRoleSequence(template.roles, target).map((role) => (
+      const roles = emphasisTemplates ? template.roles : getRoleSequence(template.roles, target);
+      const exercises = roles.map((role) => (
         buildExercise(chooseExercise(role, pools, roleOffsets, usedIds), setCount)
       ));
 
@@ -345,8 +336,9 @@ export function buildBasicWorkoutFallbackDraft({
   }));
 
   return {
+    trainingEmphasis: emphasisTemplates ? normalizeWorkoutEmphasis(trainingEmphasis) : "classic",
     name: "Базовый план на 4 недели",
-    description: "План построен из проверенных упражнений с двумя вариантами недель и спокойной прогрессией.",
+    description: `${getWorkoutEmphasisOption(emphasisTemplates ? trainingEmphasis : "classic").label}. Два варианта недель без автоматического увеличения нагрузки.`,
     safetyNote: getSafetyNote(targetRestrictions),
     progressionNote: "Во второй неделе используются безопасные альтернативы там, где они доступны; затем варианты повторяются с небольшой прогрессией.",
     generatedBy: "safe_fallback",

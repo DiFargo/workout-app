@@ -7,25 +7,25 @@
 html:root[data-app-theme="warm-light"] {
   color-scheme: light;
 
-  --font-family-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  --font-family-sans: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-compact-ui: var(--font-family-sans);
   --font-family-display: var(--font-family-sans);
 
-  --apple-canvas: #f2f2f7;
+  --apple-canvas: #f5f7f8;
   --apple-surface: #ffffff;
-  --apple-surface-muted: #efeff4;
-  --apple-text: #1c1c1e;
-  --apple-secondary: #636366;
-  --apple-separator: rgba(60, 60, 67, 0.12);
-  --apple-blue: #3c6faa;
-  --apple-blue-pressed: #3565a3;
-  --apple-blue-tint: #edf2f9;
-  --apple-hero-tint: #f0f4fa;
-  --apple-rhythm-track: #dfe7f2;
-  --apple-macro-progress: #8fa9ca;
-  --apple-segmented-fill: #e6e6ec;
-  --apple-action: #3f73b8;
-  --apple-action-pressed: #3565a3;
+  --apple-surface-muted: #edf1f3;
+  --apple-text: #1c282e;
+  --apple-secondary: #617078;
+  --apple-separator: rgba(57, 82, 91, 0.12);
+  --apple-blue: #376b91;
+  --apple-blue-pressed: #315f91;
+  --apple-blue-tint: #e8f1f2;
+  --apple-hero-tint: #e9f1f5;
+  --apple-rhythm-track: #dce9e8;
+  --apple-macro-progress: #7ca7a5;
+  --apple-segmented-fill: #e4ebed;
+  --apple-action: #396ba6;
+  --apple-action-pressed: #315f91;
   --apple-green: #237a42;
   --apple-green-tint: #edf8f0;
   --apple-orange: #886100;
@@ -126,18 +126,18 @@ html:root[data-app-theme="warm-light"] {
   --color-workout-history-card-accent: var(--apple-blue);
   --color-workout-history-latest-accent: var(--apple-blue);
   --color-workout-history-exercise-accent: var(--apple-blue);
-  --background-workout-history-primary: var(--apple-blue);
+  --background-workout-history-primary: var(--ownset-action-gradient);
   --color-workout-mode-icon: var(--apple-blue);
   --color-basic-quiz-eyebrow: var(--apple-blue);
   --color-basic-quiz-stat-value: var(--apple-blue);
-  --gradient-basic-quiz-start: var(--apple-blue);
+  --gradient-basic-quiz-start: var(--ownset-action-gradient);
   --color-workout-list-dialog-eyebrow: var(--apple-blue);
   --color-workout-list-dialog-icon: var(--apple-blue);
-  --background-workout-readiness-primary: var(--apple-blue);
-  --background-workout-dialog-primary: var(--apple-blue);
+  --background-workout-readiness-primary: var(--ownset-action-gradient);
+  --background-workout-dialog-primary: var(--ownset-action-gradient);
   --color-workout-dialog-icon: var(--apple-blue);
   --color-workout-warmup-badge-text: var(--apple-blue);
-  --background-workout-warmup-accent: var(--apple-blue);
+  --background-workout-warmup-accent: var(--ownset-action-gradient);
 }
 
 html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"],
@@ -157,7 +157,7 @@ html:root[data-app-theme="warm-light"] body[data-native-app-ui="true"] .profileD
 
 html:root[data-app-theme="warm-light"] [data-client-page-header="true"] {
   background: var(--apple-canvas) !important;
-  border-bottom-color: rgba(60, 60, 67, 0.14) !important;
+  border-bottom-color: rgba(57, 82, 91, 0.14) !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;

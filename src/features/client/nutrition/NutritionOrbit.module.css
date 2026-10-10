@@ -12,17 +12,17 @@
   height: 270px;
   padding: 13px 15px 14px;
   position: relative;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
 }
 
 .header { height: 44px; display: flex; align-items: flex-start; justify-content: space-between; }
 .header > div { display: flex; flex-direction: column; }
 .header h2 { margin: 0; font-size: 17px; font-weight: 700; line-height: 20px; }
-.header small { color: var(--apple-secondary, #636366); font-size: 9px; font-weight: 500; line-height: 11px; }
+.header small { color: var(--apple-secondary, #617078); font-size: 9px; font-weight: 500; line-height: 11px; }
 .header > .headerActions { min-height: 26px; display: flex; flex-direction: row; align-items: flex-start; gap: 4px; position: relative; z-index: 2; }
 .streak {
   height: 26px;
@@ -70,7 +70,7 @@
   align-items: center;
   border: 1px solid #d5e2d8;
   border-radius: 10px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   transition: background-color 160ms ease, border-color 160ms ease;
 }
 .voiceToggleTrack span {
@@ -81,8 +81,8 @@
   background: #94a099;
   transition: transform 160ms ease, background-color 160ms ease;
 }
-.voiceToggleActive { color: var(--apple-blue-pressed, #3565a3); }
-.voiceToggleActive .voiceToggleTrack { border-color: var(--apple-action, #3f73b8); background: var(--apple-action, #3f73b8); }
+.voiceToggleActive { color: var(--apple-blue-pressed, #315f91); }
+.voiceToggleActive .voiceToggleTrack { border-color: var(--apple-action, #396ba6); background: var(--ownset-action-gradient); }
 .voiceToggleActive .voiceToggleTrack span { background: #fff; transform: translateX(11px); }
 .voiceToggle:active { background: #edf5f0; }
 .voiceToggle:focus-visible { outline: 2px solid rgba(47, 125, 104, 0.58); outline-offset: 1px; }
@@ -100,7 +100,7 @@
 .scene { width: 160px; height: 160px; display: block; transform: translateY(2px) rotate(-90deg); }
 .track, .progress { fill: none; stroke-width: 14; }
 .track { stroke: #e7eee8; }
-.progress { stroke: var(--apple-action, #3f73b8); stroke-linecap: round; }
+.progress { stroke: var(--apple-action, #396ba6); stroke-linecap: round; }
 [data-nutrition-orbit-halo="outer"] { transform-box: fill-box; transform-origin: center; animation: haloBreath 3.2s ease-in-out infinite; }
 .calories {
   width: 120px;
@@ -111,8 +111,8 @@
   flex-direction: column;
   align-items: center;
 }
-.calories strong { color: var(--apple-text, #1c1c1e); font-size: 32px; font-weight: 700; line-height: 38px; }
-.calories span { color: var(--apple-secondary, #636366); font-size: 11px; font-weight: 600; line-height: 16px; }
+.calories strong { color: var(--apple-text, #1c282e); font-size: 32px; font-weight: 700; line-height: 38px; }
+.calories span { color: var(--apple-secondary, #617078); font-size: 11px; font-weight: 600; line-height: 16px; }
 .hitButton {
   min-width: 44px;
   height: 44px;
@@ -125,7 +125,7 @@
   top: 112px;
   border: 0;
   border-radius: 19px;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font: inherit;
   font-size: 12px;
@@ -152,8 +152,7 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 34% 22%, rgba(255, 255, 255, 0.3), transparent 34%),
-    linear-gradient(145deg, #5fa58d 0%, var(--apple-action, #3f73b8) 53%, var(--apple-blue, #3c6faa) 100%);
+    var(--ownset-action-gradient);
   box-shadow:
     0 15px 28px rgba(27, 35, 31, 0.28),
     0 4px 9px rgba(27, 35, 31, 0.14),
@@ -212,7 +211,7 @@
   box-shadow: 0 0 0 3px rgba(123, 118, 130, 0.05), 0 8px 18px rgba(27, 35, 31, 0.08);
 }
 .voiceStage .voiceButtonFailed [data-nutrition-orbit-text="title"] { color: #625c68; }
-.voiceStage .voiceButtonFailed svg { color: var(--apple-secondary, #636366); }
+.voiceStage .voiceButtonFailed svg { color: var(--apple-secondary, #617078); }
 .voiceStage .voiceButton:focus-visible {
   outline: 3px solid rgba(47, 125, 104, 0.34);
   outline-offset: 5px;
@@ -258,7 +257,7 @@
 }
 .voiceCalories { left: 0; width: 80px; align-items: center; text-align: center; }
 .voiceCalories strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   margin-top: 3px;
   font-size: 27px;
   font-weight: 800;
@@ -266,7 +265,7 @@
   letter-spacing: -0.04em;
 }
 .voiceCalories span {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 700;
   line-height: 13px;
@@ -279,7 +278,7 @@
   justify-content: center;
   border-radius: 9px;
   background: #eaf3ee;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: 0 3px 8px rgba(102, 78, 158, 0.09);
 }
 .voiceCaloriesIcon svg { width: 15px; height: 15px; stroke-width: 2.2; }
@@ -295,12 +294,12 @@
   height: 100%;
   display: block;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--apple-blue-pressed, #3565a3), #5fa58d);
+  background: var(--ownset-action-gradient);
   transition: width 220ms ease;
 }
 .voiceCalories small {
   margin-top: 5px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9px;
   font-weight: 700;
   line-height: 11px;
@@ -354,7 +353,7 @@
   border: 0;
   border-radius: 16px;
   background: #fff;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   cursor: pointer;
   pointer-events: auto;
   box-shadow: 0 7px 15px rgba(76, 63, 99, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -378,7 +377,7 @@
 }
 .voiceQuickActionLabel {
   max-width: 72px;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font-size: 10px;
   font-weight: 800;
   line-height: 12px;
@@ -406,7 +405,7 @@
 }
 .macros > div { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
 .macros > div > span { font-size: 10px; font-weight: 700; line-height: 14px; }
-.macros strong { color: var(--apple-text, #1c1c1e); font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; }
+.macros strong { color: var(--apple-text, #1c282e); font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; }
 .macros strong span { color: inherit; font: inherit; }
 .protein > span { color: #b36e72; }
 .fat > span { color: #ae8768; }
@@ -438,7 +437,7 @@
 
 .renderEnergy { --energy-ring-size:92px; margin:12px 20px 0; padding:14px 15px 13px; display:grid; grid-template-columns:var(--energy-ring-size) minmax(0,1fr); align-items:center; gap:0 17px; border:0; border-radius:18px; background:var(--apple-surface); }
 .renderRing { width:var(--energy-ring-size); height:var(--energy-ring-size); box-sizing:border-box; padding:8px; display:grid; place-items:center; border-radius:50%; background:conic-gradient(var(--apple-blue) var(--nutrition-progress),var(--apple-rhythm-track) 0); }
-.renderRing > span { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; border-radius:50%; background:var(--apple-blue-tint); }
+.renderRing > span { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; border-radius:50%; background:var(--ownset-soft-gradient); }
 .renderRing strong { font-size:21px; font-weight:700; letter-spacing:-.5px; font-variant-numeric:tabular-nums; }
 .renderRing small { font-size:10px; color:var(--apple-secondary); }
 .renderCopy { min-width:0; }

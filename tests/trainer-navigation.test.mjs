@@ -29,7 +29,7 @@ test("exercise library cards open the editor and the Add control creates a new e
   assert.match(source, /id="trainer-library-editor-title">Редактирование упражнения/);
   assert.match(source, /onClick=\{\(\) => openLibraryEditor\(exercise\)\}/);
   assert.match(source, /function createLibraryExercise\(\)/);
-  assert.match(source, /onAddExercise\?\.\(selectedWorkout\.id, \{ name: "Новое упражнение" \}\)/);
+  assert.match(source, /onCreateLibraryExercise\?\.\(selectedProgramId, \{ name: "Новое упражнение" \}\)/);
   assert.match(source, /onClick=\{createLibraryExercise\}/);
   assert.doesNotMatch(source, /event\.stopPropagation\(\); selectedWorkout && onAddExercise/);
   assert.match(source, /TrainerExerciseLibraryEditor\.module\.css/);
@@ -398,8 +398,8 @@ test("client card keeps Messages and notifications in the header instead of dupl
   assert.match(messagesView, /Обработаны/);
   assert.match(messagesView, /data-selected=\{selected \? "true" : undefined\}/);
   assert.match(styles, /\.filters button\[aria-pressed="true"\]/);
-  assert.match(styles, /background: var\(--trainer-v2-accent, #806bb6\)/);
-  assert.match(styles, /\.replyPrimary\s*\{[\s\S]*?background: var\(--trainer-v2-accent, #806bb6\)/);
+  assert.match(styles, /background: var\(--ownset-action-gradient\)/);
+  assert.match(styles, /\.replyPrimary\s*\{[\s\S]*?background: var\(--ownset-action-gradient\)/);
   assert.match(messagesView, /onReplyToMessage\(item\)/);
   assert.match(messagesView, /Обработать все/);
   assert.doesNotMatch(messagesView, /Задания клиенту|tasksPanel/);

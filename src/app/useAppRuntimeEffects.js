@@ -3,6 +3,7 @@ import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
 import { normalizeAppTheme } from "./appTheme";
 import { isTrainerForbiddenClientPage } from "./appNavigation";
+import { captureAuthSession } from "../utils/authSession.js";
 import {
   addUserLocalBackup,
   safeWriteUserJsonStorage
@@ -10,6 +11,7 @@ import {
 
 export function useAppRuntimeEffects({
   APP_PAGES,
+  auth,
   appLoading,
   appTheme,
   appThemeCloudReady,
@@ -142,6 +144,19 @@ export function useAppRuntimeEffects({
       currentUserRole !== "client"
     ) return;
 
+    const session = captureAuthSession(auth);
+    if (session.uid !== user.uid || !session.isCurrent()) return;
+    let active = true;
+    const timerIds = [];
+    const setOnboardingOpen = (open) => {
+      if (!active || !session.isCurrent()) return;
+      setShowFirstSetupOnboarding((current) => active && session.isCurrent() ? open : current);
+    };
+    const cleanup = () => {
+      active = false;
+      timerIds.forEach((timerId) => clearTimeout(timerId));
+    };
+
     let completedForThisUser;
 
     try {
@@ -162,18 +177,20 @@ export function useAppRuntimeEffects({
         // ignore localStorage errors
       }
 
-      setShowFirstSetupOnboarding(false);
-      return;
+      setOnboardingOpen(false);
+      return cleanup;
     }
 
     if (!completedForThisUser) {
-      setShowFirstSetupOnboarding(true);
-      setTimeout(() => setShowFirstSetupOnboarding(true), 120);
-      setTimeout(() => setShowFirstSetupOnboarding(true), 600);
+      setOnboardingOpen(true);
+      timerIds.push(setTimeout(() => setOnboardingOpen(true), 120));
+      timerIds.push(setTimeout(() => setOnboardingOpen(true), 600));
     }
+    return cleanup;
   }, [
     aiNutritionProfile,
     appLoading,
+    auth,
     currentUserRole,
     firstSetupCompletedInCloud,
     firstSetupCompletedInSession,

@@ -19,9 +19,19 @@ dist-ssr
 functions/.env
 functions/.env.*
 !functions/.env.example
+functions-telegram-auth/.env
+functions-telegram-auth/.env.*
+!functions-telegram-auth/.env.example
 test-results/
 test-artifacts/
 .codex-remote-attachments/
+/artifacts/
+/output/
+/.tmp/
+/.codex-workout-*.png
+/video-contact.jpg
+/video-motion.jpg
+**/__pycache__/
 
 # Editor directories and files
 .vscode/*

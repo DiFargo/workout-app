@@ -5,35 +5,49 @@ replace product smoke testing or the security review.
 
 ## Release gate and CI
 
+Use Node 22 and Java 21. Install dependencies with `npm ci` in the root,
+`functions`, and `functions-telegram-auth`. Then prepare the browser runtimes
+from the repository root:
+
+```powershell
+npx playwright install chromium webkit
+```
+
+On Linux use `--with-deps`. Chromium is also required by the unit regression
+that exercises the real reminder settings component with React DOM. WebKit is
+used by targeted browser compatibility checks.
+
 Run the full gate from the repository root:
 
 ```powershell
-npm run verify
+npm run verify:full
 ```
 
 It stops on the first failed check and returns a non-zero exit code. It covers:
 
 - full ESLint;
 - unit tests;
-- Firestore Rules emulator tests;
-- syntax parsing for every Firebase Functions JavaScript file;
+- Firestore and Storage Rules emulator tests in a local demo project;
+- syntax parsing for every JavaScript file in all codebases declared by `firebase.json`;
 - isolated staging build, then a fresh production build and bundle budget;
-- root and Functions production dependency audits;
+- root runtime/development and every declared Functions codebase's dependency audit;
 - whitespace errors in the diff; and
 - Playwright Chromium E2E.
 
-`npm run verify:core` runs the same gate without Playwright when a browser is not
-available. It is useful during implementation, not as a production sign-off.
+`npm run verify:core` runs the same gate without the full Playwright E2E suite;
+the React DOM unit regression still requires Chromium. It is useful during
+implementation, not as a production sign-off.
 `npm run report:css` is an informational report and is not a release gate.
 
 GitHub Actions runs the core checks in `quality`, then Chromium E2E in a separate
 job. Do not merge a release branch with either required check failing. The CI
-workflow uses Node 22 and Java 21 so the Firestore emulator path is repeatable.
+workflow uses Node 22 and Java 21 so the Firestore emulator path is repeatable,
+and installs Chromium before the unit tests on its clean runner.
 
 ## Release procedure
 
 1. Freeze unrelated changes and confirm the target commit/version.
-2. Run `npm run verify` from a clean worktree. It leaves a production artifact
+2. Run `npm run verify:full` from a clean worktree. It leaves a production artifact
    in `dist` after first proving the staging build is isolated.
 3. Build a fresh staging artifact with that environment's values, then deploy
    to its exact project ID:

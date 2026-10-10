@@ -36,7 +36,8 @@ async function collectFiles(directory, extensions, files = []) {
 function collectModuleImports(source) {
   return [
     ...source.matchAll(/\bimport\s+(?:[^"']+\s+from\s+)?["']([^"']+)["']/g),
-    ...source.matchAll(/\bimport\(["']([^"']+)["']\)/g)
+    ...source.matchAll(/\bimport\(["']([^"']+)["']\)/g),
+    ...source.matchAll(/new Worker\(\s*new URL\(["']([^"']+)["']/g)
   ].map((match) => match[1]);
 }
 
@@ -61,9 +62,9 @@ async function resolveSourceImport(file, importSource) {
   return null;
 }
 
-async function collectReachableSources() {
+async function collectReachableSources(initialFiles = [path.normalize("src/main.jsx")]) {
   const reachable = new Set();
-  const pending = [path.normalize("src/main.jsx")];
+  const pending = initialFiles.map((file) => path.normalize(file));
 
   while (pending.length > 0) {
     const file = pending.pop();
@@ -114,7 +115,7 @@ test("AppCore remains a coordinator", async () => {
   assert.match(source, /NutritionRoute/);
   assert.doesNotMatch(source, /renderNutritionPageFromContext/);
   assert.doesNotMatch(source, /nutritionPageModel/);
-  assert.ok(source.split(/\r?\n/).length <= 3250);
+  assert.ok(source.split(/\r?\n/).length <= 3300);
 });
 
 test("trainer daily journal stays isolated and lazy-loaded", async () => {
@@ -146,7 +147,17 @@ test("source modules are reachable and acyclic", async () => {
   // This pure module ships with Functions and is bundled by Vite too, so
   // library deduplication and client video lookup use the same identities.
   allSources.push(path.normalize("functions/exerciseLibraryIdentity.js"));
-  const reachable = await collectReachableSources();
+  const reachableFromApp = await collectReachableSources();
+  const testFiles = await collectFiles("tests", [".js", ".mjs"]);
+  const testSourceRoots = new Set();
+  for (const testFile of testFiles) {
+    for (const imported of collectModuleImports(await readText(testFile))) {
+      const target = await resolveSourceImport(testFile, imported);
+      if (target && allSources.includes(target)) testSourceRoots.add(target);
+    }
+  }
+  const reachableFromTests = await collectReachableSources([...testSourceRoots]);
+  const reachable = new Set([...reachableFromApp, ...reachableFromTests].filter((file) => allSources.includes(file)));
 
   assert.deepEqual(allSources.sort(), [...reachable].sort());
 

@@ -101,7 +101,7 @@
   border: 1px solid var(--trainer-v2-line, #d6caee);
   border-radius: 13px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 86 68 126) / 0.08);
   font-size: 13px;
   font-weight: 730;
@@ -307,7 +307,7 @@
   place-items: center;
   border-radius: 50%;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 11px;
   font-weight: 760;
 }
@@ -918,7 +918,7 @@
   :global(.trainerNextRoot) :global(.trainerNextClientContextActions button.active) {
     border-color: var(--trainer-v2-line, #d8ccec);
     color: var(--tn-purple-strong);
-    background: var(--tn-purple-soft);
+    background: var(--ownset-soft-gradient);
   }
 
   :global(.trainerNextRoot) :global(.trainerClientWorkSummary) {
@@ -1562,7 +1562,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button.active),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNextClientTabs button[aria-pressed="true"]) {
   border-color: var(--trainer-v2-accent, #806bb6);
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   color: #ffffff;
   box-shadow: 0 7px 14px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.2);
 }
@@ -1761,7 +1761,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionStart),
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerClientCalendarPanel.trainerCalendarModeSubscription .trainerNotificationCalendarGrid button.subscriptionEnd) {
   border-color: var(--trainer-v2-accent, #8f7ac8);
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   color: #ffffff;
 }
 
@@ -2721,7 +2721,7 @@
 :global(.trainerNextRoot) :global(.trainerNextClientPage .trainerNutritionDiaryCalendarGrid > button.active) {
   border-color: var(--trainer-v2-accent, #8f7ac8);
   color: #ffffff;
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.2);
 }
 

@@ -30,7 +30,7 @@
 .root {
   --plan-panel-background: rgba(255, 255, 255, 0.035);
   --plan-panel-border: rgba(255, 255, 255, 0.065);
-  --plan-text: var(--apple-text, #1c1c1e);
+  --plan-text: var(--apple-text, #1c282e);
   --plan-muted: rgba(255, 255, 255, 0.58);
   --plan-chip-background: rgba(255, 255, 255, 0.04);
   --plan-chip-border: rgba(255, 255, 255, 0.055);
@@ -496,19 +496,19 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  --plan-panel-background: var(--apple-canvas, #f2f2f7);
+  --plan-panel-background: var(--apple-canvas, #f5f7f8);
   --plan-panel-border: #e5e7f0;
-  --plan-text: var(--apple-secondary, #636366);
-  --plan-muted: var(--apple-secondary, #636366);
+  --plan-text: var(--apple-secondary, #617078);
+  --plan-muted: var(--apple-secondary, #617078);
   --plan-chip-background: #fff;
-  --plan-chip-border: var(--apple-separator, rgba(60,60,67,.12));
-  --plan-chip-text: var(--apple-secondary, #636366);
-  --plan-close-background: var(--apple-surface-muted, #efeff4);
-  --plan-close-border: var(--apple-separator, rgba(60,60,67,.12));
-  --plan-close-text: var(--apple-secondary, #636366);
+  --plan-chip-border: var(--apple-separator, rgba(57, 82, 91,.12));
+  --plan-chip-text: var(--apple-secondary, #617078);
+  --plan-close-background: var(--apple-surface-muted, #edf1f3);
+  --plan-close-border: var(--apple-separator, rgba(57, 82, 91,.12));
+  --plan-close-text: var(--apple-secondary, #617078);
 
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
-  background: var(--apple-canvas, #f2f2f7);
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
+  background: var(--apple-canvas, #f5f7f8);
   color: var(--plan-text);
   -webkit-text-fill-color: var(--plan-text);
 }
@@ -594,27 +594,27 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .root {
-  --plan-panel-background: var(--apple-surface-muted, #efeff4);
+  --plan-panel-background: var(--apple-surface-muted, #edf1f3);
   --plan-panel-border: transparent;
-  --plan-text: var(--apple-text, #1c1c1e);
-  --plan-muted: var(--apple-secondary, #636366);
-  --plan-chip-background: var(--apple-surface-muted, #efeff4);
+  --plan-text: var(--apple-text, #1c282e);
+  --plan-muted: var(--apple-secondary, #617078);
+  --plan-chip-background: var(--apple-surface-muted, #edf1f3);
   --plan-chip-border: transparent;
-  --plan-chip-text: var(--apple-action, #3f73b8);
-  --plan-close-background: var(--apple-surface-muted, #efeff4);
+  --plan-chip-text: var(--apple-action, #396ba6);
+  --plan-close-background: var(--apple-surface-muted, #edf1f3);
   --plan-close-border: transparent;
-  --plan-close-text: var(--apple-text, #1c1c1e);
+  --plan-close-text: var(--apple-text, #1c282e);
   top: auto;
   bottom: max(16px, env(safe-area-inset-bottom));
   width: min(370px, calc(100vw - 32px));
   max-width: 370px;
   max-height: calc(100dvh - max(32px, calc(env(safe-area-inset-top) + env(safe-area-inset-bottom) + 16px)));
   padding: 16px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
   transform: translateX(-50%);
   overflow-x: hidden;
@@ -623,27 +623,27 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .header { grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; }
-:global(:root[data-app-theme="warm-light"]) .titleEyebrow { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-size: 18px; font-weight: 700; }
-:global(:root[data-app-theme="warm-light"]) .title { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-size: 11px; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: var(--apple-surface-muted, #efeff4); color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-size: 24px; font-weight: 400; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: var(--apple-surface-muted, #efeff4); color: var(--apple-text, #1c1c1e); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .titleEyebrow { color: var(--apple-text, #1c282e); -webkit-text-fill-color: var(--apple-text, #1c282e); font-size: 18px; font-weight: 700; }
+:global(:root[data-app-theme="warm-light"]) .title { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-size: 11px; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .close { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-text, #1c282e); -webkit-text-fill-color: var(--apple-text, #1c282e); font-size: 24px; font-weight: 400; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .dayPill { border: 0; border-radius: 16px; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-text, #1c282e); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .dayPillActive { background: #e8efea; }
-:global(:root[data-app-theme="warm-light"]) .dayTitle { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .dayDescription { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 450; }
+:global(:root[data-app-theme="warm-light"]) .dayTitle { color: var(--apple-text, #1c282e); -webkit-text-fill-color: var(--apple-text, #1c282e); font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .dayDescription { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-weight: 450; }
 
 :global(:root[data-app-theme="warm-light"]) .calorieProgress,
 :global(:root[data-app-theme="warm-light"]) .scoreBlock,
 :global(:root[data-app-theme="warm-light"]) .macro,
 :global(:root[data-app-theme="warm-light"]) .conclusion {
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: var(--apple-separator, rgba(60,60,67,.12)); box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .pixelActive { background: var(--apple-action, #3f73b8); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .pixel { border-radius: 3px; background: var(--apple-separator, rgba(57, 82, 91,.12)); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .pixelActive { background: var(--ownset-action-gradient); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .overLimit .pixelActive,
 :global(:root[data-app-theme="warm-light"]) .root[data-state="over-limit"] .pixelActive { background: #b36e72; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .calorieLabel,
@@ -651,26 +651,26 @@
 :global(:root[data-app-theme="warm-light"]) .scoreLabel,
 :global(:root[data-app-theme="warm-light"]) .macroLabel,
 :global(:root[data-app-theme="warm-light"]) .macroGoal,
-:global(:root[data-app-theme="warm-light"]) .conclusionLabel { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .conclusionLabel { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .calorieValue,
 :global(:root[data-app-theme="warm-light"]) .macroValue,
-:global(:root[data-app-theme="warm-light"]) .conclusionText { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); font-weight: 650; }
-:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: var(--apple-separator, rgba(60,60,67,.12)); }
-:global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .macroDot { background: var(--apple-action, #3f73b8); box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); -webkit-text-fill-color: var(--apple-action, #3f73b8); box-shadow: none; font-weight: 550; }
+:global(:root[data-app-theme="warm-light"]) .conclusionText { color: var(--apple-text, #1c282e); -webkit-text-fill-color: var(--apple-text, #1c282e); font-weight: 650; }
+:global(:root[data-app-theme="warm-light"]) .calorieDivider { background: var(--apple-separator, rgba(57, 82, 91,.12)); }
+:global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .macroDot { background: var(--ownset-action-gradient); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-action, #396ba6); -webkit-text-fill-color: var(--apple-action, #396ba6); box-shadow: none; font-weight: 550; }
 :global(:root[data-app-theme="warm-light"]) .good { background: #e8efea; color: #708d79; -webkit-text-fill-color: #708d79; }
 :global(:root[data-app-theme="warm-light"]) .warning { background: #f2ece7; color: #ae8768; -webkit-text-fill-color: #ae8768; }
-:global(:root[data-app-theme="warm-light"]) .info { background: var(--apple-surface-muted, #efeff4); color: #6f879c; -webkit-text-fill-color: #6f879c; }
+:global(:root[data-app-theme="warm-light"]) .info { background: var(--apple-surface-muted, #edf1f3); color: #6f879c; -webkit-text-fill-color: #6f879c; }
 
 /* Current opaque iOS nutrition-plan sheet. */
 :global(:root) .root.modern {
   width: min(390px, calc(100vw - 24px));
   max-width: 390px;
   padding: 18px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
   box-shadow: 0 22px 64px rgba(27, 35, 31, 0.18);
 }
 
@@ -695,18 +695,18 @@
 
 :global(:root) .modern .title {
   margin-top: 2px;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font-size: 11px;
   font-weight: 700;
   line-height: 15px;
   text-align: left;
   text-transform: uppercase;
-  -webkit-text-fill-color: var(--apple-blue-pressed, #3565a3);
+  -webkit-text-fill-color: var(--apple-blue-pressed, #315f91);
 }
 
 :global(:root) .modern .close {
   grid-column: 2;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 :global(:root) .modern .close svg {
@@ -718,9 +718,9 @@
 :global(:root) .modern .dayPill {
   margin: 0 0 12px;
   padding: 11px 14px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
   text-align: left;
 }
 
@@ -755,7 +755,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 10px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
 }
@@ -770,14 +770,14 @@
 }
 
 .calorieTopline {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 13px;
   font-weight: 700;
   line-height: 17px;
 }
 
 .calorieTopline strong {
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
@@ -796,14 +796,14 @@
   height: 100%;
   display: block;
   border-radius: inherit;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 .calorieFill[data-over-limit="true"] { background: #b56570; }
 
 .calorieSummary {
   align-items: flex-end;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9px;
   line-height: 13px;
 }
@@ -815,16 +815,16 @@
 }
 
 .calorieSummary span:last-child { text-align: right; }
-.calorieSummary strong { color: var(--apple-text, #1c1c1e); font-size: 14px; font-variant-numeric: tabular-nums; }
+.calorieSummary strong { color: var(--apple-text, #1c282e); font-size: 14px; font-variant-numeric: tabular-nums; }
 
 :global(:root) .modern .scoreBlock {
   min-height: 116px;
   margin: 0;
   padding: 14px 8px;
   gap: 5px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
 }
 
 :global(:root) .modern .scoreBlock svg {
@@ -834,17 +834,17 @@
 }
 
 :global(:root) .modern .scoreLabel {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 600;
   line-height: 14px;
   letter-spacing: 0;
   text-transform: none;
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
 }
 
 .scoreValue {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 26px;
   font-weight: 750;
   line-height: 30px;
@@ -852,8 +852,8 @@
   font-variant-numeric: tabular-nums;
 }
 
-.scoreValue small { color: var(--apple-secondary, #636366); font-size: 11px; font-weight: 600; }
-.scoreCaption { color: var(--apple-blue-pressed, #3565a3); font-size: 9px; font-weight: 700; line-height: 13px; }
+.scoreValue small { color: var(--apple-secondary, #617078); font-size: 11px; font-weight: 600; }
+.scoreCaption { color: var(--apple-blue-pressed, #315f91); font-size: 9px; font-weight: 700; line-height: 13px; }
 
 :global(:root) .modern .macros {
   margin-top: 10px;
@@ -865,7 +865,7 @@
   min-height: 112px;
   padding: 12px 10px 10px;
   align-items: flex-start;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
   background: #fff;
   text-align: left;
@@ -885,12 +885,12 @@
   height: 100%;
   display: block;
   border-radius: inherit;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 .macroPercentText {
   margin-top: 4px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9px;
   font-weight: 650;
   line-height: 12px;
@@ -901,7 +901,7 @@
   margin-top: 10px;
   padding: 13px 14px;
   border-radius: 18px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
   text-align: left;
 }
 
@@ -948,10 +948,10 @@
   padding: 20px;
   overflow-x: hidden;
   overflow-y: auto;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 30px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 26px 72px rgba(27, 35, 31, 0.2);
   transform: translate(-50%, -50%);
   -webkit-text-fill-color: initial;
@@ -974,42 +974,42 @@
 }
 
 :global(:root) .modern .titleEyebrow {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 24px;
   font-weight: 750;
   line-height: 28px;
   letter-spacing: -0.65px;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .modern .title {
   margin: 0;
   padding: 5px 9px;
   border-radius: 999px;
-  background: var(--apple-blue-tint, #eef3fa);
-  color: var(--apple-blue, #3c6faa);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue, #376b91);
   font-size: 10px;
   font-weight: 750;
   line-height: 13px;
   letter-spacing: 0.04em;
   text-align: left;
   text-transform: uppercase;
-  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+  -webkit-text-fill-color: var(--apple-blue, #376b91);
 }
 
 :global(:root) .modern .close {
   grid-column: 2;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   background: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 5px 16px rgba(27, 35, 31, 0.06);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .modern .dayPill {
   margin: 0 0 12px;
   padding: 12px 14px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
   background: #ffffff;
   text-align: left;
@@ -1021,20 +1021,20 @@
 }
 
 :global(:root) .modern .dayTitle {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 700;
   line-height: 18px;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .modern .dayDescription {
   margin-top: 3px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 450;
   line-height: 16px;
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
 }
 
 :global(:root) .modern .body {
@@ -1051,22 +1051,22 @@
   flex-direction: column;
   justify-content: center;
   gap: 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
   background: #ffffff;
 }
 
 :global(:root) .modern .calorieTopline {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 700;
   line-height: 18px;
 }
 
 :global(:root) .modern .calorieTopline strong {
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
   font-size: 13px;
-  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+  -webkit-text-fill-color: var(--apple-blue, #376b91);
 }
 
 :global(:root) .modern .calorieTrack {
@@ -1077,7 +1077,7 @@
 }
 
 :global(:root) .modern .calorieFill {
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 :global(:root) .modern .calorieFill[data-over-limit="true"] {
@@ -1085,16 +1085,16 @@
 }
 
 :global(:root) .modern .calorieSummary {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   line-height: 14px;
 }
 
 :global(:root) .modern .calorieSummary strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 17px;
   line-height: 20px;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .modern .scoreBlock {
@@ -1117,11 +1117,11 @@
 }
 
 :global(:root) .modern .scoreValue {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 30px;
   font-weight: 750;
   line-height: 34px;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .modern .scoreValue small {
@@ -1131,10 +1131,10 @@
 }
 
 :global(:root) .modern .scoreCaption {
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
   font-size: 10px;
   font-weight: 700;
-  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+  -webkit-text-fill-color: var(--apple-blue, #376b91);
 }
 
 :global(:root) .modern .macros {
@@ -1149,38 +1149,38 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #ffffff;
   text-align: left;
 }
 
 :global(:root) .modern .macroLabel {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 550;
   line-height: 15px;
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
 }
 
 :global(:root) .modern .macroValue {
   margin-top: 5px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 17px;
   font-weight: 700;
   line-height: 21px;
   white-space: nowrap;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .modern .macroGoal {
   margin-top: 1px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 500;
   line-height: 14px;
   white-space: nowrap;
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
 }
 
 :global(:root) .modern .macroTrack {
@@ -1190,67 +1190,67 @@
   margin-top: auto;
   overflow: hidden;
   border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--apple-action, #3f73b8) 0 var(--macro-progress),
-    #eee9f3 var(--macro-progress) 100%
-  );
+  background: var(--ownset-action-gradient);
 }
 
 :global(:root) .modern .macroPercentText {
   margin-top: 5px;
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
   font-size: 10px;
   font-weight: 650;
   line-height: 13px;
-  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+  -webkit-text-fill-color: var(--apple-blue, #376b91);
 }
 
 :global(:root) .modern .conclusion {
   margin-top: 10px;
   padding: 14px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #ffffff;
   text-align: left;
 }
 
 :global(:root) .modern .conclusionLabel {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 600;
   line-height: 14px;
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
 }
 
 :global(:root) .modern .conclusionText {
   margin: 5px 0 0;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 12px;
   font-weight: 550;
   line-height: 17px;
   overflow-wrap: anywhere;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .modern .badges {
   margin-top: 10px;
   padding: 0;
   justify-content: flex-start;
+  flex-wrap: wrap;
+  overflow: visible;
   gap: 6px;
 }
 
 :global(:root) .modern .badge {
   min-height: 32px;
-  padding: 0 10px;
+  max-width: 100%;
+  padding: 7px 10px;
+  white-space: normal;
   border: 0;
   border-radius: 12px;
-  background: var(--apple-blue-tint, #eef3fa);
-  color: var(--apple-blue, #3c6faa);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue, #376b91);
   font-size: 10px;
   font-weight: 600;
   box-shadow: none;
-  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+  -webkit-text-fill-color: var(--apple-blue, #376b91);
 }
 
 :global(:root) .modern .badge.good {
@@ -1305,13 +1305,13 @@
 :global(:root) .modern progress.calorieTrack::-webkit-progress-value,
 :global(:root) .modern progress.macroTrack::-webkit-progress-value {
   border-radius: inherit;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 :global(:root) .modern progress.calorieTrack::-moz-progress-bar,
 :global(:root) .modern progress.macroTrack::-moz-progress-bar {
   border-radius: inherit;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 :global(:root) .modern progress.calorieTrack[data-over-limit="true"]::-webkit-progress-value,

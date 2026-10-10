@@ -1,11 +1,11 @@
 .overlay {
   --create-surface: var(--color-surface);
-  --create-text: var(--apple-text, #1c1c1e);
-  --create-muted: var(--apple-secondary, #636366);
+  --create-text: var(--apple-text, #1c282e);
+  --create-muted: var(--apple-secondary, #617078);
   --create-border: #e1e5ee;
-  --create-option-border: var(--apple-separator, rgba(60,60,67,.12));
-  --create-option-accent: var(--apple-blue-pressed, #3565a3);
-  --create-option-icon: var(--apple-surface-muted, #efeff4);
+  --create-option-border: var(--apple-separator, rgba(57, 82, 91,.12));
+  --create-option-accent: var(--apple-blue-pressed, #315f91);
+  --create-option-icon: var(--apple-surface-muted, #edf1f3);
 
   position: fixed;
   inset: 0;
@@ -73,7 +73,7 @@
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 50%;
   background: var(--create-surface);
   color: var(--color-heading);
@@ -203,16 +203,16 @@
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
   --create-surface: #fff;
-  --create-text: var(--apple-text, #1c1c1e);
-  --create-muted: var(--apple-secondary, #636366);
-  --create-border: var(--apple-separator, rgba(60,60,67,.12));
-  --create-option-border: var(--apple-separator, rgba(60,60,67,.12));
-  --create-option-accent: var(--apple-action, #3f73b8);
-  --create-option-icon: var(--apple-surface-muted, #efeff4);
+  --create-text: var(--apple-text, #1c282e);
+  --create-muted: var(--apple-secondary, #617078);
+  --create-border: var(--apple-separator, rgba(57, 82, 91,.12));
+  --create-option-border: var(--apple-separator, rgba(57, 82, 91,.12));
+  --create-option-accent: var(--apple-action, #396ba6);
+  --create-option-icon: var(--apple-surface-muted, #edf1f3);
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
   align-items: flex-end;
   background: rgba(27, 35, 31, 0.35);
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -221,17 +221,17 @@
   width: min(100%, 370px);
   max-width: 370px;
   padding: 18px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
 
 :global(:root[data-app-theme="warm-light"]) .header {
   margin-bottom: 16px;
   padding: 0 46px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton {
@@ -241,8 +241,8 @@
   height: 44px;
   border: 0;
   border-radius: 50%;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
   font-size: 24px;
   font-weight: 400;
@@ -253,14 +253,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .title {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 21px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .description {
   margin-top: 5px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 450;
 }
@@ -274,10 +274,10 @@
   min-height: 72px;
   padding: 10px 12px;
   grid-template-columns: 44px minmax(0, 1fr);
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   box-shadow: none;
 }
 
@@ -285,20 +285,20 @@
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
   font-size: 20px;
   font-weight: 500;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionTitle {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionDescription {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 450;
 }
@@ -320,6 +320,6 @@
 :global(:root[data-app-theme="warm-light"]) .option:active,
 :global(:root[data-app-theme="warm-light"]) .closeButton:active {
   background: #eee9f3;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   transform: scale(0.98);
 }

@@ -2,7 +2,7 @@ import { getIdTokenResult } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { fetchAuthorizedWithTimeout } from "../utils/apiClient.js";
 import { normalizeBasicWorkoutPlanState } from "../utils/basicWorkoutPlanBuilder.js";
-import { resolveUserRole } from "../utils/roleAccess.js";
+import { hasCurrentAdminAccess, resolveUserRole } from "../utils/roleAccess.js";
 import { migrateLegacyUserStorage } from "../utils/userScopedStorage.js";
 import { normalizeAppTheme } from "./appTheme.js";
 
@@ -132,25 +132,40 @@ export function resetAuthBootstrapState({
   setIsLoggedIn(Boolean(user));
 }
 
+export function resetAuthSessionOperations(context) {
+  if (context.workoutSaveInFlightRef) context.workoutSaveInFlightRef.current = false;
+  for (const name of ["setIsSaving", "setIsWorkoutSaved", "setShowWorkoutSavedCard", "setProfileMeasurementSaving", "setProfileProgressPhotoUploading", "setHistoryLoading", "setWorkoutIncompleteConfirmOpen"]) {
+    context[name]?.(false);
+  }
+  context.setWorkoutHistorySyncState?.("idle");
+  context.setHistoryDeletingId?.("");
+  context.setHistoryDeleteCandidate?.(null);
+  context.setPendingWorkoutFeedback?.(null);
+  context.setProfileMeasurementStatus?.("");
+  context.setProfileProgressPhotoStatus?.("");
+  context.setProfileProgressPhotoFiles?.({ front: null, side: null, back: null });
+  context.setProfileProgressPhotoPreviews?.({ front: "", side: "", back: "" });
+}
+
 export async function resolveAdminClaim({ user, setIsAdminClaim, isCurrentRun }) {
+  setIsAdminClaim(false);
   try {
     const token = await getIdTokenResult(user, true);
-    if (isCurrentRun && !isCurrentRun()) return false;
-    const isAdmin = Boolean(token.claims?.admin);
-    setIsAdminClaim(isAdmin);
-    return isAdmin;
+    if (isCurrentRun && !isCurrentRun()) return null;
+    return token.claims || {};
   } catch (error) {
     console.error("Admin claim check error", error);
-    if (isCurrentRun && !isCurrentRun()) return false;
+    if (isCurrentRun && !isCurrentRun()) return null;
     setIsAdminClaim(false);
-    return false;
+    return null;
   }
 }
 
 export async function loadRemoteUserBootstrapState({
   user,
   db,
-  isAdmin,
+  adminClaims,
+  setIsAdminClaim,
   APP_PAGES,
   AI_NUTRITION_PLAN_STORAGE_KEY,
   AI_NUTRITION_PROFILE_STORAGE_KEY,
@@ -191,7 +206,8 @@ export async function loadRemoteUserBootstrapState({
     } catch (error) {
       // Profiles created before role-based access can contain client data but
       // have no role. The security rule allows only this owner-only repair.
-      if (error?.code !== "permission-denied" || isAdmin) throw error;
+      if (error?.code !== "permission-denied" || adminClaims?.admin === true) throw error;
+      if (isCurrentRun && !isCurrentRun()) return null;
 
       try {
         await setDoc(userRef, {
@@ -199,6 +215,7 @@ export async function loadRemoteUserBootstrapState({
           updatedAt: new Date().toISOString()
         }, { merge: true });
       } catch (directRepairError) {
+        if (isCurrentRun && !isCurrentRun()) return null;
         const response = await fetchAuthorizedWithTimeout("/api/profile/recover-legacy", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -210,6 +227,7 @@ export async function loadRemoteUserBootstrapState({
           throw directRepairError;
         }
       }
+      if (isCurrentRun && !isCurrentRun()) return null;
       roleDoc = await getDoc(userRef);
     }
 
@@ -218,6 +236,8 @@ export async function loadRemoteUserBootstrapState({
       throw new Error("role_profile_missing");
     }
     const roleData = roleDoc.exists() ? roleDoc.data() : {};
+    const isAdmin = hasCurrentAdminAccess({ claims: adminClaims, profile: roleData });
+    setIsAdminClaim(isAdmin);
     const storedRole = String(roleData.role || "").trim().toLocaleLowerCase("ru");
     if (!isAdmin && !["client", "trainer", "admin"].includes(storedRole)) {
       throw new Error("role_profile_invalid");
@@ -304,7 +324,7 @@ export async function loadRemoteUserBootstrapState({
 
     if (remoteProfileCompleted) {
       setAiNutritionProfile(remoteProfile);
-      setAiNutritionProfileDraft((prev) => ({ ...prev, ...remoteProfile }));
+      setAiNutritionProfileDraft((prev) => !isCurrentRun || isCurrentRun() ? { ...prev, ...remoteProfile } : prev);
 
       try {
         safeWriteUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, user.uid, remoteProfile);
@@ -330,13 +350,15 @@ export async function loadRemoteUserBootstrapState({
     return resolvedRole;
   } catch (error) {
     console.error("User role check error", error);
+    if (isCurrentRun && !isCurrentRun()) return null;
+    setIsAdminClaim(false);
     // Never turn an authenticated account into a client merely because its
     // role document has not arrived or cannot be verified. A trainer must
     // see neither client data nor client navigation in this state.
     setCurrentUserRole("unresolved");
     return null;
   } finally {
-    setFirstSetupProfileHydrated(true);
+    if (!isCurrentRun || isCurrentRun()) setFirstSetupProfileHydrated(true);
   }
 }
 
@@ -350,7 +372,8 @@ export async function loadInitialSignedInUserData({
   loadClientTrainerTasks,
   replayFailedHistorySaves,
   replayFailedNutritionSync,
-  replayFailedMeasurementSaves
+  replayFailedMeasurementSaves,
+  isCurrentRun = () => true
 }) {
   const criticalWorkoutsLoad = Promise.resolve(
     loadWorkoutsFromFirebase(user.uid, { preserveBasicPlanOnEmpty: true })
@@ -364,11 +387,11 @@ export async function loadInitialSignedInUserData({
     loadProfileMeasurements(user.uid),
     loadClientProgressPhotos(user.uid),
     loadClientTrainerTasks(user.uid)
-  ]).then(() => Promise.allSettled([
+  ]).then(() => isCurrentRun() ? Promise.allSettled([
     replayFailedHistorySaves(user.uid),
     replayFailedNutritionSync(user.uid),
     replayFailedMeasurementSaves(user.uid)
-  ]));
+  ]) : []);
 
   // The app can open as soon as the profile and workout program are ready.
   // Slow secondary cards keep loading in the background instead of blocking splash.
@@ -387,10 +410,13 @@ export async function hydrateRemoteTelegramProfile({
   refreshTelegramAvatar,
   safeWriteUserJsonStorage,
   setTelegramDraft,
-  setTelegramProfile
+  setTelegramProfile,
+  isCurrentRun = () => true,
+  readProfile = () => getDoc(doc(db, "users", user.uid))
 }) {
   try {
-    const profileDoc = await getDoc(doc(db, "users", user.uid));
+    const profileDoc = await readProfile();
+    if (!isCurrentRun()) return;
     const profileData = profileDoc.exists() ? profileDoc.data() : {};
     const savedTelegram = profileData?.telegram || null;
     if (savedTelegram) {
@@ -401,8 +427,8 @@ export async function hydrateRemoteTelegramProfile({
         displayName: savedTelegram.displayName || profileData.telegramDisplayName || savedTelegram.username || "",
         avatarUrl: savedTelegram.avatarUrl || profileData.telegramAvatarUrl || ""
       };
-      setTelegramProfile(nextTelegram);
-      setTelegramDraft(nextTelegram);
+      setTelegramProfile((previous) => isCurrentRun() ? nextTelegram : previous);
+      setTelegramDraft((previous) => isCurrentRun() ? nextTelegram : previous);
       safeWriteUserJsonStorage(TELEGRAM_PROFILE_STORAGE_KEY, user.uid, nextTelegram);
       if (
         nextTelegram.connected &&
@@ -468,7 +494,8 @@ export function hydrateCachedUserState({
   setWorkoutModePreference,
   setWorkoutModeRemember,
   setProfileWorkoutCalendarEditing,
-  setProfileWorkoutCalendarStatus
+  setProfileWorkoutCalendarStatus,
+  isCurrentRun = () => true
 }) {
   if (user?.uid) {
     migrateLegacyUserStorage([
@@ -527,7 +554,7 @@ export function hydrateCachedUserState({
 
     if (hasRequiredAiNutritionProfileFields(cachedProfile)) {
       setAiNutritionProfile(cachedProfile);
-      setAiNutritionProfileDraft((current) => ({ ...current, ...cachedProfile }));
+      setAiNutritionProfileDraft((current) => isCurrentRun() ? { ...current, ...cachedProfile } : current);
     }
     if (cachedPlan) setAiNutritionSavedPlan(cachedPlan);
     if (cachedTelegram) {

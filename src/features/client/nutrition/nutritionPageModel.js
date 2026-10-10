@@ -10,12 +10,11 @@ import {
   buildAiNutritionMonthlyPlan
 } from "../../../utils/aiNutritionPlanBuilder";
 import {
-  getAiNutritionCurrentWeek,
   getAiNutritionDayMacros,
+  getAiNutritionWeekForDate,
   isAiNutritionTrainingDay
 } from "../../../utils/aiNutritionSchedule";
 import { getClientNutritionDisplayPlan } from "../../../utils/clientNutritionPlan";
-import { buildNutritionSummaryCollapsedText } from "../../../utils/nutritionAdvice";
 import { buildNutritionMealStats } from "../../../utils/nutritionFoodTotals";
 import { roundMacro } from "../../../utils/nutritionNumbers";
 import { getTrainerDayWord } from "../../../utils/trainerClientSummary";
@@ -35,6 +34,7 @@ export function buildNutritionPageModel({
   nutritionWeekDates,
   nutritionCurrentStreak
 }) {
+  const selectedNutritionDate = nutritionKeyToDate(nutritionDateKey);
   const preliminaryAiNutritionPlan = getClientNutritionDisplayPlan(
     {
       aiNutritionPlan: aiNutritionSavedPlan,
@@ -46,10 +46,10 @@ export function buildNutritionPageModel({
     nutrition.goals
   ) || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
 
-  const preliminaryAiNutritionWeekNumber = getAiNutritionCurrentWeek(preliminaryAiNutritionPlan);
   const preliminaryAiNutritionProfile = preliminaryAiNutritionPlan?.profile || aiNutritionProfile || aiNutritionProfileDraft;
-  const preliminaryAiNutritionWeek = preliminaryAiNutritionPlan?.weeks?.[preliminaryAiNutritionWeekNumber - 1] || preliminaryAiNutritionPlan?.weeks?.[0];
-  const preliminaryAiNutritionTodayMacros = getAiNutritionDayMacros(preliminaryAiNutritionWeek || nutrition.goals, preliminaryAiNutritionProfile);
+  const preliminaryAiNutritionWeek = getAiNutritionWeekForDate(preliminaryAiNutritionPlan, selectedNutritionDate);
+  const preliminaryAiNutritionWeekNumber = Math.max(1, (preliminaryAiNutritionPlan?.weeks || []).indexOf(preliminaryAiNutritionWeek) + 1);
+  const preliminaryAiNutritionTodayMacros = getAiNutritionDayMacros(preliminaryAiNutritionWeek || nutrition.goals, preliminaryAiNutritionProfile, selectedNutritionDate);
   const effectiveNutritionGoals = {
     ...nutrition.goals,
     calories: Math.round(Number(preliminaryAiNutritionTodayMacros?.calories) || nutrition.goals.calories),
@@ -67,7 +67,6 @@ export function buildNutritionPageModel({
   const fatPercent = Math.min(100, Math.round((nutritionTotals.fat / effectiveNutritionGoals.fat) * 100));
   const carbsPercent = Math.min(100, Math.round((nutritionTotals.carbs / effectiveNutritionGoals.carbs) * 100));
   const weekDates = nutritionWeekDates;
-  const selectedNutritionDate = nutritionKeyToDate(nutritionDateKey);
   const nutritionStreakText = `Серия записи еды — ${nutritionCurrentStreak} ${getTrainerDayWord(nutritionCurrentStreak)} 🔥`;
   const nutritionDateTitle = isNutritionToday
     ? "Сегодня"
@@ -81,7 +80,7 @@ export function buildNutritionPageModel({
   const activeNutritionMealStats = activeNutritionMeal
     ? mealStats[activeNutritionMeal.id] || { calories: 0, count: 0 }
     : { calories: 0, count: 0 };
-  const aiNutritionDay = buildAiNutritionDayModel({ ...nutrition, goals: effectiveNutritionGoals }, nutritionToday, history);
+  const aiNutritionDay = buildAiNutritionDayModel({ ...nutrition, goals: effectiveNutritionGoals }, nutritionToday, { dateKey: nutritionDateKey });
   const aiNutritionActivePlan = preliminaryAiNutritionPlan || buildAiNutritionMonthlyPlan(nutrition);
   const aiNutritionGoal = aiNutritionActivePlan?.profile?.goal || aiNutritionProfile?.goal || "recomp";
   const aiNutritionGoalText =
@@ -90,7 +89,7 @@ export function buildNutritionPageModel({
       : getAiNutritionGoalLabel(aiNutritionGoal);
   const aiNutritionCurrentWeek = preliminaryAiNutritionWeekNumber;
   const aiNutritionPageProfile = preliminaryAiNutritionProfile;
-  const isNutritionTrainingDayToday = isAiNutritionTrainingDay(aiNutritionPageProfile);
+  const isNutritionTrainingDayToday = isAiNutritionTrainingDay(aiNutritionPageProfile, selectedNutritionDate);
   const aiNutritionTodayPlanMacros = preliminaryAiNutritionTodayMacros;
   const macroCaloriesProtein = Math.max(0, Number(nutritionTotals.protein) || 0) * 4;
   const macroCaloriesFat = Math.max(0, Number(nutritionTotals.fat) || 0) * 9;
@@ -104,11 +103,7 @@ export function buildNutritionPageModel({
     { id: "fat", offset: proteinScoreSegment, value: fatScoreSegment },
     { id: "carbs", offset: proteinScoreSegment + fatScoreSegment, value: carbsScoreSegment }
   ];
-  const nutritionSummaryCollapsedText = buildNutritionSummaryCollapsedText({
-    isCaloriesOverGoal,
-    proteinPercent,
-    caloriePercent
-  });
+  const nutritionSummaryCollapsedText = aiNutritionDay.collapsedText;
   const nutritionOrbitItems = buildNutritionOrbitItems({
     nutritionTotals,
     effectiveNutritionGoals,

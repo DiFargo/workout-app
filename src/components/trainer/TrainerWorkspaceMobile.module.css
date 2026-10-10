@@ -154,7 +154,7 @@
 
   :global(.trainerNextRoot) :global(.trainerNextMobileNav button[aria-current="page"]) {
     color: var(--tn-purple-strong);
-    background: var(--tn-purple-soft);
+    background: var(--ownset-soft-gradient);
   }
 
   :global(.trainerNextRoot) :global(.trainerNextMobileNav button:focus-visible),
@@ -221,7 +221,7 @@
     border: 1px solid var(--tn-purple-strong);
     border-radius: 15px;
     color: #fff;
-    background: var(--tn-purple);
+    background: var(--ownset-action-gradient);
     box-shadow: 0 10px 22px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.25);
     font-size: 12px;
     font-weight: 750;
@@ -490,7 +490,7 @@
 
   :global(.trainerNextRoot) :global(.trainerNextClientMobileNav button[aria-current="page"]) {
     color: var(--tn-purple-strong);
-    background: var(--tn-purple-soft);
+    background: var(--ownset-soft-gradient);
   }
 
   :global(.trainerNextRoot) :global(.trainerNextClientBackRow) {
@@ -1018,7 +1018,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--trainer-v2-accent, #8f7ac8);
+    background: var(--ownset-action-gradient);
   }
 
   .clientPageFix :global(.trainerWorkoutScheduleLegend i.completed) { background: #56a473; }
@@ -1910,7 +1910,7 @@
     width: 100%;
     min-height: 6px;
     border-radius: 7px 7px 3px 3px;
-    background: var(--trainer-v2-accent, #8f7ac8);
+    background: var(--ownset-action-gradient);
   }
 
   .clientPageFix :global(.trainerClientBarChart > div > span i.over) {
@@ -2216,7 +2216,7 @@
 
   .clientPageFix :global(.trainerExerciseProgressToolbar button.active) {
     color: #ffffff;
-    background: var(--trainer-v2-accent, #8f7ac8);
+    background: var(--ownset-action-gradient);
     box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 112 88 164) / 0.2);
   }
 
@@ -2649,7 +2649,7 @@
   .clientToolbarFix > div > :global(.trainerNextPrimary) {
     border-color: var(--trainer-v2-accent, #8f7ac8);
     color: #ffffff;
-    background: var(--trainer-v2-accent, #8f7ac8);
+    background: var(--ownset-action-gradient);
     box-shadow: 0 9px 18px rgb(var(--trainer-v2-shadow-rgb, 112 88 164) / 0.24);
   }
 

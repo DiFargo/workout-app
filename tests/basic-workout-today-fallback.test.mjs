@@ -46,7 +46,7 @@ test("local today-workout fallback creates a startable one-session basic plan", 
   assert.equal(plan.workouts[0].exercises.length, 3);
   assert.ok(plan.workouts[0].exercises.some((exercise) => exercise.basicExerciseGroupId === "biceps"));
   assert.ok(plan.workouts[0].exercises.some((exercise) => exercise.basicExerciseGroupId === "triceps"));
-  assert.ok(plan.workouts[0].exercises.every((exercise) => exercise.sets.length === 2));
+  assert.ok(plan.workouts[0].exercises.every((exercise) => exercise.sets.length === 3));
 });
 
 test("today-workout fallbacks keep every selected zone and make full body balanced", () => {

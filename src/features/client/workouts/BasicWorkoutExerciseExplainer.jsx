@@ -17,7 +17,7 @@ export default function BasicWorkoutExerciseExplainer({
 }) {
   return (
     <section className={styles.explainer} data-testid="basic-workout-exercise-explainer" aria-label="Материалы к упражнению">
-      <div className={styles.content}>{children}</div>
+      <div className={styles.content} data-workout-media-area>{children}</div>
 
       <nav className={styles.tabs} aria-label="Действия с упражнением">
         {EXPLAINER_ACTIONS.map(({ id, label, Icon }) => (

@@ -61,7 +61,7 @@
   place-items: center;
   border-radius: 999px;
   color: #fff;
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
   font-size: 15px;
 }
 
@@ -239,7 +239,7 @@
 
 .dailyJournalFilters button.active span {
   color: #fff;
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
 }
 
 .dailyJournalTimeline {
@@ -320,7 +320,7 @@
   transform: translateY(-50%);
   border: 2px solid #fff;
   border-radius: 999px;
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
 }
 
 .dailyJournalEvent :global(.trainerNextAvatar.small) {
@@ -424,19 +424,19 @@
   .dailyJournalRecorded { grid-column: 4; justify-self: start; padding-right: 0; }
 }
 /* /v2 only: keep the journal's existing action centre and event handling. */
-:global(html[data-trainer-variant="v2"]) .immediateActionsSection{background:linear-gradient(120deg,#fff,#eef3fa);border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:16px;padding:16px}
+:global(html[data-trainer-variant="v2"]) .immediateActionsSection{background:linear-gradient(120deg,#fff,#e8f1f2);border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:16px;padding:16px}
 :global(html[data-trainer-variant="v2"]) .dailyJournalSection{background:#fff;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:16px;padding:16px}
 :global(html[data-trainer-variant="v2"]) .immediateActionsHead span,
-:global(html[data-trainer-variant="v2"]) .dailyJournalHead span{color:#3c6faa;font-weight:600;letter-spacing:.035em}
-:global(html[data-trainer-variant="v2"]) .immediateActionsHead>strong{background:#3f73b8}
+:global(html[data-trainer-variant="v2"]) .dailyJournalHead span{color:#376b91;font-weight:600;letter-spacing:.035em}
+:global(html[data-trainer-variant="v2"]) .immediateActionsHead>strong{background:var(--ownset-action-gradient)}
 :global(html[data-trainer-variant="v2"]) .immediateActionCard{background:#fff;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:12px;box-shadow:none}
-:global(html[data-trainer-variant="v2"]) .immediateActionCta{color:#3c6faa}
-:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button{min-height:44px;border-radius:10px;background:#efeff4;color:#636366;border-color:transparent}
-:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active{background:#eef3fa;color:#3c6faa;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12)}
+:global(html[data-trainer-variant="v2"]) .immediateActionCta{color:#376b91}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button{min-height:44px;border-radius:10px;background:#edf1f3;color:#617078;border-color:transparent}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active{background:#e8f1f2;color:#376b91;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12)}
 :global(html[data-trainer-variant="v2"]) .dailyJournalEvent{border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);box-shadow:none}
-:global(html[data-trainer-variant="v2"]) .dailyJournalEventAction{color:#3c6faa}
-:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button strong{background:#efeff4;color:#636366}
-:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active strong{background:#3f73b8;color:#fff}
+:global(html[data-trainer-variant="v2"]) .dailyJournalEventAction{color:#376b91}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button strong{background:#edf1f3;color:#617078}
+:global(html[data-trainer-variant="v2"]) .dailyJournalFilters button.active strong{background:var(--ownset-action-gradient);color:#fff}
 
 /* V2 uses the client spacing and surface system. */
 :global(html[data-trainer-variant="v2"] body) .immediateActionsSection { padding: 16px; margin-bottom: 12px; background: #fff !important; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); }
@@ -448,18 +448,18 @@
 :global(html[data-trainer-variant="v2"] body) .attention, :global(html[data-trainer-variant="v2"] body) .calm { padding: 5px 9px; font-size: 11px; font-weight: 600; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalFilters { gap: 6px; margin: 12px 0; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button { min-height: 44px; padding: 0 10px; font-size: 12px; gap: 5px; }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button span { color: #636366; background: var(--trainer-v2-surface, #e8e8ed); }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button.active span { color: #fff; background: #3f73b8; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button span { color: #617078; background: var(--trainer-v2-surface, #e8e8ed); }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalFilters button.active span { color: #fff; background: var(--ownset-action-gradient); }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalTimeline { max-height: none; overflow: visible; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary { position: relative; color: var(--trainer-v2-muted, #8e8e93); font-size: 11px; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalBoundary::before, :global(html[data-trainer-variant="v2"] body) .dailyJournalLine::before { background: var(--trainer-v2-surface, #d1d1d6); }
 :global(html[data-trainer-variant="v2"] body) .immediateActionCard { padding: 12px; border-color: rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12); min-height: 0; }
-:global(html[data-trainer-variant="v2"] body) .immediateActionsContent span, :global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent span { color: #3c6faa; font-size: 11px; }
+:global(html[data-trainer-variant="v2"] body) .immediateActionsContent span, :global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent span { color: #376b91; font-size: 11px; }
 :global(html[data-trainer-variant="v2"] body) .immediateActionsContent strong { font-size: 15px; white-space: normal; }
-:global(html[data-trainer-variant="v2"] body) .immediateActionCta { background: #eef3fa; color: #3c6faa; border: 0; }
+:global(html[data-trainer-variant="v2"] body) .immediateActionCta { background: #e8f1f2; color: #376b91; border: 0; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent strong { font-size: 14px; line-height: 1.35; white-space: normal; }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalEventContent small { font-size: 12px; line-height: 1.35; white-space: normal; }
-:global(html[data-trainer-variant="v2"] body) .dailyJournalEventAction { background: #efeff4; color: #636366; font-size: 10px; }
+:global(html[data-trainer-variant="v2"] body) .dailyJournalEventAction { background: #edf1f3; color: #617078; font-size: 10px; }
 @media(max-width:699px) {
 :global(html[data-trainer-variant="v2"] body) .immediateActionsList { grid-template-columns: minmax(0,1fr); }
 :global(html[data-trainer-variant="v2"] body) .dailyJournalEvent { grid-template-columns: 36px 8px 28px minmax(0,1fr); gap: 6px; padding-block: 10px; }

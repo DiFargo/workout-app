@@ -50,6 +50,27 @@
   display: none;
 }
 
+/* Follow the visual viewport: mobile keyboards do not always resize 100dvh. */
+:global(:root[data-app-theme="warm-light"]) .searchOverlay[data-food-search-keyboard="true"] {
+  top: var(--food-search-visible-top, 0px);
+  bottom: auto;
+  height: var(--food-search-visible-height, 100dvh);
+  padding: 4px 8px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchOverlay[data-food-search-keyboard="true"] .searchScreen.headerLayout {
+  width: min(402px, calc(100vw - 16px));
+  height: calc(var(--food-search-visible-height, 100dvh) - 8px);
+  min-height: 0;
+  max-height: calc(var(--food-search-visible-height, 100dvh) - 8px);
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+:global(:root[data-app-theme="warm-light"]) .searchOverlay[data-food-search-keyboard="true"] .grabber {
+  display: none;
+}
+
 .searchOverlay::-webkit-scrollbar,
 .searchScreen::-webkit-scrollbar {
   width: 0;
@@ -92,7 +113,7 @@
 
 .myProductsLayout {
   padding: 58px 26px calc(112px + env(safe-area-inset-bottom, 0px));
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
 }
 
 .productOverlay,
@@ -254,7 +275,7 @@
 :global(:root[data-app-theme="warm-light"]) .productOverlay {
   padding: 0;
   background: rgba(27, 35, 31, 0.34);
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -276,8 +297,8 @@
   margin: auto;
   border: 1px solid rgba(255, 255, 255, 0.95);
   border-radius: 28px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 24px 56px rgba(27, 35, 31, 0.2);
   font-family: var(--font-family-sans);
 }
@@ -290,9 +311,9 @@
   align-self: flex-end;
   margin: 0 auto;
   overflow: hidden;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
 
@@ -337,7 +358,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-gutter: auto;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 @media (max-width: 640px) {
@@ -359,7 +380,7 @@
     min-height: min(78dvh, 690px);
     max-height: calc(100dvh - 32px);
     margin: 0 auto;
-    border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+    border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 28px;
   }
 }
@@ -368,7 +389,7 @@
   :global(:root[data-app-theme="warm-light"]) .searchScreen,
   :global(:root[data-app-theme="warm-light"]) .productLayout,
   :global(:root[data-app-theme="warm-light"]) .fixtureLayout {
-    border-right: 1px solid var(--apple-separator, rgba(60,60,67,.12));
-    border-left: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+    border-right: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
+    border-left: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   }
 }

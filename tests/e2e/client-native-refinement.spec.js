@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
@@ -97,6 +97,21 @@ test("summary day illustration follows the plan state and keeps the main action 
     if (state === "recovery" || state === "today") await page.screenshot({ path: testInfo.outputPath(`${state}-day.png`) });
     await page.getByTestId("profile-summary-primary").click();
     await expect(page.getByTestId("workout-today-card")).toBeVisible();
+  }
+  assertNoErrors();
+});
+
+test("missed summary explains the original date instead of a future proposed move", async ({ page }, testInfo) => {
+  const assertNoErrors = failOnRuntimeErrors(page);
+  for (const viewport of [{ width: 375, height: 812 }, { width: 812, height: 375 }]) {
+    await page.setViewportSize(viewport);
+    await openHarness(page, "&clientDashboardWorkoutState=missed-move");
+    const summary = page.getByTestId("profile-summary-dashboard");
+    await expect(summary).toContainText("Тренировка 1 была запланирована на 26 августа");
+    await expect(summary).not.toContainText("21 сентября");
+    await expect(page.getByTestId("profile-summary-primary")).toBeEnabled();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+    await page.screenshot({ path: testInfo.outputPath(`missed-date-${viewport.width}.png`) });
   }
   assertNoErrors();
 });

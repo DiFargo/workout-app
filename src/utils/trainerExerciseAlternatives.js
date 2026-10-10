@@ -1,9 +1,18 @@
+import { exerciseCardReference } from "../../functions/exerciseCards.js";
+import { hasCompletedExerciseSets } from "./auditSafety.js";
+
 const ALTERNATIVE_FIELDS = Object.freeze([
+  "exerciseCardId",
+  "exerciseCardOwnerUid",
+  "exerciseCardSnapshot",
+  "exerciseCardNames",
+  "exerciseCardOverrides",
   "id",
   "name",
   "video",
   "videoUrl",
   "videoURL",
+  "videoCrop",
   "image",
   "thumbnail",
   "imageUrl",
@@ -53,8 +62,8 @@ function safeAlternative(item = {}) {
 }
 
 /**
- * A compact snapshot is stored in a trainer's programme, so an assignment does
- * not depend on later changes to the common exercise library.
+ * A compact fallback snapshot is stored with its shared-card reference. The
+ * alternative never supplies sets or rest: those belong to the prescribed slot.
  */
 export function createTrainerExerciseAlternative(libraryExercise = {}) {
   return safeAlternative(libraryExercise);
@@ -79,6 +88,8 @@ export function getTrainerExerciseAlternatives(exercise = {}) {
 }
 
 export function replaceTrainerAssignedExerciseInWorkout(workout = {}, exerciseId = "", selectedAlternative = {}) {
+  const currentExercise = (Array.isArray(workout?.exercises) ? workout.exercises : []).find((item) => item?.id === exerciseId);
+  if (hasCompletedExerciseSets(currentExercise)) return { workout, replacement: null };
   let replacement = null;
   const exercises = (Array.isArray(workout?.exercises) ? workout.exercises : []).map((exercise) => {
     if (exercise?.id !== exerciseId) return exercise;
@@ -91,8 +102,15 @@ export function replaceTrainerAssignedExerciseInWorkout(workout = {}, exerciseId
 
     replacement = {
       ...exercise,
+      exerciseCardId: "",
+      exerciseCardOwnerUid: "",
+      exerciseCardSnapshot: {},
+      exerciseCardNames: [],
+      exerciseCardOverrides: {},
+      ...exerciseCardReference(alternative),
       name: alternative.name,
       video: alternative.video || alternative.videoUrl || alternative.videoURL || "",
+      videoCrop: alternative.videoCrop || null,
       image: alternative.image || alternative.thumbnail || "",
       thumbnail: alternative.thumbnail || alternative.image || "",
       muscleGroup: alternative.muscleGroup || exercise.muscleGroup || "",
@@ -101,7 +119,7 @@ export function replaceTrainerAssignedExerciseInWorkout(workout = {}, exerciseId
       equipment: alternative.equipment || exercise.equipment || "",
       note: alternative.note || alternative.description || exercise.note || "",
       description: alternative.description || alternative.note || exercise.description || "",
-      technique: alternative.technique || alternative.note || exercise.technique || "",
+      technique: alternative.technique || alternative.note || "",
       sourceId: alternative.sourceId || exercise.sourceId || "",
       basicExerciseId: alternative.basicExerciseId || exercise.basicExerciseId || "",
       basicExerciseLibraryId: alternative.basicExerciseLibraryId || exercise.basicExerciseLibraryId || "",

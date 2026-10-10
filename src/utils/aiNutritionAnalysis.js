@@ -2,6 +2,7 @@ import { defaultNutritionState } from "../data/nutritionDefaults.js";
 import { makeEmptyNutritionDay, todayNutritionKey } from "../domain/nutritionPresentation.js";
 import { getShortFoodName } from "./nutritionFoodPresentation.js";
 import { sumNutritionFoods } from "./nutritionFoodTotals.js";
+import { buildNutritionDayFeedback } from "./nutritionAdvice.js";
 
 export { sumNutritionFoods } from "./nutritionFoodTotals.js";
 
@@ -70,7 +71,7 @@ export function getNutritionPersonalBaseline(nutrition = defaultNutritionState) 
   };
 }
 
-export function buildAiNutritionDayModel(nutrition = defaultNutritionState, selectedDay = null) {
+export function buildAiNutritionDayModel(nutrition = defaultNutritionState, selectedDay = null, context = {}) {
   const day = selectedDay || nutrition.days?.[todayNutritionKey()] || makeEmptyNutritionDay();
   const baseline = getNutritionPersonalBaseline(nutrition);
   const goals = getAiNutritionTargetFromHistory(nutrition);
@@ -97,40 +98,21 @@ export function buildAiNutritionDayModel(nutrition = defaultNutritionState, sele
   if (carbsProgress < 55 && totals.calories > 0) score -= 0.7;
   score = Math.max(4.8, Math.min(9.6, Math.round(score * 10) / 10));
 
-  const badges = [];
-  if (proteinProgress < 75) badges.push({ type: "warning", icon: "⚠️", text: "Мало" });
-  else badges.push({ type: "good", icon: "💪", text: "Белок хорошо" });
-
-  if (fatProgress > 110) badges.push({ type: "warning", icon: "🧈", text: "Перебор жиров" });
-  if (calorieProgress >= 78 && calorieProgress <= 98) badges.push({ type: "good", icon: "🔥", text: "Хороший дефицит" });
-  if (carbsProgress < 58) badges.push({ type: "info", icon: "🍚", text: "Мало еды до тренировки" });
-  if (totals.calories === 0) badges.push({ type: "info", icon: "📊", text: "Жду первый приём" });
-
+  const feedback = buildNutritionDayFeedback({ goals, totals, ...(!Array.isArray(context) ? context : {}) });
   const baselineDelta = Math.round(totals.calories - baseline.average.calories);
-  const weeklyText = baselineDelta < -250
-    ? "Сегодня ты заметно ниже своего личного ориентира. Если вес падает слишком быстро — добавь 100–150 ккал."
-    : baselineDelta > 250
-      ? "Сегодня ты выше своего личного ориентира. Если цель похудение — остаток дня лучше сделать легче."
-      : "Сегодня близко к твоему личному ориентиру. Коррекцию калорий можно делать плавно.";
-
-  const adaptiveAdvice = fatProgress > 110
-    ? "На остаток дня меньше сыра, орехов, масла и жирного мяса. Лучше белок + углеводы: творог/курица + рис/картофель/овощи."
-    : proteinProgress < 75
-      ? "На остаток дня добери белок: творог, Exponenta/High-Pro, курица, рыба или индейка."
-      : carbsProgress < 58
-        ? "Перед тренировкой добавь лёгкие углеводы: банан, рис, овсянка или хлеб fitness."
-        : "День идёт ровно. Дальше держи простую еду и не перегружай жиры вечером.";
+  const weeklyText = baseline.hasHistoryData
+    ? `Среднее по записанным дням — ${baseline.average.calories} ккал. Неполные записи влияют на среднее; это не новая цель и не основание менять план по одному дню.`
+    : "Пока мало записей для сравнения нескольких дней. Начни с регулярного ведения дневника.";
 
   return {
     score,
-    badges: badges.slice(0, 4),
+    ...feedback,
+    badges: feedback.badges.slice(0, 4),
     totals,
     left,
     baseline,
     baselineDelta,
     weeklyText,
-    adaptiveAdvice,
-    summary: `${score}/10 — ${proteinProgress >= 75 ? "белок хорошо" : "белка мало"}, ${fatProgress > 110 ? "жиров много" : carbsProgress < 58 ? "углеводов мало" : "баланс нормальный"}.`,
     target: getAiNutritionTargetFromHistory(nutrition),
     hasHistoryData: baseline.hasHistoryData
   };

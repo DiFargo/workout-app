@@ -6,9 +6,9 @@
   display: grid;
   place-items: center;
   padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
-  background: var(--background-profile-measurements-overlay);
-  backdrop-filter: var(--filter-profile-measurements-overlay);
-  -webkit-backdrop-filter: var(--filter-profile-measurements-overlay);
+  background: rgba(28, 28, 30, .28);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .dialog {
@@ -18,12 +18,14 @@
   padding: 15px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  border: 1px solid var(--color-profile-measurements-dialog-border);
+  border: 0;
   border-radius: 32px;
-  background: var(--background-profile-measurements-dialog);
-  box-shadow: var(--shadow-profile-measurements-dialog);
-  color: var(--color-profile-measurements-text);
+  background: var(--apple-canvas, #f2f2f7);
+  box-shadow: var(--apple-shadow-float, 0 12px 28px rgba(28, 28, 30, .12));
+  color: var(--apple-text, #1c1c1e);
   scrollbar-width: none;
+  font-family: var(--font-family-sans);
+  font-weight: 400;
 }
 
 .dialog::-webkit-scrollbar,
@@ -38,7 +40,7 @@
   max-height: min(820px, calc(100dvh - 24px));
   padding: 15px;
   display: grid;
-  grid-template-rows: auto 48px auto minmax(0, 1fr) auto;
+  grid-template-rows: auto 52px auto minmax(0, 1fr) auto;
   gap: 12px;
   overflow: hidden;
   border-radius: 32px;
@@ -58,21 +60,21 @@
 }
 
 .header span {
-  color: var(--color-profile-measurements-eyebrow);
+  color: var(--apple-secondary, #636366);
   font-size: 11px;
-  font-weight: 950;
+  font-weight: 600;
   letter-spacing: 0.08em;
 }
 
 .header h2 {
   margin: 5px 0 2px;
-  color: var(--color-profile-measurements-heading);
+  color: var(--apple-text, #1c1c1e);
   font-size: 24px;
   line-height: 1.05;
 }
 
 .header small {
-  color: var(--color-profile-measurements-muted);
+  color: var(--apple-secondary, #636366);
   font-size: 12px;
   font-weight: 700;
 }
@@ -83,10 +85,10 @@
   height: 44px;
   min-height: 44px;
   padding: 0;
-  border: 1px solid var(--color-profile-measurements-close-border);
+  border: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 13px;
-  background: var(--background-profile-measurements-close);
-  color: var(--color-profile-measurements-close);
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-secondary, #636366);
   font-size: 23px;
   line-height: 1;
   cursor: pointer;
@@ -111,7 +113,7 @@
 }
 
 .bodyControlDialog .header span {
-  color: var(--color-profile-measurements-tabbed-eyebrow);
+  color: var(--apple-secondary, #636366);
   font-size: 10px;
   letter-spacing: 0.06em;
   line-height: 1.1;
@@ -119,16 +121,16 @@
 
 .bodyControlDialog .header h2 {
   margin: 0;
-  color: var(--color-profile-measurements-tabbed-heading);
+  color: var(--apple-text, #1c1c1e);
   font-size: 25px;
   line-height: 1.02;
 }
 
 .bodyControlDialog .header small {
   min-height: 17px;
-  color: var(--color-profile-measurements-tabbed-muted);
+  color: var(--apple-secondary, #636366);
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 600;
   line-height: 1.2;
 }
 
@@ -141,48 +143,48 @@
   justify-self: end;
   display: grid;
   place-items: center;
-  border-color: var(--color-profile-measurements-tabbed-close-border);
+  border-color: var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 14px;
-  background: var(--background-profile-measurements-tabbed-close);
-  color: var(--color-profile-measurements-tabbed-close);
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-secondary, #636366);
   font-size: 24px;
   font-weight: 500;
-  box-shadow: var(--shadow-profile-measurements-tabbed-close);
+  box-shadow: none;
 }
 
 .bodyControlTabs {
   box-sizing: border-box;
-  height: 48px;
-  padding: 3px;
+  height: 52px;
+  padding: 4px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
-  gap: 6px;
-  border: 1px solid var(--color-profile-measurements-tabs-border);
-  border-radius: 16px;
-  background: var(--background-profile-measurements-tabs);
+  gap: 4px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--apple-surface-muted, #efeff4);
 }
 
 .bodyControlTabs button {
   min-width: 0;
   width: 100%;
-  height: 40px;
-  min-height: 40px;
+  height: 44px;
+  min-height: 44px;
   padding: 0 8px;
-  border: 1px solid var(--color-profile-measurements-tab-border);
-  border-radius: 13px;
-  background: var(--background-profile-measurements-tab);
-  color: var(--color-profile-measurements-tab);
-  font-size: 12px;
-  font-weight: 950;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--apple-secondary, #636366);
+  font-size: 15px;
+  font-weight: 500;
   line-height: 1;
 }
 
 .bodyControlTabs button.active {
-  border-color: var(--color-profile-measurements-tab-active-border);
-  background: var(--background-profile-measurements-tab-active);
-  color: var(--color-profile-measurements-tab-active);
-  box-shadow: var(--shadow-profile-measurements-tab-active);
+  border-color: var(--apple-separator, rgba(60, 60, 67, .12));
+  background: var(--apple-surface, #fff);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: none;
 }
 
 .summary {
@@ -191,29 +193,29 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 1px solid var(--color-profile-measurements-summary-border);
-  border-radius: 17px;
-  background: var(--background-profile-measurements-summary);
+  border: 0;
+  border-radius: 18px;
+  background: var(--apple-surface, #fff);
 }
 
 .summary span {
-  flex: 0 0 46px;
-  width: 46px;
-  height: 46px;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--color-profile-measurements-summary-icon-border);
-  border-radius: 15px;
-  background: var(--background-profile-measurements-summary-icon);
-  color: var(--color-profile-measurements-summary-icon);
+  border: 0;
+  border-radius: 12px;
+  background: var(--apple-blue-tint, #edf3fb);
+  color: var(--apple-blue, #3c6faa);
   font-size: 23px;
 }
 
 .summary p {
   margin: 0;
-  color: var(--color-profile-measurements-summary);
+  color: var(--apple-secondary, #636366);
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 400;
   line-height: 1.35;
 }
 
@@ -227,10 +229,10 @@
   box-sizing: border-box;
   min-height: 68px;
   padding: 9px 6px;
-  border: 1px solid var(--color-profile-measurements-cell-border);
+  border: 0;
   border-radius: 14px;
-  background: var(--background-profile-measurements-cell);
-  color: var(--color-profile-measurements-text);
+  background: var(--apple-surface, #fff);
+  color: var(--apple-text, #1c1c1e);
   text-align: center;
 }
 
@@ -242,33 +244,35 @@
 
 .grid span {
   min-height: 26px;
-  color: var(--color-profile-measurements-label);
-  font-size: 10px;
-  font-weight: 700;
+  color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 400;
   line-height: 1.15;
 }
 
 .grid strong {
   display: inline;
-  color: var(--color-profile-measurements-value);
-  font-size: 17px;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
 .grid small {
   display: inline;
   margin-left: 3px;
-  color: var(--color-profile-measurements-unit);
-  font-size: 10px;
-  font-weight: 850;
+  color: var(--apple-secondary, #636366);
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .empty {
   margin: 0;
   padding: 20px 16px;
-  border: 1px dashed var(--color-profile-measurements-empty-border);
+  border: 1px dashed var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 16px;
-  color: var(--color-profile-measurements-empty);
+  color: var(--apple-text, #1c1c1e);
   font-size: 13px;
   line-height: 1.45;
   text-align: center;
@@ -278,13 +282,13 @@
   width: 100%;
   min-height: 54px;
   margin-top: 14px;
-  border: 1px solid var(--color-profile-measurements-start-border);
-  border-radius: 17px;
-  background: var(--background-profile-measurements-start);
-  color: var(--color-profile-measurements-start);
-  font-size: 17px;
-  font-weight: 900;
-  box-shadow: var(--shadow-profile-measurements-start);
+  border: 0;
+  border-radius: 16px;
+  background: var(--ownset-action-gradient, var(--apple-action, #3f73b8));
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -295,7 +299,7 @@
 .closeButton:focus-visible,
 .bodyControlTabs button:focus-visible,
 .startButton:focus-visible {
-  outline: 2px solid var(--color-profile-measurements-focus);
+  outline: 2px solid var(--apple-blue, #3c6faa);
   outline-offset: 2px;
 }
 
@@ -322,7 +326,7 @@
 
   .grid span {
     min-height: 22px;
-    font-size: 9px;
+    font-size: 12px;
   }
 
   .startButton {
@@ -345,7 +349,7 @@
 
 .bodyControlDialog .grid {
   align-content: start;
-  grid-auto-rows: minmax(58px, auto);
+  grid-auto-rows: minmax(68px, auto);
   gap: 7px;
 }
 
@@ -355,13 +359,13 @@
 }
 
 .bodyControlDialog .grid span {
-  min-height: 20px;
-  font-size: 9px;
-  line-height: 1.1;
+  min-height: 28px;
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 .bodyControlDialog .grid strong {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .bodyControlDialog .startButton {
@@ -383,3 +387,8 @@
   display: block;
   grid-template-columns: none;
 }
+
+.header.header h1 { font-size: 17px; font-weight: 600; }
+.dialog.dialog[data-cabinet-sheet="true"] [data-profile-modal-close="true"] { border: 0; background: var(--apple-surface-muted, #efeff4); box-shadow: none; }
+.dialog button { font-family: inherit; }
+.dialog button:active { opacity: .75; }

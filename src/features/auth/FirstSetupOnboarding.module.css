@@ -1,14 +1,15 @@
 /* Local classes keep the first-run flow independent of legacy shell themes. */
 .firstSetupOverlay {
-  --setup-canvas: var(--apple-canvas, #f2f2f7);
+  --setup-canvas: var(--apple-canvas, #f5f7f8);
   --setup-surface: var(--apple-surface, #ffffff);
-  --setup-muted: var(--apple-surface-muted, #efeff4);
-  --setup-text: var(--apple-text, #1c1c1e);
-  --setup-secondary: var(--apple-secondary, #636366);
-  --setup-border: var(--apple-separator, rgba(60, 60, 67, 0.12));
-  --setup-accent: var(--apple-blue, #3c6faa);
-  --setup-action: var(--apple-action, #3f73b8);
-  --setup-tint: var(--apple-blue-tint, #edf2f9);
+  --setup-muted: var(--apple-surface-muted, #edf1f3);
+  --setup-text: var(--apple-text, #1c282e);
+  --setup-secondary: var(--apple-secondary, #617078);
+  --setup-border: var(--apple-separator, rgba(57, 82, 91, 0.12));
+  --setup-accent: var(--apple-blue, #376b91);
+  --setup-action: var(--apple-action, #396ba6);
+  --setup-tint: var(--apple-blue-tint, #e8f1f2);
+  height: var(--app-viewport-height, 100dvh);
   position: fixed;
   inset: 0;
   z-index: 5000;
@@ -27,13 +28,13 @@
   position: relative;
   box-sizing: border-box;
   width: min(100%, 430px);
-  height: 100dvh;
-  min-height: 100dvh;
-  max-height: 100dvh;
+  height: var(--app-viewport-height, 100dvh);
+  min-height: var(--app-viewport-height, 100dvh);
+  max-height: var(--app-viewport-height, 100dvh);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: max(18px, calc(env(safe-area-inset-top) + 10px)) 20px max(14px, calc(env(safe-area-inset-bottom) + 8px));
+  padding: max(18px, calc(max(env(safe-area-inset-top, 0px), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px)) + 10px)) 20px max(14px, calc(max(env(safe-area-inset-bottom, 0px), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px)) + 8px));
   border: 0;
   border-radius: 0;
   background: var(--setup-canvas);
@@ -79,7 +80,7 @@
 .firstSetupExitButton {
   position: absolute;
   z-index: 1;
-  top: max(14px, calc(env(safe-area-inset-top) + 6px));
+  top: max(14px, calc(max(env(safe-area-inset-top, 0px), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px)) + 6px));
   right: 20px;
   width: 44px;
   height: 44px;
@@ -550,11 +551,19 @@
 
 .firstSetupReview > button {
   min-height: 43px;
+  padding: 0 4px;
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
+  border: 0;
   border-bottom: 1px solid var(--setup-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--setup-text);
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .firstSetupReview > button:last-child {
@@ -801,3 +810,19 @@
 }
 
 .firstSetupReview > button { width: 100%; min-height: 44px; text-align: left; font: inherit; cursor: pointer; }
+
+/* Telegram's viewport is shorter than the browser's full-screen canvas. Keep
+   the review step near its heading instead of vertically centering it in the
+   remaining space. */
+:global(html[data-platform="telegram"]) .firstSetupHeader {
+  margin-top: clamp(16px, 3dvh, 28px);
+}
+
+:global(html[data-platform="telegram"]) .firstSetupBody {
+  justify-content: flex-start;
+  margin-top: 14px;
+}
+
+:global(html[data-platform="telegram"]) .firstSetupReview {
+  padding-block: 6px;
+}

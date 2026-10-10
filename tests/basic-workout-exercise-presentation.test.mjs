@@ -11,6 +11,13 @@ import {
   normalizeBasicWorkoutExerciseOverrides
 } from "../src/utils/basicWorkoutExercisePresentation.js";
 
+test("technique presentation handles the absent current exercise at workout completion", () => {
+  for (const exercise of [null, undefined]) {
+    assert.equal(getBasicWorkoutExerciseTechniqueHint(exercise), "");
+    assert.equal(getBasicWorkoutExerciseTechniqueHint(exercise, "Fallback cue"), "Fallback cue");
+  }
+});
+
 test("basic workout presentation describes the target muscles and equipment", () => {
   const presentation = getBasicWorkoutExercisePresentation({
     name: "Жим штанги лёжа",
@@ -160,4 +167,24 @@ test("partial overrides and disabled video keep the saved-plan data safe", () =>
   assert.equal(hiddenVideo.video, "");
   assert.equal(hiddenVideo.basicExerciseVideoDisabled, true);
   assert.equal(source.video, "/saved-plan-video.mp4");
+});
+
+test("shared basic video preserves its crop through the cache without changing prescribed load", () => {
+  const crop = { x: 0.5, y: 0.58, zoom: 1.2 };
+  const source = { id: "saved-slot", basicExerciseId: "leg_press", name: "Жим ногами",
+    video: "/old.mp4", videoCrop: { x: 0, y: 0, zoom: 2 }, rest: "90 сек",
+    sets: Array.from({ length: 3 }, () => ({ reps: 12, weight: 110, completed: false })) };
+  const before = structuredClone(source);
+  const cached = normalizeBasicWorkoutExerciseOverrides({ leg_press: { videoUrl: "/approved.mp4", videoCrop: crop } });
+  const resolved = applyBasicWorkoutExerciseOverride(source, cached);
+  assert.equal(resolved.video, "/approved.mp4");
+  assert.deepEqual(resolved.videoCrop, crop);
+  assert.equal(resolved.sets, source.sets);
+  assert.equal(resolved.rest, source.rest);
+  assert.deepEqual(source, before);
+  assert.deepEqual(applyBasicWorkoutExerciseOverride(source, { leg_press: { note: "Новая техника" } }).videoCrop, source.videoCrop);
+  assert.equal(applyBasicWorkoutExerciseOverride(source, { leg_press: { videoUrl: "/other.mp4" } }).videoCrop, null);
+  assert.equal(applyBasicWorkoutExerciseOverride(source, { leg_press: { videoCrop: null } }).videoCrop, null);
+  assert.equal(applyBasicWorkoutExerciseOverride(source, { leg_press: { videoDisabled: true } }).videoCrop, null);
+  assert.equal(applyBasicWorkoutExerciseOverride(source, { leg_press: { videoCrop: { x: 20, y: 0, zoom: 1 } } }).videoCrop, null);
 });

@@ -538,9 +538,9 @@
 :global(:root[data-app-theme="warm-light"]) .dialog.dialog {
   width: min(370px, 100%);
   padding: 16px;
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-canvas, #f2f2f7);
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-canvas, #f5f7f8);
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 18px 52px rgba(27, 35, 31, 0.18);
 }
@@ -561,7 +561,7 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: rgba(123, 118, 130, 0.1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -574,14 +574,14 @@
 
 :global(:root[data-app-theme="warm-light"]) .eyebrow.eyebrow {
   margin-bottom: 2px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9px;
   font-weight: 650;
   letter-spacing: 0.15px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .title.title {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 20px;
   font-weight: 700;
   line-height: 25px;
@@ -593,8 +593,8 @@
   height: 40px;
   min-height: 40px;
   padding: 0;
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-surface-muted, #edf1f3);
   border: 0;
   border-radius: 14px;
   font-size: 23px;
@@ -616,21 +616,21 @@
   padding: 11px 12px;
   grid-template-columns: 44px minmax(0, 1fr) 20px;
   gap: 11px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
   border: 1px solid transparent;
   border-radius: 18px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .option.optionActive {
-  background: var(--apple-surface-muted, #efeff4);
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-surface-muted, #edf1f3);
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionIcon.optionIcon {
   width: 44px;
   height: 44px;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   background: #ffffff;
   border-radius: 14px;
   font-size: 16px;
@@ -638,21 +638,21 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionTitle.optionTitle {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionDescription.optionDescription {
   margin-top: 3px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 500;
   line-height: 14px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .optionIndicator.optionIndicator {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 20px;
 }
 
@@ -660,7 +660,7 @@
   min-height: 48px;
   margin-top: 10px;
   padding: 0 12px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   background: #ffffff;
   border: 0;
   border-radius: 16px;
@@ -669,7 +669,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .rememberInput.rememberInput {
-  accent-color: var(--apple-action, #3f73b8);
+  accent-color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyDialog.historyDialog {
@@ -689,31 +689,31 @@
 
 :global(:root[data-app-theme="warm-light"]) .planSummary.planSummary,
 :global(:root[data-app-theme="warm-light"]) .historyStats span {
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 :global(:root[data-app-theme="warm-light"]) .planSummaryIcon.planSummaryIcon,
 :global(:root[data-app-theme="warm-light"]) .planOrder.planOrder {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   background: #ffffff;
 }
 
 :global(:root[data-app-theme="warm-light"]) .planItem.planItem {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .planItem.planItemActive {
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   border-color: rgba(47, 125, 104, 0.42);
 }
 
 :global(:root[data-app-theme="warm-light"]) .programWorkout.programWorkout {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .programWorkout.programWorkoutExpanded {
@@ -722,17 +722,17 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .exerciseList li {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(:root[data-app-theme="warm-light"]) .planSummary small,
 :global(:root[data-app-theme="warm-light"]) .planCopy small,
 :global(:root[data-app-theme="warm-light"]) .historyStats small {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 :global(:root[data-app-theme="warm-light"]) .planStatus.planStatus {
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyList.historyList {
@@ -742,27 +742,27 @@
 :global(:root[data-app-theme="warm-light"]) .historyItem.historyItem {
   min-height: 62px;
   padding: 9px 10px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
   border: 0;
   border-radius: 16px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyIcon.historyIcon {
-  color: var(--apple-action, #3f73b8);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-action, #396ba6);
+  background: var(--apple-surface-muted, #edf1f3);
   border-radius: 13px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyTitle.historyTitle {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 12px;
   font-weight: 700;
 }
 
 :global(:root[data-app-theme="warm-light"]) .historyMeta.historyMeta,
 :global(:root[data-app-theme="warm-light"]) .historyMessage.historyMessage {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 500;
 }
@@ -771,7 +771,7 @@
   min-height: 48px;
   margin-top: 10px;
   color: #ffffff;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
   font-size: 13px;
@@ -798,15 +798,15 @@
   padding: 14px; min-height: 80px; gap: 12px;
   grid-template-columns: 34px minmax(0,1fr) 18px; border-radius: 18px;
 }
-:global(:root[data-app-theme="warm-light"]) .modeDialog .optionActive { background: var(--apple-blue-tint,#edf2f9); border-color: var(--apple-blue,#3c6faa); }
-:global(:root[data-app-theme="warm-light"]) .modeDialog .optionIcon { width: 34px; height: 34px; border-radius: 10px; background: var(--apple-blue-tint,#edf2f9); }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .optionActive { background: var(--ownset-soft-gradient); border-color: var(--apple-blue,#376b91); }
+:global(:root[data-app-theme="warm-light"]) .modeDialog .optionIcon { width: 34px; height: 34px; border-radius: 10px; background: var(--ownset-soft-gradient); }
 .modeDialog .optionIcon svg { width: 20px; height: 20px; stroke-width: 1.8; }
 :global(:root[data-app-theme="warm-light"]) .modeDialog .optionTitle { font-size: 15px; font-weight: 600; line-height: 1.35; }
 :global(:root[data-app-theme="warm-light"]) .modeDialog .optionDescription { font-size: 12px; font-weight: 400; line-height: 1.4; }
 .modeDialog .optionIndicator svg { width: 18px; height: 18px; }
-.modeDialog .optionActive .optionIndicator { color: var(--apple-blue,#3c6faa); }
+.modeDialog .optionActive .optionIndicator { color: var(--apple-blue,#376b91); }
 :global(:root[data-app-theme="warm-light"]) .modeDialog .remember { min-height: 50px; font-size: 14px; font-weight: 400; border-radius: 14px; }
-.modeDialog .remember:focus-within { outline: 2px solid var(--apple-blue,#3c6faa); outline-offset: 2px; }
+.modeDialog .remember:focus-within { outline: 2px solid var(--apple-blue,#376b91); outline-offset: 2px; }
 @media (max-width: 699px) {
   :global(:root[data-app-theme="warm-light"]) .modeOverlay.overlay {
     padding: max(14px,env(safe-area-inset-top)) 12px max(14px,env(safe-area-inset-bottom));

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 
 test("rest timer promotes the next exercise after the final set", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });

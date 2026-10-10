@@ -10,6 +10,13 @@
   color: var(--color-food-result-portion);
 }
 
+:global(:root[data-app-theme="warm-light"] [data-food-search-header-layout]) .list {
+  padding-bottom: 0;
+}
+
+.sourceLinks { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 12px; }
+.sourceLinks a { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-primary, #396ba6); font-size: 13px; overflow-wrap: anywhere; }
+
 .status {
   width: 100%;
   min-width: 0;
@@ -323,15 +330,15 @@
 :global(:root[data-app-theme="warm-light"]) .list {
   padding-bottom: calc(188px + env(safe-area-inset-bottom, 0px));
   gap: 8px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .status,
 :global(:root[data-app-theme="warm-light"]) .loading {
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   box-shadow: none;
   font-weight: 500;
 }
@@ -339,12 +346,12 @@
 :global(:root[data-app-theme="warm-light"]) .statusTitle,
 :global(:root[data-app-theme="warm-light"]) .emptyTitle,
 :global(:root[data-app-theme="warm-light"]) .loadingText {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyCopy {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-weight: 450;
 }
 
@@ -353,10 +360,10 @@
   padding: 9px 10px;
   grid-template-columns: 44px minmax(0, 1fr) 32px;
   gap: 10px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
@@ -367,8 +374,8 @@
   min-height: 44px;
   border: 0;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemInfo {
@@ -378,19 +385,19 @@
 :global(:root[data-app-theme="warm-light"]) .itemTitle {
   margin: 0;
   padding: 0;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 15px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemMeta,
 :global(:root[data-app-theme="warm-light"]) .itemDetails {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-weight: 450;
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemPortion {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-size: 12px;
   font-weight: 600;
 }
@@ -401,13 +408,13 @@
   height: 32px;
   min-height: 32px;
   border: 0;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemAction::before {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-size: 20px;
   font-weight: 500;
 }
@@ -415,20 +422,20 @@
 :global(:root[data-app-theme="warm-light"]) .suggestionButton,
 :global(:root[data-app-theme="warm-light"]) .showMore {
   min-height: 48px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
   box-shadow: none;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .showMoreCount {
   background: #fff;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .loadingSpinner {
   border-color: #d7dde1;
-  border-top-color: var(--apple-action, #3f73b8);
+  border-top-color: var(--apple-action, #396ba6);
 }

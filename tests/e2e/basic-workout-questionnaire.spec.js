@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 
 async function openQuiz(page, viewport = { width: 375, height: 667 }) {
   await page.setViewportSize(viewport);
@@ -14,20 +14,21 @@ async function answer(page, label) {
   await card.getByRole("button", { name: "Далее", exact: true }).click();
 }
 
-test("every required question starts empty and deliberate answers survive back navigation", async ({ page }, testInfo) => {
+test("slider questions start selected and deliberate answers survive back navigation", async ({ page }, testInfo) => {
   await openQuiz(page);
   const card = page.getByTestId("basic-quiz-card");
-  await expect(card.locator('[aria-pressed="true"]')).toHaveCount(0);
-  await expect(card.getByRole("button", { name: "Далее", exact: true })).toBeDisabled();
-  await page.screenshot({ path: testInfo.outputPath("quiz-empty-375.png"), fullPage: true });
+  await expect(card.getByRole("button", { name: "Хорошая форма", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(card.getByRole("button", { name: "Далее", exact: true })).toBeEnabled();
+  await page.screenshot({ path: testInfo.outputPath("quiz-default-375.png"), fullPage: true });
   const answers = ["Хорошая форма", "Я новичок", "Дома", "3 тренировки", "Около 45 минут", "Нет ограничений"];
   for (const label of answers) {
-    await expect(card.locator('[aria-pressed="true"]')).toHaveCount(0);
-    await expect(card.getByRole("button", { name: "Далее", exact: true })).toBeDisabled();
+    await expect(card.locator('[aria-pressed="true"]')).toHaveCount(label === "Нет ограничений" ? 0 : 1);
+    if (label === "Нет ограничений") await expect(card.getByRole("button", { name: "Далее", exact: true })).toBeDisabled();
+    else await expect(card.getByRole("button", { name: "Далее", exact: true })).toBeEnabled();
     await answer(page, label);
   }
   await expect(card.getByRole("button", { name: "Проверить ответы", exact: true })).toBeEnabled();
-  await card.getByRole("button", { name: "Назад", exact: true }).click();
+  await page.getByRole("button", { name: "Назад", exact: true }).click();
   await expect(card.getByRole("button", { name: "Нет ограничений" })).toHaveAttribute("aria-pressed", "true");
   await card.getByRole("button", { name: "Далее", exact: true }).click();
   await card.getByRole("button", { name: "Проверить ответы", exact: true }).click();
@@ -36,9 +37,9 @@ test("every required question starts empty and deliberate answers survive back n
   await card.getByRole("button", { name: "2 тренировки" }).click();
   await card.getByRole("button", { name: "Сохранить ответ" }).click();
   const structure = card.getByTestId("basic-quiz-two-day-structure");
-  await expect(structure.locator('[aria-pressed="true"]')).toHaveCount(0);
+  await expect(structure.getByRole("combobox")).toHaveValue("");
   await expect(card.getByRole("button", { name: "Сохранить ответ" })).toBeDisabled();
-  await structure.getByRole("button", { name: "Равномерная нагрузка" }).click();
+  await structure.getByRole("combobox").selectOption({ label: "Равномерная нагрузка" });
   await card.getByRole("button", { name: "Сохранить ответ" }).click();
   await expect(page.getByTestId("basic-quiz-review")).toContainText("Равномерная нагрузка");
   await page.getByTestId("basic-quiz-review").locator('[data-answer-key="goal"]').click();
@@ -53,6 +54,34 @@ test("every required question starts empty and deliberate answers survive back n
   await expect(page.getByTestId("workout-render-overview")).toBeVisible();
 });
 
+test("unchanged visible defaults reach review without touching sliders", async ({ page }, testInfo) => {
+  await openQuiz(page, { width: 402, height: 874 });
+  const card = page.getByTestId("basic-quiz-card");
+  const labels = ["Хорошая форма", "Я новичок", "В тренажёрном зале", "1 тренировка", "Около 30 минут"];
+  for (const [index, label] of labels.entries()) {
+    await expect(card.getByRole("slider")).toHaveAttribute("aria-valuetext", label);
+    await expect(card.getByRole("button", { name: label, exact: true })).toHaveAttribute("aria-pressed", "true");
+    await expect(card.getByText("Выбери один вариант, чтобы продолжить.")).toHaveCount(0);
+    const next = card.getByRole("button", { name: "Далее", exact: true });
+    await expect(next).toBeEnabled();
+    await page.screenshot({ path: testInfo.outputPath(`default-step-${index + 1}.png`), scale: "css" });
+    await next.click();
+  }
+  await expect(card.getByRole("button", { name: "Далее", exact: true })).toBeDisabled();
+  await answer(page, "Нет ограничений");
+  await expect(card.getByRole("group", { name: "Акцент программы" }).locator('[aria-pressed="true"]')).toHaveCount(1);
+  await card.getByRole("button", { name: "Проверить ответы", exact: true }).click();
+  const review = page.getByTestId("basic-quiz-review");
+  for (const [key, label] of Object.entries({ goal: "Хорошая форма", level: "Я новичок", location: "В тренажёрном зале", days: "1 раз", duration: "30 мин" })) {
+    await expect(review.locator(`[data-answer-key="${key}"]`)).toContainText(label);
+  }
+  await review.locator('[data-answer-key="goal"]').click();
+  await card.getByRole("button", { name: "Стать сильнее", exact: true }).click();
+  await card.getByRole("button", { name: "Сохранить ответ", exact: true }).click();
+  await review.locator('[data-answer-key="goal"]').click();
+  await expect(card.getByRole("button", { name: "Стать сильнее", exact: true })).toHaveAttribute("aria-pressed", "true");
+});
+
 test("other restrictions require details, remain on review, and clear when not applicable", async ({ page }, testInfo) => {
   await openQuiz(page, { width: 320, height: 568 });
   for (const label of ["Стать сильнее", "Есть опыт", "В тренажёрном зале", "2 тренировки", "Около 30 минут"]) await answer(page, label);
@@ -61,7 +90,7 @@ test("other restrictions require details, remain on review, and clear when not a
   await expect(card.getByRole("button", { name: "Далее", exact: true })).toBeDisabled();
   await card.getByLabel("Кратко опиши ограничение (обязательно)").fill("Без прыжков");
   await card.getByRole("button", { name: "Далее", exact: true }).click();
-  await card.getByRole("button", { name: "Больше восстановления" }).click();
+  await card.getByRole("combobox", { name: "Формат двух тренировок" }).selectOption({ label: "Больше восстановления" });
   await card.getByRole("button", { name: "Проверить ответы", exact: true }).click();
   await expect(page.getByTestId("basic-quiz-review")).toContainText("Без прыжков");
   await page.getByTestId("basic-quiz-review").locator('[data-answer-key="restrictions"]').click();

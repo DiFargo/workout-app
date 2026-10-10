@@ -62,7 +62,7 @@ test("deterministic fallback produces valid drafts for every supported basic-pla
                   assert.equal(week.workouts.length, days);
                   week.workouts.forEach((workout) => {
                     const roles = workout.exercises.map((exercise) => BY_ID.get(exercise.catalogueId)?.movementRole);
-                    const expectedSetCount = duration === "30" || (duration === "45" && level === "beginner") ? 2 : 3;
+                    const expectedSetCount = 3;
 
                     assert.equal(workout.exercises.length, TARGETS[duration]);
                     assert.equal(new Set(workout.exercises.map((exercise) => exercise.catalogueId)).size, workout.exercises.length);

@@ -523,9 +523,10 @@ function AppRuntime() {
   const [adminClientTab, setAdminClientTab] = useState("overview");
   const [adminTrainerNote, setAdminTrainerNote] = useState("");
   const [adminTrainingTemplates, setAdminTrainingTemplates] = useState([]);
+  const [trainerExerciseCards, setTrainerExerciseCards] = useState([]);
   const trainerExerciseLibraryItems = useMemo(
-    () => buildTrainerExerciseLibraryItems(plan, adminTrainingTemplates),
-    [plan, adminTrainingTemplates]
+    () => buildTrainerExerciseLibraryItems({}, adminTrainingTemplates, { cards: trainerExerciseCards }),
+    [adminTrainingTemplates, trainerExerciseCards]
   );
   const adminExerciseLibrary = trainerExerciseLibraryItems;
   const [adminTemplateName, setAdminTemplateName] = useState("");
@@ -1026,6 +1027,22 @@ function AppRuntime() {
     WORKOUT_CALENDAR_STORAGE_KEY,
     WORKOUT_MODE_STORAGE_KEY,
     auth,
+    workoutSaveInFlightRef,
+    setIsSaving,
+    setIsWorkoutSaved,
+    setShowWorkoutSavedCard,
+    setWorkoutHistorySyncState,
+    setProfileMeasurementSaving,
+    setProfileMeasurementStatus,
+    setProfileProgressPhotoUploading,
+    setProfileProgressPhotoStatus,
+    setProfileProgressPhotoFiles,
+    setProfileProgressPhotoPreviews,
+    setHistoryLoading,
+    setHistoryDeletingId,
+    setHistoryDeleteCandidate,
+    setWorkoutIncompleteConfirmOpen,
+    setPendingWorkoutFeedback,
     createEmptyAiNutritionProfileDraft,
     createEmptyTelegramProfile,
     db,
@@ -1097,6 +1114,7 @@ function AppRuntime() {
 
   useAppRuntimeEffects({
     APP_PAGES,
+    auth,
     appLoading,
     appTheme,
     appThemeCloudReady,
@@ -1151,7 +1169,7 @@ function AppRuntime() {
     }
   });
 
-  useNutritionSearchEffects({
+  const { geminiSearchSuggestions, retryNutritionSearch } = useNutritionSearchEffects({
     dishIngredientPickerOpen,
     dishIngredientSearch,
     nutritionPickerOpen,
@@ -1276,7 +1294,8 @@ function AppRuntime() {
   const {
     handleGoogleAuth,
     handleLogin,
-    handleLoginPasswordReset
+    handleLoginPasswordReset,
+    handleTelegramMiniAppAuth
   } = createAuthHandlers({
     APP_PAGES,
     auth,
@@ -1818,6 +1837,8 @@ function AppRuntime() {
   });
 
   const trainerPlanEditorHandlers = createTrainerPlanEditorHandlers({
+    trainerExerciseCards,
+    setTrainerExerciseCards,
     canManageTrainingTemplate,
     plan,
     setPlan,
@@ -1893,6 +1914,8 @@ function AppRuntime() {
     renameClientProgramAssignment,
     copyCurrentProgramToClient
   } = createTrainerProgramTemplateHandlers({
+    trainerExerciseCards,
+    setTrainerExerciseCards,
     db,
     auth,
     user,
@@ -2426,6 +2449,7 @@ function AppRuntime() {
 
   const startupGate = AppStartupGate({
     appLoading,
+    currentUserRole,
     roleAccessGateState: getRoleAccessGateState({ isLoggedIn, currentUserRole }),
     firstSetupStillResolving,
     showFirstSetupOnboarding,
@@ -2454,6 +2478,7 @@ function AppRuntime() {
     handleGoogleAuth,
     handleLogin,
     handleLoginPasswordReset,
+    handleTelegramMiniAppAuth,
     logout
   });
 
@@ -2622,6 +2647,8 @@ function AppRuntime() {
       nutritionEditNote,
       nutritionEditPageOpen,
       nutritionFallbackSuggestions,
+      geminiSearchSuggestions,
+      retryNutritionSearch,
       nutritionFoodSwipeMoved,
       nutritionFoodSwipeOffsets,
       nutritionMeal,
@@ -3203,6 +3230,7 @@ function AppRuntime() {
     trainerClientSummaries,
     trainerClientSummariesLoading,
     trainerExerciseLibraryItems,
+    trainerExerciseCards,
     trainerNextSection,
     trainerSubscriptionNotificationSettings,
     trainerNextWorkspaceHandlers,

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './app-test.js';
 
 for (const width of [320, 393, 768, 1024, 1366]) {
   test(`sparse client is usable at ${width}px`, async ({page}, info) => {

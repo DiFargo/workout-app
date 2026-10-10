@@ -4,6 +4,8 @@ import "./AdminE2EHarness.module.css";
 import styles from "./AdminResponsive.module.css";
 import TrainerAdminCalendarTab from "../../features/trainer/TrainerAdminCalendarTab";
 import AdminPanelHub from "./AdminPanelHub";
+import AdminBaseLibrary from "./AdminBaseLibrary";
+import { BASIC_WORKOUT_EXERCISE_LIBRARY } from "../../data/basicWorkoutExerciseLibrary.js";
 
 const harnessClients = [
   {
@@ -283,6 +285,14 @@ export default function AdminE2EHarness() {
   const [lastAction, setLastAction] = useState("idle");
   const canAccessAdmin = getAdminHarnessAccess();
   const surface = getAdminHarnessSurface();
+
+  if (surface === "base-library") {
+    return (
+      <main className={trainerWorkspaceStyles.workspaceRoot} data-testid="admin-harness-root">
+        <AdminBaseLibrary exercises={BASIC_WORKOUT_EXERCISE_LIBRARY} initialTab="exercises" onBack={() => setLastAction("back")} />
+      </main>
+    );
+  }
 
   if (surface === "users") {
     return (

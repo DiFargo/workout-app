@@ -1,8 +1,7 @@
 import { spawn } from "node:child_process";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
-
-const FUNCTIONS_DIRECTORY = path.resolve("functions");
+import { getFirebaseFunctionsSources } from "./firebase-functions-sources.mjs";
 
 async function collectJavaScriptFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -38,7 +37,8 @@ function checkSyntax(file) {
 }
 
 try {
-  const files = (await collectJavaScriptFiles(FUNCTIONS_DIRECTORY)).sort();
+  const sources = await getFirebaseFunctionsSources();
+  const files = (await Promise.all(sources.map(source => collectJavaScriptFiles(path.resolve(source))))).flat().sort();
   if (!files.length) throw new Error("No Firebase Functions JavaScript files found.");
 
   for (const file of files) {

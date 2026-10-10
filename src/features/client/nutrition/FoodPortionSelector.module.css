@@ -240,7 +240,7 @@
   inset: 0 0 auto;
   height: 52px;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   pointer-events: none;
 }
 
@@ -253,7 +253,7 @@
   border: 0;
   border-radius: 11px;
   background: transparent;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   box-shadow: none;
 }
 
@@ -264,7 +264,7 @@
 :global(:root[data-app-theme="warm-light"]) .dropdownButton:active {
   border: 0;
   background: #fff;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   box-shadow: 0 2px 7px rgba(27, 35, 31, 0.08);
 }
 
@@ -274,10 +274,10 @@
 
 :global(:root[data-app-theme="warm-light"]) .menu {
   padding: 4px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 12px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -293,19 +293,19 @@
   gap: 2px;
   border: 0;
   border-radius: 8px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-weight: 500;
   text-align: center;
 }
 
-:global(:root[data-app-theme="warm-light"]) .menuItem.selected { background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); }
+:global(:root[data-app-theme="warm-light"]) .menuItem.selected { background: var(--apple-surface-muted, #edf1f3); color: var(--apple-action, #396ba6); }
 
 :global(:root[data-app-theme="warm-light"]) .menuItem span { font-size: 14px; line-height: 1.35; font-weight: 500; white-space: normal; overflow-wrap: anywhere; }
-:global(:root[data-app-theme="warm-light"]) .menuItem small { color: var(--apple-secondary, #636366); font-size: 13px; line-height: 1.35; font-weight: 400; font-variant-numeric: tabular-nums; }
-.check { position: absolute; right: 5px; top: calc(50% - 8px); width: 16px; height: 16px; color: var(--apple-action, #3f73b8); }
+:global(:root[data-app-theme="warm-light"]) .menuItem small { color: var(--apple-secondary, #617078); font-size: 13px; line-height: 1.35; font-weight: 400; font-variant-numeric: tabular-nums; }
+.check { position: absolute; right: 5px; top: calc(50% - 8px); width: 16px; height: 16px; color: var(--apple-action, #396ba6); }
 :global(:root[data-app-theme="warm-light"]) .modeButton:focus-visible,
 :global(:root[data-app-theme="warm-light"]) .dropdownButton:focus-visible,
-:global(:root[data-app-theme="warm-light"]) .menuItem:focus-visible { outline: 2px solid var(--apple-action, #3f73b8); outline-offset: -2px; }
+:global(:root[data-app-theme="warm-light"]) .menuItem:focus-visible { outline: 2px solid var(--apple-action, #396ba6); outline-offset: -2px; }
 
 @media (prefers-reduced-motion: reduce) {
   .caret { transition: none; }

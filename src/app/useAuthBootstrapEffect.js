@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
+import { advanceAuthSession } from "../utils/authSession";
 
 import {
   applySignedOutBootstrapState,
@@ -8,6 +9,7 @@ import {
   loadInitialSignedInUserData,
   loadRemoteUserBootstrapState,
   resolveAdminClaim,
+  resetAuthSessionOperations,
   resetAuthBootstrapState
 } from "./appBootstrapHelpers";
 
@@ -15,6 +17,7 @@ const BOOTSTRAP_FALLBACK_TIMEOUT_MS = 9000;
 
 export function useAuthBootstrapEffect(getBootstrapContext) {
   useEffect(() => {
+    const bootstrapContext = getBootstrapContext();
     const {
       AI_NUTRITION_PLAN_STORAGE_KEY,
       AI_NUTRITION_PROFILE_STORAGE_KEY,
@@ -91,7 +94,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       setWorkoutModePreference,
       setWorkoutModeRemember,
       startPerformanceCheck
-    } = getBootstrapContext();
+    } = bootstrapContext;
     let disposed = false;
     let bootstrapRunId = 0;
     let splashTimerId = null;
@@ -123,6 +126,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
+      advanceAuthSession(auth, u);
+      resetAuthSessionOperations(bootstrapContext);
       const runId = bootstrapRunId + 1;
       bootstrapRunId = runId;
       clearBootstrapTimers();
@@ -207,11 +212,12 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           setWorkoutModePreference,
           setWorkoutModeRemember,
           setProfileWorkoutCalendarEditing,
-          setProfileWorkoutCalendarStatus
+          setProfileWorkoutCalendarStatus,
+          isCurrentRun: () => !disposed && runId === bootstrapRunId
         });
 
         if (u) {
-          const nextIsAdmin = await resolveAdminClaim({
+          const adminClaims = await resolveAdminClaim({
             user: u,
             setIsAdminClaim,
             isCurrentRun: () => !disposed && runId === bootstrapRunId
@@ -221,7 +227,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           const resolvedRole = await loadRemoteUserBootstrapState({
             user: u,
             db,
-            isAdmin: nextIsAdmin,
+            adminClaims,
+            setIsAdminClaim,
             APP_PAGES,
             AI_NUTRITION_PLAN_STORAGE_KEY,
             AI_NUTRITION_PROFILE_STORAGE_KEY,
@@ -256,6 +263,13 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
 
           if (disposed || runId !== bootstrapRunId || !resolvedRole) return;
 
+          // The fallback protects role verification. A slow workout load must
+          // not revoke a role already verified from the current profile.
+          if (["client", "trainer", "admin"].includes(resolvedRole) && bootstrapFallbackTimerId) {
+            window.clearTimeout(bootstrapFallbackTimerId);
+            bootstrapFallbackTimerId = null;
+          }
+
           if (resolvedRole === "client") {
             await loadInitialSignedInUserData({
               user: u,
@@ -267,7 +281,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
               loadClientTrainerTasks,
               replayFailedHistorySaves,
               replayFailedNutritionSync,
-              replayFailedMeasurementSaves
+              replayFailedMeasurementSaves,
+              isCurrentRun: () => !disposed && runId === bootstrapRunId
             });
           } else {
             setPlan({ workouts: [] });
@@ -285,6 +300,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           // Telegram is a secondary profile enhancement. It must not keep the
           // application splash screen open after the workout and profile core
           // are ready.
+          if (disposed || runId !== bootstrapRunId) return;
           void hydrateRemoteTelegramProfile({
             user: u,
             db,
@@ -292,7 +308,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             refreshTelegramAvatar,
             safeWriteUserJsonStorage,
             setTelegramDraft,
-            setTelegramProfile
+            setTelegramProfile,
+            isCurrentRun: () => !disposed && runId === bootstrapRunId
           });
         } else {
           applySignedOutBootstrapState({

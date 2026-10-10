@@ -39,7 +39,7 @@
   background: transparent;
   box-shadow: none;
 }
-:global(html[data-app-theme="warm-light"]) .row.row + .row.row { border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12)); }
+:global(html[data-app-theme="warm-light"]) .row.row + .row.row { border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12)); }
 :global(html[data-app-theme="warm-light"]) .number.number {
   width: 34px;
   min-width: 34px;
@@ -53,12 +53,12 @@
   left: 8px;
   top: 12px;
   border-radius: 50%;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
   font-size: 13px;
   font-weight: 700;
 }
-:global(html[data-app-theme="warm-light"]) .completed .number.number { background: var(--apple-action, #3f73b8); color: #fff; }
+:global(html[data-app-theme="warm-light"]) .completed .number.number { background: var(--ownset-action-gradient); color: #fff; }
 :global(html[data-app-theme="warm-light"]) .plan.plan {
   width: 100%;
   height: 38px;
@@ -67,15 +67,15 @@
   justify-content: center;
   gap: 0;
 }
-:global(html[data-app-theme="warm-light"]) .reps.reps { color: var(--apple-secondary, #636366); font-size: 9.5px; font-weight: 600; line-height: 15px; }
+:global(html[data-app-theme="warm-light"]) .reps.reps { color: var(--apple-secondary, #617078); font-size: 9.5px; font-weight: 600; line-height: 15px; }
 :global(html[data-app-theme="warm-light"]) .startingWeightLabel.startingWeightLabel {
   margin-left: 5px;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
   font-size: 8px;
   font-style: normal;
   font-weight: 750;
 }
-:global(html[data-app-theme="warm-light"]) .weight.weight { color: var(--apple-text, #1c1c1e); font-size: 15px; font-weight: 700; line-height: 20px; }
+:global(html[data-app-theme="warm-light"]) .weight.weight { color: var(--apple-text, #1c282e); font-size: 15px; font-weight: 700; line-height: 20px; }
 :global(html[data-app-theme="warm-light"]) .actions.actions { position: static; width: auto; height: auto; display: contents; }
 :global(html[data-app-theme="warm-light"]) .root.root .editButton.editButton {
   width: 38px;
@@ -91,7 +91,7 @@
   left: 42px;
   border: 0;
   background: transparent;
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
 }
 :global(html[data-app-theme="warm-light"]) .editButton.editButton svg { width: 17px; height: 17px; }
 :global(html[data-app-theme="warm-light"]) .completeButton.completeButton {
@@ -112,7 +112,7 @@
   color: var(--color-workout-set-complete);
   cursor: pointer;
 }
-:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { border-color: var(--apple-action, #3f73b8); background: var(--apple-action, #3f73b8); color: #fff; }
+:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { border-color: var(--apple-action, #396ba6); background: var(--ownset-action-gradient); color: #fff; }
 
 @media (max-height: 824px) {
   :global(html[data-app-theme="warm-light"]) .root.root,
@@ -378,10 +378,10 @@
   max-height: 42px;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 12px;
-  background: var(--apple-blue-tint, #eef3fa);
-  color: var(--apple-blue-pressed, #3565a3);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue-pressed, #315f91);
   box-shadow: none;
   display: grid;
   place-items: center;
@@ -390,8 +390,8 @@
 
 :global(html[data-app-theme="warm-light"]) .root .timerButton.timerButtonActive {
   color: #ffffff;
-  background: var(--apple-action, #3f73b8);
-  border-color: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
+  border-color: var(--apple-action, #396ba6);
 }
 
 :global(html[data-app-theme="warm-light"]) .timerButton svg {
@@ -563,7 +563,7 @@
 }
 
 :global(html[data-app-theme="warm-light"]) .wheelPicker {
-  --workout-set-wheel-item-height: 42px;
+  --workout-set-wheel-item-height: max(42px, 2.625rem);
   position: relative;
   width: 100%;
   height: calc(var(--workout-set-wheel-item-height) * 5);
@@ -720,28 +720,28 @@
 :global(html[data-app-theme="warm-light"]) .modal.modal {
   width: min(370px, 100%);
   padding: 16px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: #ffffff;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 18px 52px rgba(27, 35, 31, 0.18);
 }
 
 :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader span {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 9px;
   font-weight: 650;
 }
 
 :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 20px;
   font-weight: 700;
 }
 
 :global(html[data-app-theme="warm-light"]) .modal.modal .closeButton.closeButton {
-  color: var(--apple-text, #1c1c1e);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-text, #1c282e);
+  background: var(--apple-surface-muted, #edf1f3);
   border: 0;
   border-radius: 14px;
   box-shadow: none;
@@ -757,13 +757,13 @@
 }
 
 :global(html[data-app-theme="warm-light"]) .wheelField.wheelField > span {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 600;
 }
 
 :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker {
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   border-radius: 16px;
   -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
   mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
@@ -771,18 +771,18 @@
 
 :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker::before,
 :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker::after {
-  background: var(--apple-separator, rgba(60,60,67,.12));
+  background: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 :global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 19px;
   font-weight: 550;
   text-shadow: none;
 }
 
 :global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption.active {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   background: rgba(255, 255, 255, 0.8);
   box-shadow: none;
   font-size: 22px;
@@ -795,7 +795,7 @@
   min-height: 48px;
   margin-top: 12px;
   color: #ffffff;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   border-radius: 17px;
   box-shadow: none;
   font-size: 14px;
@@ -807,3 +807,72 @@
     place-items: center;
   }
 }
+
+/* v5 set rows: number, secondary edit control, values, circular confirmation. */
+:global(html[data-app-theme="warm-light"]) .root.root,
+:global(html[data-app-theme="warm-light"]) .list.list { height: auto; max-height: none; overflow: visible; }
+.columnLabels { display: grid; grid-template-columns: 30px 44px minmax(0,1fr) 52px; gap: 8px; padding: var(--workout-set-label-padding, 10px 16px 2px); color: #617078; font-size: 0.75rem; }
+.columnLabels > span:first-child { font-size: 0.6875rem; text-align: center; }
+.columnLabels > span:last-child { grid-column: 3 / 5; }
+:global(html[data-app-theme="warm-light"]) .row.row {
+  display: grid; grid-template-columns: 30px 44px minmax(0,1fr) 52px; grid-template-rows: auto; gap: 8px;
+  width: auto; height: auto; min-height: var(--workout-set-row-height, 64px); margin: 0 16px; padding: 0; cursor: pointer; touch-action: pan-y;
+}
+:global(html[data-app-theme="warm-light"]) .number.number {
+  position: static; align-self: center; justify-self: center; width: 30px; min-width: 30px; max-width: 30px; height: 30px; min-height: 30px; max-height: 30px;
+  color: #617078; background: #edf1f3; font-size: 0.9375rem; font-weight: 500;
+}
+:global(html[data-app-theme="warm-light"]) .completed .number.number { color: #176332; background: #d5eadb; }
+:global(html[data-app-theme="warm-light"]) .plan.plan { height: auto; min-height: 56px; max-height: none; display: flex; flex-flow: row wrap; align-items: center; align-content: center; justify-content: flex-start; gap: 5px; min-width: 0; overflow: visible; }
+:global(html[data-app-theme="warm-light"]) .weight.weight { color: #1c282e; font-size: var(--workout-set-value-size, 1.375rem); line-height: 1.25; font-weight: 600; letter-spacing: -.6px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.weight small { font-size: 0.75rem; font-weight: 400; letter-spacing: 0; color: #617078; }
+.times { color: #617078; font-size: 0.875rem; }
+:global(html[data-app-theme="warm-light"]) .root.root .editButton.editButton,
+:global(html[data-app-theme="warm-light"]) .root.root .timerButton.timerButton {
+  position: static; width: 44px; min-width: 44px; max-width: 44px; height: 44px; min-height: 44px; max-height: 44px;
+  display: grid; place-items: center; order: 0; padding: 0; border: 0; border-radius: 50%; box-shadow: none; background: transparent; color: #617078;
+}
+:global(html[data-app-theme="warm-light"]) .editButton.editButton svg { width: 18px; height: 18px; stroke-width: 1.65; }
+:global(html[data-app-theme="warm-light"]) .completeButton.completeButton {
+  position: static; width: 52px; min-width: 52px; max-width: 52px; height: 52px; min-height: 52px; max-height: 52px;
+  padding: 0; border: 0; border-radius: 50%; background: #edf1f3; color: #617078; box-shadow: none;
+}
+:global(html[data-app-theme="warm-light"]) .completeButton.completeButton svg { width: 24px; height: 24px; }
+:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { background: #237a42; color: #fff; box-shadow: 0 2px 6px rgba(35,122,66,.22); }
+:global(html[data-app-theme="warm-light"]) .row.completed { border-color: #a9cfb2; background: #f0f7f2; }
+:global(html[data-app-theme="warm-light"]) .row.locked { cursor: default; }
+:global(html[data-app-theme="warm-light"]) .completeButton.completeButton:disabled,
+:global(html[data-app-theme="warm-light"]) .timerButton.timerButton:disabled { cursor: default; }
+:global(html[data-app-theme="warm-light"]) .locked:not(.completed) .completeButton.completeButton,
+:global(html[data-app-theme="warm-light"]) .timerButton.timerButton:disabled { opacity: .4; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media(max-width:350px) {
+  :global(html[data-app-theme="warm-light"]) .row.row, .columnLabels { grid-template-columns: 26px 44px minmax(0,1fr) 52px; gap: 8px; }
+  :global(html[data-app-theme="warm-light"]) .row.row { margin-inline: 12px; }
+  .columnLabels { padding-inline: 12px; font-size: 0.625rem; }
+  :global(html[data-app-theme="warm-light"]) .number.number { width: 26px; min-width: 26px; max-width: 26px; height: 26px; min-height: 26px; max-height: 26px; font-size: 0.875rem; }
+  :global(html[data-app-theme="warm-light"]) .weight.weight { font-size: 1.1875rem; }
+}
+:global(html[data-app-theme="warm-light"]) .root button:focus-visible { outline: 3px solid #396ba6; outline-offset: 2px; }
+
+/* Keep independent edit/confirm targets usable on both touch platforms. */
+:global(html[data-app-theme="warm-light"]) .row.row,
+.columnLabels { grid-template-columns: 30px 48px minmax(0,1fr) 52px; gap: clamp(4px, 2vw, 8px); }
+:global(html[data-app-theme="warm-light"]) .root.root .editButton.editButton,
+:global(html[data-app-theme="warm-light"]) .root.root .timerButton.timerButton { width: 48px; min-width: 48px; max-width: 48px; height: 48px; min-height: 48px; max-height: 48px; }
+:global(html[data-app-theme="warm-light"]) .weight.weight { white-space: normal; overflow-wrap: anywhere; }
+:global(html[data-app-theme="warm-light"]) .plan.plan { padding-block: 4px; }
+
+:global(html[data-app-theme="warm-light"]) .modalBackdrop.modalBackdrop { display: grid; place-items: end center; padding: max(20px,env(safe-area-inset-top)) 0 0; background: rgba(28,28,30,.22); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+:global(html[data-app-theme="warm-light"]) .modal.modal { position: relative; width: min(100%,520px); max-height: calc(100dvh - 20px - env(safe-area-inset-top)); padding: 34px 24px max(24px,env(safe-area-inset-bottom)); border: 0; border-radius: 34px 34px 0 0; background: #f5f7f8; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; }
+.modal.modal::before { content: ""; position: absolute; top: 10px; left: calc(50% - 16px); width: 32px; height: 4px; border-radius: 9px; background: #d1d1d8; }
+:global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader { position: relative; min-height: 48px; padding-inline: 32px; justify-content: center; text-align: center; margin-bottom: 20px; overflow-wrap: anywhere; }
+:global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader span { font-size: 1.0625rem; font-weight: 600; color: #1c282e; }
+:global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader strong { font-size: 0.8125rem; font-weight: 400; color: #617078; margin-top: 6px; }
+:global(html[data-app-theme="warm-light"]) .modal.modal .closeButton.closeButton { position: absolute; right: -8px; top: -8px; border-radius: 50%; width: 48px; height: 48px; font-size: 25px; }
+:global(html[data-app-theme="warm-light"]) .modalFields.modalFields { background: white; border-radius: 22px; padding: 8px; gap: 16px; }
+:global(html[data-app-theme="warm-light"]) .wheelField.wheelField > span { font-size: 0.875rem; font-weight: 400; }
+:global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker { background: white; border-radius: 12px; }
+:global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption { font-size: 1.5625rem; font-weight: 400; transition: color 120ms ease; transform: none; }
+:global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption.active { font-size: 1.5625rem; font-weight: 600; background: #edf1f3; transform: none; }
+:global(html[data-app-theme="warm-light"]) .modal.modal .doneButton.doneButton { margin-top: 20px; height: auto; min-height: max(52px,3.25rem); padding: .5em 12px; border-radius: 99px; font-size: 1.0625rem; font-weight: 600; }

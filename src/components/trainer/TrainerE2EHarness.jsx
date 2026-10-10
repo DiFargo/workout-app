@@ -1,14 +1,29 @@
 import { isTrainerV2Path } from "../../app/cssVariant.js";
-import { setTrainerLibraryVariantDeleted } from "../../utils/trainerExerciseLibrary.js";
+import { setTrainerLibraryVariantDeleted, buildTrainerExerciseLibraryItems } from "../../utils/trainerExerciseLibrary.js";
+import { createTrainerPlanEditorHandlers } from "../../features/trainer/trainerPlanEditorHandlers.js";
 import { useRef, useState } from "react";
 import TrainerWorkspace, { TrainerShell } from "./TrainerWorkspace";
 import * as appConfig from "../../constants/appConfig";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
+import { exerciseCardLegacyKey } from "../../../functions/exerciseCards.js";
+
+const duplicateAuditMovements = [
+  { id: "seated", name: "Отведение рук с гантелями сидя в наклоне", video: "/e2e-media/seated.mp4" },
+  { id: "standing", name: "Отведение рук с гантелями стоя в наклоне", video: "/e2e-media/standing.mp4" },
+  { id: "squat", name: "Присед с гантелью", video: "/e2e-media/squat.mp4" }
+];
 
 function TrainerE2EHarness({ ProgramManagerView }) {
+  const cardAudit = new URLSearchParams(window.location.search).has("cardAudit");
+  const duplicateAudit = new URLSearchParams(window.location.search).has("libraryDuplicateAudit");
+  const [exerciseCards, setExerciseCards] = useState(() => duplicateAudit ? duplicateAuditMovements.map(exercise => ({
+    ...exercise, id: `card-${exercise.id}`, ownerUid: "card-trainer", technique: "", revision: 1,
+    legacyKeys: [exerciseCardLegacyKey(exercise)], updatedAt: "2026-09-19T07:00:00.000Z", deletedAt: ""
+  })) : []);
   const sparsePreview = new URLSearchParams(window.location.search).has("sparsePreview");
   const assignmentPreview = new URLSearchParams(window.location.search).has("assignmentPreview");
   const draftAudit = new URLSearchParams(window.location.search).has("draftAudit");
+  const assignmentScheduleAudit = new URLSearchParams(window.location.search).has("assignmentScheduleAudit");
   const draftSaveAttempts = useRef(0);
   const [summaryRetried, setSummaryRetried] = useState(false);
   const [yesterday] = useState(() => new Date(Date.now() - 86400000).toISOString().slice(0, 10));
@@ -77,7 +92,16 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     },
     telegram: { connected: true, username: "germes" },
     telegramNotificationsEnabled: true,
-    ...(sparsePreview ? { name: "Margo", assignedProgramId: "", assignedProgramName: "", assignedProgramUpdatedAt: "", assignedWorkoutCount: 0, firstSetupCompleted: false, trainerSetupChecklist: {}, workoutCalendar: {} } : {})
+    ...(sparsePreview ? { name: "Margo", assignedProgramId: "", assignedProgramName: "", assignedProgramUpdatedAt: "", assignedWorkoutCount: 0, firstSetupCompleted: false, trainerSetupChecklist: {}, workoutCalendar: {} } : {}),
+    ...(assignmentScheduleAudit ? {
+      assignedProgramAddedAt: "2026-09-10T06:31:00.000Z",
+      assignedProgramUpdatedAt: "2026-09-10T06:31:00.000Z",
+      assignedWorkoutCount: 8,
+      workoutCalendar: { plannedWorkouts: [
+        ...["2026-08-26", "2026-08-29", "2026-09-01", "2026-09-07"].map((date, index) => ({ workoutId: `old-${index}`, order: index + 1, date, status: "planned" })),
+        ...Array.from({ length: 8 }, (_, index) => ({ workoutId: `new-${index}`, order: index + 1, date: `2026-09-${12 + index}`, status: "planned", assignedProgramAddedAt: "2026-09-10T06:31:00.000Z" }))
+      ] }
+    } : {})
   });
   const layoutPreview = new URLSearchParams(window.location.search).get("layoutPreview") === "1";
   const clients = layoutPreview ? [selectedClient, ...[
@@ -132,6 +156,35 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramId: "basic_client_plan",
       assignedProgramUpdatedAt: "basic:client-plan",
       exercises: [{ name: "Приседания", sets: [{ reps: 10, weight: 40 }] }]
+    }] : []),
+    ...(new URLSearchParams(window.location.search).get("staleReview") === "1" ? [{
+      id: "history_review_current",
+      workoutId: "e2e_day_1",
+      workoutName: "Тренировка 1",
+      completedAt: "2026-07-08T18:00:00.000Z",
+      clientComment: "Текущий сигнал: снизил вес на жиме.",
+      assignedProgramId: "program_tren_plus",
+      assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
+      exercises: [{ name: "Жим ногами", sets: [{ reps: 12, weight: 75 }] }]
+    }, {
+      id: "history_review_archived",
+      workoutId: "e2e_archived_day_1",
+      workoutName: "Тренировка 1",
+      completedAt: "2026-07-09T18:00:00.000Z",
+      clientComment: "Устаревший сигнал из архивной программы.",
+      assignedProgramId: "program_previous",
+      assignedProgramUpdatedAt: "2026-05-01T10:00:00.000Z",
+      exercises: [{ name: "Разгибание ног", sets: [{ reps: 12, weight: 35 }] }]
+    }, {
+      id: "history_review_basic",
+      workoutId: "e2e_basic_day_1",
+      workoutName: "Базовая тренировка",
+      completedAt: "2026-07-09T20:00:00.000Z",
+      clientComment: "Сигнал из самостоятельного базового плана.",
+      source: "basic",
+      assignedProgramId: "basic_client_plan",
+      assignedProgramUpdatedAt: "basic:client-plan",
+      exercises: [{ name: "Приседания", sets: [{ reps: 10, weight: 40 }] }]
     }] : [])
   ];
   const measurements = [
@@ -143,6 +196,11 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     { date: "2026-06-16", totals: { calories: 2290, protein: 181, fat: 69, carbs: 236 }, foods: [] }
   ];
   const libraryAuditExercises = new URLSearchParams(window.location.search).has("libraryAudit") ? [
+    ...(duplicateAudit ? duplicateAuditMovements.flatMap(exercise => [exercise,
+      { ...exercise, id: `empty-${exercise.id}`, video: "" },
+      ...(new URLSearchParams(window.location.search).has("videoPriorityAudit")
+        ? [{ ...exercise, id: `old-${exercise.id}`, video: `/e2e-media/old-${exercise.id}.mp4` }] : [])
+    ]) : []),
     { id: "library-press", name: "Жим гантелей лёжа", video: "/e2e-media/press.mp4" },
     { id: "library-front", name: "Подъём гантелей вперёд", video: "/e2e-media/front.mp4" },
     { id: "library-climber", name: "Шаги альпиниста" },
@@ -154,7 +212,12 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     { id: "library-side-b", name: "Разведения гантелей в стороны", video: "/e2e-media/side-b.mp4" },
     { id: "library-custom", name: "Авторское упражнение" }
   ].map((exercise) => ({ ...exercise, sets: [{ reps: "12", weight: "20" }], requiresWeight: true })) : [];
-  const [workouts, setWorkouts] = useState([
+  const [workouts, setWorkouts] = useState(assignmentScheduleAudit ? Array.from({ length: 8 }, (_, index) => ({
+    id: `new-${index}`, name: `Тренировка ${index + 1}`, status: "planned",
+    assignedProgramId: "program_tren_plus", assignedProgramName: "tren+",
+    assignedProgramAddedAt: "2026-09-10T06:31:00.000Z", assignedProgramUpdatedAt: "2026-09-10T06:31:00.000Z",
+    exercises: [{ id: `press-${index}`, name: "Жим ногами", requiresWeight: true, rest: "90 сек", sets: Array.from({ length: 3 }, () => ({ reps: "12", weight: "110" })) }]
+  })) : [
     ...(libraryAuditExercises.length ? [{ id: "library-audit", name: "Библиотека", exercises: libraryAuditExercises }] : []),
     {
       id: "e2e_day_1",
@@ -304,6 +367,9 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   }
 
   function updateHarnessLibraryExercise(sourceExercise, patch) {
+    if (new URLSearchParams(window.location.search).has("librarySaveConflict")) {
+      throw new Error("Упражнение изменено в другом окне. Обновите библиотеку перед сохранением.");
+    }
     const workoutId = sourceExercise?.librarySource?.workoutId || sourceExercise?.sourceWorkoutId;
     if (!workoutId || !sourceExercise?.id) return false;
 
@@ -450,7 +516,21 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     );
   }
 
+  const cardTemplate = { id: "card-template", ownerUid: "card-trainer", workouts };
+  const cardHandlers = createTrainerPlanEditorHandlers({ trainerExerciseCards: exerciseCards, setTrainerExerciseCards: setExerciseCards,
+    adminTrainingTemplates: [cardTemplate], setAdminTrainingTemplates() {}, auth: { currentUser: { uid: "card-trainer" } },
+    canManageTrainingTemplate: template => template.ownerUid === "card-trainer", setAdminClientStatus() {},
+    cardRequest: async body => {
+      const response = await fetch("/api/trainer-exercise-cards", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      return result;
+    }
+  });
   return (
+    <>
+    {cardAudit ? <output hidden data-testid="card-prescription-snapshot">{JSON.stringify(cardTemplate)}</output> : null}
+    {duplicateAudit ? <output hidden data-testid="card-library-snapshot">{JSON.stringify(exerciseCards)}</output> : null}
     <TrainerWorkspace
       appVersion={APP_VERSION}
       mode={mode}
@@ -608,7 +688,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }}
       workouts={sparsePreview ? [] : workouts}
       archivedWorkouts={sparsePreview ? [] : archivedWorkouts}
-      exerciseLibrary={workouts.flatMap((workout) => workout.exercises.map((exercise) => ({ ...exercise, librarySource: { type: "plan", workoutId: workout.id } })))}
+      exerciseLibrary={cardAudit ? buildTrainerExerciseLibraryItems({}, [cardTemplate], { cards: exerciseCards, includeDeleted: true }) : workouts.flatMap((workout) => workout.exercises.map((exercise) => ({ ...exercise, librarySource: { type: "plan", workoutId: workout.id } })))}
       programTemplates={programTemplates}
       selectedProgramId={selectedProgramId}
       onSelectProgram={setSelectedProgramId}
@@ -717,12 +797,18 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       onAddExerciseSet={() => {}}
       onRemoveExerciseSet={() => {}}
       onAddExercise={addHarnessExercise}
-      onUpdateLibraryExercise={updateHarnessLibraryExercise}
-      onRemoveLibraryExercise={removeHarnessLibraryExercise}
+      onUpdateLibraryExercise={cardAudit ? cardHandlers.updateTrainerLibraryExercise : updateHarnessLibraryExercise}
+      onRemoveLibraryExercise={cardAudit ? cardHandlers.removeTrainerLibraryExercise : removeHarnessLibraryExercise}
+      onCreateLibraryExercise={cardAudit ? cardHandlers.createTrainerLibraryExercise : undefined}
       onRemoveExercise={removeHarnessExercise}
       onDuplicateExercise={() => {}}
       onMoveExercise={() => {}}
       onUploadExerciseVideo={() => {}}
+      onUploadLibraryExerciseVideo={async (_exercise, file) => {
+        const response = await fetch("/e2e-library-upload", { method: "POST", body: file });
+        if (!response.ok) return false;
+        return (await response.json()).url;
+      }}
       onAddDay={() => {}}
       onDuplicateDay={() => {}}
       onRemoveDay={removeHarnessDay}
@@ -737,6 +823,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }}
       onLogout={() => {}}
     />
+    </>
   );
 }
 

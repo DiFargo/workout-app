@@ -8,6 +8,8 @@ import {
   where,
   writeBatch
 } from "firebase/firestore";
+import { requestTrainerExerciseCards } from "../../utils/trainerExerciseCards.js";
+import { mapTemplateExerciseCards } from "../../../functions/exerciseCards.js";
 
 import {
   buildClientWorkoutsFromTemplate,
@@ -281,6 +283,8 @@ export function createTrainerProgramTemplateHandlers({
   canManageTrainingTemplate,
   canManageClientProgram,
   setAdminTrainingTemplates,
+  trainerExerciseCards = [],
+  setTrainerExerciseCards = () => {},
   setAdminSelectedTemplateId,
   setAdminTemplateName,
   setAdminClientStatus,
@@ -302,14 +306,25 @@ export function createTrainerProgramTemplateHandlers({
       snapshot.forEach((templateDoc) => {
         templates.push({ id: templateDoc.id, ...templateDoc.data() });
       });
+      let cards = [];
+      try {
+        cards = (await requestTrainerExerciseCards({ action: "list" })).cards || [];
+      } catch (error) {
+        setAdminClientStatus("Карточки упражнений не загрузились. Показаны сохранённые копии. Обновите библиотеку перед редактированием.");
+        console.warn("Exercise cards load failed:", error.message);
+      }
+      // Ignore responses belonging to a session that has since signed out.
+      if (auth.currentUser?.uid !== currentUid) return;
+      setTrainerExerciseCards(cards);
       templates.sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
-      setAdminTrainingTemplates(templates);
+      setAdminTrainingTemplates(templates.map((template) => mapTemplateExerciseCards(template, cards)));
       setAdminSelectedTemplateId((current) =>
         current && !templates.some((template) => template.id === current) ? "" : current
       );
     } catch (error) {
       console.error("Template load failed:", error);
       setAdminTrainingTemplates([]);
+      setTrainerExerciseCards([]);
     }
   }
 
@@ -1021,7 +1036,8 @@ export function createTrainerProgramTemplateHandlers({
         return failAssignment(STATUS_SAVED_PROGRAM_NOT_FOUND);
       }
 
-      const template = { id: templateSnapshot.id, ...templateSnapshot.data() };
+      const freshCards = (await requestTrainerExerciseCards({ action: "list" })).cards || trainerExerciseCards;
+      const template = mapTemplateExerciseCards({ id: templateSnapshot.id, ...templateSnapshot.data() }, freshCards);
       if (!canManageTrainingTemplate(template)) {
         return failAssignment(STATUS_OWN_PROGRAMS_ONLY);
       }

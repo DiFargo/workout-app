@@ -437,7 +437,7 @@ export default function FirstSetupOnboarding({
           )}
 
           {onboardingStep === 9 && (
-            <div className={styles.firstSetupReview}>
+            <div className={styles.firstSetupReview} data-testid="first-setup-review">
               {[
                 [profileDraft.sex === "female" ? UserRound : PersonStanding, "Пол", profileDraft.sex === "female" ? "Женщина" : "Мужчина"],
                 [UserRound, "Имя", profileName || "—"],

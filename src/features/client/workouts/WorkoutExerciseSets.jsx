@@ -7,6 +7,7 @@ import {
   getWorkoutCountdownRemainingSeconds
 } from "./workoutCountdownTimer";
 import styles from "./WorkoutExerciseSets.module.css";
+import { canToggleWorkoutSetCompleted } from "../../../utils/workoutSetSequence";
 
 const WHEEL_ITEM_HEIGHT = 42;
 const REPS_SLIDER_MIN = 1;
@@ -114,6 +115,10 @@ function isSameWheelValue(leftValue, rightValue) {
   return Math.abs(Number(leftValue) - Number(rightValue)) < 0.001;
 }
 
+function getWheelItemHeight(element) {
+  return element?.querySelector('[role="option"]')?.getBoundingClientRect().height || WHEEL_ITEM_HEIGHT;
+}
+
 function scrollWheelToValue(element, options, value, behavior = "auto") {
   if (!element) {
     return;
@@ -125,13 +130,13 @@ function scrollWheelToValue(element, options, value, behavior = "auto") {
   }
 
   element.scrollTo({
-    top: selectedIndex * WHEEL_ITEM_HEIGHT,
+    top: selectedIndex * getWheelItemHeight(element),
     behavior
   });
 }
 
-function getWheelValueFromScroll(scrollTop, options) {
-  const index = clampNumericValue(Math.round(scrollTop / WHEEL_ITEM_HEIGHT), 0, options.length - 1);
+function getWheelValueFromScroll(scrollTop, options, itemHeight) {
+  const index = clampNumericValue(Math.round(scrollTop / itemHeight), 0, options.length - 1);
   return options[index]?.value;
 }
 
@@ -148,6 +153,7 @@ export default function WorkoutExerciseSets({
   const [activeTimedSet, setActiveTimedSet] = useState(null);
   const [pausedTimedSet, setPausedTimedSet] = useState(null);
   const [timedSetSeconds, setTimedSetSeconds] = useState(0);
+  const completedTimedSetRef = useRef("");
   const repsWheelRef = useRef(null);
   const weightWheelRef = useRef(null);
   const wheelScrollFrameRef = useRef({ reps: null, weight: null });
@@ -218,6 +224,13 @@ export default function WorkoutExerciseSets({
     const timedSetIndex = activeTimedSet.index;
     let completed = false;
     const syncTimedSetTimer = () => {
+      if (exercise.sets[timedSetIndex]?.completed || !canToggleWorkoutSetCompleted(exercise.sets, timedSetIndex)) {
+        completed = true;
+        setActiveTimedSet(null);
+        setPausedTimedSet(null);
+        setTimedSetSeconds(0);
+        return;
+      }
       const remainingSeconds = getWorkoutCountdownRemainingSeconds(deadline);
       setTimedSetSeconds((current) => (current === remainingSeconds ? current : remainingSeconds));
 
@@ -226,6 +239,11 @@ export default function WorkoutExerciseSets({
       completed = true;
       setActiveTimedSet(null);
       setPausedTimedSet(null);
+      // Parent updates can restart this effect before the completion state
+      // commits. The same timer must never toggle a completed set back off.
+      const completionKey = `${exercise.id}:${timedSetIndex}:${deadline}`;
+      if (completedTimedSetRef.current === completionKey) return;
+      completedTimedSetRef.current = completionKey;
       onToggleSetCompleted(exercise.id, timedSetIndex);
       navigator.vibrate?.([80, 50, 80]);
     };
@@ -242,7 +260,7 @@ export default function WorkoutExerciseSets({
       window.removeEventListener("focus", syncTimedSetTimer);
       window.removeEventListener("pageshow", syncTimedSetTimer);
     };
-  }, [activeTimedSet?.deadline, activeTimedSet?.index, exercise.id, onToggleSetCompleted]);
+  }, [activeTimedSet?.deadline, activeTimedSet?.index, exercise.id, exercise.sets, onToggleSetCompleted]);
 
   function closeEditModal() {
     clearWheelSettleWork();
@@ -272,7 +290,11 @@ export default function WorkoutExerciseSets({
   }
 
   function toggleSetCompleted(index) {
+    if (!canToggleWorkoutSetCompleted(exercise.sets, index)) return;
     if (activeTimedSet?.index === index) {
+      const completionKey = `${exercise.id}:${index}:${activeTimedSet.deadline}`;
+      if (completedTimedSetRef.current === completionKey) return;
+      completedTimedSetRef.current = completionKey;
       setActiveTimedSet(null);
       setTimedSetSeconds(0);
     }
@@ -284,12 +306,16 @@ export default function WorkoutExerciseSets({
   }
 
   function toggleTimedSetTimer(index, durationSeconds) {
+    if (exercise.sets[index]?.completed || !canToggleWorkoutSetCompleted(exercise.sets, index)) return;
     if (activeTimedSet?.index === index) {
       const remainingSeconds = getWorkoutCountdownRemainingSeconds(activeTimedSet.deadline);
       setActiveTimedSet(null);
       if (!remainingSeconds) {
         setPausedTimedSet(null);
         setTimedSetSeconds(0);
+        const completionKey = `${exercise.id}:${index}:${activeTimedSet.deadline}`;
+        if (completedTimedSetRef.current === completionKey) return;
+        completedTimedSetRef.current = completionKey;
         onToggleSetCompleted(exercise.id, index);
         navigator.vibrate?.([80, 50, 80]);
         return;
@@ -311,6 +337,7 @@ export default function WorkoutExerciseSets({
 
     setTimedSetSeconds(nextSeconds);
     setPausedTimedSet(null);
+    completedTimedSetRef.current = "";
     setActiveTimedSet({
       index,
       deadline: createWorkoutCountdownDeadline(nextSeconds)
@@ -334,7 +361,7 @@ export default function WorkoutExerciseSets({
 
   function handleWheelScroll(event, options, field) {
     const element = event.currentTarget;
-    const nextValue = getWheelValueFromScroll(element.scrollTop, options);
+    const nextValue = getWheelValueFromScroll(element.scrollTop, options, getWheelItemHeight(element));
 
     if (nextValue === undefined) {
       return;
@@ -359,7 +386,7 @@ export default function WorkoutExerciseSets({
     }
 
     wheelSnapTimeoutRef.current[field] = window.setTimeout(() => {
-      const settledValue = getWheelValueFromScroll(element.scrollTop, options);
+      const settledValue = getWheelValueFromScroll(element.scrollTop, options, getWheelItemHeight(element));
 
       if (settledValue === undefined) {
         return;
@@ -372,7 +399,7 @@ export default function WorkoutExerciseSets({
       }
 
       const settledIndex = options.findIndex((option) => isSameWheelValue(option.value, settledValue));
-      const settledScrollTop = settledIndex * WHEEL_ITEM_HEIGHT;
+      const settledScrollTop = settledIndex * getWheelItemHeight(element);
 
       // A hard swipe can stop between snap points on mobile. Align once after it settles,
       // without starting a second smooth scroll that would fight the user's gesture.
@@ -391,6 +418,7 @@ export default function WorkoutExerciseSets({
       data-css-module-scope="workout-exercise-sets"
     >
       {showTitle && <div className={styles.title}>План на сегодня</div>}
+      <div className={styles.columnLabels} aria-hidden="true"><span>№</span><span>{hasExternalWeight ? "Вес / повторы" : "Повторы / время"}</span></div>
       <div className={styles.list}>
         {visibleSets.map(({ set, index }) => {
           const durationSeconds = getTimedSetDurationSeconds(exercise, set);
@@ -404,22 +432,20 @@ export default function WorkoutExerciseSets({
               : durationSeconds;
           const repsValue = getPlannedValue(set.enteredReps, set.reps);
           const weightValue = getPlannedValue(set.enteredWeight, set.weight);
-          const repsText = isTimedSet
-            ? `${formatTimedSetDuration(shownTimedSetSeconds)} · на время`
-            : repsValue ? `${repsValue} повторений` : "Повторы не указаны";
           const isStartingWeightEstimate = hasExternalWeight
             && set.startingWeightSource === "estimate"
             && !set.startingWeightConfirmed;
-          const weightText = isTimedSet
-            ? isTimedSetRunning ? "Таймер идёт" : "Упражнение на время"
-            : hasExternalWeight
-            ? (weightValue ? `${weightValue} кг` : "Вес не указан")
-            : "Свой вес";
+          const canToggleCompleted = canToggleWorkoutSetCompleted(exercise.sets, index);
+          const completionHint = canToggleCompleted
+            ? set.completed ? "Снять отметку о выполнении" : "Подтвердить выполнение подхода"
+            : set.completed
+              ? "Сначала снимите отметку с последнего выполненного подхода"
+              : `Сначала выполните подход ${exercise.sets.findIndex((item) => !item.completed) + 1}`;
 
           return (
             <div
               data-testid="workout-exercise-set-row"
-              className={`${styles.row} ${set.completed ? styles.completed : ""} ${isTimedSet ? styles.timedRow : ""}`}
+              className={`${styles.row} ${set.completed ? styles.completed : ""} ${!canToggleCompleted ? styles.locked : ""} ${isTimedSet ? styles.timedRow : ""}`}
               key={`${exercise.id}:${index}`}
               onClick={() => toggleSetCompleted(index)}
             >
@@ -431,13 +457,6 @@ export default function WorkoutExerciseSets({
                 {index + 1}
               </span>
 
-              <div className={styles.plan}>
-                <span className={styles.reps}>
-                  {repsText}{isStartingWeightEstimate ? <em className={styles.startingWeightLabel}>ориентир</em> : null}
-                </span>
-                <strong className={styles.weight}>{weightText}</strong>
-              </div>
-
               <div className={styles.actions}>
                 {isTimedSet ? (
                   <button
@@ -446,6 +465,7 @@ export default function WorkoutExerciseSets({
                     data-css-module-control="workout-exercise-sets"
                     data-testid="workout-timed-set-timer"
                     data-running={isTimedSetRunning}
+                    disabled={Boolean(set.completed) || !canToggleCompleted}
                     onClick={(event) => {
                       event.stopPropagation();
                       toggleTimedSetTimer(index, durationSeconds);
@@ -477,23 +497,41 @@ export default function WorkoutExerciseSets({
                     }}
                     aria-label={`Изменить подход ${index + 1}`}
                   >
-                    <Pencil size={15} strokeWidth={2.2} aria-hidden="true" />
+                    <Pencil size={18} strokeWidth={1.65} aria-hidden="true" />
                   </button>
                 )}
+
+              </div>
+
+              <div className={styles.plan}>
+                {isTimedSet ? (
+                  <strong className={styles.weight}>{formatTimedSetDuration(shownTimedSetSeconds)} <small>на время</small></strong>
+                ) : (
+                  <>
+                    {hasExternalWeight && <strong className={styles.weight}>{weightValue ? String(weightValue).replace(".", ",") : "—"} <small>кг</small></strong>}
+                    {hasExternalWeight && <span className={styles.times}>×</span>}
+                    <strong className={styles.weight}>{repsValue || "—"}{!hasExternalWeight && <small> повт.</small>}</strong>
+                  </>
+                )}
+                {isStartingWeightEstimate && <span className={styles.srOnly}>Стартовый вес — ориентир</span>}
+                {isTimedSetRunning && <span className={styles.srOnly}>Таймер идёт</span>}
+              </div>
 
                 <button
                   type="button"
                   className={styles.completeButton}
                   aria-label={set.completed ? `Подход ${index + 1} выполнен` : `Выполнить подход ${index + 1}`}
                   aria-pressed={set.completed}
+                  disabled={!canToggleCompleted}
+                  title={completionHint}
+                  aria-description={completionHint}
                   onClick={(event) => {
                     event.stopPropagation();
                     toggleSetCompleted(index);
                   }}
                 >
-                  <Check size={20} strokeWidth={3} aria-hidden="true" />
+                  <Check size={24} strokeWidth={2.1} aria-hidden="true" />
                 </button>
-              </div>
             </div>
           );
         })}
@@ -527,39 +565,6 @@ export default function WorkoutExerciseSets({
             </div>
 
             <div className={`${styles.modalFields} ${hasExternalWeight ? "" : styles.withoutWeight}`}>
-              <div className={styles.wheelField}>
-                <span>Повторы</span>
-                <div
-                  data-testid="workout-set-wheel-picker"
-                  ref={repsWheelRef}
-                  className={styles.wheelPicker}
-                  role="listbox"
-                  tabIndex={0}
-                  aria-label={`Повторы, подход ${editingSetIndex + 1}`}
-                  onScroll={(event) => handleWheelScroll(event, repsWheelOptions, "reps")}
-                >
-                  {repsWheelOptions.map((option) => {
-                    const active = isSameWheelValue(option.value, repsSliderState.value);
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        className={`${styles.wheelOption} ${active ? styles.active : ""}`}
-                        data-css-module-control="workout-exercise-sets"
-                        role="option"
-                        aria-selected={active}
-                        onClick={() => {
-                          setRepsFromWheel(option.value);
-                          scrollWheelToValue(repsWheelRef.current, repsWheelOptions, option.value, "smooth");
-                        }}
-                      >
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
               {hasExternalWeight && (
                 <div className={styles.wheelField}>
                   <span>Вес, кг</span>
@@ -594,6 +599,39 @@ export default function WorkoutExerciseSets({
                   </div>
                 </div>
               )}
+              <div className={styles.wheelField}>
+                <span>Повторы</span>
+                <div
+                  data-testid="workout-set-wheel-picker"
+                  ref={repsWheelRef}
+                  className={styles.wheelPicker}
+                  role="listbox"
+                  tabIndex={0}
+                  aria-label={`Повторы, подход ${editingSetIndex + 1}`}
+                  onScroll={(event) => handleWheelScroll(event, repsWheelOptions, "reps")}
+                >
+                  {repsWheelOptions.map((option) => {
+                    const active = isSameWheelValue(option.value, repsSliderState.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={`${styles.wheelOption} ${active ? styles.active : ""}`}
+                        data-css-module-control="workout-exercise-sets"
+                        role="option"
+                        aria-selected={active}
+                        onClick={() => {
+                          setRepsFromWheel(option.value);
+                          scrollWheelToValue(repsWheelRef.current, repsWheelOptions, option.value, "smooth");
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
             </div>
 
             <button

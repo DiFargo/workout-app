@@ -1,7 +1,9 @@
+import { useLayoutEffect, useRef } from "react";
 import FoodPhotoAiSearchProcess from "./FoodPhotoAiSearchProcess";
 import FoodSearchBottomBar from "./FoodSearchBottomBar";
 import FoodSearchHistoryNames from "./FoodSearchHistoryNames";
 import FoodSearchInput from "./FoodSearchInput";
+import { GEMINI_ONLY_FOOD_SEARCH } from "../../../utils/nutritionSearchMode";
 import FoodSearchResults from "./FoodSearchResults";
 import NutritionCreateChoice from "./NutritionCreateChoice";
 import NutritionPhotoAiPreview from "./NutritionPhotoAiPreview";
@@ -80,6 +82,8 @@ function FoodSearchModernLanding({
 export default function FoodSearchPage({
   photoInputRef,
   search,
+  geminiSearchSuggestions = "",
+  onSearchRetry,
   searchTab,
   createChoiceOpen,
   showRecentFoods,
@@ -117,8 +121,24 @@ export default function FoodSearchPage({
   onPhotoAddManually,
   onPhotoCandidateSelect,
   onPhotoReset,
+  scrollStateRef,
   modal = false
 }) {
+  const contentRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!modal || !scrollStateRef || !content) return undefined;
+
+    const key = JSON.stringify([searchTab, search]);
+    content.scrollTop = scrollStateRef.current?.key === key ? scrollStateRef.current.top : 0;
+    // The search surface unmounts while a product is open. Keep its position
+    // only for this query/tab and discard it when starting another search.
+    return () => {
+      scrollStateRef.current = { key, top: content.scrollTop };
+    };
+  }, [modal, scrollStateRef, search, searchTab]);
+
   const isModernSearchHome = (
     searchTab !== "my" &&
     !createChoiceOpen &&
@@ -131,15 +151,20 @@ export default function FoodSearchPage({
   return (
     <>
       <div
+        ref={contentRef}
         className={`${styles.content}${modal ? ` ${styles.modalContent}` : ""}`}
         data-testid={modal ? "food-search-scroll" : undefined}
       >
         <FoodSearchInput
+          key={searchTab}
           value={search}
+          loading={fatSecretLoading}
+          onRetry={onSearchRetry}
           onChange={onSearchChange}
           onReset={onSearchReset}
           variant={searchTab === "my" ? "my-products" : "search"}
         />
+        {GEMINI_ONLY_FOOD_SEARCH && searchTab === "food" && <p className={styles.geminiNotice}>Gemini 3.6 Flash · поиск через Google. Каталог временно отключён. Введите название и нажмите «Найти».</p>}
 
         {searchTab === "my" && !createChoiceOpen && (
           <button
@@ -189,6 +214,14 @@ export default function FoodSearchPage({
             onShowMore={onShowMore}
           />
         )}
+        {!GEMINI_ONLY_FOOD_SEARCH && searchTab === "food" && search.trim().length >= 2 && <button type="button" className={styles.catalogAiSearch} disabled={fatSecretLoading} onClick={onSearchRetry}>Поискать через Gemini</button>}
+        {geminiSearchSuggestions && searchTab === "food" && <iframe
+          className={styles.searchSuggestions}
+          title="Поисковые подсказки Google"
+          sandbox="allow-popups allow-popups-to-escape-sandbox"
+          referrerPolicy="no-referrer"
+          srcDoc={geminiSearchSuggestions}
+        />}
       </div>
 
       {!createChoiceOpen && (

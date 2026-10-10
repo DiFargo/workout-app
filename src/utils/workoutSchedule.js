@@ -50,7 +50,7 @@ export function buildPlannedWorkoutSlots({
   now = new Date()
 } = {}) {
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
-  const normalizedCalendar = normalizeWorkoutCalendarSchedule(calendar, safeWorkouts);
+  const normalizedCalendar = getWorkoutScheduleCalendarForWorkouts(calendar, safeWorkouts);
   const assignmentVersion = String(
     normalizedCalendar?.assignedProgramUpdatedAt ||
     safeWorkouts.find((workout) => workout?.assignedProgramUpdatedAt)?.assignedProgramUpdatedAt ||
@@ -85,11 +85,7 @@ export function buildPlannedWorkoutSlots({
   return safeWorkouts.map((workout, index) => {
     const workoutId = String(workout?.id || "").trim();
     const workoutName = String(workout?.name || `Тренировка ${index + 1}`).trim();
-    const planned = plannedWorkouts.find((item) => (
-      String(item?.workoutId || "").trim() === workoutId ||
-      Number(item?.order) === index + 1 ||
-      Number(item?.index) === index
-    ));
+    const planned = findMatchingPlannedWorkout(plannedWorkouts, workout, index);
     const plannedDate = toWorkoutDateKey(
       planned?.date ||
       workout?.scheduledDate ||
@@ -112,9 +108,13 @@ export function buildPlannedWorkoutSlots({
       (forcedCompleted
         ? allHistoryCompletionMaps.byId.get(workoutIdKey) || { completedDate: fallbackCompletedDate }
         : null);
-    const manualStatus = String(workout?.status || planned?.status || "planned").trim().toLowerCase();
+    // The normalized calendar contains the saved per-date status. A workout's
+    // default "planned" value must not hide a trainer's completed/missed mark.
+    const savedStatus = String(planned?.status || "planned").trim().toLowerCase();
+    const workoutStatus = String(workout?.status || "planned").trim().toLowerCase();
+    const manualStatus = savedStatus !== "planned" ? savedStatus : workoutStatus;
     const completedDate = completion?.completedDate ||
-      (manualStatus === "completed" ? toWorkoutDateKey(plannedDate || workout?.completedAt || workout?.statusUpdatedAt) : "");
+      (manualStatus === "completed" ? toWorkoutDateKey(planned?.completedDate || workout?.completedAt || plannedDate || workout?.statusUpdatedAt) : "");
     let status = "planned";
     let shiftedDate = "";
 
@@ -199,6 +199,10 @@ export function buildWorkoutScheduleCalendarEntries(slots = []) {
 // stored on the profile. Scope the calendar to the workouts currently visible in
 // the plan so trainer and client never render different program versions.
 export function getWorkoutScheduleCalendarForWorkouts(calendar = {}, workouts = []) {
+  return normalizeWorkoutCalendarSchedule(scopeWorkoutCalendar(calendar, workouts), workouts);
+}
+
+function scopeWorkoutCalendar(calendar = {}, workouts = []) {
   const safeCalendar = calendar && typeof calendar === "object" ? calendar : {};
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
   const workoutsById = new Map(
@@ -235,20 +239,23 @@ export function getWorkoutScheduleCalendarForWorkouts(calendar = {}, workouts = 
         const assignmentVersion = String(
           item?.assignedProgramUpdatedAt || item?.assignmentVersion || ""
         ).trim();
-        return !workoutId && Boolean(assignmentVersion) && assignmentVersions.has(assignmentVersion);
+        const rootVersion = String(safeCalendar.assignedProgramUpdatedAt || "").trim();
+        return !workoutId && (assignmentVersion
+          ? assignmentVersions.has(assignmentVersion)
+          : !assignmentVersions.size || (Boolean(rootVersion) && assignmentVersions.has(rootVersion)));
       });
   const assignmentVersion = [...assignmentVersions][0] || "";
-  const datesBelongToAnotherPlan = allPlannedWorkouts.length > 0 || Boolean(
+  const datesBelongToAnotherPlan = scopedPlannedWorkouts.length !== allPlannedWorkouts.length || Boolean(
     assignmentVersion && safeCalendar.assignedProgramUpdatedAt && assignmentVersion !== safeCalendar.assignedProgramUpdatedAt
   );
   const scopedDates = scopedPlannedWorkouts.map((item) => item?.movedToDate || item?.date).filter(Boolean);
 
-  return normalizeWorkoutCalendarSchedule({
+  return {
     ...safeCalendar,
     ...(datesBelongToAnotherPlan ? { scheduledDates: scopedDates, monthlyTrainingDates: scopedDates } : {}),
     assignedProgramUpdatedAt: assignmentVersion || safeCalendar.assignedProgramUpdatedAt || "",
     plannedWorkouts: scopedPlannedWorkouts
-  }, safeWorkouts);
+  };
 }
 
 // The calendar stores one slot per workout. Older clients could leave both the
@@ -334,11 +341,17 @@ export function buildWorkoutScheduleDraft(dates = [], workouts = []) {
 
 function findMatchingPlannedWorkout(plannedWorkouts = [], workout = {}, index = 0) {
   const workoutId = String(workout?.id || workout?.workoutId || "").trim();
-  return (Array.isArray(plannedWorkouts) ? plannedWorkouts : []).find((item) => (
-    String(item?.workoutId || "").trim() === workoutId ||
-    Number(item?.order) === index + 1 ||
-    Number(item?.index) === index
-  )) || {};
+  const assignmentId = String(workout?.assignedProgramAddedAt || workout?.programAssignmentId || "").trim();
+  const candidates = (Array.isArray(plannedWorkouts) ? plannedWorkouts : []).filter((item) => {
+    const itemAssignmentId = String(item?.assignedProgramAddedAt || item?.programAssignmentId || "").trim();
+    return !assignmentId || !itemAssignmentId || assignmentId === itemAssignmentId;
+  });
+  // Several assigned programs can have day/order 1. An explicit different ID
+  // is never a positional match, even when it precedes the correct slot.
+  return candidates.find((item) => workoutId && String(item?.workoutId || "").trim() === workoutId) ||
+    candidates.find((item) => !String(item?.workoutId || "").trim() && (
+      Number(item?.order) === index + 1 || Number(item?.index) === index
+    )) || {};
 }
 
 export function buildWorkoutScheduleDraftWithExistingStatuses(
@@ -361,8 +374,9 @@ export function buildWorkoutScheduleDraftWithExistingStatuses(
 }
 
 export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], updatedAt = "", updatedBy = "") {
-  const existingPlannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
   const safeWorkouts = Array.isArray(workouts) ? workouts : [];
+  calendar = scopeWorkoutCalendar(calendar, safeWorkouts);
+  const existingPlannedWorkouts = Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : [];
   const isBasicPlan = safeWorkouts.some((workout) => workout?.source === "basic");
   const workoutAssignment = safeWorkouts.find((workout) => workout?.assignedProgramUpdatedAt) || {};
   const workoutProgram = safeWorkouts.find((workout) => workout?.assignedProgramId || workout?.assignedProgramName) || {};
@@ -427,4 +441,38 @@ export function syncWorkoutCalendarWithPlan(calendar = {}, workouts = [], update
     updatedAt,
     updatedBy
   };
+}
+
+// A scoped plan is a view of the profile's calendar, not the complete calendar.
+// Replace only its slots, retaining other assignments and their status metadata.
+export function mergeWorkoutCalendarScope(calendar = {}, nextScope = {}, workouts = [], previousWorkouts = workouts) {
+  const safeCalendar = calendar && typeof calendar === "object" ? calendar : {};
+  const affectedWorkouts = [...(previousWorkouts || []), ...(workouts || [])];
+  const ids = new Set(affectedWorkouts.map(workout => String(workout?.id || "").trim()).filter(Boolean));
+  const assignments = new Set(affectedWorkouts.map(workout => String(workout?.assignedProgramAddedAt || workout?.programAssignmentId || "").trim()).filter(Boolean));
+  const versions = new Set(affectedWorkouts.map(workout => String(workout?.assignedProgramUpdatedAt || "").trim()).filter(Boolean));
+  const allSlots = Array.isArray(safeCalendar.plannedWorkouts) ? safeCalendar.plannedWorkouts : [];
+  const belongsToScope = slot => {
+    const id = String(slot?.workoutId || "").trim();
+    const assignment = String(slot?.assignedProgramAddedAt || slot?.programAssignmentId || "").trim();
+    const version = String(slot?.assignedProgramUpdatedAt || slot?.assignmentVersion || "").trim();
+    if (id) return ids.has(id) && (!assignment || (assignments.size ? assignments.has(assignment) : Boolean(version && versions.has(version))));
+    if (assignment) return assignments.has(assignment);
+    if (version) return versions.has(version);
+    // Legacy unkeyed slots are attributable only when the root calendar is this
+    // assignment. Explicit slots from another program never match by order.
+    return Boolean(versions.size && versions.has(String(safeCalendar.assignedProgramUpdatedAt || "").trim()));
+  };
+  const replacedDates = new Set(allSlots.filter(belongsToScope).map(slot => toWorkoutDateKey(slot?.movedToDate || slot?.date)).filter(Boolean));
+  const retainedSlots = allSlots.filter(slot => !belongsToScope(slot));
+  const plannedWorkouts = [...(Array.isArray(nextScope.plannedWorkouts) ? nextScope.plannedWorkouts : []), ...retainedSlots];
+  const scheduledDates = [...new Set([
+    ...(Array.isArray(safeCalendar.scheduledDates) ? safeCalendar.scheduledDates : []).filter(date => !replacedDates.has(toWorkoutDateKey(date))),
+    ...(Array.isArray(safeCalendar.monthlyTrainingDates) ? safeCalendar.monthlyTrainingDates : []).filter(date => !replacedDates.has(toWorkoutDateKey(date))),
+    ...(Array.isArray(nextScope.scheduledDates) ? nextScope.scheduledDates : []),
+    ...plannedWorkouts.map(slot => slot?.movedToDate || slot?.date)
+  ].map(toWorkoutDateKey).filter(Boolean))].sort();
+  return { ...safeCalendar, plannedWorkouts, scheduledDates, monthlyTrainingDates: scheduledDates,
+    ...(nextScope.updatedAt ? { updatedAt: nextScope.updatedAt } : {}),
+    ...(nextScope.updatedBy ? { updatedBy: nextScope.updatedBy } : {}) };
 }

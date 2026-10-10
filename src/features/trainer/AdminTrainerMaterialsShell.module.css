@@ -7,26 +7,26 @@
 :local(.breadcrumb) {
   align-items: center;
   background: #ffffff;
-  border: 1px solid var(--trainer-v2-line, #efebf3);
+  border: 1px solid var(--trainer-v2-line, #edf1f3);
   border-radius: 14px;
-  color: var(--trainer-v2-muted, #5f5870);
+  color: var(--trainer-v2-muted, #617078);
   cursor: pointer;
   display: inline-flex;
   font: inherit;
   font-weight: 700;
   gap: 6px;
   justify-self: start;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 14px 0 10px;
 }
 
 :local(.breadcrumb:hover) {
-  border-color: var(--trainer-v2-line, #d9d0ec);
-  color: var(--trainer-v2-accent, #806bb6);
+  border-color: var(--trainer-v2-line, rgba(57, 82, 91, .12));
+  color: var(--trainer-v2-accent, #376b91);
 }
 
 :local(.breadcrumb:focus-visible) {
-  outline: 3px solid rgb(var(--trainer-v2-line-rgb, 143 122 200) / 0.28);
+  outline: 2px solid #396ba6;
   outline-offset: 2px;
 }
 
@@ -41,6 +41,6 @@
   }
 
   :local(.breadcrumb) {
-    min-height: 40px;
+    min-height: 44px;
   }
 }

@@ -7,6 +7,8 @@ import {
 } from "../../../utils/offlineSyncStorage";
 import { addUserLocalBackup } from "../../../utils/userScopedStorage";
 import { clearWorkoutDraft } from "../../../utils/workoutDraftStorage";
+import { captureAuthSession } from "../../../utils/authSession.js";
+import { captureWorkoutSetPrescription } from "../../../utils/workoutPrescription.js";
 import {
   getWorkoutCompletion,
   isWorkoutSetCompleted
@@ -15,6 +17,7 @@ import {
 export async function saveCompletedWorkoutToFirebase({
   db,
   auth,
+  captureSession = () => captureAuthSession(auth),
   plan,
   workout,
   isSaving,
@@ -39,7 +42,15 @@ export async function saveCompletedWorkoutToFirebase({
   feedbackOverride = null,
   allowIncomplete = false
 }) {
-  if (!workout || isSaving || isWorkoutSaved || workoutSaveInFlightRef?.current) return;
+  const session = captureSession();
+  const inFlight = workoutSaveInFlightRef?.current;
+  const currentSaveInFlight = inFlight && (inFlight === true || inFlight.session?.isCurrent());
+  if (!workout || isWorkoutSaved || currentSaveInFlight || (isSaving && !inFlight)) return;
+  const applyState = (setter, value) => {
+    if (session.isCurrent() && typeof setter === "function") {
+      setter(current => session.isCurrent() ? (typeof value === "function" ? value(current) : value) : current);
+    }
+  };
 
   const currentUser = auth.currentUser;
   const hasFilledSet = workout.exercises.some((exercise) =>
@@ -47,7 +58,7 @@ export async function saveCompletedWorkoutToFirebase({
   );
   const workoutCompletion = getWorkoutCompletion(workout);
 
-  if (!currentUser) {
+  if (!currentUser || currentUser.uid !== session.uid || !session.isCurrent()) {
     showAppError("load", "Пользователь не найден. Перезайди в аккаунт.");
     return;
   }
@@ -58,8 +69,8 @@ export async function saveCompletedWorkoutToFirebase({
   }
 
   if (workoutCompletion.isPartial && !allowIncomplete) {
-    setPendingWorkoutFeedback(feedbackOverride);
-    setWorkoutIncompleteConfirmOpen(true);
+    applyState(setPendingWorkoutFeedback, feedbackOverride);
+    applyState(setWorkoutIncompleteConfirmOpen, true);
     return;
   }
 
@@ -68,15 +79,16 @@ export async function saveCompletedWorkoutToFirebase({
   const durationSeconds = Math.max(0, Math.floor((finishedAt - startedAt) / 1000));
   const historySaveId = `workout_${workout.id}_${startedAt}`;
 
-  if (workoutSaveInFlightRef) workoutSaveInFlightRef.current = true;
+  const operation = { session };
+  if (workoutSaveInFlightRef) workoutSaveInFlightRef.current = operation;
 
-  setWorkoutHistorySyncState("saving");
-  setWorkoutFinishedAt(finishedAt);
-  setTimerTick(finishedAt);
+  applyState(setWorkoutHistorySyncState, "saving");
+  applyState(setWorkoutFinishedAt, finishedAt);
+  applyState(setTimerTick, finishedAt);
   timerTickRef.current = finishedAt;
-  setIsSaving(true);
-  setIsWorkoutSaved(false);
-  setShowWorkoutSavedCard(false);
+  applyState(setIsSaving, true);
+  applyState(setIsWorkoutSaved, false);
+  applyState(setShowWorkoutSavedCard, false);
 
   const historyEntry = {
     clientSaveId: historySaveId,
@@ -115,12 +127,11 @@ export async function saveCompletedWorkoutToFirebase({
         id: exercise.id || "",
         name: exercise.name,
         video: exercise.video || "",
-        sets: (exercise.sets || []).map((set, index) => ({
-          set: index + 1,
-          reps: set.targetReps || set.reps || "",
-          weight: set.targetWeight || set.aiOriginalWeight || set.aiSuggestedWeight || "",
-          ...(Number(set.durationSeconds) > 0 ? { durationSeconds: Number(set.durationSeconds) } : {})
-        }))
+        sets: (exercise.sets || []).map((set, index) => {
+          const prescribed = captureWorkoutSetPrescription(set);
+          return { set: index + 1, reps: prescribed.targetReps, weight: prescribed.targetWeight,
+            ...(Number(prescribed.targetDurationSeconds) > 0 ? { durationSeconds: Number(prescribed.targetDurationSeconds) } : {}) };
+        })
       }))
     },
     exercises: workout.exercises.map((exercise) => ({
@@ -152,54 +163,60 @@ export async function saveCompletedWorkoutToFirebase({
   const backupId = historySaveId;
   const completion = buildWorkoutCompletionOperation(plan, workout);
 
-  addUserLocalBackup(WORKOUT_HISTORY_BACKUP_STORAGE_KEY, currentUser.uid, {
-    id: backupId,
-    entry: historyEntry,
-    completion,
-    reason: "before_history_save"
-  });
-
   try {
+    try {
+      addUserLocalBackup(WORKOUT_HISTORY_BACKUP_STORAGE_KEY, currentUser.uid, {
+        id: backupId, entry: historyEntry, completion, reason: "before_history_save"
+      });
+    } catch (error) {
+      // A full local store must not prevent an otherwise available cloud save.
+      console.warn("Workout history backup failed:", error);
+    }
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       throw new Error("workout_history_offline");
     }
 
     const result = await persistWorkoutCompletion({ db, uid: currentUser.uid, entry: historyEntry, completion });
     forgetPendingHistorySave(currentUser.uid, historySaveId);
-    if (result.plan && typeof setPlan === "function") setPlan(result.plan);
     removePendingHistoryBackups(currentUser.uid, backupId);
+    if (!session.isCurrent()) return;
+    clearWorkoutDraft(currentUser.uid, workout.id);
+    if (result.plan) applyState(setPlan, result.plan);
 
     await loadHistory();
-    clearWorkoutDraft(currentUser.uid, workout.id);
-    setIsWorkoutSaved(true);
-    setWorkoutHistorySyncState("synced");
-    setShowWorkoutSavedCard(true);
+    if (!session.isCurrent()) return;
+    applyState(setIsWorkoutSaved, true);
+    applyState(setWorkoutHistorySyncState, "synced");
+    applyState(setShowWorkoutSavedCard, true);
     navigator.vibrate?.([100, 70, 150]);
 
     setTimeout(() => {
-      setShowWorkoutSavedCard(false);
+      applyState(setShowWorkoutSavedCard, false);
     }, 1800);
   } catch (e) {
     console.error(e);
     try {
       enqueueFailedHistorySave(currentUser.uid, historyEntry, "history_save_failed", completion);
     } catch {
-      setWorkoutHistorySyncState("error");
-      showAppError("storage", "Не удалось сохранить тренировку ни в облаке, ни на устройстве. Освободите место или восстановите сеть и нажмите сохранение ещё раз.");
+      if (session.isCurrent()) {
+        applyState(setWorkoutHistorySyncState, "error");
+        showAppError("storage", "Не удалось сохранить тренировку ни в облаке, ни на устройстве. Освободите место или восстановите сеть и нажмите сохранение ещё раз.");
+      }
       return;
     }
-    setHistory((prev) => [
+    if (!session.isCurrent()) return;
+    clearWorkoutDraft(currentUser.uid, workout.id);
+    applyState(setHistory, (prev) => [
       { id: historySaveId, ...historyEntry, pendingSync: true },
       ...prev.filter((item) => (item?.clientSaveId || item?.id) !== historySaveId)
     ]);
-    clearWorkoutDraft(currentUser.uid, workout.id);
-    setIsWorkoutSaved(true);
-    setWorkoutHistorySyncState("local");
-    setShowWorkoutSavedCard(true);
+    applyState(setIsWorkoutSaved, true);
+    applyState(setWorkoutHistorySyncState, "local");
+    applyState(setShowWorkoutSavedCard, true);
     navigator.vibrate?.([100, 70, 150]);
     showAppError("savedLocal", "Тренировка сохранена локально и будет синхронизирована позже.");
   } finally {
-    if (workoutSaveInFlightRef) workoutSaveInFlightRef.current = false;
-    setIsSaving(false);
+    if (workoutSaveInFlightRef?.current === operation) workoutSaveInFlightRef.current = false;
+    applyState(setIsSaving, false);
   }
 }

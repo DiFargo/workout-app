@@ -101,6 +101,9 @@ export default function ProfileMeasurementWizardPanel({
   const lastPoint = chart.points.at(-1);
   const photoCount = Array.isArray(progressPhotos) ? progressPhotos.length : 0;
   const measurementNote = latestMeasurement ? `Последний замер: ${formatMeasurementDate(latestMeasurement)}` : "Добавьте первый замер";
+  const weightNote = weightComparison.latestMeasurement
+    ? `Последний вес: ${formatMeasurementDate(weightComparison.latestMeasurement)}`
+    : "Добавьте первый вес";
   const photoNote = photoCount ? `${photoCount === 1 ? "1 фото сохранено" : `${photoCount} фото сохранено`}` : "Добавьте первое фото";
 
   return <div className={styles.panel} data-testid="profile-measurement-panel">
@@ -147,7 +150,7 @@ export default function ProfileMeasurementWizardPanel({
         </svg>
         <div className={styles.chartDates}><span>{formatMeasurementDate(firstPoint.measurement)}</span><span>{formatMeasurementDate(lastPoint.measurement)}</span></div>
       </> : <p className={styles.chartEmpty}>Добавьте первый вес, чтобы увидеть реальную динамику.</p>}
-      {onAddWeight ? <div className={styles.chartEntry}><small>{measurementNote}</small><button type="button" data-testid="profile-progress-add-weight" onClick={onAddWeight}>Добавить вес</button></div> : null}
+      {onAddWeight ? <div className={styles.chartEntry}><small>{weightNote}</small><button type="button" data-testid="profile-progress-add-weight" onClick={onAddWeight}>Добавить вес</button></div> : null}
     </section>
 
     <div className={styles.sectionHead}><h3>Достижения</h3></div>

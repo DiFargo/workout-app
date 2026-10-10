@@ -12,6 +12,7 @@ import {
 } from "../src/utils/basicWorkoutMannequinIllustration.js";
 
 function getExpectedIllustrationSource(exercise) {
+  if (exercise.illustrationUnavailable) return "";
   if (exercise.sourceId) {
     return `/basic-workout/exercises/catalogue/v1/${exercise.sourceId}.webp`;
   }

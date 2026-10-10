@@ -5,6 +5,8 @@ import { saveTrainerProgramDraft } from "../src/features/client/workouts/trainer
 import { persistWorkoutCompletion, deleteOwnWorkoutHistory } from "../src/features/client/workouts/workoutCompletionPersistence.js";
 import { persistMeasurement } from "../src/features/client/profile/measurementPersistence.js";
 import { patchLibraryExercise, persistTrainerTemplateEdit } from "../src/utils/trainerLibraryEditing.js";
+import { buildTrainerClientProgramName } from "../src/utils/trainerClientProgramName.js";
+import { buildClientProgramLifecycleMetadata, buildProgramAssignmentMetadata } from "../src/utils/trainerProgramLifecycle.js";
 import { after, before, beforeEach, test } from "node:test";
 
 import {
@@ -403,7 +405,6 @@ test("trainer invite lets the matching client activate a protected profile", asy
   const clientDb = testEnv.authenticatedContext("client-1", { email: "client@example.com" }).firestore();
   await assertSucceeds(setDoc(doc(clientDb, "users", "client-1"), {
     email: "client@example.com",
-    loginLower: "client",
     name: "Client",
     role: "client",
     createdAt: "2026-07-09T00:00:00.000Z",
@@ -436,6 +437,41 @@ test("trainer invite lets the matching client activate a protected profile", asy
     acceptedAt: "2026-07-09T00:01:00.000Z",
     acceptedUid: "client-1"
   }));
+});
+
+test("invited profile creation rejects injected service fields and forged assignment", async () => {
+  const email = "invited@example.com";
+  const uid = "invited-client";
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "clientInvites", email), {
+      email, status: "active", authUid: uid,
+      trainerId: "trainer-1", trainerEmail: "trainer@example.com", createdByUid: "trainer-1"
+    });
+  });
+  const profile = {
+    email, role: "client", name: "Invited client", active: true,
+    createdAt: "2026-09-18T00:00:00Z", updatedAt: "2026-09-18T00:00:00Z",
+    authProvider: "invite", inviteActivatedAt: "2026-09-18T00:00:00Z",
+    createdBy: "trainer@example.com", createdByEmail: "trainer@example.com",
+    createdByUid: "trainer-1", trainerId: "trainer-1", assignedTrainerId: "trainer-1", coachId: "trainer-1",
+    trainerEmail: "trainer@example.com", assignedTrainerEmail: "trainer@example.com", coachEmail: "trainer@example.com"
+  };
+  const db = testEnv.authenticatedContext(uid, { email }).firestore();
+  const ref = doc(db, "users", uid);
+  for (const extra of [
+    { telegramChatId: "forged" }, { telegramConnected: true }, { telegram: { connected: true } },
+    { subscription: { paid: true } }, { loginLower: "another-login" },
+    { accountProfile: { login: "another-login", email: "other@example.com" } },
+    { profileIdentityOperation: { status: "pending" } }, { isTest: true },
+    { assignedProgramId: "forged" }, { adminClaimUpdatedAt: "now" },
+    { membershipStatus: "active" }, { unknownFutureServiceField: true },
+    { role: "admin" }, { trainerId: "trainer-2" }, { assignedTrainerId: "trainer-2" },
+    { createdByUid: "trainer-2" }, { trainerEmail: "other@example.com" }, { active: false }
+  ]) await assertFails(setDoc(ref, { ...profile, ...extra }));
+  await assertFails(setDoc(doc(testEnv.authenticatedContext("other", { email }).firestore(), "users/other"), profile));
+  await assertFails(setDoc(doc(testEnv.authenticatedContext("uninvited", { email: "none@example.com" }).firestore(), "users/uninvited"), { ...profile, email: "none@example.com" }));
+  await assertSucceeds(setDoc(ref, profile));
+  assert.deepEqual((await getDoc(ref)).data(), profile);
 });
 
 test("trainer cannot take over another trainer's pending invite", async () => {
@@ -967,6 +1003,62 @@ test("assigned trainer can atomically create an individual program copy", async 
   await assertSucceeds(batch.commit());
 });
 
+async function personalizedAssignmentFixture({ name, actor = "trainer-1", templateId = "template-1", assignmentState = "assigned", profileExtra = {}, dayCount = 12 } = {}) {
+  const assignedAt = "2026-09-10T12:00:00.000Z";
+  const template = { id: "template-1", name: "Фулл бади", ownerUid: "trainer-1", ownerRole: "trainer", createdByUid: "trainer-1", updatedByUid: "trainer-1", lifecycleStatus: "ready", programStatus: "ready", visibility: "trainer_ready" };
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/trainer-1"), { role: "trainer" });
+    await setDoc(doc(db, "users/trainer-2"), { role: "trainer" });
+    await setDoc(doc(db, "users/client-1"), { role: "client", name: "Илья Михайлов", assignedTrainerId: "trainer-1", trainerAssignmentState: assignmentState });
+    await setDoc(doc(db, "trainingTemplates/template-1"), template);
+    await setDoc(doc(db, "trainingTemplates/template-2"), { ...template, id: "template-2", ownerUid: "trainer-2", createdByUid: "trainer-2", updatedByUid: "trainer-2" });
+    await setDoc(doc(db, "users/client-1/workouts/old"), { name: "Past workout", completed: true });
+    await setDoc(doc(db, "users/client-1/history/past"), { workoutId: "old", completed: true });
+  });
+  const db = testEnv.authenticatedContext(actor).firestore();
+  const batch = writeBatch(db);
+  const metadata = buildClientProgramLifecycleMetadata({ assignedAt, assignedByUid: actor });
+  const assignment = { assignedProgramId: templateId, assignedProgramName: name, assignedProgramUpdatedAt: assignedAt, assignedProgramAddedAt: assignedAt, ...metadata };
+  for (let i = 0; i < dayCount; i++) {
+    batch.set(doc(db, "users", "client-1", "workouts", `new-${i}`), { ...assignment, assignedBy: actor, assignedAt, name: `Day ${i + 1}`, exercises: [], completed: false, status: "planned" });
+  }
+  batch.set(doc(db, "users/client-1"), { ...assignment, assignedProgramAt: assignedAt, assignedWorkoutCount: dayCount, workoutCalendar: { plannedWorkouts: [] }, ...profileExtra }, { merge: true });
+  batch.set(doc(db, "trainingTemplates", templateId), buildProgramAssignmentMetadata(template, { clientId: "client-1", assignedAt, assignedByUid: actor }), { merge: true });
+  return { batch, db };
+}
+
+for (const name of [buildTrainerClientProgramName("Фулл бади", { name: "Илья Михайлов" }), "Мой индивидуальный план"]) {
+  test(`trainer assigns personalized name atomically: ${name}`, async () => {
+    const { batch, db } = await personalizedAssignmentFixture({ name });
+    await assertSucceeds(batch.commit());
+    assert.equal((await getDoc(doc(db, "users/client-1"))).data().assignedProgramName, name);
+    assert.equal((await getDoc(doc(db, "users/client-1/workouts/new-11"))).data().assignedProgramName, name);
+    assert.equal((await getDoc(doc(db, "trainingTemplates/template-1"))).data().name, "Фулл бади");
+    assert.equal((await getDoc(doc(db, "users/client-1/workouts/old"))).data().completed, true);
+    assert.equal((await getDoc(doc(db, "users/client-1/history/past"))).data().completed, true);
+  });
+}
+
+for (const [label, overrides] of [
+  ["another trainer", { actor: "trainer-2" }],
+  ["foreign template", { templateId: "template-2" }],
+  ["revoked assignment", { assignmentState: "revoked" }],
+  ["empty name", { name: "" }],
+  ["oversized name", { name: "x".repeat(81) }],
+  ["non-text name", { name: 123 }],
+  ["role escalation", { profileExtra: { role: "admin" } }]
+]) {
+  test(`personalized assignment still rejects ${label}`, async () => {
+    const { batch } = await personalizedAssignmentFixture({ name: "Индивидуальный план", dayCount: 1, ...overrides });
+    await assertFails(batch.commit());
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      assert.equal((await getDoc(doc(context.firestore(), "users/client-1/workouts/new-0"))).exists(), false);
+      assert.equal((await getDoc(doc(context.firestore(), "users/client-1"))).data().role, "client");
+    });
+  });
+}
+
 test("assigned trainer can archive the final active client program", async () => {
   const assignedAt = "2026-08-20T10:00:00.000Z";
   const archivedAt = "2026-08-21T10:00:00.000Z";
@@ -1272,4 +1364,36 @@ test("assigned trainer can mark an incoming message as read without changing its
     trainerReadByUid: "trainer-1"
   }));
   await assertFails(updateDoc(messageRef, { text: "Подменённый текст" }));
+});
+
+test("admin demotion takes effect for existing SDK tokens and re-grant requires the current claim version", async () => {
+  await testEnv.withSecurityRulesDisabled(async (ctx) => {
+    await setDoc(doc(ctx.firestore(), "users/admin-versioned"), { role: "admin" });
+    await setDoc(doc(ctx.firestore(), "users/unrelated-client"), { role: "client" });
+    await setDoc(doc(ctx.firestore(), "accountDeletions/unrelated-client"), { status: "pending" });
+  });
+  const old = testEnv.authenticatedContext("admin-versioned", { admin: true }).firestore();
+  const target = (db) => doc(db, "users/unrelated-client");
+  await assertSucceeds(updateDoc(target(old), { name: "Legacy admin allowed" }));
+  await testEnv.withSecurityRulesDisabled((ctx) => updateDoc(doc(ctx.firestore(), "users/admin-versioned"), {
+    role: "client", adminClaimVersion: "revoked"
+  }));
+  await assertFails(getDoc(target(old)));
+  await assertFails(updateDoc(target(old), { name: "Old admin claim" }));
+  await assertFails(updateDoc(doc(old, "users/admin-versioned"), { role: "admin" }));
+  await assertFails(updateDoc(doc(old, "users/admin-versioned"), { adminClaimVersion: "new-grant" }));
+  await assertSucceeds(updateDoc(doc(old, "users/admin-versioned"), { name: "Own client profile still allowed" }));
+  await testEnv.withSecurityRulesDisabled((ctx) => updateDoc(doc(ctx.firestore(), "users/admin-versioned"), {
+    role: "admin", adminClaimVersion: "new-grant"
+  }));
+  await assertFails(updateDoc(target(old), { name: "Legacy token cannot return" }));
+  const obsolete = testEnv.authenticatedContext("admin-versioned", { admin: true, adminClaimVersion: "revoked" }).firestore();
+  await assertFails(updateDoc(target(obsolete), { name: "Obsolete claim" }));
+  const current = testEnv.authenticatedContext("admin-versioned", { admin: true, adminClaimVersion: "new-grant" }).firestore();
+  await assertSucceeds(getDoc(target(current)));
+  await assertSucceeds(updateDoc(target(current), { name: "Fresh admin allowed" }));
+  await assertFails(getDoc(target(testEnv.authenticatedContext("admin-versioned").firestore())));
+  // Cleanup jobs are deliberately server-only even for administrators.
+  await assertFails(getDoc(doc(current, "accountDeletions/unrelated-client")));
+  await assertFails(setDoc(doc(current, "accountDeletions/forged"), { status: "completed" }));
 });

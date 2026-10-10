@@ -90,11 +90,19 @@ not isolated when its built client points to production Firebase.
 
 ## Functions parameters and secrets
 
-Use one file per Firebase project, such as
-`functions/.env.workout-staging`, copied from
-[`functions/.env.example`](../functions/.env.example). These files are ignored
-by git. Keep secrets in Firebase Secret Manager (`TELEGRAM_BOT_TOKEN`,
-`OPENAI_API_KEY`, `ADMIN_BOOTSTRAP_SECRET`), not in this file.
+Use one file per Firebase project for each Functions codebase, such as
+`functions/.env.workout-staging` and
+`functions-telegram-auth/.env.workout-staging`, copied from the relevant
+`.env.example`. These files are ignored by git. Keep secrets in Firebase
+Secret Manager (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_MINI_APP_BOT_TOKEN`,
+`OPENAI_API_KEY`, `ADMIN_BOOTSTRAP_SECRET`), not in these files.
+
+Telegram Mini App sign-in is deployed from the isolated `telegram-auth`
+codebase and needs only `TELEGRAM_MINI_APP_BOT_TOKEN`:
+
+```powershell
+firebase deploy --config firebase.telegram-auth.json --only functions:telegram-auth --project <your-staging-project-id>
+```
 
 At a minimum, staging must set its own `FIREBASE_WEB_API_KEY`; otherwise the
 invite activation page fails closed rather than talking to production Identity

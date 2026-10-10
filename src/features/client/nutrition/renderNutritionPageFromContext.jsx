@@ -69,6 +69,8 @@ const {
   nutritionProductErrors,
   nutritionProductUnitMenuOpen,
   nutritionSearch,
+  geminiSearchSuggestions,
+  retryNutritionSearch,
   nutritionSearchResultKey,
   nutritionSearchResults,
   nutritionSearchTab,
@@ -425,6 +427,8 @@ const {
         search: {
           photoInputRef: nutritionPhotoInputRef,
           search: nutritionSearch,
+          geminiSearchSuggestions,
+          onSearchRetry: retryNutritionSearch,
           searchTab: nutritionSearchTab,
           createChoiceOpen: nutritionCreateChoiceOpen,
           showRecentFoods: showRecentNutritionFoods,
@@ -444,7 +448,7 @@ const {
           photoCandidates: nutritionPhotoAiCandidates,
           onSearchChange: (value) => {
             setNutritionSearch(value);
-            setNutritionSearchTab("food");
+            if (nutritionSearchTab !== "my") setNutritionSearchTab("food");
             setShowRecentNutritionFoods(false);
           },
           onSearchReset: () => {
@@ -457,9 +461,6 @@ const {
             setShowRecentNutritionFoods(false);
           },
           onRecentFoodSelect: (food) => {
-            setNutritionSearch("");
-            setNutritionSearchTab("food");
-            setShowRecentNutritionFoods(false);
             setNutritionCreateChoiceOpen(false);
             setNutritionMealMenuOpen(false);
             addNutritionFoodFromPicker(food);
@@ -472,7 +473,6 @@ const {
             }
           },
           onMyFoodSelect: (normalizedFood) => {
-            setNutritionSearch("");
             const myFoodId = normalizedFood.id || normalizedFood.foodId;
             const nextAmount = normalizedFood.amountMode === "portion"
               ? (normalizedFood.portionAmount || 100)
@@ -492,12 +492,8 @@ const {
             setNutritionEditDetailsOpen(false);
             setNutritionEditPageOpen(false);
             setNutritionMealMenuOpen(false);
-            setShowRecentNutritionFoods(false);
           },
-          onFoodSelect: (food) => {
-            setNutritionSearch("");
-            addNutritionFoodFromPicker(food);
-          },
+          onFoodSelect: addNutritionFoodFromPicker,
           onShowMore: () => setNutritionSearchResultLimit({
             key: nutritionSearchResultKey,
             limit: activeNutritionSearchResultLimit + 8

@@ -64,7 +64,7 @@ export default function WorkoutFinishStage({
           </div>
 
           {finishStats.length > 0 && (
-            <div className={styles.stats}>
+            <div className={styles.stats} role="group" aria-label="Показатели тренировки" data-testid="workout-finish-stats">
               {finishStats.map((stat) => (
                 <div key={stat.label}>
                   <span>{stat.label}</span>
@@ -91,7 +91,10 @@ export default function WorkoutFinishStage({
 
           {!isWorkoutSaved && (
             <label className={styles.comment}>
-              <span>{isBasicWorkout ? "Заметка о тренировке" : "Комментарий тренеру"}</span>
+              <span className={styles.commentLabel}>
+                <span>{isBasicWorkout ? "Заметка о тренировке" : "Комментарий тренеру"}</span>
+                <small aria-hidden="true">Необязательно</small>
+              </span>
               <textarea
                 className={styles.commentInput}
                 data-css-module-control="workout-finish-stage"

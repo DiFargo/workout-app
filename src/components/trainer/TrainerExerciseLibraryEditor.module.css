@@ -4,8 +4,8 @@
 }
 
 .libraryFilters {display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;}
-.deletedToggle {min-height:44px;padding:8px 12px;border:1px solid rgba(60,60,67,.12);border-radius:10px;background:#fff;color:#3f73b8;font:inherit;font-size:14px;cursor:pointer;}
-.deletedToggle[aria-pressed="true"] {background:#edf3fa;}
+.deletedToggle {min-height:44px;padding:8px 12px;border:1px solid rgba(57, 82, 91,.12);border-radius:10px;background:#fff;color:#396ba6;font:inherit;font-size:14px;cursor:pointer;}
+.deletedToggle[aria-pressed="true"] {background:#e8f1f2;}
 .error {grid-column:1/-1;margin:0;color:#b5444c;font-size:13px;line-height:1.4;}
 
 .modal {
@@ -109,6 +109,7 @@
 }
 
 .fields select,
+.fields textarea,
 .fields input:not([type="checkbox"]):not([type="file"]) {
   box-sizing: border-box;
   width: 100%;
@@ -124,10 +125,19 @@
 }
 
 .fields select:focus-visible,
+.fields textarea:focus-visible,
 .fields input:focus-visible,
 .setRow input:focus-visible {
   border-color: var(--tn-purple);
   box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.16);
+}
+
+.fields textarea {
+  height: auto;
+  min-height: 112px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
 }
 
 .fields .weightToggle {
@@ -163,7 +173,7 @@
   border-radius: 11px;
   color: #fff;
   font-size: 12px;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   cursor: pointer;
 }
 
@@ -352,7 +362,7 @@
 .saveButton {
   border: 1px solid transparent;
   color: #fff;
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.22);
 }
 
@@ -362,7 +372,7 @@
 }
 
 .saveButton:hover {
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
 }
 
 .deleteButton:disabled,

@@ -1,0 +1,14 @@
+{
+  "functions": [
+    {
+      "source": "functions-telegram-auth",
+      "codebase": "telegram-auth",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ]
+}

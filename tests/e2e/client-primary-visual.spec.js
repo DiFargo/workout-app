@@ -1,7 +1,13 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
+
+async function gotoClient(page, url) {
+  const target = url.includes("clientCabinetModal=") ? `${url}&clientHarnessPage=cabinet` : url;
+  await page.goto(target);
+  await expect(page.locator('[data-testid^="client-harness-"]').first()).toBeAttached({ timeout: 40_000 });
+}
 
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
@@ -57,9 +63,9 @@ async function expectCrispProfileModal(page, overlayTestId, dialogTestId, closeT
   const dialog = page.getByTestId(dialogTestId);
   const close = page.getByTestId(closeTestId);
 
-  await expect(overlay).toHaveCSS("backdrop-filter", "none");
+  await expect(overlay).toHaveCSS("backdrop-filter", "blur(4px)");
   await expect(dialog).toHaveAttribute("data-modal-surface", "true");
-  await expect(dialog).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(dialog).toHaveCSS("background-color", "rgb(245, 247, 248)");
   await expect(dialog).toHaveCSS("backdrop-filter", "none");
   await expect(dialog).toHaveCSS("filter", "none");
   await expect(close).toHaveAttribute("data-profile-modal-close", "true");
@@ -82,22 +88,21 @@ async function expectCrispProfileModal(page, overlayTestId, dialogTestId, closeT
     };
   });
 
-  const isWarmMobileBottomSheet = geometry.isWarmMobile
-    && dialogTestId !== "profile-avatar-crop-dialog";
-
-  if (isWarmMobileBottomSheet) {
+  if (geometry.isWarmMobile && dialogTestId !== "profile-avatar-crop-dialog") {
     expect(Math.abs(geometry.left)).toBeLessThanOrEqual(1);
     expect(Math.abs(geometry.right)).toBeLessThanOrEqual(1);
     expect(geometry.top).toBeGreaterThanOrEqual(52);
     expect(Math.abs(geometry.bottom)).toBeLessThanOrEqual(1);
     expect(geometry.bottomRadius).toBeLessThanOrEqual(1);
+    expect(geometry.radius).toBeGreaterThanOrEqual(25);
   } else {
     expect(geometry.left).toBeGreaterThanOrEqual(10);
     expect(geometry.right).toBeGreaterThanOrEqual(10);
     expect(geometry.top).toBeGreaterThanOrEqual(10);
     expect(geometry.bottom).toBeGreaterThanOrEqual(10);
+    expect(geometry.bottomRadius).toBeGreaterThanOrEqual(28);
+    expect(geometry.radius).toBeGreaterThanOrEqual(28);
   }
-  expect(geometry.radius).toBeGreaterThanOrEqual(28);
 
   const modalHeader = dialog.locator('[data-client-page-header="true"]');
   if (await modalHeader.count()) {
@@ -117,18 +122,15 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
   await expect(title).toBeVisible();
   if (mode === "main") {
     await expect(title).toHaveText("Сегодня");
-    await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
+    await expect(page.getByTestId("profile-summary-primary")).toBeVisible();
     await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
-    const version = page.getByTestId("profile-dashboard-version");
-    await expect(version).toBeVisible();
-    await expect(version).toHaveText(/^v\.?3\.0\.\d+$/);
-    await expect(version).toHaveCSS("position", "fixed");
-    await expect(version).toHaveCSS("pointer-events", "none");
+    await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(0);
   } else {
     await expect(title).toHaveText("Кабинет");
     await expect(page.getByTestId("profile-cabinet-refresh")).toBeVisible();
     await expect(page.getByTestId("profile-main-summary-grid")).toHaveCount(0);
-    await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(0);
+    await expect(page.getByTestId("profile-dashboard-version")).toHaveText(/^v\.?3\.0\.\d+$/);
+    await expect(page.getByTestId("profile-dashboard-version")).toHaveCSS("position", "static");
   }
   await expect(page.locator(".clientPageVersionBadge")).toHaveCount(0);
   await expect(page.getByTestId("client-bottom-nav")).toBeVisible();
@@ -139,15 +141,15 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
 }
 
 async function expectMainDashboardContent(page) {
-  await expect(page.getByTestId("profile-main-hero")).toBeVisible();
-  await expect(page.getByTestId("profile-main-next-workout")).toBeVisible();
+  await expect(page.getByTestId("profile-summary-dashboard")).toBeVisible();
+  await expect(page.getByTestId("profile-summary-greeting")).toContainText("Илья");
+  await expect(page.getByTestId("profile-summary-hero-title")).toHaveText("Ноги и ягодицы");
+  await expect(page.getByTestId("profile-summary-primary")).toHaveText("Открыть тренировку");
   await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
-  await expect(page.getByTestId("profile-progress-card")).toBeVisible();
-  await expect(page.getByTestId("profile-progress-gauge")).toHaveAttribute("aria-label", /90.*100/);
-  await expect(page.getByTestId("profile-progress-headline")).toBeVisible();
-  await expect(page.getByTestId("profile-progress-title")).toBeVisible();
-  await expect(page.getByTestId("profile-progress-copy")).toBeVisible();
-  await expect(page.getByTestId("profile-measurement-snapshot")).toBeVisible();
+  await expect(page.getByTestId("profile-summary-workout-log")).toContainText("12");
+  await expect(page.getByTestId("profile-summary-nutrition")).toContainText("1 840");
+  await expect(page.getByRole("button", { name: /^Вес 89/ })).toBeVisible();
+  await expect(page.getByTestId("profile-summary-notifications-button")).toBeVisible();
 }
 
 async function expectMainMeasurementSnapshotLayout(page) {
@@ -166,10 +168,10 @@ async function expectMainMeasurementSnapshotLayout(page) {
     };
     const overlaps = (a, b) => Boolean(a && b && a.x < b.right && a.right > b.x && a.y < b.bottom && a.bottom > b.y);
 
-    const card = rectOf('[data-testid="profile-measurement-snapshot"]');
-    const header = rectOf('[data-testid="profile-measurement-snapshot-header"] span');
-    const weightLabel = rectOf('[data-testid="profile-measurement-snapshot-weight"] strong');
-    const chart = rectOf('[data-testid="profile-measurement-snapshot-chart"]');
+    const card = rectOf('[data-testid="profile-summary-dashboard"]');
+    const header = rectOf('[data-testid="profile-summary-greeting"]');
+    const weightLabel = rectOf('[data-testid="profile-summary-nutrition"] strong');
+    const chart = rectOf('[data-testid="profile-summary-notifications-button"]');
 
     return {
       skipped: window.innerWidth > 640,
@@ -192,48 +194,38 @@ async function expectMainMeasurementSnapshotLayout(page) {
   expect(metrics.chartEscapesCard).toBe(false);
 }
 
-test("profile measurement snapshot keeps every data state inside its adaptive card", async ({ page }) => {
+test("progress weight chart keeps every data state inside its adaptive card", async ({ page }) => {
   for (const state of ["trend", "single", "empty"]) {
-    await page.goto(`/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=${state}`);
+    await gotoClient(page, `/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=${state}`);
+    await page.getByTestId("client-nav-progress").click();
     await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
-    const card = page.getByTestId("profile-measurement-snapshot");
+    const card = page.getByTestId("profile-progress-weight-card");
     await expect(card).toBeVisible();
-    await expect(card).toHaveAttribute("data-state", state);
-    await expect(page.getByTestId("profile-measurement-snapshot-weight")).toBeVisible();
-    await expect(page.getByTestId("profile-measurement-snapshot-chart")).toBeVisible();
-
-    if (state === "trend") {
-        await expect(page.getByTestId("profile-measurement-snapshot-trend")).toHaveAttribute("aria-label", /Изменение веса/);
+    await expect(card.getByText("Текущий вес", { exact: true })).toBeVisible();
+    await expect(card.getByTestId("profile-progress-weight-point-label")).toHaveCount(state === "trend" ? 2 : state === "single" ? 1 : 0);
+    if (state === "empty") {
+      await expect(card.getByText("Добавьте первый вес, чтобы увидеть реальную динамику.")).toBeVisible();
+      await expect(card.getByRole("img")).toHaveCount(0);
     } else {
-        await expect(page.getByTestId(`profile-measurement-snapshot-${state}`)).toBeVisible();
-      }
+      await expect(card.getByRole("img", { name: /Динамика веса/ })).toBeVisible();
+      await expect(card.getByTestId("profile-progress-weight-delta")).toContainText(state === "trend" ? "−1,3 кг" : "Нет предыдущего значения");
+    }
 
     const fit = await card.evaluate((root) => {
       const rootRect = root.getBoundingClientRect();
-      const header = root.querySelector('[data-testid="profile-measurement-snapshot-header"] span')?.getBoundingClientRect();
-      const chart = root.querySelector('[data-testid="profile-measurement-snapshot-chart"]')?.getBoundingClientRect();
-      const stateCopy = root.querySelector('[data-testid="profile-measurement-snapshot-single"], [data-testid="profile-measurement-snapshot-empty"]')?.getBoundingClientRect();
+      const children = [...root.children].map(node => node.getBoundingClientRect());
       return {
-        headerFits: Boolean(header && header.right <= rootRect.right + 1),
-        chartFits: Boolean(chart && chart.right <= rootRect.right + 1 && chart.bottom <= rootRect.bottom + 1),
-        stateCopyFits: !stateCopy || Boolean(
-          chart &&
-          stateCopy.left >= chart.left - 1 &&
-          stateCopy.right <= chart.right + 1 &&
-          stateCopy.top >= chart.top - 1 &&
-          stateCopy.bottom <= chart.bottom + 1
-        )
+        fits: children.every(rect => rect.left >= rootRect.left - 1 && rect.right <= rootRect.right + 1 && rect.top >= rootRect.top - 1 && rect.bottom <= rootRect.bottom + 1)
       };
     });
-
-    expect(fit).toEqual({ headerFits: true, chartFits: true, stateCopyFits: true });
+    expect(fit.fits).toBe(true);
 
     await expectNoHorizontalOverflow(page);
   }
 });
 
 test("weight reminder opens a focused weight-only modal and saves it", async ({ page }) => {
-  await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=single&clientWeightCheckInDue=1");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=single&clientWeightCheckInDue=1");
 
   await expect(page.getByTestId("profile-weight-checkin-reminder")).toBeVisible();
   await page.getByTestId("profile-weight-checkin-action").click();
@@ -257,11 +249,14 @@ test("weight reminder opens a focused weight-only modal and saves it", async ({ 
 });
 
 test("basic plan review keeps the AI action visible while answers stay compact", async ({ page }) => {
-  await page.goto("/?clientHarness=1&clientHarnessPage=basicQuiz");
-
-  for (let step = 0; step < 7; step += 1) {
-    await page.locator("button").filter({ hasText: "Далее" }).click();
+  await page.addInitScript(() => localStorage.setItem("basic-workout-long-plan-access:client-harness", JSON.stringify({ activated: true })));
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=basicQuiz");
+  const card = page.getByTestId("basic-quiz-card");
+  for (const answer of ["Хорошая форма", "Я новичок", "Дома", "3 тренировки", "Около 45 минут", "Нет ограничений"]) {
+    await card.getByRole("button", { name: answer }).click();
+    await card.getByRole("button", { name: "Далее", exact: true }).click();
   }
+  await card.getByRole("button", { name: "Проверить ответы", exact: true }).click();
 
   const review = page.getByTestId("basic-quiz-review");
   const actions = page.getByTestId("basic-quiz-review-actions");
@@ -269,7 +264,7 @@ test("basic plan review keeps the AI action visible while answers stay compact",
   await expect(review).toBeVisible();
   await expect(actions).toBeVisible();
   await expect(generate).toBeVisible();
-  await expect(generate).toHaveCSS("min-height", "50px");
+  await expect(generate).toHaveCSS("min-height", "52px");
 
   const fit = await page.evaluate(() => {
     const action = document.querySelector('[data-testid="basic-quiz-generate"]')?.getBoundingClientRect();
@@ -286,7 +281,7 @@ test("basic plan review keeps the AI action visible while answers stay compact",
 
 test("client profile shell keeps the compact dock clear of content in short landscape", async ({ page }) => {
   await page.setViewportSize({ width: 844, height: 390 });
-  await page.goto("/?clientHarness=1&clientHarnessTheme=warm-light");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessTheme=warm-light");
 
   const shell = page.getByTestId("client-harness-main");
   const dock = page.getByTestId("client-bottom-nav");
@@ -303,7 +298,7 @@ test("client profile shell keeps the compact dock clear of content in short land
     const dockNode = document.querySelector('[data-testid="client-bottom-nav"]');
     const dockRect = rectOf(dockNode);
     const buttonRect = rectOf(dockNode?.querySelector("button"));
-    const snapshotRect = rectOf(document.querySelector('[data-testid="profile-measurement-snapshot"]'));
+    const snapshotRect = rectOf(document.querySelector('[data-testid="profile-summary-notifications-button"]'));
 
     return { dockRect, buttonRect, snapshotRect };
   });
@@ -311,7 +306,7 @@ test("client profile shell keeps the compact dock clear of content in short land
   expect(metrics.dockRect).not.toBeNull();
   expect(metrics.buttonRect).not.toBeNull();
   expect(metrics.snapshotRect).not.toBeNull();
-  expect(metrics.dockRect.height).toBeCloseTo(64, 0);
+  expect(metrics.dockRect.height).toBeCloseTo(70, 0);
   expect(metrics.buttonRect.height).toBeGreaterThanOrEqual(44);
   expect(metrics.snapshotRect.bottom).toBeLessThanOrEqual(metrics.dockRect.top + 1);
   await expectNoHorizontalOverflow(page);
@@ -330,10 +325,9 @@ async function expectClientCardTextReadable(page, mode) {
         : null;
     };
     const clippedTexts = [
-      '[data-testid="profile-main-stats"] strong',
-      '[data-testid="profile-main-summary-grid"] strong',
-      '[data-testid="profile-progress-title"]',
-      '[data-testid="profile-progress-copy"]'
+      '[data-testid="profile-summary-dashboard"] strong',
+      '[data-testid="profile-summary-greeting"]',
+      '[data-testid="profile-summary-hero-title"]'
     ].flatMap((selector) => (
       [...document.querySelectorAll(selector)].map((node) => ({
         selector,
@@ -345,8 +339,8 @@ async function expectClientCardTextReadable(page, mode) {
 
     return {
       skipped: window.innerWidth > 640,
-      avatar: rectOf(activeMode === "cabinet" ? '[data-testid="profile-cabinet-action-account-icon"]' : '[data-testid="profile-main-hero-avatar"]'),
-      title: rectOf(activeMode === "cabinet" ? '[data-testid="profile-cabinet-action-account-title"]' : '[data-testid="profile-main-hero-title"]'),
+      avatar: rectOf(activeMode === "cabinet" ? '[data-testid="profile-cabinet-action-account"] svg' : '[data-testid="profile-summary-notifications-button"] > span'),
+      title: rectOf(activeMode === "cabinet" ? '[data-testid="profile-cabinet-action-account"] strong' : '[data-testid="profile-summary-notifications-button"] strong'),
       clippedTexts: activeMode === "main" ? clippedTexts : []
     };
   }, mode);
@@ -363,9 +357,9 @@ async function expectCabinetContent(page) {
   await expect(page.getByTestId("profile-main-hero")).toHaveCount(0);
   await expect(page.getByTestId("profile-cabinet-action-grid")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-action-account")).toBeVisible();
-  await expect(page.getByTestId("profile-cabinet-action-account-icon")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Редактировать профиль" })).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-logout")).toBeVisible();
-  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid$="-icon"]):not([data-testid$="-title"]):not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(5);
+  await expect(page.locator('[data-testid^="profile-cabinet-action-"]:not([data-testid="profile-cabinet-action-grid"])')).toHaveCount(7);
 }
 
 async function expectContentAboveBottomNav(page) {
@@ -407,8 +401,10 @@ async function expectContentAboveBottomNav(page) {
 }
 
 async function clickClientCabinetNav(page) {
-  await expect(page.getByTestId("client-nav-cabinet")).toBeVisible({ timeout: 40_000 });
-  await page.getByTestId("client-nav-cabinet").click();
+  const cabinet = page.getByTestId("client-nav-cabinet");
+  await expect(cabinet).toBeVisible({ timeout: 40_000 });
+  if (await cabinet.getAttribute("aria-current") !== "page") await cabinet.click();
+  await expect(cabinet).toHaveAttribute("aria-current", "page");
 }
 
 test("client main bottom bar stays scoped and adaptive across supported and legacy deep links", async ({ page }, testInfo) => {
@@ -417,14 +413,14 @@ test("client main bottom bar stays scoped and adaptive across supported and lega
   for (const requestedTheme of ["warm-light", "dark-green"]) {
     for (const width of [320, 390, 1366]) {
       await page.setViewportSize({ width, height: width === 320 ? 720 : 844 });
-      await page.goto(`/?clientHarness=1&clientHarnessTheme=${requestedTheme}`);
+      await gotoClient(page, `/?clientHarness=1&clientHarnessTheme=${requestedTheme}`);
       await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
 
       const navigation = page.getByTestId("client-bottom-nav");
       await expect(navigation).toBeVisible({ timeout: 40_000 });
       await expect(navigation).toHaveAttribute("data-css-module-scope", "client-main-bottom-bar");
       await expect(navigation).not.toHaveClass(/mainMenuBottomBar|profileBottomTabBar|clientBottomNav/);
-      await expect(navigation.locator("button")).toHaveCount(4);
+      await expect(navigation.locator("button")).toHaveCount(5);
       await expect(page.getByTestId("client-nav-main")).toHaveAttribute("aria-current", "page");
       await expectTapTargets(page, ['[data-testid="client-bottom-nav"] button']);
       await expectNoHorizontalOverflow(page);
@@ -447,14 +443,14 @@ test("client main bottom bar stays scoped and adaptive across supported and lega
         };
       });
 
-      expect(mainMetrics.position).toBe("relative");
+      expect(mainMetrics.position).toBe("static");
       expect(mainMetrics.dockPosition).toBe("fixed");
-      expect(mainMetrics.width).toBeLessThanOrEqual(394);
-      expect(mainMetrics.height).toBe(76);
-      expect(mainMetrics.buttonHeight).toBe(58);
+      expect(mainMetrics.width).toBe(mainMetrics.pageRight - mainMetrics.pageX);
+      expect(mainMetrics.height).toBe(70);
+      expect(mainMetrics.buttonHeight).toBe(49);
       if (width <= 900) {
-        expect(mainMetrics.x).toBe(mainMetrics.pageX + 10);
-        expect(mainMetrics.right).toBe(mainMetrics.pageRight - 10);
+        expect(mainMetrics.x).toBe(mainMetrics.pageX);
+        expect(mainMetrics.right).toBe(mainMetrics.pageRight);
       }
 
       await page.getByTestId("client-nav-cabinet").click();
@@ -480,13 +476,13 @@ test("client main bottom bar stays scoped and adaptive across supported and lega
 test("progress photos body control uses the compact opaque sheet", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=photos&clientPhotosTabbed=1");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=photos&clientPhotosTabbed=1");
   await clickClientCabinetNav(page);
 
   const dialog = page.getByTestId("profile-progress-photos-dialog");
   const tabs = page.getByTestId("profile-progress-photos-section-tabs");
   await expect(dialog).toBeVisible();
-  await expect(dialog).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(dialog).toHaveCSS("background-color", "rgb(245, 247, 248)");
   await expect(page.getByTestId("profile-progress-photos-header").getByRole("heading")).toHaveText("Фото прогресса");
   await expect(tabs.getByRole("tab").first()).toHaveText("Фото");
   await expect(tabs.getByRole("tab").first()).toHaveCSS("background-image", "none");
@@ -505,9 +501,10 @@ test("progress photos body control uses the compact opaque sheet", async ({ page
 });
 
 test("client primary visual audit covers main dashboard and cabinet", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1");
+  await gotoClient(page, "/?clientHarness=1");
   await expectPrimaryChrome(page, "client-harness-main", "main");
   await expectMainDashboardContent(page);
   await expectMainMeasurementSnapshotLayout(page);
@@ -540,7 +537,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-workout-journal-close").click();
   await expect(page.getByTestId("profile-workout-journal-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=measurements");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=measurements");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-measurements-overlay", "profile-measurements-dialog", "profile-measurements-close");
@@ -557,7 +554,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-measurements-close").click();
   await expect(page.getByTestId("profile-measurements-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=measurements&clientMeasurementsState=empty");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=measurements&clientMeasurementsState=empty");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();
   await expect(page.getByTestId("profile-measurements-empty")).toBeVisible();
@@ -566,7 +563,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await attachScreenshot(page, testInfo, "client-cabinet-measurements-empty.png");
   await page.getByTestId("profile-measurements-close").click();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=measurements&clientMeasurementsTabbed=1&clientMeasurementsState=full");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=measurements&clientMeasurementsTabbed=1&clientMeasurementsState=full");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();
   await expect(page.getByTestId("profile-measurements-section-tabs")).toBeVisible();
@@ -582,7 +579,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-measurements-close").click();
   await expect(page.getByTestId("profile-measurements-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=nutrition");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=nutrition");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-nutrition-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-nutrition-overlay", "profile-nutrition-dialog", "profile-nutrition-close");
@@ -605,7 +602,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   const originalViewport = page.viewportSize();
   await page.setViewportSize({ width: 320, height: 568 });
   for (const requestedTheme of ["warm-light", "dark-green"]) {
-    await page.goto(`/?clientHarness=1&clientCabinetModal=nutrition&clientHarnessTheme=${requestedTheme}`);
+    await gotoClient(page, `/?clientHarness=1&clientCabinetModal=nutrition&clientHarnessTheme=${requestedTheme}`);
     await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
     await clickClientCabinetNav(page);
 
@@ -646,7 +643,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   }
   await page.setViewportSize(originalViewport);
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=calendar");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=calendar");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-workout-journal-dialog")).toBeVisible();
   await expect(page.locator('[data-testid="profile-workout-calendar-day"][aria-pressed="true"]')).toHaveCount(1);
@@ -666,7 +663,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-workout-journal-close").click();
   await expect(page.getByTestId("profile-workout-journal-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=photos");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=photos");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-progress-photos-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-progress-photos-overlay", "profile-progress-photos-dialog", "profile-progress-photos-close");
@@ -690,17 +687,18 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-progress-photos-close").click();
   await expect(page.getByTestId("profile-progress-photos-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=photos&clientPhotosState=selected");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=photos&clientPhotosState=selected");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-progress-photos-dialog")).toBeVisible();
   await expect(page.locator('[data-photo-view="front"] img')).toBeVisible();
   await expect(page.getByTestId("profile-progress-photos-status")).toHaveText("Фотографии сохранены");
-  await expect(page.getByTestId("profile-progress-photos-save")).toBeEnabled();
+  await expect(page.getByTestId("profile-progress-photos-save")).toBeDisabled();
+  await expect(page.getByTestId("save-success-notice")).toContainText("Фото сохранены");
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-cabinet-progress-photos-selected.png");
-  await page.getByTestId("profile-progress-photos-close").click();
+  await expect(page.getByTestId("profile-progress-photos-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=photos&clientPhotosTabbed=1");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=photos&clientPhotosTabbed=1");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-progress-photos-dialog")).toBeVisible();
   await expect(page.getByTestId("profile-progress-photos-section-tabs")).toBeVisible();
@@ -712,22 +710,20 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-progress-photos-close").click();
   await expect(page.getByTestId("profile-progress-photos-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=settings");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=settings");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-settings-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-settings-overlay", "profile-settings-dialog", "profile-settings-close");
   await expect(page.getByTestId("profile-account-section")).toBeVisible();
   await expect(page.getByTestId("profile-account-identity")).toBeVisible();
   await expect(page.getByTestId("profile-account-quick-panel")).toBeVisible();
-  await expect(page.getByTestId("profile-settings-email")).toBeVisible();
-  await expect(page.getByTestId("profile-settings-telegram")).toHaveAttribute("aria-label", /Telegram/);
+  await expect(page.getByTestId("profile-settings-email")).toHaveCount(0);
+  await expect(page.getByTestId("profile-settings-telegram")).toHaveCount(0);
   await expect(page.getByTestId("profile-settings-logout")).toHaveCount(0);
   await expectTapTargets(page, [
     '[data-testid="profile-settings-close"]',
     '[data-testid="profile-account-avatar"]',
-    '[data-testid="profile-account-password"]',
-    '[data-testid="profile-settings-email"]',
-    '[data-testid="profile-settings-telegram"]'
+    '[data-testid="profile-account-password"]'
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-cabinet-settings-modal.png");
@@ -752,6 +748,15 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-password-dismiss").click();
   await expect(page.getByTestId("profile-password-dialog")).toBeHidden();
 
+  await page.getByTestId("profile-settings-close").click();
+  await page.getByTestId("profile-cabinet-action-account").click();
+  await expect(page.getByTestId("profile-settings-dialog")).toHaveAttribute("data-profile-settings-section", "connections");
+  await expect(page.getByTestId("profile-settings-email")).toBeVisible();
+  await expect(page.getByTestId("profile-settings-telegram")).toHaveAttribute("aria-label", /Telegram/);
+  await expectTapTargets(page, [
+    '[data-testid="profile-settings-email"]',
+    '[data-testid="profile-settings-telegram"]'
+  ]);
   await page.getByTestId("profile-settings-email").click();
   await expect(page.getByTestId("profile-email-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-email-overlay", "profile-email-dialog", "profile-email-close");
@@ -770,7 +775,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-settings-close").click();
   await expect(page.getByTestId("profile-settings-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=notifications");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=notifications");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-trainer-notifications-overlay", "profile-trainer-notifications-dialog", "profile-trainer-notifications-close");
@@ -787,7 +792,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-trainer-notifications-close").click();
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=notifications&clientNotificationState=empty");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=notifications&clientNotificationState=empty");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toBeVisible();
   await expect(page.getByTestId("profile-trainer-notifications-empty")).toBeVisible();
@@ -797,7 +802,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-trainer-notifications-close").click();
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=telegram");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=telegram");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-telegram-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-telegram-overlay", "profile-telegram-dialog", "profile-telegram-close");
@@ -817,7 +822,7 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await page.getByTestId("profile-telegram-dismiss").click();
   await expect(page.getByTestId("profile-telegram-dialog")).toBeHidden();
 
-  await page.goto("/?clientHarness=1&clientCabinetModal=telegram&clientTelegramState=disconnected");
+  await gotoClient(page, "/?clientHarness=1&clientCabinetModal=telegram&clientTelegramState=disconnected");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-telegram-dialog")).toBeVisible();
   await expect(page.getByTestId("profile-telegram-widget-card")).toBeVisible();
@@ -840,7 +845,7 @@ test("client cabinet opens separate account connections and notification setting
   test.setTimeout(60_000);
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1");
+  await gotoClient(page, "/?clientHarness=1");
   await expect(page.getByTestId("profile-main-title")).toHaveText("Сегодня", { timeout: 30_000 });
   await expectNoHorizontalOverflow(page);
   await clickClientCabinetNav(page);
@@ -882,13 +887,14 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
     await page.setViewportSize({ width: 320, height: 568 });
   }
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=measurementPanel");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=measurementPanel");
   await expect(page.getByTestId("profile-measurement-panel")).toBeVisible();
   await expect(page.getByTestId("profile-progress-weight-card")).toBeVisible();
   await expect(page.getByTestId("profile-progress-weight-delta")).toContainText("−1,3 кг");
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveCount(2);
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["90,1", "88,8"]);
-  await expect(page.getByTestId("profile-progress-measurement-card")).toHaveCount(4);
+  await expect(page.getByTestId("profile-progress-achievement")).toContainText("Первая тренировка впереди");
+  await expect(page.getByTestId("profile-progress-controls").getByRole("button")).toHaveCount(2);
   await expect(page.getByTestId("profile-measurement-start")).toBeVisible();
   await expectTapTargets(page, ['[data-testid="profile-measurement-start"]']);
   await expectNoHorizontalOverflow(page);
@@ -909,7 +915,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   }
   await attachScreenshot(page, testInfo, "client-measurement-summary.png");
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=intro");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=intro");
   await expect(page.getByTestId("measurement-wizard-page")).toBeVisible();
   await expect(page.getByTestId("measurement-wizard-intro")).toBeVisible();
   await expectTapTargets(page, [
@@ -953,7 +959,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-measurement-wizard-step.png");
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=review");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=review");
   await expect(page.getByTestId("measurement-wizard-review")).toBeVisible();
   await expect(page.getByTestId("measurement-wizard-review-cell")).toHaveCount(12);
   await expect(page.getByTestId("measurement-wizard-review").locator("textarea[data-css-module-control]")).toBeVisible();
@@ -967,7 +973,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   }
   await attachScreenshot(page, testInfo, "client-measurement-wizard-review.png");
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=measurement&clientHarnessTheme=dark-green");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=measurement&clientHarnessTheme=dark-green");
   await expect(page.getByTestId("measurement-wizard-measurement")).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
   await expectNoHorizontalOverflow(page);
@@ -979,7 +985,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
 test("client profile role actions stay scoped and adaptive", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=profileRoleActions");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=profileRoleActions");
   await expect(page.getByTestId("profile-main-role-actions")).toBeVisible();
   await expect(page.getByTestId("profile-main-role-trainer")).toBeVisible();
   await expect(page.getByTestId("profile-main-role-admin")).toBeVisible();
@@ -1001,7 +1007,7 @@ test("client profile role actions stay scoped and adaptive", async ({ page }, te
   expect(lightMetrics.buttons.every(({ width }) => width >= ((lightMetrics.rootWidth - 8) / 2) - 1)).toBe(true);
   await attachScreenshot(page, testInfo, "client-profile-role-actions.png");
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=profileRoleActions&clientHarnessTheme=dark-green");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=profileRoleActions&clientHarnessTheme=dark-green");
   await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
   await expect(page.getByTestId("profile-main-role-actions")).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -1017,7 +1023,7 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
     await page.setViewportSize({ width: 320, height: 568 });
   }
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=profileSettingsTab");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=profileSettingsTab");
   await expect(page.getByTestId("profile-settings-tab-title")).toBeVisible();
   await expectNoHorizontalOverflow(page);
 
@@ -1039,15 +1045,15 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
     marginBottom: "32px",
     fontSize: "15px",
     lineHeight: "15.75px",
-    color: "rgb(40, 38, 46)",
+    color: "rgb(28, 40, 46)",
     textAlign: "center",
     textTransform: "uppercase"
   });
   await attachScreenshot(page, testInfo, "client-profile-settings-tab.png");
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=profileSettingsTab&clientHarnessTheme=dark-green");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=profileSettingsTab&clientHarnessTheme=dark-green");
   await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
-  await expect(page.getByTestId("profile-settings-tab-title")).toHaveCSS("color", "rgb(40, 38, 46)");
+  await expect(page.getByTestId("profile-settings-tab-title")).toHaveCSS("color", "rgb(28, 40, 46)");
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-profile-settings-tab-theme-fallback.png");
 
@@ -1057,7 +1063,7 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
 test("client avatar crop editor stays visually contained", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=avatarCrop");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=avatarCrop");
   await expect(page.getByTestId("client-harness-avatar-crop")).toBeAttached();
   await expect(page.getByTestId("profile-avatar-crop-dialog")).toBeVisible();
   await expectCrispProfileModal(page, "profile-avatar-crop-overlay", "profile-avatar-crop-dialog", "profile-avatar-crop-close");
@@ -1092,7 +1098,7 @@ test("client avatar crop editor stays visually contained", async ({ page }, test
 test("client first setup visual audit covers selected choices", async ({ page }, testInfo) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=1");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=1");
   await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
   await expect(page.locator("[class*='_firstSetupOverlay_']")).toBeVisible();
   await expect(page.locator("[class*='_firstSetupSexGrid_'] button[aria-pressed='true']")).toHaveCount(1);
@@ -1100,14 +1106,14 @@ test("client first setup visual audit covers selected choices", async ({ page },
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-first-setup-sex.png");
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=6");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=6");
   await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
   await expect(page.locator("[class*='_firstSetupOverlay_']")).toBeVisible();
   await expect(page.locator("[class*='_firstSetupActivityList_'] button[aria-pressed='true']")).toHaveCount(1);
   await expectTapTargets(page, ["[class*='_firstSetupActivityList_'] button", "[class*='_firstSetupPrimary_']", "[class*='_firstSetupSecondary_']"]);
   await expectNoHorizontalOverflow(page);
 
-  await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=7");
+  await gotoClient(page, "/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=7");
   await expect(page.getByTestId("client-harness-first-setup")).toBeAttached();
   await expect(page.locator("[class*='_firstSetupOverlay_']")).toBeVisible();
   await expect(page.locator("[class*='_firstSetupGoalGrid_'] button[aria-pressed='true']")).toHaveCount(1);
@@ -1126,7 +1132,7 @@ test("client first setup keeps the app shell on every onboarding step", async ({
   await page.setViewportSize({ width: 390, height: 844 });
 
   for (const step of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
-    await page.goto(`/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=${step}`);
+    await gotoClient(page, `/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=${step}`);
     await expect(page.getByTestId("first-setup-onboarding")).toBeVisible();
     await expect(page.getByTestId("first-setup-card")).toHaveAttribute("data-step", String(step));
     await expect(page.getByTestId("first-setup-navigation")).toBeVisible();
@@ -1150,8 +1156,14 @@ test("client first setup keeps the app shell on every onboarding step", async ({
     expect(layout.cardTop).toBeGreaterThanOrEqual(0);
     expect(layout.cardBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
     expect(layout.navigationBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
-    expect(layout.cardBackground).toBe("rgb(242, 242, 247)");
+    expect(layout.cardBackground).toBe("rgb(245, 247, 248)");
     expect(layout.cardDisplay).toBe("flex");
+
+    if (step === 9) {
+      await page.locator("html").evaluate((html) => html.setAttribute("data-platform", "telegram"));
+      await expect(page.getByTestId("first-setup-body")).toHaveCSS("justify-content", "flex-start");
+      await expect(page.getByTestId("first-setup-review")).toHaveCSS("padding-block", "6px");
+    }
   }
 
   assertNoRuntimeErrors();

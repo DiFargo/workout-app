@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 
 async function generateLocalWorkout(page, extraQuery = "") {
   await page.goto(`/?clientHarness=1&clientHarnessPage=basicWorkoutToday&clientWorkoutProgramMode=basic${extraQuery}`);

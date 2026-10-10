@@ -430,7 +430,7 @@ export default function WorkoutListPage({
         onClose={() => setWorkoutProgramModalOpen(false)}
       />
       <IndividualWorkoutHistoryDialog open={Boolean(workoutHistoryModalOpen)} historyLoading={historyLoading} historyItems={individualWorkoutHistoryItems} onClose={() => setWorkoutHistoryModalOpen(false)} />
-      <WorkoutDraftRestoreDialog open={Boolean(workoutDraftRestorePrompt)} blocked={Boolean(workoutReadinessOpen || postWorkoutFeedbackOpen || fullscreenVideo || showFirstSetupOnboarding)} onRestart={() => handleWorkoutDraftChoice(false)} onRestore={() => handleWorkoutDraftChoice(true)} />
+      <WorkoutDraftRestoreDialog open={Boolean(workoutDraftRestorePrompt)} blocked={Boolean(workoutReadinessOpen || postWorkoutFeedbackOpen || fullscreenVideo || showFirstSetupOnboarding)} onClose={() => handleWorkoutDraftChoice(null)} onRestart={() => handleWorkoutDraftChoice(false)} onRestore={() => handleWorkoutDraftChoice(true)} />
     </>;
   }
 
@@ -750,6 +750,7 @@ export default function WorkoutListPage({
           fullscreenVideo ||
           showFirstSetupOnboarding
         )}
+        onClose={() => handleWorkoutDraftChoice(null)}
         onRestart={() => handleWorkoutDraftChoice(false)}
         onRestore={() => handleWorkoutDraftChoice(true)}
       />

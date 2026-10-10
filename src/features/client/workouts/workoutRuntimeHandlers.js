@@ -1,6 +1,7 @@
 import { doc, setDoc } from "firebase/firestore";
 
 import { hasWorkoutSetEntry } from "../../../utils/auditSafety";
+import { canToggleWorkoutSetCompleted } from "../../../utils/workoutSetSequence";
 import { replaceBasicWorkoutExerciseInPlan } from "../../../utils/basicWorkoutAlternatives";
 import { applyBasicWorkoutStartingWeightFeedback } from "../../../utils/basicWorkoutStartingWeights";
 import { replaceTrainerAssignedExerciseInWorkout } from "../../../utils/trainerExerciseAlternatives";
@@ -243,6 +244,7 @@ export function createWorkoutRuntimeHandlers({
   function toggleWorkoutSetCompleted(exerciseId, setIndex) {
     const exerciseItem = workout?.exercises?.find((item) => item.id === exerciseId);
     const setItem = exerciseItem?.sets?.[setIndex];
+    if (!canToggleWorkoutSetCompleted(exerciseItem?.sets, setIndex)) return false;
     const nextCompleted = !setItem?.completed;
     const group = getWorkoutGroupConfig(workout, exerciseItem);
     const groupExerciseCount = Math.max(

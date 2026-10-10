@@ -8,13 +8,13 @@
   padding: 0;
   display: grid;
   place-items: center;
-  border: 1px solid var(--ios-glass-border, var(--apple-separator, rgba(60,60,67,.12)));
+  border: 1px solid var(--ios-glass-border, var(--apple-separator, rgba(57, 82, 91,.12)));
   border-radius: 16px;
   background: var(--ios-glass-surface, #fff);
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: var(--ios-glass-shadow, 0 3px 10px rgba(27, 35, 31, 0.08));
   backdrop-filter: var(--ios-glass-filter, blur(22px));
   -webkit-backdrop-filter: var(--ios-glass-filter, blur(22px));
 }
 .refresh svg { width: 22px; height: 22px; stroke-width: 2.1; }
-.refresh:active { background: var(--apple-surface-muted, #efeff4); transform: rotate(20deg) scale(0.96); }
+.refresh:active { background: var(--apple-surface-muted, #edf1f3); transform: rotate(20deg) scale(0.96); }

@@ -1,5 +1,7 @@
 import { buildTrainerDashboardSummary } from "../../utils/trainerClientSummary.js";
+import { buildTrainerInviteMessage } from "../../features/trainer/trainerInviteMessage.js";
 import { mergeTrainerExerciseLibraryItems } from "../../utils/trainerExerciseLibrary.js";
+import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus.js";
 import { exerciseLibraryNameKey } from "../../../functions/exerciseLibraryIdentity.js";
 import TrainerExerciseQuickFields from "./TrainerExerciseQuickFields";
 import TrainerSummaryStatus from "./TrainerSummaryStatus";
@@ -49,6 +51,8 @@ import trainerClientExercisesTabsStyles from "./TrainerClientExercisesTabs.modul
 import trainerClientMessagesStyles from "./TrainerClientMessages.module.css";
 import workspaceFeatureStyles from "./TrainerWorkspaceSubscriptionProgress.module.css";
 import exerciseLibraryEditorStyles from "./TrainerExerciseLibraryEditor.module.css";
+import ExerciseVideoCropEditor from "./ExerciseVideoCropEditor.jsx";
+import { exerciseCardMetadata } from "../../../functions/exerciseCards.js";
 import mobileStyles from "./TrainerWorkspaceMobile.module.css";
 import responsiveStyles from "./TrainerWorkspaceResponsivePass.module.css";
 import {
@@ -2695,14 +2699,16 @@ function ClientWorkoutPlan({
   const assignedName = primaryProgramAssignment?.name || client?.assignedProgramName || (workouts.length ? "Индивидуальная программа" : "Программа не назначена");
   const assignableTemplates = programTemplates.filter(canAssignTrainerProgram);
   const selectedTemplate = assignableTemplates.find((program) => program.id === selectedProgramId);
-  const latestWorkoutHistory = [...history]
+  const reviewHistory = isTrainerV2Path(window.location.pathname) ? scheduleHistory : history;
+  const reviewWorkouts = isTrainerV2Path(window.location.pathname) ? scheduleWorkouts : workouts;
+  const latestWorkoutHistory = [...reviewHistory]
     .sort((a, b) => {
       const dateA = getWorkoutHistoryDate(a)?.getTime() || 0;
       const dateB = getWorkoutHistoryDate(b)?.getTime() || 0;
       return dateB - dateA;
     })[0];
   const latestWorkoutReview = latestWorkoutHistory
-    ? buildTrainerWorkoutReview(latestWorkoutHistory, findPlannedWorkoutForHistory(latestWorkoutHistory, workouts))
+    ? buildTrainerWorkoutReview(latestWorkoutHistory, findPlannedWorkoutForHistory(latestWorkoutHistory, reviewWorkouts))
     : null;
   const persistedReviewedKeys = useMemo(
     () => getTrainerWorkoutReviewReviewedKeys(reviewEvents),
@@ -2723,10 +2729,10 @@ function ClientWorkoutPlan({
       }
     : null;
   const nextWorkoutTarget = useMemo(() => findTrainerWorkoutReviewTarget({
-    workouts,
+    workouts: reviewWorkouts,
     calendar: client?.workoutCalendar || {},
-    history
-  }), [workouts, client?.workoutCalendar, history]);
+    history: reviewHistory
+  }), [reviewWorkouts, client?.workoutCalendar, reviewHistory]);
 
   function closeEditor() {
     if (editorSaving || programNameSaving || programDraft.uploadingId) return;
@@ -3137,7 +3143,7 @@ function ClientWorkoutPlan({
           onRequestClose={() => setWorkoutInsightsOpen(false)}
         >
           <div className="trainerClientWorkoutInsightsSheet">
-            {!isTrainerV2Path(window.location.pathname) && (visibleWorkoutReview ? (
+            {visibleWorkoutReview ? (
               <ClientWorkoutReviewPanel
                 review={visibleWorkoutReview}
                 onAdjustNextWorkout={() => {
@@ -3148,7 +3154,7 @@ function ClientWorkoutPlan({
               />
             ) : (
               <div className="trainerNextEmpty">Разбор появится после первой завершённой тренировки клиента.</div>
-            ))}
+            )}
             <ClientWorkoutHistoryBlock history={history} showAll />
             {client.trainerHistoryHasMore ? <div className="trainerNextEmpty">
               <p>Показаны последние {history.length} тренировок. Более ранние записи можно загрузить отдельно.</p>
@@ -4156,6 +4162,12 @@ function ClientNotifications({
     }),
     [history, scheduleCalendar, workouts]
   );
+  const todayKey = toWorkoutDateKey(new Date());
+  const workoutProgramFinished = Boolean(
+    workouts.length &&
+    scheduleSlots.some((slot) => Boolean(slot.plannedDate)) &&
+    !scheduleSlots.some((slot) => slot.status === "planned" && slot.plannedDate >= todayKey)
+  );
   const plannedWorkoutDates = useMemo(
     () => new Set(scheduleSlots
       .filter((slot) => slot.status === "planned" && slot.plannedDate)
@@ -4555,13 +4567,18 @@ function ClientNotifications({
         <>
           <header>
             <div>
-              <span>АБОНЕМЕНТ</span>
-              <h3>Расписание клиента</h3>
+              <span>{workoutProgramFinished ? "ПЛАН ТРЕНИРОВОК" : "АБОНЕМЕНТ"}</span>
+              <h3>{workoutProgramFinished ? "Программа тренировок завершена" : "Расписание клиента"}</h3>
               <p>{editingSubscription
                 ? "Выберите дату начала, затем дату окончания абонемента."
-                : `${subscriptionStatusCopy} Действует: ${formatSubscriptionDate(subscriptionDraft.startDate)} — ${formatSubscriptionDate(subscriptionDraft.endDate)}. Показаны прошедшие и плановые тренировки.`}</p>
+                : workoutProgramFinished
+                  ? `В текущем плане больше нет предстоящих тренировок. ${subscriptionStatus.id === "expired" ? `Абонемент также закончился — действовал до ${formatSubscriptionDate(subscriptionDraft.endDate)}.` : `${subscriptionStatusCopy} Действовал: ${formatSubscriptionDate(subscriptionDraft.startDate)} — ${formatSubscriptionDate(subscriptionDraft.endDate)}.`}`
+                  : `${subscriptionStatusCopy} Действует: ${formatSubscriptionDate(subscriptionDraft.startDate)} — ${formatSubscriptionDate(subscriptionDraft.endDate)}. Показаны прошедшие и плановые тренировки.`}</p>
             </div>
-            <strong className={subscriptionStatus.tone}>{subscriptionStatus.label}<small>абонемент</small></strong>
+            <strong className={workoutProgramFinished ? "warning" : subscriptionStatus.tone}>
+              {workoutProgramFinished ? "План завершён" : subscriptionStatus.label}
+              <small>{workoutProgramFinished ? `абонемент ${subscriptionStatus.label.toLowerCase()}` : "абонемент"}</small>
+            </strong>
           </header>
           <div className="trainerWorkoutScheduleBody">
             <div className="trainerWorkoutScheduleCalendar trainerSubscriptionCalendarSurface">
@@ -6426,6 +6443,7 @@ function TrainerWorkoutEditor({
   const [libraryEditorTarget, setLibraryEditorTarget] = useState(null);
   const [libraryEditorDraft, setLibraryEditorDraft] = useState(null);
   const [libraryEditorSaving, setLibraryEditorSaving] = useState(false);
+  const [libraryEditorUploading, setLibraryEditorUploading] = useState(false);
   const appleClientEditor = embedded && isTrainerV2Path(window.location.pathname);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
@@ -6508,11 +6526,10 @@ function TrainerWorkoutEditor({
     ]));
   }, [progressHistory, workouts]);
   const libraryItems = useMemo(() => mergeTrainerExerciseLibraryItems([
-    ...(exerciseLibrary || []),
-    ...workouts.flatMap((workout) => (workout.exercises || []).map((exercise) => ({
+    ...(exerciseLibrary?.length ? exerciseLibrary : workouts.flatMap((workout) => (workout.exercises || []).map((exercise) => ({
       ...exercise, sourceWorkoutId: workout.id,
       librarySource: { type: "plan", workoutId: workout.id }
-    })))
+    }))))
   ], { includeDeleted: true }), [exerciseLibrary, workouts]);
   const library = libraryItems.filter((exercise) => Boolean(exercise.libraryDeletedAt) === libraryShowDeleted);
   const filteredLibrary = library.filter((exercise) =>
@@ -6537,18 +6554,12 @@ function TrainerWorkoutEditor({
     }
     : libraryEditorExercise;
   const activeLibraryEditorExercise = libraryEditorDraft || libraryEditorExercise;
-  const libraryEditorReadOnly = libraryEditorSaving || Boolean(activeLibraryEditorExercise?.libraryDeletedAt);
+  const libraryEditorBusy = libraryEditorSaving || libraryEditorUploading;
+  const libraryEditorReadOnly = libraryEditorBusy || Boolean(activeLibraryEditorExercise?.libraryDeletedAt);
 
   function createLibraryEditorDraft(exercise) {
     if (!exercise) return null;
-    const usesWeight = exercise.requiresWeight ?? exercise.usesWeight ?? true;
-    const sets = exercise.sets?.length ? exercise.sets : [{ reps: "", weight: "" }];
-    return {
-      ...exercise,
-      requiresWeight: usesWeight,
-      usesWeight,
-      sets: sets.map((set) => ({ ...set }))
-    };
+    return { ...exercise, ...exerciseCardMetadata(exercise) };
   }
 
   function openLibraryEditor(exercise) {
@@ -6559,22 +6570,13 @@ function TrainerWorkoutEditor({
   }
 
   async function createLibraryExercise() {
-    const exercise = selectedWorkout
-      ? await onAddExercise?.(selectedWorkout.id, { name: "Новое упражнение" })
-      : await onCreateLibraryExercise?.(selectedProgramId, { name: "Новое упражнение" });
+    const exercise = await onCreateLibraryExercise?.(selectedProgramId, { name: "Новое упражнение" });
     if (!exercise) return;
-
-    openLibraryEditor({
-      ...exercise,
-      ...(selectedWorkout ? {
-        sourceWorkoutId: selectedWorkout.id,
-        librarySource: { type: "plan", workoutId: selectedWorkout.id }
-      } : {})
-    });
+    openLibraryEditor(exercise);
   }
 
   function closeLibraryEditor() {
-    if (libraryEditorSaving) return;
+    if (libraryEditorBusy) return;
     setLibraryEditorTarget(null);
     setLibraryEditorDraft(null);
   }
@@ -6583,57 +6585,32 @@ function TrainerWorkoutEditor({
     setLibraryEditorDraft((current) => current ? { ...current, ...patch } : current);
   }
 
-  function updateLibraryEditorSet(setIndex, patch) {
-    const safePatch = sanitizeExerciseSetPatch(patch);
-    setLibraryEditorDraft((current) => {
-      if (!current) return current;
-      const sets = (current.sets?.length ? current.sets : [{ reps: "", weight: "" }]).map((set, index) => (
-        index === setIndex ? { ...set, ...safePatch } : set
-      ));
-      return { ...current, sets };
-    });
-  }
-
-  function addLibraryEditorSet() {
-    setLibraryEditorDraft((current) => {
-      if (!current) return current;
-      const sets = current.sets?.length ? current.sets : [{ reps: "", weight: "" }];
-      const firstSet = sets[0] || { reps: "", weight: "" };
-      return { ...current, sets: [...sets, { ...firstSet, id: undefined }] };
-    });
-  }
-
-  function removeLibraryEditorSet(setIndex) {
-    setLibraryEditorDraft((current) => {
-      if (!current) return current;
-      const sets = current.sets?.length ? current.sets : [{ reps: "", weight: "" }];
-      if (sets.length <= 1) return current;
-      return { ...current, sets: sets.filter((_, index) => index !== setIndex) };
-    });
-  }
-
   async function saveLibraryEditor() {
-    if (!libraryEditorExercise || !libraryEditorDraft || libraryEditorSaving) return;
+    if (!libraryEditorExercise || !libraryEditorDraft || libraryEditorBusy) return;
+    if (!libraryEditorDraft.name?.trim()) {
+      setLibraryEditorError("Укажите название упражнения.");
+      return;
+    }
     setLibraryEditorSaving(true);
     setLibraryEditorError("");
-    const patch = { ...libraryEditorDraft };
-    delete patch.librarySource;
-    delete patch.sourceWorkoutId;
+    const patch = exerciseCardMetadata(libraryEditorDraft);
     try {
       const saved = await onUpdateLibraryExercise?.(libraryEditorSourceExercise, patch);
       if (saved === true) {
         setLibraryEditorTarget(null);
         setLibraryEditorDraft(null);
       } else setLibraryEditorError("Не удалось сохранить упражнение. Попробуйте ещё раз.");
-    } catch {
-      setLibraryEditorError("Не удалось сохранить упражнение. Проверьте соединение и попробуйте ещё раз.");
+    } catch (error) {
+      setLibraryEditorError(getTrainerActionErrorStatus(error,
+        (!error?.code && error?.message) || "Не удалось сохранить упражнение. Проверьте соединение и попробуйте ещё раз."
+      ));
     } finally {
       setLibraryEditorSaving(false);
     }
   }
 
   async function removeLibraryEditor(restore = false) {
-    if (!libraryEditorExercise || libraryEditorSaving) return;
+    if (!libraryEditorExercise || libraryEditorBusy) return;
     setLibraryEditorSaving(true);
     setLibraryEditorError("");
     try {
@@ -6666,10 +6643,20 @@ function TrainerWorkoutEditor({
   async function uploadLibraryEditorVideo(event) {
     const file = event.target.files?.[0];
     event.target.value = "";
-    if (!file || !libraryEditorExercise || libraryEditorSaving) return;
-    const url = await onUploadLibraryExerciseVideo?.(libraryEditorSourceExercise, file);
-    if (typeof url === "string") {
-      updateLibraryEditorExercise({ video: url, videoAutoFilledFrom: "" });
+    if (!file || !libraryEditorExercise || libraryEditorBusy) return;
+    setLibraryEditorUploading(true);
+    setLibraryEditorError("");
+    try {
+      const url = await onUploadLibraryExerciseVideo?.(libraryEditorSourceExercise, file);
+      if (typeof url === "string" && url) {
+        updateLibraryEditorExercise({ video: url, videoAutoFilledFrom: "", videoCrop: null });
+      } else {
+        setLibraryEditorError("Не удалось загрузить видео. Проверьте соединение и попробуйте ещё раз.");
+      }
+    } catch {
+      setLibraryEditorError("Не удалось загрузить видео. Проверьте соединение и попробуйте ещё раз.");
+    } finally {
+      setLibraryEditorUploading(false);
     }
   }
 
@@ -6704,7 +6691,7 @@ function TrainerWorkoutEditor({
   return (
     <div className={embedded ? "trainerNextEmbeddedPlan trainerNextWorkoutPage" : "trainerNextPage trainerNextWorkoutPage"}>
       {!embedded ? <div className="trainerNextDesktopPageHead">
-        <div><h1>{tab === "library" ? "Моя библиотека упражнений" : "План тренировок"}</h1><p>{tab === "library" ? "Личные упражнения из ваших программ" : client ? `Клиент: ${client.name || client.email}` : "Выберите клиента"}</p></div>
+        <div><h1>{tab === "library" ? "Моя библиотека упражнений" : "План тренировок"}</h1><p>{tab === "library" ? "Общие карточки для ваших программ" : client ? `Клиент: ${client.name || client.email}` : "Выберите клиента"}</p></div>
         {tab === "plan" ? (
           <div className="trainerNextHeadActions">
             <button type="button" onClick={() => setPreviewOpen(true)}><Eye size={17} />Предпросмотр</button>
@@ -6988,13 +6975,13 @@ function TrainerWorkoutEditor({
       ) : (
         <section className={`trainerNextLibrary ${mobileStyles.libraryFix}`}>
           <div className="trainerNextPanelTitle">
-            <div><h2>Моя библиотека упражнений</h2><p>Личные упражнения, видео и параметры из ваших программ</p></div>
+            <div><h2>Моя библиотека упражнений</h2><p>Название, видео и техника. Нагрузка настраивается в программе.</p></div>
             <div className="trainerNextLibraryActions">
               <label className="trainerNextSearch open"><Search size={17} /><input value={librarySearch} onChange={(event) => setLibrarySearch(event.target.value)} placeholder="Найти упражнение..." /></label>
               <button
                 className="trainerNextLibraryAdd"
                 type="button"
-                disabled={!selectedWorkout && (!programTemplates?.length || typeof onCreateLibraryExercise !== "function")}
+                disabled={typeof onCreateLibraryExercise !== "function"}
   onClick={createLibraryExercise}
                 aria-label="Создать новое упражнение"
               >
@@ -7033,7 +7020,7 @@ function TrainerWorkoutEditor({
                   <span className="trainerNextExerciseImage">
                     {video ? <video src={video} muted preload="metadata" aria-hidden="true" /> : <Dumbbell size={22} />}
                   </span>
-                  <div><strong>{exercise.name}</strong><small>{exercise.sets?.length || 0} подх. · {video ? "с видео" : "без видео"}</small></div>
+                  <div><strong>{exercise.name}</strong><small>{video ? "С видео" : "Без видео"} · {exercise.technique ? "техника добавлена" : "без описания техники"}</small></div>
                 </article>
               );
             })}
@@ -7045,64 +7032,53 @@ function TrainerWorkoutEditor({
       {activeLibraryEditorExercise ? (
         <div className={`trainerNextModalBackdrop ${exerciseLibraryEditorStyles.backdrop}`} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeLibraryEditor()}>
           <section className={exerciseLibraryEditorStyles.modal} role="dialog" aria-modal="true" data-modal-surface="true" data-trainer-modal-surface="true" data-trainer-modal-frame="true" aria-labelledby="trainer-library-editor-title">
-            <button type="button" className={exerciseLibraryEditorStyles.close} onClick={closeLibraryEditor} disabled={libraryEditorSaving} aria-label="Закрыть редактор упражнения"><X size={18} /></button>
+            <button type="button" className={exerciseLibraryEditorStyles.close} onClick={closeLibraryEditor} disabled={libraryEditorBusy} aria-label="Закрыть редактор упражнения"><X size={18} /></button>
             <header className={exerciseLibraryEditorStyles.header} data-trainer-modal-header="true">
               <small>БИБЛИОТЕКА УПРАЖНЕНИЙ</small>
               <h2 id="trainer-library-editor-title">Редактирование упражнения</h2>
-              <p>{activeLibraryEditorExercise.libraryDeletedAt ? "Удалено из библиотеки. Упражнение можно восстановить." : "Изменения применятся после нажатия кнопки «Сохранить»."}</p>
+              <p>{activeLibraryEditorExercise.libraryDeletedAt ? "Удалено из библиотеки. Упражнение можно восстановить." : "Обновляется в связанных программах. Нагрузка и история не меняются."}</p>
             </header>
             <div className={exerciseLibraryEditorStyles.body} data-trainer-modal-content="true">
               <div className={exerciseLibraryEditorStyles.fields}>
-                <label className={exerciseLibraryEditorStyles.nameField}><span>Название</span><input value={activeLibraryEditorExercise.name || ""} onChange={(event) => updateLibraryEditorExercise({ name: event.target.value })} disabled={libraryEditorReadOnly} /></label>
+                <label className={exerciseLibraryEditorStyles.nameField}><span>Название</span><input maxLength={200} aria-describedby={libraryEditorError ? "trainer-library-editor-error" : undefined} aria-invalid={Boolean(libraryEditorError && !activeLibraryEditorExercise.name?.trim())} value={activeLibraryEditorExercise.name || ""} onChange={(event) => updateLibraryEditorExercise({ name: event.target.value })} disabled={libraryEditorReadOnly} /></label>
                 <label className={exerciseLibraryEditorStyles.nameField}>
                   <span>Группа мышц</span>
                   <select aria-label="Группа мышц" value={getTrainerLibraryMuscle(activeLibraryEditorExercise)} onChange={(event) => updateLibraryEditorExercise({ muscleGroup: event.target.value })} disabled={libraryEditorReadOnly}>
                     {TRAINER_LIBRARY_MUSCLES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
                   </select>
                 </label>
-                <label className={exerciseLibraryEditorStyles.restField}><span>Отдых</span><input value={activeLibraryEditorExercise.rest || ""} onChange={(event) => updateLibraryEditorExercise({ rest: event.target.value })} placeholder="90 сек" disabled={libraryEditorReadOnly} /></label>
-                <label className={exerciseLibraryEditorStyles.weightToggle}>
-                  <span>Используется вес</span>
-                  <input type="checkbox" checked={activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true} onChange={(event) => updateLibraryEditorExercise({ requiresWeight: event.target.checked, usesWeight: event.target.checked })} disabled={libraryEditorReadOnly} />
+                <label className={exerciseLibraryEditorStyles.nameField}>
+                  <span>Техника выполнения</span>
+                  <textarea maxLength={12000} rows={4} value={activeLibraryEditorExercise.technique || ""} onChange={(event) => updateLibraryEditorExercise({ technique: event.target.value })} disabled={libraryEditorReadOnly} placeholder="Опишите положение тела, движение и важные детали" />
                 </label>
                 <label className={exerciseLibraryEditorStyles.videoUpload}>
                   <Upload size={16} />
-                  <span>{exerciseVideoUploadingId === libraryEditorExercise.id ? "Загрузка..." : getExerciseVideo(activeLibraryEditorExercise) ? "Заменить видео" : "Загрузить видео"}</span>
+                  <span>{libraryEditorUploading || exerciseVideoUploadingId === libraryEditorExercise.id ? "Загрузка..." : getExerciseVideo(activeLibraryEditorExercise) ? "Заменить видео" : "Загрузить видео"}</span>
                   <input type="file" accept="video/*" disabled={libraryEditorReadOnly || exerciseVideoUploadingId === libraryEditorExercise.id} onChange={uploadLibraryEditorVideo} />
                 </label>
-                <div className={exerciseLibraryEditorStyles.videoPreview} aria-label="Предпросмотр видео упражнения">
-                  {getExerciseVideo(activeLibraryEditorExercise) ? (
-                    <video src={getExerciseVideo(activeLibraryEditorExercise)} controls playsInline preload="metadata" />
-                  ) : (
+                {getExerciseVideo(activeLibraryEditorExercise) ? (
+                  <ExerciseVideoCropEditor key={getExerciseVideo(activeLibraryEditorExercise)} src={getExerciseVideo(activeLibraryEditorExercise)}
+                    value={activeLibraryEditorExercise.videoCrop} disabled={libraryEditorReadOnly}
+                    onChange={videoCrop => updateLibraryEditorExercise({ videoCrop })} />
+                ) : (
+                  <div className={exerciseLibraryEditorStyles.videoPreview} aria-label="Предпросмотр видео упражнения">
                     <div className={exerciseLibraryEditorStyles.videoPreviewEmpty}>
                       <Upload size={20} aria-hidden="true" />
                       <strong>Видео ещё не добавлено</strong>
                       <span>Загрузите ролик, чтобы проверить технику упражнения.</span>
                     </div>
-                  )}
-                </div>
-              </div>
-              <div className={exerciseLibraryEditorStyles.setEditor}>
-                <div className={exerciseLibraryEditorStyles.setEditorHead}><span>Подход</span><span>Повторы</span><span>Вес, кг</span><span /></div>
-                {(activeLibraryEditorExercise.sets?.length ? activeLibraryEditorExercise.sets : [{ reps: "", weight: "" }]).map((set, setIndex, sets) => (
-                  <div className={exerciseLibraryEditorStyles.setRow} key={set.id || setIndex}>
-                    <strong>{setIndex + 1}</strong>
-                    <input aria-label={`Повторы, подход ${setIndex + 1}`} value={set.reps ?? ""} onChange={(event) => updateLibraryEditorSet(setIndex, { reps: event.target.value })} disabled={libraryEditorReadOnly} />
-                    <input aria-label={`Вес, подход ${setIndex + 1}`} inputMode="decimal" value={sanitizeExerciseWeightInput(set.weight) ?? ""} disabled={libraryEditorReadOnly || !(activeLibraryEditorExercise.requiresWeight ?? activeLibraryEditorExercise.usesWeight ?? true)} onChange={(event) => updateLibraryEditorSet(setIndex, { weight: event.target.value })} />
-                    <button type="button" disabled={libraryEditorReadOnly || sets.length <= 1} onClick={() => removeLibraryEditorSet(setIndex)} aria-label={`Удалить подход ${setIndex + 1}`}><X size={14} /></button>
                   </div>
-                ))}
-                <button className={exerciseLibraryEditorStyles.addSet} type="button" disabled={libraryEditorReadOnly} onClick={addLibraryEditorSet}><Plus size={15} />Добавить подход</button>
+                )}
               </div>
             </div>
             <footer className={exerciseLibraryEditorStyles.footer} data-trainer-modal-footer="true">
-              {libraryEditorError ? <p className={exerciseLibraryEditorStyles.error} role="alert">{libraryEditorError}</p> : null}
+              {libraryEditorError ? <p id="trainer-library-editor-error" className={exerciseLibraryEditorStyles.error} role="alert">{libraryEditorError}</p> : null}
               {activeLibraryEditorExercise.libraryDeletedAt ? <>
-                <button className={exerciseLibraryEditorStyles.deletedToggle} type="button" disabled={libraryEditorSaving} onClick={closeLibraryEditor}>Закрыть</button>
-                <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorSaving} onClick={() => void removeLibraryEditor(true)}><RefreshCw size={16} />{libraryEditorSaving ? "Восстанавливаем…" : "Восстановить"}</button>
+                <button className={exerciseLibraryEditorStyles.deletedToggle} type="button" disabled={libraryEditorBusy} onClick={closeLibraryEditor}>Закрыть</button>
+                <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorBusy} onClick={() => void removeLibraryEditor(true)}><RefreshCw size={16} />{libraryEditorSaving ? "Восстанавливаем…" : "Восстановить"}</button>
               </> : <>
-                <button className={exerciseLibraryEditorStyles.deleteButton} type="button" disabled={libraryEditorSaving} onClick={confirmRemoveLibraryEditor}><Trash2 size={16} />{libraryEditorSaving ? "Сохранение…" : "Удалить"}</button>
-                <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorSaving} onClick={() => void saveLibraryEditor()}><Save size={16} />{libraryEditorSaving ? "Сохраняем..." : "Сохранить"}</button>
+                <button className={exerciseLibraryEditorStyles.deleteButton} type="button" disabled={libraryEditorBusy} onClick={confirmRemoveLibraryEditor}><Trash2 size={16} />{libraryEditorSaving ? "Сохранение…" : "Удалить"}</button>
+                <button className={exerciseLibraryEditorStyles.saveButton} type="button" disabled={libraryEditorBusy} onClick={() => void saveLibraryEditor()}><Save size={16} />{libraryEditorUploading ? "Загружаем видео..." : libraryEditorSaving ? "Сохраняем..." : "Сохранить"}</button>
               </>}
             </footer>
           </section>
@@ -7163,7 +7139,7 @@ function CreateClientModal({ state }) {
           <label><span>Логин</span><input value={state.login} onChange={(event) => state.onLoginChange(event.target.value)} placeholder="например: ilya.fit" autoComplete="off" autoCapitalize="none" spellCheck="false" /></label>
           <small className="trainerNextModalHint">Латиница, цифры, точка, дефис или _; от 3 до 32 символов.</small>
           {state.status ? <p className="trainerNextModalStatus">{state.status}</p> : null}
-          {state.credentials ? <div className="trainerNextCredentials"><strong>Ссылка активации</strong><small>Логин: {state.credentials.login}</small><div className="trainerNextCredentialLinkRow"><code>{state.credentials.shareUrl || state.credentials.inviteUrl}</code><button className="trainerNextCopyInviteLink" type="button" aria-label="Скопировать ссылку" title="Скопировать ссылку" onClick={() => navigator.clipboard?.writeText(state.credentials.shareUrl || state.credentials.activationUrl || state.credentials.inviteUrl)}><Copy size={19} strokeWidth={2.25} /></button></div></div> : null}
+          {state.credentials ? <div className="trainerNextCredentials"><strong>Ссылка активации</strong><small>Логин: {state.credentials.login}</small><div className="trainerNextCredentialLinkRow"><code>{state.credentials.shareUrl || state.credentials.activationUrl || state.credentials.inviteUrl}</code><button className="trainerNextCopyInviteLink" type="button" aria-label="Скопировать инструкцию для клиента" title="Скопировать инструкцию для клиента" onClick={() => navigator.clipboard?.writeText(buildTrainerInviteMessage({ login: state.credentials.login, inviteUrl: state.credentials.shareUrl || state.credentials.activationUrl || state.credentials.inviteUrl }))}><Copy size={19} strokeWidth={2.25} /></button></div><small>В скопированном сообщении — логин, ссылка и шаги первого входа.</small></div> : null}
         </form>
         <footer data-trainer-modal-footer="true">
           <button className="trainerNextPrimary trainerNextModalSubmit" form="trainer-create-client-form" type="submit" disabled={state.loading}>{state.loading ? "Создаю..." : "Создать приглашение"}</button>

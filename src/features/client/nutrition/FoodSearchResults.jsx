@@ -1,3 +1,6 @@
+import { Fragment, useState } from "react";
+import FoodNutritionBasisDialog from "./FoodNutritionBasisDialog";
+import { GEMINI_ONLY_FOOD_SEARCH } from "../../../utils/nutritionSearchMode";
 import {
   getFoodDisplayPortion,
   getFoodIcon,
@@ -6,21 +9,6 @@ import {
 } from "../../../utils/nutritionFoodPresentation";
 import { normalizeNutritionFood } from "../../../utils/nutritionFoodModel";
 import styles from "./FoodSearchResults.module.css";
-
-function getFoodSourceLabel(food = {}, isMyFoodResult = false) {
-  if (isMyFoodResult) return "Моя база";
-
-  const source = String(food.source || "").trim();
-  const sourceType = String(food.sourceType || "").trim().toLowerCase();
-  const looksGenerated = sourceType === "ai_estimate" || /(?:оценка\s*ии|ai\s*(?:фото|voice|estimate)|openai)/i.test(source);
-
-  if (looksGenerated) return "Примерная оценка ИИ";
-  if (sourceType === "local_catalog") {
-    return source ? `Проверенная база · ${source}` : "Проверенная база";
-  }
-  if (/fatsecret/i.test(source)) return "Каталог брендов · FatSecret";
-  return source ? `Общая база · ${source}` : "Общая база";
-}
 
 export default function FoodSearchResults({
   search,
@@ -38,6 +26,7 @@ export default function FoodSearchResults({
   onShowMore
 }) {
   const cleanSearch = search.trim();
+  const [basisFood, setBasisFood] = useState(null);
   const myFoods = nutrition.myFoods || {};
 
   return (
@@ -46,13 +35,14 @@ export default function FoodSearchResults({
       data-testid="food-search-results"
       data-css-module-scope="food-search-results"
     >
+      {basisFood && <FoodNutritionBasisDialog key={basisFood.id} food={basisFood} onClose={()=>setBasisFood(null)} onConfirm={(food)=>{setBasisFood(null);onFoodSelect(food);}} />}
       {!photoAnalyzing && fatSecretError && (
         <div className={`${styles.status} ${styles.error}`} data-food-search-status="error">
           {fatSecretError}
         </div>
       )}
 
-      {!fatSecretLoading && cleanSearch.length >= 2 && searchResults.length === 0 && (
+      {!fatSecretLoading && !fatSecretError && cleanSearch.length >= 2 && searchResults.length === 0 && (
         <div className={styles.status} data-food-search-status="empty-search">
           <strong className={styles.statusTitle}>Точного совпадения пока нет</strong>
           {fallbackSuggestions.length > 0 && (
@@ -84,9 +74,10 @@ export default function FoodSearchResults({
 
       {visibleResults.map((food) => {
         const normalizedFood = normalizeNutritionFood(food);
-        const isMyFoodResult = searchTab === "my" || Boolean(myFoods[normalizedFood.id] || myFoods[normalizedFood.foodId]);
+        const isMyFoodResult = searchTab === "my" || (normalizedFood.sourceType !== "gemini_search" && Boolean(myFoods[normalizedFood.id] || myFoods[normalizedFood.foodId]));
 
         return (
+          <Fragment key={normalizedFood.id}>
           <button
             type="button"
             className={styles.item}
@@ -94,6 +85,7 @@ export default function FoodSearchResults({
             data-food-search-result-card
             data-css-module-control="food-search-result-card"
             onClick={() => {
+              if (normalizedFood.nutritionBasisPending) {setBasisFood(normalizedFood);return;}
               if (isMyFoodResult) {
                 onMyFoodSelect(normalizedFood);
                 return;
@@ -108,15 +100,20 @@ export default function FoodSearchResults({
             <div className={styles.itemInfo}>
               <strong className={styles.itemTitle}>{getShortFoodName(normalizedFood.name)}</strong>
               <span className={styles.itemMeta}>
-                <em className={styles.itemPortion}>{getFoodDisplayPortion(normalizedFood)}</em>
+                <em className={styles.itemPortion}>{normalizedFood.nutritionBasisPending ? "Нужно уточнить массу или объём КБЖУ" : getFoodDisplayPortion(normalizedFood)}</em>
                 <small className={styles.itemDetails}>
-                  {getFoodSourceLabel(normalizedFood, isMyFoodResult)} ·
-                  РСК {getFoodRskPercent(normalizedFood, nutrition.goals)}% · {Math.round(Number(normalizedFood.calories) || 0)} ккал
+                  {!normalizedFood.nutritionBasisPending && <>РСК {getFoodRskPercent(normalizedFood, nutrition.goals)}% · </>}{Math.round(Number(normalizedFood.calories) || 0)} ккал
                 </small>
               </span>
             </div>
             <span className={styles.itemAction} data-food-search-result-action aria-hidden="true" />
           </button>
+          {normalizedFood.sourceType === "gemini_search" && normalizedFood.sources.length > 0 && (
+            <div className={styles.sourceLinks}>
+              {normalizedFood.sources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer">Источник: {source.title}</a>)}
+            </div>
+          )}
+          </Fragment>
         );
       })}
 
@@ -134,9 +131,9 @@ export default function FoodSearchResults({
       )}
 
       {fatSecretLoading && cleanSearch.length >= 2 && (
-        <div className={styles.loading} data-testid="food-search-loading">
+        <div className={styles.loading} data-testid="food-search-loading" role="status">
           <span className={styles.loadingSpinner} />
-          <strong className={styles.loadingText}>Ищу ещё варианты в общей базе…</strong>
+          <strong className={styles.loadingText}>{GEMINI_ONLY_FOOD_SEARCH && searchTab === "food" ? "Gemini ищет продукты через Google…" : "Ищу ещё варианты в общей базе…"}</strong>
         </div>
       )}
     </div>

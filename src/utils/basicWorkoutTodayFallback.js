@@ -90,9 +90,8 @@ function getTodayExerciseCount(duration, readiness) {
   return readiness === "low" ? Math.max(3, target - 1) : target;
 }
 
-function getTodaySetCount(duration, level, readiness) {
-  if (readiness === "low" || String(duration) === "30") return 2;
-  return String(duration) === "45" && String(level) === "beginner" ? 2 : 3;
+function getTodaySetCount() {
+  return 3;
 }
 
 function isRestrictionSafe(exercise, restrictions) {
@@ -159,7 +158,7 @@ export function buildBasicWorkoutTodayLocalFallback({
   const resolvedTargets = targets.length ? targets : [getBasicWorkoutTodayTarget("chest")];
   const targetLabel = resolvedTargets.map((target) => target.label).join(" + ");
   const exerciseCount = getTodayExerciseCount(duration, readiness);
-  const setCount = getTodaySetCount(duration, level, readiness);
+  const setCount = getTodaySetCount();
   const allowedLocations = String(location) === "home" ? "home" : "gym";
   const candidates = BASIC_WORKOUT_EXERCISE_LIBRARY.filter((exercise) => (
     exercise.planEligible !== false &&

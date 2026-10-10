@@ -6,7 +6,7 @@ export default function NutritionMacroScoreRing({ score, segments }) {
       className={styles.root}
       viewBox="0 0 42 42"
       role="img"
-      aria-label={`Оценка питания: ${score}`}
+      aria-label={score === null ? "Недостаточно данных для сравнения с планом" : `Соответствие плану по записям КБЖУ: ${score} из 10`}
     >
       <circle className={styles.track} cx="21" cy="21" r="15.9155" pathLength="100" />
       {segments.map(({ id, offset, value }) => (
@@ -22,7 +22,7 @@ export default function NutritionMacroScoreRing({ score, segments }) {
         />
       ))}
       <circle className={styles.center} cx="21" cy="21" r="10.2" />
-      <text className={styles.value} x="21" y="22" textAnchor="middle">{score}</text>
+      <text className={styles.value} x="21" y="22" textAnchor="middle">{score ?? "—"}</text>
     </svg>
   );
 }

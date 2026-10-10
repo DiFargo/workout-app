@@ -6,6 +6,7 @@ import { createClientResourceId } from "../../../domain/clientInsights";
 import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
 import { uploadStorageFile } from "../../../utils/firebaseStorage";
 import { compressProgressPhoto } from "../../../utils/imageCompression";
+import { captureAuthSession as captureActiveAuthSession } from "../../../utils/authSession.js";
 import {
   getFailedMeasurementQueue,
   acknowledgeMeasurementSave,
@@ -25,6 +26,7 @@ import {
 export function createProfileProgressHandlers({
   MEASUREMENTS_STORAGE_KEY,
   auth,
+  captureAuthSession = () => captureActiveAuthSession(auth),
   db,
   aiNutritionProfile,
   aiNutritionProfileDraft,
@@ -45,9 +47,18 @@ export function createProfileProgressHandlers({
   setProfileProgressPhotoStatus,
   setProfileProgressPhotoUploading
 }) {
+  function updateForSession(session, setter, value) {
+    if (!session.isCurrent()) return;
+    setter((current) => session.isCurrent()
+      ? (typeof value === "function" ? value(current) : value)
+      : current);
+  }
+
   async function loadProfileMeasurements(uid = auth.currentUser?.uid) {
+    const session = captureAuthSession();
+    if (session.uid !== uid) return [];
     if (!uid) {
-      setProfileMeasurements([]);
+      updateForSession(session, setProfileMeasurements, []);
       return [];
     }
 
@@ -56,12 +67,12 @@ export function createProfileProgressHandlers({
       .sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
 
     if (normalizedCachedMeasurements.length) {
-      setProfileMeasurements(normalizedCachedMeasurements);
+      updateForSession(session, setProfileMeasurements, normalizedCachedMeasurements);
     }
 
     try {
       const snapshot = await getDocs(collection(db, "users", uid, "measurements"));
-      if (auth.currentUser?.uid !== uid) return [];
+      if (!session.isCurrent()) return [];
       const remoteMeasurements = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
       const measurements = Array.from(
         new Map(
@@ -73,52 +84,55 @@ export function createProfileProgressHandlers({
         .sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
 
       safeWriteUserJsonStorage(MEASUREMENTS_STORAGE_KEY, uid, measurements);
-      setProfileMeasurements(measurements);
+      updateForSession(session, setProfileMeasurements, measurements);
       return measurements;
     } catch (error) {
-      if (auth.currentUser?.uid !== uid) return [];
+      if (!session.isCurrent()) return [];
       console.error("Ошибка загрузки замеров:", error);
-      setProfileMeasurements(normalizedCachedMeasurements);
+      updateForSession(session, setProfileMeasurements, normalizedCachedMeasurements);
       return normalizedCachedMeasurements;
     }
   }
 
   async function loadClientProgressPhotos(uid = auth.currentUser?.uid) {
+    const session = captureAuthSession();
+    if (session.uid !== uid) return [];
     if (!uid) {
-      setClientProgressPhotos([]);
+      updateForSession(session, setClientProgressPhotos, []);
       return [];
     }
 
     try {
       const snapshot = await getDocs(collection(db, "users", uid, "progressPhotos"));
-      if (auth.currentUser?.uid !== uid) return [];
+      if (!session.isCurrent()) return [];
       const photos = snapshot.docs
         .map((item) => ({ id: item.id, ...item.data() }))
         .sort((a, b) => (
           getTrainerSummaryTimestamp(b.date || b.createdAt) -
           getTrainerSummaryTimestamp(a.date || a.createdAt)
         ));
-      setClientProgressPhotos(photos);
+      updateForSession(session, setClientProgressPhotos, photos);
       return photos;
     } catch (error) {
-      if (auth.currentUser?.uid !== uid) return [];
+      if (!session.isCurrent()) return [];
       console.warn("Client progress photos load failed:", error);
-      setClientProgressPhotos([]);
+      updateForSession(session, setClientProgressPhotos, []);
       return [];
     }
   }
 
   function selectClientProgressPhoto(view, file) {
-    setProfileProgressPhotoFiles((current) => ({ ...current, [view]: file || null }));
+    const session = captureAuthSession();
+    updateForSession(session, setProfileProgressPhotoFiles, (current) => ({ ...current, [view]: file || null }));
 
     if (!file) {
-      setProfileProgressPhotoPreviews((current) => ({ ...current, [view]: "" }));
+      updateForSession(session, setProfileProgressPhotoPreviews, (current) => ({ ...current, [view]: "" }));
       return;
     }
 
     const reader = new FileReader();
     reader.onload = () => {
-      setProfileProgressPhotoPreviews((current) => ({
+      updateForSession(session, setProfileProgressPhotoPreviews, (current) => ({
         ...current,
         [view]: typeof reader.result === "string" ? reader.result : ""
       }));
@@ -127,36 +141,39 @@ export function createProfileProgressHandlers({
   }
 
   async function saveClientProgressPhotos() {
-    const uid = auth.currentUser?.uid;
+    const session = captureAuthSession();
+    const uid = session.uid;
     const requiredViews = ["front", "side", "back"];
     if (!uid) return;
 
     if (!requiredViews.every((view) => profileProgressPhotoFiles[view])) {
-      setProfileProgressPhotoStatus("Добавь фото спереди, сбоку и со спины.");
+      updateForSession(session, setProfileProgressPhotoStatus, "Добавь фото спереди, сбоку и со спины.");
       return;
     }
 
-    setProfileProgressPhotoUploading(true);
-    setProfileProgressPhotoStatus("");
+    updateForSession(session, setProfileProgressPhotoUploading, true);
+    updateForSession(session, setProfileProgressPhotoStatus, "");
 
     try {
       const photo = await persistProgressPhotos({ db, uid, files: profileProgressPhotoFiles, upload: uploadStorageFile, compress: compressProgressPhoto, createId: () => createClientResourceId("progress") });
-      setClientProgressPhotos((current) => [photo, ...current.filter((item) => item.id !== photo.id)]);
-      setProfileProgressPhotoFiles({ front: null, side: null, back: null });
-      setProfileProgressPhotoPreviews({ front: "", side: "", back: "" });
-      setProfileProgressPhotoStatus("Фото прогресса сохранены.");
+      if (!session.isCurrent()) return false;
+      updateForSession(session, setClientProgressPhotos, (current) => [photo, ...current.filter((item) => item.id !== photo.id)]);
+      updateForSession(session, setProfileProgressPhotoFiles, { front: null, side: null, back: null });
+      updateForSession(session, setProfileProgressPhotoPreviews, { front: "", side: "", back: "" });
+      updateForSession(session, setProfileProgressPhotoStatus, "Фото прогресса сохранены.");
       await recordTrainerEvent(uid, "photo", "Клиент добавил фото прогресса")
         .catch((error) => console.warn("Photos saved; trainer event was not recorded", error));
     } catch (error) {
       console.error("Client progress photos upload failed:", error);
-      setProfileProgressPhotoStatus("Не получилось загрузить фото. Проверь соединение и попробуй ещё раз.");
+      updateForSession(session, setProfileProgressPhotoStatus, "Не получилось загрузить фото. Проверь соединение и попробуй ещё раз.");
     } finally {
-      setProfileProgressPhotoUploading(false);
+      updateForSession(session, setProfileProgressPhotoUploading, false);
     }
   }
 
   async function saveProfileMeasurement(draftOverride = null, options = {}) {
-    const uid = auth.currentUser?.uid;
+    const session = captureAuthSession();
+    const uid = session.uid;
     if (!uid) return false;
 
     const measurementDraft = draftOverride && typeof draftOverride === "object"
@@ -168,12 +185,12 @@ export function createProfileProgressHandlers({
     const draftValidation = validateProfileMeasurementDraft(measurementDraft, fields);
 
     if (!draftValidation.hasValue) {
-      setProfileMeasurementStatus("Заполни хотя бы один замер.");
+      updateForSession(session, setProfileMeasurementStatus, "Заполни хотя бы один замер.");
       return false;
     }
 
     if (!draftValidation.valid) {
-      setProfileMeasurementStatus(draftValidation.firstError);
+      updateForSession(session, setProfileMeasurementStatus, draftValidation.firstError);
       return false;
     }
 
@@ -182,8 +199,8 @@ export function createProfileProgressHandlers({
       ...draftValidation.values
     };
 
-    setProfileMeasurementSaving(true);
-    setProfileMeasurementStatus("");
+    updateForSession(session, setProfileMeasurementSaving, true);
+    updateForSession(session, setProfileMeasurementStatus, "");
 
     const measurementId = `measurement_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
     const now = new Date().toISOString();
@@ -212,15 +229,11 @@ export function createProfileProgressHandlers({
         : null,
       queuedAt: now
     };
-    const nextMeasurements = [
-      measurement,
-      ...(Array.isArray(profileMeasurements) ? profileMeasurements : [])
-        .filter((item) => item?.id !== measurementId)
-    ].sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
     const requireCloudSave = options?.requireCloudSave === true;
     const completeFirstSetupVersion = String(options?.completeFirstSetupVersion || "").trim();
     const isOffline = () => typeof navigator !== "undefined" && navigator.onLine === false;
     const applyLocalMeasurement = (queueForSync = false) => {
+      if (!session.isCurrent()) return false;
       const queued = setFailedMeasurementQueue(
         uid,
         queueForSync
@@ -232,14 +245,19 @@ export function createProfileProgressHandlers({
       );
 
       if (!queued && queueForSync) {
-        setProfileMeasurementStatus("Недостаточно места на устройстве. Замер не сохранён — восстановите сеть и повторите.");
+        updateForSession(session, setProfileMeasurementStatus, "Недостаточно места на устройстве. Замер не сохранён — восстановите сеть и повторите.");
         return false;
       }
-      setProfileMeasurements(nextMeasurements);
-      safeWriteUserJsonStorage(MEASUREMENTS_STORAGE_KEY, uid, nextMeasurements);
+      updateForSession(session, setProfileMeasurements, (current) => {
+        const nextMeasurements = [measurement, ...(Array.isArray(current) ? current : profileMeasurements || [])
+          .filter((item) => item?.id !== measurementId)]
+          .sort((a, b) => getMeasurementTimestampValue(b) - getMeasurementTimestampValue(a));
+        safeWriteUserJsonStorage(MEASUREMENTS_STORAGE_KEY, uid, nextMeasurements);
+        return nextMeasurements;
+      });
       if (normalizedMeasurementDraft.weight) {
-        setAiNutritionProfileDraft((prev) => ({ ...prev, weight: normalizedMeasurementDraft.weight }));
-        setAiNutritionProfile((prev) => ({
+        updateForSession(session, setAiNutritionProfileDraft, (prev) => ({ ...prev, weight: normalizedMeasurementDraft.weight }));
+        updateForSession(session, setAiNutritionProfile, (prev) => ({
           ...(prev || {}),
           ...(aiNutritionProfileDraft || {}),
           weight: normalizedMeasurementDraft.weight
@@ -248,59 +266,63 @@ export function createProfileProgressHandlers({
       return true;
     };
     if (isOffline()) {
-      setProfileMeasurementSaving(false);
+      updateForSession(session, setProfileMeasurementSaving, false);
       if (requireCloudSave) {
-        setProfileMeasurementStatus("Нет подключения к интернету. Замер не сохранён в облаке — подключитесь и повторите.");
+        updateForSession(session, setProfileMeasurementStatus, "Нет подключения к интернету. Замер не сохранён в облаке — подключитесь и повторите.");
         return false;
       }
 
       if (!applyLocalMeasurement(true)) return false;
-      setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
+      updateForSession(session, setProfileMeasurementStatus, "Замер сохранён на устройстве. Синхронизирую при появлении сети.");
       return true;
     }
 
     try {
       await persistMeasurement({ db, uid, item: queuedMeasurement, completeFirstSetupVersion });
-
+      if (!session.isCurrent()) return false;
       applyLocalMeasurement(false);
-      setProfileMeasurementStatus("Замер сохранён. Эти данные можно использовать для коррекции плана.");
+      updateForSession(session, setProfileMeasurementStatus, "Замер сохранён. Эти данные можно использовать для коррекции плана.");
     } catch (error) {
       console.error("Ошибка сохранения замера:", error);
+      if (!session.isCurrent()) return false;
 
       if (!requireCloudSave && isOffline()) {
         if (!applyLocalMeasurement(true)) return false;
-        setProfileMeasurementStatus("Замер сохранён на устройстве. Синхронизирую при появлении сети.");
+        updateForSession(session, setProfileMeasurementStatus, "Замер сохранён на устройстве. Синхронизирую при появлении сети.");
         return true;
       }
 
-      setProfileMeasurementStatus(
+      updateForSession(session, setProfileMeasurementStatus,
         isOffline()
           ? "Нет подключения к интернету. Замер не сохранён в облаке — подключитесь и повторите."
           : "Не удалось сохранить замер в облаке. Проверьте соединение и повторите."
       );
       return false;
     } finally {
-      setProfileMeasurementSaving(false);
+      updateForSession(session, setProfileMeasurementSaving, false);
     }
 
     return true;
   }
 
   async function replayFailedMeasurementSaves(uid = auth.currentUser?.uid) {
-    if (!uid || measurementReplayInProgressRef.current) return;
+    const session = captureAuthSession();
+    if (!uid || uid !== session.uid || measurementReplayInProgressRef.current?.isCurrent?.()) return;
 
     const queue = getFailedMeasurementQueue(uid);
     if (!queue.length) return;
 
-    measurementReplayInProgressRef.current = true;
+    measurementReplayInProgressRef.current = session;
     let syncedCount = 0;
 
     try {
       for (const item of queue) {
+        if (!session.isCurrent()) return;
         try {
           if (!item?.id || !item?.measurement) continue;
 
           await persistMeasurement({ db, uid, item });
+          if (!session.isCurrent()) return;
           acknowledgeMeasurementSave(uid, item);
 
           syncedCount += 1;
@@ -313,6 +335,7 @@ export function createProfileProgressHandlers({
 
       if (syncedCount > 0) {
         await loadProfileMeasurements(uid);
+        if (!session.isCurrent()) return;
         showAppError(
           "savedLocal",
           remaining.length
@@ -321,7 +344,7 @@ export function createProfileProgressHandlers({
         );
       }
     } finally {
-      measurementReplayInProgressRef.current = false;
+      if (measurementReplayInProgressRef.current === session) measurementReplayInProgressRef.current = false;
     }
   }
 

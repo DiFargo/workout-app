@@ -4,8 +4,8 @@
   min-height: 100dvh;
   margin: 0 auto;
   padding: max(26px, calc(env(safe-area-inset-top) + 18px)) 20px calc(42px + env(safe-area-inset-bottom));
-  color: #28262e;
-  background: #f7f6f8;
+  color: #1c282e;
+  background: #f5f7f8;
   font-family: var(--font-family-sans, inherit);
 }
 
@@ -33,7 +33,7 @@
   border: 0;
   border-radius: 14px;
   background: transparent;
-  color: #5f5968;
+  color: #617078;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -42,13 +42,13 @@
 .backButton svg {
   width: 21px;
   height: 21px;
-  color: #8f7ac8;
+  color: #376b91;
 }
 
-.backButton:hover { background: #f0edf3; }
+.backButton:hover { background: #edf1f3; }
 .backButton:active { transform: scale(0.985); }
 .backButton:focus-visible,
-.sectionCard:focus-visible { outline: 2px solid #8f7ac8; outline-offset: 3px; }
+.sectionCard:focus-visible { outline: 2px solid #376b91; outline-offset: 3px; }
 
 .accessBadge {
   min-height: 34px;
@@ -56,10 +56,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #e5ddf2;
+  border: 1px solid #edf1f3;
   border-radius: 999px;
-  background: #f5f1fa;
-  color: #806bb6;
+  background: #f5f7f8;
+  color: #376b91;
   font-size: 12px;
   font-weight: 750;
 }
@@ -75,10 +75,10 @@
   display: flex;
   align-items: flex-start;
   gap: 18px;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 28px;
-  background: linear-gradient(135deg, #ffffff 0%, #f7f3fc 100%);
-  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.07);
+  background: linear-gradient(135deg, #ffffff 0%, #f5f7f8 100%);
+  box-shadow: 0 12px 30px rgba(28, 28, 30, 0.07);
 }
 
 .heroIcon,
@@ -86,21 +86,21 @@
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  color: #806bb6;
+  color: #376b91;
 }
 
 .heroIcon {
   width: 54px;
   height: 54px;
   border-radius: 18px;
-  background: #eee9f8;
+  background: #edf1f3;
 }
 
 .heroIcon svg { width: 28px; height: 28px; }
 
 .eyebrow {
   margin: 0 0 5px;
-  color: #8f7ac8;
+  color: #376b91;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -111,7 +111,7 @@
 .sectionHeading h2,
 .deniedCard h1 {
   margin: 0;
-  color: #28262e;
+  color: #1c282e;
   letter-spacing: -0.025em;
 }
 
@@ -120,7 +120,7 @@
 .heroDescription {
   max-width: 500px;
   margin: 9px 0 0;
-  color: #7b7682;
+  color: #617078;
   font-size: 15px;
   font-weight: 500;
   line-height: 1.42;
@@ -130,7 +130,7 @@
 
 .sectionHeading { margin: 0 0 12px; }
 .sectionHeading h2 { font-size: 20px; line-height: 1.2; }
-.sectionHeading p { margin: 4px 0 0; color: #7b7682; font-size: 14px; }
+.sectionHeading p { margin: 4px 0 0; color: #617078; font-size: 14px; }
 
 .sectionGrid {
   display: grid;
@@ -147,19 +147,19 @@
   gap: 14px;
   position: relative;
   overflow: hidden;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 22px;
   background: #fff;
-  color: #28262e;
+  color: #1c282e;
   text-align: left;
-  box-shadow: 0 8px 22px rgba(72, 63, 87, 0.05);
+  box-shadow: 0 8px 22px rgba(28, 28, 30, 0.05);
   cursor: pointer;
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
 .sectionCard:hover {
-  border-color: #dcd1ef;
-  box-shadow: 0 14px 28px rgba(72, 63, 87, 0.1);
+  border-color: rgba(57, 82, 91, .12);
+  box-shadow: 0 14px 28px rgba(28, 28, 30, 0.1);
   transform: translateY(-2px);
 }
 
@@ -169,7 +169,7 @@
   width: 44px;
   height: 44px;
   border-radius: 15px;
-  background: #f3eff9;
+  background: #f5f7f8;
 }
 
 .cardIcon svg { width: 23px; height: 23px; }
@@ -182,7 +182,7 @@
 }
 
 .cardCopy strong { font-size: 16px; font-weight: 800; line-height: 1.2; }
-.cardCopy small { color: #7b7682; font-size: 13px; font-weight: 500; line-height: 1.32; }
+.cardCopy small { color: #617078; font-size: 13px; font-weight: 500; line-height: 1.32; }
 
 .cardChevron {
   position: absolute;
@@ -190,7 +190,7 @@
   bottom: 16px;
   width: 19px;
   height: 19px;
-  color: #8f7ac8;
+  color: #376b91;
 }
 
 .accessNote {
@@ -199,31 +199,31 @@
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  border: 1px solid #e9e1f4;
+  border: 1px solid #edf1f3;
   border-radius: 18px;
-  background: #f5f2f7;
-  color: #6f6878;
+  background: #f5f7f8;
+  color: #617078;
   font-size: 13px;
   font-weight: 550;
   line-height: 1.36;
 }
 
-.accessNote svg { flex: 0 0 auto; width: 18px; height: 18px; color: #8f7ac8; }
+.accessNote svg { flex: 0 0 auto; width: 18px; height: 18px; color: #376b91; }
 
 .deniedCard {
   max-width: 480px;
   margin: 90px auto 0;
   padding: 28px;
   text-align: center;
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   border-radius: 28px;
   background: #fff;
-  box-shadow: 0 12px 30px rgba(72, 63, 87, 0.07);
+  box-shadow: 0 12px 30px rgba(28, 28, 30, 0.07);
 }
 
-.deniedCard > svg { width: 34px; height: 34px; margin-bottom: 12px; color: #8f7ac8; }
+.deniedCard > svg { width: 34px; height: 34px; margin-bottom: 12px; color: #376b91; }
 .deniedCard h1 { font-size: 23px; }
-.deniedCard p { margin: 9px 0 0; color: #7b7682; line-height: 1.4; }
+.deniedCard p { margin: 9px 0 0; color: #617078; line-height: 1.4; }
 
 @media (max-width: 720px) {
   .root {

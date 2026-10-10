@@ -257,14 +257,20 @@ test("assigned trainer nutrition writes are limited to plan fields", () => {
   );
 });
 
-test("every configured API rewrite points to an exported function", () => {
+test("every configured API rewrite points to exactly one declared codebase's exported function", async () => {
+  const codebases = Array.isArray(firebaseConfig.functions) ? firebaseConfig.functions : [firebaseConfig.functions];
+  const entrySources = await Promise.all(codebases.map(async ({ source }) => {
+    const packageConfig = JSON.parse(await readFile(new URL(`../${source}/package.json`, import.meta.url), "utf8"));
+    return readFile(new URL(`../${source}/${packageConfig.main || "index.js"}`, import.meta.url), "utf8");
+  }));
   const rewrites = firebaseConfig.hosting?.rewrites || [];
   const functionIds = rewrites
     .map((rewrite) => rewrite.function?.functionId)
     .filter(Boolean);
 
   functionIds.forEach((functionId) => {
-    assert.match(functionsSource, new RegExp(`export const ${functionId}\\b`));
+    const declaration = new RegExp(`export const ${functionId}\\b`);
+    assert.equal(entrySources.filter(source => declaration.test(source)).length, 1, `${functionId} must be exported by exactly one declared codebase`);
   });
 });
 

@@ -1,3 +1,9 @@
+/* Use component pressed states instead of the mobile browser's blue overlay.
+   This inherited property also covers SVG/text inside interactive elements. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 *,
 *::before,
 *::after {

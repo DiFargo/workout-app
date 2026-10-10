@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test("library keeps filmed variants, groups known movements and saves a manual group", async ({ page }, info) => {
@@ -9,7 +9,7 @@ test("library keeps filmed variants, groups known movements and saves a manual g
   await page.locator(".trainerNextPageTabs button").nth(1).click();
   const library = page.locator(".trainerNextLibrary");
   await expect(library.locator("article")).toHaveCount(12);
-  await expect(library.getByRole("button", { name: "Редактировать упражнение Жим гантелей лёжа", exact: true })).toContainText("с видео");
+  await expect(library.getByRole("button", { name: "Редактировать упражнение Жим гантелей лёжа", exact: true })).toContainText(/с видео/i);
   await expect(library.getByRole("button", { name: "Редактировать упражнение Жим лёжа с гантелями", exact: true })).toHaveCount(0);
   await library.getByPlaceholder("Найти упражнение...").fill("Жим лёжа с гантелями");
   await expect(library.locator("article")).toHaveCount(1);

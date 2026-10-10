@@ -7,17 +7,18 @@
 | Слой | Назначение | Где искать |
 | --- | --- | --- |
 | Bootstrap | React root, service worker, error boundary | `src/main.jsx`, `src/App.jsx`, `src/app/AppBootstrap.jsx` |
+| Авторизация | Вход Telegram Mini App первым способом; отдельный Cloud Functions codebase без AI-секретов | `src/components/auth/AuthScreens.jsx`, `src/features/auth/authHandlers.js`, `functions-telegram-auth/` |
 | Координация | глобальное состояние, сборка route context | `src/AppCore.jsx` |
 | Навигация | список страниц, доступ, back navigation, lazy routes | `src/app/appPages.js`, `src/app/appNavigation.js`, `src/app/appRouteRenderer.jsx`, `src/app/AppRouter.jsx` |
 | Client features | экраны и обработчики клиента | `src/features/client/` |
 | Trainer features | экраны и обработчики тренера | `src/features/trainer/` |
 | Shared UI | общие панели, шапки, модальные примитивы, hooks | `src/shared/ui/`, `src/shared/hooks/` |
 | Domain / utils | чистая бизнес-логика и преобразования данных | `src/domain/`, `src/utils/` |
-| Backend | callable/HTTP functions, Telegram, reminders, AI | `functions/` |
+| Backend | основной набор callable/HTTP functions, Telegram, reminders, AI | `functions/`; Telegram Mini App auth отдельно: `functions-telegram-auth/` |
 
 ## Клиент: пять главных вкладок
 
-Текущий визуальный эталон: [«Свой ритм» — компактные пять экранов](docs/client-five-main-screens-signature.html). В runtime используются реальные данные и существующие обработчики, не демонстрационная логика макета.
+Эталон геометрии: [«Свой ритм» — компактные пять экранов](docs/client-five-main-screens-signature.html). Цветовая тема с 3.0.784: [OwnSet — зелёно-синий градиент](docs/ownset-gradient-preview.html); изменены только цвета, существующая геометрия сохранена. Основные токены: `src/styles/_variables.css`, `src/AppCoreClientAppleTheme.css`. В runtime используются реальные данные и существующие обработчики, не демонстрационная логика макета.
 Предыдущий эталон сохранён: `docs/client-five-main-screens-native-refinement.html?palette=calm-blue`.
 Шапки экранов: `src/shared/ui/ClientPageHeader.jsx`, `ClientPageHeader.module.css`. Декоративные полоски убраны по просьбе пользователя; заголовки и функциональные действия сохранены. Геометрия каждого экрана остаётся в его CSS Module.
 Регрессия нового интерфейса и основных действий: `tests/e2e/client-native-refinement.spec.js`.
@@ -35,6 +36,8 @@
 | Нужно изменить | Сначала открыть | Связанная логика |
 | --- | --- | --- |
 | Базовая программа и генерация на сегодня | `BasicWorkoutQuizPage.jsx`, `BasicWorkoutTodayPage.jsx` | `src/utils/basicWorkoutPlanBuilder.js`, `basicWorkoutSchedule.js`, `basicWorkoutTodayFallback.js`, `functions/basicWorkoutTodayPlan.js` |
+| Персонализированный подбор Gemini | `functions/basicWorkoutGemini.js`, `functions/basicWorkoutHybridPlan.js`, `functions/basicWorkoutPersonalization.js`, `src/utils/basicWorkoutClientContext.js` | Общий профиль/история для двух режимов, ограниченный каталог; [контракт 3.0.792](docs/basic-workout-personalization-792.md) |
+| Акцент недельной программы | `functions/basicWorkoutEmphasis.js`, `BasicWorkoutQuizPage.jsx`, `src/utils/basicWorkoutQuizDraft.js` | Сбалансированно / ноги и ягодицы / верх / прежняя схема; [контракт 3.0.793](docs/basic-workout-emphasis-793.md) |
 | 4-недельный план | `WorkoutPlanPage.jsx`, `workoutPlanRouteHandlers.js`, `workoutPlanUpdateHandlers.js` | `src/utils/workoutPlanNormalization.js`, `workoutPlanMode.js`, `workoutSchedule.js` |
 | Пропуск / перенос / порядок следующих тренировок | `workoutReschedule.js`, `workoutCompletion.js` | `src/utils/workoutSchedule.js`, `workoutPlanNormalization.js`, `basicWorkoutSchedule.js` |
 | Экран активной тренировки | `WorkoutRunRoute.jsx`, `WorkoutRunPageShell.jsx`, `WorkoutRunStageView.jsx` | `useWorkoutRunViewModel.js`, `workoutRuntimeHandlers.js`, `workoutRunNavigationHandlers.js` |
@@ -44,6 +47,8 @@
 | История и рекорды | `WorkoutHistoryPage.jsx`, `workoutHistoryNavigation.js` | `workoutHistoryDedupe.js`, `src/utils/workoutHistoryPresentation.js` |
 
 ## Питание
+
+Поиск по 10 000 карточкам и дополнительный Gemini: [описание](docs/gemini-nutrition-test-mode.md). Каталог `public/nutrition-catalog/personal/`, worker `src/utils/personalNutritionCatalog.worker.js`; `GEMINI_ONLY_FOOD_SEARCH=false`. Сервер Gemini: `functions/geminiNutritionSearch.js`.
 
 | Нужно изменить | Сначала открыть | Связанная логика |
 | --- | --- | --- |
@@ -101,6 +106,7 @@
 | Storage файлов | `src/utils/firebaseStorage.js`, `src/utils/imageCompression.js` |
 | Каталог продуктов | `src/data/nutrition-catalog/`, `public/nutrition-catalog/`, `scripts/build-nutrition-catalog.mjs` |
 | Медиа упражнений и замеров | `public/videos/`, `public/measurements/`, `public/basic-workout/illustrations/`; видео библиотеки в назначенном плане: `functions/clientExerciseMedia.js`, `src/utils/clientExerciseMedia.js` |
+| Дополнительные варианты базовой библиотеки с видео тренера | `src/data/basicWorkoutTrainerVideoAdditions.js`; медиа и кадрирование: `basicExerciseOverrides`, `src/utils/basicWorkoutExercisePresentation.js`; не расширяет автоматические планы |
 | Android | `capacitor.config.ts`, `android/`, `docs/android-build.md` |
 
 Не помещать секреты в эти документы или в клиентский код. Секреты Functions определены через Firebase `defineSecret`.
@@ -125,3 +131,5 @@
 - [product audit](docs/APP_AUDIT_2026-09-06.md) — текущий продуктовый аудит.
 
 Библиотека упражнений тренера: `src/utils/trainerExerciseLibrary.js` объединяет повторы с сохранением видео; `src/utils/trainerLibraryMuscleGroups.js` определяет группы. Чистый модуль `functions/exerciseLibraryIdentity.js` используется и клиентской сборкой, и серверным поиском видео для единых правил названий.
+
+Общие карточки упражнений и отдельная нагрузка: `functions/exerciseCards.js` — ссылки, снимки и совместимость со старыми копиями; `functions/trainerExerciseCards.js` — приватный серверный CRUD без полей нагрузки; `src/utils/trainerExerciseCards.js` — клиент API. Метаданные для клиента проходят через `functions/clientExerciseMedia.js`. Проверки: `tests/exercise-cards.test.mjs`, `tests/exercise-cards.rules.mjs`, `tests/e2e/trainer-exercise-cards.spec.js`. Модель и состав публикации: [exercise-card-separation](docs/exercise-card-separation.md).

@@ -15,6 +15,8 @@ export default function WorkoutRestTimer({
   compact = false,
   expanded = false,
   onMinimize,
+  docked = false,
+  onExpand,
   showCompletionAction = false,
   completionActionLabel = "К следующему упражнению",
   onCompletionAction
@@ -67,7 +69,14 @@ export default function WorkoutRestTimer({
             <Clock3 aria-hidden="true" />
             <span>Таймер отдыха</span>
           </div>
-          <strong className={styles.expandedCountdown}>{formatCompactTimer(shownSeconds)}</strong>
+          <div className={styles.timerFace}>
+            <svg className={styles.timerRing} viewBox="0 0 100 100" aria-hidden="true">
+              <circle className={styles.timerTrack} cx="50" cy="50" r="46" />
+              <circle className={styles.timerProgress} cx="50" cy="50" r="46" pathLength="100" strokeDasharray="100" strokeDashoffset={100 * (1 - Math.min(1, shownSeconds / Math.max(1, duration)))} />
+            </svg>
+            <strong className={styles.expandedCountdown}>{formatCompactTimer(shownSeconds)}</strong>
+            <span className={styles.timerState}>{running ? "Время для восстановления" : "На паузе"}</span>
+          </div>
           <p>{running ? "Отдыхайте перед следующим подходом" : "Таймер на паузе"}</p>
           <div className={`${styles.expandedControls} ${canCompleteRest ? styles.withCompletionAction : ""}`} aria-label="Корректировка таймера отдыха">
             <button type="button" onClick={() => changeSeconds(-15)} aria-label="Убавить 15 секунд">−15</button>
@@ -101,6 +110,19 @@ export default function WorkoutRestTimer({
           )}
         </section>
       </div>
+    );
+  }
+
+  if (docked) {
+    return (
+      <section className={styles.dockedTimer} data-testid="workout-rest-timer">
+        <button type="button" onClick={onExpand} aria-label="Открыть таймер отдыха">
+          <Clock3 aria-hidden="true" /><span>Отдых <b>{formatCompactTimer(shownSeconds)}</b></span><ArrowRight aria-hidden="true" />
+        </button>
+        <button type="button" onClick={toggleTimer} data-testid="workout-rest-timer-start" aria-label={primaryActionAriaLabel}>
+          <MorphingIcon icon={running ? Pause : Play} data-icon-state={running ? "pause" : "play"} />
+        </button>
+      </section>
     );
   }
 

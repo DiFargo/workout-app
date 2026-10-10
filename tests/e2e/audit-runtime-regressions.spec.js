@@ -1,15 +1,17 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test("countdown continues after extending, pausing and returning from the background", async ({ page }) => {
+  test.setTimeout(60_000);
   const checkErrors = failOnRuntimeErrors(page);
   await page.clock.install();
   await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunStage");
+  await expect(page.getByTestId("workout-exercise-set-row").nth(1)).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("workout-exercise-set-row").nth(1).click();
   const timer = page.getByTestId("workout-rest-timer-expanded");
   const value = timer.locator("strong").first();
   await expect(value).toBeVisible();
-  await page.clock.pauseAt(new Date(Date.now() + 1000));
+  await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now()) + 1000));
   const seconds = async () => { const [m, s] = (await value.textContent()).split(":").map(Number); return m * 60 + s; };
   const before = await seconds();
   await timer.getByLabel("Добавить 15 секунд").click();

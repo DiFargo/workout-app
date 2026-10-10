@@ -1,0 +1,35 @@
+import { expect, test } from './app-test.js';
+import { failOnRuntimeErrors } from './runtime-errors.js';
+
+test('set editor matches weight then reps in the workout and preserves each value', async ({ page }, testInfo) => {
+  const assertNoErrors = failOnRuntimeErrors(page);
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const url = '/cssV2?clientHarness=1&clientHarnessPage=exerciseSets&clientHarnessTheme=warm-light';
+  await page.goto(url);
+  const row = page.getByTestId('workout-exercise-set-row').first();
+  await row.getByRole('button', { name: 'Изменить подход 1' }).click();
+  const modal = page.getByTestId('workout-set-edit-modal');
+  const weight = modal.getByRole('listbox', { name: 'Вес, подход 1' });
+  const reps = modal.getByRole('listbox', { name: 'Повторы, подход 1' });
+  await expect(modal.getByRole('listbox').first()).toHaveAttribute('aria-label', 'Вес, подход 1');
+  expect((await weight.boundingBox()).x).toBeLessThan((await reps.boundingBox()).x);
+  await weight.getByRole('option', { name: '65', exact: true }).click();
+  await reps.getByRole('option', { name: '12', exact: true }).click();
+  await expect(weight.getByRole('option', { selected: true })).toHaveText('65');
+  await expect(reps.getByRole('option', { selected: true })).toHaveText('12');
+  await page.screenshot({ path: testInfo.outputPath('weight-then-reps.png'), scale: 'css' });
+  await modal.getByRole('button', { name: 'Готово', exact: true }).click();
+  await expect(row).toContainText('65 кг');
+  await expect(row).toContainText('12');
+  await row.getByRole('button', { name: 'Изменить подход 1' }).click();
+  await expect(weight.getByRole('option', { selected: true })).toHaveText('65');
+  await expect(reps.getByRole('option', { selected: true })).toHaveText('12');
+  await modal.getByRole('button', { name: 'Закрыть', exact: true }).click();
+  await expect(row.getByRole('button', { name: 'Выполнить подход 1' })).toHaveAttribute('aria-pressed', 'false');
+  await page.goto(`${url}&clientExerciseSetsState=bodyweight`);
+  await row.getByRole('button', { name: 'Изменить подход 1' }).click();
+  await expect(modal.getByRole('listbox')).toHaveCount(1);
+  await expect(reps).toBeVisible();
+  assertNoErrors();
+});

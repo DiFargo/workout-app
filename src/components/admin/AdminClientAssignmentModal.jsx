@@ -61,6 +61,7 @@ function AdminClientAssignmentSheet({
         aria-modal="true"
         className={styles.sheet}
         role="dialog"
+        onKeyDown={(event) => { if (event.key === "Escape") close(); }}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <header className={styles.header}>

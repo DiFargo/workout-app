@@ -72,7 +72,7 @@
 
 .footer { display: flex; justify-content: flex-end; gap: 10px; flex: 0 0 auto; padding: 13px 22px max(16px, env(safe-area-inset-bottom)); border-top: 1px solid var(--trainer-v2-line, #efebf3); background: #fff; }
 .footer button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; border: 1px solid var(--trainer-v2-line, #dfd8ec); border-radius: 12px; background: #fff; color: var(--trainer-v2-muted, #5f5469); font-size: 12px; font-weight: 800; cursor: pointer; }
-.footer .confirm { border-color: var(--trainer-v2-accent, #8f7ac8); background: var(--trainer-v2-accent, #8f7ac8); color: #fff; box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / .2); }
+.footer .confirm { border-color: var(--trainer-v2-accent, #8f7ac8); background: var(--ownset-action-gradient); color: #fff; box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / .2); }
 .footer button:disabled { opacity: .62; cursor: not-allowed; }
 .spinner { animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

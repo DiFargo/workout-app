@@ -1,6 +1,6 @@
 .root { width:100%; display:flex; flex-direction:column; color:var(--apple-text); }
 .profileCard { padding:16px 14px; display:flex; align-items:center; gap:11px; border-radius:18px; background:var(--apple-surface); }
-.avatar { width:46px; height:46px; flex-shrink:0; display:grid; place-items:center; overflow:hidden; border-radius:50%; background:var(--apple-blue-tint); color:var(--apple-blue); font-size:20px; font-weight:650; }
+.avatar { width:46px; height:46px; flex-shrink:0; display:grid; place-items:center; overflow:hidden; border-radius:50%; background:var(--ownset-soft-gradient); color:var(--apple-blue); font-size:20px; font-weight:650; }
 .avatar img { width:100%; height:100%; object-fit:cover; }
 .profileCopy { min-width:0; display:flex; flex-direction:column; align-items:flex-start; flex:1; }
 .profileCopy strong { max-width:100%; font-size:20px; font-weight:650; letter-spacing:-.4px; overflow-wrap:anywhere; }
@@ -25,7 +25,7 @@
 .note { padding:9px 5px 0; margin:0; color:var(--apple-secondary); font-size:11px; line-height:1.5; }
 .logout { min-height:46px; width:100%; margin-top:21px; border:0; background:transparent; color:var(--apple-red); font-size:13px; cursor:pointer; }
 .row:active { background:var(--apple-surface-muted); }
-.edit:active { background:var(--apple-blue-tint); }
+.edit:active { background:var(--ownset-soft-gradient); }
 .row:focus-visible, .edit:focus-visible, .logout:focus-visible { outline:2px solid var(--apple-blue); outline-offset:-2px; }
 .trainer .section h2 { display:none; }
 .trainer .section { margin-top:16px; }

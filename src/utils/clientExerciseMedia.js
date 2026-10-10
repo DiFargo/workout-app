@@ -1,4 +1,5 @@
 import { fetchAuthorizedWithTimeout } from "./apiClient.js";
+import { applyExerciseCard, isExerciseCardWorkoutMutable } from "../../functions/exerciseCards.js";
 
 export async function loadClientExerciseMedia(clientId, request = fetchAuthorizedWithTimeout) {
   try {
@@ -16,12 +17,17 @@ export async function loadClientExerciseMedia(clientId, request = fetchAuthorize
 }
 
 export function withClientExerciseMedia(workout, media = []) {
+  if (!isExerciseCardWorkoutMutable(workout)) return workout;
   return { ...workout, exercises: (workout.exercises || []).map((exercise) => {
-    const ownVideo = exercise.video || exercise.videoUrl || exercise.videoURL;
-    if (ownVideo && !exercise.videoAutoFilledFrom) return exercise;
     const match = media.find((item) => item.workoutId === workout.id && item.exerciseId === exercise.id &&
       item.exerciseName === exercise.name && String(item.assignmentVersion || "") === String(workout.assignedProgramUpdatedAt || ""));
-    if (!match?.video) return exercise;
-    return { ...exercise, video: match.video, videoAutoFilledFrom: match.sourceName || exercise.name };
+    const updated = match?.alternativeCards?.length && Array.isArray(exercise.trainerAlternatives) ? { ...exercise,
+      trainerAlternatives: exercise.trainerAlternatives.map((alternative) => applyExerciseCard(alternative,
+        match.alternativeCards.find((item) => item.id === (alternative.libraryExerciseId || alternative.id))?.card)) } : exercise;
+    if (match?.card) return applyExerciseCard(updated, match.card);
+    const ownVideo = exercise.video || exercise.videoUrl || exercise.videoURL;
+    if (ownVideo && !exercise.videoAutoFilledFrom) return updated;
+    if (!match?.video) return updated;
+    return { ...updated, video: match.video, videoAutoFilledFrom: match.sourceName || exercise.name };
   }) };
 }

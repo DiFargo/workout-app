@@ -16,7 +16,7 @@
   min-height: 70px;
   margin: 0;
   /* The home-indicator inset replaces the regular gap, rather than adding to it. */
-  padding: 8px 7px max(12px, env(safe-area-inset-bottom, 0px));
+  padding: 8px 7px max(12px, env(safe-area-inset-bottom, 0px), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px));
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0;
@@ -72,10 +72,10 @@
 }
 .main > .active, .nutrition > .active, .training > .active {
   color: var(--apple-action);
-  background: transparent;
+  background: var(--ownset-soft-gradient);
 }
 .main > .active, .nutrition > .active { position:relative; }
-.main > .active::before, .nutrition > .active::before { content:""; position:absolute; top:-8px; width:17px; height:3px; border-radius:3px; background:var(--apple-action); }
+.main > .active::before, .nutrition > .active::before { content:""; position:absolute; top:-8px; width:17px; height:3px; border-radius:3px; background:var(--ownset-action-gradient); }
 .active strong { font-weight: 650; }
 .active svg { stroke-width: 2.25; }
 .main button:focus-visible, .nutrition button:focus-visible, .training button:focus-visible {

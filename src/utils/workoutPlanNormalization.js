@@ -13,8 +13,10 @@ export function makeThreeSets(sets = [], defaultReps = 8) {
     enteredWeight: set?.enteredWeight || ""
   });
 
+  // Keep the legacy initializer name, but never pad an existing prescription.
+  // Loading, replacing or saving an exercise must not change its set count.
   return Array.from(
-    { length: Math.max(cleanSets.length, 3) },
+    { length: cleanSets.length || 3 },
     (_, index) => buildSet(cleanSets[index])
   );
 }

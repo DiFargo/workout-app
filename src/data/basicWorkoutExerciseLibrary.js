@@ -1,5 +1,10 @@
 // Curated, reviewed exercise names and movement groups for basic workouts.
 // Cues are original app copy; the wider 873-entry reference catalogue is lazy.
+import { BASIC_WORKOUT_TRAINER_LIBRARY_ADDITIONS, BASIC_WORKOUT_TRAINER_LIBRARY_GROUPS, BASIC_WORKOUT_VIDEO_IDS } from "./basicWorkoutTrainerLibraryAdditions.js";
+import {
+  BASIC_WORKOUT_TRAINER_VIDEO_ADDITIONS,
+  BASIC_WORKOUT_TRAINER_VIDEO_GROUPS
+} from "./basicWorkoutTrainerVideoAdditions.js";
 import {
   BASIC_WORKOUT_COMPACT_EXTRA_GROUPS,
   BASIC_WORKOUT_COMPACT_LIBRARY_ADDITIONS,
@@ -32,7 +37,9 @@ export const BASIC_WORKOUT_EXERCISE_GROUPS = [
   { id: "triceps", title: "Руки · трицепс", shortTitle: "Трицепс" },
   { id: "forearms", title: "Руки · предплечья и хват", shortTitle: "Предплечья" },
   { id: "core", title: "Кор · стабилизация и пресс", shortTitle: "Пресс" },
-  ...BASIC_WORKOUT_COMPACT_EXTRA_GROUPS
+  ...BASIC_WORKOUT_COMPACT_EXTRA_GROUPS,
+  ...BASIC_WORKOUT_TRAINER_VIDEO_GROUPS,
+  ...BASIC_WORKOUT_TRAINER_LIBRARY_GROUPS
 ];
 
 const BASIC_WORKOUT_PLAN_EXERCISE_LIBRARY = [
@@ -135,8 +142,10 @@ export const BASIC_WORKOUT_EXERCISE_LIBRARY = [
     sectionId: "strength",
     planEligible: true
   })),
-  ...BASIC_WORKOUT_COMPACT_LIBRARY_ADDITIONS
-];
+  ...BASIC_WORKOUT_COMPACT_LIBRARY_ADDITIONS,
+  ...BASIC_WORKOUT_TRAINER_VIDEO_ADDITIONS,
+  ...BASIC_WORKOUT_TRAINER_LIBRARY_ADDITIONS
+].map(exercise => ({ ...exercise, hasVideo: BASIC_WORKOUT_VIDEO_IDS.has(exercise.id) }));
 
 export const BASIC_WORKOUT_COMPACT_LIBRARY_COUNT = BASIC_WORKOUT_EXERCISE_LIBRARY.length;
 
@@ -144,5 +153,5 @@ export const BASIC_WORKOUT_LIBRARY_SOURCE = {
   name: "Внутренняя проверенная база базовых планов",
   url: "",
   accessedAt: "2026-08-06",
-  note: "В библиотеке 99 понятных упражнений: 75 силовых для готовых и ИИ-планов, 16 для мобильности и 8 для кардио. ИИ использует отдельный проверенный поднабор силовых упражнений. Полный справочник из 873 упражнений хранится скрытым резервом и не попадает в базовые планы."
+  note: "Базовые планы используют силовую библиотеку, включая разрешённую личную библиотеку тренера. Совместимые упражнения с видео имеют приоритет. Мобильность и кардио доступны отдельно; полный справочник из 873 упражнений не используется для автоматического подбора."
 };

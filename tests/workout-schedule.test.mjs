@@ -244,3 +244,38 @@ test("a new assignment never inherits dates from unrelated old workout ids", () 
   assert.equal(calendar.plannedWorkouts[0]?.date || "", "");
   assert.deepEqual(calendar.scheduledDates, []);
 });
+
+test("new program slots ignore four past dates from an older assignment", () => {
+  const oldWorkouts = Array.from({ length: 4 }, (_, i) => ({ id: `old-${i}` }));
+  const newWorkouts = Array.from({ length: 8 }, (_, i) => ({ id: `new-${i}`, assignedProgramUpdatedAt: "new", assignedProgramAddedAt: "new", status: "planned" }));
+  const calendar = { assignedProgramUpdatedAt: "old", scheduledDates: ["2026-08-26", "2026-08-29", "2026-09-01", "2026-09-07"], plannedWorkouts: buildWorkoutScheduleDraft(["2026-08-26", "2026-08-29", "2026-09-01", "2026-09-07"], oldWorkouts) };
+  const original = structuredClone(calendar);
+  const slots = buildPlannedWorkoutSlots({ workouts: newWorkouts, calendar, now: new Date("2026-09-10T12:00:00") });
+  assert.equal(slots.filter(slot => slot.isMissed).length, 0);
+  assert.ok(slots.every(slot => !slot.plannedDate));
+  const synced = syncWorkoutCalendarWithPlan(calendar, newWorkouts);
+  assert.deepEqual(synced.scheduledDates, []);
+  assert.ok(synced.plannedWorkouts.every(slot => slot.status === "planned" && !slot.date));
+  assert.deepEqual(calendar, original);
+});
+
+test("same day order across assignments cannot shadow the new program's exact slots", () => {
+  const current = [{ id: "new-1", assignedProgramUpdatedAt: "new", assignedProgramAddedAt: "new" }];
+  const calendar = { assignedProgramUpdatedAt: "new", plannedWorkouts: [
+    { workoutId: "old-1", order: 1, date: "2026-08-26", status: "missed", assignedProgramAddedAt: "old" },
+    { workoutId: "new-1", order: 1, date: "2026-09-25", status: "planned", assignedProgramAddedAt: "new" }
+  ] };
+  const slots = buildPlannedWorkoutSlots({ workouts: current, calendar, now: new Date("2026-09-10T12:00:00") });
+  assert.equal(slots[0].plannedDate, "2026-09-25");
+  assert.equal(slots[0].status, "planned");
+  const draft = buildWorkoutScheduleDraftWithExistingStatuses(["2026-09-25"], current, calendar.plannedWorkouts);
+  assert.equal(draft[0].status, "planned");
+  const synced = syncWorkoutCalendarWithPlan(calendar, current);
+  assert.equal(synced.plannedWorkouts[0].date, "2026-09-25");
+  assert.equal(synced.plannedWorkouts[0].status, "planned");
+});
+
+test("unmarked legacy positional slots remain usable only without a conflicting assignment", () => {
+  const slots = buildPlannedWorkoutSlots({ workouts: [{ id: "w1" }], calendar: { plannedWorkouts: [{ order: 1, date: "2026-09-12", status: "planned" }] }, now: new Date("2026-09-10T12:00:00") });
+  assert.equal(slots[0].plannedDate, "2026-09-12");
+});

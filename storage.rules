@@ -31,7 +31,17 @@ service firebase.storage {
     }
 
     function isAdmin() {
-      return isActiveMember() && request.auth.token.admin == true;
+      return isActiveMember() && userData(request.auth.uid).role == "admin" &&
+        hasCurrentAdminClaimVersion(userData(request.auth.uid)) &&
+        request.auth.token.admin == true;
+    }
+
+    function hasCurrentAdminClaimVersion(data) {
+      return data.keys().hasAll(["adminClaimVersion"])
+        ? data.adminClaimVersion is string &&
+          "adminClaimVersion" in request.auth.token &&
+          request.auth.token.adminClaimVersion == data.adminClaimVersion
+        : !("adminClaimVersion" in request.auth.token);
     }
 
     function isTrainer() {
@@ -139,6 +149,7 @@ service firebase.storage {
     match /progress-photos/{uid}/{photoId}/{fileName} {
       allow read: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
       allow create, update: if (isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid))) &&
+        hasActiveMembershipData(userData(uid)) &&
         isProgressPhoto();
       allow delete: if isOwnerOrAdmin(uid) || (isTrainer() && isAssignedTrainer(uid));
     }

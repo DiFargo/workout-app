@@ -1,4 +1,5 @@
 import { doc, getDoc } from "firebase/firestore";
+import { refreshTemplateExerciseCards } from "../../utils/trainerExerciseCards.js";
 
 export function createTrainerMonthSelectedExerciseHandlers({
   adminActiveProgramId,
@@ -54,7 +55,7 @@ export function createTrainerMonthSelectedExerciseHandlers({
         return;
       }
 
-      const template = templateSnapshot.data();
+      const template = await refreshTemplateExerciseCards(templateSnapshot.data());
       const templateMicrocycles = Array.isArray(template.blocks)
         ? template.blocks
         : (template.months || []).flatMap((month) => month.microcycles || month.blocks || []);

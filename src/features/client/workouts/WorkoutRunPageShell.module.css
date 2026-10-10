@@ -40,8 +40,8 @@
   position: relative;
   overflow: hidden;
   border-radius: 0;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
 }
 
 @media (min-width: 403px) {
@@ -111,3 +111,22 @@
     padding-left: 10px;
   }
 }
+
+/* Approved workout-session-apple v5: one viewport and system typography. */
+:global(:root[data-app-theme="warm-light"]) .root.root {
+  --workout-run-content-width: min(760px, 100vw);
+  --workout-run-content-half: min(380px, 50vw);
+  --workout-cycle-header-height: calc(144px + env(safe-area-inset-top, 0px));
+  width: 100%; max-width: none; height: 100dvh; min-height: 100dvh; max-height: 100dvh;
+  margin: 0; padding: 0; border-radius: 0; box-shadow: none;
+  --workout-inline-gutter: clamp(16px, 5vw, 20px);
+  font-family: var(--font-family-sans);
+  -webkit-font-smoothing: antialiased;
+  --font-family-compact-ui: var(--font-family-sans);
+  --font-family-display: var(--font-family-sans);
+  display: flex; flex-direction: column;
+}
+:global(:root[data-app-theme="warm-light"]) .root button,
+:global(:root[data-app-theme="warm-light"]) .root textarea { font-family: inherit; }
+@media (max-width: 350px) { :global(:root[data-app-theme="warm-light"]) .root.root { --workout-cycle-header-height: calc(136px + env(safe-area-inset-top, 0px)); } }
+@media (prefers-reduced-motion: reduce) { .root *, .root *::before, .root *::after { animation: none !important; transition-duration: 0ms !important; scroll-behavior: auto !important; } }

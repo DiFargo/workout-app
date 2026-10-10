@@ -1,6 +1,6 @@
 import { toWorkoutDateKey } from "../../../utils/workoutSchedule.js";
-import { useEffect, useRef, useState } from "react";
-import { CalendarDays, Check, ChevronLeft, Dumbbell, KeyRound, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CalendarDays, Check, Dumbbell, KeyRound, Sparkles } from "lucide-react";
 
 import {
   createBasicWorkoutLongPlanAccessRecord,
@@ -9,7 +9,7 @@ import {
   isBasicWorkoutLongPlanAccessCode
 } from "../../../utils/basicWorkoutLongPlanAccess";
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
-import { getBasicWorkoutQuizDraft, getBasicWorkoutQuizStepHint } from "../../../utils/basicWorkoutQuizDraft";
+import { getBasicWorkoutQuizDraft, getBasicWorkoutQuizStepHint, resolveQuizWorkoutEmphasis } from "../../../utils/basicWorkoutQuizDraft";
 import {
   applyBasicWorkoutSchedule,
   buildBasicWorkoutScheduleCalendar,
@@ -23,6 +23,9 @@ import { safeReadJsonStorage, safeWriteJsonStorage } from "../../../utils/storag
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { ProfileWorkoutCalendarContent } from "../profile/ProfileWorkoutCalendarModal";
 import { requestBasicWorkoutAiPlan } from "./basicWorkoutAi";
+import { getBasicWorkoutGenerationNotice } from "../../../utils/basicWorkoutGeneration.js";
+import { buildBasicWorkoutClientContext } from "../../../utils/basicWorkoutClientContext.js";
+import { QuizSlider, QuizPreferences, QuizReviewAnswers } from "./BasicWorkoutQuizControls.jsx";
 import styles from "./BasicWorkoutQuizPage.module.css";
 
 const QUIZ_STEPS = [
@@ -30,7 +33,7 @@ const QUIZ_STEPS = [
     key: "goal",
     eyebrow: "Цель",
     title: "Для чего тебе нужен план?",
-    description: "Подберём нагрузку и упражнения под твой основной фокус.",
+    description: "Начнём с того, что важно именно тебе.",
     options: [
       { value: "general_fitness", label: "Хорошая форма", hint: "Сила, выносливость и самочувствие" },
       { value: "fat_loss", label: "Снижение веса", hint: "Больше движения и умеренная нагрузка" },
@@ -65,6 +68,7 @@ const QUIZ_STEPS = [
     title: "Сколько раз в неделю?",
     description: "Оставим достаточно времени для восстановления.",
     options: [
+      { value: "1", label: "1 тренировка", hint: "Один устойчивый день для всего тела" },
       { value: "2", label: "2 тренировки", hint: "Мягкий и устойчивый старт" },
       { value: "3", label: "3 тренировки", hint: "Оптимальный базовый ритм" },
       { value: "4", label: "4 тренировки", hint: "Больше тренировочного объёма" },
@@ -79,7 +83,7 @@ const QUIZ_STEPS = [
     options: [
       { value: "30", label: "Около 30 минут", hint: "3–4 упражнения" },
       { value: "45", label: "Около 45 минут", hint: "4–5 упражнений" },
-      { value: "60", label: "Около 60 минут", hint: "5–6 упражнений" },
+      { value: "60", label: "Около 60 минут", hint: "До 7 упражнений — в зависимости от формата" },
       { value: "90", label: "Около 90 минут", hint: "6–8 упражнений" }
     ]
   },
@@ -87,20 +91,20 @@ const QUIZ_STEPS = [
     key: "restrictions",
     eyebrow: "Самочувствие",
     title: "Есть ли ограничения?",
-    description: "Это поможет исключить неподходящие движения из плана.",
+    description: "При ограничениях автоматический подбор недоступен — нужен план с тренером.",
     options: [
       { value: "none", label: "Нет ограничений", hint: "Могу выполнять базовые упражнения" },
-      { value: "back", label: "Спина", hint: "Учтём дискомфорт или рекомендации специалиста" },
-      { value: "knees", label: "Колени", hint: "Снизим ударную и глубокую нагрузку" },
-      { value: "shoulders", label: "Плечи", hint: "Подберём более щадящие варианты жимов" },
+      { value: "back", label: "Спина", hint: "Нужен подбор с тренером" },
+      { value: "knees", label: "Колени", hint: "Нужен подбор с тренером" },
+      { value: "shoulders", label: "Плечи", hint: "Нужен подбор с тренером" },
       { value: "other", label: "Другое", hint: "Можно кратко описать ниже" }
     ]
   },
   {
     key: "planPreferences",
     eyebrow: "Пожелания",
-    title: "Есть пожелания к плану?",
-    description: "Напиши, что важно учесть: любимые упражнения, желаемый акцент или то, чего хочется избегать. Это необязательно."
+    title: "На чём сделать акцент?",
+    description: "Выбери фокус. Остальное мы учтём в плане."
   }
 ];
 
@@ -140,7 +144,7 @@ const GENERATION_PROGRESS_STAGES = [
     afterMs: 8200,
     percent: 64,
     title: "Собираем план на 4 недели",
-    description: "Создаём два варианта недели и прогрессию."
+    description: "Создаём два варианта недели с выбранным акцентом."
   },
   {
     afterMs: 15000,
@@ -162,23 +166,9 @@ function getGenerationProgressStage(elapsedMs = 0) {
   ), { ...GENERATION_PROGRESS_STAGES[0], index: 0 });
 }
 
-function getOptionLabel(stepKey, value) {
-  return QUIZ_STEPS
-    .find((step) => step.key === stepKey)
-    ?.options.find((option) => option.value === value)
-    ?.label || "Не выбрано";
-}
-
 function getTwoDayStructureLabel(value) {
   return TWO_DAY_STRUCTURE_OPTIONS.find((option) => option.value === value)?.label
     || "Не выбрано";
-}
-
-function getReviewAnswer(step, quiz) {
-  if (step.key === "planPreferences") {
-    return String(quiz.planPreferences || "").trim() || "Нет пожеланий";
-  }
-  return getOptionLabel(step.key, quiz[step.key]);
 }
 
 function getPlanScheduleDates(plan = {}) {
@@ -195,6 +185,9 @@ export default function BasicWorkoutQuizPage({
   userId,
   startingWeightProfile,
   workoutHistory,
+  profileMeasurements,
+  workoutHistoryLoading,
+  onLoadWorkoutHistory,
   onBasicWorkoutQuizChange,
   onApplyBasicWorkoutPlan,
   onOpenToday,
@@ -239,7 +232,17 @@ export default function BasicWorkoutQuizPage({
   const [scheduleSelectedDate, setScheduleSelectedDate] = useState(() => (
     initialScheduleDates[0] || toWorkoutDateKey(new Date())
   ));
-  const quiz = getBasicWorkoutQuizDraft(basicWorkoutQuiz);
+  const quizDraft = getBasicWorkoutQuizDraft(basicWorkoutQuiz);
+  const clientContext = useMemo(() => buildBasicWorkoutClientContext({ profile: startingWeightProfile,
+    measurements: profileMeasurements, history: workoutHistory }), [startingWeightProfile, profileMeasurements, workoutHistory]);
+  const quiz = { ...quizDraft, trainingEmphasis: generatedPlan?.trainingEmphasis || resolveQuizWorkoutEmphasis(quizDraft, clientContext.registration) };
+  const historyRequested = useRef("");
+  useEffect(() => {
+    if (userId && onLoadWorkoutHistory && historyRequested.current !== userId) {
+      historyRequested.current = userId;
+      onLoadWorkoutHistory();
+    }
+  }, [userId, onLoadWorkoutHistory]);
   const isReviewStep = stepIndex === QUIZ_STEPS.length;
   const currentStep = QUIZ_STEPS[stepIndex];
   const stepHint = currentStep ? getBasicWorkoutQuizStepHint(currentStep.key, quiz) : "";
@@ -318,6 +321,7 @@ export default function BasicWorkoutQuizPage({
       longPlanAnswers: {
         ...getBasicWorkoutQuizDraft(previous),
         [field]: value,
+        ...(field === "trainingEmphasis" ? { trainingEmphasisChosen: true } : {}),
         ...(field === "restrictions" && value !== "other" ? { restrictionDetails: "" } : {})
       },
       generatedPlan: undefined
@@ -329,7 +333,7 @@ export default function BasicWorkoutQuizPage({
       setStepIndex(firstIncompleteStep);
       return;
     }
-    if (isGenerating) return;
+    if (isGenerating || workoutHistoryLoading) return;
     setGenerationError("");
     setPlanSaveError("");
     setOwnPlanNotice("");
@@ -343,18 +347,18 @@ export default function BasicWorkoutQuizPage({
     const progressTimer = window.setInterval(updateGenerationProgress, 650);
 
     try {
-      const plan = await requestBasicWorkoutAiPlan(quiz, startingWeightProfile);
+      const plan = await requestBasicWorkoutAiPlan(quiz, clientContext.registration, clientContext.trainingHistory);
       window.clearInterval(progressTimer);
       setGenerationProgress({ percent: 100, title: "План готов", description: "Открываем обзор программы.", index: GENERATION_PROGRESS_STAGES.length });
       setGenerationPhase("ready");
       await new Promise((resolve) => window.setTimeout(resolve, 900));
       const defaultScheduleDates = buildDefaultBasicWorkoutSchedule(plan.workouts?.length, quiz.days);
       setGeneratedPlan(plan);
-      setOwnPlanNotice(plan?.requiresReview
+      setOwnPlanNotice(getBasicWorkoutGenerationNotice(plan) || (plan?.requiresReview
         ? "Вы выбрали ограничение, поэтому мы собрали временный базовый план из проверенных упражнений. Это не медицинская реабилитация: выполняйте только движения без боли и согласуйте нагрузку со специалистом."
         : plan?.generationFallback
           ? "Приложение автоматически собрало надёжный план из проверенных упражнений."
-          : "");
+          : ""));
       setPlanScheduleDates(defaultScheduleDates);
       setScheduleDraftDates(defaultScheduleDates);
       setScheduleEditing(false);
@@ -362,10 +366,14 @@ export default function BasicWorkoutQuizPage({
       setScheduleMonth(getBasicWorkoutScheduleMonthKey(defaultScheduleDates));
       setScheduleSelectedDate(defaultScheduleDates[0] || toWorkoutDateKey(new Date()));
     } catch (error) {
+      if (error?.noLocalFallback) {
+        setGenerationError(error.message);
+        return;
+      }
       console.warn("Basic workout AI request failed; using local fallback plan.", error);
       try {
-        createSafeFallbackPlan(
-          "ИИ временно недоступен, поэтому мы подготовили безопасный базовый план по вашим ответам."
+        await createSafeFallbackPlan(
+          "Gemini недоступен. План собран локально по тем же базовым шаблонам и проверкам."
         );
       } catch (fallbackError) {
         console.error("Basic workout local fallback failed:", fallbackError);
@@ -420,17 +428,9 @@ export default function BasicWorkoutQuizPage({
     }
   }
 
-  function createSafeFallbackPlan(notice = "ИИ сейчас недоступен, поэтому мы подготовили безопасный базовый план по вашим ответам.") {
-    const fallbackPlan = buildBasicWorkoutPlanFromQuiz(
-      { ...quiz, generatedPlan: undefined },
-      undefined,
-      { profile: startingWeightProfile, history: workoutHistory }
-    );
-    const resolvedFallbackPlan = {
-      ...fallbackPlan,
-      generatedBy: "fallback",
-      generationFallback: true
-    };
+  async function createSafeFallbackPlan(notice = "План собран по базовому шаблону без Gemini.") {
+    const { buildLocalHybridWorkoutPlan } = await import("../../../../functions/basicWorkoutHybridPlan.js");
+    const resolvedFallbackPlan = buildLocalHybridWorkoutPlan({ ...quiz, mode: "plan", ...clientContext });
     const defaultScheduleDates = buildDefaultBasicWorkoutSchedule(
       resolvedFallbackPlan.workouts?.length,
       quiz.days
@@ -445,7 +445,7 @@ export default function BasicWorkoutQuizPage({
     setScheduleSelectedDate(defaultScheduleDates[0] || toWorkoutDateKey(new Date()));
     setGenerationError("");
     setPlanSaveError("");
-    setOwnPlanNotice(notice);
+    setOwnPlanNotice(getBasicWorkoutGenerationNotice(resolvedFallbackPlan) || notice);
   }
 
   function toggleScheduleDate(dateKey) {
@@ -473,13 +473,13 @@ export default function BasicWorkoutQuizPage({
         title="План на 4 недели"
         titleTestId="basic-quiz-title"
         eyebrow="Базовые тренировки"
-        onBack={onBackToWorkouts || onOpenTraining}
-        backAriaLabel="Вернуться к тренировкам"
+        onBack={isLongPlanUnlocked && !generatedPlan && stepIndex > 0 ? () => { setStepIndex(editingFromReview ? QUIZ_STEPS.length : stepIndex - 1); setEditingFromReview(false); } : onBackToWorkouts || onOpenTraining}
+        backAriaLabel={isLongPlanUnlocked && !generatedPlan && stepIndex > 0 ? "Назад" : "Вернуться к тренировкам"}
         testId="basic-quiz-header"
         scope="basic-quiz-header"
       />
 
-      <nav className={styles.planSwitcher} aria-label="Формат базовой тренировки" data-testid="basic-workout-plan-switcher">
+      {(!isLongPlanUnlocked || generatedPlan) && <nav className={styles.planSwitcher} aria-label="Формат базовой тренировки" data-testid="basic-workout-plan-switcher">
         <button type="button" onClick={onOpenToday}>
           <Dumbbell aria-hidden="true" />
           <span><strong>На сегодня</strong><small>Быстрая тренировка</small></span>
@@ -488,7 +488,7 @@ export default function BasicWorkoutQuizPage({
           <CalendarDays aria-hidden="true" />
           <span><strong>На 4 недели</strong><small>Полная программа</small></span>
         </button>
-      </nav>
+      </nav>}
 
       {!isLongPlanUnlocked ? (
         <main className={styles.accessGate}>
@@ -531,6 +531,12 @@ export default function BasicWorkoutQuizPage({
           <span className={styles.eyebrow}>План готов</span>
           <h2>{planPreview.name}</h2>
           <p>{planPreview.description}</p>
+          {generatedPlan.weeklySetDistribution ? (
+            <p className={styles.emphasisSummary} data-testid="basic-quiz-emphasis-summary">
+              Подходы за первую неделю: ноги и ягодицы — {generatedPlan.weeklySetDistribution.lower}, верх — {generatedPlan.weeklySetDistribution.upper}, кор — {generatedPlan.weeklySetDistribution.core}.
+              <small>Считаем по основной зоне упражнения, без повторного учёта косвенной нагрузки.</small>
+            </p>
+          ) : null}
           {ownPlanNotice ? <p className={styles.placeholderNotice} role="status">{ownPlanNotice}</p> : null}
 
           <div className={styles.resultStats}>
@@ -540,7 +546,7 @@ export default function BasicWorkoutQuizPage({
           </div>
 
           {planPreview.safetyNote ? <p className={styles.safetyNote}>{planPreview.safetyNote}</p> : null}
-          <p className={styles.progressionNote}>Стартовые веса будут рассчитаны по анкете и уточнятся после первого подхода.</p>
+          {planPreview.startingWeightPolicy !== "manual" ? <p className={styles.progressionNote}>Стартовые веса будут рассчитаны по анкете и уточнятся после первого подхода.</p> : null}
           {planPreview.progressionNote ? <p className={styles.progressionNote}>{planPreview.progressionNote}</p> : null}
 
           <section className={styles.scheduleSection} aria-label="Расписание тренировок">
@@ -623,25 +629,15 @@ export default function BasicWorkoutQuizPage({
       ) : isReviewStep ? (
         <section className={styles.reviewCard} data-testid="basic-quiz-review">
           <div className={styles.reviewHeading}>
-            <span className={styles.eyebrow}>Проверь ответы</span>
-            <h2 ref={questionRef} tabIndex={-1}>Составим твой стартовый план</h2>
-            <p>ИИ подготовит программу на 4 недели, которую можно сразу запустить в приложении.</p>
+            <span className={styles.eyebrow}>Проверка ответов</span>
+            <h2 ref={questionRef} tabIndex={-1}>Всё верно?</h2>
+            <p>Нажми на ответ, если хочешь его изменить.</p>
           </div>
 
           <div className={styles.answerList} ref={reviewAnswersRef}>
-            {QUIZ_STEPS.map((step) => (
-              <button className={styles.answerRow} data-answer-key={step.key} key={step.key} type="button" onClick={() => editAnswer(QUIZ_STEPS.indexOf(step))}>
-                <span>{step.eyebrow}</span>
-                <strong>{getReviewAnswer(step, quiz)}</strong>
-                {step.key === "restrictions" && quiz.restrictions === "other" ? <small>{quiz.restrictionDetails}</small> : null}
-              </button>
-            ))}
-            {quiz.days === "2" ? (
-              <button className={styles.answerRow} data-answer-key="twoDayStructure" type="button" onClick={() => editAnswer(QUIZ_STEPS.length - 1)}>
-                <span>Формат нагрузки</span>
-                <strong>{getTwoDayStructureLabel(quiz.twoDayStructure)}</strong>
-              </button>
-            ) : null}
+            <QuizReviewAnswers quiz={quiz} steps={QUIZ_STEPS} editAnswer={editAnswer}
+              context={clientContext} loading={workoutHistoryLoading} onEditProfile={onOpenCabinet}
+              updateQuiz={updateQuiz} structureLabel={getTwoDayStructureLabel(quiz.twoDayStructure)} />
           </div>
 
           <div className={styles.reviewActions} data-testid="basic-quiz-review-actions">
@@ -650,18 +646,17 @@ export default function BasicWorkoutQuizPage({
             ) : null}
             {generationError ? <p className={styles.errorMessage} role="alert">{generationError}</p> : null}
 
-            <button className={styles.primaryButton} data-testid="basic-quiz-generate" type="button" onClick={generatePlan} disabled={isGenerating || firstIncompleteStep !== -1}>
+            <button className={styles.primaryButton} data-testid="basic-quiz-generate" type="button" onClick={generatePlan} disabled={isGenerating || workoutHistoryLoading || firstIncompleteStep !== -1}>
               <Sparkles aria-hidden="true" /> {isGenerating ? "ИИ составляет план…" : "Составить план с ИИ"}
             </button>
             {generationError ? (
-              <button className={styles.secondaryButton} type="button" onClick={createSafeFallbackPlan}>
+              <button className={styles.secondaryButton} type="button" onClick={() => {
+                createSafeFallbackPlan().catch((error) => setGenerationError(error.message));
+              }}>
                 Использовать готовый базовый план
               </button>
             ) : null}
             {ownPlanNotice ? <p className={styles.placeholderNotice} role="status">{ownPlanNotice}</p> : null}
-            <button className={styles.backButton} type="button" onClick={() => setStepIndex(QUIZ_STEPS.length - 1)} disabled={isGenerating}>
-              <ChevronLeft aria-hidden="true" /> Назад к вопросам
-            </button>
           </div>
         </section>
       ) : (
@@ -676,7 +671,7 @@ export default function BasicWorkoutQuizPage({
           <h2 ref={questionRef} tabIndex={-1}>{currentStep.title}</h2>
           <p>{currentStep.description}</p>
 
-          {currentStep.options?.length ? (
+          {stepIndex < 5 ? <QuizSlider step={currentStep} value={quiz[currentStep.key]} onChange={value => updateQuiz(currentStep.key, value)} /> : currentStep.options?.length ? (
             <div className={styles.optionGrid} role="group" aria-label={currentStep.title}>
               {currentStep.options.map((option) => (
                 <button
@@ -709,52 +704,14 @@ export default function BasicWorkoutQuizPage({
             </label>
           ) : null}
 
-          {currentStep.key === "planPreferences" ? (
-            <>
-              {quiz.days === "2" ? (
-                <section className={styles.twoDayStructure} data-testid="basic-quiz-two-day-structure" aria-labelledby="basic-quiz-two-day-structure-title">
-                  <span className={styles.twoDayStructureLabel} id="basic-quiz-two-day-structure-title">Формат двух тренировок</span>
-                  <div className={styles.optionGrid} role="group" aria-label="Формат двух тренировок">
-                    {TWO_DAY_STRUCTURE_OPTIONS.map((option) => (
-                      <button
-                        className={styles.optionButton}
-                        data-selected={quiz.twoDayStructure === option.value}
-                        aria-pressed={quiz.twoDayStructure === option.value}
-                        key={option.value}
-                        type="button"
-                        onClick={() => updateQuiz("twoDayStructure", option.value)}
-                      >
-                        <strong>{option.label}</strong>
-                        <small>{option.hint}</small>
-                        {quiz.twoDayStructure === option.value ? <Check className={styles.optionCheck} aria-hidden="true" /> : null}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-              ) : null}
+          {currentStep.key === "planPreferences" ? <QuizPreferences quiz={quiz} updateQuiz={updateQuiz} structureOptions={TWO_DAY_STRUCTURE_OPTIONS} /> : null}
 
-              <label className={styles.detailsField}>
-                <span>Твоё пожелание к плану (необязательно)</span>
-                <textarea
-                  data-testid="basic-quiz-plan-preferences"
-                  value={quiz.planPreferences}
-                  maxLength={280}
-                  onChange={(event) => updateQuiz("planPreferences", event.target.value)}
-                  placeholder="Например: хочу больше упражнений на спину и без бега"
-                />
-              </label>
-            </>
-          ) : null}
-
-          <p className={styles.stepHint} id="basic-quiz-step-hint" role="status">{stepHint || (currentStep.key === "planPreferences" ? "Пожелание необязательно — можно продолжить без него." : "Ответ выбран. Можно продолжить.")}</p>
+          {currentStep.key !== "planPreferences" || stepHint ? <p className={styles.stepHint} id="basic-quiz-step-hint" role="status">{stepHint || "Ответ выбран. Можно продолжить."}</p> : null}
           </div>
           <div className={styles.wizardActions}>
-            {stepIndex > 0 ? (
-              <button className={styles.backButton} type="button" onClick={() => setStepIndex((current) => current - 1)}>
-                <ChevronLeft aria-hidden="true" /> Назад
-              </button>
-            ) : <span />}
-            <button className={styles.nextButton} type="button" onClick={nextStep} disabled={Boolean(stepHint)} aria-describedby="basic-quiz-step-hint">
+            {stepIndex === 0 ? <button className={styles.todayLink} type="button" onClick={onOpenToday}>Нужна одна тренировка? На сегодня</button> : null}
+
+            <button className={styles.nextButton} type="button" onClick={nextStep} disabled={Boolean(stepHint)} aria-describedby={currentStep.key !== "planPreferences" || stepHint ? "basic-quiz-step-hint" : undefined}>
               {editingFromReview ? "Сохранить ответ" : stepIndex === QUIZ_STEPS.length - 1 ? "Проверить ответы" : "Далее"}
             </button>
           </div>

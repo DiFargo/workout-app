@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Dumbbell, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Send } from "lucide-react";
 import styles from "./AuthScreens.module.css";
 
 export function AppSplash() {
@@ -23,8 +23,8 @@ export function AppSplash() {
   return (
     <main className={styles.appSplash} role="status" aria-label="Загрузка приложения" aria-busy="true">
       <div className={styles.splashInner}>
-        <div className={styles.splashMark} aria-hidden="true"><Dumbbell size={34} strokeWidth={2.1} /></div>
-        <div className={styles.splashLogo}>GYM</div>
+        <img className={styles.splashMark} src="/brand/ownset.svg?v=gradient-1" width="68" height="68" alt="" />
+        <div className={styles.splashLogo}>Zmena</div>
         <div className={styles.splashText}>Загрузка приложения</div>
         <div className={styles.splashCaption}>Готовим ваши тренировки и прогресс</div>
         <div className={styles.splashProgress}>
@@ -67,22 +67,62 @@ export function LoginPage({
   passwordResetSending,
   handleGoogleAuth,
   handleLogin,
-  handleLoginPasswordReset
+  handleLoginPasswordReset,
+  handleTelegramMiniAppAuth
 }) {
+  const [isTelegramMiniApp, setIsTelegramMiniApp] = useState(
+    () => typeof window !== "undefined" && Boolean(window.Telegram?.WebApp?.initData)
+  );
+
+  useEffect(() => {
+    const syncTelegramSdk = () => {
+      const webApp = window.Telegram?.WebApp;
+      setIsTelegramMiniApp(Boolean(webApp?.initData));
+    };
+    const script = document.getElementById("telegram-web-app-sdk");
+    script?.addEventListener("load", syncTelegramSdk);
+    syncTelegramSdk();
+    return () => script?.removeEventListener("load", syncTelegramSdk);
+  }, []);
+
   return (
     <div className={`${styles.loginPage} loginPage`}>
       <div className={`${styles.loginHero} loginHero`}>
-        <div className={`${styles.appLogo} appLogo`} aria-hidden="true"><Dumbbell size={30} strokeWidth={2.15} /></div>
+        <img className={`${styles.appLogo} appLogo`} src="/brand/ownset.svg?v=gradient-1" width="64" height="64" alt="" />
         <span className={styles.loginEyebrow}>Персональные тренировки</span>
-        <h1>Workout</h1>
-        <p>Доступ к приложению открывает тренер</p>
+        <h1>Zmena</h1>
+        <p>Войди через Telegram или используй данные приглашения тренера</p>
       </div>
 
-      <form className={`${styles.loginCard} loginCard`} onSubmit={handleLogin}>
-        <h2>Вход по приглашению</h2>
-        <p className={`${styles.loginInviteNote} loginInviteNote`}>
-          Если тренер уже добавил тебя, войди по логину, email или Google.
-        </p>
+      <section className={`${styles.loginCard} loginCard`} aria-labelledby="telegram-login-title">
+        <div className={styles.telegramLoginIntro}>
+          <span className={styles.telegramLoginEyebrow}>БЫСТРО И БЕЗ ПАРОЛЯ</span>
+          <h2 id="telegram-login-title">Вход через Telegram</h2>
+          <p className={`${styles.loginInviteNote} loginInviteNote`}>
+            {isTelegramMiniApp
+              ? "Подтверди вход своим Telegram-аккаунтом."
+              : "Открой приложение через кнопку меню своего бота в Telegram."}
+          </p>
+        </div>
+
+        {loginError && <div className={`${styles.loginError} loginError`} role="alert">{loginError}</div>}
+        <button
+          className={styles.loginTelegramBtn}
+          type="button"
+          disabled={loginSubmitting || passwordResetSending}
+          onClick={handleTelegramMiniAppAuth}
+        >
+          <Send size={19} aria-hidden="true" />
+          {loginSubmitting ? "Проверяю Telegram…" : "Продолжить через Telegram"}
+        </button>
+
+        <details className={styles.loginAlternate}>
+          <summary>Есть приглашение от тренера? Войти</summary>
+          <form className={styles.loginAlternateForm} onSubmit={handleLogin}>
+            <h3>Вход по приглашению</h3>
+            <p className={`${styles.loginInviteNote} loginInviteNote`}>
+              Открой ссылку активации и задай пароль. Потом введи ниже логин из сообщения тренера и этот пароль. Вход через Telegram доступен после привязки аккаунта.
+            </p>
 
         <label className={`${styles.loginField} loginField`}>
           <span>Логин или email</span>
@@ -137,7 +177,6 @@ export function LoginPage({
           )}
         </label>
 
-        {loginError && <div className={`${styles.loginError} loginError`} role="alert">{loginError}</div>}
         {loginNotice && <div className={`${styles.loginNotice} loginNotice`} role="status">{loginNotice}</div>}
 
         <button className={`${styles.loginBtn} loginBtn`} type="submit" disabled={loginSubmitting || passwordResetSending}>
@@ -164,7 +203,9 @@ export function LoginPage({
         </button>
 
         <p className={`${styles.loginHint} loginHint`}>Нет доступа? Попроси тренера отправить приглашение. Восстановление пароля отправит письмо на почту аккаунта.</p>
-      </form>
+          </form>
+        </details>
+      </section>
     </div>
   );
 }

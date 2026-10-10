@@ -161,6 +161,13 @@
   font-size: 14px;
 }
 
+.credentials p {
+  margin: 0;
+  color: var(--trainer-v2-muted, #7b7682);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .credentials code {
   color: var(--trainer-v2-muted, #7b7682);
   font: 12px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -193,7 +200,7 @@
   padding: 0 18px;
   border: 0;
   border-radius: 14px;
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   color: #ffffff;
   font: inherit;
   font-weight: 800;

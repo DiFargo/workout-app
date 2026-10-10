@@ -5,7 +5,6 @@ import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
   BASIC_WORKOUT_TODAY_MAX_TARGETS,
   BASIC_WORKOUT_TODAY_TARGETS,
-  buildBasicWorkoutTodayLocalFallback,
   getBasicWorkoutTodayTargets
 } from "../../../utils/basicWorkoutTodayFallback";
 import {
@@ -16,6 +15,9 @@ import {
 } from "../../../utils/basicWorkoutTodayGenerationLimit";
 import { safeReadJsonStorage, safeWriteJsonStorage } from "../../../utils/storageSafety";
 import { requestBasicWorkoutTodayPlan } from "./basicWorkoutAi";
+import { getBasicWorkoutGenerationNotice, assertBasicWorkoutGenerationAllowed } from "../../../utils/basicWorkoutGeneration.js";
+import { buildBasicWorkoutClientContext } from "../../../utils/basicWorkoutClientContext.js";
+import BasicWorkoutProfileSummary from "./BasicWorkoutProfileSummary.jsx";
 import styles from "./BasicWorkoutTodayPage.module.css";
 
 const DEFAULT_PREFERENCES = {
@@ -82,6 +84,10 @@ export default function BasicWorkoutTodayPage({
   renderClientMainBottomBar,
   basicWorkoutQuiz,
   startingWeightProfile,
+  workoutHistory,
+  profileMeasurements,
+  workoutHistoryLoading,
+  onLoadWorkoutHistory,
   onBasicWorkoutQuizChange,
   onApplyBasicWorkoutPlan,
   onOpenLongPlan,
@@ -104,6 +110,15 @@ export default function BasicWorkoutTodayPage({
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [selectionNotice, setSelectionNotice] = useState("");
+  const clientContext = useMemo(() => buildBasicWorkoutClientContext({ profile: startingWeightProfile,
+    measurements: profileMeasurements, history: workoutHistory }), [startingWeightProfile, profileMeasurements, workoutHistory]);
+  const historyRequested = useRef("");
+  useEffect(() => {
+    if (userId && onLoadWorkoutHistory && historyRequested.current !== userId) {
+      historyRequested.current = userId;
+      onLoadWorkoutHistory();
+    }
+  }, [userId, onLoadWorkoutHistory]);
   const generationStorageKey = getBasicWorkoutTodayGenerationStorageKey(userId);
   const [generationRecord, setGenerationRecord] = useState(() => (
     safeReadJsonStorage(generationStorageKey, null)
@@ -208,26 +223,33 @@ export default function BasicWorkoutTodayPage({
   }
 
   async function generateWorkout() {
-    if (!selectedTargetIds.length || isGenerating) return;
+    if (!selectedTargetIds.length || isGenerating || workoutHistoryLoading) return;
+    try { assertBasicWorkoutGenerationAllowed(preferences, clientContext.registration); }
+    catch (profileError) { setError(profileError.message); return; }
     if (!reserveGeneration()) return;
 
     setIsGenerating(true);
     setStatus("");
     setError("");
     try {
-      const plan = await requestBasicWorkoutTodayPlan(preferences, startingWeightProfile);
+      const plan = await requestBasicWorkoutTodayPlan(preferences, clientContext.registration, clientContext.trainingHistory);
       setGeneratedPlan(plan);
       setStatus(
-        plan?.generationFallback
+        getBasicWorkoutGenerationNotice(plan) || (plan?.generationFallback
           ? "Собрали надёжную тренировку из проверенной базы — её можно начать сразу."
-          : "Тренировка готова. Проверь упражнения и начинай, когда будешь готов."
+          : "Тренировка готова. Проверь упражнения и начинай, когда будешь готов.")
       );
     } catch (requestError) {
+      if (requestError?.noLocalFallback) {
+        setError(requestError.message);
+        return;
+      }
       console.warn("Today basic workout AI request failed; using local fallback.", requestError);
       try {
-        const localPlan = buildBasicWorkoutTodayLocalFallback(preferences);
+        const { buildLocalHybridWorkoutPlan } = await import("../../../../functions/basicWorkoutHybridPlan.js");
+        const localPlan = buildLocalHybridWorkoutPlan({ ...preferences, mode: "today", ...clientContext });
         setGeneratedPlan(localPlan);
-        setStatus("Нет устойчивого соединения, поэтому собрали тренировку из локальной проверенной базы.");
+        setStatus(getBasicWorkoutGenerationNotice(localPlan));
       } catch (fallbackError) {
         console.error("Today basic workout local fallback failed:", fallbackError);
         setError(requestError?.message || "Не удалось подобрать тренировку. Попробуйте ещё раз.");
@@ -297,7 +319,7 @@ export default function BasicWorkoutTodayPage({
           <section className={styles.intro}>
             <span className={styles.eyebrow}>Выбери зоны</span>
             <h2>Что тренируем сегодня?</h2>
-            <p>Выбери до трёх зон или Full body. ИИ подберёт упражнения под место, время и твоё состояние.</p>
+            <p>Выбери до трёх зон или Full body. Gemini подберёт упражнения внутри базового шаблона. Рабочий вес задаёшь ты.</p>
           </section>
 
           <section className={styles.targetGrid} aria-label="Выбор зон тренировки" aria-describedby="basic-workout-target-help">
@@ -375,6 +397,13 @@ export default function BasicWorkoutTodayPage({
                 </select>
               </label>
               <label>
+                <span>Цель тренировки</span>
+                <select value={preferences.goal} onChange={(event) => updatePreference("goal", event.target.value)}>
+                  <option value="general_fitness">Хорошая форма</option><option value="fat_loss">Снижение веса</option>
+                  <option value="muscle">Набор мышц</option><option value="strength">Стать сильнее</option>
+                </select>
+              </label>
+              <label>
                 <span>Ограничения</span>
                 <select value={preferences.restrictions} onChange={(event) => updatePreference("restrictions", event.target.value)}>
                   {RESTRICTION_OPTIONS.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}
@@ -391,8 +420,14 @@ export default function BasicWorkoutTodayPage({
                   />
                 </label>
               ) : null}
+              <label className={styles.noteField}><span>Пожелания к упражнениям</span>
+                <textarea maxLength={280} value={preferences.planPreferences}
+                  onChange={(event) => updatePreference("planPreferences", event.target.value)} placeholder="Например: предпочитаю упражнения в тренажёрах" />
+              </label>
             </div>
           </details>
+          <BasicWorkoutProfileSummary context={clientContext} loading={workoutHistoryLoading} onEdit={onOpenCabinet}
+            specialStatus={preferences.specialStatus} onSpecialStatusChange={(value) => updatePreference("specialStatus", value)} />
 
           <p id="basic-workout-target-help" className={styles.targetHelp} role="status">
             {selectionNotice || (selectedTargets.length
@@ -418,7 +453,7 @@ export default function BasicWorkoutTodayPage({
           <button
             className={styles.primaryButton}
             data-testid="basic-workout-today-generate"
-            disabled={!selectedTargetIds.length || isGenerating || generationAllowance.isLimitReached}
+            disabled={!selectedTargetIds.length || isGenerating || workoutHistoryLoading || generationAllowance.isLimitReached}
             type="button"
             onClick={generateWorkout}
           >

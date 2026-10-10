@@ -1,4 +1,4 @@
-import { startTransition, useEffect } from "react";
+import { startTransition, useCallback, useEffect, useState } from "react";
 
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import {
@@ -7,6 +7,8 @@ import {
 } from "../../../utils/localNutritionCatalog";
 import { normalizeNutritionFood } from "../../../utils/nutritionFoodModel";
 import { awaitNutritionSearchResult } from "../../../utils/nutritionSearchDeadline";
+import { GEMINI_ONLY_FOOD_SEARCH } from "../../../utils/nutritionSearchMode";
+import { searchPersonalNutritionCatalog, warmPersonalNutritionCatalog } from "../../../utils/personalNutritionCatalog";
 
 const REMOTE_SEARCH_DEBOUNCE_MS = 350;
 const REMOTE_SEARCH_DEADLINE_MS = 12000;
@@ -28,6 +30,21 @@ export function useNutritionSearchEffects({
   setFatSecretLoading,
   setNutritionFallbackSuggestions
 }) {
+  const [geminiSearchEvidence, setGeminiSearchEvidence] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [geminiQuery, setGeminiQuery] = useState(null);
+  const [previousQuery, setPreviousQuery] = useState(nutritionSearch);
+  if (previousQuery !== nutritionSearch) {
+    setPreviousQuery(nutritionSearch);
+    setGeminiQuery(null);
+  }
+  const retryNutritionSearch = useCallback(() => {
+    setGeminiQuery(nutritionSearch);
+    setRetryCount((count) => count + 1);
+  }, [nutritionSearch]);
+  useEffect(() => {
+    if (nutritionPickerOpen && !GEMINI_ONLY_FOOD_SEARCH) warmPersonalNutritionCatalog();
+  }, [nutritionPickerOpen]);
   useEffect(() => {
     const query = nutritionSearch.trim();
 
@@ -42,11 +59,25 @@ export function useNutritionSearchEffects({
     const controller = new AbortController();
     let timer;
     let cancelled = false;
-    const bundledFallbackFoods = searchBundledNutritionFallbackFoods(query);
+    const useGemini = GEMINI_ONLY_FOOD_SEARCH || geminiQuery === nutritionSearch;
+    const bundledFallbackFoods = useGemini ? [] : searchBundledNutritionFallbackFoods(query);
+    const deadline = useGemini ? 55000 : REMOTE_SEARCH_DEADLINE_MS;
     setFatSecretFoods(bundledFallbackFoods);
     setFatSecretError("");
     setNutritionFallbackSuggestions([]);
     setFatSecretLoading(true);
+
+    if (!useGemini) {
+      searchPersonalNutritionCatalog(query, {signal:controller.signal}).then((foods) => {
+        if (cancelled) return;
+        startTransition(() => setFatSecretFoods(mergeNutritionFoodResults(foods, bundledFallbackFoods)));
+      }).catch((error) => {
+        if (!cancelled && error.name !== "AbortError") {
+          setFatSecretError(bundledFallbackFoods.length ? "Показаны доступные продукты на устройстве." : "Каталог пока не загружен. Проверьте соединение или используйте Gemini.");
+        }
+      }).finally(() => {if (!cancelled) setFatSecretLoading(false);});
+      return () => {cancelled = true;controller.abort();};
+    }
 
     // Do not load the multi-megabyte browser catalog here. Parsing its JSON and
     // building indexes blocks taps and scrolling on mobile devices, and the
@@ -57,18 +88,23 @@ export function useNutritionSearchEffects({
       try {
         startPerformanceCheck("Food search · nutrition API", { query, packagedResults: bundledFallbackFoods.length });
         const response = await awaitNutritionSearchResult(
-          fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}`, {
+          fetchAuthorizedWithTimeout(`/api/nutrition/search?q=${encodeURIComponent(query)}${useGemini ? "&provider=gemini" : ""}`, {
             signal: controller.signal
-          }, REMOTE_SEARCH_DEADLINE_MS),
-          REMOTE_SEARCH_DEADLINE_MS
+          }, deadline),
+          deadline
         );
 
         if (!response.ok) {
-          throw new Error(`Nutrition search API error: ${response.status}`);
+          const failure = await response.json().catch(() => ({}));
+          throw new Error(failure.message || `Ошибка поиска: ${response.status}`);
         }
 
         const data = await response.json();
         if (cancelled) return;
+        if (useGemini) {
+          if (data.mode !== "gemini") throw new Error("Поиск Gemini ещё не включён на сервере.");
+          setGeminiSearchEvidence({ key: `${nutritionSearch}:${retryCount}`, html: typeof data.searchSuggestions === "string" ? data.searchSuggestions : "" });
+        }
         const remoteFoods = Array.isArray(data.foods) ? data.foods.map(normalizeNutritionFood) : [];
 
         startTransition(() => {
@@ -79,7 +115,9 @@ export function useNutritionSearchEffects({
       } catch (error) {
         if (!cancelled && !controller.signal.aborted && error.name !== "AbortError") {
           console.error(error);
-          if (bundledFallbackFoods.length) {
+          if (useGemini) {
+            setFatSecretError(error.message || "Gemini сейчас недоступен. Повторите поиск.");
+          } else if (bundledFallbackFoods.length) {
             setFatSecretError("Нет соединения. Показаны доступные продукты на устройстве.");
           } else {
             setNutritionFallbackSuggestions(["Фото продукта", "Уточнить название", "Создать продукт"]);
@@ -104,6 +142,8 @@ export function useNutritionSearchEffects({
     };
   }, [
     endPerformanceCheck,
+    retryCount,
+    geminiQuery,
     nutritionPickerOpen,
     nutritionSearch,
     nutritionSearchTab,
@@ -182,4 +222,6 @@ export function useNutritionSearchEffects({
     setDishIngredientLoading,
     startPerformanceCheck
   ]);
+  const geminiSearchSuggestions = nutritionPickerOpen && nutritionSearchTab === "food" && geminiSearchEvidence?.key === `${nutritionSearch}:${retryCount}` ? geminiSearchEvidence.html : "";
+  return { geminiSearchSuggestions, retryNutritionSearch };
 }

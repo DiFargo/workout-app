@@ -45,6 +45,13 @@ export default function NutritionPlanDetails({
     return null;
   }
 
+  const percentOf = (value, goal) => Number(goal) > 0 ? Math.round((Number(value) || 0) / Number(goal) * 100) : null;
+  const actualCaloriePercent = percentOf(caloriesConsumed, effectiveGoals.calories) ?? caloriePercent;
+  const actualProteinPercent = percentOf(nutritionTotals.protein, effectiveGoals.protein) ?? proteinPercent;
+  const actualFatPercent = percentOf(nutritionTotals.fat, effectiveGoals.fat) ?? fatPercent;
+  const actualCarbsPercent = percentOf(nutritionTotals.carbs, effectiveGoals.carbs) ?? carbsPercent;
+  const caloriesOver = Math.max(0, Math.round(caloriesConsumed - effectiveGoals.calories));
+
   return (
     <div
       className={styles.dialog}
@@ -56,20 +63,20 @@ export default function NutritionPlanDetails({
         role="dialog"
         aria-modal="true"
         data-modal-surface="true"
-        aria-label="План питания"
+        aria-label="Анализ питания"
         data-testid="nutrition-plan-details"
         data-css-module-scope="nutrition-plan-details"
         data-state={isCaloriesOverGoal ? "over-limit" : "within-limit"}
       >
         <div className={styles.header} data-nutrition-plan-part="header">
           <div className={styles.titleBox} data-nutrition-plan-part="title">
-            <span className={styles.titleEyebrow} data-nutrition-plan-text="eyebrow">План питания</span>
+            <span className={styles.titleEyebrow} data-nutrition-plan-text="eyebrow">Анализ питания</span>
             <h2 className={styles.title} data-nutrition-plan-text="title">{goalText}</h2>
           </div>
           <button
             type="button"
             className={styles.close}
-            aria-label="Закрыть план питания"
+            aria-label="Закрыть анализ питания"
             onClick={onClose}
             data-testid="nutrition-plan-close"
           >
@@ -86,7 +93,7 @@ export default function NutritionPlanDetails({
             {isTrainingDay ? "Тренировочный день" : "Обычный день"}
           </span>
           <small className={styles.dayDescription} data-nutrition-plan-text="day-description">
-            {isTrainingDay ? `Сегодня: ${todayPlanMacros.calories} ккал · У ${todayPlanMacros.carbs} г` : "КБЖУ без тренировочной надбавки"}
+            {isTrainingDay ? `По плану: ${todayPlanMacros.calories} ккал · У ${todayPlanMacros.carbs} г` : "КБЖУ без тренировочной надбавки"}
           </small>
         </div>
 
@@ -94,7 +101,7 @@ export default function NutritionPlanDetails({
           <div className={styles.calorieProgress} data-nutrition-plan-part="calorie-progress">
             <div className={styles.calorieTopline}>
               <span>Калории</span>
-              <strong>{caloriePercent}%</strong>
+              <strong>{actualCaloriePercent}%</strong>
             </div>
             <progress
               className={styles.calorieTrack}
@@ -105,14 +112,14 @@ export default function NutritionPlanDetails({
             />
             <div className={styles.calorieSummary}>
               <span><strong>{caloriesConsumed}</strong> из {effectiveGoals.calories} ккал</span>
-              <span>Осталось <strong>{caloriesLeft}</strong></span>
+              <span>{isCaloriesOverGoal ? "Сверх цели" : caloriesLeft > 0 ? "До цели" : "Цель достигнута"} <strong>{isCaloriesOverGoal ? caloriesOver : caloriesLeft > 0 ? caloriesLeft : "✓"}</strong></span>
             </div>
           </div>
 
           <div className={styles.scoreBlock} data-nutrition-plan-part="score-block">
-            <span className={styles.scoreLabel} data-nutrition-plan-text="score-label">Баланс дня</span>
-            <NutritionMacroScoreRing score={nutritionDay.score} segments={scoreSegments} />
-            <span className={styles.scoreCaption}>по КБЖУ</span>
+            <span className={styles.scoreLabel} data-nutrition-plan-text="score-label">Соответствие плану</span>
+            <NutritionMacroScoreRing score={nutritionDay.hasEnoughDataForScore === false ? null : nutritionDay.score} segments={scoreSegments} />
+            <span className={styles.scoreCaption}>{nutritionDay.hasEnoughDataForScore === false ? "пока мало данных" : "по записям КБЖУ"}</span>
           </div>
         </div>
 
@@ -122,27 +129,30 @@ export default function NutritionPlanDetails({
             <strong className={styles.macroValue} data-nutrition-plan-text="macro-value">{roundMacro(nutritionTotals.protein)} г</strong>
             <small className={styles.macroGoal} data-nutrition-plan-text="macro-goal">/ {effectiveGoals.protein} г</small>
             <progress className={styles.macroTrack} max="100" value={Math.min(100, proteinPercent)} aria-label={`Белки: ${proteinPercent}%`} />
-            <span className={styles.macroPercentText}>{proteinPercent}%</span>
+            <span className={styles.macroPercentText}>{actualProteinPercent}%</span>
           </div>
           <div className={styles.macro} data-nutrition-plan-part="macro">
             <span className={styles.macroLabel} data-nutrition-plan-text="macro-label">Жиры</span>
             <strong className={styles.macroValue} data-nutrition-plan-text="macro-value">{roundMacro(nutritionTotals.fat)} г</strong>
             <small className={styles.macroGoal} data-nutrition-plan-text="macro-goal">/ {effectiveGoals.fat} г</small>
             <progress className={styles.macroTrack} max="100" value={Math.min(100, fatPercent)} aria-label={`Жиры: ${fatPercent}%`} />
-            <span className={styles.macroPercentText}>{fatPercent}%</span>
+            <span className={styles.macroPercentText}>{actualFatPercent}%</span>
           </div>
           <div className={styles.macro} data-nutrition-plan-part="macro">
             <span className={styles.macroLabel} data-nutrition-plan-text="macro-label">Углеводы</span>
             <strong className={styles.macroValue} data-nutrition-plan-text="macro-value">{roundMacro(nutritionTotals.carbs)} г</strong>
             <small className={styles.macroGoal} data-nutrition-plan-text="macro-goal">/ {effectiveGoals.carbs} г</small>
             <progress className={styles.macroTrack} max="100" value={Math.min(100, carbsPercent)} aria-label={`Углеводы: ${carbsPercent}%`} />
-            <span className={styles.macroPercentText}>{carbsPercent}%</span>
+            <span className={styles.macroPercentText}>{actualCarbsPercent}%</span>
           </div>
         </div>
 
         <div className={styles.conclusion} data-nutrition-plan-part="conclusion">
           <span className={styles.conclusionLabel} data-nutrition-plan-text="conclusion-label">Короткий вывод</span>
-          <p className={styles.conclusionText} data-nutrition-plan-text="conclusion">{nutritionDay.summary} {nutritionDay.adaptiveAdvice}</p>
+          <div data-nutrition-plan-text="conclusion">
+            <p className={styles.conclusionText}>{nutritionDay.summary}</p>
+            <p className={styles.conclusionText}>{nutritionDay.adaptiveAdvice}</p>
+          </div>
         </div>
 
         <div className={styles.badges} data-nutrition-plan-part="badges">
@@ -166,7 +176,7 @@ export default function NutritionPlanDetails({
         type="button"
         className={styles.backdrop} data-modal-backdrop="true"
         onClick={onClose}
-        aria-label="Закрыть план питания по фону"
+        aria-label="Закрыть анализ питания по фону"
         data-testid="nutrition-plan-backdrop"
         data-nutrition-plan-part="backdrop"
       />

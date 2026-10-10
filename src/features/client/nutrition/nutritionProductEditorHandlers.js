@@ -32,9 +32,7 @@ export function createNutritionProductEditorHandlers({
   setNutritionMealMenuOpen,
   setNutritionPickerOpen,
   setNutritionProductErrors,
-  setNutritionSearchTab,
-  setSelectedNutritionFood,
-  setShowRecentNutritionFoods
+  setSelectedNutritionFood
 }) {
   function createCustomNutritionFood() {
     const draftFood = buildCustomNutritionFoodDraft();
@@ -210,8 +208,6 @@ export function createNutritionProductEditorHandlers({
     setNutritionAmountError("");
     setNutritionProductErrors({});
     setEditingNutritionItemId(null);
-    setNutritionSearchTab("food");
-    setShowRecentNutritionFoods(false);
     setNutritionPickerOpen(true);
   }
 

@@ -1,4 +1,5 @@
 import { onRequest, onCall, HttpsError } from "firebase-functions/v2/https";
+import { fetchGeminiNutritionFoods } from "./geminiNutritionSearch.js";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { onDocumentCreated, onDocumentDeleted } from "firebase-functions/v2/firestore";
 import { defineBoolean, defineSecret, defineString } from "firebase-functions/params";
@@ -8,9 +9,11 @@ import crypto from "node:crypto";
 import { resolveAssignedTrainerId } from "./trainerAssignment.js";
 import { requireRecentIdentityAuth, updateProfileEmail, updateProfileLogin } from "./profileIdentity.js";
 import { readClientExerciseMedia } from "./clientExerciseMedia.js";
+import { manageTrainerExerciseCards } from "./trainerExerciseCards.js";
 import { INVITE_PAGE_STYLES, formatInviteAccountLabel } from "./invitePageStyles.js";
-import { getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout } from "./reminderSchedule.js";
+import { getActivePlanWorkouts, getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout, getPlannedWorkoutForReminder } from "./reminderSchedule.js";
 import { isTelegramRemindersEnabled } from "./telegramNotificationPreferences.js";
+import { buildClientReminderCalendarPatch } from "./clientReminderSettings.js";
 import { buildSubscriptionReminderLine, getDueSubscriptionNotifications, resolveSubscriptionNotificationSettings } from "./subscriptionReminders.js";
 import { extractVoiceMetricAmounts, resolveVoiceFoodMetricAmounts } from "./voiceFoodAmounts.js";
 import { getUnsafeVoiceFoodStems, isUnsafeVoiceFoodQuery } from "./voiceFoodSafety.js";
@@ -21,6 +24,9 @@ import {
   resolveBasicWorkoutAiCatalogueExercise
 } from "./basicWorkoutAiCatalogue.js";
 import { buildBasicWorkoutFallbackDraft } from "./basicWorkoutFallbackPlan.js";
+import { generateHybridWorkoutDraft } from "./basicWorkoutGemini.js";
+import { finalizeHybridWorkoutPlan } from "./basicWorkoutHybridPlan.js";
+import { normalizeWorkoutRegistration, normalizeWorkoutTrainingHistory } from "./basicWorkoutPersonalization.js";
 import {
   buildBasicWorkoutTodayFallbackDraft,
   getBasicWorkoutTodayCompositionIssues,
@@ -37,6 +43,7 @@ admin.initializeApp();
 const TELEGRAM_BOT_TOKEN = defineSecret("TELEGRAM_BOT_TOKEN");
 const ADMIN_BOOTSTRAP_SECRET = defineSecret("ADMIN_BOOTSTRAP_SECRET");
 const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
+const GEMINI_API_KEY = defineSecret("GEMINI_API_KEY");
 const PRODUCTION_PROJECT_ID = "tren-85720";
 const FIREBASE_WEB_API_KEY = "AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";
 const WORKOUT_APP_URL = "https://tren-85720.web.app/";
@@ -403,6 +410,14 @@ function isActiveMemberData(userData = {}) {
     userData.membershipStatus !== "suspended";
 }
 
+function hasCurrentAdminClaim(token = {}, userData = {}) {
+  return token.admin === true && userData.role === "admin" &&
+    (Object.hasOwn(userData, "adminClaimVersion")
+      ? typeof userData.adminClaimVersion === "string" &&
+        token.adminClaimVersion === userData.adminClaimVersion
+      : !Object.hasOwn(token, "adminClaimVersion"));
+}
+
 async function getAuthenticatedContext(req, { requireMembership = false } = {}) {
   const authorization = String(req.headers.authorization || "");
   const idToken = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
@@ -411,7 +426,7 @@ async function getAuthenticatedContext(req, { requireMembership = false } = {}) 
     throw createHttpError(401, "Missing Firebase ID token");
   }
 
-  const decodedToken = await admin.auth().verifyIdToken(idToken);
+  const decodedToken = await admin.auth().verifyIdToken(idToken, true);
   const userSnapshot = await admin.firestore().collection("users").doc(decodedToken.uid).get();
   const userData = userSnapshot.exists ? userSnapshot.data() || {} : {};
 
@@ -421,9 +436,11 @@ async function getAuthenticatedContext(req, { requireMembership = false } = {}) 
 
   return {
     uid: decodedToken.uid,
-    token: decodedToken,
+    // A claim in an already issued token cannot retain privileges after a
+    // server-side demotion. Pass effective privileges to downstream helpers.
+    token: { ...decodedToken, admin: hasCurrentAdminClaim(decodedToken, userData) },
     userData,
-    role: decodedToken.admin === true ? "admin" : String(userData.role || "client")
+    role: String(userData.role || "client")
   };
 }
 
@@ -438,7 +455,7 @@ async function requireAuthenticatedUser(req) {
 }
 
 function assertAdminContext(context) {
-  if (context?.token?.admin !== true) {
+  if (!hasCurrentAdminClaim(context?.token, context?.userData)) {
     throw createHttpError(403, "Admin access required");
   }
 }
@@ -569,7 +586,7 @@ function renderInviteActivationPageTemplate({ actionCode, email, login }) {
   const code = JSON.stringify(String(actionCode || ""));
   const accountEmail = JSON.stringify(formatInviteAccountLabel({ login, email }));
   const appUrl = JSON.stringify(getWorkoutAppUrl());
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Workout - создание пароля</title><style>${INVITE_PAGE_STYLES}</style></head><body><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>Создай пароль</h1><p>Пароль будет привязан к аккаунту <span class="email" id="email"></span>. После сохранения можно войти в Workout.</p><form id="form"><label>Новый пароль<input id="password" type="password" minlength="6" required autocomplete="new-password" placeholder="Минимум 6 символов"></label><label>Повтори пароль<input id="repeat" type="password" minlength="6" required autocomplete="new-password" placeholder="Повтори пароль"></label><button id="submit" type="submit">Сохранить пароль</button></form><div id="status" class="status" role="status" aria-live="polite"></div><a id="login-link" class="login-link" href=${appUrl}>Перейти ко входу</a><p class="hint">Ссылка действует ограниченное время и может быть использована один раз.</p></main><script>const code=${code},email=${accountEmail},apiKey="AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";document.getElementById("email").textContent=email;const form=document.getElementById("form"),status=document.getElementById("status"),button=document.getElementById("submit"),loginLink=document.getElementById("login-link");function show(message,error=false){status.textContent=message;status.className="status show"+(error?" error":"")}form.addEventListener("submit",async e=>{e.preventDefault();const password=document.getElementById("password").value,repeat=document.getElementById("repeat").value;if(password!==repeat)return show("Пароли не совпадают.",true);button.disabled=true;button.textContent="Сохраняю...";try{const r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({oobCode:code,newPassword:password})});if(!r.ok)throw new Error();show("Пароль создан. Теперь можно войти в приложение.");form.hidden=true;loginLink.classList.add("show")}catch{show("Ссылка недействительна или срок её действия истёк. Попроси тренера создать новое приглашение.",true);button.disabled=false;button.textContent="Сохранить пароль"}});</script></body></html>`;
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Zmena — создание пароля</title><style>${INVITE_PAGE_STYLES}</style></head><body><main class="card"><div class="mark">Z</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>Создай пароль</h1><p>Логин для входа: <span class="email" id="email"></span>. Создай пароль. После сохранения нажми «Перейти ко входу» и введи логин и новый пароль.</p><form id="form"><label>Новый пароль<input id="password" type="password" minlength="6" required autocomplete="new-password" placeholder="Минимум 6 символов"></label><label>Повтори пароль<input id="repeat" type="password" minlength="6" required autocomplete="new-password" placeholder="Повтори пароль"></label><button id="submit" type="submit">Сохранить пароль</button></form><div id="status" class="status" role="status" aria-live="polite"></div><a id="login-link" class="login-link" href=${appUrl}>Перейти ко входу</a><p class="hint">Ссылка действует ограниченное время и может быть использована один раз.</p></main><script>const code=${code},email=${accountEmail},apiKey="AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";document.getElementById("email").textContent=email;const form=document.getElementById("form"),status=document.getElementById("status"),button=document.getElementById("submit"),loginLink=document.getElementById("login-link");function show(message,error=false){status.textContent=message;status.className="status show"+(error?" error":"")}form.addEventListener("submit",async e=>{e.preventDefault();const password=document.getElementById("password").value,repeat=document.getElementById("repeat").value;if(password!==repeat)return show("Пароли не совпадают.",true);button.disabled=true;button.textContent="Сохраняю...";try{const r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({oobCode:code,newPassword:password})});if(!r.ok)throw new Error();show("Пароль создан. Нажми «Перейти ко входу» и войди с указанным логином и новым паролем.");form.hidden=true;loginLink.classList.add("show")}catch{show("Ссылка недействительна или срок её действия истёк. Попроси тренера создать новое приглашение.",true);button.disabled=false;button.textContent="Сохранить пароль"}});</script></body></html>`;
 }
 
 function renderInviteActivationPage(input) {
@@ -745,6 +762,15 @@ async function assertActiveCallableMember(request) {
     throw new HttpsError("permission-denied", "Active membership required.");
   }
 
+  // Callable token verification does not check session revocation itself.
+  const authUser = await admin.auth().getUser(request.auth.uid);
+  const authTime = Number(request.auth.token?.auth_time);
+  const validAfter = Date.parse(authUser.tokensValidAfterTime || "") / 1000;
+  if (authUser.disabled || !Number.isFinite(authTime) ||
+    (Number.isFinite(validAfter) && authTime < validAfter)) {
+    throw new HttpsError("unauthenticated", "Your session has been revoked. Sign in again.");
+  }
+
   return userSnapshot.data() || {};
 }
 
@@ -758,7 +784,7 @@ function hasMatchingSecret(candidate, expected) {
 }
 
 async function saveTelegramAvatar(uid, userId, token) {
-  if (!uid || !userId) return "";
+  if (!uid || !userId) return null;
 
   try {
     const photosResponse = await fetch(`https://api.telegram.org/bot${token}/getUserProfilePhotos`, {
@@ -769,21 +795,21 @@ async function saveTelegramAvatar(uid, userId, token) {
 
     const photosData = await photosResponse.json();
 
-    if (!photosData.ok || !photosData.result?.photos?.length) return "";
+    if (!photosData.ok || !photosData.result?.photos?.length) return null;
 
     const bestPhoto = photosData.result.photos[0].at(-1);
     const fileId = bestPhoto?.file_id;
 
-    if (!fileId) return "";
+    if (!fileId) return null;
 
     const fileResponse = await fetch(`https://api.telegram.org/bot${token}/getFile?file_id=${encodeURIComponent(fileId)}`);
     const fileData = await fileResponse.json();
 
-    if (!fileData.ok || !fileData.result?.file_path) return "";
+    if (!fileData.ok || !fileData.result?.file_path) return null;
 
     const telegramFileResponse = await fetch(`https://api.telegram.org/file/bot${token}/${fileData.result.file_path}`);
 
-    if (!telegramFileResponse.ok) return "";
+    if (!telegramFileResponse.ok) return null;
 
     const contentType = telegramFileResponse.headers.get("content-type") || "image/jpeg";
     const extension = String(fileData.result.file_path).split(".").pop()?.replace(/[^a-z0-9]/gi, "") || "jpg";
@@ -803,10 +829,53 @@ async function saveTelegramAvatar(uid, userId, token) {
       }
     });
 
-    return `https://firebasestorage.googleapis.com/v0/b/${encodeURIComponent(bucket.name)}/o/${encodeURIComponent(storagePath)}?alt=media&token=${downloadToken}`;
+    // Save's response metadata identifies this upload, even if another refresh
+    // has already replaced the same avatar path before profile publication.
+    const generation = avatarFile.metadata?.generation;
+    if (!generation) throw new Error("Telegram avatar upload generation is missing");
+    return {
+      url: `https://firebasestorage.googleapis.com/v0/b/${encodeURIComponent(bucket.name)}/o/${encodeURIComponent(storagePath)}?alt=media&token=${downloadToken}`,
+      file: bucket.file(storagePath, { generation })
+    };
   } catch (error) {
     console.error("Telegram avatar fetch failed:", error);
-    return "";
+    return null;
+  }
+}
+
+async function publishTelegramProfile(uid, patch, uploadedAvatar = null) {
+  const db = admin.firestore();
+  const userRef = db.collection("users").doc(uid);
+  const deletionRef = db.collection("accountDeletions").doc(uid);
+  try {
+    const published = await db.runTransaction(async transaction => {
+      const [profile, deletion] = await Promise.all([transaction.get(userRef), transaction.get(deletionRef)]);
+      if (!profile.exists || !isActiveMemberData(profile.data() || {}) ||
+        ["pending", "completed"].includes(deletion.data()?.status)) return false;
+      transaction.set(userRef, patch, { merge: true });
+      return true;
+    });
+    if (!published) throw createHttpError(403, "Account access is disabled");
+  } catch (error) {
+    try {
+      // Delete only our upload generation; a parallel refresh may own a newer
+      // object at this path. Admin SDK uploads bypass the client Storage rules.
+      await uploadedAvatar?.file.delete({ ignoreNotFound: true });
+    } catch (cleanupError) {
+      // A completed deletion must become retryable again if this late upload
+      // could not be removed. Preserve all existing pending cleanup paths.
+      await db.runTransaction(async transaction => {
+        const deletion = await transaction.get(deletionRef);
+        if (!deletion.exists) return;
+        transaction.set(deletionRef, {
+          status: "pending",
+          lastError: "Late Telegram avatar cleanup failed",
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      }).catch(recordError => console.error("Telegram avatar cleanup state error:", recordError));
+      throw cleanupError;
+    }
+    throw error;
   }
 }
 
@@ -841,6 +910,24 @@ function verifyTelegramLoginPayload(payload = {}, token) {
   }
 }
 
+async function findTelegramLinkedAccounts(telegramUserId) {
+  const id = String(telegramUserId || "").trim();
+  if (!/^\d{1,16}$/.test(id)) return [];
+
+  const users = admin.firestore().collection("users");
+  const [topLevel, nested] = await Promise.all([
+    users.where("telegramUserId", "==", id).limit(3).get(),
+    users.where("telegram.telegramUserId", "==", id).limit(3).get()
+  ]);
+  const matches = new Map();
+  for (const snapshot of [topLevel, nested]) {
+    for (const document of snapshot.docs) {
+      matches.set(document.id, { uid: document.id, data: document.data() || {} });
+    }
+  }
+  return [...matches.values()];
+}
+
 
 
 async function assertAdmin(request) {
@@ -848,7 +935,10 @@ async function assertAdmin(request) {
     throw new HttpsError("permission-denied", "Only admin can perform this action.");
   }
 
-  await assertActiveCallableMember(request);
+  const userData = await assertActiveCallableMember(request);
+  if (!hasCurrentAdminClaim(request.auth.token, userData)) {
+    throw new HttpsError("permission-denied", "Only admin can perform this action.");
+  }
 }
 
 export const clientExerciseMedia = onRequest(
@@ -861,6 +951,22 @@ export const clientExerciseMedia = onRequest(
       return json(res, 200, await readClientExerciseMedia({ db: admin.firestore(), context, clientId: req.body?.clientId || context.uid }));
     } catch (error) {
       return json(res, getHttpErrorStatus(error), { error: "Не удалось обновить видео упражнений." });
+    }
+  }
+);
+
+export const trainerExerciseCards = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30 },
+  async (req, res) => {
+    res.set("Cache-Control", "private, no-store");
+    if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
+    try {
+      const context = await requireActiveMember(req);
+      await enforceRateLimit(context.uid, "exercise-cards", { limit: 120, windowMs: 60000 });
+      return json(res, 200, await manageTrainerExerciseCards({ db: admin.firestore(), context, body: req.body || {} }));
+    } catch (error) {
+      const status = getHttpErrorStatus(error);
+      return json(res, status, { error: status >= 500 ? "Не удалось сохранить карточку упражнения. Попробуйте ещё раз." : error.message });
     }
   }
 );
@@ -883,15 +989,31 @@ export const setAdminClaim = onCall(
     }
 
     const targetUser = await admin.auth().getUser(uid);
+    const userRef = admin.firestore().collection("users").doc(uid);
+    const adminClaimVersion = crypto.randomUUID();
+    // Deny SDK/API access first, even if a later Auth operation needs a retry.
+    if (!adminClaim) {
+      await userRef.set({
+        role: "client",
+        adminClaimVersion,
+        adminClaimUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    }
     await admin.auth().setCustomUserClaims(uid, {
       ...(targetUser.customClaims || {}),
-      admin: adminClaim
+      admin: adminClaim,
+      adminClaimVersion
     });
 
-    await admin.firestore().collection("users").doc(uid).set({
-      role: adminClaim ? "admin" : "client",
-      adminClaimUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
+    if (adminClaim) {
+      await userRef.set({
+        role: "admin",
+        adminClaimVersion,
+        adminClaimUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    } else {
+      await admin.auth().revokeRefreshTokens(uid);
+    }
 
     return {
       ok: true,
@@ -1295,7 +1417,13 @@ export const telegramLoginVerify = onRequest(
         return json(res, 401, { ok: false, error: "Invalid Telegram signature" });
       }
 
-      const avatarUrl = await saveTelegramAvatar(uid, telegramUser.id, token);
+      const existingLinks = await findTelegramLinkedAccounts(telegramUser.id);
+      if (existingLinks.some((linkedAccount) => linkedAccount.uid !== uid)) {
+        return json(res, 409, { ok: false, error: "Telegram account is already linked" });
+      }
+
+      const uploadedAvatar = await saveTelegramAvatar(uid, telegramUser.id, token);
+      const avatarUrl = uploadedAvatar?.url || "";
 
       const telegramProfile = {
         connected: true,
@@ -1313,7 +1441,7 @@ export const telegramLoginVerify = onRequest(
         loginProvider: "telegram_login_widget"
       };
 
-      await admin.firestore().collection("users").doc(uid).set({
+      await publishTelegramProfile(uid, {
         telegram: telegramProfile,
         telegramConnected: true,
         telegramUsername: telegramProfile.username,
@@ -1322,7 +1450,7 @@ export const telegramLoginVerify = onRequest(
         telegramUserId: telegramProfile.telegramUserId,
         telegramNotificationsEnabled: true,
         telegramLinkedAt: admin.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+      }, uploadedAvatar);
 
       return json(res, 200, { ok: true, telegram: telegramProfile });
     } catch (error) {
@@ -1357,7 +1485,8 @@ export const telegramRefreshAvatar = onRequest(
         return json(res, 400, { ok: false, error: "Telegram user is not connected" });
       }
 
-      const avatarUrl = await saveTelegramAvatar(uid, telegramUserId, TELEGRAM_BOT_TOKEN.value());
+      const uploadedAvatar = await saveTelegramAvatar(uid, telegramUserId, TELEGRAM_BOT_TOKEN.value());
+      const avatarUrl = uploadedAvatar?.url || "";
 
       if (!avatarUrl) {
         return json(res, 404, { ok: false, error: "Telegram avatar is unavailable" });
@@ -1370,10 +1499,10 @@ export const telegramRefreshAvatar = onRequest(
         avatarUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
       };
 
-      await userRef.set({
+      await publishTelegramProfile(uid, {
         telegram: nextTelegram,
         telegramAvatarUrl: avatarUrl
-      }, { merge: true });
+      }, uploadedAvatar);
 
       return json(res, 200, {
         ok: true,
@@ -1450,7 +1579,8 @@ export const telegramUpdateNotifications = onRequest(
     try {
       const context = await requireActiveMember(req);
       const enabled = req.body?.enabled;
-      if (typeof enabled !== "boolean") {
+      const hasReminderSettings = req.body?.reminderSettings !== undefined;
+      if ((enabled !== undefined && typeof enabled !== "boolean") || (enabled === undefined && !hasReminderSettings)) {
         return json(res, 400, { ok: false, error: "enabled must be a boolean" });
       }
 
@@ -1467,18 +1597,24 @@ export const telegramUpdateNotifications = onRequest(
         : {};
       const nextTelegram = {
         ...currentTelegram,
-        notificationsEnabled: enabled
+        ...(typeof enabled === "boolean" ? { notificationsEnabled: enabled } : {})
       };
-
+      const workoutCalendar = hasReminderSettings
+        ? buildClientReminderCalendarPatch(req.body.reminderSettings, target.data.workoutCalendar || {})
+        : null;
       await target.ref.set({
-        telegram: nextTelegram,
-        telegramNotificationsEnabled: enabled,
+        ...(typeof enabled === "boolean" ? {
+          telegram: { notificationsEnabled: enabled },
+          telegramNotificationsEnabled: enabled
+        } : {}),
+        ...(workoutCalendar ? { workoutCalendar } : {}),
         telegramNotificationsUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
 
       return json(res, 200, {
         ok: true,
         clientId: target.id,
+        ...(workoutCalendar ? { workoutCalendar } : {}),
         telegram: buildTelegramResponseProfile(nextTelegram)
       });
     } catch (error) {
@@ -1603,14 +1739,25 @@ function getWorkoutOrderIndex(workout = {}, fallbackIndex = 0) {
   return Number.isFinite(idValue) && idValue > 0 ? idValue : fallbackIndex + 1;
 }
 
-async function getNextWorkoutForUser(userId) {
+async function getNextWorkoutForUser(userId, { calendar = {}, event = null, userData = {} } = {}) {
   const workoutsSnapshot = await admin.firestore().collection("users").doc(userId).collection("workouts").get();
 
-  const workouts = workoutsSnapshot.docs
+  const allWorkouts = workoutsSnapshot.docs
     .map((workoutDoc, index) => ({ id: workoutDoc.id, ...workoutDoc.data(), fallbackIndex: index }))
     .sort((a, b) => getWorkoutOrderIndex(a, a.fallbackIndex) - getWorkoutOrderIndex(b, b.fallbackIndex));
+  const workouts = getActivePlanWorkouts(allWorkouts, userData, calendar);
 
   if (!workouts.length) return null;
+
+  const plannedSlot = getPlannedWorkoutForReminder(calendar, event);
+  if (plannedSlot === null) return null;
+  if (plannedSlot) {
+    const workoutId = String(plannedSlot.workoutId || "").trim();
+    const workoutName = String(plannedSlot.workoutName || "").trim();
+    return workouts.find((workout) => workoutId && workout.id === workoutId) ||
+      workouts.find((workout) => !workoutId && workoutName && String(workout.name || "").trim() === workoutName) ||
+      null;
+  }
 
   const historySnapshot = await admin.firestore()
     .collection("users")
@@ -1751,7 +1898,8 @@ async function sendWorkoutReminderForClient(clientId, { test = false, event = nu
     throw new Error("Telegram is not connected");
   }
 
-  const workout = await getNextWorkoutForUser(clientId);
+  const workout = await getNextWorkoutForUser(clientId, test ? { userData: user } : { calendar, event: nextEvent, userData: user });
+  if (!workout && !test) return { skipped: true, reason: "no_workout_in_plan" };
   const workoutTime = nextEvent.workoutTime || calendar.workoutTime || user.workoutTime || "13:00";
 
   const text = buildWorkoutReminderMessage({
@@ -1802,8 +1950,8 @@ export const telegramTestWorkoutReminder = onRequest(
 
     try {
       const context = await requireActiveMember(req);
-      const { clientId } = req.body || {};
-      await getManagedClient(context, clientId);
+      const clientId = String(req.body?.clientId || context.uid).trim();
+      if (clientId !== context.uid) await getManagedClient(context, clientId);
       await enforceRateLimit(context.uid, "telegram-test-reminder", {
         limit: 5,
         windowMs: 60 * 1000
@@ -1834,9 +1982,9 @@ export const telegramDailyWorkoutReminders = onSchedule(
       const calendar = user.workoutCalendar || {};
       const now = new Date();
 
-      if (calendar.enabled === false || calendar.reminderEnabled === false) return;
       const event = getNextScheduledWorkout(calendar, now);
-      const dueOffsets = getDueReminderOffsets(calendar, event, now);
+      const dueOffsets = calendar.enabled === false || calendar.reminderEnabled === false
+        ? [] : getDueReminderOffsets(calendar, event, now);
 
       await Promise.all(dueOffsets.map(async (offsetHours) => {
         const reminderDocId = `workout_reminder_${event.key}_${offsetHours}h`;
@@ -2190,14 +2338,16 @@ export const telegramWebhook = onRequest(
 
       if (startMatch) return json(res, 200, { ok: true });
 
-      if (fromId && text) {
+      if (fromId && text && message?.chat?.type === "private" && chatId === fromId) {
         const matches = await admin.firestore()
           .collection("users")
           .where("telegram.telegramUserId", "==", fromId)
           .limit(1)
           .get();
 
-        if (!matches.empty && isActiveMemberData(matches.docs[0].data() || {})) {
+        const linkedData = matches.empty ? {} : matches.docs[0].data() || {};
+        if (!matches.empty && isActiveMemberData(linkedData) &&
+          String(linkedData.telegram?.chatId || "").trim() === chatId) {
           await matches.docs[0].ref.collection("telegramMessages").add({
             type: "incoming",
             direction: "in",
@@ -2587,10 +2737,11 @@ function normalizeBasicWorkoutAiProfile(input = {}) {
     goal: ["general_fitness", "fat_loss", "muscle", "strength"],
     level: ["beginner", "returning", "experienced"],
     location: ["gym", "home"],
-    days: ["2", "3", "4", "5"],
+    days: ["1", "2", "3", "4", "5"],
     duration: ["30", "45", "60", "90"],
     restrictions: ["none", "back", "knees", "shoulders", "other"],
     twoDayStructure: ["recovery_split", "balanced_full_body"],
+    trainingEmphasis: ["classic", "balanced", "lower", "upper", "full_body_331"],
     mode: ["plan", "today"],
     todayTarget: ["chest", "back", "shoulders", "legs", "glutes", "biceps", "triceps", "core", "full_body"],
     readiness: ["low", "normal", "high"]
@@ -2613,11 +2764,6 @@ function normalizeBasicWorkoutAiProfile(input = {}) {
   const normalizedTodayTargets = todayTargets.includes("full_body")
     ? ["full_body"]
     : todayTargets.slice(0, 3);
-  const numberInRange = (value, min, max) => {
-    const numeric = Number(String(value || "").replace(",", "."));
-    return Number.isFinite(numeric) && numeric >= min && numeric <= max ? numeric : null;
-  };
-
   const days = resolveValue("days", "3");
   const twoDayStructure = days === "2"
     ? resolveValue("twoDayStructure", "recovery_split")
@@ -2633,24 +2779,14 @@ function normalizeBasicWorkoutAiProfile(input = {}) {
     restrictions: resolveValue("restrictions", "none"),
     restrictionDetails: cleanProgramText(input.restrictionDetails || "", 180),
     twoDayStructure,
+    trainingEmphasis: resolveValue("trainingEmphasis", "classic"),
     planPreferences: cleanProgramText(input.planPreferences || "", 280),
     todayTarget: normalizedTodayTargets[0] || resolveValue("todayTarget", "chest"),
     todayTargets: normalizedTodayTargets.length ? normalizedTodayTargets : [resolveValue("todayTarget", "chest")],
     readiness: resolveValue("readiness", "normal"),
-    registration: {
-      weight: numberInRange(registration.weight, 35, 300),
-      height: numberInRange(registration.height, 120, 240),
-      age: numberInRange(registration.age, 14, 100),
-      sex: ["male", "female"].includes(String(registration.sex || ""))
-        ? String(registration.sex)
-        : "",
-      activity: ["low", "medium", "high", "veryHigh"].includes(String(registration.activity || ""))
-        ? String(registration.activity)
-        : "",
-      goal: ["cut", "mass", "recomp", "maintain"].includes(String(registration.goal || ""))
-        ? String(registration.goal)
-        : ""
-    }
+    registration: normalizeWorkoutRegistration(registration),
+    trainingHistory: normalizeWorkoutTrainingHistory(input.trainingHistory),
+    specialStatus: ["none", "pregnant", "postpartum", "medical"].includes(input.specialStatus) ? input.specialStatus : ""
   };
 }
 
@@ -2724,9 +2860,7 @@ function getBasicWorkoutExerciseTarget(duration) {
   return targets[String(duration)] || targets["45"];
 }
 
-function getBasicWorkoutSetCount(duration, level) {
-  if (String(duration) === "30") return 2;
-  if (String(duration) === "45" && String(level) === "beginner") return 2;
+function getBasicWorkoutSetCount() {
   return 3;
 }
 
@@ -2966,9 +3100,7 @@ function normalizeAiBasicWorkoutTodayPlan(rawPlan = {}, profile = {}, uid = "") 
   const targetLabel = targets.map((item) => item.label).join(" + ") || target.label;
   const targetFocus = targets.map((item) => item.focus).join(" · ") || target.focus;
   const expectedExerciseCount = getBasicWorkoutTodayExerciseTarget(profile);
-  const targetSetCount = profile.readiness === "low"
-    ? 2
-    : getBasicWorkoutSetCount(profile.duration, profile.level);
+  const targetSetCount = getBasicWorkoutSetCount();
   const workout = rawPlan?.workout && typeof rawPlan.workout === "object" ? rawPlan.workout : {};
   const sourceExercises = Array.isArray(workout.exercises) ? workout.exercises : [];
 
@@ -3021,9 +3153,7 @@ function normalizeAiBasicWorkoutTodayPlan(rawPlan = {}, profile = {}, uid = "") 
 
 async function respondWithAiBasicWorkoutToday({ res, profile, context, apiVersion }) {
   const expectedExercises = getBasicWorkoutTodayExerciseTarget(profile);
-  const expectedSets = profile.readiness === "low"
-    ? 2
-    : getBasicWorkoutSetCount(profile.duration, profile.level);
+  const expectedSets = getBasicWorkoutSetCount();
   const targets = getBasicWorkoutTodayTargets(profile.todayTargets?.length ? profile.todayTargets : [profile.todayTarget]);
   const target = targets[0] || getBasicWorkoutTodayTarget(profile.todayTarget);
   const targetLabel = targets.map((item) => item.label).join(" + ") || target.label;
@@ -3210,16 +3340,34 @@ async function respondWithAiBasicWorkoutToday({ res, profile, context, apiVersio
   }
 }
 
+async function respondWithHybridBasicWorkout({ res, profile, context, apiVersion }) {
+  const today = profile.mode === "today";
+  const result = await generateHybridWorkoutDraft(profile, {
+    apiKey: GEMINI_API_KEY.value(),
+    beforeGenerate: async () => {
+      await enforceRateLimit(context.uid, today ? "ai-basic-workout-today-v1" : "ai-basic-workout-plan-v2", {
+        limit: 8, windowMs: 10 * 60 * 1000
+      });
+      await enforceRateLimit(context.uid, today ? "ai-basic-workout-today-daily-v1" : "ai-basic-workout-plan-daily-v2", {
+        limit: 16, windowMs: 24 * 60 * 60 * 1000
+      });
+    }
+  });
+  const plan = finalizeHybridWorkoutPlan(result, profile, context.uid);
+  return json(res, 200, { ok: true, apiVersion, fallback: result.generationFallback,
+    plan });
+}
+
 export const aiBasicWorkoutPlan = onRequest(
   {
     region: "us-central1",
     memory: "512MiB",
     timeoutSeconds: 90,
-    secrets: [OPENAI_API_KEY],
+    secrets: [OPENAI_API_KEY, GEMINI_API_KEY],
     cors: true
   },
   async (req, res) => {
-    const apiVersion = "aiBasicWorkoutPlan-v18";
+    const apiVersion = "aiBasicWorkoutPlan-v22";
     if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed", apiVersion });
 
     try {
@@ -3227,6 +3375,9 @@ export const aiBasicWorkoutPlan = onRequest(
       // App Check, and rate limiting here; a paid membership is not required.
       const context = await requireAuthenticatedUser(req);
       const profile = normalizeBasicWorkoutAiProfile(req.body?.profile || {});
+      if (req.body?.provider === "gemini") {
+        return await respondWithHybridBasicWorkout({ res, profile, context, apiVersion });
+      }
       if (profile.mode === "today") {
         return respondWithAiBasicWorkoutToday({ res, profile, context, apiVersion });
       }
@@ -3491,8 +3642,8 @@ export const aiBasicWorkoutPlan = onRequest(
       const status = getHttpErrorStatus(error, 502);
       return json(res, status, {
         ok: false,
-        error: "ai_basic_workout_plan_failed",
-        message: status === 422
+        error: ["basic_workout_review_required", "basic_workout_profile_required"].includes(error.code) ? error.code : "ai_basic_workout_plan_failed",
+        message: ["basic_workout_review_required", "basic_workout_profile_required"].includes(error.code) ? error.message : status === 422
           ? "ИИ не смог подобрать достаточно разнообразную структуру плана. Попробуйте создать его ещё раз."
           : error.message || "Не удалось составить план.",
         apiVersion
@@ -3596,6 +3747,11 @@ async function nutritionSearchHandler(req, res) {
     const query = normalizeSearchString(req.query.q).slice(0, 120);
     if (query.length < 2) return json(res, 200, { foods: [], sources: [] });
 
+    if (req.query.provider === "gemini") {
+      res.set("Cache-Control", "no-store");
+      const result = await fetchGeminiNutritionFoods(query, GEMINI_API_KEY.value());
+      return json(res, 200, { ...result, mode: "gemini", fallbackSuggestions: [] });
+    }
     const foods = await fetchOpenAiNutritionFoods(query);
     return json(res, 200, {
       foods,
@@ -3620,7 +3776,7 @@ async function nutritionSearchHandler(req, res) {
 export const nutritionSearch = onRequest(
   {
     cors: true,
-    secrets: [OPENAI_API_KEY],
+    secrets: [OPENAI_API_KEY, GEMINI_API_KEY],
     timeoutSeconds: 60,
     memory: "512MiB",
     region: "us-central1"
@@ -4506,13 +4662,24 @@ export const deleteUser = onRequest(
       });
 
       const uid = String(req.body?.uid || "").trim();
-      if (!uid) return json(res, 400, { ok: false, error: "uid is required" });
+      if (!uid || uid.includes("/") || uid.length > 128) {
+        return json(res, 400, { ok: false, error: "A valid uid is required" });
+      }
       if (uid === context.uid) return json(res, 400, { ok: false, error: "Admin cannot delete the active account" });
 
       const db = admin.firestore();
       const userRef = db.collection("users").doc(uid);
-      const userSnapshot = await userRef.get();
-      if (!userSnapshot.exists) return json(res, 404, { ok: false, error: "Client not found" });
+      // This server-only tombstone survives recursiveDelete, so failures after
+      // removing Auth/profile data can still be retried safely by an admin.
+      const deletionRef = db.collection("accountDeletions").doc(uid);
+      const [userSnapshot, deletionSnapshot] = await Promise.all([userRef.get(), deletionRef.get()]);
+      const deletionData = deletionSnapshot.exists ? deletionSnapshot.data() || {} : {};
+      if (deletionData.status === "completed") {
+        return json(res, 200, { ok: true, uid, cleanupCount: 0, alreadyDeleted: true });
+      }
+      if (!userSnapshot.exists && deletionData.status !== "pending") {
+        return json(res, 404, { ok: false, error: "Client not found" });
+      }
 
       const userData = userSnapshot.data() || {};
       if (String(userData.role || "client") !== "client") {
@@ -4530,6 +4697,7 @@ export const deleteUser = onRequest(
       const addCleanupRef = (ref) => {
         if (ref?.path && ref.path !== userRef.path) cleanupRefs.set(ref.path, ref);
       };
+      for (const path of deletionData.cleanupPaths || []) addCleanupRef(db.doc(path));
       const emails = new Set([
         userData.email,
         authUser?.email
@@ -4560,9 +4728,45 @@ export const deleteUser = onRequest(
         db.collection("users").doc(trainerId).collection("trainerClients").doc(uid)
       ));
 
-      if (authUser) await admin.auth().deleteUser(uid);
-      await db.recursiveDelete(userRef);
-      await Promise.all([...cleanupRefs.values()].map((ref) => ref.delete()));
+      const pending = db.batch();
+      pending.set(deletionRef, {
+        status: "pending",
+        requestedByUid: context.uid,
+        cleanupPaths: [...cleanupRefs.keys()],
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+      if (userSnapshot.exists) {
+        pending.set(userRef, { active: false, accessDisabled: true }, { merge: true });
+      }
+      await pending.commit();
+
+      try {
+        if (authUser) {
+          try {
+            await admin.auth().deleteUser(uid);
+          } catch (error) {
+            if (error?.code !== "auth/user-not-found") throw error;
+          }
+        }
+        const bucket = admin.storage().bucket(getStorageBucketName());
+        for (const prefix of [`users/${uid}/`, `progress-photos/${uid}/`, `feedback/${uid}/`, `telegram-avatars/${uid}/`]) {
+          await bucket.deleteFiles({ prefix, force: true, ignoreNotFound: true, versions: true });
+        }
+        await Promise.all([...cleanupRefs.values()].map((ref) => ref.delete()));
+        await db.recursiveDelete(userRef);
+        await deletionRef.set({
+          status: "completed",
+          cleanupPaths: admin.firestore.FieldValue.delete(),
+          lastError: admin.firestore.FieldValue.delete(),
+          completedAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      } catch (error) {
+        await deletionRef.set({
+          lastError: String(error?.message || "Cleanup failed").slice(0, 500),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }).catch((recordError) => console.error("deleteUser cleanup state error:", recordError));
+        throw error;
+      }
 
       return json(res, 200, { ok: true, uid, cleanupCount: cleanupRefs.size });
     } catch (error) {

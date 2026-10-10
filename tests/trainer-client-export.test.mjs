@@ -43,11 +43,11 @@ test("trainer client export rows include measurements and csv quoting", () => {
   assert.match(trainerExportRowsToCsv(rows), /"nutrition","2026-06-17","day totals","2000"/);
 });
 
-test("trainer export html rows omit the header and strip unsafe cell characters", () => {
+test("trainer export html rows omit the header and escape cell text without losing characters", () => {
   const htmlRows = trainerExportRowsToHtmlRows([
     ["type", "date", "name"],
     ["workout", "2026-06-20", "<Спина&плечи>"]
   ]);
 
-  assert.equal(htmlRows, "<tr><td>workout</td><td>2026-06-20</td><td>Спинаплечи</td></tr>");
+  assert.equal(htmlRows, "<tr><td>workout</td><td>2026-06-20</td><td>&lt;Спина&amp;плечи&gt;</td></tr>");
 });

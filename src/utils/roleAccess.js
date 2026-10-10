@@ -1,15 +1,28 @@
+const normalizeRole = (role) => String(role || "").trim().toLocaleLowerCase("ru");
+
+// UI capabilities use the same current server authority as Functions/rules.
+// Existing admins without a version keep access until their first role change.
+export function hasCurrentAdminAccess({ claims = {}, profile = {} } = {}) {
+  return claims?.admin === true && profile?.role === "admin" &&
+    profile.active !== false && profile.archived !== true && profile.accessDisabled !== true &&
+    !["revoked", "suspended"].includes(profile.membershipStatus) &&
+    (Object.hasOwn(profile, "adminClaimVersion")
+      ? typeof profile.adminClaimVersion === "string" && claims.adminClaimVersion === profile.adminClaimVersion
+      : !Object.hasOwn(claims, "adminClaimVersion"));
+}
+
 export function resolveUserRole({ isAdminClaim, role }) {
-  const normalizedRole = String(role || "").trim().toLocaleLowerCase("ru");
-  if (isAdminClaim) return "admin";
+  const normalizedRole = normalizeRole(role);
+  if (normalizedRole === "admin") return isAdminClaim === true ? "admin" : "unresolved";
   if (normalizedRole === "trainer") return "trainer";
-  if (normalizedRole === "admin") return "admin";
   return "client";
 }
 
-export function getCanUseAdminFeatures({ isAdminClaim }) {
-  return Boolean(isAdminClaim);
+export function getCanUseAdminFeatures({ isAdminClaim, currentUserRole }) {
+  return isAdminClaim === true && normalizeRole(currentUserRole) === "admin";
 }
 
 export function getCanUseTrainerFeatures({ isAdminClaim, currentUserRole }) {
-  return Boolean(isAdminClaim || currentUserRole === "trainer");
+  return normalizeRole(currentUserRole) === "trainer" ||
+    getCanUseAdminFeatures({ isAdminClaim, currentUserRole });
 }

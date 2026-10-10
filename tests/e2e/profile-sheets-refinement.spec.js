@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 
 async function openSheet(page, sheet, extra = "") {
   await page.emulateMedia({ reducedMotion: "reduce" });

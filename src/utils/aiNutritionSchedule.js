@@ -1,25 +1,26 @@
 import { AI_NUTRITION_WEEK_DAYS } from "../data/nutritionPlanning.js";
 
-export function getAiNutritionCurrentWeek(plan) {
-  if (!plan?.createdAt) return 1;
-  const created = new Date(plan.createdAt);
-  if (Number.isNaN(created.getTime())) return 1;
-  const diffDays = Math.max(0, Math.floor((Date.now() - created.getTime()) / (24 * 60 * 60 * 1000)));
-  return Math.min(4, Math.floor(diffDays / 7) + 1);
+function getNutritionPlanWeekIndex(plan, date, weekCount) {
+  const created = new Date(plan?.createdAt || "");
+  const target = new Date(date);
+  if (Number.isNaN(created.getTime()) || Number.isNaN(target.getTime())) return 0;
+
+  // Compare calendar days, including across DST; both dashboard and diary
+  // start a new plan week at local midnight rather than the creation hour.
+  const createdDay = Date.UTC(created.getFullYear(), created.getMonth(), created.getDate());
+  const targetDay = Date.UTC(target.getFullYear(), target.getMonth(), target.getDate());
+  const diffDays = Math.max(0, Math.round((targetDay - createdDay) / 86400000));
+  return Math.min(weekCount - 1, Math.floor(diffDays / 7));
+}
+
+export function getAiNutritionCurrentWeek(plan, date = new Date()) {
+  return getNutritionPlanWeekIndex(plan, date, plan?.weeks?.length || 4) + 1;
 }
 
 export function getAiNutritionWeekForDate(plan, date = new Date()) {
   if (!Array.isArray(plan?.weeks) || !plan.weeks.length) return null;
 
-  const created = new Date(plan.createdAt);
-  const target = new Date(date);
-  if (Number.isNaN(created.getTime()) || Number.isNaN(target.getTime())) return plan.weeks[0];
-
-  created.setHours(0, 0, 0, 0);
-  target.setHours(0, 0, 0, 0);
-
-  const diffDays = Math.max(0, Math.floor((target.getTime() - created.getTime()) / (24 * 60 * 60 * 1000)));
-  const weekIndex = Math.min(plan.weeks.length - 1, Math.floor(diffDays / 7));
+  const weekIndex = getNutritionPlanWeekIndex(plan, date, plan.weeks.length);
   return plan.weeks[weekIndex] || plan.weeks[0];
 }
 
@@ -51,7 +52,7 @@ export function getAiNutritionDayMacros(baseMacros, profile = {}, date = new Dat
 
   const goal = profile?.goal || "recomp";
   const calorieBoost = goal === "mass" ? 180 : goal === "dry" ? 90 : goal === "cut" ? 80 : goal === "maintain" ? 70 : 130;
-  const carbsBoost = goal === "dry" ? 25 : goal === "cut" ? 20 : goal === "maintain" ? 18 : 35;
+  const carbsBoost = Math.round(calorieBoost / 4);
 
   return {
     ...macros,

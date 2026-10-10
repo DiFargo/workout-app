@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
@@ -74,13 +74,17 @@ test("client AI coach visual audit covers insights and nutrition plan states", a
         const backRect = root.querySelector("[data-testid='ai-coach-back']")?.getBoundingClientRect();
         return {
           width: Math.round(rootRect.width),
+          left: Math.round(rootRect.left),
+          right: Math.round(rootRect.right),
           headingColor: heading ? getComputedStyle(heading).color : "",
           backWidth: Math.round(backRect?.width || 0),
           backHeight: Math.round(backRect?.height || 0)
         };
       });
-      expect(visualContract.width).toBeLessThanOrEqual(402);
-      expect(visualContract.headingColor).toBe("rgb(40, 38, 46)");
+      expect(visualContract.width).toBe(width < 700 ? width : 1040);
+      expect(visualContract.left).toBeGreaterThanOrEqual(0);
+      expect(visualContract.right).toBeLessThanOrEqual(width);
+      expect(visualContract.headingColor).toBe("rgb(28, 40, 46)");
       expect(visualContract.backWidth).toBe(44);
       expect(visualContract.backHeight).toBe(44);
     }

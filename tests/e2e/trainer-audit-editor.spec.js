@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 async function openEditor(page) {
@@ -11,6 +11,23 @@ async function client(page, query = "") {
   await page.locator(".trainerNextClientTable > button").first().click();
   await page.locator(".trainerNextClientTabs:visible,.trainerNextClientMobileNav:visible").getByRole("button", { name: "Тренировки", exact: true }).click();
 }
+
+test("new assignment editor uses its own dates and preserves 3 x 110 prescription", async ({ page }, info) => {
+  test.skip(info.project.name !== "desktop-chromium", "Editor date and prescription regression");
+  const errors = failOnRuntimeErrors(page);
+  await page.clock.install({ time: new Date("2026-09-10T12:00:00Z") });
+  await client(page, "&assignmentScheduleAudit=1");
+  const editor = await openEditor(page);
+  const days = editor.locator(".trainerNextWorkoutDayItem");
+  await expect(days).toHaveCount(8);
+  await expect(days.filter({ hasText: "Пропущена" })).toHaveCount(0);
+  await expect(days.filter({ hasText: "Запланирована" })).toHaveCount(8);
+  await expect(editor.getByLabel("Статус тренировки", { exact: true })).toHaveValue("planned");
+  await expect(editor.getByLabel(/^Подходы:/)).toHaveValue("3");
+  await expect(editor.getByLabel(/^Вес:/)).toHaveValue("110");
+  await editor.screenshot({ path: "test-artifacts/assignment-calendar-761.png" });
+  errors();
+});
 
 for (const width of [320, 393, 760, 1081, 1280, 1600]) test(`client draft fits, cancels and saves at ${width}px`, async ({ page }, info) => {
   test.skip(info.project.name !== "desktop-chromium", "Explicit viewport matrix");

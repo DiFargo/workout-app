@@ -135,15 +135,20 @@ export default defineConfig(({ command, mode }) => {
         },
       },
     },
-    server: apiBaseUrl
-      ? {
-          proxy: {
+    server: {
+      watch: {
+        // Playwright trace snapshots contain HTML. Watching generated reports
+        // reloads the application in the middle of unrelated browser checks.
+        ignored: ['**/artifacts/**', '**/test-results/**', '**/playwright-report/**'],
+      },
+      proxy: apiBaseUrl
+        ? {
             '/api': {
               target: parsedApiBaseUrl.origin,
               changeOrigin: true
             }
           }
-        }
-      : undefined
+        : undefined,
+    },
   }
 })

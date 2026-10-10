@@ -52,7 +52,7 @@ export function WorkoutFullscreenVideoOverlay({ videoSrc, onClose, onVideoError 
 export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack }) {
   return (
     <>
-      <button
+      {!showBackButton && <button
         type="button"
         className={styles.closeButton}
         data-css-module-control="workout-run-overlays"
@@ -61,18 +61,20 @@ export function WorkoutRunTopControls({ isSaving, showBackButton, onExit, onBack
         aria-label="Выйти из тренировки"
       >
         <X aria-hidden="true" />
-      </button>
+      </button>}
 
       <div className={styles.topHeader}>
-        <button
+        {showBackButton && <button
           className={styles.backButton}
           type="button"
-          onClick={showBackButton ? onBack : onExit}
+          data-css-module-control="workout-run-overlays"
+          onClick={onBack}
           disabled={isSaving}
           aria-label="Вернуться к предыдущему экрану"
         >
           <ChevronLeft aria-hidden="true" />
-        </button>
+          <span>Назад</span>
+        </button>}
 
         <div aria-hidden="true" />
       </div>
@@ -105,7 +107,7 @@ export function WorkoutStageHeading({
         data-css-module-scope="workout-stage-heading"
       >
         <div className={styles.stageTitleContent}>
-          <span className={styles.stageTitleText}>
+          <span className={`${styles.stageTitleText} ${!isFinishSlide ? styles.exerciseTitle : ""}`}>
             {isFinishSlide
               ? isWorkoutSaved
                 ? "Тренировка завершена"

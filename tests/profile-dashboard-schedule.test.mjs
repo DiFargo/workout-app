@@ -5,8 +5,24 @@ import {
   getProfileDashboardScheduleDates,
   getProfileMeasurementTrendPeriodLabel,
   getTimeOfDayGreeting,
-  getProfileWeightCheckInState
+  getProfileWeightCheckInState,
+  getProfileWorkoutStatusDateKey
 } from "../src/features/client/profile/profileDashboardModel.js";
+import { buildPlannedWorkoutSlots } from "../src/utils/workoutSchedule.js";
+
+test("missed workout message uses the missed date, not its suggested future move", () => {
+  const dates = ["2026-08-26", "2026-08-29", "2026-09-02", "2026-09-05", "2026-09-09", "2026-09-12", "2026-09-16", "2026-09-19"];
+  const slots = buildPlannedWorkoutSlots({
+    workouts: dates.map((scheduledDate, index) => ({ id: `day-${index}`, scheduledDate })),
+    now: new Date("2026-09-10T12:00:00")
+  });
+  assert.equal(slots.filter(slot => slot.isMissed).length, 5);
+  assert.equal(slots[0].shiftedDate, "2026-09-21");
+  assert.equal(getProfileWorkoutStatusDateKey(slots[0]), "2026-08-26");
+  assert.equal(getProfileWorkoutStatusDateKey(slots[5]), "2026-09-12");
+  assert.equal(getProfileWorkoutStatusDateKey({ isMissed: false, shiftedDate: "2026-09-22", plannedDate: "2026-09-10" }), "2026-09-22");
+  assert.equal(getProfileWorkoutStatusDateKey(null), "");
+});
 
 test("profile dashboard greeting follows the user's local time", () => {
   const atHour = (hour) => new Date(2026, 8, 1, hour, 0, 0);

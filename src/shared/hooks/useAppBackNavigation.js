@@ -10,6 +10,49 @@ export function useAppBackNavigation({
   restorePrimaryPage
 }) {
   useEffect(() => {
+    const shouldShowTelegramBackButton = Boolean(
+      isLoggedIn &&
+      !appLoading &&
+      page !== undefined &&
+      (hasTransientScreen || page !== "main")
+    );
+
+    let removeBackButtonHandler = () => {};
+    const syncTelegramBackButton = () => {
+      removeBackButtonHandler();
+      const backButton = window.Telegram?.WebApp?.BackButton;
+      if (!backButton) return;
+
+      if (!shouldShowTelegramBackButton) {
+        backButton.hide?.();
+        return;
+      }
+
+      const onTelegramBack = () => {
+        if (hasTransientScreen && window.history.state?.workoutAppBackTrap) {
+          window.history.back();
+          return;
+        }
+        handleTransientBack?.();
+      };
+
+      backButton.onClick?.(onTelegramBack);
+      backButton.show?.();
+      removeBackButtonHandler = () => {
+        backButton.offClick?.(onTelegramBack);
+        backButton.hide?.();
+      };
+    };
+
+    syncTelegramBackButton();
+    window.addEventListener("telegram-mini-app-ready", syncTelegramBackButton);
+    return () => {
+      window.removeEventListener("telegram-mini-app-ready", syncTelegramBackButton);
+      removeBackButtonHandler();
+    };
+  }, [appLoading, handleTransientBack, hasTransientScreen, isLoggedIn, page]);
+
+  useEffect(() => {
     const isPrimary = Boolean(isPrimaryPage && isPrimaryPage(page));
     const shouldTrapAndroidBack =
       isLoggedIn &&

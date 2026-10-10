@@ -29,18 +29,18 @@
   box-shadow: var(--shadow-profile-nutrition-modal);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
-  --gradient-primary: var(--apple-action, #3f73b8);
+  --gradient-primary: var(--apple-action, #396ba6);
 }
 
 .dialog button { font-family: inherit; }
 .header.header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
 .dialog.dialog[data-cabinet-sheet="true"] .closeButton[data-profile-modal-close="true"] {
   border: 0;
-  color: var(--apple-secondary, #636366);
-  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-secondary, #617078);
+  background: var(--apple-surface-muted, #edf1f3);
   box-shadow: none;
 }
-.dialog .closeButton:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 0; }
+.dialog .closeButton:focus-visible { outline: 2px solid var(--apple-blue, #376b91); outline-offset: 0; }
 
 .header {
   position: relative;
@@ -80,7 +80,7 @@
   border: 0;
   border-radius: 18px;
   background: var(--apple-surface, #fff);
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
@@ -120,7 +120,7 @@
   border: 0;
   border-radius: 11px;
   background: transparent;
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
@@ -128,7 +128,7 @@
 
 .calendarTitle strong {
   min-width: 0;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 13px;
   font-weight: 600;
   text-align: center;
@@ -145,7 +145,7 @@
   min-height: 14px;
   display: grid;
   place-items: center;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 400;
 }
@@ -163,32 +163,32 @@
   align-items: center;
   border: 1px solid transparent;
   border-radius: 8px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-text, #1c282e);
   cursor: default;
   user-select: none;
 }
 
 .day.today {
-  border-color: var(--apple-blue, #3c6faa);
+  border-color: var(--apple-blue, #376b91);
 }
 
 .day.activeDay {
-  border-color: var(--apple-blue, #3c6faa);
-  background: var(--apple-blue-tint, #edf2f9);
+  border-color: var(--apple-blue, #376b91);
+  background: var(--ownset-soft-gradient);
   box-shadow: none;
 }
 
 .day.planned {
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 .day.planned > strong {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 .day.planned > small {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 .day > span,
@@ -201,14 +201,14 @@
 
 .day > span {
   justify-self: start;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 500;
 }
 
 .day > strong {
   align-self: end;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 12px;
   line-height: 1;
   font-weight: 600;
@@ -217,7 +217,7 @@
 .day > small,
 .day > em {
   align-self: end;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   line-height: 1;
   font-style: normal;
@@ -257,7 +257,7 @@
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 400;
 }
@@ -269,17 +269,17 @@
 }
 
 .factLegend {
-  background: var(--apple-blue, #3c6faa);
+  background: var(--ownset-action-gradient);
 }
 
 .planLegend {
-  border: 1px solid var(--apple-secondary, #636366);
+  border: 1px solid var(--apple-secondary, #617078);
   background: transparent;
 }
 
 .logged {
   margin: 6px 0 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.5;
@@ -298,7 +298,7 @@
 }
 
 .planHeader strong {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 600;
 }
@@ -315,24 +315,24 @@
   padding: 10px 4px;
   border: 1px solid transparent;
   border-radius: 11px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-text, #1c282e);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
 }
 
 .goalPicker button.activeGoal {
-  border-color: var(--apple-blue, #3c6faa);
-  background: var(--apple-blue-tint, #edf2f9);
-  color: var(--apple-blue, #3c6faa);
+  border-color: var(--apple-blue, #376b91);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue, #376b91);
 }
 
 .goalHint {
   margin: 0;
   padding: 0;
   border: 0;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   font-weight: 400;
   line-height: 1.45;
@@ -350,14 +350,14 @@
   padding: 7px 3px;
   border: 0;
   border-radius: 10px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-text, #1c282e);
   text-align: center;
 }
 
 .macroGrid span {
   display: block;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 400;
 }
@@ -365,7 +365,7 @@
 .macroGrid strong {
   display: block;
   margin-top: 4px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.05;
@@ -377,7 +377,7 @@
   padding: 0 13px;
   border: 0;
   border-radius: 14px;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-size: 16px;
   font-weight: 600;
@@ -386,7 +386,7 @@
 }
 
 .saveButton[data-save-state="saved"] {
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   opacity: 1;
 }
@@ -402,7 +402,7 @@
 .calendarTitle button:focus-visible,
 .goalPicker button:focus-visible,
 .saveButton:focus-visible {
-  outline: 2px solid var(--apple-blue, #3c6faa);
+  outline: 2px solid var(--apple-blue, #376b91);
   outline-offset: 2px;
 }
 

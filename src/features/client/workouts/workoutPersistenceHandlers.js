@@ -19,6 +19,7 @@ export function createWorkoutPersistenceHandlers(getContext) {
 
     return replayFailedHistorySavesWithDeps({
       db,
+      auth,
       uid: uid || auth.currentUser?.uid,
       historyReplayInProgressRef,
       setWorkoutHistorySyncState,
@@ -36,6 +37,7 @@ export function createWorkoutPersistenceHandlers(getContext) {
     } = getContext();
 
     return replayFailedNutritionSyncWithDeps({
+      auth,
       uid: uid || auth.currentUser?.uid,
       nutritionReplayInProgressRef,
       setNutrition,

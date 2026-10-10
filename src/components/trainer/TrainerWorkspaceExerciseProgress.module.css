@@ -34,7 +34,7 @@
   place-items: center;
   border-radius: 14px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressHeading h3) {
@@ -73,7 +73,7 @@
 :global(.trainerNextRoot) :global(.trainerExerciseProgressFilterToggle[aria-expanded="true"]) {
   border-color: var(--trainer-v2-line, #d5c7ea);
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressToolbar) {
@@ -110,7 +110,7 @@
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressToolbar button.active) {
   color: #ffffff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.2);
 }
 
@@ -175,7 +175,7 @@
   place-items: center;
   border-radius: 13px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressName > b) {
@@ -312,7 +312,7 @@
   border: 1px solid var(--trainer-v2-line, #dfd3ee);
   border-radius: 10px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   cursor: pointer;
   font: inherit;
   font-size: 11px;
@@ -772,7 +772,7 @@
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressName) {display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressExerciseIcon) {display:none!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressName strong) {font-size:18px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;}
-:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics) {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;background:#f2f2f7!important;border-radius:10px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics) {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;background:#f5f7f8!important;border-radius:10px!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics > span) {min-width:0!important;padding:12px!important;border:0!important;border-radius:0!important;background:transparent!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics b) {font-size:14px!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics small) {font-size:12px!important;}

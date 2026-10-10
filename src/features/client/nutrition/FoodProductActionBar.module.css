@@ -142,10 +142,10 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
   overflow: hidden;
   border: 0;
-  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
   background: #ffffff;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -161,7 +161,7 @@
   flex-direction: row;
   border: 0;
   border-radius: 14px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 :global(:root[data-app-theme="warm-light"]) .button > span { font-size: 21px; font-weight: 400; }
@@ -170,4 +170,4 @@
 :global(:root[data-app-theme="warm-light"]) .button > span svg { width: 20px; height: 20px; }
 :global(:root[data-app-theme="warm-light"]) .add,
 :global(:root[data-app-theme="warm-light"]) .add:hover,
-:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: var(--apple-action, #3f73b8); color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: var(--ownset-action-gradient); color: #fff; }

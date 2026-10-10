@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 
 async function openTrainerNotifications(page) {
   await page.goto("/?clientHarness=1&clientHarnessPage=cabinet&clientCabinetModal=notifications");

@@ -8,6 +8,7 @@ import {
 } from "../src/utils/trainerExerciseLibrary.js";
 import { exerciseLibraryNameKey } from "../functions/exerciseLibraryIdentity.js";
 import { findExerciseLibraryMatch } from "../src/utils/auditSafety.js";
+import { exerciseCardLegacyKey } from "../functions/exerciseCards.js";
 
 test("trainer exercise library merges current plan and templates", () => {
   const items = buildTrainerExerciseLibraryItems({
@@ -143,4 +144,108 @@ test("workspace resolves editable source without mixing a template video with a 
   assert.deepEqual(mergeTrainerExerciseLibraryItems([item, sourced]), [sourced]);
   const template = { id: "video-id", name: item.name, video: "video.mp4", librarySource: { type: "template", templateId: "template" } };
   assert.deepEqual(mergeTrainerExerciseLibraryItems([template, sourced]), [template]);
+});
+
+const libraryTemplate = (exercises, ownerUid = "trainer") => ({
+  id: `template-${ownerUid}`, ownerUid, workouts: [{ id: "day", exercises }]
+});
+const libraryCard = (name, patch = {}) => ({
+  id: "saved-card", ownerUid: "trainer", name, video: "/demo.mp4", technique: "",
+  revision: 2, updatedAt: "2026-09-19T07:00:00.000Z", ...patch
+});
+
+test("card-backed library suppresses blank legacy copies for every movement and preserves the editable source", () => {
+  const names = ["Отведение рук с гантелями сидя в наклоне", "Отведение рук с гантелями стоя в наклоне", "Жим ногами", "Скручивания на пресс"];
+  const cards = names.map((name, index) => libraryCard(name, { id: `card-${index}`, video: `/demo-${index}.mp4` }));
+  const templates = [libraryTemplate(names.flatMap((name, index) => [
+    { id: `blank-${index}`, name, video: "", sets: [{ reps: 12, weight: 20 }] },
+    { id: `filmed-${index}`, name, video: `/demo-${index}.mp4`, sets: [{ reps: 8, weight: 30 }] }
+  ]))];
+  const before = structuredClone({ cards, templates });
+  const items = buildTrainerExerciseLibraryItems({}, templates, { cards });
+  assert.deepEqual(items.map(item => item.exerciseCardId), cards.map(card => card.id));
+  for (const item of items) {
+    assert.deepEqual(item.librarySource, { type: "card", ownerUid: "trainer" });
+    assert.equal("sets" in item, false);
+    assert.equal(item.revision, 2);
+  }
+  assert.deepEqual(mergeTrainerExerciseLibraryItems(items), items, "workspace's second pass must stay stable");
+  assert.deepEqual({ cards, templates }, before);
+});
+
+test("card-enabled consumers still deduplicate legacy items before any shared card has been saved", () => {
+  const template = libraryTemplate([
+    { id: "blank", name: "Жим гантелей лёжа", video: "" },
+    { id: "filmed", name: "Жим лёжа с гантелями", video: "/press.mp4" }
+  ]);
+  const items = buildTrainerExerciseLibraryItems({}, [template], { cards: [] });
+  assert.equal(items.length, 1);
+  assert.equal(items[0].id, "filmed");
+  assert.equal(items[0].librarySource.templateId, template.id);
+});
+
+test("new shared video supersedes an old copy but preserves techniques, positions and owners", () => {
+  const name = "Отведение рук с гантелями сидя в наклоне";
+  const card = libraryCard(name);
+  const otherCard = libraryCard(name, { id: "other-owner", ownerUid: "other" });
+  const otherPosition = libraryCard("Отведение рук с гантелями стоя в наклоне", { id: "standing" });
+  const techniques = libraryTemplate([
+    { id: "different-video", name, video: "/second.mp4" },
+    { id: "different-technique", name, video: "/demo.mp4", technique: "Другая техника выполнения" },
+    { id: "blank", name, video: "" }
+  ]);
+  const items = buildTrainerExerciseLibraryItems({}, [techniques], { cards: [card, otherCard, otherPosition] });
+  assert.equal(items.length, 4);
+  assert.ok(!items.some(item => item.id === "different-video"));
+  assert.ok(items.some(item => item.id === "different-technique"));
+  assert.ok(items.some(item => item.id === "other-owner"));
+  assert.ok(items.some(item => item.id === "standing"));
+});
+
+test("shared-card deletion does not resurrect legacy filmed or empty copies and restoration stays unique", () => {
+  const blank = { id: "blank", name: "Жим ногами", video: "" };
+  const filmed = { id: "filmed", name: blank.name, video: "/demo.mp4" };
+  const templates = [libraryTemplate([blank, filmed])];
+  const deleted = libraryCard(blank.name, { deletedAt: "2026-09-19", legacyKeys: [exerciseCardLegacyKey(filmed)] });
+  assert.equal(buildTrainerExerciseLibraryItems({}, templates, { cards: [deleted] }).length, 0);
+  const archived = buildTrainerExerciseLibraryItems({}, templates, { cards: [deleted], includeDeleted: true });
+  assert.equal(archived.length, 1);
+  assert.equal(archived[0].exerciseCardId, deleted.id);
+  const restored = buildTrainerExerciseLibraryItems({}, templates, { cards: [{ ...deleted, deletedAt: "" }] });
+  assert.equal(restored.length, 1);
+  assert.equal(restored[0].exerciseCardId, deleted.id);
+});
+
+test("identical shared cards use the most recently edited source consistently, including its deletion", () => {
+  const old = libraryCard("Жим ногами", { id: "old", updatedAt: "2026-09-18T07:00:00.000Z" });
+  const latest = libraryCard("Жим ногами", { id: "latest" });
+  for (const cards of [[old, latest], [latest, old]]) {
+    const items = buildTrainerExerciseLibraryItems({}, [], { cards });
+    assert.equal(items.length, 1);
+    assert.equal(items[0].id, "latest");
+  }
+  assert.equal(buildTrainerExerciseLibraryItems({}, [], { cards: [old, { ...latest, deletedAt: "2026-09-19" }] }).length, 0);
+});
+
+test("same-named empty copies with different explicit techniques or owners never disappear", () => {
+  const name = "Жим ногами";
+  const templates = [libraryTemplate([
+    { id: "different-instructions", name, video: "", technique: "Особая техника" }
+  ]), libraryTemplate([{ id: "foreign-blank", name, video: "" }], "other")];
+  assert.equal(buildTrainerExerciseLibraryItems({}, templates, { cards: [libraryCard(name)] }).length, 3);
+});
+
+test("old empty and filmed copies stay hidden after the shared card is renamed, re-filmed or its technique is updated", () => {
+  const original = { id: "source", name: "Отведение рук с гантелями сидя в наклоне", video: "/old.mp4", technique: "" };
+  const card = libraryCard("Обновлённое отведение рук сидя", {
+    video: "/new.mp4", technique: "Новая техника", legacyKeys: [exerciseCardLegacyKey(original), "invalid old key"]
+  });
+  const templates = [libraryTemplate([original, { ...original, id: "blank", video: "" },
+    { ...original, id: "different-technique", video: "", technique: "Иная техника" },
+    { ...original, id: "different-video", video: "/private.mp4" }
+  ])];
+  const items = buildTrainerExerciseLibraryItems({}, templates, { cards: [card] });
+  assert.deepEqual(items.map(item => item.id), [card.id, "different-technique"]);
+  const deleted = buildTrainerExerciseLibraryItems({}, templates, { cards: [{ ...card, deletedAt: "2026-09-19" }] });
+  assert.deepEqual(deleted.map(item => item.id), ["different-technique", "different-video"]);
 });

@@ -1,12 +1,15 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(60_000);
 
 test.beforeEach(async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  await page.goto("/");
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("heading", { name: "Вход через Telegram" })).toBeVisible({ timeout: 40_000 });
+  await page.locator("summary").filter({ hasText: "Есть приглашение от тренера? Войти" }).click();
   await expect(page.getByRole("heading", { name: "Вход по приглашению" })).toBeVisible({ timeout: 40_000 });
+  await expect(page.getByText("Открой ссылку активации и задай пароль. Потом введи ниже логин из сообщения тренера и этот пароль.")).toBeVisible();
   assertNoRuntimeErrors();
 });
 

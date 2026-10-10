@@ -104,7 +104,23 @@ export function trainerExportRowsToHtmlRows(rows = []) {
   return (Array.isArray(rows) ? rows : [])
     .slice(1)
     .map((row) => `<tr>${(Array.isArray(row) ? row : [])
-      .map((cell) => `<td>${String(cell).replace(/[<>&]/g, "")}</td>`)
+      .map((cell) => `<td>${escapeTrainerExportHtml(cell)}</td>`)
       .join("")}</tr>`)
     .join("");
+}
+
+export function escapeTrainerExportHtml(value = "") {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[character]));
+}
+
+export function buildTrainerClientPrintDocument(clientLabel, rows = [], channelName = "") {
+  const label = escapeTrainerExportHtml(clientLabel);
+  const header = (rows[0] || []).map(cell => `<th>${escapeTrainerExportHtml(cell)}</th>`).join("");
+  // The only script value is an internally generated channel ID; no user text
+  // is interpolated into JavaScript. noopener does not provide a WindowProxy,
+  // so the ready signal confirms the complete print document actually loaded.
+  const channel = JSON.stringify(String(channelName)).replaceAll("<", "\\u003c");
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>${label} — отчёт</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#1c1c1e}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;font-size:12px;overflow-wrap:anywhere}h1{font-size:22px}@media print{body{padding:0}}</style></head><body><h1>Отчёт клиента: ${label}</h1><table><thead><tr>${header}</tr></thead><tbody>${trainerExportRowsToHtmlRows(rows)}</tbody></table><script>window.addEventListener("load",()=>{const channel=new BroadcastChannel(${channel});channel.postMessage({type:"ready"});try{window.print()}catch{channel.postMessage({type:"print-error"})}finally{channel.close()}},{once:true});</script></body></html>`;
 }

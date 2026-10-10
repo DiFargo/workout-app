@@ -494,33 +494,33 @@
   }
 }
 
-:global(:root[data-app-theme="warm-light"]) .field { color: var(--apple-text, #1c1c1e); -webkit-text-fill-color: var(--apple-text, #1c1c1e); }
+:global(:root[data-app-theme="warm-light"]) .field { color: var(--apple-text, #1c282e); -webkit-text-fill-color: var(--apple-text, #1c282e); }
 :global(:root[data-app-theme="warm-light"]) .section {
   padding: 12px;
   gap: 10px;
   border: 0;
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionHeader strong {
-  color: var(--apple-text, #1c1c1e);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionHeader span {
-  color: var(--apple-secondary, #636366);
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 450;
 }
 :global(:root[data-app-theme="warm-light"]) .labelText {
-  color: var(--apple-secondary, #636366);
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
@@ -532,18 +532,18 @@
   height: 46px;
   min-height: 46px;
   padding: 10px 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 12px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: none;
   font-size: 16px;
   font-weight: 500;
 }
 
 :global(:root[data-app-theme="warm-light"]) .input::placeholder,
-:global(:root[data-app-theme="warm-light"]) .portionInput::placeholder { color: var(--apple-secondary, #636366); -webkit-text-fill-color: var(--apple-secondary, #636366); }
+:global(:root[data-app-theme="warm-light"]) .portionInput::placeholder { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); }
 
 :global(:root[data-app-theme="warm-light"]) .iconBox {
   padding: 0;
@@ -551,42 +551,42 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--apple-text, #1c1c1e);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .iconPreview {
   border: 0;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .presetRow { gap: 6px; }
 :global(:root[data-app-theme="warm-light"]) .presetButton {
   min-height: 44px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
 :global(:root[data-app-theme="warm-light"]) .presetActive {
   border-color: #cfd7dc;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
-  -webkit-text-fill-color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
+  -webkit-text-fill-color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .macroGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 :global(:root[data-app-theme="warm-light"]) .macroField { padding: 0; border: 0; border-radius: 0; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .macroTitle { overflow: visible; text-align: left; white-space: normal; }
-:global(:root[data-app-theme="warm-light"]) .macroInput { padding-inline: 4px; border: 0; background: var(--apple-surface-muted, #efeff4); font-variant-numeric: tabular-nums; }
-:global(:root[data-app-theme="warm-light"]) .portionRow { height: 46px; min-height: 46px; max-height: none; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) 52px; gap: 0; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 12px; background: #fff; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .macroInput { padding-inline: 4px; border: 0; background: var(--apple-surface-muted, #edf1f3); font-variant-numeric: tabular-nums; }
+:global(:root[data-app-theme="warm-light"]) .portionRow { height: 46px; min-height: 46px; max-height: none; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) 52px; gap: 0; border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12)); border-radius: 12px; background: #fff; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .portionRow .portionInput { border: 0; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .portionToggle {
   position: static;
@@ -595,11 +595,11 @@
   height: 44px;
   min-height: 44px;
   border: 0;
-  border-left: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-left: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0 12px 12px 0;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
-  -webkit-text-fill-color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
+  -webkit-text-fill-color: var(--apple-action, #396ba6);
   font-weight: 600;
 }
 
@@ -610,10 +610,10 @@
 :global(:root[data-app-theme="warm-light"]) .sectionHeader { flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 8px; }
 :global(:root[data-app-theme="warm-light"]) .iconInput { padding-inline: 4px; font-size: 22px; }
 :global(:root[data-app-theme="warm-light"]) .portionSection { gap: 6px; }
-:global(:root[data-app-theme="warm-light"]) .portionHint { color: var(--apple-secondary, #636366); font-size: 12px; line-height: 1.35; }
+:global(:root[data-app-theme="warm-light"]) .portionHint { color: var(--apple-secondary, #617078); font-size: 12px; line-height: 1.35; }
 :global(:root[data-app-theme="warm-light"]) .root[data-food-type="dish"] .macroTitle { min-height: 29px; }
 :global(:root[data-app-theme="warm-light"]) .input:focus-visible,
-:global(:root[data-app-theme="warm-light"]) .portionInput:focus-visible { outline: 2px solid var(--apple-action, #3f73b8); outline-offset: -2px; }
+:global(:root[data-app-theme="warm-light"]) .portionInput:focus-visible { outline: 2px solid var(--apple-action, #396ba6); outline-offset: -2px; }
 
 :global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .section { padding: 16px; gap: 12px; }
 :global(:root[data-app-theme="warm-light"]) .root[data-food-type="food"] .input,

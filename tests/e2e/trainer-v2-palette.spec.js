@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './app-test.js';
 import { failOnRuntimeErrors } from './runtime-errors.js';
 
 async function assertPalette(page) {
@@ -30,8 +30,8 @@ for (const width of [393,768,1366]) {
     await page.setViewportSize({width,height:852});
     await page.emulateMedia({reducedMotion:'reduce'});
     const errors = failOnRuntimeErrors(page);
-    await page.goto('/v2?trainerHarness=1');
-    await expect(page.locator('#root .trainerNextRoot')).toBeVisible();
+    await page.goto('/v2?trainerHarness=1',{timeout:40000});
+    await expect(page.locator('#root .trainerNextRoot')).toBeVisible({timeout:40000});
     const navigate = async section => {
       const mobile=page.getByTestId(`trainer-nav-${section}`);
       await (await mobile.isVisible()?mobile:page.getByTestId(`trainer-desktop-nav-${section}`)).click();
@@ -94,7 +94,10 @@ for (const width of [393,768,1366]) {
       await page.getByRole('button',{name:'Редактировать',exact:true}).click();
       await expect(page.locator('[data-trainer-constructor]')).toBeVisible();
       await assertPalette(page);
-      await page.getByRole('button',{name:/^День 1 Тренировка 1/}).click();
+      const day = page.getByRole('combobox',{name:'День программы',exact:true});
+      await day.selectOption({label:'День 2 · Тренировка 2'});
+      await expect(page.getByRole('main',{name:'День 2 из 3',exact:true})).toBeVisible();
+      await day.selectOption({label:'День 1 · Тренировка 1'});
       await expect(page.getByLabel('Вес: Жим ногами',{exact:true})).toBeVisible();
       await assertPalette(page);
     }

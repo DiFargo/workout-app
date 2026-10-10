@@ -3,7 +3,7 @@
   gap: 16px;
   width: min(100%, 1260px);
   margin: 0 auto;
-  color: #28262e;
+  color: #1c282e;
 }
 
 .intro,
@@ -12,9 +12,9 @@
 .userRow,
 .emptyState,
 .errorState {
-  border: 1px solid #efebf3;
+  border: 1px solid #edf1f3;
   background: #fff;
-  box-shadow: 0 10px 26px rgba(72, 63, 87, 0.05);
+  box-shadow: 0 10px 26px rgba(28, 28, 30, 0.05);
 }
 
 .intro {
@@ -24,7 +24,7 @@
   align-items: flex-start;
   gap: 15px;
   border-radius: 24px;
-  background: linear-gradient(135deg, #fff 0%, #f7f3fc 100%);
+  background: linear-gradient(135deg, #fff 0%, #f5f7f8 100%);
 }
 
 .introIcon {
@@ -34,13 +34,13 @@
   display: grid;
   place-items: center;
   border-radius: 16px;
-  background: #eee9f8;
-  color: #806bb6;
+  background: #edf1f3;
+  color: #376b91;
 }
 
 .eyebrow {
   margin: 0 0 5px;
-  color: #8f7ac8;
+  color: #376b91;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -53,7 +53,7 @@
 .emptyState h3,
 .errorState strong {
   margin: 0;
-  color: #28262e;
+  color: #1c282e;
   letter-spacing: -0.02em;
 }
 
@@ -62,7 +62,7 @@
 .intro p:not(.eyebrow) {
   max-width: 680px;
   margin: 7px 0 0;
-  color: #7b7682;
+  color: #617078;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.42;
@@ -75,13 +75,13 @@
   align-items: flex-start;
   gap: 10px;
   border-radius: 18px;
-  background: #f4f0fa;
-  color: #685e75;
+  background: #f5f7f8;
+  color: #617078;
 }
 
-.roleNote svg { flex: 0 0 auto; color: #806bb6; }
+.roleNote svg { flex: 0 0 auto; color: #376b91; }
 .roleNote p { margin: 0; font-size: 13px; font-weight: 550; line-height: 1.4; }
-.roleNote strong { color: #4e4658; font-weight: 800; }
+.roleNote strong { color: #617078; font-weight: 800; }
 
 .directory {
   min-width: 0;
@@ -103,7 +103,7 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 4px;
   border-radius: 16px;
-  background: #f5f2f7;
+  background: #f5f7f8;
 }
 
 .roleTab {
@@ -116,7 +116,7 @@
   border: 1px solid transparent;
   border-radius: 12px;
   background: transparent;
-  color: #746d7d;
+  color: #617078;
   font: inherit;
   font-size: 13px;
   font-weight: 760;
@@ -131,20 +131,20 @@
   display: inline-grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(143, 122, 200, 0.1);
+  background: rgba(63, 115, 184, 0.1);
   color: inherit;
   font-size: 11px;
 }
 
-.roleTab:hover { background: #fdfcff; color: #5f536e; }
+.roleTab:hover { background: #f5f7f8; color: #617078; }
 .roleTab:active { transform: scale(0.985); }
-.roleTabActive { border-color: #ded3f0; background: #fff; color: #806bb6; box-shadow: 0 2px 7px rgba(72, 63, 87, 0.06); }
+.roleTabActive { border-color: rgba(57, 82, 91, .12); background: #fff; color: #376b91; box-shadow: 0 2px 7px rgba(28, 28, 30, 0.06); }
 .roleTab:focus-visible,
 .searchField:focus-within,
 .userRowAction:focus-visible,
 .promoteButton:focus-visible,
 .inviteTrainerButton:focus-visible,
-.errorState button:focus-visible { outline: 2px solid #8f7ac8; outline-offset: 2px; }
+.errorState button:focus-visible { outline: 2px solid #376b91; outline-offset: 2px; }
 
 .searchField {
   min-height: 50px;
@@ -152,16 +152,16 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  border: 1px solid #e9e4ed;
+  border: 1px solid #edf1f3;
   border-radius: 15px;
   background: #fff;
-  color: #8f7ac8;
+  color: #376b91;
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
-.searchField:focus-within { border-color: #b7a3e1; box-shadow: 0 0 0 3px rgba(143, 122, 200, 0.13); }
-.searchField input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; color: #28262e; font: inherit; font-size: 14px; font-weight: 600; }
-.searchField input::placeholder { color: #a19aa9; font-weight: 500; }
+.searchField:focus-within { border-color: rgba(57, 82, 91, .12); box-shadow: 0 0 0 3px rgba(63, 115, 184, 0.13); }
+.searchField input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; color: #1c282e; font: inherit; font-size: 14px; font-weight: 600; }
+.searchField input::placeholder { color: #617078; font-weight: 500; }
 
 .listHeader {
   margin: 20px 0 10px;
@@ -172,7 +172,7 @@
 }
 
 .listHeader h3 { font-size: 19px; line-height: 1.2; }
-.listHeader p { margin: 0; color: #7b7682; font-size: 13px; font-weight: 600; }
+.listHeader p { margin: 0; color: #617078; font-size: 13px; font-weight: 600; }
 
 .inviteTrainerButton {
   min-height: 42px;
@@ -183,18 +183,18 @@
   gap: 8px;
   border: 0;
   border-radius: 13px;
-  background: #8f7ac8;
+  background: var(--ownset-action-gradient);
   color: #fff;
   font: inherit;
   font-size: 13px;
   font-weight: 780;
   white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(114, 91, 177, .18);
+  box-shadow: 0 8px 18px rgba(63, 115, 184, .18);
   transition: background 140ms ease, box-shadow 140ms ease, transform 140ms ease;
 }
 
-.inviteTrainerButton:hover { background: #806bb6; box-shadow: 0 11px 20px rgba(114, 91, 177, .25); }
+.inviteTrainerButton:hover { background: var(--ownset-action-gradient); box-shadow: 0 11px 20px rgba(63, 115, 184, .25); }
 .inviteTrainerButton:active { transform: scale(.98); }
 
 .userList { display: grid; gap: 9px; }
@@ -206,7 +206,7 @@
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
   border-radius: 18px;
-  color: #28262e;
+  color: #1c282e;
   text-align: left;
 }
 
@@ -229,7 +229,7 @@
 
 button.userOpenButton { font: inherit; }
 .userRowAction { cursor: pointer; transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease; }
-.userRowAction:hover { box-shadow: inset 0 0 0 1px #dcd1ef, 0 12px 22px rgba(72, 63, 87, 0.08); }
+.userRowAction:hover { box-shadow: inset 0 0 0 1px rgba(57, 82, 91, .12), 0 12px 22px rgba(28, 28, 30, 0.08); }
 .userRowAction:active { transform: scale(0.995); }
 
 .promoteButton {
@@ -240,10 +240,10 @@ button.userOpenButton { font: inherit; }
   align-items: center;
   justify-content: center;
   gap: 7px;
-  border: 1px solid #dcd1ef;
+  border: 1px solid rgba(57, 82, 91, .12);
   border-radius: 12px;
-  background: #f7f3fc;
-  color: #765db8;
+  background: #f5f7f8;
+  color: #376b91;
   font: inherit;
   font-size: 12px;
   font-weight: 780;
@@ -253,7 +253,7 @@ button.userOpenButton { font: inherit; }
   transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
 }
 
-.promoteButton:hover { border-color: #b7a3e1; background: #eee9f8; box-shadow: 0 6px 14px rgba(72, 63, 87, 0.08); }
+.promoteButton:hover { border-color: rgba(57, 82, 91, .12); background: #edf1f3; box-shadow: 0 6px 14px rgba(28, 28, 30, 0.08); }
 .promoteButton:active { transform: scale(0.98); }
 .promoteButton:disabled { opacity: 0.62; cursor: wait; }
 
@@ -265,10 +265,10 @@ button.userOpenButton { font: inherit; }
   align-items: center;
   justify-content: center;
   gap: 7px;
-  border: 1px solid #d9cfeb;
+  border: 1px solid rgba(57, 82, 91, .12);
   border-radius: 12px;
-  color: #765db8;
-  background: #faf8fd;
+  color: #376b91;
+  background: #f5f7f8;
   font: inherit;
   font-size: 12px;
   font-weight: 760;
@@ -277,18 +277,18 @@ button.userOpenButton { font: inherit; }
   transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
 }
 
-.assignTrainerButton:hover { border-color: #b7a3e1; background: #f1ecfa; box-shadow: 0 6px 14px rgba(72, 63, 87, 0.08); }
+.assignTrainerButton:hover { border-color: rgba(57, 82, 91, .12); background: #edf1f3; box-shadow: 0 6px 14px rgba(28, 28, 30, 0.08); }
 .assignTrainerButton:active { transform: scale(0.98); }
 
-.avatar { position: relative; width: 50px; height: 50px; overflow: hidden; display: grid; place-items: center; border-radius: 17px; background: #eee9f8; color: #806bb6; font-size: 16px; font-weight: 850; }
-.avatarImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #eee9f8; }
+.avatar { position: relative; width: 50px; height: 50px; overflow: hidden; display: grid; place-items: center; border-radius: 17px; background: #edf1f3; color: #376b91; font-size: 16px; font-weight: 850; }
+.avatarImage { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #edf1f3; }
 
 .userCopy { min-width: 0; display: grid; gap: 3px; }
 .userTitleLine { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
-.userTitleLine strong { overflow: hidden; color: #28262e; font-size: 16px; font-weight: 800; line-height: 1.18; text-overflow: ellipsis; white-space: nowrap; }
+.userTitleLine strong { overflow: hidden; color: #1c282e; font-size: 16px; font-weight: 800; line-height: 1.18; text-overflow: ellipsis; white-space: nowrap; }
 .userEmail,
-.userDescription { overflow: hidden; color: #7b7682; font-size: 12px; font-weight: 550; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
-.userDescription { color: #91899a; }
+.userDescription { overflow: hidden; color: #617078; font-size: 12px; font-weight: 550; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+.userDescription { color: #617078; }
 
 .roleBadge,
 .statusBadge {
@@ -301,11 +301,11 @@ button.userOpenButton { font: inherit; }
   white-space: nowrap;
 }
 
-.roleBadge { padding: 6px 8px; background: #f0ebf8; color: #806bb6; }
-.roleBadgetrainer { background: #ede6fa; color: #765db8; }
-.roleBadgeadmin { background: #e8eff8; color: #5c6f98; }
+.roleBadge { padding: 6px 8px; background: #edf1f3; color: #376b91; }
+.roleBadgetrainer { background: #edf1f3; color: #376b91; }
+.roleBadgeadmin { background: #e8eff8; color: #376b91; }
 
-.userMeta { display: flex; align-items: center; justify-content: flex-end; gap: 10px; color: #8f7ac8; }
+.userMeta { display: flex; align-items: center; justify-content: flex-end; gap: 10px; color: #376b91; }
 .statusBadge { padding: 7px 9px; background: #edf6ef; color: #53905e; }
 .statuspending { background: #fff4df; color: #a9792f; }
 .statusblocked { background: #fdeeee; color: #b85c65; }
@@ -321,9 +321,9 @@ button.userOpenButton { font: inherit; }
   border-radius: 20px;
 }
 
-.emptyState svg { color: #8f7ac8; }
+.emptyState svg { color: #376b91; }
 .emptyState h3 { margin-top: 10px; font-size: 18px; }
-.emptyState p { max-width: 370px; margin: 7px 0 0; color: #7b7682; font-size: 14px; font-weight: 500; line-height: 1.4; }
+.emptyState p { max-width: 370px; margin: 7px 0 0; color: #617078; font-size: 14px; font-weight: 500; line-height: 1.4; }
 
 .errorState {
   min-height: 0;
@@ -338,12 +338,12 @@ button.userOpenButton { font: inherit; }
 }
 
 .errorState strong { font-size: 15px; }
-.errorState p { margin: 4px 0 0; color: #896e73; font-size: 13px; font-weight: 500; line-height: 1.35; }
+.errorState p { margin: 4px 0 0; color: #617078; font-size: 13px; font-weight: 500; line-height: 1.35; }
 .errorState button { min-height: 40px; padding: 8px 11px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid #edd9dc; border-radius: 12px; background: #fff; color: #9a5d65; font: inherit; font-size: 13px; font-weight: 760; cursor: pointer; }
 .errorState button:hover { background: #fff5f5; }
 
 .loadingRows { display: grid; gap: 9px; }
-.loadingRow { height: 88px; display: block; border-radius: 18px; background: linear-gradient(90deg, #f5f2f7 25%, #fbfaff 40%, #f5f2f7 60%); background-size: 250% 100%; animation: loading-shimmer 1.4s ease infinite; }
+.loadingRow { height: 88px; display: block; border-radius: 18px; background: linear-gradient(90deg, #f5f7f8 25%, #f5f7f8 40%, #f5f7f8 60%); background-size: 250% 100%; animation: loading-shimmer 1.4s ease infinite; }
 
 .visuallyHidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
@@ -392,4 +392,52 @@ button.userOpenButton { font: inherit; }
   .promoteButton,
   .assignTrainerButton { transition: none; }
   .loadingRow { animation: none; }
+}
+
+/* Directory is the working surface; controls precede the grouped account rows. */
+.directory { padding: 0; border: 0; box-shadow: none; background: transparent; }
+.directoryControls { grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr); gap: 12px; }
+.roleTabs { background: #e9e9ef; padding: 3px; border-radius: 13px; gap: 2px; }
+.roleTab { min-height: 44px; font-size: 13px; font-weight: 600; padding: 7px; }
+.roleTabActive { border-color: transparent; color: #1c282e; background: #fff; }
+.roleTab strong { background: transparent; padding: 0; min-width: 15px; font-weight: 600; color: #617078; }
+.searchField { min-height: 48px; border: 1px solid rgba(57, 82, 91,.12); border-radius: 14px; color: #617078; }
+.searchField input { font-size: 16px; font-weight: 400; }
+.searchField:focus-within { outline: none; border-color: #396ba6; box-shadow: none; }
+.listHeader { margin: 20px 0 12px; align-items: center; flex-wrap: wrap; }
+.listHeader h2 { margin: 0; color: #1c282e; font-size: 18px; font-weight: 650; }
+.listHeader p { margin-top: 4px; font-weight: 400; }
+.inviteTrainerButton { min-height: 44px; box-shadow: none; border-radius: 12px; font-weight: 600; }
+.inviteTrainerButton:hover { box-shadow: none; }
+.userList { gap: 10px; }
+.userRow { border: 0; box-shadow: none; border-radius: 18px; overflow: hidden; }
+.userRowWithRoleAction { grid-template-columns: minmax(0, 1fr); }
+.userOpenButton { min-height: 94px; padding: 14px 16px; align-items: center; }
+.avatar { border-radius: 50%; color: #617078; }
+.userTitleLine strong { font-size: 16px; font-weight: 600; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.userEmail { font-size: 13px; max-width: none; font-weight: 400; }
+.userCopy { gap: 5px; }
+.roleBadge { font-size: 11px; background: #edf1f3; color: #617078; font-weight: 500; }
+.statusBadge { display: inline-flex; justify-self: start; font-size: 12px; font-weight: 500; padding: 3px 0; background: transparent; color: #237A42; line-height: 1.25; white-space: normal; }
+.statuspending { color: #8b631e; background: transparent; }
+.statusblocked { color: #b23e46; background: transparent; }
+.userMeta { color: #617078; }
+.userActions { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px; border-top: 1px solid rgba(57, 82, 91,.12); }
+.promoteButton, .assignTrainerButton { flex: 1 1 auto; width: auto; min-height: 44px; margin: 0; padding: 8px 10px; font-size: 12px; font-weight: 550; white-space: normal; background: #edf1f3; border: 0; color: #376b91; border-radius: 11px; }
+.promoteButton svg, .assignTrainerButton svg { flex-shrink: 0; }
+.userRowAction:hover { box-shadow: none; background: #fafafa; }
+.assignTrainerButton:focus-visible { outline: 2px solid #396ba6; outline-offset: 2px; }
+.errorState button { min-height: 44px; }
+@media (max-width: 1000px) {
+  .directoryControls { grid-template-columns: minmax(0, 1fr); }
+  .searchField { grid-row: 1; }
+}
+@media (max-width: 620px) {
+  .roleTabs { grid-template-columns: repeat(4, minmax(0,1fr)); overflow: visible; }
+  .roleTab { min-width: 0; flex-direction: column; gap: 2px; font-size: 12px; padding: 7px 1px; }
+  .roleTab strong { font-size: 11px; height: auto; }
+  .userOpenButton { padding: 13px; }
+  .userActions { padding: 9px 11px; }
+  .listHeader h2 { font-size: 17px; }
+  .inviteTrainerButton { min-height: 44px; font-size: 12px; padding-inline: 10px; }
 }

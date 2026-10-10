@@ -2,6 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { rescheduleClientWorkout } from "../src/features/client/workouts/workoutReschedule.js";
 
+const transactionFor = calendar => async (_db, callback) => callback({
+  get: async () => ({ exists: () => true, data: () => ({ workoutCalendar: calendar }) }),
+  set: (_ref, payload) => { transactionFor.saved = payload; }
+});
+
 test("rescheduling replaces the old date with one active slot", async () => {
   let savedPayload = null;
   let localCalendar = null;
@@ -10,7 +15,11 @@ test("rescheduling replaces the old date with one active slot", async () => {
     user: null,
     db: {},
     doc: (_db, collection, uid) => ({ collection, uid }),
-    setDoc: async (_ref, payload) => { savedPayload = payload; },
+    run: async (db, callback) => {
+      const result = await transactionFor({ scheduledDates: ["2026-09-01"], plannedWorkouts: [{ workoutId: "workout-1", order: 1, date: "2026-09-01", status: "planned" }] })(db, callback);
+      savedPayload = transactionFor.saved;
+      return result;
+    },
     plan: { workouts: [{ id: "workout-1", name: "Тренировка 1" }] },
     workoutCalendar: {
       scheduledDates: ["2026-09-01"],
@@ -19,7 +28,7 @@ test("rescheduling replaces the old date with one active slot", async () => {
     workoutId: "workout-1",
     workoutIndex: 0,
     dateKey: "2026-09-03",
-    setWorkoutCalendar: (calendar) => { localCalendar = calendar; },
+    setWorkoutCalendar: (update) => { localCalendar = update(localCalendar); },
     setScheduledDates: () => {},
     setDraftDates: () => {},
     persistCalendar: () => {},
@@ -39,7 +48,15 @@ test("rescheduling into an occupied day automatically shifts following workouts"
     auth: { currentUser: { uid: "client-1" } },
     db: {},
     doc: (_db, collection, uid) => ({ collection, uid }),
-    setDoc: async (_ref, payload) => { savedPayload = payload; },
+    run: async (db, callback) => {
+      const result = await transactionFor({ scheduledDates: ["2026-09-01", "2026-09-03", "2026-09-05"], plannedWorkouts: [
+        { workoutId: "workout-1", order: 1, date: "2026-09-01", status: "planned" },
+        { workoutId: "workout-2", order: 2, date: "2026-09-03", status: "planned" },
+        { workoutId: "workout-3", order: 3, date: "2026-09-05", status: "planned" }
+      ] })(db, callback);
+      savedPayload = transactionFor.saved;
+      return result;
+    },
     plan: {
       workouts: [
         { id: "workout-1", name: "Тренировка 1" },

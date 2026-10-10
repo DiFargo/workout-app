@@ -38,11 +38,11 @@
   border: 1px solid transparent;
   border-radius: 18px;
   background: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 .itemOpen {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
 .itemButton {
@@ -66,8 +66,8 @@
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: var(--apple-blue-tint, #edf2f9);
-  color: var(--apple-blue, #3c6faa);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue, #376b91);
   font-size: 18px;
 }
 
@@ -90,7 +90,7 @@
 
 .itemMeta {
   margin-top: 4px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 12px;
   font-weight: 400;
 }
@@ -114,7 +114,7 @@
   display: grid;
   gap: 7px;
   border-radius: 10px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 .exerciseHeader {
@@ -159,7 +159,7 @@
   gap: 6px;
   border-radius: 8px;
   background: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 12px;
 }
 
@@ -191,8 +191,8 @@
   font-weight: 500;
 }
 
-.feedback { margin: 0 0 4px; color: var(--apple-secondary, #636366); font-size: 12px; line-height: 1.4; }
-.itemButton:active { background: var(--apple-surface-muted, #efeff4); }
+.feedback { margin: 0 0 4px; color: var(--apple-secondary, #617078); font-size: 12px; line-height: 1.4; }
+.itemButton:active { background: var(--apple-surface-muted, #edf1f3); }
 
 .deleteButton:disabled {
   opacity: 0.55;

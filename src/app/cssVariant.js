@@ -4,14 +4,15 @@ export function isCssV2PreviewPath(pathname = "") {
   return pathname === CSS_V2_PATH_PREFIX || pathname.startsWith(`${CSS_V2_PATH_PREFIX}/`);
 }
 
-export function isTrainerV2Path(pathname = "") {
-  return pathname === "/v2" || pathname.startsWith("/v2/");
+// Keep the existing component API; V2 is now the only trainer presentation,
+// including the normal entry URL and previously shared /v2 links.
+export function isTrainerV2Path() {
+  return true;
 }
 
 export function loadCssVariant() {
-  const isTrainerV2 = isTrainerV2Path(window.location.pathname);
-  document.documentElement.dataset.trainerVariant = isTrainerV2 ? "v2" : "current";
-  document.body.dataset.trainerVariant = isTrainerV2 ? "v2" : "current";
+  document.documentElement.dataset.trainerVariant = "v2";
+  document.body.dataset.trainerVariant = "v2";
   const isCssV2 = isCssV2PreviewPath(window.location.pathname);
   const variant = isCssV2 ? "v2" : "current";
 
@@ -20,6 +21,6 @@ export function loadCssVariant() {
 
   return Promise.all([
     isCssV2 ? import("./CssVariantPreview.module.css") : Promise.resolve(),
-    isTrainerV2 ? import("../components/trainer/TrainerWorkspaceV2.module.css") : Promise.resolve()
+    import("../components/trainer/TrainerWorkspaceV2.module.css")
   ]);
 }

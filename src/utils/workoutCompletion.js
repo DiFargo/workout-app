@@ -146,12 +146,15 @@ export function isWorkoutCompletedWithSet(workoutItem, completedSet = new Set(),
 
   const manualStatus = String(workoutItem.status || "").trim().toLowerCase();
   if (manualStatus === "completed") return true;
+  const workoutIdKey = `id:${getCompletedWorkoutKey(workoutItem.id)}`;
+  // An actual saved completion of this exact assignment/day overrides an older
+  // missed mark. Positional/name fallbacks must not override a manual miss.
+  if (workoutItem.id && completedSet.has(workoutIdKey)) return true;
   if (["not_completed", "missed"].includes(manualStatus)) return false;
 
   const assignmentVersion = String(
     workoutItem.assignedProgramUpdatedAt || currentAssignmentVersion || ""
   ).trim();
-  const workoutIdKey = `id:${getCompletedWorkoutKey(workoutItem.id)}`;
   const workoutOrderKeys = getCompletedWorkoutOrderKeys(workoutItem);
 
   if (assignmentVersion) {

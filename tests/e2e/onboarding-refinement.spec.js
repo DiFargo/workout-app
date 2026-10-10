@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { renderInviteFixture } from "../helpers/invite-page-template.mjs";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
@@ -9,8 +9,8 @@ test("onboarding welcome, name and navigation use the current mobile design", as
   await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=0&clientHarnessTheme=warm-light");
   const root = page.getByTestId("first-setup-onboarding");
   await expect(root).toBeVisible();
-  await expect(root).toHaveCSS("background-color", "rgb(242, 242, 247)");
-  await expect(root.getByRole("button", { name: "Начать", exact: true })).toHaveCSS("background-color", "rgb(63, 115, 184)");
+  await expect(root).toHaveCSS("background-color", "rgb(245, 247, 248)");
+  await expect(root.getByRole("button", { name: "Начать", exact: true })).toHaveCSS("background-color", "rgb(57, 107, 166)");
   const features = page.getByTestId("first-setup-welcome-features");
   await expect(features.getByRole("listitem")).toHaveCount(3);
   for (const icon of await features.locator("svg").all()) {
@@ -35,6 +35,10 @@ test("onboarding welcome, name and navigation use the current mobile design", as
   }
   await expect(root.getByText("Мария", { exact: true })).toBeVisible();
   await expect(root.getByRole("button", { name: "Создать профиль", exact: true })).toBeEnabled();
+  const reviewRows = root.getByTestId("first-setup-review").getByRole("button");
+  await expect(reviewRows).toHaveCount(8);
+  await expect(reviewRows.first()).toHaveCSS("border-top-width", "0px");
+  await expect(reviewRows.first()).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await page.screenshot({ path: testInfo.outputPath("review-375.png") });
   await page.setViewportSize({ width: 812, height: 375 });
   await root.getByRole("button", { name: "Создать профиль", exact: true }).scrollIntoViewIfNeeded();
@@ -57,6 +61,7 @@ test("invitation password form retains validation, retry and success in the calm
   });
   await page.goto("/__test/invite");
   await expect(page.locator("#email")).toHaveText("Логин: Nargo");
+  await expect(page.getByText(/нажми «Перейти ко входу» и введи логин и новый пароль/)).toBeVisible();
   await expect(page.locator("body")).toHaveCSS("background-color", "rgb(242, 242, 247)");
   const submit = page.getByRole("button", { name: "Сохранить пароль" });
   await expect(submit).toHaveCSS("background-color", "rgb(63, 115, 184)");

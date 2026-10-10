@@ -157,6 +157,7 @@ function getExerciseSets(exercise = {}) {
 
 function getExerciseIdentityKeys(exercise = {}) {
   return new Set([
+    exercise?.exerciseCardId && exercise?.exerciseCardOwnerUid ? `card:${exercise.exerciseCardOwnerUid}:${exercise.exerciseCardId}` : "",
     exercise?.id,
     exercise?.exerciseId,
     exercise?.basicExerciseId,
@@ -268,6 +269,8 @@ function exercisesMatch(targetExercise, historyExercise) {
     .map((exercise) => getExerciseProgressKey(getExerciseName(exercise)))
     .filter(Boolean);
   if (historyNames.some((name) => targetNames.has(name))) return true;
+  const cardNames = new Set(targetVariants.flatMap((exercise) => exercise.exerciseCardNames || []).map(getExerciseProgressKey));
+  if (historyNames.some((name) => cardNames.has(name))) return true;
 
   const targetIdentityKeys = new Set(targetVariants.flatMap((exercise) => [
     ...getExerciseIdentityKeys(exercise)

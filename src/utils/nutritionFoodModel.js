@@ -28,6 +28,10 @@ export function normalizeNutritionFood(food) {
     sourceType: food.sourceType || "",
     evidenceType: food.evidenceType || "",
     requiresReview: food.requiresReview === true,
+    nutritionBasisPending: food.nutritionBasisPending === true,
+    sources: Array.isArray(food.sources) ? food.sources.filter((source) => {
+      try { return new URL(source.url).protocol === "https:"; } catch { return false; }
+    }).map(({ title, url }) => ({ title: String(title || "Источник"), url })) : [],
     icon: food.icon || getFoodIcon(food),
     portionAmount: parseNutritionNumber(food.portionAmount, 0),
     lastAmount: parseNutritionNumber(food.lastAmount, 0),

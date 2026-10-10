@@ -130,14 +130,14 @@
 
 .workspaceRoot :global(.trainerNextDesktopDock button:hover) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   transform: translateY(-1px);
 }
 
 .workspaceRoot :global(.trainerNextDesktopDock button[aria-current="page"]),
 .workspaceRoot :global(.trainerNextDesktopDock button.active) {
   color: #fff;
-  background: var(--tn-purple-strong);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.26);
 }
 
@@ -197,7 +197,7 @@
 .workspaceRoot :global(.trainerNextSidebar nav button[aria-current="page"]),
 .workspaceRoot :global(.trainerNextSidebar nav button.isActive) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextSidebar nav button svg),
@@ -245,7 +245,7 @@
   border: 1px solid var(--tn-line);
   border-radius: 50%;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 13px;
   font-weight: 750;
 }
@@ -344,7 +344,7 @@
 .workspaceRoot :global(.trainerNextOutlineAdd:hover),
 .workspaceRoot :global(.trainerNextModalClose:hover) {
   border-color: var(--trainer-v2-line, #ded4ef);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   color: var(--tn-purple-strong);
 }
 
@@ -364,7 +364,7 @@
   border: 2px solid var(--tn-surface);
   border-radius: 999px;
   color: #fff;
-  background: var(--tn-purple-strong);
+  background: var(--ownset-action-gradient);
   font-size: 10px;
   font-style: normal;
   font-weight: 760;
@@ -542,7 +542,7 @@
   place-items: center;
   border-radius: 50%;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 13px;
   font-weight: 760;
 }
@@ -607,7 +607,7 @@
 .workspaceRoot :global(.trainerActionCenterCard.active),
 .workspaceRoot :global(.trainerActionCenterCard[aria-pressed="true"]) {
   border-color: var(--trainer-v2-line, #d9cdec);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerActionCenterList) {
@@ -721,7 +721,7 @@
   border: 1px solid transparent;
   border-radius: 14px;
   color: #ffffff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 8px 16px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.2);
   cursor: pointer;
   font-size: 14px;
@@ -736,7 +736,7 @@
 .workspaceRoot :global(.trainerNextWorkoutDayActions button:last-child:hover),
 .workspaceRoot :global(.trainerNextExerciseActions button:last-child:hover),
 .workspaceRoot :global(.trainerNextAddSet:hover) {
-  background: var(--tn-purple-strong);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 10px 20px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.27);
   transform: translateY(-1px);
 }
@@ -744,7 +744,7 @@
 .workspaceRoot :global(.trainerNextHeadActions .trainerNextPrimary) {
   border-color: transparent;
   color: #ffffff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerNextPrimary:disabled),
@@ -866,7 +866,7 @@
 .workspaceRoot :global(.trainerMessageFilters button[aria-pressed="true"]) {
   border-color: var(--trainer-v2-line, #d9cdec);
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 @media (max-width: 760px) {
@@ -951,7 +951,7 @@
 .workspaceRoot :global(.trainerNextClientTabs button[aria-current="page"]),
 .workspaceRoot :global(.trainerNextClientTabs button.isActive) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextProgramsTab > .trainerNextPageTabs) {
@@ -1023,13 +1023,13 @@
   min-height: 42px;
   border-color: var(--trainer-v2-accent, #8F7AC8);
   color: #FFFFFF;
-  background: var(--trainer-v2-accent, #8F7AC8);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.22);
 }
 
 .workspaceRoot :global(.trainerNextPanelTitle button.trainerNextLibraryAdd:hover) {
   border-color: var(--trainer-v2-accent, #806BB6);
-  background: var(--trainer-v2-accent, #806BB6);
+  background: var(--ownset-action-gradient);
 }
 
 .workspaceRoot :global(.trainerNextPanelTitle button.trainerNextLibraryAdd:focus-visible) {
@@ -1047,7 +1047,7 @@
   padding: 3px 9px;
   border-radius: 999px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 12px;
   font-weight: 700;
   line-height: 1.15;
@@ -1299,7 +1299,7 @@
   place-items: center;
   border-radius: 20px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerUtilityCard > div:nth-child(2)) {
@@ -1878,7 +1878,7 @@
   place-items: center;
   border-radius: 11px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextWorkoutDays) {
@@ -1900,7 +1900,7 @@
 .workspaceRoot :global(.trainerNextWorkoutDayItem[aria-current="true"]),
 .workspaceRoot :global(.trainerNextWorkoutDayItem.isActive) {
   border-color: var(--trainer-v2-line, #d7cbed);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextWorkoutDaySelect) {
@@ -1963,7 +1963,7 @@
   border: 1px solid transparent;
   border-radius: 13px;
   color: #ffffff;
-  background: var(--tn-purple);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.18);
   cursor: pointer;
   font-size: 13px;
@@ -2040,7 +2040,7 @@
   height: 48px;
   overflow: hidden;
   border-radius: 13px;
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextExerciseImage img),
@@ -2093,7 +2093,7 @@
 
 .workspaceRoot :global(.trainerNextExerciseMove button:hover) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextExerciseMove button:disabled) {
@@ -2220,7 +2220,7 @@
   place-items: center;
   border-radius: 10px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 13px;
 }
 
@@ -2248,7 +2248,7 @@
   margin-top: 12px;
   border-radius: 14px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   font-size: 14px;
   font-weight: 720;
 }
@@ -2352,7 +2352,7 @@
   place-items: center;
   border-radius: 11px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerCabinetUtilitySheet .trainerUtilityPage) {
@@ -2419,7 +2419,7 @@
   place-items: center;
   border-radius: 14px;
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextModalSubmit) {
@@ -2475,7 +2475,7 @@
 .workspaceRoot :global(.trainerNextMoreDrawer button:hover),
 .workspaceRoot :global(.trainerNextMoreDrawer button[aria-current="page"]) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 .workspaceRoot :global(.trainerNextMobileNav) {
@@ -2993,6 +2993,161 @@
   .workspaceRoot :global(.trainerNextMobileNav button[aria-current="page"]),
   .workspaceRoot :global(.trainerNextMobileNav button.isActive) {
     color: var(--tn-purple-strong);
-    background: var(--tn-purple-soft);
+    background: var(--ownset-soft-gradient);
   }
+}
+
+/* The plan DOM groups all four metrics in one cell. Keep the name operable
+   and put the longer history summary on a separate row. Client sheets and
+   the compact phone layout have their own grids. */
+@media (min-width: 980px) {
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseHead),
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseRow) {
+    grid-template-columns: 30px 48px minmax(120px, 1fr) minmax(150px, .9fr) 95px;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseStatsHead),
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseStats) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    align-items: center;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseMetric) {
+    min-width: 0;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseStatsHead > span) {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseActions) {
+    grid-column: 5;
+    grid-row: 1;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseProgress) {
+    grid-column: 3 / -1;
+    grid-row: 2;
+    min-width: 0;
+    justify-self: start;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseProgressHead) {
+    display: none;
+  }
+}
+
+/* On narrow phones, stack the two 44px actions within their existing cell
+   so the exercise name keeps a usable width alongside the reorder controls. */
+@media (max-width: 699px) {
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextWorkoutDayItem) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextWorkoutDayActions) {
+    justify-self: end;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextWorkoutDayActions button) {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseRow) {
+    grid-template-columns: 44px 42px minmax(0, 1fr) 44px;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseList .trainerNextExerciseActions) {
+    width: 44px;
+    min-width: 44px;
+    flex-direction: column;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseName strong) {
+    white-space: normal;
+  }
+
+  .workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextExerciseProgress) {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-width: 0;
+    gap: 4px;
+  }
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextSetEditor) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedProgram) {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--tn-line);
+  border-radius: 14px;
+  background: var(--tn-surface-soft);
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedProgramToggle) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 0;
+  color: var(--tn-muted);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedProgramToggle > span) {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedProgramToggle small) {
+  font-size: 10px;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedProgramToggle strong) {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedProgramToggle em) {
+  font-size: 11px;
+  font-style: normal;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedProgramToggle > svg) {
+  flex-shrink: 0;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedWorkoutList) {
+  display: grid;
+  gap: 8px;
+  padding: 0 10px 10px;
+}
+
+.workspaceRoot :global(.trainerNextWorkoutPage:not(.trainerNextEmbeddedPlan) .trainerNextArchivedWorkoutList > div) {
+  display: grid;
+  gap: 3px;
+  padding-top: 8px;
+  border-top: 1px solid var(--tn-line);
+  color: var(--tn-muted);
+  font-size: 12px;
 }

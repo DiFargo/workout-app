@@ -3,6 +3,7 @@ import { Pause, Play } from "lucide";
 import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import BasicWorkoutExerciseIllustration from "./BasicWorkoutExerciseIllustration";
 import styles from "./WorkoutExerciseVideoFrame.module.css";
+import { exerciseVideoCropStyle } from "../../../utils/exerciseVideoCrop.js";
 
 export default function WorkoutExerciseVideoFrame({
   exercise,
@@ -38,6 +39,7 @@ export default function WorkoutExerciseVideoFrame({
           <video
             key={`${exercise.id}:${videoRetryToken}`}
             className={styles.video}
+            style={exerciseVideoCropStyle(exercise.videoCrop)}
             data-css-module-control="workout-exercise-video"
             src={exercise.video}
             playsInline
@@ -80,9 +82,9 @@ export default function WorkoutExerciseVideoFrame({
             }}
             aria-label={isInlinePlaying ? "Поставить видео на паузу" : "Воспроизвести видео упражнения"}
           >
-            <MorphingIcon icon={isInlinePlaying ? Pause : Play} data-icon-state={isInlinePlaying ? "pause" : "play"} />
+            <MorphingIcon icon={isInlinePlaying ? Pause : Play} data-icon-state={isInlinePlaying ? "pause" : "play"} aria-hidden="true" />
           </button>
-          <button
+          {isInlinePlaying && <button
             type="button"
             className={styles.fullscreenButton}
             data-css-module-control="workout-exercise-video"
@@ -95,7 +97,7 @@ export default function WorkoutExerciseVideoFrame({
             title="На весь экран"
           >
             <Maximize2 aria-hidden="true" />
-          </button>
+          </button>}
         </>
       ) : (
         <div className={styles.fallbackContent} data-css-module-scope="workout-exercise-video-fallback">

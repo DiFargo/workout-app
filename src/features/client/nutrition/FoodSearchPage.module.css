@@ -30,6 +30,10 @@
   display: none;
 }
 
+:global([data-food-search-keyboard="true"]) .myProductsAction {
+  display: none;
+}
+
 .sectionHeader {
   width: 100%;
   min-height: 0;
@@ -450,7 +454,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .landing {
   gap: 14px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionHeader {
@@ -459,14 +463,14 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionTitle {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .sectionIcon,
 :global(:root[data-app-theme="warm-light"]) .clearButton {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .clearButton {
@@ -487,10 +491,10 @@
   max-height: 88px;
   padding: 10px 6px;
   gap: 8px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
 
@@ -499,33 +503,33 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .recentName {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 11px;
   font-weight: 600;
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyRecent {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 :global(:root[data-app-theme="warm-light"]) .emptyRecent {
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   background: #fff;
 }
 
 :global(:root[data-app-theme="warm-light"]) .createInMy {
   margin-bottom: 12px;
-  border-color: var(--apple-separator, rgba(60,60,67,.12));
+  border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .createInMy svg {
-  color: var(--apple-action, #3f73b8);
+  color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .createInMy small {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction {
@@ -542,17 +546,17 @@
   padding: 10px 12px;
   grid-template-columns: 44px minmax(0, 1fr) 18px;
   gap: 11px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
   outline: 0;
   background: #fff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 8px 28px rgba(27, 35, 31, 0.1);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction::before {
   bottom: calc(-120px - env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(180deg, rgba(243, 244, 243, 0), var(--apple-canvas, #f2f2f7) 22px, var(--apple-canvas, #f2f2f7) 100%);
+  background: linear-gradient(180deg, rgba(243, 244, 243, 0), var(--apple-canvas, #f5f7f8) 22px, var(--apple-canvas, #f5f7f8) 100%);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoAction::after {
@@ -565,23 +569,23 @@
   height: 44px;
   min-height: 44px;
   border-radius: 14px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-action, #3f73b8);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-action, #396ba6);
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoTitle {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 650;
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoDescription {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-weight: 450;
 }
 
 :global(:root[data-app-theme="warm-light"]) .photoChevron {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-weight: 500;
 }
 
@@ -596,3 +600,21 @@
     max-height: 82px;
   }
 }
+
+.geminiNotice { margin: 0 0 12px; color: var(--apple-secondary-text, #617078); font-size: 13px; line-height: 1.5; }
+
+.searchSuggestions { width: 100%; min-height: 150px; border: 0; background: #fff; border-radius: 12px; }
+.catalogAiSearch {
+  min-height: 44px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--color-food-result-border, rgba(57, 82, 91,.12));
+  border-radius: 12px;
+  background: var(--color-food-result-surface, #fff);
+  color: var(--color-primary, #396ba6);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.catalogAiSearch:focus-visible { outline: 2px solid #396ba6; outline-offset: 2px; }
+.catalogAiSearch:disabled { opacity: .55; }

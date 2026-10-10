@@ -29,7 +29,7 @@
   width: 100%;
   text-align: center;
 }
-.calendarDiary.calendarDiary :global(.trainerNutritionDiaryWeekdays) { font-size: 12px; color: #636366; }
+.calendarDiary.calendarDiary :global(.trainerNutritionDiaryWeekdays) { font-size: 12px; color: #617078; }
 .calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button {
   display: flex !important;
   flex-direction: column;
@@ -44,10 +44,10 @@
   box-shadow: none !important;
 }
 .calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button strong { font-size: 14px !important; }
-.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button small { font-size: 10px !important; color: #636366 !important; }
-.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button:global(.active) { background: #e7effa !important; color: #3c6faa !important; border: 1px solid #3f73b8 !important; }
-.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button:global(.active) small { color: #3c6faa !important; }
-.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarHint) { margin: 0; font-size: 12px; line-height: 1.45; color: #636366; }
+.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button small { font-size: 10px !important; color: #617078 !important; }
+.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button:global(.active) { background: #e7effa !important; color: #376b91 !important; border: 1px solid #396ba6 !important; }
+.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarGrid) > button:global(.active) small { color: #376b91 !important; }
+.calendarDiary.calendarDiary :global(.trainerNutritionDiaryCalendarHint) { margin: 0; font-size: 12px; line-height: 1.45; color: #617078; }
 
 :local(.scope) {
   min-width: 0;
@@ -222,7 +222,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNutritionDiary > aside button.active) {
   border-color: var(--tn-purple-strong);
-  background: var(--tn-purple-strong);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.22);
   color: #fff;
 }
@@ -281,7 +281,7 @@
   flex: 0 0 auto;
   padding: 9px 13px;
   border-radius: 12px;
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
   color: var(--tn-purple-strong);
   font-size: 17px;
 }

@@ -7,7 +7,7 @@ const source = (await readFile(new URL("../src/features/client/workouts/workoutO
   .replace(/^import[\s\S]*?;\r?\n/gm, "")
   .replace("export function createWorkoutOpenHandlers", "function createWorkoutOpenHandlers");
 
-function setup({ rejected = false, offline = false } = {}) {
+function setup({ rejected = false, offline = false, workoutDraftRestorePrompt = null } = {}) {
   const events = [];
   const nextPlan = { id: "new-plan", workouts: [{ id: "new-workout", exercises: [] }] };
   const factory = vm.runInNewContext(`${source}\ncreateWorkoutOpenHandlers`, {
@@ -34,12 +34,22 @@ function setup({ rejected = false, offline = false } = {}) {
     APP_PAGES: { WORKOUTS: "workouts" },
     auth: { currentUser: { uid: "test-user" } }, db: {}, user: {},
     plan: { workouts: [{ id: "old-workout" }] }, history: [],
+    workoutDraftRestorePrompt,
     setIndividualWorkoutIndex: (value) => events.push(["setIndividualWorkoutIndex", value]),
     setIndividualWorkoutIndexInitialized() {},
     loadHistory: () => events.push(["loadHistory"])
   });
   return { handlers, events, nextPlan };
 }
+
+test("cancelling draft restoration only closes the prompt, without restarting, saving or navigating", async () => {
+  const savedDraft = { workoutId: "old-workout", exercises: [{ sets: [{ weight: 110, reps: 12, completed: true }] }] };
+  const snapshot = structuredClone(savedDraft);
+  const { handlers, events } = setup({ workoutDraftRestorePrompt: { workoutId: "old-workout", savedDraft } });
+  await handlers.handleWorkoutDraftChoice(null);
+  assert.deepEqual(events, [["setWorkoutDraftRestorePrompt", null]]);
+  assert.deepEqual(savedDraft, snapshot);
+});
 
 test("save and start opens the newly saved workout in readiness without starting its timer", async () => {
   const { handlers, events, nextPlan } = setup();

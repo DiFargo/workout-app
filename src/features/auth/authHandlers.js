@@ -2,6 +2,7 @@ import {
   GoogleAuthProvider,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithCustomToken,
   signInWithPopup,
   signOut
 } from "firebase/auth";
@@ -13,7 +14,7 @@ import {
   validateLoginFields
 } from "../../utils/clientUx";
 import { limitUserDisplayName } from "../../utils/userDisplayName.js";
-import { fetchAuthorizedWithTimeout } from "../../utils/apiClient";
+import { fetchAuthorizedWithTimeout, fetchWithAppCheck } from "../../utils/apiClient";
 import { resolveEmailForLogin } from "./loginResolution";
 
 const googleProvider = new GoogleAuthProvider();
@@ -82,12 +83,10 @@ async function createInvitedUserProfile(db, user, invite) {
 
   const userRef = doc(db, "users", user.uid);
   const email = String(user.email || invite.email || "").trim().toLowerCase();
-  const loginLower = getDefaultLoginAlias(email);
   const now = new Date().toISOString();
 
   const profile = {
     email,
-    loginLower,
     name: limitUserDisplayName(user.displayName || invite.name || email.split("@")[0]),
     role: "client",
     active: true,
@@ -243,9 +242,56 @@ export function createAuthHandlers({
     }
   }
 
+  async function handleTelegramMiniAppAuth() {
+    if (loginSubmitting || passwordResetSending) return;
+
+    const initData = String(window.Telegram?.WebApp?.initData || "").trim();
+    if (!initData) {
+      setLoginError("Открой приложение из меню бота в Telegram, чтобы войти этим способом.");
+      setLoginNotice("");
+      return;
+    }
+
+    setLoginSubmitting(true);
+    setLoginError("");
+    setLoginNotice("");
+    setLoginFieldErrors({});
+
+    try {
+      const response = await fetchWithAppCheck("/api/telegram/miniapp-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ initData })
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data.ok || !data.customToken) {
+        const error = new Error(data.error || "telegram-login-failed");
+        error.code = data.error || "telegram-login-failed";
+        throw error;
+      }
+
+      const credential = await signInWithCustomToken(auth, data.customToken);
+      await finishAuth(credential.user);
+    } catch (error) {
+      console.error("Telegram Mini App sign-in failed:", error?.code || "unknown");
+      const message = error?.code === "telegram-not-linked"
+        ? "Этот Telegram ещё не привязан к аккаунту. Войди по логину и привяжи Telegram в профиле."
+        : error?.code === "telegram-account-disabled"
+          ? "Доступ к аккаунту отключён. Обратись к тренеру."
+          : error?.code === "auth/invite-required"
+            ? "Для этого аккаунта нужно приглашение тренера."
+            : "Не удалось войти через Telegram. Попробуй ещё раз или выбери другой способ входа.";
+      setLoginError(message);
+    } finally {
+      setLoginSubmitting(false);
+    }
+  }
+
   return {
     handleGoogleAuth,
     handleLogin,
-    handleLoginPasswordReset
+    handleLoginPasswordReset,
+    handleTelegramMiniAppAuth
   };
 }

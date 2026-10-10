@@ -33,7 +33,7 @@
 
 :global(.trainerNextRoot) :global(.trainerNextNutritionUnified > .trainerNutritionQuickNav button:hover) {
   color: var(--tn-purple-strong);
-  background: var(--tn-purple-soft);
+  background: var(--ownset-soft-gradient);
 }
 
 /* The nutrition plan is a trainer's primary action in this card, not a quiet metadata link. */

@@ -1,6 +1,8 @@
 .section {
   display: grid;
-  gap: 9px;
+  gap: 12px;
+  color: var(--apple-text, #1c1c1e);
+  font-family: var(--font-family-sans);
 }
 
 .identity {
@@ -24,7 +26,7 @@
 }
 
 .avatarAction:focus-within {
-  outline: 2px solid var(--color-profile-settings-focus);
+  outline: 2px solid var(--apple-blue, #3c6faa);
   outline-offset: 3px;
   border-radius: 50%;
 }
@@ -43,10 +45,10 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 1px solid var(--color-profile-account-avatar-border);
+  border: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 50%;
-  background: var(--background-profile-account-avatar);
-  box-shadow: var(--shadow-profile-account-avatar);
+  background: var(--apple-surface-muted, #efeff4);
+  box-shadow: none;
   font-size: 24px;
 }
 
@@ -65,11 +67,11 @@
   height: 24px;
   display: grid;
   place-items: center;
-  border: 2px solid var(--color-profile-account-camera-border);
+  border: 2px solid var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 50%;
-  background: var(--background-profile-account-camera);
-  color: var(--color-profile-account-camera);
-  box-shadow: var(--shadow-profile-account-camera);
+  background: var(--ownset-action-gradient, var(--apple-action, #3f73b8));
+  color: #fff;
+  box-shadow: none;
 }
 
 .nameRow {
@@ -87,16 +89,16 @@
 .nameInput {
   width: 100%;
   min-width: 0;
-  height: 28px;
-  padding: 0 36px;
+  height: 44px;
+  padding: 0 44px;
   border: 1px solid transparent;
   border-radius: 10px;
   outline: none;
   background: transparent;
-  color: var(--color-profile-account-name);
+  color: var(--apple-text, #1c1c1e);
   font: inherit;
-  font-size: 16px;
-  font-weight: 950;
+  font-size: 18px;
+  font-weight: 600;
   line-height: 1.05;
   text-align: center;
 }
@@ -106,17 +108,17 @@
 }
 
 .nameRow.editing .nameInput {
-  border-color: var(--color-profile-account-name-edit-border);
-  background: var(--background-profile-account-name-edit);
-  box-shadow: var(--shadow-profile-account-name-edit);
+  border-color: var(--apple-blue, #3c6faa);
+  background: var(--apple-surface, #fff);
+  box-shadow: none;
 }
 
 .nameEdit {
   position: absolute;
   top: 50%;
-  right: 7px;
-  width: 24px;
-  height: 24px;
+  right: 0;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -124,7 +126,7 @@
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: var(--color-profile-account-name-edit);
+  color: var(--apple-blue, #3c6faa);
   cursor: pointer;
   transform: translateY(-50%);
 }
@@ -136,7 +138,7 @@
 .nameEdit:focus-visible,
 .quickEdit:focus-visible,
 .quickButton:focus-visible {
-  outline: 2px solid var(--color-profile-settings-focus);
+  outline: 2px solid var(--apple-blue, #3c6faa);
   outline-offset: 2px;
 }
 
@@ -145,28 +147,28 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--color-profile-account-panel-border);
+  border: 0;
   border-radius: 18px;
-  background: var(--background-profile-account-panel);
-  box-shadow: var(--shadow-profile-account-panel);
+  background: var(--apple-surface, #fff);
+  box-shadow: none;
 }
 
 .quickRow {
-  min-height: 50px;
-  padding: 0 14px;
+  min-height: 54px;
+  padding: 0 12px;
   display: grid;
-  grid-template-columns: 30px minmax(74px, 0.85fr) minmax(0, 1.15fr) 24px;
+  grid-template-columns: 30px minmax(0, 0.85fr) minmax(0, 1.15fr) 44px;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   border: 0;
-  border-bottom: 1px solid var(--color-profile-account-row-divider);
+  border-bottom: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
   background: transparent;
   color: inherit;
   text-align: left;
 }
 
 .quickRow.editing {
-  background: var(--background-profile-account-row-editing);
+  background: var(--apple-blue-tint, #edf3fb);
 }
 
 .quickRow:last-child {
@@ -179,15 +181,15 @@
   display: grid;
   place-items: center;
   border-radius: 11px;
-  background: var(--background-profile-account-icon);
-  color: var(--color-profile-account-icon);
+  background: var(--apple-blue-tint, #edf3fb);
+  color: var(--apple-blue, #3c6faa);
 }
 
 .quickTitle {
   min-width: 0;
-  color: var(--color-profile-account-title);
-  font-size: 13px;
-  font-weight: 950;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .quickValue,
@@ -202,33 +204,35 @@
   appearance: none;
   background: transparent;
   box-shadow: none;
-  color: var(--color-profile-account-value);
+  color: var(--apple-secondary, #636366);
   font: inherit;
-  font-size: 12px;
-  font-weight: 900;
-  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .quickValue {
   display: grid;
-  place-items: center;
+  align-items: center;
+  justify-items: end;
   line-height: 1;
 }
 
 .quickInput:focus {
-  color: var(--color-profile-account-value-focus);
+  color: var(--apple-blue, #3c6faa);
 }
 
 .quickRow.editing .quickInput {
-  min-height: 32px;
+  min-height: 44px;
   padding: 0 8px;
-  border: 1px solid var(--color-profile-account-input-edit-border);
+  border: 1px solid var(--apple-blue, #3c6faa);
   border-radius: 11px;
-  background: var(--background-profile-account-input-edit);
-  box-shadow: var(--shadow-profile-account-input-edit);
-  color: var(--color-profile-account-input-edit);
+  background: var(--apple-surface, #fff);
+  box-shadow: none;
+  color: var(--apple-text, #1c1c1e);
+  font-size: 16px;
 }
 
 .quickInput[readonly] {
@@ -240,23 +244,23 @@
 }
 
 .quickEdit {
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   display: grid;
   place-items: center;
   border: 0;
   border-radius: 9px;
   background: transparent;
-  color: var(--color-profile-account-value);
+  color: var(--apple-secondary, #636366);
   cursor: pointer;
   font-style: normal;
   line-height: 1;
 }
 
 .quickRow.editing .quickEdit {
-  background: var(--background-profile-account-edit-action);
-  color: var(--color-profile-account-edit-action);
+  background: var(--apple-blue-tint, #edf3fb);
+  color: var(--apple-blue, #3c6faa);
 }
 
 .quickEdit:active {
@@ -272,25 +276,25 @@
 .status {
   margin: 0;
   padding: 6px 9px;
-  border: 1px solid var(--color-profile-account-status-border);
+  border: 1px solid transparent;
   border-radius: 11px;
-  background: var(--background-profile-account-status);
-  color: var(--color-profile-account-status);
-  font-size: 10px;
+  background: var(--apple-red-tint, #fff0ee);
+  color: var(--apple-red, #c43830);
+  font-size: 12px;
   line-height: 1.35;
   text-align: center;
 }
 
 .status.success {
-  border-color: var(--color-profile-account-status-success-border);
-  background: var(--background-profile-account-status-success);
-  color: var(--color-profile-account-status-success);
+  border-color: transparent;
+  background: var(--apple-green-tint, #edf8f0);
+  color: var(--apple-green, #237a42);
 }
 
 @media (max-width: 350px) {
   .quickRow {
     padding: 0 10px;
-    grid-template-columns: 28px minmax(64px, 0.8fr) minmax(0, 1.2fr) 22px;
-    gap: 7px;
+    grid-template-columns: 28px minmax(0, 0.8fr) minmax(0, 1.2fr) 44px;
+    gap: 6px;
   }
 }

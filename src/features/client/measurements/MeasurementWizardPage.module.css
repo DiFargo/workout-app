@@ -327,7 +327,7 @@
   gap: 9px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--apple-action, #3f73b8) rgba(156, 136, 210, 0.12);
+  scrollbar-color: var(--apple-action, #396ba6) rgba(156, 136, 210, 0.12);
 }
 
 .reviewGrid > div {
@@ -449,7 +449,7 @@
 .reviewCard,
 .reviewGrid {
   scrollbar-width: thin;
-  scrollbar-color: var(--apple-action, #3f73b8) rgba(156, 136, 210, 0.12);
+  scrollbar-color: var(--apple-action, #396ba6) rgba(156, 136, 210, 0.12);
 }
 
 .reviewCard::-webkit-scrollbar,
@@ -466,7 +466,7 @@
 .reviewCard::-webkit-scrollbar-thumb,
 .reviewGrid::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  background: linear-gradient(180deg, #a9d2c3, var(--apple-blue-pressed, #3565a3));
+  background: var(--ownset-action-gradient);
 }
 
 @media (max-width: 390px) {
@@ -622,13 +622,13 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .rangeHint {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-weight: 500;
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid {
-  scrollbar-color: var(--apple-action, #3f73b8) rgba(47, 125, 104, 0.12);
+  scrollbar-color: var(--apple-action, #396ba6) rgba(47, 125, 104, 0.12);
 }
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-track,
@@ -638,7 +638,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .reviewCard::-webkit-scrollbar-thumb,
 :global(:root[data-app-theme="warm-light"]) .reviewGrid::-webkit-scrollbar-thumb {
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation {
@@ -657,7 +657,7 @@
   gap: 10px;
   overflow: hidden;
   border: 0;
-  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
   background: rgba(255, 255, 255, 0.98);
   box-shadow: none;
@@ -679,13 +679,13 @@
 
 :global(:root[data-app-theme="warm-light"]) .navigation button:first-child {
   border-radius: 24px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root[data-app-theme="warm-light"]) .navigation .next {
   border-radius: 17px;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #ffffff;
   box-shadow: none;
 }
@@ -694,8 +694,8 @@
 :global(:root) .page.page {
   max-width: 430px;
   padding: 0 14px calc(86px + env(safe-area-inset-bottom));
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .page .header {
@@ -721,13 +721,13 @@
 }
 
 .progressMeta span {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-weight: 550;
 }
 
 .progressMeta strong {
   overflow: hidden;
-  color: var(--apple-blue, #3c6faa);
+  color: var(--apple-blue, #376b91);
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -746,7 +746,7 @@
   height: 100%;
   display: block;
   border-radius: inherit;
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   transition: width 180ms ease-out;
 }
 
@@ -757,10 +757,10 @@
 :global(:root) .page .card {
   padding: 16px;
   gap: 12px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
   background: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   box-shadow: 0 14px 38px rgba(27, 35, 31, 0.07);
 }
 
@@ -768,9 +768,9 @@
   height: min(30vh, 238px);
   min-height: 176px;
   flex: 0 1 auto;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 :global(:root) .page .introImage {
@@ -780,23 +780,23 @@
 
 :global(:root) .page .text h2,
 :global(:root) .page .card h2 {
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: clamp(25px, 6.5vw, 30px);
   font-weight: 750;
   line-height: 1.08;
   letter-spacing: -0.65px;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .page .text p,
 :global(:root) .page .card p {
   max-width: 340px;
   margin-top: 6px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 13px;
   font-weight: 450;
   line-height: 1.42;
-  -webkit-text-fill-color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: var(--apple-secondary, #617078);
 }
 
 :global(:root) .page .tips {
@@ -809,9 +809,9 @@
   padding: 8px 9px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
   color: #625d69;
   font-size: 10px;
   font-weight: 600;
@@ -830,23 +830,23 @@
   align-content: center;
   align-items: center;
   gap: 2px 8px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .page .modeChoices button.fullMode {
-  border-color: var(--apple-blue, #3c6faa);
-  background: var(--apple-blue-tint, #eef3fa);
-  color: var(--apple-blue, #3c6faa);
+  border-color: var(--apple-blue, #376b91);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue, #376b91);
 }
 
 :global(:root) .page .modeChoices button > svg {
   width: 22px;
   height: 22px;
   grid-row: 1 / span 2;
-  color: var(--apple-blue-pressed, #3565a3);
+  color: var(--apple-blue-pressed, #315f91);
   stroke-width: 1.9;
 }
 
@@ -857,7 +857,7 @@
 
 :global(:root) .page .modeChoices small {
   margin-top: 1px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 450;
   line-height: 13px;
@@ -871,9 +871,9 @@
   height: min(34vh, 280px);
   min-height: 210px;
   flex: 0 1 auto;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
 }
 
 :global(:root) .page .imageFrame::after {
@@ -903,7 +903,7 @@
 .inputLabel {
   margin: 0 0 6px 3px;
   display: block;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 11px;
   font-weight: 600;
   line-height: 14px;
@@ -915,33 +915,33 @@
   grid-template-columns: minmax(0, 1fr) 60px;
   border: 1px solid #ded6eb;
   border-radius: 18px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
 }
 
 :global(:root) .page .input input {
   height: 52px;
   border-radius: 13px;
   background: #ffffff;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 30px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .page .input em {
   min-height: 52px;
   border-radius: 13px;
-  background: var(--apple-blue-tint, #eef3fa);
-  color: var(--apple-blue, #3c6faa);
+  background: var(--ownset-soft-gradient);
+  color: var(--apple-blue, #376b91);
   font-size: 14px;
   font-weight: 700;
-  -webkit-text-fill-color: var(--apple-blue, #3c6faa);
+  -webkit-text-fill-color: var(--apple-blue, #376b91);
 }
 
 :global(:root) .page .rangeHint {
   margin-top: -5px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 450;
 }
@@ -950,7 +950,7 @@
   align-self: center;
   padding: 6px 10px;
   border-radius: 999px;
-  background: var(--apple-surface-muted, #efeff4);
+  background: var(--apple-surface-muted, #edf1f3);
   color: #625d69;
   font-size: 11px;
   font-weight: 600;
@@ -969,27 +969,27 @@
 :global(:root) .page .reviewGrid > div {
   min-height: 60px;
   padding: 10px 11px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 15px;
-  background: var(--apple-canvas, #f2f2f7);
+  background: var(--apple-canvas, #f5f7f8);
 }
 
 :global(:root) .page .reviewGrid span {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 550;
 }
 
 :global(:root) .page .reviewGrid strong {
   margin-top: 4px;
-  color: var(--apple-text, #1c1c1e);
+  color: var(--apple-text, #1c282e);
   font-size: 16px;
   font-weight: 700;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .page .reviewGrid small {
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   font-size: 10px;
   font-weight: 550;
 }
@@ -1006,13 +1006,13 @@
 
 :global(:root) .page .note textarea {
   min-height: 72px;
-  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 15px;
-  background: var(--apple-canvas, #f2f2f7);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-canvas, #f5f7f8);
+  color: var(--apple-text, #1c282e);
   font-size: 13px;
   font-weight: 450;
-  -webkit-text-fill-color: var(--apple-text, #1c1c1e);
+  -webkit-text-fill-color: var(--apple-text, #1c282e);
 }
 
 :global(:root) .page .navigation {
@@ -1024,7 +1024,7 @@
   padding: 12px 14px 16px;
   grid-template-columns: 104px minmax(0, 1fr);
   gap: 8px;
-  border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12));
+  border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   background: #ffffff;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -1040,8 +1040,8 @@
   gap: 7px;
   border: 0;
   border-radius: 16px;
-  background: var(--apple-surface-muted, #efeff4);
-  color: var(--apple-text, #1c1c1e);
+  background: var(--apple-surface-muted, #edf1f3);
+  color: var(--apple-text, #1c282e);
   font-size: 14px;
   font-weight: 650;
 }
@@ -1054,7 +1054,7 @@
 }
 
 :global(:root) .page .navigation .next {
-  background: var(--apple-action, #3f73b8);
+  background: var(--ownset-action-gradient);
   color: #ffffff;
 }
 

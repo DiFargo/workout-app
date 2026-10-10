@@ -104,3 +104,15 @@ test("trainer alternative replacement refuses an option that was not assigned", 
   assert.equal(result.replacement, null);
   assert.equal(result.workout.exercises[0].name, "Жим штанги лёжа");
 });
+
+test("trainer replacement never attributes completed results to an alternative", () => {
+  const alternative = { id: "machine_chest_press", name: "Жим от груди в тренажёре" };
+  const workout = { id: "day", exercises: [{ id: "exercise", name: "Жим штанги лёжа", trainerAlternatives: [alternative],
+    sets: [{ completed: true, enteredWeight: "60", enteredReps: "10" }, { completed: true, enteredWeight: "65", enteredReps: "8" }, { reps: 10 }]
+  }] };
+  const snapshot = structuredClone(workout);
+  const result = replaceTrainerAssignedExerciseInWorkout(workout, "exercise", alternative);
+  assert.strictEqual(result.workout, workout);
+  assert.equal(result.replacement, null);
+  assert.deepEqual(workout, snapshot);
+});

@@ -14,9 +14,6 @@ import { BASIC_WORKOUT_EXERCISE_LIBRARY } from "../src/data/basicWorkoutExercise
 
 const DISABLED_AI_IDS = new Set([
   "deadlift",
-  "barbell_row",
-  "machine_row",
-  "barbell_bench_press",
   "incline_machine_press",
   "low_incline_pushup",
   "standing_db_press"
@@ -33,6 +30,9 @@ const ROLE_BY_GROUP = {
   chest_fly: "chestAccessory",
   shoulder_press: "shoulderPress",
   side_delts: "shoulderAccessory",
+  shoulder_front: "shoulderAccessory",
+  hip_abduction: "lowerAccessory",
+  hip_adduction: "lowerAccessory",
   rear_delts: "shoulderAccessory",
   biceps: "biceps",
   triceps: "triceps",
@@ -44,6 +44,7 @@ const ROLE_BY_ID = {
   leg_extension: "lowerAccessory",
   leg_curl: "lowerAccessory",
   back_extension: "lowerAccessory",
+  weighted_back_extension: "lowerAccessory",
   standing_calf_raise: "lowerAccessory",
   seated_calf_raise: "lowerAccessory",
   leg_press_calf_raise: "lowerAccessory",
@@ -74,6 +75,7 @@ export function buildBasicWorkoutAiCatalogue(library = BASIC_WORKOUT_EXERCISE_LI
         equipment: exercise.equipment,
         locations: Array.isArray(exercise.locations) ? exercise.locations : [],
         requiresWeight: Boolean(exercise.requiresWeight),
+        hasVideo: Boolean(exercise.hasVideo),
         restSeconds: toSeconds(exercise.rest),
         durationSeconds: Number(exercise.durationSeconds) || 0,
         note: exercise.note

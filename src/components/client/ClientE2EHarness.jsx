@@ -22,6 +22,7 @@ import { WorkoutModePickerDialog } from "../../features/client/workouts/WorkoutL
 import BasicWorkoutExerciseExplainer from "../../features/client/workouts/BasicWorkoutExerciseExplainer";
 import WorkoutExerciseVideoFrame from "../../features/client/workouts/WorkoutExerciseVideoFrame";
 import WorkoutExerciseSets from "../../features/client/workouts/WorkoutExerciseSets";
+import { createWorkoutRuntimeHandlers } from "../../features/client/workouts/workoutRuntimeHandlers";
 import WorkoutRunStageView, { WorkoutRunExercisePreview } from "../../features/client/workouts/WorkoutRunStageView";
 import WorkoutRunPageShell from "../../features/client/workouts/WorkoutRunPageShell";
 import WorkoutExerciseSupport from "../../features/client/workouts/WorkoutExerciseSupport";
@@ -59,6 +60,7 @@ import {
   ProfileHarnessTitle
 } from "../../features/client/profile/ProfileDashboardShell";
 import ProfileSummaryDashboard from "../../features/client/profile/ProfileSummaryDashboard";
+import { getProfileWorkoutStatusDateKey } from "../../features/client/profile/profileDashboardModel.js";
 import ProfileProgressPhotosModal from "../../features/client/profile/ProfileProgressPhotosModal";
 import ProfileSettingsModal from "../../features/client/profile/ProfileSettingsModal";
 import ProfileSettingsTab from "../../features/client/profile/ProfileSettingsTab";
@@ -79,7 +81,6 @@ import {
   shiftNutritionCalendarMonthKey
 } from "../../utils/nutritionCalendar";
 import { buildAiNutritionMonthlyPlan } from "../../utils/aiNutritionPlanBuilder";
-import { replaceBasicWorkoutExerciseInPlan } from "../../utils/basicWorkoutAlternatives";
 import { getProfileMeasurementFields } from "../../utils/profileMeasurements";
 
 const HARNESS_DATE = "2026-06-22";
@@ -157,6 +158,7 @@ const harnessRunWorkoutSeed = {
     {
       id: "client_harness_run_bench",
       name: "Жим штанги лёжа",
+      trainerAlternatives: [{ id: "machine_chest_press", name: "Жим от груди в тренажёре", equipment: "Тренажёр" }],
       video: "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4",
       sets: [
         { reps: "10", weight: "60", enteredReps: "10", enteredWeight: "60", aiOriginalWeight: "65", completed: true },
@@ -351,7 +353,7 @@ const harnessTrainerTasks = [
   }
 ];
 
-function buildHarnessWorkoutCalendarDays(monthKey, selectedDateKey) {
+function buildHarnessWorkoutCalendarDays(monthKey) {
   const [year, month] = monthKey.split("-").map(Number);
   const monthStart = new Date(year, month - 1, 1, 12);
   const gridStart = new Date(monthStart);
@@ -365,6 +367,8 @@ function buildHarnessWorkoutCalendarDays(monthKey, selectedDateKey) {
     const scheduledIndex = harnessWorkoutScheduledDates.indexOf(key);
     const status = key === "2026-06-05"
       ? "completed"
+      : key === "2026-06-09"
+        ? "completed_off_date"
       : key === "2026-06-12"
         ? "missed"
         : key === "2026-06-19"
@@ -378,12 +382,30 @@ function buildHarnessWorkoutCalendarDays(monthKey, selectedDateKey) {
       isToday: key === HARNESS_DATE,
       isScheduled: scheduledIndex >= 0,
       scheduleEntries: scheduledIndex >= 0 ? [{ order: scheduledIndex + 1, status }] : [],
-      workouts: key === selectedDateKey ? [{ id: "client_harness_history_1", workout: "День 1 - Верх тела", date: `${key}T18:30:00.000Z`, durationSeconds: 2700 }] : []
+      workouts: ["2026-06-05", "2026-06-22"].includes(key) ? [{ id: "client_harness_history_1", workout: "День 1 - Верх тела", date: `${key}T18:30:00.000Z`, durationSeconds: 2700 }] : []
     };
   });
 }
 
-function buildHarnessNutrition() {
+function buildHarnessNutrition(scenario = "", dateKey = HARNESS_DATE) {
+  if (scenario) {
+    const goals = { calories: 2500, protein: 199, fat: 69, carbs: 300 };
+    const totals = {
+      over: { calories: 2829, protein: 200.9, fat: 95.8, carbs: 277.8 },
+      "low-protein-over": { calories: 2829, protein: 80, fat: 110, carbs: 380 },
+      target: { ...goals },
+      near: { calories: 2400, protein: 180, fat: 65, carbs: 290 },
+      partial: { calories: 800, protein: 40, fat: 30, carbs: 90 }
+    }[scenario];
+    return {
+      ...defaultNutritionState,
+      goals,
+      nutritionPlan: { ...goals, source: "trainer", updatedAt: "2026-06-01T12:00:00Z", trainingDays: [] },
+      myFoods: harnessMyFoods,
+      recent: harnessSearchFoods,
+      days: { [dateKey]: { foods: totals ? [{ id: "analysis_fixture", name: "Записи за день (тест)", mealId: "breakfast", ...totals }] : [] } }
+    };
+  }
   return {
     ...defaultNutritionState,
     goals: {
@@ -492,6 +514,9 @@ export default function ClientE2EHarness() {
   const measurementsTabbed = harnessParams?.get("clientMeasurementsTabbed") === "1";
   const measurementsState = harnessParams?.get("clientMeasurementsState") || "default";
   const measurementSnapshotState = harnessParams?.get("clientMeasurementSnapshotState") || "trend";
+  const progressMeasurements = measurementSnapshotState === "empty" ? []
+    : measurementSnapshotState === "single" ? [harnessLatestMeasurement]
+      : [harnessLatestMeasurement, harnessPreviousMeasurement];
   const weightCheckInDue = harnessParams?.get("clientWeightCheckInDue") === "1";
   const measurementWizardState = harnessParams?.get("clientMeasurementStep") || "intro";
   const visibleHarnessWorkouts = workoutHarnessState === "empty"
@@ -503,8 +528,10 @@ export default function ClientE2EHarness() {
     date.setDate(date.getDate() + offset);
     return date.toISOString().slice(0, 10);
   };
+  const todayWeekday = new Date().getDay();
+  const nearbyVisibleWeekdayOffset = todayWeekday === 0 ? -1 : 1;
   const overviewWorkoutScheduledDates = workoutOverviewState === "today"
-    ? visibleHarnessWorkouts.map((_, index) => offsetWorkoutDate(index * 3))
+    ? visibleHarnessWorkouts.map((_, index) => offsetWorkoutDate(index === 0 ? 0 : index === 1 ? nearbyVisibleWeekdayOffset : index * 3))
     : workoutOverviewState === "recovery"
       ? visibleHarnessWorkouts.map((_, index) => offsetWorkoutDate(index * 3 + 1))
       : workoutOverviewState === "unscheduled"
@@ -525,7 +552,10 @@ export default function ClientE2EHarness() {
     empty: { workoutTitle: "Программа пока не назначена", workoutDate: "", workoutState: "empty", isWorkoutToday: false, workoutScheduleStatus: "unscheduled" },
     today: { workoutTitle: "Ноги и ягодицы", workoutDate: "Сегодня", workoutState: "ready", isWorkoutToday: true, workoutScheduleStatus: "today" },
     recovery: { workoutTitle: "Тренировка 3", workoutDate: "2 сентября", workoutState: "ready", isWorkoutToday: false, workoutScheduleStatus: "upcoming" },
+    "today-long": { workoutTitle: "День 1 · Всё тело · 3 ноги + 3 верх + пресс · А", workoutDate: "Сегодня", workoutState: "ready", isWorkoutToday: true, workoutScheduleStatus: "today" },
+    "recovery-long": { workoutTitle: "День 1 · Всё тело · 3 ноги + 3 верх + пресс · А", workoutDate: "21 сентября", workoutState: "ready", isWorkoutToday: false, workoutScheduleStatus: "upcoming" },
     missed: { workoutTitle: "Тренировка 2", workoutDate: "31 августа", workoutState: "ready", isWorkoutToday: false, workoutScheduleStatus: "missed" },
+    "missed-move": { workoutTitle: "Тренировка 1", workoutDate: new Date(`${getProfileWorkoutStatusDateKey({ isMissed: true, plannedDate: "2026-08-26", shiftedDate: "2026-09-21" })}T12:00:00`).toLocaleDateString("ru-RU", { day: "numeric", month: "long" }), workoutState: "ready", isWorkoutToday: false, workoutScheduleStatus: "missed" },
     unscheduled: { workoutTitle: "Тренировка по плану", workoutDate: "", workoutState: "ready", isWorkoutToday: false, workoutScheduleStatus: "unscheduled" },
     complete: { workoutTitle: "Ноги и ягодицы", workoutDate: "Сегодня", workoutState: "complete", isWorkoutToday: false, workoutScheduleStatus: "today" }
   }[dashboardWorkoutState] || { workoutTitle: "Ноги и ягодицы", workoutDate: "Сегодня", workoutState: "ready", isWorkoutToday: true, workoutScheduleStatus: "today" };
@@ -641,12 +671,33 @@ export default function ClientE2EHarness() {
   const [harnessBasicStartRequested, setHarnessBasicStartRequested] = useState(false);
   const harnessRunDeckRef = useRef(null);
   const harnessRunInlineVideoTimerRef = useRef(null);
-  const [harnessRunWorkout, setHarnessRunWorkout] = useState(() => structuredClone(harnessRunWorkoutSeed));
+  const [harnessRunWorkout, setHarnessRunWorkout] = useState(() => {
+    const seed = structuredClone(harnessRunWorkoutSeed);
+    if (harnessParams?.has("clientWorkoutFinishAudit")) {
+      seed.id = "finish_audit_day_7";
+      seed.name = "День 7";
+      seed.exercises = Array.from({ length: 7 }, (_, index) => ({
+        id: `finish_audit_exercise_${index}`, name: `Упражнение ${index + 1}`,
+        sets: Array.from({ length: 3 }, (_, set) => ({
+          reps: "10", weight: index < 6 ? "25" : set < 2 ? "44" : "45",
+          enteredReps: "10", enteredWeight: index < 6 ? "25" : set < 2 ? "44" : "45", completed: true
+        }))
+      }));
+    }
+    if (harnessParams?.get("clientWorkoutRunStartingWeight") === "1") {
+      seed.exercises[0].sets[0].startingWeightSource = "estimate";
+      seed.exercises[0].sets[0].startingWeightConfirmed = false;
+    }
+    if (harnessParams?.get("clientWorkoutRunSets") === "6") {
+      seed.exercises[0].sets = Array.from({ length: 6 }, (_, index) => ({ ...seed.exercises[0].sets[0], set: index + 1, completed: false }));
+    }
+    return seed;
+  });
   const [harnessRunExerciseIndex, setHarnessRunExerciseIndex] = useState(() => (
     harnessRunStageParam === "warmup"
       ? 0
       : harnessRunStageParam === "finish" || harnessRunStageParam === "saved"
-        ? harnessRunWorkoutSeed.exercises.length + 1
+        ? harnessRunWorkout.exercises.length + 1
         : 1
   ));
   const [harnessRunExerciseHistoryOpenId, setHarnessRunExerciseHistoryOpenId] = useState(
@@ -669,6 +720,8 @@ export default function ClientE2EHarness() {
   const [harnessRunClientComment, setHarnessRunClientComment] = useState("");
   const [harnessRunSaved, setHarnessRunSaved] = useState(harnessRunStageParam === "saved");
   const [harnessRunSavedCard, setHarnessRunSavedCard] = useState(harnessRunStageParam === "saved");
+  const [harnessVideoPlaying, setHarnessVideoPlaying] = useState(harnessParams?.get("clientExerciseVideoState") === "playing");
+  const [harnessFullscreenVideo, setHarnessFullscreenVideo] = useState("");
   const [harnessExerciseSets, setHarnessExerciseSets] = useState(() => [
     ...(harnessParams?.get("clientExerciseSetsState") === "timed"
       ? Array.from({ length: 3 }, () => ({
@@ -713,11 +766,12 @@ export default function ClientE2EHarness() {
     goal: "recomp",
     targetWeight: "84"
   });
-  const [nutritionDateKey, setNutritionDateKey] = useState(HARNESS_DATE);
-  const [nutrition] = useState(buildHarnessNutrition);
+  const [nutritionDateKey, setNutritionDateKey] = useState(harnessParams?.get("clientNutritionDate") || HARNESS_DATE);
+  const [nutrition] = useState(() => buildHarnessNutrition(harnessParams?.get("clientNutritionAnalysis") || "", harnessParams?.get("clientNutritionDate") || HARNESS_DATE));
   const [selectedAiFeatureId, setSelectedAiFeatureId] = useState("recovery");
   const [aiNutritionProfileDraft, setAiNutritionProfileDraft] = useState({
     weight: "88",
+    targetWeight: "80",
     height: "181",
     age: "32",
     sex: "male",
@@ -824,7 +878,7 @@ export default function ClientE2EHarness() {
       : [];
   const visibleNutritionSearchResults = nutritionSearchResults.slice(0, nutritionSearchResultLimit);
   const cabinetCalendarMonthKey = "2026-06";
-  const cabinetCalendarDays = buildHarnessWorkoutCalendarDays(cabinetCalendarMonthKey, cabinetCalendarSelectedDate);
+  const cabinetCalendarDays = buildHarnessWorkoutCalendarDays(cabinetCalendarMonthKey);
   const cabinetCalendarSelectedItems = cabinetCalendarDays
     .find((day) => day.key === cabinetCalendarSelectedDate)
     ?.workouts || [];
@@ -1280,7 +1334,7 @@ export default function ClientE2EHarness() {
           renderClientMainBottomBar={renderBottomBar}
           basicWorkoutQuiz={harnessBasicWorkoutQuiz}
           userId="client-harness"
-          startingWeightProfile={{ weight: "80", height: "178", age: "30", activity: "medium", goal: "recomp" }}
+          startingWeightProfile={harnessParams?.get("clientBasicProfile") === "missing" ? {} : { weight: "80", height: "178", age: "30", sex: "female", activity: "medium", goal: "recomp" }}
           workoutHistory={harnessWorkoutHistory}
           onBasicWorkoutQuizChange={setHarnessBasicWorkoutQuiz}
           onOpenToday={() => setPage("basicWorkoutToday")}
@@ -1305,7 +1359,8 @@ export default function ClientE2EHarness() {
         <BasicWorkoutTodayPage
           renderClientMainBottomBar={renderBottomBar}
           basicWorkoutQuiz={harnessBasicWorkoutQuiz}
-          startingWeightProfile={{ weight: "80", height: "178", age: "30", activity: "medium", goal: "recomp" }}
+          startingWeightProfile={harnessParams?.get("clientBasicProfile") === "missing" ? {} : { weight: "80", height: "178", age: "30", sex: "female", activity: "medium", goal: "recomp" }}
+          workoutHistory={harnessWorkoutHistory}
           onBasicWorkoutQuizChange={setHarnessBasicWorkoutQuiz}
           onApplyBasicWorkoutPlan={async (_quiz, { startWorkout = false } = {}) => {
             if (harnessParams?.get("clientBasicSave") === "error") return { cloudSaved: false };
@@ -1365,24 +1420,22 @@ export default function ClientE2EHarness() {
         ))
       }));
     };
-    const toggleHarnessRunSet = (exerciseId, setIndex) => {
-      setHarnessRunWorkout((current) => ({
-        ...current,
-        exercises: current.exercises.map((exercise) => (
-          exercise.id === exerciseId
-            ? {
-                ...exercise,
-                sets: exercise.sets.map((set, index) => (
-                  index === setIndex ? { ...set, completed: !set.completed } : set
-                ))
-              }
-            : exercise
-        ))
-      }));
-      setHarnessRunRestTimerSeconds(119);
-      setHarnessRunRestTimerRunning(true);
-      return true;
-    };
+    const {
+      toggleWorkoutSetCompleted: toggleHarnessRunSet,
+      replaceBasicWorkoutExercise: replaceHarnessRunExercise,
+      replaceTrainerAssignedWorkoutExercise: replaceHarnessTrainerRunExercise
+    } = createWorkoutRuntimeHandlers({
+      plan: { source: harnessRunIsBasicWorkout ? "basic" : "trainer", workouts: [harnessRunWorkout] },
+      workout: harnessRunWorkout,
+      restTimerDuration: 119,
+      setPlan: (update) => setHarnessRunWorkout((current) => (
+        typeof update === "function" ? update({ workouts: [current] }) : update
+      ).workouts[0]),
+      setExerciseValidationMessage: () => {},
+      setRestTimerDuration: () => {},
+      setRestTimerSeconds: setHarnessRunRestTimerSeconds,
+      setRestTimerRunning: setHarnessRunRestTimerRunning
+    });
     const updateHarnessRunNote = (exerciseId, value) => {
       setHarnessRunWorkout((current) => ({
         ...current,
@@ -1390,19 +1443,6 @@ export default function ClientE2EHarness() {
           exercise.id === exerciseId ? { ...exercise, clientNote: value } : exercise
         ))
       }));
-    };
-    const replaceHarnessRunExercise = (exerciseId, alternative) => {
-      const { plan: nextPlan, replacement } = replaceBasicWorkoutExerciseInPlan(
-        { source: "basic", workouts: [harnessRunWorkout] },
-        harnessRunWorkout.id,
-        exerciseId,
-        alternative
-      );
-
-      if (!replacement) return false;
-
-      setHarnessRunWorkout(nextPlan.workouts[0]);
-      return true;
     };
     const noHeader = !harnessRunSaved;
 
@@ -1417,6 +1457,14 @@ export default function ClientE2EHarness() {
           />
           <WorkoutRunStageView
             closeWorkoutExerciseModal={(setter) => setter("")}
+            confirmBasicStartingWeightFeedback={(exerciseId) => {
+              setHarnessRunWorkout(current => ({
+                ...current,
+                exercises: current.exercises.map(exercise => exercise.id === exerciseId
+                  ? { ...exercise, sets: exercise.sets.map(set => ({ ...set, startingWeightConfirmed: true })) }
+                  : exercise)
+              }));
+            }}
             currentExerciseIndex={harnessRunExerciseIndex}
             deckRef={harnessRunDeckRef}
             exerciseHistoryOpenId={harnessRunExerciseHistoryOpenId}
@@ -1450,6 +1498,7 @@ export default function ClientE2EHarness() {
             replaceBasicWorkoutExercise={
               harnessRunIsBasicWorkout ? replaceHarnessRunExercise : undefined
             }
+            replaceTrainerAssignedWorkoutExercise={replaceHarnessTrainerRunExercise}
             restTimerDuration={119}
             restTimerRunning={harnessRunRestTimerRunning}
             restTimerSeconds={harnessRunRestTimerSeconds}
@@ -1511,7 +1560,7 @@ export default function ClientE2EHarness() {
                 : harnessRunWorkout
             }
             workoutClientComment={harnessRunClientComment}
-            workoutDurationText="42 мин"
+            workoutDurationText={harnessParams?.has("clientWorkoutFinishAudit") ? "52 мин" : "42 мин"}
             workoutFinishedAt={Date.parse("2026-06-22T18:42:00.000Z")}
             workoutHistorySyncState={harnessRunSaved ? "synced" : "local"}
             workoutReadiness={{ volumeText: "−10% объёма" }}
@@ -1562,6 +1611,7 @@ export default function ClientE2EHarness() {
     const exercise = {
       id: "client_harness_exercise_video",
       name: "Жим штанги лёжа",
+      videoCrop: harnessParams?.get("clientExerciseVideoCrop") === "1" ? { x: 0.2, y: 0.8, zoom: 1.5 } : null,
       video: "/videos/1ea4065d-8785-4c13-9fd5-a5bdf409b6b7.mp4",
       sets: []
     };
@@ -1574,18 +1624,18 @@ export default function ClientE2EHarness() {
               exercise={exercise}
               exerciseVideoFailed={videoState === "fallback"}
               fallbackHint="Держите лопатки сведёнными и контролируйте амплитуду."
-              inlinePlayingVideoId={videoState === "playing" ? exercise.id : ""}
+              inlinePlayingVideoId={harnessVideoPlaying ? exercise.id : ""}
               inlineVideoControlsVisible={videoState !== "hidden"}
-              onFullscreenVideo={() => {}}
+              onFullscreenVideo={setHarnessFullscreenVideo}
               onInlineVideoPlayFailed={() => {}}
               onRetryVideo={() => {}}
               onVideoCanPlay={() => {}}
-              onVideoEnded={() => {}}
+              onVideoEnded={() => setHarnessVideoPlaying(false)}
               onVideoError={() => {}}
               onVideoLoadedMetadata={() => {}}
               onVideoLoadStart={() => {}}
-              onVideoPause={() => {}}
-              onVideoPlay={() => {}}
+              onVideoPause={() => setHarnessVideoPlaying(false)}
+              onVideoPlay={() => setHarnessVideoPlaying(true)}
               videoLoadingId={videoState === "loading" ? exercise.id : ""}
               videoRetryToken={0}
             />
@@ -1600,6 +1650,7 @@ export default function ClientE2EHarness() {
               showNoteButton={false}
             />
           </WorkoutRunExercisePreview>
+          <WorkoutFullscreenVideoOverlay videoSrc={harnessFullscreenVideo} onClose={() => setHarnessFullscreenVideo("")} onVideoError={() => {}} />
         </WorkoutRunPageShell>
       </main>
     );
@@ -1760,6 +1811,7 @@ export default function ClientE2EHarness() {
         <WorkoutDraftRestoreDialog
           open={workoutDialogParam === "draft"}
           blocked={false}
+          onClose={() => setPage("workouts")}
           onRestart={() => {}}
           onRestore={() => {}}
         />
@@ -2081,7 +2133,7 @@ export default function ClientE2EHarness() {
           latestMeasurement={measurementsState === "empty" ? null : harnessLatestMeasurement}
           measurementFields={measurementsState === "full" ? harnessFullMeasurementFields : harnessMeasurementFields}
           formatMeasurementDate={(measurement) => new Date(measurement.date).toLocaleDateString("ru-RU")}
-          getMeasurementValue={(measurement, field) => `${measurement[field.id]} ${field.unit}`}
+          getMeasurementValue={(measurement, field) => String(measurement[field.id] ?? "—")}
           onClose={() => setCabinetMeasurementsOpen(false)}
           onStart={() => {}}
           onOpenPhotos={measurementsTabbed ? () => {} : undefined}
@@ -2295,8 +2347,8 @@ export default function ClientE2EHarness() {
         <ProfileDashboardContent mode="measurements">
           <ProfileMeasurementWizardPanel
             visible
-            latestMeasurement={harnessLatestMeasurement}
-            measurements={[harnessLatestMeasurement, harnessPreviousMeasurement]}
+            latestMeasurement={progressMeasurements[0] || null}
+            measurements={progressMeasurements}
             measurementFields={harnessWizardMeasurementFields}
             formatMeasurementDate={(measurement) => new Date(measurement.date).toLocaleDateString("ru-RU")}
             onStart={() => setCabinetMeasurementsOpen(true)}

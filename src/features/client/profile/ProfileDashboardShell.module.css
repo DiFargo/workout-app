@@ -1,9 +1,9 @@
 .root {
   box-sizing: border-box;
   width: min(402px, 100vw);
-  height: min(874px, 100dvh);
-  min-height: min(874px, 100dvh);
-  max-height: min(874px, 100dvh);
+  height: min(874px, var(--app-viewport-height, 100dvh));
+  min-height: min(874px, var(--app-viewport-height, 100dvh));
+  max-height: min(874px, var(--app-viewport-height, 100dvh));
   margin: 0 auto;
   position: relative;
   overflow-x: hidden;
@@ -11,10 +11,10 @@
   overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
-  color: var(--apple-text, #1c1c1e);
-  background: var(--ios-canvas-background, var(--apple-canvas, #f2f2f7));
+  color: var(--apple-text, #1c282e);
+  background: var(--ios-canvas-background, var(--apple-canvas, #f5f7f8));
   font-family: var(--font-family-compact-ui);
-  scroll-padding-block-end: calc(92px + env(safe-area-inset-bottom, 0px));
+  scroll-padding-block-end: calc(92px + max(env(safe-area-inset-bottom, 0px), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px)));
   scrollbar-width: none;
 }
 
@@ -28,7 +28,7 @@
   /* This padding is inside the fixed-height shell: it reserves space for the
      dock only after the content genuinely overflows, so short pages do not
      gain an empty scroll range. */
-  padding: 0 0 calc(92px + env(safe-area-inset-bottom, 0px));
+  padding: 0 0 calc(92px + max(env(safe-area-inset-bottom, 0px), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px)));
 }
 
 .measurements,
@@ -37,7 +37,7 @@
   width: min(402px, 100vw);
   min-height: 100dvh;
   overflow: hidden;
-  background: var(--ios-canvas-background, var(--apple-canvas, #f2f2f7));
+  background: var(--ios-canvas-background, var(--apple-canvas, #f5f7f8));
 }
 
 .content {
@@ -86,7 +86,7 @@
   margin: 16px auto 0;
   padding: 0 8px;
   border-radius: 10px;
-  color: var(--apple-secondary, #636366);
+  color: var(--apple-secondary, #617078);
   background: transparent;
   font-family: var(--font-family-compact-ui);
   font-size: 0.6875rem;

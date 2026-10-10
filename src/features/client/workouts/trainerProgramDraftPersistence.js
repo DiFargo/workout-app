@@ -1,6 +1,6 @@
 import { doc, runTransaction } from "firebase/firestore";
 import { programDraftSnapshot } from "../../../utils/trainerProgramDraft.js";
-import { syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule.js";
+import { mergeWorkoutCalendarScope, syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule.js";
 
 export const PROGRAM_CONFLICT_MESSAGE = "Программа изменилась в другой вкладке или у клиента. Правки остаются в редакторе. Закройте его и откройте актуальную программу перед повторным редактированием.";
 const conflict = () => Object.assign(new Error(PROGRAM_CONFLICT_MESSAGE), { code: "program/conflict" });
@@ -57,7 +57,8 @@ export async function saveTrainerProgramDraft({ db, userId, authorId, draft, run
       }
       savedWorkouts.push({ ...workout, ...saved, _editorSnapshot: programDraftSnapshot(saved) });
     }
-    const workoutCalendar = { ...syncWorkoutCalendarWithPlan(user.workoutCalendar || {}, workouts, now, authorId), planRevision: draft.revision + 1 };
+    const calendarScope = syncWorkoutCalendarWithPlan(user.workoutCalendar || {}, workouts, now, authorId);
+    const workoutCalendar = { ...mergeWorkoutCalendarScope(user.workoutCalendar || {}, calendarScope, workouts, before), planRevision: draft.revision + 1 };
     const clientPatch = { workoutCalendar, assignedWorkoutCount: workouts.length, updatedAt: now, ...(renamed ? { assignedProgramName: assignment.assignedProgramName } : {}) };
     transaction.set(userRef, clientPatch, { merge: true });
     return { plan: { workouts: savedWorkouts, assignedProgramName: assignment.assignedProgramName }, workoutCalendar, clientPatch };

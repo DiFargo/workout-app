@@ -5,6 +5,7 @@ import AdminUsersWorkspaceRoute from "./AdminUsersWorkspaceRoute";
 import TrainerClientsWorkspaceRoute from "./TrainerClientsWorkspaceRoute";
 import TrainerUsersLegacyRoute from "./TrainerUsersLegacyRoute";
 import { buildTrainerUsersPageModel } from "./trainerUsersPageModel";
+import { buildTrainerInviteMessage } from "./trainerInviteMessage.js";
 
 export default function TrainerUsersRoute(ctx) {
   const {
@@ -90,13 +91,10 @@ export default function TrainerUsersRoute(ctx) {
   }
 
   const credentialsText = adminCreatedCredentials
-    ? [
-        "Доступ по приглашению",
-        `Логин: ${adminCreatedCredentials.login || adminCreatedCredentials.email}`,
-        adminCreatedCredentials.shareUrl
-          ? `Активировать и задать пароль: ${adminCreatedCredentials.shareUrl}`
-          : adminCreatedCredentials.inviteUrl ? `Ссылка: ${adminCreatedCredentials.inviteUrl}` : ""
-      ].filter(Boolean).join("\n")
+    ? buildTrainerInviteMessage({
+        login: adminCreatedCredentials.login || adminCreatedCredentials.email,
+        inviteUrl: adminCreatedCredentials.shareUrl || adminCreatedCredentials.inviteUrl
+      })
     : "";
 
   const model = buildTrainerUsersPageModel({

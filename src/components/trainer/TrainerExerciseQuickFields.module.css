@@ -1,9 +1,9 @@
 .fields { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; min-width:0; width:100%; box-sizing:border-box; }
 .fields.fields label { display:flex; flex-direction:column; justify-content:space-between; align-items:stretch; gap:6px; min-width:0; margin:0; }
-.fields label > span { color:#636366; font-size:12px; line-height:1.35; white-space:normal; overflow-wrap:anywhere; }
-.fields.fields input, .fields.fields button { width:100%!important; min-width:0!important; max-width:100%; min-height:44px!important; height:44px; padding:8px 4px!important; margin:0!important; border:1px solid #3c3c430d; border-radius:10px; background:#f6f6fa; color:#1c1c1e; font:inherit; font-size:16px; text-align:center; box-sizing:border-box!important; }
-.fields button { color:#3c6faa; cursor:pointer; }
-.fields input:disabled { color:#636366; opacity:.75; }
-.fields input:focus-visible, .fields button:focus-visible { outline:2px solid #3f73b8; outline-offset:2px; }
+.fields label > span { color:#617078; font-size:12px; line-height:1.35; white-space:normal; overflow-wrap:anywhere; }
+.fields.fields input, .fields.fields button { width:100%!important; min-width:0!important; max-width:100%; min-height:44px!important; height:44px; padding:8px 4px!important; margin:0!important; border:1px solid #3c3c430d; border-radius:10px; background:#f6f6fa; color:#1c282e; font:inherit; font-size:16px; text-align:center; box-sizing:border-box!important; }
+.fields button { color:#376b91; cursor:pointer; }
+.fields input:disabled { color:#617078; opacity:.75; }
+.fields input:focus-visible, .fields button:focus-visible { outline:2px solid #396ba6; outline-offset:2px; }
 .fields .undo { grid-column:1/-1; width:auto; justify-self:start; font-size:13px; background:transparent; border:0; text-align:left; }
 @media(max-width:359px) { .fields { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 8px; } .fields label > span { font-size:12px; } }

@@ -1,7 +1,26 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
-test.setTimeout(60_000);
+test.setTimeout(90_000);
+
+const actionGradient = "linear-gradient(115deg, rgb(70, 123, 114) 0%, rgb(62, 116, 139) 54%, rgb(53, 101, 163) 100%)";
+const modalCanvas = "rgb(245, 247, 248)";
+
+async function openClientHarness(page, url) {
+  // Wait for lazy harness compilation separately from the 5s behavioral checks.
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  await expect(page.locator('[data-testid^="client-harness-"]').first()).toBeVisible({ timeout: 40_000 });
+}
+
+async function seedWorkoutDraft(page) {
+  await page.addInitScript(() => {
+    localStorage.setItem("workout_active_draft_v1:client_harness:client_harness_day_1", JSON.stringify({
+      workoutId: "client_harness_day_1",
+      assignmentVersion: "2026-06-18T10:00:00.000Z",
+      plan: { id: "client_harness_day_1", exercises: [] }
+    }));
+  });
+}
 
 async function expectNoHorizontalOverflow(page) {
   const metrics = await page.evaluate(() => ({
@@ -65,9 +84,10 @@ function expectCloseToBaseline(value, baseline, tolerance = 2) {
   ).toBeLessThanOrEqual(tolerance);
 }
 
-test("client primary mobile chrome keeps shared alignment", async ({ page }) => {
+test("client primary chrome keeps shared alignment and draft progress inside its card", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  await page.goto("/?clientHarness=1");
+  await seedWorkoutDraft(page);
+  await openClientHarness(page, "/?clientHarness=1");
 
   const main = await collectPrimaryLayoutMetric(
     page,
@@ -75,12 +95,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     "client-harness-main",
     '[data-testid="profile-main-title"]'
   );
-  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "28px");
-
-  if (main.viewportWidth > 640) {
-    assertNoRuntimeErrors();
-    return;
-  }
+  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "32px");
 
   const workouts = await collectPrimaryLayoutMetric(
     page,
@@ -88,28 +103,28 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     "client-harness-workouts",
     '[data-testid="workout-list-title"]'
   );
-  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "28px");
+  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "32px");
   const nutrition = await collectPrimaryLayoutMetric(
     page,
     "client-nav-nutrition",
     "client-harness-nutrition",
     '[data-nutrition-header-part="title"]'
   );
-  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "28px");
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "32px");
   const progress = await collectPrimaryLayoutMetric(
     page,
     "client-nav-progress",
     "client-harness-progress",
     '[data-testid="profile-progress-title"]'
   );
-  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "28px");
+  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "32px");
   const cabinet = await collectPrimaryLayoutMetric(
     page,
     "client-nav-cabinet",
     "client-harness-cabinet",
     '[data-testid="profile-cabinet-title"]'
   );
-  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "28px");
+  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "32px");
 
   for (const metric of [workouts, nutrition, progress, cabinet]) {
     // Stable primary screens keep page-specific top insets within the shared 36px rhythm.
@@ -130,6 +145,9 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
 
   await clickClientNav(page, "client-nav-workouts");
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
+  await expect(page.getByTestId("workout-today-card")).toHaveAttribute("data-state", "draft");
+  await expect(page.getByTestId("workout-start-button")).toHaveText("Продолжить тренировку");
+  await expect(page.getByTestId("workout-list-progress").locator("span")).toHaveCount(2);
 
   const workoutCardMetric = await page.evaluate(() => {
     const rectOf = (node) => {
@@ -148,7 +166,7 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
     return {
       viewportWidth: window.innerWidth,
       header: rectOf(document.querySelector('[data-testid="workout-list-header"]')),
-      card: rectOf(document.querySelector('[data-testid="workout-list-card"]')),
+      card: rectOf(document.querySelector('[data-testid="workout-today-card"]')),
       startButton: rectOf(document.querySelector('[data-testid="workout-start-button"]')),
       progress: rectOf(document.querySelector('[data-testid="workout-list-progress"]')),
       bottomNav: rectOf(document.querySelector('[data-testid="client-bottom-nav"]')),
@@ -170,37 +188,18 @@ test("client primary mobile chrome keeps shared alignment", async ({ page }) => 
 
 test("client harness smoke: main, workouts, nutrition and cabinet stay usable", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  await page.goto("/?clientHarness=1");
+  await openClientHarness(page, "/?clientHarness=1");
 
   await expect(page.getByTestId("client-harness-main")).toBeVisible();
-  const version = page.getByTestId("profile-dashboard-version");
-  await expect(version).toBeVisible();
-  await expect(version).toHaveText(/^v\.?3\.0\.\d+$/);
-  await expect(version).toHaveCSS("position", "fixed");
+  await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(0);
   await expect(page.getByText("Твой день", { exact: true })).toHaveCount(0);
   await expect(page.getByTestId("profile-summary-workout-log")).toContainText("12");
-  await expect(page.getByTestId("profile-summary-workout-log")).toContainText("тренировок всего");
+  await expect(page.getByTestId("profile-summary-workout-log")).toContainText("завершено");
   await expect(page.getByTestId("profile-summary-nutrition")).toContainText("1 840");
-  await expect(page.getByTestId("profile-summary-nutrition")).toContainText("осталось 660 ккал");
+  await expect(page.getByTestId("profile-summary-nutrition")).toContainText("из 2 500 ккал");
   await expect(page.getByTestId("profile-summary-trainer-status")).toHaveText("1 сообщение от тренера");
-  await expect(page.getByTestId("profile-summary-trainer-badge")).toHaveText("1");
-  await expect(page.getByTestId("profile-summary-trainer-badge")).toHaveCSS("background-color", "rgb(217, 54, 79)");
-  const versionPlacement = await page.evaluate(() => {
-    const versionNode = document.querySelector('[data-testid="profile-dashboard-version"]');
-    const dockNode = document.querySelector('[data-testid="client-bottom-nav"]');
-    const versionRect = versionNode?.getBoundingClientRect();
-    const dockRect = dockNode?.getBoundingClientRect();
-
-    return versionRect && dockRect
-      ? {
-          versionBottom: Math.round(versionRect.bottom),
-          dockTop: Math.round(dockRect.top)
-        }
-      : null;
-  });
-  expect(versionPlacement).not.toBeNull();
-  expect(versionPlacement.versionBottom).toBeLessThanOrEqual(versionPlacement.dockTop);
-  expect(versionPlacement.dockTop - versionPlacement.versionBottom).toBeLessThanOrEqual(12);
+  await expect(page.getByTestId("profile-summary-trainer-badge")).toHaveAttribute("aria-label", "1 новых уведомлений");
+  await expect(page.getByTestId("profile-summary-trainer-badge")).toHaveCSS("background-image", actionGradient);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
@@ -220,7 +219,8 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await expect(page.getByTestId("workout-history-dialog")).toBeHidden();
 
   await expect(page.getByTestId("workout-list-card")).toBeVisible();
-  await expect(page.getByTestId("workout-list-progress")).toBeVisible();
+  await expect(page.getByTestId("workout-list-progress")).toHaveCount(0);
+  await expect(page.getByRole("progressbar", { name: "Прогресс программы" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
@@ -229,7 +229,8 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await expect(page.getByTestId("nutrition-orbit-add")).toBeVisible();
   await expect(page.locator("[data-nutrition-header-day]")).toHaveCount(7);
   await expect(page.locator('[data-nutrition-header-day][aria-pressed="true"]')).toHaveCount(1);
-  await expect(page.getByTestId("nutrition-progress-status")).toHaveText("Хороший темп");
+  await expect(page.getByTestId("nutrition-progress-status")).toHaveText("Осталось на сегодня");
+  await expect(page.getByTestId("nutrition-progress-status")).toHaveAttribute("aria-label", "Хороший темп");
   await expect(page.getByTestId("nutrition-streak")).toHaveText("4 дня подряд");
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
@@ -260,6 +261,14 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await clickClientNav(page, "client-nav-cabinet");
   await expect(page.getByTestId("client-harness-cabinet")).toBeVisible();
   await expect(page.getByTestId("profile-cabinet-title")).toBeVisible();
+  const version = page.getByTestId("profile-dashboard-version");
+  await version.scrollIntoViewIfNeeded();
+  await expect(version).toBeVisible();
+  await expect(version).toHaveText(/^v\.?3\.0\.\d+$/);
+  await expect(version).toHaveCSS("position", "static");
+  const versionRect = await version.boundingBox();
+  const dockRect = await page.getByTestId("client-bottom-nav").boundingBox();
+  expect(versionRect.y + versionRect.height).toBeLessThanOrEqual(dockRect.y);
   await page.getByTestId("profile-cabinet-action-workout-mode").click();
   await expect(page.getByTestId("workout-mode-dialog")).toBeVisible();
   await page.getByTestId("workout-mode-dialog-dismiss").click();
@@ -271,11 +280,11 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
 test("workout header stays focused on the destination", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1");
+  await openClientHarness(page, "/?clientHarness=1");
   await clickClientNav(page, "client-nav-workouts");
   await expect(page.getByTestId("workout-list-header").getByText("Индивидуальная программа", { exact: true })).toHaveCount(0);
 
-  await page.goto("/?clientHarness=1&clientWorkoutProgramMode=basic");
+  await openClientHarness(page, "/?clientHarness=1&clientWorkoutProgramMode=basic");
   await clickClientNav(page, "client-nav-workouts");
   await expect(page.getByTestId("workout-list-header").getByText("Базовая программа", { exact: true })).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
@@ -285,7 +294,7 @@ test("workout header stays focused on the destination", async ({ page }) => {
 test("workout and nutrition week calendars share geometry and typography", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/?clientHarness=1&clientWorkoutOverviewState=today");
+  await openClientHarness(page, "/?clientHarness=1&clientWorkoutOverviewState=today");
 
   await clickClientNav(page, "client-nav-workouts");
   const workoutMetrics = await page.getByTestId("workout-week-calendar").evaluate((calendar) => {
@@ -301,7 +310,9 @@ test("workout and nutrition week calendars share geometry and typography", async
       numberSize: getComputedStyle(number).fontSize
     };
   });
-  await expect(page.getByTestId("workout-week-calendar").locator('[data-active="true"]')).toHaveCSS("background-color", "rgb(238, 233, 248)");
+  const activeWorkoutNumber = page.getByTestId("workout-week-calendar").locator('[data-active="true"] [data-week-calendar-number]');
+  await expect(activeWorkoutNumber).toHaveCSS("background-image", actionGradient);
+  await expect(activeWorkoutNumber).toHaveCSS("color", "rgb(255, 255, 255)");
   await expect(page.getByTestId("workout-week-calendar").locator('[data-active="true"] [data-week-calendar-dot]')).toHaveCount(0);
   expect(await page.getByTestId("workout-week-calendar").locator("[data-week-calendar-dot]").count()).toBeGreaterThan(0);
 
@@ -322,6 +333,7 @@ test("workout and nutrition week calendars share geometry and typography", async
 
   expect(nutritionMetrics).toEqual(workoutMetrics);
   await expect(page.locator('[data-nutrition-header-day] [data-week-calendar-number]').first()).toHaveCSS("border-radius", "50%");
+  await expect(page.locator('[data-selected="true"] [data-week-calendar-number]')).toHaveCSS("background-image", actionGradient);
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
@@ -331,14 +343,15 @@ test("trainer card distinguishes messages, tasks and combined notifications", as
     ["message", "1 сообщение от тренера", "1"],
     ["task", "1 задача от тренера", "1"],
     ["both", "Сообщение и задача от тренера", "2"],
-    ["empty", "План для Илья под контролем", null],
+    ["empty", "Новых сообщений нет", null],
   ];
 
   for (const [state, label, badge] of cases) {
-    await page.goto(`/?clientHarness=1&clientCoachNotificationState=${state}`);
+    await openClientHarness(page, `/?clientHarness=1&clientCoachNotificationState=${state}`);
     await expect(page.getByTestId("profile-summary-trainer-status")).toHaveText(label);
     if (badge) {
-      await expect(page.getByTestId("profile-summary-trainer-badge")).toHaveText(badge);
+      await expect(page.getByTestId("profile-summary-trainer-badge")).toHaveAttribute("aria-label", `${badge} новых уведомлений`);
+      await expect(page.getByTestId("profile-summary-trainer-badge")).toBeVisible();
     } else {
       await expect(page.getByTestId("profile-summary-trainer-badge")).toHaveCount(0);
     }
@@ -347,59 +360,77 @@ test("trainer card distinguishes messages, tasks and combined notifications", as
 
 test("dashboard hero reflects today's workout state", async ({ page }) => {
   const cases = [
-    ["today", "Тренировка сегодня", "Ноги и ягодицы", "Тренировка по плану"],
-    ["recovery", "День отдыха", "Отдых и восстановление", "Восстановление и лёгкая активность"],
-    ["missed", "Нужен перенос", "Пропущенная тренировка", "Перенесите тренировку"],
-    ["unscheduled", "Свободный день", "Сегодня без тренировки", "Отдых без нагрузки"],
-    ["complete", "Выполнено", "Тренировка завершена", "Тренировка выполнена"],
+    ["today", "Сегодня по плану", "Ноги и ягодицы", "Тренировка по вашему плану", "Открыть тренировку", "dumbbell"],
+    ["recovery", "День отдыха", "Отдых и восстановление", "Следующая: Тренировка 3 · 2 сентября", "Открыть план", "heart"],
+    ["missed", "Нужен перенос", "Пропущенная тренировка", "Тренировка 2 была запланирована на 31 августа", "Тренировки", "dumbbell"],
+    ["unscheduled", "Свободный день", "Сегодня без тренировки", "Дата следующей тренировки пока не назначена", "Открыть план", "heart"],
+    // The eyebrow identifies the scheduled day; completion is shown by the title.
+    ["complete", "Сегодня по плану", "Тренировка завершена", "План на сегодня выполнен — время восстановиться", "Тренировки", "heart"],
   ];
 
-  for (const [state, status, title, plan] of cases) {
-    await page.goto(`/?clientHarness=1&clientDashboardWorkoutState=${state}`);
-    await expect(page.getByTestId("profile-summary-hero-status")).toHaveText(status);
+  for (const [state, status, title, description, action, symbol] of cases) {
+    await openClientHarness(page, `/?clientHarness=1&clientDashboardWorkoutState=${state}`);
+    const hero = page.locator("section").filter({ has: page.getByTestId("profile-summary-hero-title") });
+    await expect(hero.getByText(status, { exact: true })).toBeVisible();
     await expect(page.getByTestId("profile-summary-hero-title")).toHaveText(title);
-    await expect(page.getByTestId("profile-summary-hero-plan")).toHaveText(plan);
+    await expect(hero.locator(":scope > p")).toHaveText(description);
+    await expect(page.getByTestId("profile-summary-primary")).toHaveText(action);
+    await expect(page.getByTestId("profile-summary-day-illustration")).toHaveAttribute("data-day-symbol", symbol);
     await expectNoHorizontalOverflow(page);
   }
 });
 
-test("nutrition streak stays aligned with the progress status", async ({ page }) => {
-  await page.goto("/?clientHarness=1&clientNutritionStreak=114");
+test("nutrition streak stays below the energy heading without overflow", async ({ page }) => {
+  await openClientHarness(page, "/?clientHarness=1&clientNutritionStreak=114");
   await clickClientNav(page, "client-nav-nutrition");
   await expect(page.getByTestId("nutrition-streak")).toHaveText("114 дней подряд");
-  await expect(page.getByRole("heading", { name: "Поиск", exact: true })).toBeVisible();
-  await expect(page.getByTestId("nutrition-orbit-add")).toHaveText("Добавить еду");
+  await expect(page.getByRole("heading", { name: "Добавить еду", exact: true })).toBeVisible();
+  await expect(page.getByTestId("nutrition-orbit-add")).toHaveText("Продукт");
+  await expect(page.getByTestId("nutrition-orbit-add")).toHaveAccessibleName("Добавить еду: продукт");
   await expect(page.getByTestId("nutrition-orbit-add").locator("svg")).toHaveClass(/lucide-plus/);
 
   const layout = await page.getByTestId("nutrition-energy-heading-row").evaluate((row) => {
     const title = row.querySelector('[data-testid="nutrition-progress-status"]');
-    const streak = row.querySelector('[data-testid="nutrition-streak"]');
+    const streak = row.parentElement.querySelector('[data-testid="nutrition-streak"]');
+    const copyRect = row.parentElement.getBoundingClientRect();
     const rowRect = row.getBoundingClientRect();
     const titleRect = title?.getBoundingClientRect();
     const streakRect = streak?.getBoundingClientRect();
     return {
-      rowWidth: rowRect.width,
-      contentWidth: titleRect && streakRect ? streakRect.right - titleRect.left : 0,
-      gap: titleRect && streakRect ? streakRect.left - titleRect.right : 0,
-      centerDelta: titleRect && streakRect
-        ? Math.abs((titleRect.top + titleRect.bottom) / 2 - (streakRect.top + streakRect.bottom) / 2)
-        : 999,
+      copyLeft: copyRect.left,
+      copyRight: copyRect.right,
+      titleRight: titleRect?.right,
+      streakLeft: streakRect?.left,
+      streakRight: streakRect?.right,
+      streakWidth: streak?.scrollWidth,
+      availableWidth: copyRect.width,
+      gap: streakRect ? streakRect.top - rowRect.bottom : -1,
     };
   });
 
-  expect(layout.contentWidth).toBeLessThanOrEqual(layout.rowWidth + 0.5);
-  expect(layout.gap).toBeGreaterThanOrEqual(4);
-  expect(layout.centerDelta).toBeLessThanOrEqual(1);
+  expect(layout.titleRight).toBeLessThanOrEqual(layout.copyRight + 0.5);
+  expect(layout.streakLeft).toBeGreaterThanOrEqual(layout.copyLeft);
+  expect(layout.streakRight).toBeLessThanOrEqual(layout.copyRight + 0.5);
+  expect(layout.streakWidth).toBeLessThanOrEqual(layout.availableWidth + 0.5);
+  expect(layout.gap).toBeGreaterThanOrEqual(0);
   await expectNoHorizontalOverflow(page);
 });
 
 test("workout overview uses schedule data and opens plan and history", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  await page.goto("/?clientHarness=1");
+  await openClientHarness(page, "/?clientHarness=1");
   await clickClientNav(page, "client-nav-workouts");
 
-  await expect(page.getByTestId("workout-program-button")).toContainText("Тестовая программа");
-  const progressRows = await page.getByTestId("workout-list-progress").locator("span").evaluateAll((items) => (
+  await expect(page.getByTestId("workout-program-button")).toHaveText("Открыть программу");
+  const program = page.locator("section").filter({ has: page.getByTestId("workout-program-button") });
+  await expect(program).toContainText("Тестовая программа");
+  const progress = page.getByRole("progressbar", { name: "Прогресс программы" });
+  await expect(progress).toHaveAttribute("aria-valuenow", "0");
+  await expect(progress).toHaveAttribute("aria-valuemax", "2");
+  const progressLabels = program.locator('[class*="programProgress"] span');
+  await expect(progressLabels).toHaveCount(2);
+  await expect(progressLabels).toHaveText(["0 из 2 тренировок", "2 осталось"]);
+  const progressRows = await progressLabels.evaluateAll((items) => (
     [...new Set(items.map((item) => Math.round(item.getBoundingClientRect().top)))].length
   ));
   expect(progressRows).toBe(1);
@@ -412,15 +443,17 @@ test("workout overview uses schedule data and opens plan and history", async ({ 
     items.map((item) => ({
       width: item.getBoundingClientRect().width,
       height: item.getBoundingClientRect().height,
-      backgroundColor: getComputedStyle(item).backgroundColor,
+      backgroundImage: getComputedStyle(item).backgroundImage,
     }))
   ));
   expect(scheduledDayDots).toHaveLength(2);
-  expect(scheduledDayDots.every((dot) => dot.width === 4 && dot.height === 4 && dot.backgroundColor === "rgb(143, 122, 200)")).toBe(true);
+  expect(scheduledDayDots.every((dot) => dot.width === 3 && dot.height === 3 && dot.backgroundImage === actionGradient)).toBe(true);
 
   const todayCard = page.getByTestId("workout-today-card");
   await expect(todayCard).toHaveAttribute("data-state", "missed");
-  await expect(todayCard).toContainText("Тренировка пропущена");
+  await expect(todayCard).toContainText("День 1 — Верх тела");
+  await expect(todayCard).toContainText("Перенос");
+  await expect(todayCard).toContainText("Можно выполнить тренировку сейчас или выбрать новую дату");
   await expect(todayCard.getByRole("button", { name: "Начать сейчас" })).toBeVisible();
   await todayCard.getByRole("button", { name: "Перенести" }).click();
   const rescheduleDialog = page.getByRole("dialog", { name: "Перенести тренировку" });
@@ -448,19 +481,21 @@ test("workout overview uses schedule data and opens plan and history", async ({ 
   await page.getByTestId("workout-plan-button").click();
   await expect(page.getByTestId("workout-plan-dialog")).toBeVisible();
   await expect(page.getByTestId("workout-plan-dialog")).toHaveAttribute("data-modal-surface", "true");
-  await expect(page.getByTestId("workout-plan-dialog")).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(page.getByTestId("workout-plan-dialog")).toHaveCSS("background-color", modalCanvas);
   await expect(page.getByTestId("workout-plan-dialog")).toHaveCSS("backdrop-filter", "none");
   await expect(page.getByTestId("workout-plan-dialog")).toContainText("Тестовая программа");
   await expect(page.getByTestId("workout-plan-dialog-close")).toBeVisible();
   await expect(page.getByRole("button", { name: "Все" })).toHaveCount(0);
   const availableWorkout = page.locator('[data-testid="workout-plan-dialog-item"]:not([disabled])').last();
+  await expect(availableWorkout).toContainText("День 2 — Низ тела");
   await availableWorkout.click();
   await expect(page.getByTestId("workout-plan-dialog")).toBeHidden();
+  await expect(page.getByTestId("workout-today-card")).toContainText("День 2 — Низ тела");
 
   await page.getByTestId("workout-program-button").click();
   await expect(page.getByTestId("workout-program-dialog")).toBeVisible();
   await expect(page.getByTestId("workout-program-dialog")).toHaveAttribute("data-modal-surface", "true");
-  await expect(page.getByTestId("workout-program-dialog")).toHaveCSS("background-color", "rgb(247, 246, 248)");
+  await expect(page.getByTestId("workout-program-dialog")).toHaveCSS("background-color", modalCanvas);
   await expect(page.getByTestId("workout-program-dialog")).toContainText("Тестовая программа");
   await expect(page.getByTestId("workout-program-exercise-list")).toBeVisible();
   await page.getByTestId("workout-program-dialog-close").click();
@@ -476,20 +511,23 @@ test("workout overview uses schedule data and opens plan and history", async ({ 
 test("workout today card switches between planned, recovery, and unscheduled states", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
-  await page.goto("/?clientHarness=1&clientWorkoutOverviewState=today");
+  await openClientHarness(page, "/?clientHarness=1&clientWorkoutOverviewState=today");
   await clickClientNav(page, "client-nav-workouts");
   await expect(page.getByTestId("workout-today-card")).toHaveAttribute("data-state", "today");
-  await expect(page.getByTestId("workout-today-card")).toContainText("Тренировка сегодня");
+  await expect(page.getByTestId("workout-today-card")).toContainText("День 1 — Верх тела");
+  await expect(page.getByTestId("workout-today-card").getByRole("button", { name: "Начать тренировку" })).toBeVisible();
   const plannedToday = page.locator('[aria-label="Неделя ближайшей тренировки"] [aria-current="date"]');
   await expect(plannedToday).toHaveAttribute("data-planned", "true");
   await expect(plannedToday.locator("i")).toHaveCount(0);
-  await expect(plannedToday).toHaveCSS("background-color", "rgb(238, 233, 248)");
+  await expect(plannedToday.locator("[data-week-calendar-number]")).toHaveCSS("background-image", actionGradient);
 
-  await page.goto("/?clientHarness=1&clientWorkoutOverviewState=recovery");
+  await openClientHarness(page, "/?clientHarness=1&clientWorkoutOverviewState=recovery");
   await clickClientNav(page, "client-nav-workouts");
   const recoveryCard = page.getByTestId("workout-today-card");
   await expect(recoveryCard).toHaveAttribute("data-state", "recovery");
-  await expect(recoveryCard).toContainText("Ближайшая тренировка");
+  await expect(page.getByRole("heading", { name: "Следующая тренировка", exact: true })).toBeVisible();
+  await expect(recoveryCard).toContainText("День 1 — Верх тела");
+  await expect(recoveryCard).toContainText("Отдохните, соблюдайте питание и добавьте лёгкую активность");
   const todayDay = page.locator('[aria-label="Неделя ближайшей тренировки"] [aria-current="date"]');
   await expect(todayDay).toHaveCount(1);
   const plannedFutureDay = page.locator('[aria-label="Неделя ближайшей тренировки"] [data-planned="true"]').first();
@@ -505,7 +543,7 @@ test("workout today card switches between planned, recovery, and unscheduled sta
   await expect(page.getByRole("dialog", { name: "Начать тренировку раньше?" })).toContainText("Плановая дата сохранится");
   await page.getByRole("button", { name: "Закрыть" }).click();
 
-  await page.goto("/?clientHarness=1&clientWorkoutOverviewState=unscheduled");
+  await openClientHarness(page, "/?clientHarness=1&clientWorkoutOverviewState=unscheduled");
   await clickClientNav(page, "client-nav-workouts");
   const unscheduledCard = page.getByTestId("workout-today-card");
   await expect(unscheduledCard).toHaveAttribute("data-state", "unscheduled");
@@ -514,8 +552,7 @@ test("workout today card switches between planned, recovery, and unscheduled sta
   assertNoRuntimeErrors();
 });
 
-test("primary client tabs keep a shared adaptive width and an on-screen dock", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "desktop-chromium", "One browser covers the responsive viewport matrix.");
+test("primary client tabs keep a shared adaptive width and an on-screen dock", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const viewports = [
     { width: 768, height: 1024, shellWidth: 720 },
@@ -524,7 +561,7 @@ test("primary client tabs keep a shared adaptive width and an on-screen dock", a
 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
-    await page.goto("/?clientHarness=1");
+    await openClientHarness(page, "/?clientHarness=1");
 
     const shellRects = [];
     const tabs = [
@@ -587,19 +624,28 @@ test("primary client tabs keep a shared adaptive width and an on-screen dock", a
 
 test("progress uses real measurement deltas and opens body control modal", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
-  await page.goto("/?clientHarness=1");
+  await openClientHarness(page, "/?clientHarness=1");
   await clickClientNav(page, "client-nav-progress");
 
   await expect(page.getByLabel("Настроить период")).toHaveCount(0);
   await expect(page.getByText("12 замеров")).toHaveCount(0);
   await expect(page.getByTestId("profile-progress-weight-delta")).toContainText("−1,3 кг");
-  await expect(page.getByTestId("profile-progress-measurement-card")).toHaveCount(4);
-  await expect(page.getByTestId("profile-progress-measurement-card").first()).toContainText("−0,5 см");
-  await expect(page.getByTestId("profile-measurement-start")).toContainText("Замеры тела и фото");
+  await expect(page.getByTestId("profile-progress-weight-card")).toContainText("88,8");
+  await expect(page.getByRole("img", { name: "Динамика веса: от 90,1 до 88,8 килограмма" })).toBeVisible();
+  await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["90,1", "88,8"]);
+  await expect(page.getByTestId("profile-progress-achievement")).toContainText("12 тренировок завершено");
+  await expect(page.getByTestId("profile-progress-periods").getByRole("tab")).toHaveCount(3);
+  await page.getByTestId("profile-progress-periods").getByRole("tab", { name: "Год", exact: true }).click();
+  await expect(page.getByTestId("profile-progress-periods").getByRole("tab", { name: "Год", exact: true })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByTestId("profile-measurement-start")).toContainText("Замеры тела");
   await page.getByTestId("profile-measurement-start").click();
   await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();
   await expect(page.getByTestId("profile-measurements-dialog")).toContainText("Замеры тела и фото");
   await expect(page.getByTestId("profile-measurements-section-tabs").getByRole("tab")).toHaveCount(2);
+  const measurements = page.getByTestId("profile-measurements-cell");
+  await expect(measurements).toHaveCount(12);
+  await expect(measurements.filter({ hasText: "Шея" })).toContainText("39");
+  await expect(measurements.filter({ hasText: "Вес" })).toContainText("88.8");
   await page.getByTestId("profile-measurements-close").click();
   await expect(page.getByTestId("profile-measurements-dialog")).toBeHidden();
   await expectNoHorizontalOverflow(page);

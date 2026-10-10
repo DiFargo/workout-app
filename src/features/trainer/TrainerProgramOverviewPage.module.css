@@ -96,7 +96,7 @@
   padding: 0 18px;
   border: 1px solid var(--trainer-v2-accent, #806bb6);
   border-radius: 15px;
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font: inherit;
   font-size: 14px;
@@ -107,7 +107,7 @@
 }
 
 .addButton:hover {
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
 }
 
 .grid {
@@ -172,14 +172,14 @@
 .selectedActions .prepareAction {
   grid-area: prepare;
   border-color: var(--trainer-v2-accent, #8f7ac8);
-  background: var(--trainer-v2-accent, #8f7ac8);
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.22);
 }
 
 .selectedActions .prepareAction:hover {
   border-color: var(--trainer-v2-accent, #806bb6);
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
 }
 
 .selectedActions .deleteAction {
@@ -314,7 +314,7 @@
   padding: 0;
   border: 2px solid #fff;
   border-radius: 50%;
-  background: var(--trainer-v2-accent, #806bb6);
+  background: var(--ownset-action-gradient);
   color: #fff;
   font-size: 0;
   line-height: 0;
@@ -887,20 +887,20 @@
 }
 
 /* Temporary trainer comparison style, opt-in by URL. */
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .root {color:#1c1c1e;padding-top:12px}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .root {color:#1c282e;padding-top:12px}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .section {border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);border-radius:16px}
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField {background:#efeff4;border-color:transparent;border-radius:12px;color:#636366}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField {background:#edf1f3;border-color:transparent;border-radius:12px;color:#617078}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .addButton,
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions .prepareAction {background:#3f73b8;border-color:#3f73b8;border-radius:12px;color:white;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions .prepareAction {background:var(--ownset-action-gradient);border-color:#396ba6;border-radius:12px;color:white;box-shadow:none}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card {min-height:240px;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12);background:white;box-shadow:none;transform:none}
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card.selected {border-color:#3f73b8;background:#fff;box-shadow:0 0 0 1px #3f73b8}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card.selected {border-color:#396ba6;background:#fff;box-shadow:0 0 0 1px #396ba6}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle > i,
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats span {background:#efeff4;border-color:transparent;color:#636366}
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats svg {color:#636366}
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedMark {background:#3f73b8;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats span {background:#edf1f3;border-color:transparent;color:#617078}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardStats svg {color:#617078}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedMark {background:var(--ownset-action-gradient);box-shadow:none}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions {background:#fff;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12)}
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions :is(.editAction,.copyAction) {background:#efeff4;border-color:transparent;color:#3c6faa;box-shadow:none}
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .formatBadge {background:#efeff4;border-color:transparent;color:#636366}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .selectedActions :is(.editAction,.copyAction) {background:#edf1f3;border-color:transparent;color:#376b91;box-shadow:none}
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .formatBadge {background:#edf1f3;border-color:transparent;color:#617078}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .statusBadge {color:#237a42;background:#edf8f0;border-color:transparent}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer {background:#fff;border-color:rgb(var(--trainer-v2-accent-rgb, 60 60 67) / .12)}
 
@@ -956,7 +956,7 @@
   border: 2px solid #fff;
   border-radius: 50%;
   background: #e7effa;
-  color: #3c6faa;
+  color: #376b91;
   font-size: 10px;
   font-weight: 600;
 }
@@ -989,7 +989,7 @@
   min-height: 44px;
   width: fit-content;
   margin-bottom: 8px;
-  color: var(--text-secondary, #636366);
+  color: var(--text-secondary, #617078);
   font-size: 14px;
 }
-.testFilter input { width: 18px; height: 18px; accent-color: #3f73b8; }
+.testFilter input { width: 18px; height: 18px; accent-color: #396ba6; }

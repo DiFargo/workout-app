@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import vm from "node:vm";
 import { createProgramDraft, isProgramDraftDirty, programDraftSnapshot, createKeyedSaveQueue } from "../src/utils/trainerProgramDraft.js";
 import { getUniformSetValue, resizeTrainerSets } from "../src/utils/trainerQuickSets.js";
+import { mergeWorkoutCalendarScope, syncWorkoutCalendarWithPlan } from "../src/utils/workoutSchedule.js";
 
 test("an untouched, reverted or cancelled draft does not change its source", () => {
   const source = [{ id: "w1", exercises: [{ id: "e1", sets: [{ reps: 8, weight: 20 }] }] }];
@@ -45,7 +46,7 @@ async function persistenceFixture() {
     doc: (_db, ...path) => path.join("/"), runTransaction: async (_db, callback) => callback({
       get: async (ref) => ({ exists: () => documents.has(ref), data: () => structuredClone(documents.get(ref)) }),
       set: (...args) => writes.push(["set", ...args]), delete: (...args) => writes.push(["delete", ...args])
-    }), syncWorkoutCalendarWithPlan: (calendar) => ({ ...calendar }) };
+    }), mergeWorkoutCalendarScope, syncWorkoutCalendarWithPlan };
   const source = await readFile(new URL("../src/features/client/workouts/trainerProgramDraftPersistence.js", import.meta.url), "utf8");
   vm.runInNewContext(source.replace(/^import .*;\r?\n/gm, "").replace(/export /g, ""), context);
   const draft = createProgramDraft([{ ...structuredClone(raw), _editorSnapshot: programDraftSnapshot(raw) }], profile);

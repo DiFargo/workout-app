@@ -1,10 +1,11 @@
 import { doc, writeBatch } from "firebase/firestore";
 import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
+import { captureAuthSession as captureActiveAuthSession } from "../../../utils/authSession.js";
 
 import {
   buildAiNutritionMonthlyPlan
 } from "../../../utils/aiNutritionPlanBuilder";
-import { getAiNutritionProfileValidation } from "../../../utils/aiNutritionCalculations";
+import { getAiNutritionProfileValidation, parseAiNutritionProfileNumber } from "../../../utils/aiNutritionCalculations";
 import {
   getAiNutritionTrainingDays
 } from "../../../utils/aiNutritionSchedule";
@@ -15,8 +16,8 @@ import {
 
 export function createAiNutritionPlanHandlers({
   auth,
+  captureAuthSession = () => captureActiveAuthSession(auth),
   db,
-  user,
   nutrition,
   history,
   aiNutritionProfile,
@@ -33,14 +34,24 @@ export function createAiNutritionPlanHandlers({
   setFirstSetupCompletedInCloud,
   setNutrition
 }) {
+  function updateForSession(session, setter, value) {
+    if (!session.isCurrent()) return;
+    setter((current) => session.isCurrent()
+      ? (typeof value === "function" ? value(current) : value)
+      : current);
+  }
+
   async function saveAiNutritionPlan(profileOverride = aiNutritionProfileDraft, options = {}) {
+    const session = captureAuthSession();
+    const savingUid = session.uid;
+    if (!savingUid) return false;
     const completeFirstSetup = options?.completeFirstSetup !== false;
     const profile = {
       name: limitUserDisplayName(profileOverride.name),
-      weight: String(profileOverride.weight || "").trim(),
-      targetWeight: String(profileOverride.targetWeight || "").trim(),
-      height: String(profileOverride.height || "").trim(),
-      age: String(profileOverride.age || "").trim(),
+      weight: String(parseAiNutritionProfileNumber(profileOverride.weight, "")),
+      targetWeight: String(parseAiNutritionProfileNumber(profileOverride.targetWeight, "")),
+      height: String(parseAiNutritionProfileNumber(profileOverride.height, "")),
+      age: String(parseAiNutritionProfileNumber(profileOverride.age, "")),
       sex: profileOverride.sex || "male",
       activity: profileOverride.activity || "medium",
       goal: profileOverride.goal || "recomp",
@@ -60,12 +71,11 @@ export function createAiNutritionPlanHandlers({
       carbs: Math.round(Number(weekOne.carbs) || defaultNutritionState.goals.carbs)
     } : null;
 
-    const savingUid = auth.currentUser?.uid;
     if (savingUid) {
       try {
         const batch = writeBatch(db);
         profile.updatedAt = new Date().toISOString();
-        batch.set(doc(db, "users", auth.currentUser.uid), {
+        batch.set(doc(db, "users", savingUid), {
           ...(profile.name ? { name: profile.name } : {}),
           profile,
           aiNutritionProfile: profile,
@@ -81,7 +91,7 @@ export function createAiNutritionPlanHandlers({
         }, { merge: true });
 
         if (nextGoals) {
-          batch.set(doc(db, "users", auth.currentUser.uid, "nutrition", "state"), {
+          batch.set(doc(db, "users", savingUid, "nutrition", "state"), {
             goals: {
               ...nutrition.goals,
               ...nextGoals
@@ -92,20 +102,20 @@ export function createAiNutritionPlanHandlers({
         }
 
         await batch.commit();
-        if (auth.currentUser?.uid !== savingUid) return false;
+        if (!session.isCurrent()) return false;
 
         if (completeFirstSetup) {
-          setFirstSetupCompletedInCloud(true);
+          updateForSession(session, setFirstSetupCompletedInCloud, true);
         }
 
         if (completeFirstSetup) {
           try {
             localStorage.setItem(
               FIRST_SETUP_DONE_USER_STORAGE_KEY,
-              `${auth.currentUser.uid}:${FIRST_SETUP_REQUIRED_VERSION}`
+              `${savingUid}:${FIRST_SETUP_REQUIRED_VERSION}`
             );
             localStorage.setItem(
-              `${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${auth.currentUser.uid}`,
+              `${FIRST_SETUP_DONE_USER_STORAGE_KEY}:${savingUid}`,
               FIRST_SETUP_REQUIRED_VERSION
             );
           } catch {
@@ -120,14 +130,14 @@ export function createAiNutritionPlanHandlers({
       return false;
     }
 
-    setAiNutritionProfile(profile);
-    setAiNutritionProfileDraft(profile);
-    setAiNutritionSavedPlan(nextPlan);
+    updateForSession(session, setAiNutritionProfile, profile);
+    updateForSession(session, setAiNutritionProfileDraft, profile);
+    updateForSession(session, setAiNutritionSavedPlan, nextPlan);
 
     try {
-      if (user?.uid) {
-        safeWriteUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, user.uid, profile);
-        safeWriteUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, user.uid, nextPlan);
+      if (session.isCurrent()) {
+        safeWriteUserJsonStorage(AI_NUTRITION_PROFILE_STORAGE_KEY, savingUid, profile);
+        safeWriteUserJsonStorage(AI_NUTRITION_PLAN_STORAGE_KEY, savingUid, nextPlan);
       }
     } catch {
       // ignore localStorage errors
@@ -135,7 +145,7 @@ export function createAiNutritionPlanHandlers({
 
 
     if (nextGoals) {
-      setNutrition((prev) => ({
+      updateForSession(session, setNutrition, (prev) => ({
         ...prev,
         goals: {
           ...prev.goals,
@@ -150,6 +160,8 @@ export function createAiNutritionPlanHandlers({
   }
 
   function resetAiNutritionPlan() {
+    const session = captureAuthSession();
+    if (!session.isCurrent()) return;
     const nextDraft = {
       weight: "",
       targetWeight: "",
@@ -161,12 +173,12 @@ export function createAiNutritionPlanHandlers({
       trainingDays: getAiNutritionTrainingDays(aiNutritionProfile)
     };
 
-    setAiNutritionProfile(null);
-    setAiNutritionSavedPlan(null);
-    setAiNutritionProfileDraft(nextDraft);
+    updateForSession(session, setAiNutritionProfile, null);
+    updateForSession(session, setAiNutritionSavedPlan, null);
+    updateForSession(session, setAiNutritionProfileDraft, nextDraft);
 
     try {
-      const uid = auth.currentUser?.uid;
+      const uid = session.uid;
       if (uid) {
         localStorage.removeItem(getUserScopedStorageKey(AI_NUTRITION_PROFILE_STORAGE_KEY, uid));
         localStorage.removeItem(getUserScopedStorageKey(AI_NUTRITION_PLAN_STORAGE_KEY, uid));

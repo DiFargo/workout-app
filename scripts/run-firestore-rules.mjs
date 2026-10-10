@@ -9,10 +9,12 @@ const firebaseArgs = [
   "--cache",
   cachePath,
   "firebase-tools@15.20.0",
+  "--project",
+  "demo-workout-rules",
   "emulators:exec",
   "--only",
-  "firestore",
-  "node tests/firestore-rules.rules.mjs"
+  "firestore,storage",
+  "node --test tests/firestore-rules.rules.mjs tests/exercise-cards.rules.mjs tests/admin-storage-access.rules.mjs"
 ];
 
 function run(command, args, options = {}) {

@@ -32,6 +32,12 @@ function getRussianDayLabel(days) {
 const WEIGHT_CHECK_IN_INTERVAL_DAYS = 7;
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
+export function getProfileWorkoutStatusDateKey(slot) {
+  // A suggested future move is not the date that was missed.
+  if (slot?.isMissed) return slot.plannedDate || "";
+  return slot?.shiftedDate || slot?.plannedDate || "";
+}
+
 function getCalendarDayTimestamp(value) {
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return 0;
@@ -315,7 +321,7 @@ export function buildProfileDashboardModel(ctx) {
     const nextWorkoutSource = profileCalendarWorkouts.find((workout) => (
       String(workout?.id || "") === String(nextWorkoutSlot?.workoutId || "")
     )) || profileCalendarWorkouts[nextWorkoutSlot?.index ?? 0] || null;
-    const nextWorkoutDateKey = nextWorkoutSlot?.shiftedDate || nextWorkoutSlot?.plannedDate || "";
+    const nextWorkoutDateKey = getProfileWorkoutStatusDateKey(nextWorkoutSlot);
     const nextWorkoutDate = nextWorkoutDateKey
       ? new Date(`${nextWorkoutDateKey}T12:00:00`).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })
       : "Дата уточняется";

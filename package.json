@@ -1,7 +1,7 @@
 {
   "name": "workout-app",
   "private": true,
-  "version": "3.0.756",
+  "version": "3.0.818",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,13 +18,14 @@
     "test:e2e": "node ./node_modules/@playwright/test/cli.js test",
     "verify": "node scripts/verify.mjs --profile=release",
     "verify:full": "node scripts/verify.mjs --profile=full --e2e",
-    "verify:core": "node scripts/verify.mjs",
+    "verify:core": "node scripts/verify.mjs --profile=full",
     "check:bundle": "node scripts/check-build-budget.mjs",
     "check:functions": "node scripts/check-functions-syntax.mjs",
     "check:firebase-artifact": "node scripts/assert-firebase-deploy.mjs",
     "report:css": "node scripts/report-css-size.mjs",
     "audit:production": "npm audit --cache ./.npm-cache --omit=dev",
-    "audit:functions": "npm audit --prefix functions --cache ./.npm-cache --omit=dev",
+    "audit:all": "npm audit --cache ./.npm-cache",
+    "audit:functions": "node scripts/audit-functions.mjs",
     "lint": "eslint .",
     "lint:critical": "eslint src/utils/clientUx.js src/utils/trainerAttention.js src/utils/trainerNutritionPlan.js tests/client-ux.test.mjs tests/trainer-attention.test.mjs tests/trainer-nutrition-plan.test.mjs tests/security-boundaries.test.mjs tests/firestore-rules.rules.mjs tests/e2e/client-smoke.spec.js tests/e2e/trainer-workspace.spec.js playwright.config.js",
     "preview": "vite preview"
@@ -41,7 +42,7 @@
     "read-excel-file": "^9.0.10"
   },
   "devDependencies": {
-    "@capacitor/cli": "^8.5.1",
+    "@capacitor/cli": "^8.5.3",
     "@eslint/js": "^10.0.1",
     "@firebase/rules-unit-testing": "^5.0.1",
     "@playwright/test": "^1.60.0",
@@ -53,10 +54,14 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
     "typescript": "^7.0.2",
-    "vite": "^8.0.10"
+    "vite": "^8.3.3"
   },
   "overrides": {
+    "@grpc/grpc-js": "1.14.5",
     "protobufjs": "7.6.5",
+    "xcode": {
+      "uuid": "11.1.1"
+    },
     "websocket-driver": "0.7.5"
   }
 }

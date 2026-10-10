@@ -14,8 +14,8 @@
   overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
-  color: var(--apple-text, #1c1c1e);
-  background: var(--ios-canvas-background, var(--apple-canvas, #f2f2f7));
+  color: var(--apple-text, #1c282e);
+  background: var(--ios-canvas-background, var(--apple-canvas, #f5f7f8));
   border: 0;
   border-radius: 0;
   box-shadow: none;

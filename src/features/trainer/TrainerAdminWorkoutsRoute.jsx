@@ -120,6 +120,7 @@ export default function TrainerAdminWorkoutsRoute({
   sortWorkoutDays,
   telegramProfile,
   trainerExerciseLibraryItems,
+  trainerExerciseCards,
   trainerNextWorkspaceHandlers,
   trainerProgramManagerOpen,
   trainerWorkoutTab,
@@ -247,6 +248,7 @@ export default function TrainerAdminWorkoutsRoute({
         sortWorkoutDays={sortWorkoutDays}
         telegramProfile={telegramProfile}
         trainerExerciseLibraryItems={trainerExerciseLibraryItems}
+        trainerExerciseCards={trainerExerciseCards}
         trainerNextWorkspaceHandlers={trainerNextWorkspaceHandlers}
         trainerWorkoutTab={trainerWorkoutTab}
         usersList={usersList}
@@ -324,6 +326,7 @@ export default function TrainerAdminWorkoutsRoute({
     monthWorkouts,
     openMonthWorkoutContext
   } = buildTrainerMonthProgramEditorModel({
+    exerciseCards: trainerExerciseCards,
     adminOpenWorkoutId,
     adminTrainingTemplates,
     monthBlocks

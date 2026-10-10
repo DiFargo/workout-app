@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test("profile settings icon stays compact, accessible and opens account editing", async ({ page }, testInfo) => {

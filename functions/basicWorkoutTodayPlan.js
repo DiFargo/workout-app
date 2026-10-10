@@ -16,19 +16,19 @@ export const BASIC_WORKOUT_TODAY_TARGETS = Object.freeze({
   shoulders: {
     label: "Плечи",
     focus: "Плечи и стабильность верха тела",
-    groups: ["shoulder_press", "side_delts", "rear_delts"],
+    groups: ["shoulder_press", "side_delts", "rear_delts", "shoulder_front"],
     supportGroups: ["triceps", "core"]
   },
   legs: {
     label: "Ноги",
     focus: "Ноги и икры",
-    groups: ["quads", "calves"],
+    groups: ["quads", "calves", "hip_adduction"],
     supportGroups: ["posterior_chain", "core"]
   },
   glutes: {
     label: "Ягодицы",
     focus: "Ягодицы и задняя поверхность ног",
-    groups: ["posterior_chain"],
+    groups: ["posterior_chain", "hip_abduction"],
     supportGroups: ["calves", "core"]
   },
   biceps: {
@@ -55,7 +55,7 @@ export const BASIC_WORKOUT_TODAY_TARGETS = Object.freeze({
     groups: [
       "chest_press", "chest_incline", "chest_fly", "vertical_pull", "horizontal_pull",
       "shoulder_press", "side_delts", "rear_delts", "quads", "posterior_chain",
-      "calves", "biceps", "triceps", "forearms", "core"
+      "calves", "biceps", "triceps", "forearms", "core", "hip_abduction", "hip_adduction", "shoulder_front"
     ],
     supportGroups: []
   }
@@ -86,17 +86,15 @@ const ROLE_BY_GROUP = {
   chest_fly: "chestAccessory",
   shoulder_press: "shoulderPress",
   side_delts: "shoulderAccessory",
+  shoulder_front: "shoulderAccessory",
+  hip_abduction: "lowerAccessory",
+  hip_adduction: "lowerAccessory",
   rear_delts: "shoulderAccessory",
   biceps: "biceps",
   triceps: "triceps",
   forearms: "forearms",
   core: "core"
 };
-
-function getSetCount(profile = {}) {
-  if (profile.readiness === "low" || String(profile.duration) === "30") return 2;
-  return String(profile.duration) === "45" && String(profile.level) === "beginner" ? 2 : 3;
-}
 
 export function getBasicWorkoutTodayExerciseTarget(profile = {}) {
   const defaultTarget = { "30": 3, "45": 5, "60": 6, "90": 7 }[String(profile.duration)] || 5;
@@ -198,7 +196,7 @@ export function buildBasicWorkoutTodayFallbackDraft(profile = {}) {
     name: exercise.name,
     note: exercise.note,
     restSeconds: exercise.restSeconds,
-    sets: getFallbackExerciseSets(exercise, getSetCount(profile))
+    sets: getFallbackExerciseSets(exercise, 3)
   }));
 
   if (exercises.length < targetExerciseCount) {
@@ -277,8 +275,8 @@ export function getBasicWorkoutTodayCompositionIssues(workout = {}, profile = {}
 
   if (targets[0] === BASIC_WORKOUT_TODAY_TARGETS.full_body) {
     const areaForGroup = (groupId) => {
-      if (["quads", "posterior_chain", "calves"].includes(groupId)) return "lower";
-      if (["chest_press", "chest_incline", "chest_fly", "shoulder_press", "side_delts", "rear_delts", "triceps"].includes(groupId)) return "push";
+      if (["quads", "posterior_chain", "calves", "hip_abduction", "hip_adduction"].includes(groupId)) return "lower";
+      if (["chest_press", "chest_incline", "chest_fly", "shoulder_press", "side_delts", "rear_delts", "shoulder_front", "triceps"].includes(groupId)) return "push";
       if (["vertical_pull", "horizontal_pull", "biceps", "forearms"].includes(groupId)) return "pull";
       return groupId === "core" ? "core" : "";
     };
