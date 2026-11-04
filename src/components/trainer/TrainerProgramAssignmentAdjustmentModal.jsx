@@ -1,17 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  Activity,
   Check,
   CircleAlert,
   Dumbbell,
   LoaderCircle,
-  Minus,
-  TrendingDown,
-  TrendingUp,
+  Search,
   X
 } from "lucide-react";
-import { analyzeExerciseProgress } from "../../utils/exerciseProgress.js";
+import { buildTrainerAssignmentProgress, prepareTrainerAssignmentProgressHistory } from "../../utils/trainerAssignmentProgress.js";
+import TrainerAssignmentExerciseProgress from "./TrainerAssignmentExerciseProgress.jsx";
 import {
   getTrainerProgramAssignmentExercises
 } from "../../utils/trainerProgramAssignmentAdjustment.js";
@@ -24,54 +22,21 @@ import {
 import styles from "./TrainerProgramAssignmentAdjustmentModal.module.css";
 
 function formatWeightRange(item = {}) {
-  if (!item.usesWeight) return "Без дополнительного веса";
-  if (item.plannedMinWeight === null) return "Рабочий вес не указан";
-  if (item.plannedMinWeight === item.plannedMaxWeight) return `${item.plannedMinWeight} кг в плане`;
-  return `${item.plannedMinWeight}–${item.plannedMaxWeight} кг в плане`;
+  if (!item.usesWeight) return "План новой программы · без дополнительного веса";
+  if (item.plannedMinWeight === null) return "План новой программы · рабочий вес не указан";
+  if (item.plannedMinWeight === item.plannedMaxWeight) return `План новой программы · ${item.plannedMinWeight} кг`;
+  return `План новой программы · ${item.plannedMinWeight}–${item.plannedMaxWeight} кг`;
 }
 
-function getProgressMeta(item) {
-  if (!item) {
-    return {
-      label: "Нет сравнения",
-      description: "По этому упражнению ещё недостаточно заполненных тренировок.",
-      icon: Activity,
-      tone: "neutral"
-    };
-  }
-  if (item.status === "progress") {
-    return {
-      label: "Прогресс",
-      description: `Последний рабочий вес ${item.current?.bestWeight || "—"} кг; динамика ${item.changes?.e1rmPct >= 0 ? "+" : ""}${item.changes?.e1rmPct ?? 0}% по e1RM.`,
-      icon: TrendingUp,
-      tone: "positive"
-    };
-  }
-  if (item.status === "regression") {
-    return {
-      label: "Возможный регресс",
-      description: `Последний рабочий вес ${item.current?.bestWeight || "—"} кг. Проверьте восстановление и оставьте запас нагрузки.`,
-      icon: TrendingDown,
-      tone: "negative"
-    };
-  }
-  if (item.status === "adaptation" || item.status === "mixed") {
-    return {
-      label: item.status === "adaptation" ? "Адаптация" : "Смешанная динамика",
-      description: "Данные пока не стоит трактовать как прямой рост или спад нагрузки.",
-      icon: CircleAlert,
-      tone: "warning"
-    };
-  }
-  return {
-    label: "Стабильно",
-    description: `Последний рабочий вес ${item.current?.bestWeight || "—"} кг; заметного изменения нагрузки нет.`,
-    icon: Minus,
-    tone: "neutral"
-  };
+function normalizeExerciseSearch(value = "") {
+  return String(value).normalize("NFKC").toLocaleLowerCase("ru-RU").replace(/ё/g, "е").trim().replace(/\s+/g, " ");
 }
 
-export default function TrainerProgramAssignmentAdjustmentModal({
+export default function TrainerProgramAssignmentAdjustmentModal(props) {
+  return <TrainerProgramAssignmentAdjustmentForm key={`${props.client?.id || ""}:${props.template?.id || ""}`} {...props} />;
+}
+
+function TrainerProgramAssignmentAdjustmentForm({
   client,
   template,
   workouts = [],
@@ -81,14 +46,23 @@ export default function TrainerProgramAssignmentAdjustmentModal({
 }) {
   const confirmButtonRef = useRef(null);
   const errorRef = useRef(null);
+  const searchRef = useRef(null);
+  const searchId = useId();
   const [adjustments, setAdjustments] = useState({});
-  const [programName, setProgramName] = useState(() => buildTrainerClientProgramName(template?.name, client));
+  const [exerciseSearch, setExerciseSearch] = useState("");
+  const programName = buildTrainerClientProgramName(template?.name, client);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const programExercises = useMemo(() => getTrainerProgramAssignmentExercises(workouts), [workouts]);
-  const progressByName = useMemo(() => new Map(
-    analyzeExerciseProgress(history).map((item) => [String(item.name || "").normalize("NFKC").toLocaleLowerCase("ru-RU").trim(), item])
-  ), [history]);
+  const visibleExercises = useMemo(() => {
+    const terms = normalizeExerciseSearch(exerciseSearch).split(" ").filter(Boolean);
+    return programExercises.filter(exercise => {
+      const name = normalizeExerciseSearch(exercise.name);
+      return terms.every(term => name.includes(term));
+    });
+  }, [programExercises, exerciseSearch]);
+  const preparedHistory = useMemo(() => prepareTrainerAssignmentProgressHistory(history), [history]);
+  const progressByName = useMemo(() => new Map(programExercises.map(exercise => [exercise.key, buildTrainerAssignmentProgress(history, exercise, preparedHistory)])), [history, programExercises, preparedHistory]);
   const adjustedCount = Object.values(adjustments).filter((value) => Number.parseFloat(String(value).replace(",", ".")) > 0).length;
 
   useEffect(() => {
@@ -96,7 +70,11 @@ export default function TrainerProgramAssignmentAdjustmentModal({
   }, [error]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => confirmButtonRef.current?.focus(), 60);
+    const timer = window.setTimeout(() => {
+      const button = confirmButtonRef.current;
+      const dialog = button?.closest('[role="dialog"]');
+      if (!dialog?.contains(document.activeElement)) button?.focus();
+    }, 60);
     function onKeyDown(event) {
       if (event.key === "Escape" && !saving) onClose?.();
     }
@@ -107,15 +85,16 @@ export default function TrainerProgramAssignmentAdjustmentModal({
     };
   }, [onClose, saving]);
 
-  useEffect(() => {
-    setProgramName(buildTrainerClientProgramName(template?.name, client));
-  }, [client?.email, client?.name, template?.id, template?.name]);
-
   function updateAdjustment(key, value) {
     const nextValue = sanitizeExerciseWeightInput(value);
     if (!/^\d*(?:[.,]\d*)?$/.test(nextValue)) return;
     setAdjustments((current) => ({ ...current, [key]: nextValue }));
     setError("");
+  }
+
+  function clearExerciseSearch() {
+    setExerciseSearch("");
+    searchRef.current?.focus();
   }
 
   async function confirm() {
@@ -169,39 +148,48 @@ export default function TrainerProgramAssignmentAdjustmentModal({
             </div>
           </section>
 
-          <label className={styles.programNameField}>
-            <span>Название программы для клиента</span>
-            <input
-              value={programName}
-              onChange={(event) => {
-                setProgramName(event.target.value.slice(0, 80));
-                setError("");
-              }}
-              maxLength={80}
-              aria-label="Название программы для клиента"
-              disabled={saving}
-            />
-            <small>Шаблон останется без изменений. Это имя увидит только этот клиент.</small>
-          </label>
+          <div className={styles.searchField} role="search" aria-label="Поиск упражнений в программе">
+            <label htmlFor={searchId}>Поиск упражнений</label>
+            <div className={styles.searchControl}>
+              <Search size={18} aria-hidden="true" />
+              <input
+                ref={searchRef}
+                id={searchId}
+                type="search"
+                value={exerciseSearch}
+                onChange={event => setExerciseSearch(event.target.value)}
+                onKeyDown={event => {
+                  if (event.key === "Escape" && exerciseSearch) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    clearExerciseSearch();
+                  }
+                }}
+                placeholder="Найти упражнение в программе"
+                autoComplete="off"
+                aria-describedby={`${searchId}-count`}
+                disabled={saving}
+              />
+              {exerciseSearch && <button type="button" onClick={clearExerciseSearch} disabled={saving} aria-label="Очистить поиск упражнений"><X size={18} aria-hidden="true" /></button>}
+            </div>
+            <p id={`${searchId}-count`} data-testid="assignment-search-count" role="status" aria-live="polite" aria-atomic="true">Упражнения: найдено {visibleExercises.length} из {programExercises.length}</p>
+          </div>
 
-          <p className={styles.hint}>Поправка применяется только к копии этой программы у клиента и сохраняет разницу весов между днями.</p>
+          <p className={styles.hint}>План новой программы показан отдельно от истории. Сравнение «план / факт» использует план, сохранённый на дату той тренировки. Поправка применяется только к новой копии программы.</p>
 
           <section className={styles.exerciseList} aria-label="Корректировка нагрузки по упражнениям">
-            {programExercises.map((exercise) => {
+            {visibleExercises.map((exercise) => {
               const progress = progressByName.get(exercise.key);
-              const meta = getProgressMeta(progress);
-              const Icon = meta.icon;
               return (
-                <article className={styles.exercise} key={exercise.key}>
+                <article className={styles.exercise} key={exercise.key} data-testid="assignment-exercise-card">
                   <div className={styles.exerciseHeading}>
-                    <span className={`${styles.statusIcon} ${styles[meta.tone]}`}><Icon size={17} /></span>
+                    <span className={`${styles.statusIcon} ${styles.neutral}`}><Dumbbell size={17} aria-hidden="true" /></span>
                     <div>
                       <strong>{exercise.name}</strong>
                       <small>{formatWeightRange(exercise)}</small>
                     </div>
-                    <b className={`${styles.status} ${styles[meta.tone]}`}>{meta.label}</b>
                   </div>
-                  <p>{meta.description}</p>
+                  <TrainerAssignmentExerciseProgress progress={progress} />
                   {exercise.usesWeight && exercise.plannedMinWeight !== null ? (
                     <label className={styles.adjustment}>
                       <span>Поправка к весам</span>
@@ -223,6 +211,11 @@ export default function TrainerProgramAssignmentAdjustmentModal({
               );
             })}
             {!programExercises.length ? <div className={styles.empty}>В программе пока нет упражнений для корректировки.</div> : null}
+            {!!programExercises.length && !visibleExercises.length && <div className={styles.searchEmpty} data-testid="assignment-search-empty">
+              <strong>Упражнения не найдены</strong>
+              <p>Попробуйте другую часть названия или очистите поиск. Введённые поправки к весам сохранены.</p>
+              <button type="button" onClick={clearExerciseSearch} disabled={saving}>Показать все упражнения</button>
+            </div>}
           </section>
           {error ? <p ref={errorRef} className={styles.error} role="alert"><CircleAlert size={16} />{error}</p> : null}
         </div>

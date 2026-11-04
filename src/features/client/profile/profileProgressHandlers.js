@@ -7,6 +7,7 @@ import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
 import { uploadStorageFile } from "../../../utils/firebaseStorage";
 import { compressProgressPhoto } from "../../../utils/imageCompression";
 import { captureAuthSession as captureActiveAuthSession } from "../../../utils/authSession.js";
+import { validateClientLoadingSnapshot } from "../../../utils/clientLoadingSnapshot.js";
 import {
   getFailedMeasurementQueue,
   acknowledgeMeasurementSave,
@@ -23,6 +24,9 @@ import {
   safeWriteUserJsonStorage
 } from "../../../utils/userScopedStorage";
 
+const photoReadersBySetter = new WeakMap();
+const measurementSnapshotLoads = new WeakMap();
+
 export function createProfileProgressHandlers({
   MEASUREMENTS_STORAGE_KEY,
   auth,
@@ -34,6 +38,7 @@ export function createProfileProgressHandlers({
   profileMeasurements,
   profileMeasurementDraft,
   profileProgressPhotoFiles,
+  readClientLoadingSnapshot,
   recordTrainerEvent,
   showAppError,
   setAiNutritionProfile,
@@ -41,6 +46,7 @@ export function createProfileProgressHandlers({
   setClientProgressPhotos,
   setProfileMeasurementSaving,
   setProfileMeasurements,
+  setProfileMeasurementSnapshot,
   setProfileMeasurementStatus,
   setProfileProgressPhotoFiles,
   setProfileProgressPhotoPreviews,
@@ -52,6 +58,26 @@ export function createProfileProgressHandlers({
     setter((current) => session.isCurrent()
       ? (typeof value === "function" ? value(current) : value)
       : current);
+  }
+
+  // This metadata has a separate destination: recent7 is never a full history.
+  async function loadProfileMeasurementSnapshot(uid = auth.currentUser?.uid, { throwOnError = false } = {}) {
+    const session = captureAuthSession();
+    if (!uid || session.uid !== uid || !session.isCurrent() ||
+      typeof readClientLoadingSnapshot !== "function" || typeof setProfileMeasurementSnapshot !== "function") return null;
+    const generation = (measurementSnapshotLoads.get(setProfileMeasurementSnapshot) || 0) + 1;
+    measurementSnapshotLoads.set(setProfileMeasurementSnapshot, generation);
+    const isCurrent = () => session.isCurrent() && measurementSnapshotLoads.get(setProfileMeasurementSnapshot) === generation;
+    try {
+      const snapshot = validateClientLoadingSnapshot(await readClientLoadingSnapshot({ kind: "measurements" }), "measurements", uid);
+      if (!isCurrent()) return null;
+      setProfileMeasurementSnapshot(current => isCurrent() ? snapshot : current);
+      return snapshot;
+    } catch (error) {
+      if (isCurrent()) console.warn("Measurement overview snapshot load failed:", error);
+      if (isCurrent() && throwOnError) throw error;
+      return null;
+    }
   }
 
   async function loadProfileMeasurements(uid = auth.currentUser?.uid) {
@@ -94,7 +120,7 @@ export function createProfileProgressHandlers({
     }
   }
 
-  async function loadClientProgressPhotos(uid = auth.currentUser?.uid) {
+  async function loadClientProgressPhotos(uid = auth.currentUser?.uid, { throwOnError = false } = {}) {
     const session = captureAuthSession();
     if (session.uid !== uid) return [];
     if (!uid) {
@@ -116,6 +142,7 @@ export function createProfileProgressHandlers({
     } catch (error) {
       if (!session.isCurrent()) return [];
       console.warn("Client progress photos load failed:", error);
+      if (throwOnError) throw error;
       updateForSession(session, setClientProgressPhotos, []);
       return [];
     }
@@ -123,19 +150,31 @@ export function createProfileProgressHandlers({
 
   function selectClientProgressPhoto(view, file) {
     const session = captureAuthSession();
-    updateForSession(session, setProfileProgressPhotoFiles, (current) => ({ ...current, [view]: file || null }));
+    let readers = photoReadersBySetter.get(setProfileProgressPhotoFiles);
+    if (!readers) {
+      readers = new Map();
+      photoReadersBySetter.set(setProfileProgressPhotoFiles, readers);
+    }
+    const previous = readers.get(view);
+    const selection = { file, reader: null };
+    readers.set(view, selection);
+    if (previous?.reader?.readyState === 1) previous.reader.abort();
+    const isCurrent = () => session.isCurrent() && readers.get(view) === selection;
+    updateForSession(session, setProfileProgressPhotoFiles, (current) => isCurrent() ? ({ ...current, [view]: file || null }) : current);
 
     if (!file) {
-      updateForSession(session, setProfileProgressPhotoPreviews, (current) => ({ ...current, [view]: "" }));
+      updateForSession(session, setProfileProgressPhotoPreviews, (current) => isCurrent() ? ({ ...current, [view]: "" }) : current);
       return;
     }
 
     const reader = new FileReader();
+    selection.reader = reader;
     reader.onload = () => {
-      updateForSession(session, setProfileProgressPhotoPreviews, (current) => ({
+      if (!isCurrent()) return;
+      updateForSession(session, setProfileProgressPhotoPreviews, (current) => isCurrent() ? ({
         ...current,
         [view]: typeof reader.result === "string" ? reader.result : ""
-      }));
+      }) : current);
     };
     reader.readAsDataURL(file);
   }
@@ -157,6 +196,11 @@ export function createProfileProgressHandlers({
     try {
       const photo = await persistProgressPhotos({ db, uid, files: profileProgressPhotoFiles, upload: uploadStorageFile, compress: compressProgressPhoto, createId: () => createClientResourceId("progress") });
       if (!session.isCurrent()) return false;
+      const readers = photoReadersBySetter.get(setProfileProgressPhotoFiles);
+      if (readers) {
+        for (const selection of readers.values()) if (selection.reader?.readyState === 1) selection.reader.abort();
+        readers.clear();
+      }
       updateForSession(session, setClientProgressPhotos, (current) => [photo, ...current.filter((item) => item.id !== photo.id)]);
       updateForSession(session, setProfileProgressPhotoFiles, { front: null, side: null, back: null });
       updateForSession(session, setProfileProgressPhotoPreviews, { front: "", side: "", back: "" });
@@ -247,6 +291,10 @@ export function createProfileProgressHandlers({
       if (!queued && queueForSync) {
         updateForSession(session, setProfileMeasurementStatus, "Недостаточно места на устройстве. Замер не сохранён — восстановите сеть и повторите.");
         return false;
+      }
+      // A request started before this save must not replace the new overview.
+      if (typeof setProfileMeasurementSnapshot === "function") {
+        measurementSnapshotLoads.set(setProfileMeasurementSnapshot, (measurementSnapshotLoads.get(setProfileMeasurementSnapshot) || 0) + 1);
       }
       updateForSession(session, setProfileMeasurements, (current) => {
         const nextMeasurements = [measurement, ...(Array.isArray(current) ? current : profileMeasurements || [])
@@ -349,6 +397,7 @@ export function createProfileProgressHandlers({
   }
 
   return {
+    loadProfileMeasurementSnapshot,
     loadProfileMeasurements,
     loadClientProgressPhotos,
     replayFailedMeasurementSaves,

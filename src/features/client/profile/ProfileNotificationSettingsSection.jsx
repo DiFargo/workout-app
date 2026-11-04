@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Bell, Camera, Check, Clock3, Dumbbell, Ruler, Send } from "lucide-react";
+import { Bell, Camera, Check, Clock3, Dumbbell, Ruler, Scale, Send } from "lucide-react";
 import { getClientReminderSettings, PROGRESS_REMINDER_PERIODS, WORKOUT_REMINDER_OFFSETS } from "../../../utils/clientReminderSettings";
 import styles from "./ProfileNotificationSettingsSection.module.css";
 
@@ -175,6 +175,14 @@ export default function ProfileNotificationSettingsSection({ telegramProfile, ca
       </div>}
     </div>
     <div className={styles.card}>
+      <ReminderSwitch title="Взвешивание" description="Напомнить записать текущий вес" icon={Scale}
+        checked={draft.weightEnabled} disabled={settingsDisabled} onClick={() => change("weightEnabled", !draft.weightEnabled)} />
+      {draft.weightEnabled && <div className={styles.details}>
+        <p className={styles.label}>Повторять каждые</p>
+        <PeriodOptions label="Период напоминания о взвешивании" value={draft.weightIntervalDays} disabled={settingsDisabled} onChange={value => change("weightIntervalDays", value)} />
+      </div>}
+    </div>
+    <div className={styles.card}>
       <ReminderSwitch title="Замеры тела" description="Напомнить обновить замеры" icon={Ruler}
         checked={draft.measurementsEnabled} disabled={settingsDisabled} onClick={() => change("measurementsEnabled", !draft.measurementsEnabled)} />
       {draft.measurementsEnabled && <div className={styles.details}>
@@ -182,13 +190,13 @@ export default function ProfileNotificationSettingsSection({ telegramProfile, ca
         <PeriodOptions label="Период замеров тела" value={draft.measurementsIntervalDays} disabled={settingsDisabled} onChange={value => change("measurementsIntervalDays", value)} />
       </div>}
     </div>
-    {(draft.photoEnabled || draft.measurementsEnabled) && <div className={styles.card}>
+    {(draft.photoEnabled || draft.weightEnabled || draft.measurementsEnabled) && <div className={styles.card}>
       <label className={styles.timeRow} htmlFor="client-progress-reminder-time">
-        <Clock3 size={20} aria-hidden="true" /><span>Время для фото и замеров</span>
+        <Clock3 size={20} aria-hidden="true" /><span>Время для фото, веса и замеров</span>
         <input id="client-progress-reminder-time" type="time" value={timeDraft} disabled={settingsDisabled}
           onChange={event => setTimeDraft(event.target.value)} onBlur={saveTime} />
       </label>
-      <p className={styles.timeHelp}>По Минску, UTC+3. Интервал считается от последнего фото или замера.</p>
+      <p className={styles.timeHelp}>По Минску, UTC+3. Интервал считается от последнего фото, взвешивания или замера.</p>
     </div>}
     {connected && onTestReminder && <button type="button" className={styles.testButton} disabled={saving || testing} onClick={testReminder}>
       <Send size={18} aria-hidden="true" />{testing ? "Отправляем…" : "Отправить тестовое напоминание"}

@@ -1,4 +1,5 @@
 import { exerciseCardReference } from "../../functions/exerciseCards.js";
+import { normalizeExerciseVideoPosterTime } from "../../functions/exerciseVideoPoster.js";
 import { hasCompletedExerciseSets } from "./auditSafety.js";
 
 const ALTERNATIVE_FIELDS = Object.freeze([
@@ -13,6 +14,7 @@ const ALTERNATIVE_FIELDS = Object.freeze([
   "videoUrl",
   "videoURL",
   "videoCrop",
+  "videoPosterTime",
   "image",
   "thumbnail",
   "imageUrl",
@@ -111,6 +113,7 @@ export function replaceTrainerAssignedExerciseInWorkout(workout = {}, exerciseId
       name: alternative.name,
       video: alternative.video || alternative.videoUrl || alternative.videoURL || "",
       videoCrop: alternative.videoCrop || null,
+      videoPosterTime: normalizeExerciseVideoPosterTime(alternative.videoPosterTime),
       image: alternative.image || alternative.thumbnail || "",
       thumbnail: alternative.thumbnail || alternative.image || "",
       muscleGroup: alternative.muscleGroup || exercise.muscleGroup || "",

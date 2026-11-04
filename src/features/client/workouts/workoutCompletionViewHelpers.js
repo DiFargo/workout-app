@@ -1,3 +1,5 @@
+import { getClientWorkoutCompletionHistory } from "../../../utils/clientWorkoutEvidence.js";
+
 export function createWorkoutCompletionViewHelpers({
   plan,
   history,
@@ -11,7 +13,7 @@ export function createWorkoutCompletionViewHelpers({
     currentAssignmentVersion = getWorkoutAssignmentVersion(plan)
   ) {
     return buildCompletedWorkoutSet(
-      historyItems,
+      getClientWorkoutCompletionHistory(plan, historyItems),
       currentAssignmentVersion,
       workoutCalendar,
       plan?.workouts || []

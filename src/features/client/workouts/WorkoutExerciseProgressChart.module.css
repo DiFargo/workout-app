@@ -1,0 +1,14 @@
+.root { display: grid; gap: 12px; min-width: 0; padding: 14px; border-radius: 16px; background: var(--apple-surface-muted, #efeff4); }
+.heading { display: grid; gap: 4px; }
+.root .heading strong { color: var(--apple-text, #1c1c1e); font-size: .9375rem; font-weight: 600; }
+.heading span, .root p { margin: 0; color: var(--apple-secondary, #636366); font-size: .8125rem; line-height: 1.4; }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.stats > div { display: grid; gap: 4px; min-width: 0; }
+.stats span { color: var(--apple-secondary, #636366); font-size: .75rem; }
+.root .stats strong { overflow-wrap: anywhere; font-size: 1.25rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.stats small { font-size: .8125rem; font-weight: 400; }
+.chart { width: 100%; height: auto; overflow: visible; }
+.chart text { fill: var(--apple-secondary, #636366); font-family: inherit; font-size: 14px; }
+.chart circle { fill: var(--apple-action, #3c6faa); }
+.grid { stroke: var(--apple-separator, rgba(60,60,67,.12)); stroke-width: 1; }
+.line { fill: none; stroke: var(--apple-action, #3c6faa); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }

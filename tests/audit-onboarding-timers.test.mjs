@@ -6,7 +6,7 @@ import { hasRequiredAiNutritionProfileFields } from "../src/utils/profileDefault
 
 let effects = [];
 const cleanupImports = installRuntimeImports({
-  react: { useEffect: (callback, dependencies) => effects.push({ callback, dependencies }) },
+  react: { useEffect: (callback, dependencies) => effects.push({ callback, dependencies }), useEffectEvent: callback => callback },
   "/firebase.js": { auth: { currentUser: null }, db: {} },
   "firebase/firestore": { doc: (_, ...parts) => parts.join("/"), onSnapshot: () => () => {}, setDoc: async () => {} }
 });

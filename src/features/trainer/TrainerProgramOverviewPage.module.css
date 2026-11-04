@@ -505,9 +505,9 @@
 
 .choiceHint {
   margin: -6px 0 16px;
-  color: var(--trainer-muted, #747b8d);
-  font-size: 11px;
-  line-height: 1.45;
+  color: var(--trainer-muted, var(--text-secondary, #636366));
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .choiceOptions {
@@ -678,7 +678,7 @@
 
 .aiImportActions button[type="submit"] {
   border-color: var(--trainer-accent, var(--trainer-v2-accent, #6534ef));
-  background: var(--trainer-accent, var(--trainer-v2-surface, #6534ef));
+  background: var(--ownset-action-gradient);
   color: #fff;
 }
 
@@ -911,7 +911,7 @@
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField { min-width: 0; min-height: 46px; padding: 0 12px; gap: 8px; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .searchField input { min-width: 0 ; padding: 0 ; background: transparent ; border: 0 ; border-radius: 0 ; box-shadow: none ; font-size: 14px; font-weight: 400; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .addButton { min-height: 46px; padding: 0 12px; font-size: 13px; font-weight: 600; }
-:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .grid { gap: 12px; align-items: stretch; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .grid { gap: 12px; align-items: start; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .card { height: auto ; min-height: 0 ; box-shadow: none ; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect { flex: none; padding: 14px ; gap: 12px; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle { grid-template-columns: 36px minmax(0,1fr); gap: 10px; }
@@ -934,7 +934,7 @@
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer {align-self:stretch;justify-self:stretch}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle p {display:-webkit-box;-webkit-line-clamp:2;line-clamp:2}
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .statusBadge {max-width:none;white-space:normal;overflow:visible;text-overflow:clip}
-@media(max-width:370px) {
+@media(max-width:430px) {
   :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .toolbar {grid-template-columns:minmax(0,1fr)}
   :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .addButton {justify-self:end;min-height:44px}
 }
@@ -963,23 +963,64 @@
 .clientAvatar img { width: 100%; height: 100%; object-fit: cover; }
 .cardSelect footer { flex-wrap: wrap; }
 
-/* Reserve the same title, metrics and status rows on every library card. */
+/* Keep title, metrics and status on separate rows; content may grow on narrow screens. */
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect {
   display: grid;
-  grid-template-rows: 80px 60px 56px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "title" "stats" "status";
+  grid-template-rows: auto auto auto;
   gap: 12px;
-  height: 248px;
+  min-height: 0;
+  height: auto;
   box-sizing: border-box;
   align-content: start;
 }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle {
+  grid-area: title;
   align-content: start;
-  overflow: hidden;
+  overflow: visible;
+  width: 100%;
+  min-width: 0;
 }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect footer {
-  align-content: center;
+  grid-area: status;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
-  row-gap: 4px;
+}
+
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle > div { min-width: 0; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardTitle p {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+
+.templatePurpose {
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 1px solid var(--trainer-border, rgba(60, 60, 67, .12));
+  border-radius: 14px;
+  background: var(--trainer-surface, #FFFFFF);
+  color: var(--trainer-muted, var(--text-secondary, #636366));
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.templatePurpose h2 {
+  margin: 0 0 6px;
+  color: var(--trainer-text, var(--text-primary, #1C1C1E));
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.templatePurpose p { max-width: 65ch; margin: 0; }
+.templatePurpose strong {
+  color: var(--trainer-text, var(--text-primary, #1C1C1E));
+  font-weight: 600;
 }
 
 .testFilter {
@@ -993,3 +1034,18 @@
   font-size: 14px;
 }
 .testFilter input { width: 18px; height: 18px; accent-color: #396ba6; }
+
+.catalogMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: -6px 0 12px;
+  color: var(--trainer-muted, var(--text-secondary, #636366));
+  font-size: 13px;
+  line-height: 1.4;
+}
+.catalogMeta .testFilter { margin-bottom: 0; font-size: 13px; }
+.addButton:disabled { opacity: .5; cursor: wait; }
+:global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect .selectedMark { margin-left: auto; }

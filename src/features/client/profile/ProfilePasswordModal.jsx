@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Check, Eye, EyeOff, LockKeyhole } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfilePasswordModal.module.css";
 
-export default function ProfilePasswordModal({
-  open,
+export default function ProfilePasswordModal(props) {
+  return props.open ? <ProfilePasswordForm {...props} /> : null;
+}
+
+function ProfilePasswordForm({
   hasPasswordProvider = true,
   hasGoogleProvider = false,
+  canResetByEmail = true,
+  onAddRecoveryEmail,
   saving,
   status,
   onClose,
@@ -27,12 +32,6 @@ export default function ProfilePasswordModal({
   });
   const [saveSuccess, setSaveSuccess] = useState(false);
   const canSetPasswordViaGoogle = !hasPasswordProvider && hasGoogleProvider;
-
-  useEffect(() => {
-    if (open) setSaveSuccess(false);
-  }, [open]);
-
-  if (!open) return null;
 
   function updatePasswordDraft(field, value) {
     setPasswordDraft((current) => ({ ...current, [field]: value }));
@@ -156,15 +155,19 @@ export default function ProfilePasswordModal({
               <span>
                 {canSetPasswordViaGoogle
                   ? "Для Google-аккаунта откроется окно подтверждения Google."
-                  : "Для смены пароля нужен текущий пароль. Можно отправить ссылку восстановления на почту."}
+                  : canResetByEmail
+                    ? "Для смены пароля нужен текущий пароль. Можно отправить ссылку восстановления на почту."
+                    : "Для смены пароля нужен текущий пароль. Добавь личную почту, чтобы восстановить доступ, если забудешь его."}
               </span>
             </div>
           </div>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.secondaryButton} data-testid="profile-password-reset" onClick={onSendPasswordReset} disabled={saveSuccess}>
+            {canResetByEmail ? <button type="button" className={styles.secondaryButton} data-testid="profile-password-reset" onClick={onSendPasswordReset} disabled={saveSuccess}>
               Ссылка на почту
-            </button>
+            </button> : onAddRecoveryEmail ? <button type="button" className={styles.secondaryButton} onClick={onAddRecoveryEmail} disabled={saveSuccess}>
+              Добавить личную почту
+            </button> : null}
             <button type="submit" className={styles.primaryButton} data-testid="profile-password-submit" disabled={saving || saveSuccess}>
               {saving ? "Меняю..." : canSetPasswordViaGoogle ? "Задать пароль" : "Обновить"}
             </button>

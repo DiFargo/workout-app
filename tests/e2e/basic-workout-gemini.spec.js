@@ -125,6 +125,7 @@ test("today template fallback is labelled and save failure keeps draft", async (
   });
   await page.goto("/?clientHarness=1&clientHarnessPage=basicWorkoutToday&clientWorkoutProgramMode=basic&clientBasicSave=error");
   await page.getByRole("region", { name: "Выбор зон тренировки" }).getByRole("button").first().click();
+  await page.getByRole("button", { name: "Далее: время и условия" }).click();
   await page.getByTestId("basic-workout-today-generate").click();
   await expect(page.getByText("Gemini не использовался:", { exact: false })).toBeVisible();
   await page.getByTestId("basic-workout-save-later").click();
@@ -140,6 +141,7 @@ test("missing profile blocks remote and local generation without spending a toda
   await page.route("**/api/ai-basic-workout-plan", (route) => { requests++; return route.abort(); });
   await page.goto("/?clientHarness=1&clientHarnessPage=basicWorkoutToday&clientBasicProfile=missing");
   await page.getByRole("region", { name: "Выбор зон тренировки" }).getByRole("button").first().click();
+  await page.getByRole("button", { name: "Далее: время и условия" }).click();
   const allowance = await page.getByText("Подборок на сегодня осталось:", { exact: false }).textContent();
   await page.getByTestId("basic-workout-today-generate").click();
   await expect(page.getByRole("alert")).toContainText("Заполни в кабинете");

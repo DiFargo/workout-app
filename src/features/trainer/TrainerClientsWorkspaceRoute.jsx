@@ -53,6 +53,7 @@ export default function TrainerClientsWorkspaceRoute({
   loadUsers,
   loadAdminClientOverview,
   loadTrainerClientSummaries,
+  loadAdminTrainingTemplates,
   saveTrainerSubscriptionNotificationSettings,
   saveTrainerClientWorkoutSchedule,
   saveWorkoutsToFirebase,
@@ -148,13 +149,20 @@ export default function TrainerClientsWorkspaceRoute({
   return (
     <>
       <TrainerWorkspace
+      key={user?.uid || "anonymous"}
+      trainerUid={user?.uid || ""}
       appVersion={APP_VERSION}
       embedded={embedded}
       mode={adminClientPageOpen && selectedClient ? "client" : "clients"}
       activeSection="clients"
       onNavigate={navigateTrainerNext}
       onRefresh={refreshPage}
+      onRetryClientData={async (retryClient) => {
+        await loadAdminClientOverview?.(retryClient);
+        setAdminClientTab(trainerNextTab);
+      }}
       onRetrySummary={(retryClientIds) => loadTrainerClientSummaries?.(usersList, { retryClientIds })}
+      onLoadProgramLibrary={loadAdminTrainingTemplates}
       trainerName={selectedTrainerName}
       trainerAvatar={telegramProfile.avatarUrl}
       clients={usersList}
@@ -215,7 +223,7 @@ export default function TrainerClientsWorkspaceRoute({
       onArchiveProgramAssignment={(assignment) => archiveClientProgramAssignment(selectedClient?.id, assignment)}
       onRestoreProgramAssignment={(assignment) => restoreClientProgramAssignment(selectedClient?.id, assignment)}
       onDeleteProgramAssignment={(assignment) => deleteClientProgramAssignment(selectedClient?.id, assignment)}
-      onSaveWorkoutSchedule={(dates, assignmentWorkouts) => saveTrainerClientWorkoutSchedule(dates, selectedClient, assignmentWorkouts)}
+      onSaveWorkoutSchedule={(dates, assignmentWorkouts, options) => saveTrainerClientWorkoutSchedule(dates, selectedClient, assignmentWorkouts, options)}
       programStatus={adminClientStatus}
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}

@@ -71,13 +71,11 @@ export async function deleteClientEverywhereFromAdminPanelWithDeps({
 
 export async function transferClientDataBetweenAccountsWithDeps({
   db,
-  auth,
-  adminEmail,
   adminTransferFromUid,
   adminTransferToUid,
   adminAllUsersList,
   usersList,
-  canUseTrainerFeatures,
+  canUseAdminFeatures,
   showAppConfirm,
   loadUsers,
   loadAdminClientOverview,
@@ -86,9 +84,9 @@ export async function transferClientDataBetweenAccountsWithDeps({
   fromUidOverride = null,
   toUidOverride = null
 }) {
-  if (!canUseTrainerFeatures()) {
+  if (!canUseAdminFeatures?.()) {
     setAdminTransferStatus("Перенос может делать только админ.");
-    return;
+    return false;
   }
 
   const transferFromUid = fromUidOverride || adminTransferFromUid;
@@ -108,7 +106,7 @@ export async function transferClientDataBetweenAccountsWithDeps({
   const targetUser = usersList.find((item) => item.id === transferToUid);
 
   const confirmed = await showAppConfirm(
-    `Перенести данные с ${sourceUser?.email || transferFromUid} на ${targetUser?.email || adminTransferToUid}? Данные получателя будут дополнены/обновлены.`
+    `Перенести программу, историю тренировок и питание с ${sourceUser?.email || transferFromUid} на ${targetUser?.email || transferToUid}? Идентификация, роль и Telegram получателя сохранятся. Замеры, фото, nutritionDays, задачи, оплаты и подписки не переносятся. Повтор после ошибки обновит те же документы.`
   );
 
   if (!confirmed) return;
@@ -124,28 +122,21 @@ export async function transferClientDataBetweenAccountsWithDeps({
 
     if (!sourceSnap.exists()) {
       setAdminTransferStatus("Источник не найден в Firestore.");
-      setAdminTransferLoading(false);
-      return;
+      return false;
     }
 
     const sourceData = sourceSnap.data() || {};
     const targetData = targetSnap.exists() ? targetSnap.data() || {} : {};
-    const safeSourceData = { ...sourceData };
-    delete safeSourceData.role;
-    delete safeSourceData.createdBy;
-    delete safeSourceData.createdAt;
-    delete safeSourceData.email;
-
-    await setDoc(doc(db, "users", transferToUid), {
-      ...safeSourceData,
-      email: targetData.email || targetUser?.email || "",
-      name: targetData.name || targetUser?.name || safeSourceData.name || "",
-      role: "client",
-      migratedFromUid: transferFromUid,
-      migratedFromEmail: sourceData.email || sourceUser?.email || "",
-      migratedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }, { merge: true });
+    if (!targetSnap.exists() || (targetData.role || "client") !== "client") {
+      setAdminTransferStatus("Получателем может быть только существующий аккаунт клиента. Роль и идентификация не изменены.");
+      return false;
+    }
+    // Explicit domain content only: never copy source identity, Telegram,
+    // roles, trainer ownership, access flags, subscriptions or admin metadata.
+    const contentFields = ["assignedProgramId", "assignedProgramName", "assignedProgramAt", "assignedProgramAddedAt",
+      "assignedProgramUpdatedAt", "assignedWorkoutCount", "assignedProgramLifecycleStatus", "assignedProgramVisibility",
+      "workoutCalendar", "nutritionState", "nutritionPlan", "nutritionGoals"];
+    const safeSourceData = Object.fromEntries(contentFields.filter(key => Object.hasOwn(sourceData, key)).map(key => [key, sourceData[key]]));
 
     const copied = {
       workouts: await copyAdminSubcollection(db, transferFromUid, transferToUid, "workouts"),
@@ -153,14 +144,9 @@ export async function transferClientDataBetweenAccountsWithDeps({
       nutrition: await copyAdminSubcollection(db, transferFromUid, transferToUid, "nutrition")
     };
 
-    if (transferFromUid === auth.currentUser?.uid) {
-      await setDoc(doc(db, "users", transferFromUid), {
-        role: "admin",
-        email: auth.currentUser?.email || adminEmail,
-        adminOnly: true,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
-    }
+    // Publish the root content only after the three declared collection types
+    // have copied. Retrying uses the same IDs rather than duplicating records.
+    await setDoc(doc(db, "users", transferToUid), { ...safeSourceData, updatedAt: new Date().toISOString() }, { merge: true });
 
     await loadUsers();
 
@@ -170,14 +156,16 @@ export async function transferClientDataBetweenAccountsWithDeps({
       email: targetData.email || targetUser?.email || ""
     };
 
-    await loadAdminClientOverview(freshTarget);
+    await loadAdminClientOverview?.(freshTarget);
 
     setAdminTransferStatus(
-      `Готово: тренировки ${copied.workouts}, история ${copied.history}, питание ${copied.nutrition}. Получатель остался client.`
+      `Готово: тренировки ${copied.workouts}, история ${copied.history}, питание ${copied.nutrition}. Идентификация и роль получателя сохранены. Замеры, фото, nutritionDays, задачи, оплаты и подписки не переносились.`
     );
+    return true;
   } catch (error) {
     console.error("Ошибка переноса данных:", error);
-    setAdminTransferStatus("Не получилось перенести данные. Проверь Firestore rules и выбранные аккаунты.");
+    setAdminTransferStatus("Перенос не завершён: часть документов могла сохраниться. Проверь выбранные аккаунты и повтори перенос с тем же источником; те же ID будут обновлены, не продублированы. Идентификация и роль получателя не изменялись.");
+    return false;
   } finally {
     setAdminTransferLoading(false);
   }

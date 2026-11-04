@@ -2,6 +2,7 @@ import FoodSearchOverlay from "./FoodSearchOverlay";
 import NutritionMainContent from "./NutritionMainContent";
 import NutritionPage from "./NutritionPage";
 import NutritionUndoDeleteToast from "./NutritionUndoDeleteToast";
+import NutritionDeleteConfirmModal from "./NutritionDeleteConfirmModal";
 
 export default function NutritionPageView({
   pickerOpen,
@@ -17,7 +18,9 @@ export default function NutritionPageView({
   planDetailsProps,
   overlayData,
   undoDeleteItem,
-  onUndoDelete
+  onUndoDelete,
+  deleteConfirmProps,
+  syncRecoveryProps
 }) {
   return (
     <NutritionPage>
@@ -31,6 +34,7 @@ export default function NutritionPageView({
         diaryProps={diaryProps}
         mealModalProps={mealModalProps}
         planDetailsProps={planDetailsProps}
+        syncRecoveryProps={syncRecoveryProps}
       />
 
       <FoodSearchOverlay
@@ -43,9 +47,10 @@ export default function NutritionPageView({
       />
 
       <NutritionUndoDeleteToast
-        open={Boolean(undoDeleteItem)}
+        open={Boolean(undoDeleteItem) && !activeMeal && !diaryProps?.nutritionZoukExpanded}
         onRestore={onUndoDelete}
       />
+      <NutritionDeleteConfirmModal {...deleteConfirmProps} />
 
       {!pickerOpen && !calendarOpen && !activeMeal && renderBottomBar?.(
         "nutrition",

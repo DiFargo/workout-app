@@ -1,0 +1,618 @@
+[
+  {
+    "name": "Ветчина «Банзай» вареная из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 170,
+      "protein": 18,
+      "fat": 10,
+      "carbs": 3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-banzay-varenaya-iz-myasa-tsyplyat-broylerov/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаса «Советская» вареная из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 153,
+      "protein": 11.5,
+      "fat": 11.3,
+      "carbs": 1.2
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasnoe-izdelie-varenoe-iz-myasa-tsyplyat-broylerov-vysshego-sorta-kolbasa-sovetskaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаса «Аппетитная со свининой» вареная",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 170,
+      "protein": 10,
+      "fat": 14,
+      "carbs": 1.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasnoe-izdelie-varenaya-iz-myasa-ts-b-appetitnaya-so-svininoy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаса «Любимая» вареная из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 162,
+      "protein": 8.6,
+      "fat": 14,
+      "carbs": 0.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasnoe-izdelie-varenaya-iz-myasa-ts-b-lyubimaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаса «Переменка» вареная из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 229,
+      "protein": 10.5,
+      "fat": 20.3,
+      "carbs": 1.1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasa-varenaya-iz-myasa-ptitsy-peremenka/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Рулет «Столичный» копчено-вареный из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 153,
+      "protein": 17,
+      "fat": 8.8,
+      "carbs": 1.4
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/rulety/rulet-kopcheno-varenyy-iz-myasa-ts-b-stolichnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Рулет «Фирменный от Ганны» копчено-вареный",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 260,
+      "protein": 17,
+      "fat": 20,
+      "carbs": 2
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/rulety/rulet-kopcheno-varenyy-firmennyy-ot-ganny/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Рулет «Руляда святочная» копчено-вареный",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 174.1,
+      "protein": 19.7,
+      "fat": 9.7,
+      "carbs": 2
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/rulety/rulet-kopcheno-varenyy-rulyada-svyatochnaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Ветчина «Европейская» вареная рубленая",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 155,
+      "protein": 16,
+      "fat": 9.3,
+      "carbs": 1.4
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-evropeyskaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Ветчина «Балерон» вареная рубленая",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 130,
+      "protein": 16,
+      "fat": 7,
+      "carbs": 1.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-baleron-appetitnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Ветчина «Нежность» вареная рубленая",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 80,
+      "protein": 13,
+      "fat": 2,
+      "carbs": 2
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-nezhnost/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Ветчина «Бутербродная» вареная рубленая",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 80,
+      "protein": 12,
+      "fat": 1.5,
+      "carbs": 5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-buterbrodnaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаса «Домашняя с дымком» варено-копченая",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 230,
+      "protein": 16,
+      "fat": 18,
+      "carbs": 1.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vareno-kopchenye-kolbasy/izdelie-kolbasnoe-vareno-kopchenoe-iz-myasa-tsyplyat-broylerov-kolbasa-vysshego-sorta-domashnyaya-s-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаски «Ганночкины салями» варено-копченые",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 350,
+      "protein": 15,
+      "fat": 32,
+      "carbs": 0.3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vareno-kopchenye-kolbasy/kolbasnoe-izdelie-varenoe-kopchenye-iz-myasa-tsyplyat-broylerov-kolbaski-vysshego-sorta-gannochkiny-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаса «Купеческая» варено-копченая",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 293,
+      "protein": 12,
+      "fat": 29,
+      "carbs": 2.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/vareno-kopchenye-kolbasy/kolbasa-kupecheskaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Сосиски «Банзай с сыром» из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 226,
+      "protein": 13,
+      "fat": 19,
+      "carbs": 1.3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/sosiski/kolbasnoe-izdelie-iz-myasa-tsyplyat-broylerov-sosiski-banzay-s-syrom-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Чипсы сыровяленые из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 420,
+      "protein": 87,
+      "fat": 7,
+      "carbs": 1.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/syrovyalenye-kolbasy/produkt-syrovyalenyy-chipsy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Паштет «Риет с томатами» вареный охлажденный",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 280,
+      "protein": 11,
+      "fat": 26,
+      "carbs": 1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/pashtety-i-saltisony/kulinarnoe-izdelie-iz-myasa-tsyplyat-broylerov-pashtet-riet-s-tomatami-varenyy-okhlazhdennyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Чипсы классические сыровяленые из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 420,
+      "protein": 87,
+      "fat": 7,
+      "carbs": 1.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/syrovyalenye-kolbasy/produkt-syrovyalenyy-chipsy-klassicheskie/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Джерки классические сыровяленые из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 300,
+      "protein": 62,
+      "fat": 5,
+      "carbs": 1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/syrovyalenye-kolbasy/produkt-syrovyalenyy-dzherki-klassicheskie/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Джерки сыровяленые из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 300,
+      "protein": 62,
+      "fat": 5,
+      "carbs": 1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/syrovyalenye-kolbasy/produkt-syrovyalenyy-dzherki/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Фарш «Для котлет» из мяса цыплят-бройлеров",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 195,
+      "protein": 12,
+      "fat": 15,
+      "carbs": 1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/farsh/polufabrikat-iz-myasa-tsyplyat-broylerov-rublennyy-beskostnyy-farsh-dlya-kotlet-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Фарш «Фирменный от Ганны»",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 163,
+      "protein": 14.5,
+      "fat": 11.3,
+      "carbs": 0.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/farsh/farsh-firmennyy-ot-ganny/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Фарш мясной «Нежный»",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 244.2,
+      "protein": 10.2,
+      "fat": 22.6,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/farsh/farsh-myasnoy-nezhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Грудка цыпленка-бройлера «Аппетитная» копчено-вареная",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 120,
+      "protein": 21,
+      "fat": 4,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-grudka-ts-b-appetitnaya-kopcheno-varenaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Окорочок цыпленка-бройлера «Аппетитный» копчено-вареный",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 222.8,
+      "protein": 21.2,
+      "fat": 15.4,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-okorochok-ts-b-appetitnyy-kopcheno-varenyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Бедро цыпленка-бройлера «Аппетитное» копчено-вареное",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 219.6,
+      "protein": 20.7,
+      "fat": 15.2,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-bedro-ts-b-appetitnoe-kopcheno-varenoe/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Крыло «Фантазия» фаршированное копчено-запеченное",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 255.5,
+      "protein": 18.2,
+      "fat": 20.3,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-krylo-fantaziya-produkt-farshirovannyy-kopcheno-zapechennyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  }
+]

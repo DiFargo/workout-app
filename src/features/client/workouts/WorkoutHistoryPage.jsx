@@ -1,4 +1,5 @@
 import HistoryDeleteConfirmDialog from "./HistoryDeleteConfirmDialog";
+import WorkoutSectionNavigation from "./WorkoutSectionNavigation";
 import { RefreshCw } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
@@ -26,6 +27,7 @@ export default function WorkoutHistoryPage({
   historyDeleteCandidate,
   goBackToMain,
   openTrainingEntry,
+  onOpenPlan,
   onOpenNutrition,
   openProfileCabinet,
   onOpenTrainerClients,
@@ -54,7 +56,7 @@ export default function WorkoutHistoryPage({
         titleTestId="workout-history-title"
         testId="workout-history-hero"
         scope="workout-history-header"
-        onBack={goBackToMain}
+        onBack={openTrainingEntry || goBackToMain}
         backAriaLabel="Вернуться назад"
         actions={(
           <button className={styles.refresh} data-testid="workout-history-refresh" type="button" onClick={loadHistory} aria-label="Обновить историю тренировок">
@@ -66,6 +68,7 @@ export default function WorkoutHistoryPage({
       <p className={styles.lead}>
         {historyItems.length ? `Последняя: ${formatHistoryCardDate(latestHistoryWorkout?.date, true)}` : "Сохраняй тренировки — здесь будет прогресс."}
       </p>
+      <WorkoutSectionNavigation active="history" onOpenWorkouts={openTrainingEntry} onOpenPlan={onOpenPlan} onOpenHistory={loadHistory} />
 
       <section className={styles.stats} data-testid="workout-history-stats">
         <div>

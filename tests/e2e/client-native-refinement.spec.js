@@ -70,33 +70,35 @@ test("summary actions open nutrition, progress, workout and notifications", asyn
   await page.getByTestId("profile-main-notifications").click();
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toBeVisible();
   await page.getByTestId("profile-trainer-notifications-close").click();
-  await page.getByTestId("profile-summary-primary").click();
+  await page.locator('[data-task-id="workout"]').click();
   await expect(page.getByTestId("workout-today-card")).toBeVisible();
   assertNoErrors();
 });
 
-test("summary day illustration follows the plan state and keeps the main action available", async ({ page }, testInfo) => {
+test("summary task card keeps the workout action relevant and touchable", async ({ page }, testInfo) => {
   const assertNoErrors = failOnRuntimeErrors(page);
   await page.setViewportSize({ width: 375, height: 812 });
-  for (const [state, symbol, title] of [
-    ["today", "dumbbell", "Ноги и ягодицы"],
-    ["recovery", "heart", "Отдых и восстановление"],
-    ["missed", "dumbbell", "Пропущенная тренировка"],
-    ["unscheduled", "heart", "Сегодня без тренировки"],
-    ["complete", "heart", "Тренировка завершена"],
-    ["empty", "dumbbell", "Программа пока не назначена"]
+  for (const [state, workoutTitle] of [
+    ["today", "Сегодня тренировка"],
+    ["recovery", ""],
+    ["missed", "Перенесите тренировку"],
+    ["unscheduled", "Продолжите тренировочный план"],
+    ["complete", ""],
+    ["empty", "Создайте первый план"]
   ]) {
     await openHarness(page, `&clientDashboardWorkoutState=${state}`);
-    const art = page.getByTestId("profile-summary-day-illustration");
-    await expect(art).toHaveAttribute("data-day-symbol", symbol);
-    await expect(art).toHaveAttribute("aria-hidden", "true");
-    await expect(art).toHaveCSS("width", "28px");
-    await expect(art).toHaveCSS("height", "28px");
-    await expect(page.getByTestId("profile-summary-hero-title")).toHaveText(title);
-    await expect(page.getByTestId("profile-summary-primary")).toBeEnabled();
-    if (state === "recovery" || state === "today") await page.screenshot({ path: testInfo.outputPath(`${state}-day.png`) });
-    await page.getByTestId("profile-summary-primary").click();
-    await expect(page.getByTestId("workout-today-card")).toBeVisible();
+    const taskCard = page.getByTestId("profile-summary-task-card");
+    await expect(taskCard).toBeVisible();
+    const workoutTask = page.locator('[data-task-id="workout"]');
+    if (workoutTitle) {
+      await expect(workoutTask).toContainText(workoutTitle);
+      await expect(workoutTask).toBeEnabled();
+      if (state === "today" || state === "recovery") await page.screenshot({ path: testInfo.outputPath(`${state}-day.png`) });
+      await workoutTask.click();
+      await expect(page.getByTestId("workout-today-card")).toBeVisible();
+    } else {
+      await expect(workoutTask).toHaveCount(0);
+    }
   }
   assertNoErrors();
 });
@@ -107,9 +109,10 @@ test("missed summary explains the original date instead of a future proposed mov
     await page.setViewportSize(viewport);
     await openHarness(page, "&clientDashboardWorkoutState=missed-move");
     const summary = page.getByTestId("profile-summary-dashboard");
-    await expect(summary).toContainText("Тренировка 1 была запланирована на 26 августа");
+    const workoutTask = page.locator('[data-task-id="workout"]');
+    await expect(workoutTask).toContainText("Тренировка 1 была запланирована на 26 августа");
     await expect(summary).not.toContainText("21 сентября");
-    await expect(page.getByTestId("profile-summary-primary")).toBeEnabled();
+    await expect(workoutTask).toBeEnabled();
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
     await page.screenshot({ path: testInfo.outputPath(`missed-date-${viewport.width}.png`) });
   }

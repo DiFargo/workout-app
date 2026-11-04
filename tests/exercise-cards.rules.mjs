@@ -34,7 +34,7 @@ test("exercise cards: real transactions preserve programme copies, reject confli
   await db.doc("users/client/history/finished").set({ ...workout, completed: true });
   const context = { uid: "trainer", role: "trainer" };
   const videoCrop = { x: 0.2, y: 0.8, zoom: 1.5 };
-  const { card } = await manageTrainerExerciseCards({ db, context, body: { action: "save", templateId: "template", exerciseId: "press", legacyKey: exerciseCardLegacyKey(exercise), patch: { name: exercise.name, video: "https://example.test/new.mp4", technique: "Новая техника", videoCrop } } });
+  const { card } = await manageTrainerExerciseCards({ db, context, body: { action: "save", templateId: "template", exerciseId: "press", legacyKey: exerciseCardLegacyKey(exercise), patch: { name: exercise.name, video: "https://example.test/new.mp4", technique: "Новая техника", videoCrop, videoPosterTime: 1.2 } } });
   assert.equal("sets" in card, false);
   assert.equal(card.videoUpdatedAt, card.updatedAt);
   assert.deepEqual((await db.doc("trainingTemplates/template").get()).data(), template);
@@ -44,6 +44,8 @@ test("exercise cards: real transactions preserve programme copies, reject confli
   assert.equal(media.media[0].card.video, card.video);
   assert.deepEqual(media.media[0].card.videoCrop, videoCrop);
   assert.deepEqual((await db.doc(`trainerExerciseCards/${card.id}`).get()).data().videoCrop, videoCrop);
+  assert.equal(media.media[0].card.videoPosterTime, 1.2);
+  assert.equal((await db.doc(`trainerExerciseCards/${card.id}`).get()).data().videoPosterTime, 1.2);
   await assert.rejects(manageTrainerExerciseCards({ db, context: { uid: "other", role: "trainer" }, body: { action: "save", cardId: card.id, revision: 1, patch: { name: "Forbidden" } } }), { status: 403 });
   await assert.rejects(readClientExerciseMedia({ db, context: { uid: "other", role: "trainer" }, clientId: "client" }), { status: 403 });
   // One optimistic writer wins, the other sees a real transaction retry and a

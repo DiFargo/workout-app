@@ -1,0 +1,155 @@
+.card,
+.sheet {
+  --exercise-card-canvas: #f2f2f7;
+  --exercise-card-surface: #ffffff;
+  --exercise-card-secondary: #efeff4;
+  --exercise-card-line: rgba(60, 60, 67, 0.12);
+  --exercise-card-text: #1c1c1e;
+  --exercise-card-muted: #636366;
+  --exercise-card-accent: #3f73b8;
+  --exercise-card-soft: #edf3fa;
+  --exercise-card-danger: #b63d46;
+  box-sizing: border-box;
+  color: var(--exercise-card-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+.card.card {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 1px solid var(--exercise-card-line);
+  border-radius: 17px;
+  background: var(--exercise-card-surface);
+  box-shadow: none;
+}
+
+.card.card.open { border-color: rgba(63, 115, 184, 0.36); }
+.card .header { display: grid; grid-template-columns: 32px minmax(0, 1fr) 44px; align-items: center; gap: 10px; padding: 12px 14px; }
+.card .number { display: grid; place-items: center; width: 32px; min-height: 38px; border-radius: 10px; background: var(--exercise-card-secondary); color: var(--exercise-card-muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.card.open .number { color: var(--exercise-card-accent); background: var(--exercise-card-soft); }
+
+.card .toggle,
+.card .menuButton {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--exercise-card-text);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.card .toggle { justify-content: space-between; gap: 8px; min-width: 0; width: 100%; padding: 0; text-align: left; }
+.card .toggle > span { display: grid; gap: 3px; min-width: 0; }
+.card .toggle strong { display: block; color: var(--exercise-card-text); font-size: 15px; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.card .toggle small { color: var(--exercise-card-muted); font-size: 12px; font-weight: 400; line-height: 1.4; overflow-wrap: anywhere; }
+.card .toggle > svg { flex-shrink: 0; color: var(--exercise-card-muted); }
+.card .menuButton { justify-content: center; width: 44px; min-width: 44px; height: 44px; padding: 0; color: var(--exercise-card-muted); }
+.card .summary { margin: -2px 14px 13px 56px; color: var(--exercise-card-muted); font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.card .panel { min-width: 0; padding: 14px 14px 8px; border-top: 1px solid var(--exercise-card-line); }
+.card .panel[hidden] { display: none !important; }
+
+/* The shared quick editor retains its undo state while this panel is hidden. */
+.card.card .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 10px; width: 100%; max-width:640px; min-width: 0; }
+.card.card .fields label { gap: 6px; }
+.card.card .fields label > span { color: var(--exercise-card-muted); font-size: 12px; line-height: 1.35; }
+.card.card .fields input,
+.card.card .fields button { border: 1px solid var(--exercise-card-line); border-radius: 11px; background: var(--exercise-card-canvas); color: var(--exercise-card-text); font-size: 16px; font-weight: 400; line-height: 1.3; text-align: left; padding-inline: 12px !important; box-shadow: none; }
+.card.card .fields input:disabled { color: var(--exercise-card-muted); }
+.card.card .fields > button { grid-column: 1 / -1; width: auto !important; justify-self: start; padding-inline: 0 !important; border: 0; background: transparent; color: var(--exercise-card-accent); font-size: 13px; text-align: left; }
+.card .hint { margin: 10px 0 2px; color: var(--exercise-card-muted); font-size: 12px; line-height: 1.45; }
+.card .sets { min-width: 0; max-width:640px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--exercise-card-line); }
+.card .setLegend,
+.card .setRow { display: grid; grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; align-items: center; }
+.card .setLegend { margin-bottom: 6px; color: var(--exercise-card-muted); font-size: 12px; line-height: 1.35; }
+.card .setRow { margin-top: 8px; }
+.card .setRow > span { color: var(--exercise-card-muted); font-size: 13px; text-align: center; font-variant-numeric: tabular-nums; }
+.card .setRow input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 44px; margin: 0; padding: 10px 12px; border: 1px solid var(--exercise-card-line); border-radius: 11px; color: var(--exercise-card-text); background: var(--exercise-card-canvas); font: inherit; font-size: 16px; line-height: 1.3; box-shadow: none; }
+.card .setRow input:disabled { color: var(--exercise-card-muted); opacity: 0.65; }
+.card .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0 10px; margin-top: 6px; }
+.card .actions button,
+.card .choose { display: inline-flex; align-items: center; justify-content: flex-start; gap: 6px; min-height: 44px; min-width: 0; margin: 0; padding: 8px 0; border: 0; border-radius: 8px; background: transparent; box-shadow: none; color: var(--exercise-card-muted); font: inherit; font-size: 13px; line-height: 1.35; text-align: left; cursor: pointer; touch-action: manipulation; }
+.card .actions button[aria-expanded="true"] { color: var(--exercise-card-accent); }
+.card .actions button { font-size:12px; }
+.card.card .fields input, .card.card .fields button, .card .setRow input, .card .secondary select, .card .note textarea { font-size:16px!important; }
+.card .actions svg,
+.card .choose svg { flex-shrink: 0; }
+.card .choose { color: var(--exercise-card-accent); }
+.card .secondary { display: grid; gap: 10px; min-width: 0; margin: 6px 0 8px; padding: 12px; border-radius: 12px; background: var(--exercise-card-canvas); }
+.card .secondary > p { margin: 0; color: var(--exercise-card-muted); font-size: 12px; line-height: 1.45; }
+.card .alternative { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 8px; align-items: center; padding-left: 10px; border: 1px solid var(--exercise-card-line); border-radius: 10px; background: var(--exercise-card-surface); }
+.card .alternative > span { min-width: 0; padding-block: 8px; font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.card .alternative > button { display: grid; place-items: center; width: 44px; min-width: 44px; height: 44px; margin: 0; padding: 0; border: 0; border-radius: 9px; background: transparent; color: var(--exercise-card-muted); box-shadow: none; cursor: pointer; }
+.card .secondary > label,
+.card .note { display: grid; gap: 6px; min-width: 0; color: var(--exercise-card-muted); font-size: 12px; line-height: 1.4; }
+.card .secondary select,
+.card .note textarea { box-sizing: border-box; width: 100%; min-width: 0; min-height: 44px; margin: 0; padding: 10px 12px; border: 1px solid var(--exercise-card-line); border-radius: 11px; color: var(--exercise-card-text); background: var(--exercise-card-surface); font: inherit; font-size: 16px; line-height: 1.4; box-shadow: none; }
+.card .secondary select:disabled { opacity: 0.55; }
+.card .note { margin: 6px 0 10px; }
+.card .note textarea { min-height: 96px; resize: vertical; background: var(--exercise-card-canvas); }
+
+.sheet.sheet {
+  position: fixed;
+  inset: 0;
+  width: min(460px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  min-width: 0;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--exercise-card-line);
+  border-radius: 24px;
+  background: var(--exercise-card-canvas);
+  box-shadow: 0 24px 80px rgba(28, 28, 30, 0.22);
+}
+
+.sheet.sheet[open] { display: flex; flex-direction: column; }
+.sheet::backdrop { background: rgba(28, 28, 30, 0.36); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+.sheet * { box-sizing: border-box; }
+.sheet.sheet > header { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding: 14px 18px; border-bottom: 1px solid var(--exercise-card-line); background: var(--exercise-card-surface); }
+.sheet.sheet > header h2 { margin: 0; color: var(--exercise-card-text); font-size: 18px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.sheet.sheet > header button { display: grid; place-items: center; width: 44px; min-width: 44px; height: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 50%; background: var(--exercise-card-secondary); color: var(--exercise-card-muted); box-shadow: none; cursor: pointer; }
+.sheet .sheetBody { display: grid; gap: 8px; min-height: 0; min-width: 0; padding: 16px 18px; overflow-y: auto; overscroll-behavior: contain; }
+.sheetBody > p { margin: 0 0 4px; color: var(--exercise-card-muted); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.sheet .sheetBody > button { display: flex; align-items: center; justify-content: flex-start; gap: 10px; width: 100%; min-width: 0; min-height: 48px; margin: 0; padding: 12px; border: 1px solid var(--exercise-card-line); border-radius: 12px; background: var(--exercise-card-surface); color: var(--exercise-card-text); font: inherit; font-size: 14px; line-height: 1.35; text-align: left; box-shadow: none; cursor: pointer; touch-action: manipulation; }
+.sheet .sheetBody > button svg { flex-shrink: 0; }
+.sheet .sheetBody > button.danger { margin-top: 6px; border-color: transparent; color: var(--exercise-card-danger); background: transparent; }
+.sheet.sheet > footer { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 14px; margin: 0; padding: 14px 18px max(14px, env(safe-area-inset-bottom)); border-top: 1px solid var(--exercise-card-line); background: var(--exercise-card-surface); }
+.sheet.sheet > footer > span { min-width: 0; max-width: 250px; color: var(--exercise-card-muted); font-size: 12px; line-height: 1.4; }
+.sheet.sheet > footer > button { flex: 0 0 auto; min-width: 92px; min-height: 44px; margin: 0; padding: 10px 18px; border: 0; border-radius: 12px; background: var(--ownset-action-gradient); color: #ffffff; font: inherit; font-size: 14px; font-weight: 600; box-shadow: none; cursor: pointer; }
+.sheet button:disabled { opacity: 0.4; cursor: default; }
+.card :is(button, input, select, textarea):focus-visible,
+.sheet button:focus-visible { outline: 2px solid var(--exercise-card-accent); outline-offset: 2px; }
+.card button:active:not(:disabled),
+.sheet button:active:not(:disabled) { opacity: 0.72; }
+
+@media (max-width: 600px) {
+  .sheet.sheet { inset: auto 8px 8px; width: calc(100vw - 16px); max-height: calc(100dvh - max(16px, env(safe-area-inset-top))); margin: 0; border-radius: 24px; }
+}
+
+@media (max-width: 359px) {
+  .card .header { grid-template-columns: 28px minmax(0, 1fr) 44px; gap: 7px; padding: 11px 10px; }
+  .card .number { width: 28px; }
+  .card .toggle strong { font-size: 14px; }
+  .card .summary { margin-left: 45px; margin-right: 10px; font-size: 12px; }
+  .card .panel { padding-inline: 10px; }
+  .card .actions { column-gap: 12px; }
+  .card .actions button { font-size: 12px; }
+  .card .setLegend,
+  .card .setRow { grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr); gap: 6px; }
+  .sheet.sheet > header,
+  .sheet .sheetBody,
+  .sheet.sheet > footer { padding-inline: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card *, .sheet * { transition: none !important; }
+}

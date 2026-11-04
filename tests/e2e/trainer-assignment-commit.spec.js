@@ -1,0 +1,65 @@
+import { expect, test } from "./app-test.js";
+import { failOnRuntimeErrors } from "./runtime-errors.js";
+
+test.setTimeout(60_000);
+
+test("a saved assignment survives checklist failure and retries only the checklist", async ({ page }) => {
+  const noErrors = failOnRuntimeErrors(page);
+  await page.goto("/v2?trainerHarness=1&programAssignments=1&setupProgressFailure=1");
+  await expect(page.locator(".trainerNextRoot")).toBeVisible({ timeout: 40_000 });
+  await page.locator('[data-testid="trainer-nav-clients"]:visible,[data-testid="trainer-desktop-nav-clients"]:visible').click();
+  await page.locator(".trainerNextClientTable > button").first().click();
+  await page.locator(".trainerNextClientTabs:visible,.trainerNextClientMobileNav:visible").getByRole("button", { name: "Тренировки", exact: true }).click();
+  const disclosure = page.locator(".trainerClientAssignmentDisclosure");
+  await disclosure.locator("summary").click();
+  await page.getByLabel("Назначить программу клиенту", { exact: true }).selectOption("program_support");
+  await page.getByRole("button", { name: "Назначить", exact: true }).click();
+  const assignmentModal = page.getByRole("dialog", { name: "Корректировка под клиента", exact: true });
+  await assignmentModal.getByRole("button", { name: "Назначить программу", exact: true }).click();
+  await expect(assignmentModal).toBeHidden();
+  await expect(page.locator("html")).toHaveAttribute("data-assignment-attempts", "1");
+  await expect(page.locator("html")).toHaveAttribute("data-setup-progress-attempts", "1");
+  const schedule = page.getByRole("dialog").filter({ hasText: "РАСПИСАНИЕ ПРОГРАММЫ" });
+  await expect(schedule).toBeVisible();
+  await expect(schedule.getByRole("textbox", { name: /^Новая дата — / })).toHaveCount(3);
+  await schedule.getByRole("button", { name: /Закрыть/ }).click();
+  const warning = page.getByRole("status").filter({ hasText: "Программа уже назначена." });
+  await expect(warning).toBeVisible();
+  await expect(warning).toContainText("назначать программу заново не нужно");
+  const retry = warning.getByRole("button", { name: "Сохранить отметку", exact: true });
+  const bounds = await retry.boundingBox();
+  expect(bounds.height).toBeGreaterThanOrEqual(44);
+  await warning.screenshot({ path: test.info().outputPath("assignment-secondary-save-warning.png") });
+  await retry.click();
+  await expect(warning).toHaveCount(0);
+  await expect(page.locator("html")).toHaveAttribute("data-setup-progress-attempts", "2");
+  await expect(page.locator("html")).toHaveAttribute("data-assignment-attempts", "1");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  noErrors();
+});
+
+test("setup names the progress-only retry after its programme assignment was committed", async ({ page }) => {
+  const noErrors = failOnRuntimeErrors(page);
+  await page.goto("/v2?trainerHarness=1&primaryScreensAudit=1&setupProgressFailure=1");
+  await expect(page.locator(".trainerNextRoot")).toBeVisible({ timeout: 40_000 });
+  await page.locator('[data-testid="trainer-nav-clients"]:visible,[data-testid="trainer-desktop-nav-clients"]:visible').click();
+  await page.locator(".trainerNextClientTable > button").filter({ hasText: "Новый клиент" }).click();
+  const setup = page.getByRole("dialog").filter({ has: page.getByRole("heading", { name: "Назначьте программу", exact: true }) });
+  await expect(setup).toBeVisible();
+  await setup.getByRole("combobox", { name: "Программа тренировок", exact: true }).selectOption("program_support");
+  await setup.getByRole("button", { name: "Настроить программу", exact: true }).click();
+  await page.getByRole("dialog").filter({ has: page.getByRole("heading", { name: "Настройте веса для клиента", exact: true }) }).getByRole("button", { name: "Назначить и продолжить", exact: true }).click();
+  const pending = page.getByRole("dialog").filter({ has: page.getByRole("heading", { name: "Программа уже назначена", exact: true }) });
+  await expect(pending).toBeVisible();
+  await expect(pending).toContainText("Программа и корректировки нагрузки уже сохранены.");
+  await expect(pending.getByRole("button", { name: "Сохранить отметку и продолжить", exact: true })).toBeVisible();
+  await expect(pending.getByRole("button", { name: /Назначить/ })).toHaveCount(0);
+  await expect(pending.getByRole("spinbutton")).toHaveCount(0);
+  expect(await pending.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
+  await pending.screenshot({ path: test.info().outputPath("setup-progress-only-retry.png") });
+  await expect(page.locator("html")).toHaveAttribute("data-assignment-attempts", "1");
+  await pending.getByRole("button", { name: "Сохранить отметку и продолжить", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-setup-progress-attempts", "2");
+  await expect(page.locator("html")).toHaveAttribute("data-assignment-attempts", "1");
+  noErrors();
+});

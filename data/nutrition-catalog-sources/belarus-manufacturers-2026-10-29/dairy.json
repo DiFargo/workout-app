@@ -1,0 +1,684 @@
+[
+  {
+    "name": "Сыр творожный «Воздушный» сливочный 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 216,
+      "protein": 6,
+      "fat": 20,
+      "carbs": 3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный «Воздушный» с авокадо 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 222.9,
+      "protein": 6,
+      "fat": 20.5,
+      "carbs": 3.6
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный «Воздушный» с паприкой 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 224,
+      "protein": 6,
+      "fat": 20,
+      "carbs": 5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный «Воздушный» со вкусом «Оливковое масло» 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 216,
+      "protein": 3,
+      "fat": 20,
+      "carbs": 5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный «Воздушный» со вкусом «Лосось» 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 224,
+      "protein": 6,
+      "fat": 20,
+      "carbs": 5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный «Воздушный» со вкусом «Креветка» 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 224,
+      "protein": 6,
+      "fat": 20,
+      "carbs": 5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный сливочный 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 234,
+      "protein": 6,
+      "fat": 22,
+      "carbs": 3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный «Легкий» 35%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 154.8,
+      "protein": 8,
+      "fat": 12,
+      "carbs": 3.7
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный с авокадо 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 231.5,
+      "protein": 6,
+      "fat": 21.5,
+      "carbs": 3.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр творожный со вкусом «Трюфель» 60%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 234,
+      "protein": 6,
+      "fat": 22,
+      "carbs": 3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Сливочный» 50%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 355.5,
+      "protein": 22.5,
+      "fat": 29.5,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Маасдам» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 336.5,
+      "protein": 25.4,
+      "fat": 26.1,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Чеддер» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 316,
+      "protein": 25,
+      "fat": 24.6,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Тильзитер» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 334.8,
+      "protein": 26.1,
+      "fat": 25.6,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Голландский» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 332,
+      "protein": 26.3,
+      "fat": 25.2,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Швейцарский» 40%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 307.6,
+      "protein": 23.8,
+      "fat": 21.6,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Топленое молоко» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 316,
+      "protein": 25,
+      "fat": 24,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Сметанковый» 50%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 344,
+      "protein": 23,
+      "fat": 28,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Великокняжеский» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 316,
+      "protein": 23,
+      "fat": 25,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Мраморный» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 326.8,
+      "protein": 26,
+      "fat": 25.2,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт густой «Лесная ягода» 2%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 83.5,
+      "protein": 2.9,
+      "fat": 2,
+      "carbs": 13.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт густой «Клубника» 2%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 83.5,
+      "protein": 2.9,
+      "fat": 2,
+      "carbs": 13.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт густой двухслойный «Киви-крыжовник» 2%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 92,
+      "protein": 3,
+      "fat": 2,
+      "carbs": 15.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт густой двухслойный «Ананас-кокос» 2%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 92,
+      "protein": 3,
+      "fat": 2,
+      "carbs": 15.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт питьевой натуральный 2%",
+    "brand": "TEOS",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 53.2,
+      "protein": 5.8,
+      "fat": 2,
+      "carbs": 3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт питьевой «Черника» 1,8%",
+    "brand": "TEOS",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 73.4,
+      "protein": 5.2,
+      "fat": 1.8,
+      "carbs": 8.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт питьевой «Вишня-гранат» 1,8%",
+    "brand": "TEOS",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 73.4,
+      "protein": 5.2,
+      "fat": 1.8,
+      "carbs": 8.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт питьевой «Киви-яблоко» 1,8%",
+    "brand": "TEOS",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 73.4,
+      "protein": 5.2,
+      "fat": 1.8,
+      "carbs": 8.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт густой с топпером «Клубника и конфеты из молочного шоколада»",
+    "brand": "СуперКид",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 109.1,
+      "protein": 3.4,
+      "fat": 3.5,
+      "carbs": 16
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-s-topperom/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт густой с топпером «Ваниль и конфеты из молочного шоколада»",
+    "brand": "СуперКид",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 109.1,
+      "protein": 3.4,
+      "fat": 3.5,
+      "carbs": 16
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-s-topperom/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Йогурт густой с топпером «Пломбир и маршмеллоу»",
+    "brand": "СуперКид",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 86.4,
+      "protein": 3.3,
+      "fat": 2,
+      "carbs": 13.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/yogurt-s-topperom/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  }
+]

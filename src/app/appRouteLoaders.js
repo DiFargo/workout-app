@@ -1,5 +1,6 @@
 export const loadAdminPanelHub = () => import("../components/admin/AdminPanelHub");
 export const loadAdminBaseLibrary = () => import("../components/admin/AdminBaseLibrary");
+export const loadAdminLibraryRoute = () => import("./AdminLibraryRoute.jsx");
 export const loadAiCoachPage = () => import("../features/client/ai/AiCoachPage");
 export const loadBasicWorkoutQuizPage = () => import("../features/client/workouts/BasicWorkoutQuizPage");
 export const loadBasicWorkoutTodayPage = () => import("../features/client/workouts/BasicWorkoutTodayPage");

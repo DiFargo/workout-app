@@ -1,6 +1,6 @@
 // Standalone invitation pages are rendered before the React application's CSS loads.
 export const INVITE_PAGE_STYLES = `
-:root{color-scheme:light;--canvas:#f2f2f7;--surface:#fff;--text:#1c1c1e;--secondary:#636366;--line:rgba(60,60,67,.12);--accent:#3c6faa;--action:#3f73b8;--tint:#edf2f9}
+:root{color-scheme:light;--canvas:#f2f2f7;--surface:#fff;--text:#1c1c1e;--secondary:#636366;--line:rgba(60,60,67,.12);--accent:#3c6faa;--action:linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%);--tint:#edf2f9}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;background:var(--canvas);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom))}
 .card{width:min(100%,430px);padding:28px 24px;border-radius:28px;background:var(--surface)}
@@ -14,7 +14,7 @@ input{width:100%;min-height:52px;margin-top:8px;padding:13px 14px;border:1px sol
 input::placeholder{color:var(--secondary);opacity:1}
 input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}
 button,.login-link{width:100%;min-height:52px;margin-top:24px;padding:14px 16px;border:0;border-radius:16px;background:var(--action);color:#fff;font:600 17px/1.4 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;cursor:pointer;text-align:center;text-decoration:none;touch-action:manipulation}
-button:active,.login-link:active{background:#3565a3}
+button:active,.login-link:active{filter:brightness(.94)}
 button:focus-visible,.login-link:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 button:disabled{opacity:.6;cursor:wait}
 .login-link{display:none}.login-link.show,.notice .login-link{display:block}

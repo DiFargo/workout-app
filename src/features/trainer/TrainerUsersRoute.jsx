@@ -93,7 +93,8 @@ export default function TrainerUsersRoute(ctx) {
   const credentialsText = adminCreatedCredentials
     ? buildTrainerInviteMessage({
         login: adminCreatedCredentials.login || adminCreatedCredentials.email,
-        inviteUrl: adminCreatedCredentials.shareUrl || adminCreatedCredentials.inviteUrl
+        inviteUrl: adminCreatedCredentials.shareUrl || adminCreatedCredentials.inviteUrl,
+        botStartUrl: adminCreatedCredentials.botStartUrl
       })
     : "";
 

@@ -80,7 +80,25 @@ test("long voice results remain reachable without moving the close and done butt
   expect(await page.getByTestId("nutrition-voice-actions").boundingBox()).toEqual(actions);
   expect(await page.getByTestId("nutrition-voice-close").boundingBox()).toEqual(close);
   await page.getByTestId("nutrition-voice-close").click();
+  await expect(page.getByRole("alertdialog")).toBeVisible();
+  await page.getByRole("button", { name: "Пропустить и закрыть", exact: true }).click();
   await expect(page.getByTestId("voice-harness-result")).toHaveText("cancelled");
+});
+
+test("unresolved voice food requires a choice or explicit skip before Done", async ({ page }) => {
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.goto("/?clientHarness=1&clientHarnessPage=voiceReview&clientHarnessTheme=warm-light");
+  await page.getByTestId("nutrition-orbit-audio-search").click();
+  await page.getByTestId("nutrition-voice-record").click();
+  await expect(page.getByTestId("nutrition-voice-done")).toHaveText("Уточнить продукты");
+  await expect(page.getByTestId("nutrition-voice-record")).toBeDisabled();
+  await page.getByTestId("nutrition-voice-done").click();
+  await expect(page.getByTestId("nutrition-voice-candidate").first()).toBeFocused();
+  await expect(page.getByTestId("nutrition-voice-modal")).toBeVisible();
+  await page.getByTestId("nutrition-voice-skip").click();
+  await expect(page.getByTestId("nutrition-voice-candidate")).toHaveCount(0);
+  await page.getByTestId("nutrition-voice-done").click();
+  await expect(page.getByTestId("voice-harness-result")).toHaveText("saved:1");
 });
 
 test("voice sheet has clear recording controls across phone sizes", async ({ page }, testInfo) => {

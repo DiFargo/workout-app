@@ -225,6 +225,8 @@ export default function ProfileAccountSettingsSection({
         </button>
       </section>
 
+      <a className={styles.privacyLink} href="/privacy.html" target="_blank" rel="noopener noreferrer">Данные и конфиденциальность</a>
+
       {statusText && (
         <p className={`${styles.status}${statusIsSuccess ? ` ${styles.success}` : ""}`} data-testid="profile-account-status">
           {statusText}

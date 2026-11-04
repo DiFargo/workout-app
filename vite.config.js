@@ -114,9 +114,16 @@ export default defineConfig(({ command, mode }) => {
       __APP_VERSION__: JSON.stringify(pkg.version),
     },
     build: {
+      manifest: true,
       rollupOptions: {
         output: {
           manualChunks(id) {
+            if (
+              id.includes("node_modules/firebase/app-check/") ||
+              id.includes("node_modules/@firebase/app-check/")
+            ) {
+              return "firebase-app-check";
+            }
             if (
               id.includes("node_modules/firebase/storage") ||
               id.includes("node_modules/@firebase/storage")
@@ -139,7 +146,7 @@ export default defineConfig(({ command, mode }) => {
       watch: {
         // Playwright trace snapshots contain HTML. Watching generated reports
         // reloads the application in the middle of unrelated browser checks.
-        ignored: ['**/artifacts/**', '**/test-results/**', '**/playwright-report/**'],
+        ignored: ['**/artifacts/**', '**/output/**', '**/test-results/**', '**/playwright-report/**'],
       },
       proxy: apiBaseUrl
         ? {

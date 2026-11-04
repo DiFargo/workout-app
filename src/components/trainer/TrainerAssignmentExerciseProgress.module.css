@@ -1,0 +1,43 @@
+.progress { --assignment-success-text: #237a42; min-width: 0; display: grid; gap: 12px; margin: 12px 0 16px; font-size: 13px; line-height: 1.45; color: var(--trainer-v2-ink, #1c1c1e); }
+.summary { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--trainer-v2-line, rgba(60,60,67,.12)); }
+.historyHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.badge { max-width: 100%; padding: 4px 7px; border-radius: 8px; background: var(--trainer-v2-surface, #efeff4); color: var(--trainer-v2-muted, #636366); font-size: 11px; line-height: 1.35; font-weight: 650; overflow-wrap: anywhere; }
+.badge[data-tone="positive"] { color: var(--assignment-success-text); }
+.badge[data-tone="warning"] { color: var(--color-warning-text, #896014); }
+.caption, .historyLabel { color: var(--trainer-v2-muted, #636366); font-size: 12px; }
+.fact { font-size: 14px; font-weight: 650; overflow-wrap: anywhere; }
+.summary p, .sessionDetail p { margin: 0; color: var(--trainer-v2-muted, #636366); overflow-wrap: anywhere; }
+.returnLabel { font-size: 13px; color: var(--assignment-success-text); }
+.chart { margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--trainer-v2-surface, #efeff4); }
+.chart figcaption { font-size: 12px; font-weight: 650; }
+.chart svg { display: block; width: 100%; height: auto; min-height: 75px; max-height: 118px; overflow: visible; }
+.chart text { font-size: 11px; fill: var(--trainer-v2-muted, #636366); font-variant-numeric: tabular-nums; }
+.gridLine { stroke: var(--trainer-v2-line, rgba(60,60,67,.12)); stroke-width: 1; }
+.actualLine, .plannedLine { fill: none; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.actualLine { stroke: var(--trainer-v2-accent, #3c6faa); stroke-width: 2.5; }
+.plannedLine { stroke: var(--trainer-v2-muted, #636366); stroke-width: 1.8; }
+.point { fill: var(--trainer-v2-accent, #3c6faa); stroke: var(--color-surface, #fff); stroke-width: 1.5; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--trainer-v2-muted, #636366); }
+.legend span:first-child { color: var(--trainer-v2-accent, #3c6faa); }
+.chart p { margin: 4px 0 0; font-size: 11px; color: var(--trainer-v2-muted, #636366); }
+.historyLabel { margin-bottom: -6px; }
+.sessions { display: grid; grid-template-columns: repeat(auto-fit, minmax(63px, 1fr)); gap: 8px; }
+.sessions button { min-width: 0; min-height: 52px; display: grid; place-content: center; gap: 2px; padding: 6px 4px; border: 1px solid var(--trainer-v2-line, rgba(60,60,67,.12)); border-radius: 10px; background: var(--color-surface, #fff); color: var(--trainer-v2-ink, #1c1c1e); cursor: pointer; font: inherit; font-variant-numeric: tabular-nums; }
+.sessions button span { font-size: 11px; color: var(--trainer-v2-muted, #636366); }
+.sessions button strong { font-size: 12px; font-weight: 650; }
+.sessions button[aria-pressed="true"] { border-color: var(--trainer-v2-accent, #3c6faa); background: var(--trainer-v2-surface, #efeff4); }
+.sessions button:focus-visible, .details summary:focus-visible { outline: 2px solid var(--trainer-v2-accent, #3c6faa); outline-offset: 2px; }
+.sessions button:active { opacity: .7; }
+.details { min-width: 0; border-top: 1px solid var(--trainer-v2-line, rgba(60,60,67,.12)); }
+.details summary { min-height: 44px; padding: 12px 0 8px; color: var(--trainer-v2-accent, #3c6faa); font-size: 12px; font-weight: 600; cursor: pointer; }
+.sessionDetail { display: grid; gap: 8px; padding-bottom: 8px; }
+.sessionDetail > div { display: grid; gap: 2px; }
+.sessionDetail > div > span { font-size: 11px; color: var(--trainer-v2-muted, #636366); }
+.sessionDetail strong { font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
+.sessionDetail table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+.sessionDetail caption { padding: 0 0 5px; text-align: left; color: var(--trainer-v2-muted, #636366); font-size: 11px; }
+.sessionDetail th, .sessionDetail td { padding: 7px 3px; border-bottom: 1px solid var(--trainer-v2-line, rgba(60,60,67,.12)); text-align: left; overflow-wrap: anywhere; }
+.sessionDetail th { font-weight: 550; }
+.comment { padding: 8px 10px; border-radius: 10px; background: var(--trainer-v2-surface, #efeff4); white-space: pre-wrap; }
+.empty { margin: 12px 0; font-size: 13px; line-height: 1.45; color: var(--trainer-v2-muted, #636366); }
+@media (max-width: 560px) { .progress { font-size: 14px; } .fact { font-size: 15px; } .sessions { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

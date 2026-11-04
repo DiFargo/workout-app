@@ -41,6 +41,7 @@ test("cancelled photo response cannot replace a newer result or stop its spinner
   globalThis.document = { createElement: () => ({ getContext: () => ({ drawImage() {} }), toDataURL: () => "data:image/jpeg;base64,eA==" }) };
   const state = {};
   const handlers = createNutritionPhotoAiHandlers(new Proxy({
+    auth: { currentUser: { uid: "synthetic" } }, captureAuthSession: undefined,
     nutrition: { myFoods: {} }, nutritionFoodDatabase: [], fatSecretFoods: [], nutritionPhotoInputRef: { current: null }, nutritionPhotoLastFileRef: { current: null }
   }, { get(target, name) { return name in target ? target[name] : (value) => { state[name] = typeof value === "function" ? value(state[name]) : value; }; } }));
   const file = new Blob(["image"], { type: "image/png" });

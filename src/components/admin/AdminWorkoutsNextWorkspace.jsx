@@ -8,6 +8,8 @@ export default function AdminWorkoutsNextWorkspace({
   selectedClient,
   workouts,
   exerciseLibrary,
+  trainerLibraryLoadState,
+  onRetryLibrary,
   programTemplates,
   selectedProgramId,
   onSelectProgram,
@@ -56,6 +58,8 @@ export default function AdminWorkoutsNextWorkspace({
       selectedClient={selectedClient || null}
       workouts={workouts}
       exerciseLibrary={exerciseLibrary}
+      trainerLibraryLoadState={trainerLibraryLoadState}
+      onRetryLibrary={onRetryLibrary}
       programTemplates={programTemplates}
       selectedProgramId={selectedProgramId}
       onSelectProgram={onSelectProgram}

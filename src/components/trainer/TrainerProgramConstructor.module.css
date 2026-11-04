@@ -87,7 +87,7 @@
   white-space: nowrap;
 }
 .programActions .deleteButton { border-color: #ff777d; color: #ef343b; }
-.programActions .saveButton { min-width: 124px; border-color: var(--purple); background: linear-gradient(135deg, var(--trainer-v2-accent, #9a87ce), var(--trainer-v2-accent, #806bb6)); color: #fff; box-shadow: 0 7px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / .23); }
+.programActions .saveButton { min-width: 124px; border-color: var(--purple); background: var(--ownset-action-gradient); color: #fff; box-shadow: 0 7px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / .23); }
 
 .editorGrid { min-width: 0; display: grid; grid-template-columns: 248px minmax(600px, 1fr); align-items: start; gap: 12px; }
 .daysPanel, .dayEditor { border: 1px solid var(--line); border-radius: 14px; background: #fff; }
@@ -1412,5 +1412,18 @@
 
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview {display:grid!important;gap:10px!important;margin:0!important}
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview strong {font-size:13px!important;font-weight:500!important;color:#617078!important}
-:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview video {display:block!important;width:100%!important;max-width:100%!important;height:220px!important;object-fit:contain!important;background:#1c282e!important;border-radius:12px!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview video {display:block!important;width:min(100%,320px)!important;max-width:100%!important;height:auto!important;max-height:none!important;aspect-ratio:1!important;justify-self:center!important;object-fit:contain!important;background:#1c282e!important;border-radius:12px!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .appleVideoPreview small {font-size:12px!important;line-height:1.45!important;color:#617078!important}
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor .videoUpload > span {font-size:14px!important;font-weight:500!important}
+
+/* The card editor keeps the established day/group flows and only replaces
+   ordinary exercise rows. Scope these adjustments to the approved layout. */
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .exerciseTable {display:grid!important;gap:12px!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .exerciseHead {display:none!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .editorTabs[hidden] {display:none!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .dayHeader {margin-bottom:16px!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .appleMobileDays {margin-bottom:14px!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .appleSectionHead {display:none!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .exerciseAddRow {margin-top:16px!important;gap:10px!important;flex-wrap:wrap!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .addExerciseButton {width:100%!important;justify-content:center!important;min-height:48px!important;background:#edf3fa!important;border:1px dashed #3f73b8!important;color:#3f73b8!important}
+:global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] {background:#f2f2f7!important}

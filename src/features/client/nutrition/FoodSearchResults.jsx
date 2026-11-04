@@ -21,6 +21,7 @@ export default function FoodSearchResults({
   visibleResults,
   nutrition,
   onSuggestionSelect,
+  onClearSearch,
   onMyFoodSelect,
   onFoodSelect,
   onShowMore
@@ -42,7 +43,11 @@ export default function FoodSearchResults({
         </div>
       )}
 
-      {!fatSecretLoading && !fatSecretError && cleanSearch.length >= 2 && searchResults.length === 0 && (
+      {!fatSecretLoading && visibleResults.some(food => food.searchFallback) && (
+        <div className={styles.status} role="status">В общей базе нет точного товара этого бренда. Ниже — базовые продукты без бренда; их КБЖУ могут отличаться от упаковки.</div>
+      )}
+
+      {searchTab !== "my" && !fatSecretLoading && !fatSecretError && cleanSearch.length >= 2 && searchResults.length === 0 && (
         <div className={styles.status} data-food-search-status="empty-search">
           <strong className={styles.statusTitle}>Точного совпадения пока нет</strong>
           {fallbackSuggestions.length > 0 && (
@@ -67,8 +72,9 @@ export default function FoodSearchResults({
 
       {searchTab === "my" && searchResults.length === 0 && (
         <div className={`${styles.status} ${styles.emptyState}`} data-food-search-status="empty-products">
-          <strong className={styles.emptyTitle}>Пока нет своих продуктов</strong>
-          <span className={styles.emptyCopy}>Создай продукт или блюдо — они появятся здесь.</span>
+          <strong className={styles.emptyTitle}>{cleanSearch && Object.keys(myFoods).length ? "По запросу ничего не найдено" : "Пока нет своих продуктов"}</strong>
+          <span className={styles.emptyCopy}>{cleanSearch && Object.keys(myFoods).length ? "Ваши продукты сохранены. Попробуйте другой запрос." : "Создайте продукт или блюдо — они появятся здесь."}</span>
+          {cleanSearch && Object.keys(myFoods).length > 0 && <button type="button" className={styles.suggestionButton} onClick={onClearSearch || (() => onSuggestionSelect(""))}>Очистить поиск</button>}
         </div>
       )}
 
@@ -98,7 +104,10 @@ export default function FoodSearchResults({
               {normalizedFood.icon || getFoodIcon(normalizedFood)}
             </span>
             <div className={styles.itemInfo}>
-              <strong className={styles.itemTitle}>{getShortFoodName(normalizedFood.name)}</strong>
+              <strong className={`${styles.itemTitle} ${normalizedFood.sourceType === "basic_reference" ? styles.basicTitle : ""}`}>{getShortFoodName(normalizedFood.name)}</strong>
+              {(normalizedFood.sourceType === "basic_reference" || normalizedFood.brand) && (
+                <small className={styles.itemOrigin}>{normalizedFood.sourceType === "basic_reference" ? "Базовый продукт · USDA" : normalizedFood.brand}</small>
+              )}
               <span className={styles.itemMeta}>
                 <em className={styles.itemPortion}>{normalizedFood.nutritionBasisPending ? "Нужно уточнить массу или объём КБЖУ" : getFoodDisplayPortion(normalizedFood)}</em>
                 <small className={styles.itemDetails}>

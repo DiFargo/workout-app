@@ -27,6 +27,10 @@ export function createWorkoutEntryNavigation({
 }) {
   function saveWorkoutModePreference(mode, remember = workoutModeRemember) {
     const currentUser = auth.currentUser || user;
+    const previous = currentUser?.uid
+      ? safeReadUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, workoutModePreference)
+      : workoutModePreference;
+    if (previous?.mode === mode && Boolean(previous.remember) === Boolean(remember)) return;
     const nextPreference = {
       mode,
       remember: Boolean(remember),
@@ -55,6 +59,7 @@ export function createWorkoutEntryNavigation({
       : null;
 
     if (
+      !hasSavedWorkoutPlanForMode(plan, "individual") &&
       isWorkoutPlanForMode(cachedIndividualPlan, "individual") &&
       cachedIndividualPlan?.workouts?.length > 0
     ) {
@@ -74,6 +79,7 @@ export function createWorkoutEntryNavigation({
     if (currentUserId) {
       loadWorkoutsFromFirebase(currentUserId, {
         mode: "individual",
+        maxAgeMs: 3000,
         preserveCurrentPlanOnError: true
       }).catch((error) => {
         console.warn("Background workouts refresh error", error);
@@ -107,6 +113,7 @@ export function createWorkoutEntryNavigation({
     if (currentUserId) {
       loadWorkoutsFromFirebase(currentUserId, {
         mode: "basic",
+        maxAgeMs: 3000,
         preserveCurrentPlanOnError: true
       }).catch((error) => {
         console.warn("Background basic workouts refresh error", error);

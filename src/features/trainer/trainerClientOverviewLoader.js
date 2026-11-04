@@ -2,6 +2,9 @@ import { collection, doc, getDoc, getDocs, query, orderBy, limit, startAfter } f
 import { programDraftSnapshot } from "../../utils/trainerProgramDraft.js";
 import { withSummaryDeadline } from "../../utils/trainerSummaryReadState.js";
 import { loadClientExerciseMedia, withClientExerciseMedia } from "../../utils/clientExerciseMedia.js";
+import { captureAuthSession } from "../../utils/authSession.js";
+import { runSessionResource } from "../../utils/sessionResource.js";
+import { isNutritionDayStorageEnabled } from "../../utils/nutritionDayStorageConfig.js";
 
 const historyRequests = new WeakMap();
 const HISTORY_PAGE_SIZE = 80;
@@ -40,7 +43,6 @@ function getSettledDocs(result) {
 export function createTrainerClientOverviewLoader({
   db,
   auth,
-  user,
   setSelectedUserId,
   setAdminSelectedClient,
   setAdminClientTab,
@@ -67,21 +69,20 @@ export function createTrainerClientOverviewLoader({
   setAdminTrainerNote,
   setAdminCalendarDraft,
   setPlan,
-  mirrorClientForTrainer,
-  loadAdminTrainingTemplates
+  mirrorClientForTrainer
 }) {
   async function loadHistoryPage(client) {
     const request = historyRequests.get(setAdminClientHistory);
-    if (!request || request.clientId !== client.id || !request.cursor || request.loading || !request.hasMore) return false;
+    if (!request || !request.session.isCurrent() || request.clientId !== client.id || !request.cursor || request.loading || !request.hasMore) return false;
     request.loading = true;
     try {
       const snapshot = await withSummaryDeadline(() => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), startAfter(request.cursor), limit(HISTORY_PAGE_SIZE))), 8000);
-      if (historyRequests.get(setAdminClientHistory) !== request) return false;
+      if (!request.session.isCurrent() || historyRequests.get(setAdminClientHistory) !== request) return false;
       const items = getDocsAsItems(snapshot);
       request.cursor = snapshot.docs.at(-1) || request.cursor;
       request.hasMore = snapshot.size === HISTORY_PAGE_SIZE;
-      setAdminClientHistory((previous) => [...new Map([...previous, ...items].map((item) => [item.id, item])).values()]);
-      setAdminSelectedClient((previous) => previous?.id === client.id ? { ...previous, trainerHistoryHasMore: request.hasMore } : previous);
+      setAdminClientHistory((previous) => request.session.isCurrent() && historyRequests.get(setAdminClientHistory) === request ? [...new Map([...previous, ...items].map((item) => [item.id, item])).values()] : previous);
+      setAdminSelectedClient((previous) => request.session.isCurrent() && previous?.id === client.id ? { ...previous, trainerHistoryHasMore: request.hasMore } : previous);
       return true;
     } catch (error) {
       console.warn("Earlier client history load failed:", error);
@@ -91,11 +92,16 @@ export function createTrainerClientOverviewLoader({
 
   async function loadAdminClientOverview(client, openClientPage = false) {
     if (!client?.id) return;
+    const session = captureAuthSession(auth);
+    if (!session.isCurrent()) return;
     if (openClientPage?.historyPage) return loadHistoryPage(client);
 
-    const request = { clientId: client.id, cursor: null, hasMore: false, loading: false };
+    const dayStorage = isNutritionDayStorageEnabled();
+    const previousRequest = historyRequests.get(setAdminClientHistory);
+    return runSessionResource(auth, `trainer-overview:${client.id}:${dayStorage}`, async ({ isCurrent: resourceIsCurrent }) => {
+    const request = { session, clientId: client.id, cursor: null, hasMore: false, loading: false };
     historyRequests.set(setAdminClientHistory, request);
-    const isCurrentClientRequest = () => historyRequests.get(setAdminClientHistory) === request;
+    const isCurrentClientRequest = () => resourceIsCurrent() && session.isCurrent() && historyRequests.get(setAdminClientHistory) === request;
 
     setSelectedUserId(client.id);
     setAdminSelectedClient(client);
@@ -118,7 +124,7 @@ export function createTrainerClientOverviewLoader({
 
     try {
       let freshClient = { ...client };
-      const currentTrainerUid = auth.currentUser?.uid || user?.uid || "";
+      const currentTrainerUid = session.uid;
 
       try {
         const clientDocSnap = await getDoc(doc(db, "users", client.id));
@@ -128,7 +134,7 @@ export function createTrainerClientOverviewLoader({
       } catch (clientDocError) {
         console.warn("Full client document unavailable, trying trainerClients mirror:", clientDocError);
 
-        if (currentTrainerUid) {
+        if (currentTrainerUid && isCurrentClientRequest()) {
           try {
             const linkedClientSnap = await getDoc(doc(db, "users", currentTrainerUid, "trainerClients", client.id));
             if (linkedClientSnap.exists()) {
@@ -150,56 +156,51 @@ export function createTrainerClientOverviewLoader({
       if (!isCurrentClientRequest()) return;
 
       setAdminSelectedClient(freshClient);
-      setUsersList((prev) => prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item));
-      setAdminAllUsersList((prev) => prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item));
+      setUsersList((prev) => isCurrentClientRequest() ? prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item) : prev);
+      setAdminAllUsersList((prev) => isCurrentClientRequest() ? prev.map((item) => item.id === freshClient.id ? { ...item, ...freshClient } : item) : prev);
 
-      let historySnap = null;
-      let historyLoadFailed = false;
-      let nutritionSnap = null;
-      let measurementsSnap = null;
-      let workoutsSnap = null;
       const exerciseMediaRequest = loadClientExerciseMedia(client.id);
-
-      try {
-        historySnap = await withSummaryDeadline(() => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), limit(HISTORY_PAGE_SIZE))), 8000);
-        request.cursor = historySnap.docs.at(-1) || null;
-        request.hasMore = historySnap.size === HISTORY_PAGE_SIZE;
-      } catch (historyError) {
-        console.error("Client history load failed:", historyError);
-        historyLoadFailed = true;
-        historySnap = null;
-      }
-
-      try {
-        nutritionSnap = await getDoc(doc(db, "users", client.id, "nutrition", "state"));
-      } catch (nutritionError) {
-        console.error("Client nutrition load failed:", nutritionError);
-        nutritionSnap = null;
-      }
-
-      try {
-        measurementsSnap = await getDocs(collection(db, "users", client.id, "measurements"));
-      } catch (measurementError) {
-        console.error("Client measurements load failed:", measurementError);
-        measurementsSnap = null;
-      }
-
-      try {
-        workoutsSnap = await getDocs(collection(db, "users", client.id, "workouts"));
-      } catch (workoutsError) {
-        console.error("Client workouts load failed:", workoutsError);
-        workoutsSnap = null;
-      }
-
-      const [tasksResult, photosResult, eventsResult, paymentResult, privateNoteResult] = await Promise.allSettled([
+      const [historyResult, nutritionResult, measurementsResult, workoutsResult,
+        tasksResult, photosResult, eventsResult, paymentResult, privateNoteResult] = await Promise.allSettled([
+        withSummaryDeadline(() => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), limit(HISTORY_PAGE_SIZE))), 8000),
+        (async () => {
+          if (!dayStorage) return getDoc(doc(db, "users", client.id, "nutrition", "state"));
+          const result = await (await import("../../utils/nutritionDayClient.js")).readNutritionState(client.id, { mode: "full" });
+          if (!result?.state || result.state.__uid !== client.id || result.coverage?.complete !== true ||
+            result.coverage.nextCursor || !Array.isArray(result.coverage.missingDayKeys) || result.coverage.missingDayKeys.length) {
+            throw Object.assign(new Error("Питание клиента загружено не полностью."), { code: "nutrition/incomplete-read" });
+          }
+          return { exists: () => true, data: () => result.state };
+        })(),
+        getDocs(collection(db, "users", client.id, "measurements")),
+        // Keep the complete editor/assignment aggregate, including its archive.
+        getDocs(collection(db, "users", client.id, "workouts")),
         getDocs(collection(db, "users", client.id, "trainerTasks")),
         getDocs(collection(db, "users", client.id, "progressPhotos")),
         getDocs(collection(db, "users", client.id, "trainerEvents")),
         getDoc(doc(db, "users", client.id, "payments", "current")),
-        getDoc(doc(db, "trainerNotes", `${auth.currentUser?.uid || ""}_${client.id}`))
+        getDoc(doc(db, "trainerNotes", `${session.uid}_${client.id}`))
       ]);
 
       if (!isCurrentClientRequest()) return;
+      if (dayStorage && nutritionResult.status === "rejected") {
+        // Null plus an explicit error is not an authoritative empty diary and
+        // must never be mirrored back over the client's current nutrition.
+        setAdminClientNutrition(null);
+        setAdminSelectedClient(previous => isCurrentClientRequest() ? { ...previous, trainerNutritionLoadError: true } : previous);
+        throw nutritionResult.reason;
+      }
+      const historySnap = historyResult.status === "fulfilled" ? historyResult.value : null;
+      const historyLoadFailed = historyResult.status !== "fulfilled";
+      const nutritionSnap = nutritionResult.status === "fulfilled" ? nutritionResult.value : null;
+      const measurementsSnap = measurementsResult.status === "fulfilled" ? measurementsResult.value : null;
+      const workoutsSnap = workoutsResult.status === "fulfilled" ? workoutsResult.value : null;
+      request.cursor = historySnap?.docs.at(-1) || null;
+      request.hasMore = historySnap?.size === HISTORY_PAGE_SIZE;
+      for (const [name, result] of [["history", historyResult], ["nutrition", nutritionResult],
+        ["measurements", measurementsResult], ["workouts", workoutsResult]]) {
+        if (result.status === "rejected") console.error(`Client ${name} load failed:`, result.reason);
+      }
 
       const clientHistory = getDocsAsItems(historySnap);
       clientHistory.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
@@ -280,6 +281,7 @@ export function createTrainerClientOverviewLoader({
       // failure back into the client's Firestore profile.
       const clientView = {
         ...fullClientForView,
+        trainerNutritionLoadError: false,
         trainerHistoryLoadError: historyLoadFailed,
         trainerHistoryHasMore: request.hasMore
       };
@@ -287,8 +289,8 @@ export function createTrainerClientOverviewLoader({
       if (!isCurrentClientRequest()) return;
 
       setAdminSelectedClient(clientView);
-      setUsersList((prev) => prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item));
-      setAdminAllUsersList((prev) => prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item));
+      setUsersList((prev) => isCurrentClientRequest() ? prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item) : prev);
+      setAdminAllUsersList((prev) => isCurrentClientRequest() ? prev.map((item) => item.id === clientView.id ? { ...item, ...clientView } : item) : prev);
       await mirrorClientForTrainer(fullClientForView, mergedNutritionState);
       if (!isCurrentClientRequest()) return;
 
@@ -326,7 +328,6 @@ export function createTrainerClientOverviewLoader({
         workouts: clientWorkouts,
         archivedWorkouts
       });
-      await loadAdminTrainingTemplates();
     } catch (error) {
       console.error("Client overview load failed:", error);
       if (isCurrentClientRequest()) {
@@ -337,6 +338,7 @@ export function createTrainerClientOverviewLoader({
         setAdminClientLoading(false);
       }
     }
+    }, { force: Boolean(previousRequest && previousRequest.clientId !== client.id) });
   }
 
   return {

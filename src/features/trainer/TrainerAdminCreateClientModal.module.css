@@ -125,6 +125,13 @@
   box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / .16);
 }
 
+.hint {
+  margin: -7px 0 0;
+  color: var(--trainer-v2-muted, #636366);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .status {
   margin: 0;
   padding: 11px 13px;
@@ -185,6 +192,22 @@
   font-size: 13px;
   font-weight: 750;
   cursor: pointer;
+}
+
+.telegramAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--ownset-action-gradient);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
 }
 
 .footer {

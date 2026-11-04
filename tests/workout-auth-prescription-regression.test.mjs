@@ -1,6 +1,8 @@
 import { test, beforeEach, after } from "node:test";
 import assert from "node:assert/strict";
 import { installRuntimeImports } from "./helpers/runtime-imports.mjs";
+import { POST_WORKOUT_FEEDBACK_OPTIONS } from "../src/domain/workoutPresentation.js";
+import { getWorkoutNoteItems } from "../src/utils/trainerClientMessages.js";
 
 const auth = { currentUser: null };
 let transact;
@@ -108,6 +110,30 @@ test("ordinary trainer prescription remains separate from actual entered weight 
   assert.equal(entry.exercises[0].sets[0].reps, "12");
   assert.equal(entry.exercises[0].video, "/trainer/bench.mp4");
   assert.equal(state.saved, true);
+});
+
+test("сохранение тренировки не подставляет системный совет в комментарий и сохраняет оценку отдельно", async () => {
+  for (const feedback of POST_WORKOUT_FEEDBACK_OPTIONS) {
+    for (const basic of [false, true]) {
+      for (const comment of ["", "  Последний подход был тяжёлым.  "]) {
+        writes = [];
+        const plan = assignedPlan();
+        if (basic) { plan.source = "basic"; plan.workouts[0].source = "basic"; }
+        const readiness = { id: "good", title: "Нормально", emoji: "🙂", weightFactor: 1 };
+        const { args, state } = saveFixture({ plan, workout: plan.workouts[0], workoutClientComment: comment,
+          workoutReadiness: readiness, feedbackOverride: feedback });
+        await saveCompletedWorkoutToFirebase(args);
+        const entry = writes.find(item => item.path.includes("/history/")).data;
+        assert.equal(state.saved, true);
+        assert.deepEqual(entry.postWorkoutFeedback, { id: feedback.id, title: feedback.title, emoji: feedback.emoji, advice: feedback.advice });
+        assert.deepEqual(entry.readiness, readiness);
+        assert.equal(entry[basic ? "personalNote" : "clientComment"], comment.trim());
+        assert.equal(Object.hasOwn(entry, basic ? "clientComment" : "personalNote"), false);
+        assert.deepEqual(getWorkoutNoteItems([entry]).map(note => note.text), !basic && comment.trim() ? [comment.trim()] : []);
+        assert.ok(writes.every(item => !/\/(telegramMessages|trainerTasks|trainerEvents)\//.test(item.path)), "finish не отправляет сообщения и уведомления");
+      }
+    }
+  }
 });
 
 test("readiness captures prescription before adaptation and repeated readiness cannot change it", async () => {
@@ -240,6 +266,7 @@ test("history load result/error from a prior generation cannot publish even for 
     const delay = deferred(); readHistory = () => delay.promise;
     const fixture = historyFixture();
     const loading = fixture.handlers.loadHistory();
+    await new Promise(resolve => setImmediate(resolve));
     reloginSameObject(); fixture.state.history = [{ id: "new" }]; fixture.state.loading = "new";
     if (fail) delay.reject(new Error("offline")); else delay.resolve({ forEach: fn => fn({ id: "old", data: () => ({ date: "2026-10-08" }) }) });
     await loading;
@@ -277,6 +304,7 @@ test("workout plan loader rejects late result/error after same-object relogin, p
     readHistory = () => delay.promise;
     const fixture = planLoadFixture();
     const loading = loadWorkoutsFromFirebaseWithDeps(fixture.args);
+    await new Promise(resolve => setImmediate(resolve));
     reloginSameObject();
     values.set("plan:a", "new-plan-cache");
     values.set(getWorkoutDraftKey("a", "day-a"), "new-draft");

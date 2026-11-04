@@ -1,5 +1,6 @@
 import { exerciseLibraryNameKey } from "./exerciseLibraryIdentity.js";
 import { normalizeExerciseVideoCrop } from "./exerciseVideoCrop.js";
+import { normalizeExerciseVideoPosterTime } from "./exerciseVideoPoster.js";
 import { exerciseVideoPriorityTime } from "./exerciseVideoPriority.js";
 
 const text = (value) => typeof value === "string" ? value.trim() : "";
@@ -16,7 +17,8 @@ export function exerciseCardLegacyKey(exercise = {}) {
 export function exerciseCardMetadata(exercise = {}) {
   return { name: text(exercise.name), video: exerciseVideo(exercise), technique: exerciseTechnique(exercise),
     muscleGroup: text(exercise.muscleGroup), videoPoster: text(exercise.videoPoster), videoThumbnail: text(exercise.videoThumbnail),
-    videoCrop: exerciseVideo(exercise) ? normalizeExerciseVideoCrop(exercise.videoCrop) : null };
+    videoCrop: exerciseVideo(exercise) ? normalizeExerciseVideoCrop(exercise.videoCrop) : null,
+    videoPosterTime: exerciseVideo(exercise) ? normalizeExerciseVideoPosterTime(exercise.videoPosterTime) : null };
 }
 
 // Preserve existing catalogue/illustration identity when a legacy item becomes
@@ -90,6 +92,14 @@ export function applyExerciseCard(exercise, card) {
   const resolved = Object.fromEntries(Object.entries(metadata).filter(([field]) => !overrides[field]));
   // A different, local video must never inherit framing for the shared source.
   if (overrides.video && !overrides.videoCrop) resolved.videoCrop = null;
+  if (overrides.video && !overrides.videoPosterTime) resolved.videoPosterTime = null;
+  // A local timestamp belongs to its old source, not to a replacement shared
+  // clip. A cleared video cannot retain any selected frame either.
+  if (Object.hasOwn(resolved, "video") && resolved.video !== original.video) {
+    resolved.videoPosterTime = metadata.videoPosterTime;
+    delete overrides.videoPosterTime;
+  }
+  if (!exerciseVideo({ ...exercise, ...resolved })) resolved.videoPosterTime = null;
   if (Object.hasOwn(resolved, "video")) Object.assign(resolved, { videoUrl: "", videoURL: "" });
   return { ...exercise, ...resolved, exerciseCardId: card.id, exerciseCardOwnerUid: card.ownerUid,
     exerciseCardNames: card.previousNames || [],

@@ -86,3 +86,5 @@
   font-size: 14px;
   font-weight: 650;
 }
+.toast.inline { position: static; width: auto; margin: 8px 0; box-shadow: none; }
+.toast.inline .restoreButton { min-height: 44px; }

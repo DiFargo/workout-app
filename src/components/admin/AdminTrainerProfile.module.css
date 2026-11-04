@@ -315,6 +315,9 @@
 .inviteIcon svg { width: 20px; height: 20px; }
 
 .inviteCard > div:nth-child(2) { min-width: 0; flex: 1 1 auto; }
+.inviteCard label { display: grid; gap: 4px; margin-top: 8px; font-size: 12px; }
+.inviteCard input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid currentColor; border-radius: 8px; background: #fff; color: inherit; font: inherit; font-size: 16px; }
+.inviteCard input:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 .inviteCard .eyebrow { color: #a87838; }
 .inviteCard strong { display: block; color: #4c4034; font-size: 14px; font-weight: 800; }
 .inviteCard p:not(.eyebrow) { margin: 4px 0 0; color: #617078; font-size: 12px; font-weight: 560; line-height: 1.35; }
@@ -1079,6 +1082,7 @@
 }
 
 .root { min-height: 0; width: 100%; padding: 0; background: transparent; }
+.root, .root * { box-sizing: border-box; }
 .profileCard { min-height: 0; padding: 22px; border: 0; box-shadow: none; background: #fff; border-radius: 20px; }
 .avatar, .clientAvatar { background: #edf1f3; color: #617078; border: 0; box-shadow: none; border-radius: 50%; }
 .nameLine h1 { font-size: 26px; font-weight: 700; letter-spacing: -.025em; line-height: 1.2; }
@@ -1086,7 +1090,7 @@
 .headerActions { flex-wrap: wrap; }
 .iconAction, .compactAction, .cardLink, .roleDialogConfirm, .roleDialogCancel, .dialogInlineAction { min-height: 44px; }
 .iconAction span { display: inline; }
-.primaryAction { box-shadow: none; background: var(--ownset-action-gradient); font-weight: 600; }
+.primaryAction, .primaryAction:hover, .primaryAction:active { box-shadow: none; background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); font-weight: 600; }
 .secondaryAction { font-weight: 600; }
 .metricsGrid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
 .metricCard { min-width: 0; min-height: 100px; padding: 15px; display: flex; flex-direction: column; gap: 5px; border: 0; box-shadow: none; border-radius: 16px; }
@@ -1105,6 +1109,27 @@
 .roleDialogClose { width: 44px; height: 44px; }
 .roleDialogActions { flex-wrap: wrap; }
 .trainerChoice select { font-size: 16px; }
+.clientsCard { grid-row: auto; scroll-margin-top: 100px; }
+.profileQuickActions { justify-content: flex-start; flex-wrap: wrap; }
+.profileQuickActions button { min-height: 44px; }
+.profileQuickActions .secondaryAction { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.advanced { margin-top: 14px; border: 1px solid rgba(60,60,67,.12); border-radius: 18px; background: #fff; }
+.advanced > summary { display: flex; min-height: 64px; align-items: center; gap: 12px; padding: 14px 18px; list-style: none; cursor: pointer; }
+.advanced > summary::-webkit-details-marker { display: none; }
+.advanced > summary > svg { width: 20px; height: 20px; color: #636366; flex: 0 0 auto; }
+.advanced > summary > svg:last-child { margin-left: auto; }
+.advanced[open] > summary > svg:last-child { transform: rotate(90deg); }
+.advanced > summary span { display: grid; gap: 3px; min-width: 0; }
+.advanced > summary strong { font-size: 15px; font-weight: 600; }
+.advanced > summary small { font-size: 12px; color: #636366; }
+.advanced > .managementCard { padding-top: 8px; }
+.advanced .cardHeader { display: none; }
+.advanced .cardActions { gap: 8px; }
+.advanced > summary:focus-visible { outline: 3px solid #3c6faa; outline-offset: 3px; border-radius: 16px; }
+.accountIdentity { padding: 10px 12px; border-radius: 10px; background: #efeff4; color: #1c1c1e; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.operationNote { font-size: 12px; line-height: 1.5; color: #636366; }
+.root button:disabled { cursor: wait; opacity: .58; }
+.roleDialogConfirm, .roleDialogConfirm:hover, .roleDialogConfirm:active { background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); }
 @media (max-width: 680px) {
   .header { flex-direction: row; }
   .headerActions { width: auto; }

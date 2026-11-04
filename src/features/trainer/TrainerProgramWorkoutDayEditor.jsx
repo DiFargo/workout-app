@@ -1,9 +1,11 @@
 import { createPortal } from "react-dom";
+import { useState } from "react";
 
+import TrainerExerciseLibraryPicker from "../../components/trainer/TrainerExerciseLibraryPicker";
 import TrainerProgramExerciseCard from "./TrainerProgramExerciseCard";
 
 export default function TrainerProgramWorkoutDayEditor({
-  adminExerciseLibrary,
+  adminExerciseLibrary = [],
   adminExerciseSearch,
   adminExerciseVideoUploadingId,
   adminSelectedExerciseId,
@@ -12,27 +14,27 @@ export default function TrainerProgramWorkoutDayEditor({
   block,
   cancelMonthExerciseEdit,
   handleMonthProgramBack,
+  onOpenExerciseLibrary,
   openMonthExerciseEditor,
   removeMonthExerciseSet,
   saveMonthExerciseEdit,
   setAdminExerciseSearch,
   updateMonthExercise,
-  updateMonthExerciseName,
   updateMonthExerciseSet,
   updateMonthWorkout,
-  uploadMonthExerciseVideo,
   week,
   workout
 }) {
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const workoutExercises = workout.exercises || [];
   const selectedWorkoutExercise = workoutExercises.find(
     (exercise) => exercise.id === adminSelectedExerciseId
   );
-  const normalizedExerciseSearch = adminExerciseSearch.trim().toLocaleLowerCase("ru");
+  const normalizedExerciseSearch = String(adminExerciseSearch || "").trim().toLocaleLowerCase("ru");
   const exerciseSearchResults = normalizedExerciseSearch
     ? adminExerciseLibrary
         .filter((exercise) =>
-          String(exercise.name || "").toLocaleLowerCase("ru").includes(normalizedExerciseSearch)
+          !exercise.libraryDeletedAt && String(exercise.name || "").toLocaleLowerCase("ru").includes(normalizedExerciseSearch)
         )
         .slice(0, 8)
     : [];
@@ -40,6 +42,10 @@ export default function TrainerProgramWorkoutDayEditor({
     1,
     (week.workouts || []).findIndex((item) => item.id === workout.id) + 1
   );
+  const openLibrary = () => {
+    setLibraryOpen(false);
+    onOpenExerciseLibrary?.();
+  };
 
   return (
     <div className={`monthProgramPremiumDayEditor${selectedWorkoutExercise ? " exercise-fullscreen-open" : ""}`}>
@@ -82,7 +88,12 @@ export default function TrainerProgramWorkoutDayEditor({
               </button>
             ))}
             {exerciseSearchResults.length === 0 && (
-              <span>Упражнение не найдено. Добавьте его кнопкой внизу.</span>
+              <div>
+                <span>Упражнение не найдено в библиотеке.</span>
+                <button type="button" disabled={typeof onOpenExerciseLibrary !== "function"} onClick={openLibrary}>
+                  Перейти в «Упражнения» и создать
+                </button>
+              </div>
             )}
           </div>
         )}
@@ -95,18 +106,18 @@ export default function TrainerProgramWorkoutDayEditor({
           const exerciseCard = (
             <TrainerProgramExerciseCard
               adminExerciseVideoUploadingId={adminExerciseVideoUploadingId}
+              adminExerciseLibrary={adminExerciseLibrary}
               blockId={block.id}
               cancelMonthExerciseEdit={cancelMonthExerciseEdit}
               exercise={exercise}
               exerciseIndex={exerciseIndex}
               isExerciseSelected={isExerciseSelected}
               openMonthExerciseEditor={openMonthExerciseEditor}
+              onOpenExerciseLibrary={openLibrary}
               removeMonthExerciseSet={removeMonthExerciseSet}
               saveMonthExerciseEdit={saveMonthExerciseEdit}
               updateMonthExercise={updateMonthExercise}
-              updateMonthExerciseName={updateMonthExerciseName}
               updateMonthExerciseSet={updateMonthExerciseSet}
-              uploadMonthExerciseVideo={uploadMonthExerciseVideo}
               weekId={week.id}
               workoutId={workout.id}
               addMonthExerciseSet={addMonthExerciseSet}
@@ -128,9 +139,20 @@ export default function TrainerProgramWorkoutDayEditor({
         )}
       </div>
 
-      <button className="monthAddExerciseBtn" type="button" onClick={() => addMonthExercise(block.id, week.id, workout.id)}>
+      <button className="monthAddExerciseBtn" type="button" onClick={() => setLibraryOpen(true)}>
         + Добавить упражнение
       </button>
+      <TrainerExerciseLibraryPicker
+        open={libraryOpen}
+        items={adminExerciseLibrary}
+        onClose={() => setLibraryOpen(false)}
+        onSelect={(exercise) => {
+          const added = addMonthExercise(block.id, week.id, workout.id, exercise);
+          if (added !== false) setLibraryOpen(false);
+          return added;
+        }}
+        onOpenLibrary={openLibrary}
+      />
     </div>
   );
 }

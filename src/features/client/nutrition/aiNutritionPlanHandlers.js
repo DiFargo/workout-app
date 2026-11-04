@@ -1,6 +1,9 @@
 import { doc, writeBatch } from "firebase/firestore";
 import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
 import { captureAuthSession as captureActiveAuthSession } from "../../../utils/authSession.js";
+import { isNutritionDayStorageEnabled } from "../../../utils/nutritionDayStorageConfig.js";
+import { mergeNutritionStates } from "../../../utils/nutritionStateMerge.js";
+import { beginNutritionSave, acknowledgeNutritionCloudState } from "../../../utils/nutritionSyncRevision.js";
 
 import {
   buildAiNutritionMonthlyPlan
@@ -62,7 +65,14 @@ export function createAiNutritionPlanHandlers({
       return false;
     }
 
-    const nextPlan = buildAiNutritionMonthlyPlan(nutrition, profile, history, aiNutritionSavedPlan);
+    const dayStorage = isNutritionDayStorageEnabled();
+    let calculationNutrition = nutrition;
+    if (dayStorage) {
+      try { calculationNutrition = mergeNutritionStates((await (await import("../../../utils/nutritionDayClient.js")).readNutritionState(savingUid, { mode: "full" })).state, nutrition); }
+      catch (error) { console.error("Nutrition history load error", error); return false; }
+    }
+    if (!session.isCurrent()) return false;
+    const nextPlan = buildAiNutritionMonthlyPlan(calculationNutrition, profile, history, aiNutritionSavedPlan);
     const weekOne = nextPlan.weeks?.[0];
     const nextGoals = weekOne ? {
       calories: Math.round(Number(weekOne.calories) || defaultNutritionState.goals.calories),
@@ -73,9 +83,8 @@ export function createAiNutritionPlanHandlers({
 
     if (savingUid) {
       try {
-        const batch = writeBatch(db);
         profile.updatedAt = new Date().toISOString();
-        batch.set(doc(db, "users", savingUid), {
+        const userPatch = {
           ...(profile.name ? { name: profile.name } : {}),
           profile,
           aiNutritionProfile: profile,
@@ -88,20 +97,29 @@ export function createAiNutritionPlanHandlers({
             firstSetupCompletedAt: new Date().toISOString()
           } : {}),
           updatedAt: new Date().toISOString()
-        }, { merge: true });
+        };
 
-        if (nextGoals) {
-          batch.set(doc(db, "users", savingUid, "nutrition", "state"), {
-            goals: {
-              ...nutrition.goals,
-              ...nextGoals
-            },
-            aiNutritionPlan: nextPlan,
-            updatedAt: new Date().toISOString()
-          }, { merge: true });
+        if (dayStorage) {
+          const ticket = beginNutritionSave(auth);
+          const saved = await (await import("../../../utils/nutritionDayClient.js")).saveNutritionDaySnapshot(savingUid, { updatedAt: profile.updatedAt,
+            ...(nextGoals ? { goals: { ...calculationNutrition.goals, ...nextGoals }, aiNutritionPlan: nextPlan } : {}) }, { planOnly: true, userPatch });
+          if (!session.isCurrent()) return false;
+          acknowledgeNutritionCloudState(auth, ticket, saved);
+        } else {
+          const batch = writeBatch(db);
+          batch.set(doc(db, "users", savingUid), userPatch, { merge: true });
+          if (nextGoals) {
+            batch.set(doc(db, "users", savingUid, "nutrition", "state"), {
+              goals: {
+                ...nutrition.goals,
+                ...nextGoals
+              },
+              aiNutritionPlan: nextPlan,
+              updatedAt: new Date().toISOString()
+            }, { merge: true });
+          }
+          await batch.commit();
         }
-
-        await batch.commit();
         if (!session.isCurrent()) return false;
 
         if (completeFirstSetup) {
@@ -152,7 +170,7 @@ export function createAiNutritionPlanHandlers({
           ...nextGoals
         },
         aiNutritionPlan: nextPlan,
-        updatedAt: new Date().toISOString()
+        updatedAt: profile.updatedAt
       }));
     }
 

@@ -6,9 +6,10 @@ test("countdown continues after extending, pausing and returning from the backgr
   const checkErrors = failOnRuntimeErrors(page);
   await page.clock.install();
   await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunStage");
-  await expect(page.getByTestId("workout-exercise-set-row").nth(1)).toBeVisible({ timeout: 40_000 });
-  await page.getByTestId("workout-exercise-set-row").nth(1).click();
+  await expect(page.getByTestId("workout-primary-action")).toBeVisible({ timeout: 40_000 });
+  await page.getByTestId("workout-primary-action").click();
   const timer = page.getByTestId("workout-rest-timer-expanded");
+  await expect(timer).toBeVisible();
   const value = timer.locator("strong").first();
   await expect(value).toBeVisible();
   await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now()) + 1000));

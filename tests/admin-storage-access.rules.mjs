@@ -66,3 +66,36 @@ test("Storage photo upload remains available to the owner/assigned trainer and s
   await assertFails(photo(owner).put(bytes, { contentType: "image/webp" }));
   await assertFails(photo(trainer).put(bytes, { contentType: "image/webp" }));
 });
+
+test("admin hardware key proof gates Storage admin surfaces without blocking owner or assigned trainer", async () => {
+  await env.clearFirestore(); await env.clearStorage();
+  await env.withSecurityRulesDisabled(async ctx => {
+    await setDoc(doc(ctx.firestore(), "users/admin"), { role: "admin", adminClaimVersion: "grant",
+      adminSecurityKeyRequired: true, adminSecurityKeyVersion: "key-version" });
+    await setDoc(doc(ctx.firestore(), "users/client"), { role: "client", assignedTrainerId: "trainer" });
+    await setDoc(doc(ctx.firestore(), "users/trainer"), { role: "trainer" });
+  });
+  const claims = { admin: true, adminClaimVersion: "grant", adminSecurityKeyVersion: "key-version", adminSecurityKeyRoleVersion: "grant", adminSecurityKeyUntil: Date.now() + 60 * 60 * 1000 };
+  const valid = env.authenticatedContext("admin", claims);
+  await assertSucceeds(adminFile(valid).put(bytes, { contentType: "text/plain" }));
+  await assertSucceeds(adminFile(valid).getMetadata());
+  for (const patch of [{ adminSecurityKeyVersion: "stale" }, { adminSecurityKeyRoleVersion: "obsolete-grant" },
+    { adminSecurityKeyRoleVersion: "" }, { adminSecurityKeyUntil: Date.now() - 60_000 },
+    { adminSecurityKeyUntil: Date.now() + 9 * 60 * 60 * 1000 }, { adminSecurityKeyUntil: "tomorrow" },
+    { adminSecurityKeyUntil: Date.now() + 60_000.5 }, { adminClaimVersion: "stale" }, { admin: false }]) {
+    const invalid = env.authenticatedContext("admin", { ...claims, ...patch });
+    await assertFails(adminFile(invalid).getMetadata());
+    await assertFails(adminFile(invalid).put(bytes, { contentType: "text/plain" }));
+    await assertFails(adminFile(invalid).delete());
+  }
+  const missing = env.authenticatedContext("admin", { admin: true, adminClaimVersion: "grant" });
+  await assertFails(adminFile(missing).getMetadata());
+  await assertSucceeds(photo(env.authenticatedContext("client")).put(bytes, { contentType: "image/webp" }));
+  await assertSucceeds(photo(env.authenticatedContext("trainer")).getMetadata());
+  await changeUser("admin", { adminSecurityKeyRequired: false });
+  await assertSucceeds(adminFile(missing).getMetadata());
+  await changeUser("admin", { adminSecurityKeyRequired: "true" });
+  await assertFails(adminFile(valid).getMetadata());
+  await changeUser("admin", { adminSecurityKeyRequired: true, adminSecurityKeyVersion: "" });
+  await assertFails(adminFile(valid).getMetadata());
+});

@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, runTransaction } from "firebase/firestore";
 
 import { buildWorkoutScheduleDraftWithExistingStatuses } from "../../utils/workoutSchedule";
 import { sortWorkoutDays } from "../../utils/workoutPlanNormalization";
@@ -8,10 +8,9 @@ import { fetchAuthorized } from "../../utils/apiClient";
 import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus";
 import { validateTrainerWorkoutScheduleDates } from "../../utils/trainerProgramValidation";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
-import {
-  buildSubscriptionFromTrainerSetupSchedule,
-  getTrainerSetupScheduleDates
-} from "../../utils/trainerSetupSchedule";
+import { getTrainerSetupScheduleDates } from "../../utils/trainerSetupSchedule";
+import { resolveAgendaScheduleInput } from "../../utils/trainerScheduleAgenda";
+import { programDraftSnapshot } from "../../utils/trainerProgramDraft.js";
 import {
   buildNextTrainerClientSetupChecklist,
   TRAINER_CLIENT_SETUP_STEPS
@@ -210,7 +209,12 @@ export function createTrainerClientCalendarHandlers({
     }
   }
 
-  async function saveTrainerClientWorkoutSchedule(dates = [], client = adminSelectedClient, assignmentWorkouts = []) {
+  async function saveTrainerClientWorkoutSchedule(dates = [], client = adminSelectedClient, assignmentWorkouts = [], options = {}) {
+    const rejectSchedule = message => {
+      setAdminClientStatus(message);
+      if (options.throwOnError) throw Object.assign(new Error(message), { assignmentMessage: message });
+      return false;
+    };
     const targetClient = client?.id ? client : (adminSelectedClient?.id ? adminSelectedClient : usersList.find((item) => item.id === selectedUserId));
     const clientId = targetClient?.id || selectedUserId;
     let allWorkouts = sortWorkoutDays(plan.workouts || []);
@@ -228,8 +232,7 @@ export function createTrainerClientCalendarHandlers({
     let workouts = selectAssignmentWorkouts(allWorkouts);
 
     if (!clientId) {
-      setAdminClientStatus(STATUS_SELECT_CLIENT);
-      return false;
+      return rejectSchedule(STATUS_SELECT_CLIENT);
     }
 
     // A program assignment and the first calendar save can happen in the
@@ -243,47 +246,54 @@ export function createTrainerClientCalendarHandlers({
     }
 
     if (!workouts.length) {
-      setAdminClientStatus(STATUS_PROGRAM_REQUIRED);
-      return false;
+      return rejectSchedule(STATUS_PROGRAM_REQUIRED);
     }
 
     const nowIso = new Date().toISOString();
     const currentCalendar = targetClient?.workoutCalendar || {};
     const assignmentWorkoutIds = new Set(workouts.map((workout) => String(workout?.id || "").trim()).filter(Boolean));
     const assignmentId = String(workouts[0]?.assignedProgramAddedAt || workouts[0]?.programAssignmentId || "").trim();
+    const existingAssignmentEntries = (currentCalendar.plannedWorkouts || []).filter((entry) => (
+      assignmentWorkoutIds.has(String(entry?.workoutId || "").trim()) ||
+      Boolean(assignmentId) && String(entry?.assignedProgramAddedAt || entry?.programAssignmentId || "").trim() === assignmentId
+    ));
+    const keyedSchedule = dates && !Array.isArray(dates) && typeof dates === "object";
+    const keyedResult = keyedSchedule
+      ? resolveAgendaScheduleInput(dates, workouts, existingAssignmentEntries)
+      : null;
+    if (keyedResult && !keyedResult.ok) {
+      return rejectSchedule(keyedResult.message);
+    }
+    if (keyedResult) workouts = keyedResult.workouts;
     const assignmentInfo = {
       assignedProgramId: workouts[0]?.assignedProgramId || targetClient?.assignedProgramId || plan.assignedProgramId || "",
       assignedProgramName: workouts[0]?.assignedProgramName || targetClient?.assignedProgramName || plan.assignedProgramName || "",
       assignedProgramUpdatedAt: workouts[0]?.assignedProgramUpdatedAt || targetClient?.assignedProgramUpdatedAt || plan.assignedProgramUpdatedAt || "",
       assignedProgramAddedAt: assignmentId
     };
-    const existingAssignmentEntries = (currentCalendar.plannedWorkouts || []).filter((entry) => (
-      assignmentWorkoutIds.has(String(entry?.workoutId || "").trim()) ||
-      Boolean(assignmentId) && String(entry?.assignedProgramAddedAt || entry?.programAssignmentId || "").trim() === assignmentId
-    ));
-    const scheduleValidation = validateTrainerWorkoutScheduleDates(dates, workouts.length, {
+    const scheduleValidation = keyedResult || validateTrainerWorkoutScheduleDates(dates, workouts.length, {
       allowedPastDates: [
         ...existingAssignmentEntries.map((entry) => entry?.date),
         ...workouts.map((workout) => workout?.scheduledDate || workout?.plannedDate)
       ]
     });
-    const cleanDates = getTrainerSetupScheduleDates(scheduleValidation.cleanDates);
+    const cleanDates = keyedResult ? keyedResult.cleanDates : getTrainerSetupScheduleDates(scheduleValidation.cleanDates);
 
     if (!scheduleValidation.ok) {
-      setAdminClientStatus(scheduleValidation.message);
-      return false;
+      return rejectSchedule(scheduleValidation.message);
     }
-    const assignmentPlannedWorkouts = buildWorkoutScheduleDraftWithExistingStatuses(
+    const assignmentPlannedWorkouts = (keyedResult ? keyedResult.plannedWorkouts : buildWorkoutScheduleDraftWithExistingStatuses(
       cleanDates,
       workouts,
       existingAssignmentEntries
-    ).map((entry) => ({ ...entry, ...assignmentInfo }));
+    )).map((entry) => ({ ...entry, ...assignmentInfo }));
     const plannedWorkouts = [
       ...(currentCalendar.plannedWorkouts || []).filter((entry) => !assignmentWorkoutIds.has(String(entry?.workoutId || "").trim())),
       ...assignmentPlannedWorkouts
     ];
     const nextCalendar = {
       ...currentCalendar,
+      ...(keyedSchedule && dates.trainingDays ? { trainingDays: [...dates.trainingDays] } : {}),
       enabled: currentCalendar.enabled !== false,
       scheduledDates: [...new Set(plannedWorkouts.map((item) => item?.date).filter(Boolean))].sort(),
       monthlyTrainingDates: [...new Set(plannedWorkouts.map((item) => item?.date).filter(Boolean))].sort(),
@@ -294,10 +304,6 @@ export function createTrainerClientCalendarHandlers({
       updatedAt: nowIso,
       updatedBy: auth.currentUser?.uid || ""
     };
-    const nextSubscription = buildSubscriptionFromTrainerSetupSchedule(
-      targetClient?.subscription || {},
-      cleanDates
-    );
     const scheduledWorkoutsById = new Map(workouts.map((workout, index) => {
       const planned = assignmentPlannedWorkouts[index] || {};
       return [String(workout?.id || "").trim(), {
@@ -314,7 +320,8 @@ export function createTrainerClientCalendarHandlers({
     const nextWorkouts = allWorkouts.map((workout) => (
       scheduledWorkoutsById.get(String(workout?.id || "").trim()) || workout
     ));
-    const batch = writeBatch(db);
+    const pendingWrites = [];
+    const batch = { set: (...args) => pendingWrites.push(args) };
     setAdminClientStatus(STATUS_SCHEDULE_SAVING);
 
     workouts.forEach((workout, index) => {
@@ -332,15 +339,30 @@ export function createTrainerClientCalendarHandlers({
     });
     batch.set(doc(db, "users", clientId), {
       workoutCalendar: nextCalendar,
-      subscription: nextSubscription,
-      trainingDays: currentCalendar.trainingDays || targetClient?.trainingDays || [],
+      trainingDays: nextCalendar.trainingDays || targetClient?.trainingDays || [],
       workoutTime: currentCalendar.workoutTime || targetClient?.workoutTime || "",
       updatedAt: nowIso
     }, { merge: true });
 
     try {
-      await batch.commit();
-      const patch = { workoutCalendar: nextCalendar, subscription: nextSubscription };
+      await runTransaction(db, async (transaction) => {
+        const [clientSnapshot, ...workoutSnapshots] = await Promise.all([
+          transaction.get(doc(db, "users", clientId)),
+          ...workouts.map(workout => transaction.get(doc(db, "users", clientId, "workouts", workout.id)))
+        ]);
+        const freshClient = clientSnapshot.exists() ? clientSnapshot.data() : null;
+        const conflict = !freshClient || programDraftSnapshot(freshClient.workoutCalendar || {}) !== programDraftSnapshot(currentCalendar) ||
+          workoutSnapshots.some((snapshot, index) => {
+            if (!snapshot.exists()) return true;
+            const fresh = snapshot.data();
+            return ["status", "movedToDate", "statusUpdatedAt", "completedAt", "scheduledDate", "plannedDate", "assignedProgramAddedAt", "assignedProgramLifecycleStatus"].some(
+              key => (fresh[key] || (key === "status" ? "planned" : "")) !== (workouts[index][key] || (key === "status" ? "planned" : ""))
+            );
+          });
+        if (conflict) throw Object.assign(new Error("Расписание или тренировка изменились. Обновите карточку и повторите сохранение."), { code: "trainer-schedule-conflict" });
+        pendingWrites.forEach(args => transaction.set(...args));
+      });
+      const patch = { workoutCalendar: nextCalendar, ...(keyedSchedule && dates.trainingDays ? { trainingDays: nextCalendar.trainingDays } : {}) };
       setPlan((current) => ({
         ...current,
         workouts: sortWorkoutDays(nextWorkouts)
@@ -357,7 +379,9 @@ export function createTrainerClientCalendarHandlers({
       return true;
     } catch (error) {
       console.error("Workout schedule save failed:", error);
-      setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_SCHEDULE_FAILED));
+      const message = error.code === "trainer-schedule-conflict" ? error.message : getTrainerActionErrorStatus(error, STATUS_SCHEDULE_FAILED);
+      setAdminClientStatus(message);
+      if (options.throwOnError) throw Object.assign(error, { assignmentMessage: message });
       return false;
     }
   }
@@ -372,18 +396,26 @@ export function createTrainerClientCalendarHandlers({
       const updatedAt = new Date().toISOString();
       const subscriptionDraft = {
         ...(client.subscription || {}),
-        ...(settings.subscription || {})
+        ...(settings.subscription || {}),
+        periodMode: "sessions"
       };
-      const purchasedSessions = Math.max(0, Number(subscriptionDraft.purchasedSessions ?? subscriptionDraft.totalSessions) || 0);
-      const usedSessions = Math.max(0, Number(subscriptionDraft.usedSessions) || 0);
+      const purchasedSessions = Math.max(0, Math.trunc(Number(subscriptionDraft.purchasedSessions ?? subscriptionDraft.totalSessions) || 0));
+      const usedSessions = Math.max(0, Math.trunc(Number(subscriptionDraft.usedSessions) || 0));
       const subscription = settings.renewSubscription
-        ? renewClientSubscription(client.subscription || {}, settings.subscription || {})
+        ? renewClientSubscription(client.subscription || {}, { ...subscriptionDraft, purchasedSessions, usedSessions })
         : normalizeClientSubscription({
             ...subscriptionDraft,
+            purchasedSessions,
+            usedSessions,
             // A manually updated subscription starts a new balance. Do not retain
             // an expired balance from the previous subscription cycle.
             remainingSessions: Math.max(0, purchasedSessions - usedSessions)
           });
+      // Saving counts (or renewing) is not consent to unfreeze an existing
+      // subscription. Only the explicit conditional resume control clears it.
+      const resumeSubscription = settings.resumeSubscription === true;
+      subscription.frozen = resumeSubscription ? false : client.subscription?.frozen === true;
+      subscription.frozenUntil = resumeSubscription ? "" : client.subscription?.frozenUntil || "";
       const patch = { subscription };
       let previousClient = null;
 
@@ -395,14 +427,31 @@ export function createTrainerClientCalendarHandlers({
       setAdminClientStatus(STATUS_NOTIFICATIONS_SAVING);
 
       try {
-        await setDoc(doc(db, "users", client.id), { ...patch, updatedAt }, { merge: true });
+        if (resumeSubscription) {
+          await runTransaction(db, async transaction => {
+            const ref = doc(db, "users", client.id);
+            const snapshot = await transaction.get(ref);
+            const fresh = snapshot.exists() ? snapshot.data()?.subscription || {} : null;
+            const baseline = client.subscription || {};
+            if (!fresh || ["cycleId", "lastRenewedAt", "purchasedSessions", "totalSessions", "usedSessions", "frozen", "frozenUntil"].some(
+              key => JSON.stringify(fresh[key] ?? null) !== JSON.stringify(baseline[key] ?? null)
+            )) throw Object.assign(new Error("Абонемент изменился. Обновите карточку перед возобновлением."), { code: "trainer-subscription-conflict" });
+            const subscriptionPatch = settings.renewSubscription ? subscription : {
+              periodMode: "sessions", purchasedSessions, usedSessions,
+              remainingSessions: Math.max(0, purchasedSessions - usedSessions), frozen: false, frozenUntil: ""
+            };
+            transaction.set(ref, { subscription: subscriptionPatch, updatedAt }, { merge: true });
+          });
+        } else {
+          await setDoc(doc(db, "users", client.id), { ...patch, updatedAt }, { merge: true });
+        }
         setAdminClientStatus(STATUS_NOTIFICATIONS_SAVED);
         return true;
       } catch (error) {
         console.error("Subscription save failed:", error);
         setAdminSelectedClient((prev) => prev?.id === client.id && previousClient ? previousClient : prev);
         setUsersList((prev) => prev.map((item) => item.id === client.id && previousClient ? previousClient : item));
-        setAdminClientStatus(getTrainerActionErrorStatus(error, STATUS_NOTIFICATIONS_FAILED));
+        setAdminClientStatus(error.code === "trainer-subscription-conflict" ? error.message : getTrainerActionErrorStatus(error, STATUS_NOTIFICATIONS_FAILED));
         return false;
       }
     }

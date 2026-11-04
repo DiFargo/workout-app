@@ -24,6 +24,10 @@ const STATUS_NOTIFICATIONS_ON = "Telegram-\u0443\u0432\u0435\u0434\u043e\u043c\u
 const STATUS_NOTIFICATIONS_OFF = "Telegram-\u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u044b.";
 const STATUS_NOTIFICATIONS_FAILED = "\u041d\u0435 \u043f\u043e\u043b\u0443\u0447\u0438\u043b\u043e\u0441\u044c \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c Telegram-\u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f.";
 
+function canDeliverTelegram(client, telegram) {
+  return telegram.connected && Boolean(telegram.chatId || telegram.telegramUserId || client?.telegramUserId);
+}
+
 export function createTrainerMessagingHandlers({
   db,
   auth,
@@ -47,7 +51,7 @@ export function createTrainerMessagingHandlers({
       return false;
     }
 
-    if (!telegram.connected || !telegram.username) {
+    if (!canDeliverTelegram(client, telegram)) {
       setAdminClientStatus(STATUS_NO_TELEGRAM);
       return false;
     }
@@ -186,7 +190,7 @@ export function createTrainerMessagingHandlers({
       return sent;
     }
 
-    if (telegram.connected && telegram.username) {
+    if (canDeliverTelegram(client, telegram)) {
       const sent = await sendAdminTelegramMessage(client, message);
       if (replyDocumentRef) {
         await setDoc(replyDocumentRef, {
@@ -196,6 +200,13 @@ export function createTrainerMessagingHandlers({
         }, { merge: true }).catch((error) => console.warn("Unable to update linked reply status:", error));
       }
       return sent;
+    }
+
+    // Telegram delivery must never silently become an internal-history save.
+    if (deliveryChannel === "telegram") {
+      if (replyDocumentRef) await setDoc(replyDocumentRef, { status: "error", channel: "telegram" }, { merge: true }).catch(() => {});
+      setAdminClientStatus(STATUS_NO_TELEGRAM);
+      return false;
     }
 
     setAdminClientStatus(STATUS_INTERNAL_SAVING);

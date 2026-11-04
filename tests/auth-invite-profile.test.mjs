@@ -8,15 +8,21 @@ const invite = { email: user.email, status: "active", authUid: user.uid, trainer
   trainerEmail: "trainer@example.com", createdByUid: "trainer" };
 let writes;
 let requests;
+let hasInvite;
 const cleanup = installRuntimeImports({
   "firebase/auth": {
-    GoogleAuthProvider: class {}, signInWithEmailAndPassword: async () => ({ user }),
-    signInWithPopup: async () => ({ user }), signInWithCustomToken: async () => ({ user }),
+    GoogleAuthProvider: class {}, createUserWithEmailAndPassword: async () => ({ user: { uid: "new-user", email: "new@example.com", displayName: "New User" } }),
+    signInWithEmailAndPassword: async () => ({ user }),
+    signInWithPopup: async () => ({ user, isNewUser: false }), signInWithCustomToken: async () => ({ user }),
     signOut: async () => {}, sendPasswordResetEmail: async () => {}
   },
   "firebase/firestore": {
     doc: (_, ...path) => path.join("/"),
-    getDoc: async (path) => ({ exists: () => path.startsWith("clientInvites/"), data: () => path.startsWith("clientInvites/") ? invite : undefined }),
+    getDoc: async (path) => {
+      const created = writes.findLast((write) => write.path === path);
+      const isInvite = path.startsWith("clientInvites/");
+      return { exists: () => Boolean(created) || (isInvite && hasInvite), data: () => created?.data || (isInvite && hasInvite ? invite : undefined) };
+    },
     setDoc: async (path, data) => writes.push({ path, data })
   },
   "/src/utils/apiClient.js": {
@@ -26,7 +32,7 @@ const cleanup = installRuntimeImports({
   }
 });
 after(cleanup);
-beforeEach(() => { writes = []; requests = []; });
+beforeEach(() => { writes = []; requests = []; hasInvite = true; });
 const { createAuthHandlers } = await import("../src/features/auth/authHandlers.js");
 
 for (const provider of ["password", "google"]) test(`invited ${provider} login creates only the profile contract and delegates alias to server`, async () => {
@@ -57,7 +63,7 @@ for (const provider of ["password", "google"]) test(`invited ${provider} login c
 test("Telegram Mini App login gives a clear next step when opened outside Telegram", async () => {
   const previousWindow = globalThis.window;
   const errors = [];
-  globalThis.window = { Telegram: { WebApp: { initData: "" } } };
+  globalThis.window = { location: { search: "" }, Telegram: { WebApp: { initData: "" } } };
   try {
     const handlers = createAuthHandlers({
       APP_PAGES: { MAIN: "main" }, auth, db: {}, login: "", password: "",
@@ -73,4 +79,56 @@ test("Telegram Mini App login gives a clear next step when opened outside Telegr
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;
   }
+});
+
+test("email registration creates a restricted profile and skips member data APIs", async () => {
+  const errors = [];
+  const pages = [];
+  let historyLoads = 0;
+  let workoutLoads = 0;
+  const handlers = createAuthHandlers({
+    APP_PAGES: { MAIN: "main" }, auth, db: {}, login: "", password: "",
+    setLoginFieldErrors() {}, setLoginError: (value) => { if (value) errors.push(value); },
+    setLoginNotice() {}, setLoginSubmitting() {}, setPasswordResetSending() {},
+    setPage: (value) => pages.push(value), setSelectedUserId() {},
+    loadHistory: () => { historyLoads += 1; }, loadWorkoutsFromFirebase: () => { workoutLoads += 1; }
+  });
+
+  await handlers.handleEmailSignup({ preventDefault() {} }, "new@example.com", "strong-password");
+
+  assert.deepEqual(errors, []);
+  assert.deepEqual(pages, ["main"]);
+  const profile = writes.find((write) => write.path === "users/new-user")?.data;
+  assert.equal(profile?.role, "client");
+  assert.equal(profile?.accountRegistrationType, "open");
+  assert.equal(profile?.accountAccessStatus, "awaiting_trainer");
+  assert.equal(profile?.trainerId, undefined);
+  assert.deepEqual(requests, []);
+  assert.equal(historyLoads, 0);
+  assert.equal(workoutLoads, 0);
+});
+
+test("an existing email account with a missing profile can recover into restricted access without an invitation", async () => {
+  hasInvite = false;
+  const errors = [];
+  const pages = [];
+  let historyLoads = 0;
+  const handlers = createAuthHandlers({
+    APP_PAGES: { MAIN: "main" }, auth, db: {}, login: user.email, password: "test-password",
+    setLoginFieldErrors() {}, setLoginError: (value) => { if (value) errors.push(value); },
+    setLoginNotice() {}, setLoginSubmitting() {}, setPasswordResetSending() {},
+    setPage: (value) => pages.push(value), setSelectedUserId() {},
+    loadHistory: () => { historyLoads += 1; }, loadWorkoutsFromFirebase() {}
+  });
+
+  await handlers.handleLogin({ preventDefault() {} });
+
+  assert.deepEqual(errors, []);
+  assert.deepEqual(pages, ["main"]);
+  const profile = writes.find((write) => write.path === `users/${user.uid}`)?.data;
+  assert.equal(profile?.accountRegistrationType, "open");
+  assert.equal(profile?.accountAccessStatus, "awaiting_trainer");
+  assert.equal(profile?.trainerId, undefined);
+  assert.equal(historyLoads, 0);
+  assert.deepEqual(requests, []);
 });

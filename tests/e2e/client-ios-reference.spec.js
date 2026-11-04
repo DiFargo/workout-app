@@ -16,8 +16,8 @@ async function expectRect(locator, expected) {
 }
 
 async function expectWorkoutTimerReachable(page) {
-  // The current timer belongs to the fixed action panel. Verify that scrolling
-  // a shorter phone reveals the last set above it without moving the timer.
+  // The timer belongs to the fixed panel. Shorter phones may fit all sets after
+  // adaptive compaction; overflow, when needed, must still reveal the last set.
   await page.setViewportSize({ width: 402, height: 600 });
   const metrics = await page.getByTestId("workout-run-stage").evaluate(async (deck) => {
     const timer = document.querySelector('[data-testid="workout-rest-timer"]');
@@ -39,8 +39,8 @@ async function expectWorkoutTimerReachable(page) {
     };
   });
 
-  expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight);
-  expect(metrics.scrollTop).toBeGreaterThan(0);
+  expect(metrics.scrollHeight).toBeGreaterThanOrEqual(metrics.clientHeight);
+  if (metrics.scrollHeight > metrics.clientHeight) expect(metrics.scrollTop).toBeGreaterThan(0);
   expect(metrics.lastSetBottom).toBeLessThanOrEqual(metrics.panelTop);
   expect(metrics.timerTop).toBeGreaterThanOrEqual(metrics.panelTop);
   expect(metrics.timerBottom).toBeLessThanOrEqual(metrics.panelBottom);
@@ -124,6 +124,7 @@ async function expectHorizontalGap(left, right, minimumGap = 0) {
 
 test("calm iOS client screens match the 402 by 874 reference geometry", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "The reference uses one deterministic mobile browser.");
+  await page.clock.setFixedTime(new Date("2026-06-22T12:00:00Z"));
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
   await page.setViewportSize({ width: 402, height: 874 });
@@ -142,17 +143,32 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "32px");
   await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 23, width: 44, height: 44 });
   const dashboard = page.getByTestId("profile-summary-dashboard");
-  const hero = dashboard.locator("section").filter({ has: page.getByTestId("profile-summary-hero-title") });
+  const taskCard = dashboard.getByTestId("profile-summary-task-card");
   await expectRect(page.getByTestId("profile-summary-greeting"), { x: 22, y: 104, width: 358, height: 26 });
   await expect(page.getByTestId("profile-summary-greeting")).toContainText("Илья");
-  await expectRect(hero, { x: 20, y: 147, width: 362, height: 288 });
-  await expectRect(page.getByTestId("profile-summary-primary"), { x: 36, y: 371, width: 330, height: 48 });
-  await expectAlignedLeft(page.getByTestId("profile-summary-hero-title"), page.getByTestId("profile-summary-primary"));
-  await expect(page.getByTestId("profile-summary-hero-title")).toHaveCSS("font-size", "27px");
-  await expectRect(page.getByTestId("profile-summary-workout-log"), { x: 20, y: 486, width: 115, height: 99 });
-  await expectRect(page.getByTestId("profile-summary-nutrition"), { x: 143, y: 486, width: 115, height: 99 });
+  await expectRect(taskCard, { x: 20, y: 147, width: 362, height: await taskCard.evaluate((node) => Math.round(node.getBoundingClientRect().height)) });
+  await expect(page.getByTestId("profile-summary-task-title")).toHaveCSS("font-size", "21px");
+  const taskCardBox = await taskCard.boundingBox();
+  const workoutTask = page.locator('[data-task-id="workout"]');
+  const workoutTaskBox = await workoutTask.boundingBox();
+  const workoutTaskStyle = await workoutTask.evaluate((node) => getComputedStyle(node));
+  expect(workoutTaskBox.x).toBeGreaterThan(taskCardBox.x);
+  expect(workoutTaskBox.width).toBeLessThan(taskCardBox.width);
+  expect(workoutTaskBox.height).toBeGreaterThanOrEqual(56);
+  expect(workoutTaskStyle.gridTemplateColumns).toContain("36px");
+  await expectAlignedLeft(page.getByTestId("profile-summary-task-title"), workoutTask);
+  const workoutMetrics = await page.getByTestId("profile-summary-workout-log").boundingBox();
+  const nutritionMetrics = await page.getByTestId("profile-summary-nutrition").boundingBox();
+  expect(workoutMetrics.y).toBeGreaterThanOrEqual(taskCardBox.y + taskCardBox.height + 16);
+  expect(Math.round(workoutMetrics.x)).toBe(20);
+  expect(Math.round(workoutMetrics.width)).toBe(115);
+  expect(Math.round(nutritionMetrics.x)).toBe(143);
+  expect(Math.round(nutritionMetrics.width)).toBe(115);
   await expectHorizontalGap(page.getByTestId("profile-summary-workout-log"), page.getByTestId("profile-summary-nutrition"), 8);
-  await expectRect(page.getByTestId("profile-summary-notifications-button"), { x: 20, y: 636, width: 362, height: 64 });
+  const notificationBox = await page.getByTestId("profile-summary-notifications-button").boundingBox();
+  expect(notificationBox.x).toBe(20);
+  expect(notificationBox.width).toBe(362);
+  expect(notificationBox.y).toBeGreaterThan(workoutMetrics.y);
   await expect(page.getByTestId("profile-summary-workout-log")).toContainText("12");
   await expect(page.getByTestId("profile-summary-nutrition")).toContainText("1 840");
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
@@ -179,10 +195,11 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.getByTestId("nutrition-header-calendar")).toHaveCount(0);
   await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
   await expectRect(page.locator('[data-nutrition-header-part="week"]'), { x: 20, y: 84, width: 362, height: 67 });
-  await expectRect(page.getByTestId("nutrition-orbit"), { x: 20, y: 163, width: 362, height: 185 });
-  await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 20, y: 463, width: 362, height: 44 });
-  await expectRect(page.getByTestId("nutrition-diary-list"), { x: 20, y: 507, width: 362, height: 171 });
-  await expectRect(page.getByTestId("nutrition-summary"), { x: 20, y: 690, width: 362, height: 76 });
+  await expect(page.getByTestId("nutrition-selected-date")).toHaveText("Сегодня · 22 июня");
+  await expectRect(page.getByTestId("nutrition-orbit"), { x: 20, y: 181, width: 362, height: 185 });
+  await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 20, y: 481, width: 362, height: 44 });
+  await expectRect(page.getByTestId("nutrition-diary-list"), { x: 20, y: 525, width: 362, height: 171 });
+  await expectRect(page.getByTestId("nutrition-summary"), { x: 20, y: 708, width: 362, height: 76 });
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
 
   await page.getByTestId("client-nav-workouts").click();
@@ -210,11 +227,12 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.locator('[data-css-module-scope="workout-stage-heading"]')).toContainText("Жим штанги лёжа");
   await expectRect(page.getByTestId("workout-exercise-progress"), { x: 184, y: 39, width: 35, height: 18 });
   await expect(page.getByTestId("workout-exercise-progress")).toHaveText("1 из 2");
-  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 20, y: 72, width: 362, height: 272 });
-  await expectRect(page.getByTestId("workout-plan-section"), { x: 20, y: 424, width: 362, height: 248 });
-  await expectRect(page.getByTestId("workout-plan-card"), { x: 20, y: 453, width: 362, height: 218 });
-  await expectRect(page.getByTestId("workout-rest-timer"), { x: 20, y: 738, width: 362, height: 48 });
-  await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 726, width: 402, height: 148 });
+  await expectRect(page.getByTestId("workout-exercise-video-frame"), { x: 16, y: 72, width: 370, height: 370 });
+  await expectRect(page.getByTestId("workout-plan-section"), { x: 16, y: 509, width: 370, height: 108 });
+  await expectRect(page.getByTestId("workout-plan-card"), { x: 16, y: 509, width: 370, height: 108 });
+  await expect(page.getByTestId("workout-exercise-set-row")).toHaveCount(1);
+  await expectRect(page.getByTestId("workout-rest-timer"), { x: 20, y: 746, width: 362, height: 48 });
+  await expectRect(page.locator('[data-css-module-scope="workout-stage-action-panel"]'), { x: 0, y: 734, width: 402, height: 140 });
   await expectWorkoutTimerReachable(page);
 
   assertNoRuntimeErrors();

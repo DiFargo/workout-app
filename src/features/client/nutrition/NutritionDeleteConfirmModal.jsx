@@ -45,6 +45,7 @@ export default function NutritionDeleteConfirmModal({
         <h2 className={styles.title} id="nutrition-delete-title">Удалить из моей базы?</h2>
         <p className={styles.description}>
           «{foodName || "Продукт"}» будет удалён без возможности восстановления.
+          Записи в дневнике останутся без изменений.
         </p>
         <div className={styles.actions}>
           <button className={styles.actionButton} type="button" onClick={onCancel}>

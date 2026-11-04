@@ -24,7 +24,17 @@ for (const width of [320, 393, 768, 1024, 1366]) {
       await (await top.isVisible()?top:page.locator('.trainerNextClientMobileNav')).getByRole('button',{name,exact:true}).click();
       const close=page.getByRole('button',{name:'Закрыть редактор плана',exact:true});
       if (await close.isVisible()) await close.click();
-      if(name==='Сводка') await expect(page.getByText(/Одна запись за период/)).toBeVisible();
+      if(name==='Сводка') {
+        const progress=page.getByTestId('trainer-client-progress-dashboard');
+        await expect(progress.getByRole('img',{name:'Изменение веса клиента',exact:true})).toBeVisible();
+        await progress.getByText('Даты и точные значения',{exact:true}).click();
+        const table=progress.getByRole('table',{name:'Изменение веса клиента',exact:true});
+        await expect(table).toBeVisible();
+        await expect(table.locator('tbody tr')).toHaveCount(1);
+        await expect(table.locator('tbody td').nth(0)).toHaveText(/\d{2}\.\d{2}\.\d{4}/);
+        await expect(table.locator('tbody td').nth(1)).toHaveText('66,0');
+        await expect(table.getByRole('columnheader',{name:'Значение, кг',exact:true})).toBeVisible();
+      }
       if(name==='Тренировки') {
         await expect(page.getByText('Нет активной программы',{exact:true})).toBeVisible();
         await page.locator('[class*=scheduleEditRow]').getByRole('button', { name: 'Редактировать', exact: true }).click();

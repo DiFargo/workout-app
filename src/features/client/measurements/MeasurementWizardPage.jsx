@@ -1,6 +1,7 @@
 import { getAiNutritionGoalLabel } from "../../../utils/aiNutritionLabels";
 import { ArrowLeft, ArrowRight, Check, Ruler, Scale, X } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useModalBackNavigation } from "../../../shared/hooks/useModalBackNavigation.js";
 import { APP_VERSION } from "../../../constants/appConfig";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
@@ -35,6 +36,8 @@ export default function MeasurementWizardPage({
   setPage
 }) {
   const [measurementMode, setMeasurementMode] = useState("full");
+  const [discardOpen, setDiscardOpen] = useState(false);
+  const initialDraft = useRef(JSON.stringify(profileMeasurementDraft || {}));
   const activeProfile = {
     ...(aiNutritionProfile || {}),
     ...aiNutritionProfileDraft
@@ -94,14 +97,23 @@ export default function MeasurementWizardPage({
     }
   };
 
+  const requestClose = () => {
+    if (profileMeasurementSaving) return;
+    if (!measurementSaved && JSON.stringify(profileMeasurementDraft || {}) !== initialDraft.current) setDiscardOpen(true);
+    else closeMeasurementWizard();
+  };
+
   const handleGoBack = () => {
+    if (profileMeasurementSaving) return;
     if (profileMeasurementWizardStep === 0) {
-      closeMeasurementWizard();
+      requestClose();
       return;
     }
 
     setProfileMeasurementWizardStep((step) => Math.max(0, step - 1));
   };
+
+  useModalBackNavigation({ open: true, onBack: () => discardOpen ? setDiscardOpen(false) : handleGoBack() });
 
   const handleGoNext = () => {
     if (isIntroStep) {
@@ -171,8 +183,9 @@ export default function MeasurementWizardPage({
           <button
             type="button"
             className={styles.close}
-            onClick={closeMeasurementWizard}
-            aria-label="Закрыть без сохранения"
+            onClick={requestClose}
+            disabled={profileMeasurementSaving}
+            aria-label="Закрыть замеры"
           >
             <X aria-hidden="true" />
           </button>
@@ -344,6 +357,7 @@ export default function MeasurementWizardPage({
         <button
           type="button"
           onClick={handleGoBack}
+          disabled={profileMeasurementSaving}
         >
           <ArrowLeft aria-hidden="true" /> Назад
         </button>
@@ -361,6 +375,15 @@ export default function MeasurementWizardPage({
               : <><span>Сохранить</span><Check aria-hidden="true" /></>))}
         </button>
       </div>
+
+      {discardOpen && <div className={styles.discardOverlay} data-modal-backdrop="true">
+        <section className={styles.discardDialog} role="alertdialog" aria-modal="true" aria-labelledby="measurementDiscardTitle" data-modal-surface="true">
+          <h2 id="measurementDiscardTitle">Выйти без сохранения?</h2>
+          <p>Введённые замеры ещё не сохранены. История предыдущих замеров не изменится.</p>
+          <button type="button" autoFocus onClick={() => setDiscardOpen(false)}>Продолжить замер</button>
+          <button type="button" onClick={closeMeasurementWizard}>Удалить черновик и выйти</button>
+        </section>
+      </div>}
 
       {measurementSaved && measurementMode === "weight" ? (
         <SaveSuccessNotice

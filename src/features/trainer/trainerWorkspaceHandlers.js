@@ -16,6 +16,7 @@ export function createTrainerWorkspaceHandlers({
   uploadTrainerLibraryExerciseVideo,
   addTrainerNextWorkoutDay,
   duplicateTrainerNextWorkoutDay,
+  moveTrainerNextWorkoutDay,
   removeTrainerNextWorkoutDay,
   setAdminClientStatus
 }) {
@@ -117,9 +118,10 @@ export function createTrainerWorkspaceHandlers({
     },
     onDuplicateDay: (...args) => {
       if (typeof duplicateTrainerNextWorkoutDay === "function") {
-        duplicateTrainerNextWorkoutDay(...args);
+        return duplicateTrainerNextWorkoutDay(...args);
       }
     },
+    onMoveDay: (...args) => typeof moveTrainerNextWorkoutDay === "function" ? moveTrainerNextWorkoutDay(...args) : false,
     onRemoveDay: (...args) => {
       if (typeof removeTrainerNextWorkoutDay === "function") {
         return removeTrainerNextWorkoutDay(...args);

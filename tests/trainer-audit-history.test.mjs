@@ -4,6 +4,8 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { programDraftSnapshot } from '../src/utils/trainerProgramDraft.js';
 import { withSummaryDeadline } from '../src/utils/trainerSummaryReadState.js';
+import { captureAuthSession } from '../src/utils/authSession.js';
+import { runSessionResource } from '../src/utils/sessionResource.js';
 
 test('client history uses stable pages, preserves results on failure and drops late pages after switching client', async () => {
   let history=[], selected, fail=false, delayed, hold=false;
@@ -11,7 +13,7 @@ test('client history uses stable pages, preserves results on failure and drops l
   const snapshot=(items)=>({size:items.length,docs:items,forEach:callback=>items.forEach(callback)});
   const item=(id)=>({id,data:()=>({date:`2026-09-${String(30-Number(id)%28).padStart(2,'0')}`})});
   const setHistory=(update)=>{history=typeof update==='function'?update(history):update;};
-  const context={WeakMap, Map, Set, String, Number, Date, Promise, console, programDraftSnapshot, withSummaryDeadline, loadClientExerciseMedia:async()=>[], withClientExerciseMedia:workout=>workout,
+  const context={captureAuthSession, runSessionResource, isNutritionDayStorageEnabled:()=>false, WeakMap, Map, Set, String, Number, Date, Promise, console, programDraftSnapshot, withSummaryDeadline, loadClientExerciseMedia:async()=>[], withClientExerciseMedia:workout=>workout,
     APP_PAGES:{ADMIN_USERS:'clients'},collection:(_db,...parts)=>({path:parts.join('/')}),doc:(_db,...parts)=>({path:parts.join('/')}),query:(ref,...constraints)=>({...ref,constraints}),orderBy:(...args)=>({order:args}),limit:n=>({limit:n}),startAfter:cursor=>({cursor}),
     getDoc:async ref=>({exists:()=>ref.path.split('/').length===2,id:ref.path.split('/')[1],data:()=>({role:'client'})}),
     getDocs:async ref=>{

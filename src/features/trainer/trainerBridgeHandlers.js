@@ -86,6 +86,7 @@ export function createTrainerBridgeHandlers(getContext) {
       adminTransferToUid,
       auth,
       canUseTrainerFeatures,
+      canUseAdminFeatures,
       db,
       loadUsers,
       setAdminTransferLoading,
@@ -103,6 +104,7 @@ export function createTrainerBridgeHandlers(getContext) {
       adminAllUsersList,
       usersList,
       canUseTrainerFeatures,
+      canUseAdminFeatures,
       showAppConfirm,
       loadUsers,
       setAdminTransferLoading,
@@ -224,6 +226,7 @@ export function createTrainerBridgeHandlers(getContext) {
 
   function downloadTrainerClientExport(client, format = "excel") {
     const {
+      db,
       adminClientHistory,
       adminClientMeasurements,
       adminClientNutrition,
@@ -232,6 +235,7 @@ export function createTrainerBridgeHandlers(getContext) {
     } = getContext();
 
     return downloadTrainerClientExportWithDeps({
+      db,
       adminClientHistory,
       adminClientMeasurements,
       getAdminNutritionDaysList,

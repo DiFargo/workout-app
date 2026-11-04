@@ -1,6 +1,7 @@
-import { collection, doc, getDocs, setDoc, writeBatch } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc, writeBatch, query, orderBy, documentId, startAfter, limit } from "firebase/firestore";
 
 import { createClientResourceId } from "../../domain/clientInsights.js";
+import { isNutritionDayStorageEnabled } from "../../utils/nutritionDayStorageConfig.js";
 import {
   buildTrainerClientExportRows,
   trainerExportRowsToCsv,
@@ -93,6 +94,7 @@ export async function deleteClientFromTrainerPanelWithDeps({
 }
 
 export async function downloadTrainerClientExportWithDeps({
+  db,
   adminClientHistory,
   adminClientMeasurements,
   getAdminNutritionDaysList,
@@ -102,8 +104,32 @@ export async function downloadTrainerClientExportWithDeps({
   format = "excel"
 }) {
   if (!client?.id) return false;
+  let history = adminClientHistory || [];
+  let historyComplete = false;
+  if (db) {
+    try {
+      history = [];
+      let cursor = null;
+      const pageSize = 250;
+      const maxRecords = 5000;
+      while (history.length < maxRecords) {
+        const constraints = [orderBy(documentId()), limit(pageSize)];
+        if (cursor) constraints.push(startAfter(cursor));
+        const page = await getDocs(query(collection(db, "users", client.id, "history"), ...constraints));
+        history.push(...page.docs.map(item => ({ ...item.data(), id: item.id })));
+        if (page.docs.length < pageSize) { historyComplete = true; break; }
+        cursor = page.docs.at(-1);
+      }
+    } catch (error) {
+      console.error("Trainer export history load failed:", error);
+      setAdminClientStatus("Экспорт отменён: не удалось загрузить историю тренировок. Повторите попытку.");
+      return false;
+    }
+  }
+  const exportNotice = `${historyComplete ? "История тренировок загружена полностью" : "Неполная история тренировок (только загруженный диапазон, максимум 5000)"}: ${history.length} записей. Замеры и питание — загруженные данные, полнота не подтверждена.`;
   const nutritionDays = getAdminNutritionDaysList(adminClientNutrition);
-  const rows = buildTrainerClientExportRows(adminClientHistory, adminClientMeasurements, nutritionDays);
+  const rows = buildTrainerClientExportRows(history, adminClientMeasurements, nutritionDays);
+  rows.splice(1, 0, ["export_scope", "", exportNotice, "", "", "", "", "", ""]);
 
   if (format === "pdf") {
     if (typeof window.BroadcastChannel !== "function") {
@@ -127,7 +153,7 @@ export async function downloadTrainerClientExportWithDeps({
           if (!success) channel.close();
           setTimeout(() => { channel.close(); URL.revokeObjectURL(url); }, 60000);
           setAdminClientStatus(success
-            ? "PDF-отчёт открыт в новом окне для сохранения через печать."
+            ? `PDF-отчёт открыт в новом окне для сохранения через печать. ${exportNotice}`
             : "Не удалось подтвердить открытие PDF-отчёта. Проверьте блокировку всплывающих окон и повторите.");
           resolve(success);
         };
@@ -160,7 +186,7 @@ export async function downloadTrainerClientExportWithDeps({
   link.download = `${client.email || client.name || "client"}-trainer-export.csv`;
   link.click();
   URL.revokeObjectURL(url);
-  setAdminClientStatus("Excel-экспорт клиента подготовлен в CSV.");
+  setAdminClientStatus(`Excel-экспорт клиента подготовлен в CSV. ${exportNotice}`);
   return true;
 }
 
@@ -336,7 +362,7 @@ export async function handleTrainerClientActionWithDeps({
       const archived = action === "archive";
       const confirmed = await showAppConfirm(
         archived
-          ? `Архивировать клиента ${client.name || client.email || client.id}? Его история и программа сохранятся, а карточка исчезнет из активного списка.`
+          ? `Архивировать клиента ${client.name || client.email || client.id}? Доступ клиента будет отключён, а карточка исчезнет из активного списка. История и программа сохранятся. Клиента можно будет восстановить из архива.`
           : `Восстановить клиента ${client.name || client.email || client.id} в активном списке?`
       );
       if (!confirmed) return false;
@@ -359,7 +385,7 @@ export async function handleTrainerClientActionWithDeps({
       const notificationsEnabled = action === "enable_notifications";
       const currentCalendar = client.workoutCalendar || {};
       const currentProgressReminders = currentCalendar.progressReminderSettings || client.progressReminderSettings || {};
-      await saveTrainerClientNotificationSettings({
+      const saved = await saveTrainerClientNotificationSettings({
         enabled: notificationsEnabled,
         offsets: currentCalendar.reminderOffsetsHours || [24],
         scheduledDates: currentCalendar.scheduledDates || currentCalendar.monthlyTrainingDates || [],
@@ -368,6 +394,7 @@ export async function handleTrainerClientActionWithDeps({
         progressPhotoIntervalDays: currentProgressReminders.photoIntervalDays || client.progressPhotoReminderIntervalDays,
         measurementsIntervalDays: currentProgressReminders.measurementsIntervalDays || client.measurementsReminderIntervalDays
       }, client);
+      if (!saved) return false;
       await recordTrainerEvent(
         client.id,
         "notifications",
@@ -378,6 +405,7 @@ export async function handleTrainerClientActionWithDeps({
 
     if (action === "export_excel" || action === "export_pdf") {
       const exported = await downloadTrainerClientExportWithDeps({
+        db,
         adminClientHistory,
         adminClientMeasurements,
         getAdminNutritionDaysList,
@@ -398,16 +426,17 @@ export async function handleTrainerClientActionWithDeps({
 
     if (action === "reset_progress") {
       if (!(await showAppConfirm("Сбросить прогресс клиента? Профиль, программа и план питания сохранятся."))) return false;
+      if (isNutritionDayStorageEnabled()) await (await import("../../utils/nutritionDayClient.js")).clearNutritionProgress(client.id);
       await Promise.all([
         deleteClientSubcollection(db, client.id, "history"),
         deleteClientSubcollection(db, client.id, "measurements"),
         deleteClientSubcollection(db, client.id, "progressPhotos"),
         deleteClientSubcollection(db, client.id, "nutritionDays"),
-        setDoc(doc(db, "users", client.id, "nutrition", "state"), {
+        isNutritionDayStorageEnabled() ? Promise.resolve() : setDoc(doc(db, "users", client.id, "nutrition", "state"), {
           days: {},
           updatedAt: new Date().toISOString()
         }, { merge: true }),
-        setDoc(doc(db, "users", client.id), {
+        isNutritionDayStorageEnabled() ? Promise.resolve() : setDoc(doc(db, "users", client.id), {
           nutritionState: {
             ...(client.nutritionState || {}),
             days: {},

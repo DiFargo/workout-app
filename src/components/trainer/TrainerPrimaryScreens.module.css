@@ -1,0 +1,142 @@
+/* Main trainer screens only. Extra scope wins over legacy workspace rules. */
+.scope { min-width: 0; }
+.journalLoading { display: flex; align-items: center; min-height: 112px; padding: 16px; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 16px; color: var(--apple-secondary, #636366); background: var(--apple-surface, #fff); font-size: 14px; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab)) {
+  --tn-text: #1c1c1e;
+  --tn-muted: #636366;
+  --tn-surface-soft: #efeff4;
+  --tn-line: rgba(60,60,67,.12);
+  --trainer-v2-ink: #1c1c1e;
+  --trainer-v2-muted: #636366;
+  color: var(--tn-text);
+  background: var(--apple-page, #f2f2f7) !important;
+}
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab) .trainerNextMobileTitle) {
+  margin: 0;
+  font-size: 28px !important;
+  line-height: 1.2 !important;
+  letter-spacing: -.5px;
+}
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab) .trainerNextDesktopPageHead h1) {
+  font-size: 28px;
+  line-height: 1.2;
+}
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab) .trainerNextDesktopPageHead) { background: var(--apple-page, #f2f2f7) !important; }
+.listContext {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin: 0 0 10px;
+  color: var(--tn-muted, #636366);
+  font-size: 13px;
+}
+.metricHelp { min-width: 0; }
+.metricHelp summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--apple-accent, #3c6faa);
+  cursor: pointer;
+  list-style: none;
+}
+.metricHelp summary::-webkit-details-marker { display: none; }
+.metricHelp[open] { flex-basis: 100%; padding-bottom: 8px; }
+.metricHelp[open] summary { justify-content: flex-start; }
+.metricHelp[open] summary svg { transform: rotate(180deg); }
+.metricHelp p { max-width: 70ch; margin: 6px 0; font-size: 14px; line-height: 1.5; }
+.metricHelp summary:focus-visible { outline: 2px solid var(--apple-accent, #3c6faa); outline-offset: 2px; border-radius: 6px; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .mobileActivity { display: none !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextClientsPage .trainerNextClientTableHead) {
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextClientsPage .trainerNextClientIdentity strong) {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextClientsPage .trainerNextClientTable > button small) { font-size: 12px !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextClientsPage .trainerNextClientTable > button > .positive) { color: var(--tn-text) !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextClientsPage .trainerNextClientTable > button > .positive b) { color: var(--tn-text) !important; }
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  min-height: 24px;
+  margin-left: 4px;
+  padding: 0 7px;
+  border-radius: 8px;
+  color: var(--tn-muted, #636366);
+  background: var(--apple-muted, #efeff4);
+  font-size: 13px;
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextLibrary) {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextPanelTitle) { display: block !important; margin: 0 0 12px !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextPanelTitle h2) { margin: 0 0 4px; font-size: 18px !important; line-height: 1.4; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextPanelTitle p) { font-size: 13px !important; line-height: 1.5; color: var(--tn-muted); }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextLibraryActions) { display: grid !important; grid-template-columns: minmax(0,1fr) auto !important; gap: 10px; margin-top: 14px; width: 100% !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextSearch) { width: 100% !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextSearch input) { font-weight: 400 !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextLibraryAdd) { min-height: 46px !important; padding: 0 16px !important; box-shadow: none !important; white-space: normal; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextLibraryPage .trainerNextLibraryAdd:disabled) { opacity: .5; cursor: wait; }
+.libraryResultCount { margin: 8px 0 10px; color: var(--tn-muted, #636366); font-size: 13px; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryFilterRow { display: grid; grid-template-columns: minmax(0,280px) auto; justify-content: space-between; align-items: end; gap: 10px; margin-bottom: 10px; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryFilterRow > label { width: 100% !important; min-width: 0; margin: 0 !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryFilterRow select { box-sizing: border-box; width: 100% !important; min-width: 0; margin: 0; font-size: 14px; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryResults { display: grid !important; grid-template-columns: minmax(0,1fr) !important; gap: 8px !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryResults .libraryCard {
+  display: grid !important;
+  grid-template-columns: 64px minmax(0,1fr) 18px !important;
+  gap: 12px !important;
+  align-items: center;
+  min-height: 88px !important;
+  margin: 0 !important;
+  padding: 12px !important;
+  border: 1px solid var(--tn-line) !important;
+  border-radius: 16px !important;
+  background: var(--apple-surface, #fff) !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+.libraryCard > div { min-width: 0; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryCard strong { display: block; font-size: 15px !important; line-height: 1.4; color: var(--tn-text); white-space: normal !important; overflow-wrap: anywhere; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryCard small { display: block; margin-top: 4px; font-size: 12px !important; font-weight: 400 !important; line-height: 1.45; color: var(--tn-muted); }
+.libraryCard > svg { color: var(--tn-muted, #636366); }
+.libraryCard:focus-visible { outline: 2px solid var(--apple-accent, #3c6faa); outline-offset: 2px; }
+.libraryCard:active { opacity: .72; }
+.cabinetHint { margin: 0 0 22px; color: var(--tn-muted, #636366); font-size: 13px; line-height: 1.5; }
+.sectionTitle { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerNextCabinetContent) { display: block !important; background: transparent !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerCabinetHero) { display: grid !important; grid-template-columns: 56px minmax(0,1fr) 22px !important; align-items: center; gap: 14px !important; min-height: 106px !important; padding: 16px !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerCabinetHero .trainerNextAvatar) { width: 56px !important; height: 56px !important; min-width: 56px !important; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerCabinetHero .trainerNextAvatarPlaceholder) { display: block !important; width: 26px; height: 26px; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerCabinetHero h2) { margin: 3px 0 5px; font-size: 22px !important; line-height: 1.25; overflow-wrap: anywhere; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerCabinetHero p) { margin: 0; font-size: 13px; line-height: 1.4; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerCabinetStats article span) { font-size: 12px !important; line-height: 1.4; }
+:global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextCabinetPage .trainerCabinetLogout) { display: flex; align-items: center; justify-content: center; gap: 8px; width: auto !important; min-height: 44px; margin: 24px auto 0 !important; padding: 10px 16px !important; border: 0 !important; border-radius: 12px !important; color: #b4232c !important; background: transparent !important; box-shadow: none !important; font-size: 14px; }
+@media (min-width: 700px) {
+  :global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryResults { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+}
+@media (min-width: 1100px) {
+  :global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryResults { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+}
+@media (max-width: 699px) {
+  :global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab) .trainerNextMobileHeader) { min-height: calc(68px + env(safe-area-inset-top,0px)); padding-top: calc(14px + env(safe-area-inset-top,0px)) !important; padding-bottom: 12px !important; background: var(--apple-page, #f2f2f7) !important; }
+  :global(html[data-trainer-variant="v2"] body #root) .scope.scope .mobileActivity { display: block !important; }
+  :global(html[data-trainer-variant="v2"] body #root) .scope.scope .libraryFilterRow { grid-template-columns: minmax(0,1fr) auto; }
+}
+@media (prefers-reduced-motion: reduce) { .libraryCard { transition: none; } }

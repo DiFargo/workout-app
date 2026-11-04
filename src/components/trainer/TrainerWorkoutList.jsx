@@ -3,6 +3,7 @@ import { buildTrainerWorkoutReview } from "../../utils/trainerActionCenter.js";
 import { getTrainerWorkoutReviewKey } from "../../utils/trainerWorkoutReviewDecision.js";
 import TrainerClientDisclosure from "./TrainerClientDisclosure";
 import styles from "./TrainerWorkoutList.module.css";
+import { formatRussianCount } from "../../utils/russianCount.js";
 
 const firstValue = (...values) => values.find(value => value !== undefined && value !== null && value !== "");
 function setText(set) {
@@ -45,13 +46,15 @@ function ExerciseResult({ exercise, actual, hasReview, index }) {
   </details>;
 }
 
-export default function TrainerWorkoutList({ workouts, slots, history, completion, reviewedKeys, localReviewedKeys, onOpen }) {
-  return <details className={`trainerClientWorkoutList ${styles.list}`}>
+export default function TrainerWorkoutList({ workouts, slots, history, completion, reviewedKeys, localReviewedKeys, onOpen, defaultOpen = false }) {
+  const nextWorkout = workouts.find((workout, index) => !(slots.find(item => item.workoutId === String(workout.id || "")) || slots[index])?.isCompleted);
+  return <details open={defaultOpen || undefined} className={`trainerClientWorkoutList ${styles.list}`}>
     <summary className={styles.toggle}>
       <span className={styles.heading}><h2>Тренировки программы</h2><span>{completion}% выполнено</span><ChevronDown size={18} className={styles.chevron} /></span>
       <progress max="100" value={completion} aria-label="Выполнение программы" />
     </summary>
     <div className={styles.rows}>
+      <p className={styles.note}>Метка «Следующая» показывает, с какой тренировки продолжить программу.</p>
       {workouts.map((workout, index) => {
         const slot = slots.find(item => item.workoutId === String(workout.id || "")) || slots[index];
         // Match immutable workout IDs within this assignment; repeated names are not identities.
@@ -59,7 +62,9 @@ export default function TrainerWorkoutList({ workouts, slots, history, completio
           .sort((a, b) => new Date(b.completedAt || b.finishedAt || b.date || b.createdAt).getTime() - new Date(a.completedAt || a.finishedAt || a.date || a.createdAt).getTime())[0];
         const review = saved ? buildTrainerWorkoutReview(saved, workout) : null;
         const reviewed = review && (reviewedKeys.has(getTrainerWorkoutReviewKey(review)) || localReviewedKeys.includes(getTrainerWorkoutReviewKey(review)));
-        return <TrainerClientDisclosure key={workout.id || index} title={<span className="trainerWorkoutRowLabel"><span>{index + 1}. {workout.name || workout.title || "Тренировка"}</span>{slot?.isCompleted ? <small className="trainerWorkoutCompleted"><Check size={14} />Выполнена</small> : null}</span>}>
+        const exerciseCount = (workout.exercises || []).length;
+        const setCount = (workout.exercises || []).reduce((sum, exercise) => sum + setsOf(exercise).length, 0);
+        return <TrainerClientDisclosure key={workout.id || index} title={<span className="trainerWorkoutRowLabel"><span><strong>{workout.name || workout.title || "Тренировка"}</strong><small className="trainerWorkoutRowMeta">{formatRussianCount(exerciseCount, ["упражнение", "упражнения", "упражнений"])} · {formatRussianCount(setCount, ["подход", "подхода", "подходов"])}</small></span>{slot?.isCompleted ? <small className="trainerWorkoutCompleted"><Check size={14} />Выполнена</small> : nextWorkout?.id === workout.id ? <small className="trainerWorkoutUpcoming">Следующая</small> : <small className="trainerWorkoutPlanned">В плане</small>}</span>}>
           <div className={styles.content}>
             {review ? <>
               <div className={styles.reviewHeading}><span>Результат тренировки</span><span>{reviewed ? "Проверено тренером" : "Не проверено"}</span></div>

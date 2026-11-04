@@ -1,3 +1,5 @@
+.loadState{padding:20px;text-align:center;color:#636366;font-size:15px;line-height:1.5}
+.loadState button{min-height:44px;padding:10px 16px;border:0;border-radius:12px;background:#efeff4;color:#3c6faa;font:inherit;cursor:pointer}
 .overlay {
   --calendar-backdrop: rgba(27, 35, 31, 0.18);
   --calendar-sheet-background: var(--color-surface);

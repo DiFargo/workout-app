@@ -1,4 +1,5 @@
 import { getActiveTrainerTasksCount, getTrainerTaskStatus } from "../../domain/clientInsights";
+import PrivateProgressPhoto from "../../components/media/PrivateProgressPhoto.jsx";
 
 export default function TrainerClientOverviewPhotosTasks({
   adminClientProgressPhotos,
@@ -68,7 +69,7 @@ export default function TrainerClientOverviewPhotosTasks({
           {[["frontUrl", "Фронт"], ["sideUrl", "Бок"], ["backUrl", "Спина"]].map(([field, label]) => (
             <figure key={field}>
               {selectedLatestPhoto?.[field] ? (
-                <img src={selectedLatestPhoto[field]} alt={label} loading="lazy" />
+                <PrivateProgressPhoto source={selectedLatestPhoto[field]} alt={label} loading="lazy" />
               ) : (
                 <div><span>＋</span><small>Нет фото</small></div>
               )}

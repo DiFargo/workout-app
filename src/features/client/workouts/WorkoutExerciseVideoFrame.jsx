@@ -1,7 +1,9 @@
+import ProtectedExerciseVideo from "../../../components/media/ProtectedExerciseVideo.jsx";
 import { Info, Maximize2 } from "lucide-react";
 import { Pause, Play } from "lucide";
 import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import BasicWorkoutExerciseIllustration from "./BasicWorkoutExerciseIllustration";
+import WorkoutVideoProtectionMark from "./WorkoutVideoProtectionMark";
 import styles from "./WorkoutExerciseVideoFrame.module.css";
 import { exerciseVideoCropStyle } from "../../../utils/exerciseVideoCrop.js";
 
@@ -36,14 +38,21 @@ export default function WorkoutExerciseVideoFrame({
     >
       {hasVideo ? (
         <>
-          <video
+          <ProtectedExerciseVideo
             key={`${exercise.id}:${videoRetryToken}`}
             className={styles.video}
             style={exerciseVideoCropStyle(exercise.videoCrop)}
             data-css-module-control="workout-exercise-video"
             src={exercise.video}
+            previewTime={exercise.videoPosterTime}
+            preferPoster
             playsInline
             preload="auto"
+            controlsList="nodownload noremoteplayback"
+            disablePictureInPicture
+            disableRemotePlayback
+            draggable={false}
+            onContextMenu={(event) => event.preventDefault()}
             onPointerDown={(event) => event.stopPropagation()}
             onTouchStart={(event) => event.stopPropagation()}
             onTouchMove={(event) => event.stopPropagation()}
@@ -64,6 +73,7 @@ export default function WorkoutExerciseVideoFrame({
             onLoadedMetadata={onVideoLoadedMetadata}
             onError={onVideoError}
           />
+          <WorkoutVideoProtectionMark className={styles.protectionMark} />
           {videoLoadingId === exercise.id && (
             <span className={styles.loading}>Загрузка видео...</span>
           )}

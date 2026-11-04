@@ -183,7 +183,7 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerPhotoCompareGrid .trainerPhotoMediaPlaceholder) {height:220px!important;max-height:220px!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerPhotoComparePanel),
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page :global(.trainerPhotoCompareGrid) {gap:10px!important;}
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .subscription {grid-column:1 / -1!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;border-top:1px solid rgba(57, 82, 91,.12)!important;padding-top:8px!important;font-size:12px!important;min-height:35px!important;}
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .subscription {grid-column:1 / -1!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;border-top:1px solid rgba(57, 82, 91,.12)!important;padding-top:8px!important;font-size:12px!important;min-height:44px!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .subscription small {font-size:11px!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .twoActions {display:block!important;}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page .twoActions .row + .row {border-left:0!important;border-top:1px solid rgba(57, 82, 91,.12)!important;}

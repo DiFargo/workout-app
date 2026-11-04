@@ -3,7 +3,12 @@ import assert from "node:assert/strict";
 import vm from "node:vm";
 import { installRuntimeImports } from "./helpers/runtime-imports.mjs";
 
-const cleanup = installRuntimeImports({ "firebase/firestore": { collection() {}, doc() {}, getDocs() {}, setDoc() {}, writeBatch() {} } });
+const unexpectedFirestore = () => assert.fail("Loaded-range PDF fixture must not perform Firestore I/O");
+const cleanup = installRuntimeImports({ "firebase/firestore": {
+  collection: unexpectedFirestore, doc: unexpectedFirestore, getDocs: unexpectedFirestore, setDoc: unexpectedFirestore,
+  writeBatch: unexpectedFirestore, query: unexpectedFirestore, orderBy: unexpectedFirestore,
+  documentId: unexpectedFirestore, startAfter: unexpectedFirestore, limit: unexpectedFirestore
+} });
 after(cleanup);
 const { downloadTrainerClientExportWithDeps, handleTrainerClientActionWithDeps } = await import("../src/features/trainer/trainerClientActionHandlers.js");
 const { buildTrainerClientPrintDocument } = await import("../src/utils/trainerClientExport.js");
@@ -36,7 +41,7 @@ beforeEach(() => {
   globalThis.document = { createElement: () => ({ click() { opened.push({ href: this.href, download: this.download }); } }) };
 });
 
-test("PDF opens a complete escaped report with noopener even when open returns null", async () => {
+test("PDF opens an escaped loaded-range report with explicit scope and noopener even when open returns null", async () => {
   assert.equal(await downloadTrainerClientExportWithDeps(fixture()), true);
   assert.deepEqual(opened[0], ["blob:test/1", "_blank", "noopener,noreferrer"]);
   assert.equal(blobs[0].type, "text/html;charset=utf-8");
@@ -49,7 +54,9 @@ test("PDF opens a complete escaped report with noopener even when open returns n
   assert.equal((html.match(/<script>/g) || []).length, 1);
   assert.equal(html.includes("<img"), false);
   assert.equal(html.includes("<script>steal()"), false);
-  assert.equal(statuses.at(-1), "PDF-отчёт открыт в новом окне для сохранения через печать.");
+  assert.match(statuses.at(-1), /^PDF-отчёт открыт в новом окне для сохранения через печать\. Неполная история тренировок/);
+  assert.match(html, /Неполная история тренировок[^<]*: 1 записей/);
+  assert.match(html, /Замеры и питание — загруженные данные, полнота не подтверждена/);
   assert.equal([...timeouts.values()].some(timer => timer.ms === 10000), false);
   assert.equal(revoked.length, 0);
   [...timeouts.values()].find(timer => timer.ms === 60000).callback();
@@ -64,7 +71,7 @@ test("blocked popup times out with failure and does not claim a successful PDF e
   [...timeouts.values()].find(timer => timer.ms === 10000).callback();
   assert.equal(await exporting, false);
   assert.match(statuses.at(-1), /Не удалось подтвердить открытие/);
-  assert.equal(statuses.some(status => status === "PDF-отчёт открыт в новом окне для сохранения через печать."), false);
+  assert.equal(statuses.some(status => status.startsWith("PDF-отчёт открыт в новом окне для сохранения через печать.")), false);
   assert.equal(channels[0].closed, true);
 });
 
@@ -121,5 +128,6 @@ test("confirmed PDF records exactly one event; CSV download and quoting remain a
   assert.match(csv, /"workout","2026-10-08"/);
   assert.match(csv, /"measurement","2026-10-08"/);
   assert.match(opened[1].download, /-trainer-export\.csv$/);
-  assert.equal(statuses.at(-1), "Excel-экспорт клиента подготовлен в CSV.");
+  assert.match(statuses.at(-1), /^Excel-экспорт клиента подготовлен в CSV\. Неполная история тренировок/);
+  assert.match(csv, /"export_scope"/);
 });

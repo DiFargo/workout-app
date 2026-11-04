@@ -23,19 +23,22 @@ import {
   writeBatch
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
+import { captureAuthSession } from "../../utils/authSession.js";
 import {
   ADMIN_BASIC_PROGRAM_STATUSES,
   countAdminBasicProgramsByStatus,
   createBasicProgramMutation,
   createBasicProgramPlan,
-  formatBasicProgramWorkouts,
+  formatBasicProgramWorkoutsForEditing,
   getAdminBasicProgramStatus,
   getAdminBasicProgramStatusLabel,
   getBasicProgramTransition,
   isAdminManagedBasicProgram,
-  parseBasicProgramWorkouts
+  parseBasicProgramWorkouts,
+  parseBasicProgramWorkoutsForEditing
 } from "../../utils/adminBasicProgramLifecycle";
 import styles from "./AdminBasicProgramLifecycle.module.css";
+import { matchesAdminCatalogSearch } from "./adminCatalogSearch.js";
 
 const EMPTY_LIST = [];
 const PROGRAM_COLLECTION_PATH = ["admin", "basicProgramTemplates", "items"];
@@ -225,12 +228,12 @@ function ModalFrame({ children, labelledBy, onClose, className = "", disabled = 
   );
 }
 
-function ProgramEditorSheet({ mode, program, onClose, onSave, saving, saveError }) {
+export function ProgramEditorSheet({ mode, program, onClose, onSave, saving, saveError }) {
   const initial = useMemo(() => ({
     title: String(program?.title || ""),
     description: String(program?.description || ""),
     goal: String(program?.goal || ""),
-    workoutsText: formatBasicProgramWorkouts(program?.workouts || []),
+    workoutsText: program ? formatBasicProgramWorkoutsForEditing(program.workouts || []) : "",
     reason: mode === "duplicate" ? "Создана версия на основе шаблона" : ""
   }), [mode, program]);
   const [draft, setDraft] = useState(initial);
@@ -246,9 +249,32 @@ function ProgramEditorSheet({ mode, program, onClose, onSave, saving, saveError 
     setValidationError("");
   };
 
+  let structuredWorkouts = null;
+  if (program) {
+    try { structuredWorkouts = parseBasicProgramWorkoutsForEditing(draft.workoutsText); } catch { /* Keep invalid advanced input visible for correction. */ }
+  }
+  const updateWorkoutName = (dayIndex, exerciseIndex, value) => {
+    const workouts = parseBasicProgramWorkoutsForEditing(draft.workoutsText);
+    if (exerciseIndex === null) workouts[dayIndex].name = value;
+    else {
+      const exercise = workouts[dayIndex].exercises[exerciseIndex];
+      workouts[dayIndex].exercises[exerciseIndex] = typeof exercise === "string" ? value : { ...exercise, name: value };
+    }
+    setDraft((current) => ({ ...current, workoutsText: formatBasicProgramWorkoutsForEditing(workouts) }));
+    setValidationError("");
+  };
+
   const handleSubmit = () => {
     const titleValue = String(draft.title || "").trim();
-    const workouts = parseBasicProgramWorkouts(draft.workoutsText);
+    let workouts;
+    try {
+      workouts = program
+        ? (draft.workoutsText === initial.workoutsText ? program.workouts : parseBasicProgramWorkoutsForEditing(draft.workoutsText))
+        : parseBasicProgramWorkouts(draft.workoutsText);
+    } catch {
+      setValidationError("Проверьте JSON состава: нужен массив тренировок с массивами exercises. Исходные параметры не изменены.");
+      return;
+    }
 
     if (!titleValue) {
       setValidationError("Укажите название программы.");
@@ -286,9 +312,27 @@ function ProgramEditorSheet({ mode, program, onClose, onSave, saving, saveError 
         <span>Цель или фокус</span>
         <input value={draft.goal} onChange={updateDraft("goal")} disabled={saving} maxLength={120} placeholder="Например: общая физическая подготовка" />
       </label>
+      {program && structuredWorkouts ? <section aria-label="Состав программы">
+        <p className={styles.sheetLead}>Названия можно менять отдельно: подходы, повторы, видео и блоки сохранятся.</p>
+        {structuredWorkouts.map((workout, dayIndex) => <details key={dayIndex} open={dayIndex === 0}>
+          <summary>{workout.name || workout.title || `Тренировка ${dayIndex + 1}`}</summary>
+          <label className={styles.field}>
+            <span>Название тренировки {dayIndex + 1}</span>
+            <input value={workout.name || workout.title || ""} onChange={(event) => updateWorkoutName(dayIndex, null, event.target.value)} disabled={saving} />
+          </label>
+          {workout.exercises.map((exercise, exerciseIndex) => <label className={styles.field} key={exerciseIndex}>
+            <span>Упражнение {dayIndex + 1}.{exerciseIndex + 1}</span>
+            <input value={typeof exercise === "string" ? exercise : exercise.name || exercise.title || ""} onChange={(event) => updateWorkoutName(dayIndex, exerciseIndex, event.target.value)} disabled={saving} />
+          </label>)}
+        </details>)}
+      </section> : null}
+      <details open={program ? undefined : true}>
+        <summary>{program ? "Расширенный редактор состава (JSON)" : "Состав новой программы"}</summary>
       <label className={styles.field}>
         <span>Состав программы</span>
-        <small>Одна строка — одна тренировка: «День 1: упражнение; упражнение».</small>
+        <small>{program
+          ? "Полный состав в JSON: подходы, повторы, видео и блоки сохранены. Меняйте только нужные значения; сохраняйте ID и остальные поля. Для смены названия программы состав менять не нужно."
+          : "Одна строка — одна тренировка: «День 1: упражнение; упражнение»."}</small>
         <textarea
           value={draft.workoutsText}
           onChange={updateDraft("workoutsText")}
@@ -297,6 +341,7 @@ function ProgramEditorSheet({ mode, program, onClose, onSave, saving, saveError 
           placeholder="День 1: Жим ногами; Тяга верхнего блока\nДень 2: Жим гантелей лёжа; Планка"
         />
       </label>
+      </details>
       <label className={styles.field}>
         <span>Комментарий к версии</span>
         <input value={draft.reason} onChange={updateDraft("reason")} disabled={saving} maxLength={160} placeholder="Что и почему изменили" />
@@ -359,7 +404,7 @@ function TransitionSheet({ transition, onClose, onConfirm, saving, saveError }) 
   );
 }
 
-function ProgramHistorySheet({ program, history, loading, onClose }) {
+function ProgramHistorySheet({ program, history, loading, error, onRetry, onClose }) {
   const titleId = useId();
   return (
     <ModalFrame labelledBy={titleId} onClose={onClose} className={styles.historySheet}>
@@ -373,8 +418,9 @@ function ProgramHistorySheet({ program, history, loading, onClose }) {
         <strong>v{program.version || 1}</strong>
         <small>{getAdminBasicProgramStatusLabel(program.status)}</small>
       </section>
-      {loading ? <p className={styles.loadingHistory}><LoaderCircle className={styles.spinner} aria-hidden="true" /> Загружаем историю…</p> : null}
-      {!loading && !history.length ? <p className={styles.emptyHistory}>Версий пока нет. Следующее сохранение будет зафиксировано в журнале.</p> : null}
+      {loading ? <p className={styles.loadingHistory} role="status"><LoaderCircle className={styles.spinner} aria-hidden="true" /> Загружаем историю…</p> : null}
+      {!loading && error ? <div className={`${styles.warning} ${styles.historyError}`} role="alert"><p>{error}</p><button type="button" onClick={onRetry}>Повторить загрузку</button></div> : null}
+      {!loading && !error && !history.length ? <p className={styles.emptyHistory}>Версий пока нет. Следующее сохранение будет зафиксировано в журнале.</p> : null}
       {!loading && history.length ? (
         <ol className={styles.historyList}>
           {history.map((entry) => (
@@ -488,6 +534,8 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [], embe
   const [historyProgram, setHistoryProgram] = useState(null);
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
+  const historyRequest = useRef(null);
 
   const programsCollection = useMemo(() => collection(db, ...PROGRAM_COLLECTION_PATH), []);
   const livePrograms = useMemo(() => managedPrograms.map(normalizeManagedProgram), [managedPrograms]);
@@ -499,29 +547,26 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [], embe
   const queryText = search.trim().toLocaleLowerCase("ru");
   const filteredPrograms = useMemo(() => allPrograms.filter((program) => {
     if (filter !== "all" && getAdminBasicProgramStatus(program.status) !== filter) return false;
-    return !queryText || makeCardSearchText(program).includes(queryText);
+    return matchesAdminCatalogSearch(makeCardSearchText(program), queryText);
   }), [allPrograms, filter, queryText]);
 
-  const loadPrograms = useCallback(async ({ silent = false } = {}) => {
-    if (!silent) setLoading(true);
-    setLoadError("");
-    try {
-      const snapshot = await getDocs(programsCollection);
+  const loadPrograms = useCallback(() => {
+    return getDocs(programsCollection).then((snapshot) => {
       const next = snapshot.docs
         .map((item) => normalizeManagedProgram({ id: item.id, ...item.data() }))
         .filter(isAdminManagedBasicProgram)
         .sort((left, right) => getMilliseconds(right.updatedAt || right.createdAt) - getMilliseconds(left.updatedAt || left.createdAt));
       setManagedPrograms(next);
-    } catch (error) {
+      setLoadError("");
+    }).catch((error) => {
       console.error("Basic program lifecycle load failed:", error);
       setLoadError("Не удалось загрузить управляемые программы. Проверьте подключение и права администратора.");
-    } finally {
-      if (!silent) setLoading(false);
-    }
+    }).finally(() => setLoading(false));
   }, [programsCollection]);
 
   useEffect(() => {
     loadPrograms();
+    return () => { historyRequest.current = null; };
   }, [loadPrograms]);
 
   const saveProgram = async ({ current = null, draft, action, status, reason }) => {
@@ -589,22 +634,35 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [], embe
   };
 
   const openHistory = async (program) => {
+    if (historyRequest.current?.programId === program.id && historyRequest.current.pending && historyRequest.current.session.isCurrent()) return;
+    const request = { programId: program.id, session: captureAuthSession(auth), pending: true };
+    historyRequest.current = request;
+    const isCurrent = () => historyRequest.current === request && request.session.isCurrent();
     setHistoryProgram(program);
     setHistory([]);
-    if (!program.managed) return;
+    setHistoryError("");
+    setHistoryLoading(Boolean(program.managed));
+    if (!program.managed) { request.pending = false; return; }
+    if (!request.session.isCurrent()) {
+      request.pending = false;
+      setHistoryLoading(false);
+      setHistoryError("Сессия изменилась. Войдите снова и откройте историю.");
+      return;
+    }
 
-    setHistoryLoading(true);
     try {
       const snapshot = await getDocs(collection(doc(programsCollection, program.id), "versions"));
       const entries = snapshot.docs
         .map((item) => ({ id: item.id, ...item.data() }))
         .sort((left, right) => Number(right.version || 0) - Number(left.version || 0));
-      setHistory(entries);
+      if (isCurrent()) setHistory(entries);
     } catch (error) {
+      if (!isCurrent()) return;
       console.error("Basic program version history load failed:", error);
-      setHistory([]);
+      setHistoryError("Не удалось загрузить историю версий. Проверьте подключение и повторите попытку.");
     } finally {
-      setHistoryLoading(false);
+      request.pending = false;
+      if (isCurrent()) setHistoryLoading(false);
     }
   };
 
@@ -656,12 +714,12 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [], embe
         </button>
       </div>
 
-      <div className={styles.statsRow} aria-label="Состояние каталога программ">
+      {!loading && !loadError ? <div className={styles.statsRow} aria-label="Состояние каталога программ">
         <span><CheckCircle2 aria-hidden="true" />{statusCounts.published} опубликовано</span>
         <span><Clock3 aria-hidden="true" />{statusCounts.review} на проверке</span>
         <span><Pencil aria-hidden="true" />{statusCounts.draft} черновиков</span>
         <span><Archive aria-hidden="true" />{statusCounts.archived} в архиве</span>
-      </div>
+      </div> : null}
 
       <div className={styles.toolbar}>
         <label className={styles.searchField}>
@@ -674,19 +732,21 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [], embe
               key={item.id}
               className={`${styles.filterButton}${filter === item.id ? ` ${styles.filterButtonActive}` : ""}`}
               type="button"
+              aria-pressed={filter === item.id}
               onClick={() => setFilter(item.id)}
             >
-              {item.label}<b>{filterCount(item.id)}</b>
+              {item.label}<b>{loading || loadError ? "—" : filterCount(item.id)}</b>
             </button>
           ))}
         </div>
       </div>
+      {queryText || filter !== "all" ? <button className={styles.filterButton} type="button" onClick={() => { setSearch(""); setFilter("all"); }}>Сбросить поиск и фильтры</button> : null}
 
-      {loadError ? <div className={styles.warning} role="alert">{loadError}<button type="button" onClick={() => loadPrograms()}>Повторить</button></div> : null}
+      {loadError ? <div className={styles.warning} role="alert">{loadError}<button type="button" onClick={() => { setLoading(true); setLoadError(""); void loadPrograms(); }}>Повторить</button></div> : null}
       {actionStatus ? <p className={styles.statusMessage} role="status">{actionStatus}</p> : null}
 
       {loading ? <div className={styles.loading}><LoaderCircle className={styles.spinner} aria-hidden="true" />Загружаем управляемые программы…</div> : null}
-      {!loading && !filteredPrograms.length ? (
+      {!loading && !loadError && !filteredPrograms.length ? (
         <div className={styles.emptyState}>
           <BookOpen aria-hidden="true" />
           <strong>Программ по этому запросу нет</strong>
@@ -736,7 +796,9 @@ export default function AdminBasicProgramLifecycle({ fallbackPrograms = [], embe
           program={historyProgram}
           history={history}
           loading={historyLoading}
-          onClose={() => setHistoryProgram(null)}
+          error={historyError}
+          onRetry={() => void openHistory(historyProgram)}
+          onClose={() => { historyRequest.current = null; setHistoryProgram(null); }}
         />
       ) : null}
     </section>

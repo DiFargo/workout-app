@@ -253,7 +253,8 @@ export function buildTrainerClientListItems(clients = [], summaries = {}, {
   const searchText = String(search || "").trim().toLowerCase();
 
   return (Array.isArray(clients) ? clients : [])
-    .filter((client) => filter === "test" ? client.isTest : !client.isTest)
+    .filter((client) => filter === "archive" ? Boolean(client.archived)
+      : !client.archived && (filter === "test" ? client.isTest : !client.isTest))
     .map((client) => {
       const summary = getTrainerClientSummaryFromMap(client, summaries);
       const activityStatus = getClientActivityStatus(summary);
@@ -285,7 +286,7 @@ export function buildTrainerClientListItems(clients = [], summaries = {}, {
         ...item.reasons
       ].filter(Boolean).join(" ").toLowerCase();
       if (searchText && !haystack.includes(searchText)) return false;
-      if (filter === "all" || filter === "test") return true;
+      if (filter === "all" || filter === "test" || filter === "archive") return true;
       if (filter === "active") return item.status.id === "active";
       if (filter === "attention") return Boolean(item.attention);
       if (filter === "inactive") return item.activityStatus.id === "lost";

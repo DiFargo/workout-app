@@ -13,6 +13,8 @@ service firebase.storage {
     function hasActiveMembershipData(data) {
       return data.keys().hasAll(["role"]) &&
         data.role in ["client", "trainer", "admin"] &&
+        (!data.keys().hasAll(["accountAccessStatus"]) || data.accountAccessStatus != "awaiting_trainer") &&
+        !(data.role == "client" && data.get("trainerAssignmentState", "") == "unassigned") &&
         (!data.keys().hasAll(["active"]) || data.active != false) &&
         (!data.keys().hasAll(["archived"]) || data.archived != true) &&
         (!data.keys().hasAll(["accessDisabled"]) || data.accessDisabled != true) &&
@@ -33,7 +35,21 @@ service firebase.storage {
     function isAdmin() {
       return isActiveMember() && userData(request.auth.uid).role == "admin" &&
         hasCurrentAdminClaimVersion(userData(request.auth.uid)) &&
+        hasCurrentAdminSecurityKeyProof(userData(request.auth.uid)) &&
         request.auth.token.admin == true;
+    }
+
+    function hasCurrentAdminSecurityKeyProof(data) {
+      let required = data.get("adminSecurityKeyRequired", false);
+      let version = data.get("adminSecurityKeyVersion", "");
+      let roleVersion = request.auth.token.get("adminSecurityKeyRoleVersion", "");
+      let until = request.auth.token.get("adminSecurityKeyUntil", 0);
+      return required == false || (required == true &&
+        version is string && version.size() > 0 && version.size() <= 256 &&
+        request.auth.token.get("adminSecurityKeyVersion", "") == version &&
+        roleVersion is string && roleVersion == data.get("adminClaimVersion", "legacy") &&
+        until is int && until > request.time.toMillis() &&
+        until <= request.time.toMillis() + 8 * 60 * 60 * 1000);
     }
 
     function hasCurrentAdminClaimVersion(data) {

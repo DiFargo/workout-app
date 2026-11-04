@@ -20,7 +20,8 @@ export function useNutritionPageData({
   nutritionMeals = defaultNutritionMeals,
   expandedNutritionMeals,
   nutritionWeekDates,
-  nutritionCurrentStreak
+  nutritionCurrentStreak,
+  nutritionHistoryReady = true
 }) {
   return useMemo(
     () => buildNutritionPageModel({
@@ -36,7 +37,8 @@ export function useNutritionPageData({
       nutritionMeals,
       expandedNutritionMeals,
       nutritionWeekDates,
-      nutritionCurrentStreak
+      nutritionCurrentStreak,
+      nutritionHistoryReady
     }),
     [
       aiNutritionSavedPlan,
@@ -51,7 +53,8 @@ export function useNutritionPageData({
       nutritionMeals,
       expandedNutritionMeals,
       nutritionWeekDates,
-      nutritionCurrentStreak
+      nutritionCurrentStreak,
+      nutritionHistoryReady
     ]
   );
 }

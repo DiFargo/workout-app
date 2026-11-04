@@ -493,6 +493,44 @@
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
+.skipCandidate {
+  min-height: 44px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--apple-separator, rgba(57, 82, 91, .12));
+  border-radius: 14px;
+  background: var(--apple-surface, #fff);
+  color: var(--apple-secondary, #617078);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.discardOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(28, 40, 46, .3);
+}
+
+.discardCard {
+  width: min(100%, 380px);
+  padding: 22px;
+  box-sizing: border-box;
+  border-radius: 24px;
+  background: var(--apple-surface, #fff);
+  color: var(--apple-text, #1c282e);
+}
+
+.discardCard h3 { margin: 0 0 10px; font-size: 20px; }
+.discardCard p { margin: 0 0 18px; color: var(--apple-secondary, #617078); font-size: 14px; line-height: 1.45; }
+.recordButton:disabled { opacity: .55; cursor: not-allowed; }
+
 .candidateQuery {
   margin: 0 0 7px;
   color: var(--apple-secondary, #617078);
@@ -621,7 +659,7 @@
 .anchoredRecordButton > * { position: relative; z-index: 1; }
 
 .anchoredRecordButton.analyzing {
-  background: var(--apple-blue-pressed, #315f91);
+  background: var(--ownset-action-gradient);
   box-shadow: 0 8px 18px rgba(27, 35, 31, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
@@ -918,7 +956,7 @@
 }
 
 .sheet[data-search-failure="true"] .doneButton {
-  background: var(--apple-blue-pressed, #315f91);
+  background: var(--ownset-action-gradient);
 }
 
 .closeButton:focus-visible,

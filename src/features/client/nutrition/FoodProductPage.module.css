@@ -67,3 +67,4 @@
   scrollbar-color: transparent transparent;
   -webkit-text-fill-color: currentColor;
 }
+.editContext { margin: 8px 16px; color: var(--apple-secondary); font-size: 13px; line-height: 1.4; }

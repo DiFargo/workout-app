@@ -6,6 +6,7 @@ import weeklyCalendarStyles from "../../../shared/ui/WeeklyCalendar.module.css";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 import styles from "./WorkoutRenderOverview.module.css";
 import responsiveFixStyles from "./WorkoutRenderOverviewResponsiveFix.module.css";
+import { formatRussianCount } from "../../../utils/russianCount.js";
 
 function formatWorkoutDateLabel(dateKey, fallback = "Дата не назначена") {
   if (!dateKey) return fallback;
@@ -50,35 +51,47 @@ const STATE_COPY = {
 function ActionDialog({ mode, workout, workoutDate, onClose, onConfirm, onReschedule }) {
   const [dateKey, setDateKey] = useState("");
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const now = new Date();
   const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   useEffect(() => {
     if (!mode) return undefined;
-    const onKeyDown = (event) => event.key === "Escape" && onClose();
+    const onKeyDown = (event) => event.key === "Escape" && !saving && onClose();
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [mode, onClose]);
+  }, [mode, onClose, saving]);
   if (!mode) return null;
 
   const reschedule = mode === "reschedule";
   const handleSave = async () => {
     if (!dateKey || saving) return;
+    setSaveError("");
     setSaving(true);
-    const saved = await onReschedule?.(dateKey);
-    setSaving(false);
-    if (saved !== false) onClose();
+    try {
+      const saved = await onReschedule?.(dateKey);
+      if (saved === false) {
+        setSaveError("Не удалось подтвердить перенос. Проверьте интернет и повторите попытку. Выбранная дата остаётся в форме.");
+      } else {
+        onClose();
+      }
+    } catch {
+      setSaveError("Не удалось подтвердить перенос. Проверьте интернет и повторите попытку. Выбранная дата остаётся в форме.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
-    <div className={`${styles.modalOverlay} ${responsiveFixStyles.modalOverlay}`} data-modal-backdrop="true" role="presentation" onClick={onClose} data-testid="workout-today-action-overlay">
-      <section className={`${styles.modal} ${responsiveFixStyles.modal}`} data-modal-surface="true" role="dialog" aria-modal="true" aria-labelledby="workoutTodayDialogTitle" onClick={(event) => event.stopPropagation()}>
-        <button className={styles.modalClose} type="button" aria-label="Закрыть" onClick={onClose}><X aria-hidden="true" /></button>
+    <div className={`${styles.modalOverlay} ${responsiveFixStyles.modalOverlay}`} data-modal-backdrop="true" role="presentation" onClick={() => { if (!saving) onClose(); }} data-testid="workout-today-action-overlay">
+      <section className={`${styles.modal} ${responsiveFixStyles.modal}`} data-modal-surface="true" role="dialog" aria-modal="true" aria-busy={saving} aria-labelledby="workoutTodayDialogTitle" onClick={(event) => event.stopPropagation()}>
+        <button className={styles.modalClose} type="button" aria-label="Закрыть" disabled={saving} onClick={onClose}><X aria-hidden="true" /></button>
         <span className={styles.modalIcon}>{reschedule ? <CalendarDays aria-hidden="true" /> : <Dumbbell aria-hidden="true" />}</span>
         <h2 id="workoutTodayDialogTitle">{reschedule ? "Перенести тренировку" : "Начать тренировку раньше?"}</h2>
         <p>{reschedule
           ? `${workout?.name || "Тренировка"} была назначена на ${formatWorkoutDateLabel(workoutDate).toLowerCase()}. Выберите новую дату: если этот день занят, следующие тренировки автоматически сдвинутся, сохранив порядок программы.`
           : `${workout?.name || "Тренировка"} запланирована на ${formatWorkoutDateLabel(workoutDate).toLowerCase()}. Плановая дата сохранится, а фактическое выполнение будет отмечено сегодняшним числом.`}</p>
-        {reschedule ? <label className={`${styles.dateField} ${responsiveFixStyles.dateField}`}><span>Новая дата</span><input className={responsiveFixStyles.dateInput} type="date" min={todayKey} value={dateKey} onChange={(event) => setDateKey(event.target.value)} /></label> : null}
+        {reschedule ? <label className={`${styles.dateField} ${responsiveFixStyles.dateField}`}><span>Новая дата</span><input className={responsiveFixStyles.dateInput} type="date" min={todayKey} value={dateKey} disabled={saving} onChange={(event) => { setDateKey(event.target.value); setSaveError(""); }} /></label> : null}
+        {saveError && <p className={styles.modalError} role="alert">{saveError}</p>}
         <button className={styles.modalPrimary} type="button" disabled={reschedule && (!dateKey || saving)} onClick={reschedule ? handleSave : onConfirm}>
           {saving ? "Сохраняем…" : reschedule ? "Сохранить дату" : "Начать сегодня"}
         </button>
@@ -90,9 +103,11 @@ function ActionDialog({ mode, workout, workoutDate, onClose, onConfirm, onResche
 export default function WorkoutRenderOverview({
   workout, workoutDate, scheduledDates = [], programName, index = 0, total = 0, completedCount = 0,
   programType = "individual", todayState = "today", missedCount = 0, isTrainerMode, renderBottomBar, onOpen, onViewResult,
-  onReschedule, onHistory, onPlan, onProgram, onCreateBasicWorkout, navigation
+  onReschedule, onHistory, onPlan, onProgram, onCreateBasicWorkout, navigation,
+  localOnlyPlan = false, pendingSyncCount = 0, onRetrySync
 }) {
   const [dialogMode, setDialogMode] = useState("");
+  const [syncRetryState, setSyncRetryState] = useState("");
   const now = new Date();
   const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const weekDays = getWeekDays(workoutDate || todayKey, scheduledDates, todayKey);
@@ -125,18 +140,38 @@ export default function WorkoutRenderOverview({
           {weekDays.map((day) => <span className={day.active ? styles.activeDay : ""} key={day.key} data-week-calendar-day data-active={day.active ? "true" : "false"} data-date={day.key} data-planned={day.planned ? "true" : "false"} aria-current={day.active ? "date" : undefined}><small data-week-calendar-label>{day.weekday}</small><strong data-week-calendar-number>{day.day}</strong>{day.planned && !day.active ? <i data-week-calendar-dot aria-label={`${day.weekday} ${day.day}: запланирована тренировка`} /> : null}</span>)}
         </section>
 
+        {(localOnlyPlan || pendingSyncCount > 0) && <aside className={styles.syncNotice} role="status" data-testid="workout-plan-cloud-save-notice">
+          <strong>{localOnlyPlan ? "План только на этом устройстве" : "Результаты ожидают отправки"}</strong>
+          {localOnlyPlan && <span>План пока не подтверждён в облаке.</span>}
+          {pendingSyncCount > 0 && <span>{formatRussianCount(pendingSyncCount, ["тренировка сохранена", "тренировки сохранены", "тренировок сохранено"])} на устройстве. Отправка результатов в облако ещё не подтверждена.</span>}
+          <span>Не очищайте данные приложения до подтверждения облачной записи.</span>
+          {onRetrySync && pendingSyncCount > 0 && <button type="button" disabled={syncRetryState === "saving"} onClick={async () => {
+            if (syncRetryState === "saving") return;
+            setSyncRetryState("saving");
+            try { await onRetrySync(); setSyncRetryState("pending"); } catch { setSyncRetryState("error"); }
+          }}>{syncRetryState === "saving" ? "Отправляем результаты…" : "Повторить отправку"}</button>}
+          {pendingSyncCount > 0 && syncRetryState === "pending" && <span>Ожидаем подтверждения облачной записи. Если уведомление остаётся, проверьте интернет и повторите отправку.</span>}
+          {pendingSyncCount > 0 && syncRetryState === "error" && <span>Не удалось отправить результаты. Они остаются на устройстве. Проверьте интернет и повторите отправку.</span>}
+        </aside>}
         <div className={styles.sectionHead}><h2>{upcoming ? "Следующая тренировка" : "Сегодня"}</h2><button type="button" data-testid="workout-plan-button" onClick={onPlan}>Расписание</button></div>
         <section className={`${styles.workoutCard} ${styles[`state_${todayState}`] || ""}`} data-testid="workout-today-card" data-state={todayState}>
           <div data-testid="workout-list-card">
           <div className={styles.workoutLabel}><span>{programType === "basic" ? "Базовая программа" : "Индивидуальная программа"}</span><small>{todayState === "draft" ? "В процессе" : todayState === "missed" ? "Перенос" : formatWorkoutDateLabel(workoutDate, "Без даты")}</small></div>
           {!completed ? <div className={styles.workoutSummary}><span className={styles.order}>{String(index + 1).padStart(2, "0")}</span><span className={styles.workoutCopy}><strong>{workout?.name || `Тренировка ${index + 1}`}</strong><small>Тренировка {index + 1}</small></span></div> : <h2 className={styles.completedTitle}>{state.title}</h2>}
-          {!completed ? <div className={styles.exerciseMeta}><p>{exerciseCount} упражнений{setCount ? ` · ${setCount} подходов` : ""}{["today", "draft"].includes(todayState) ? null : <><br />{state.description}</>}</p><StateIcon aria-hidden="true" /></div> : <p className={styles.advice}>{state.description}</p>}
+          {!completed ? <div className={styles.exerciseMeta}><p>{formatRussianCount(exerciseCount, ["упражнение", "упражнения", "упражнений"])}{setCount ? ` · ${formatRussianCount(setCount, ["подход", "подхода", "подходов"])}` : ""}{["today", "draft"].includes(todayState) ? null : <><br />{state.description}</>}</p><StateIcon aria-hidden="true" /></div> : <p className={styles.advice}>{state.description}</p>}
           {todayState === "missed" && missedCount > 1 ? <p className={styles.advice}>Пропущено: {missedCount}. Порядок программы сохраняется.</p> : null}
           {todayState === "draft" ? <div className={styles.progress} data-testid="workout-list-progress" style={{ "--exercise-count": Math.max(exerciseCount, 1) }} aria-label={`${exerciseCount} упражнений`}>{Array.from({ length: Math.max(exerciseCount, 1) }, (_, itemIndex) => <span key={itemIndex} />)}</div> : null}
           <div className={styles.actions}><button className={styles.start} type="button" data-testid="workout-start-button" onClick={handlePrimary}>{state.primary}<ArrowRight aria-hidden="true" /></button>{state.secondary ? <button className={styles.secondary} type="button" onClick={() => setDialogMode("reschedule")}>{state.secondary}</button> : null}</div>
           </div>
         </section>
 
+        {programType === "basic" && onCreateBasicWorkout ? (
+          <button type="button" className={`${styles.historyRow} ${styles.basicPickerRow}`} data-testid="basic-workout-picker-button" onClick={onCreateBasicWorkout}>
+            <span className={styles.historyIcon}><Dumbbell aria-hidden="true" /></span>
+            <span><strong>Подобрать тренировку или программу</strong><small>Одно занятие сейчас или план на 4 недели</small></span>
+            <ChevronRight aria-hidden="true" />
+          </button>
+        ) : null}
         <div className={styles.sectionHead}><h2>Ваша программа</h2></div>
         <section className={styles.program}>
           <div className={styles.programHead}><span className={styles.programIcon}><Dumbbell aria-hidden="true" /></span><span><strong>{programName || "Программа тренировок"}</strong><small>{programType === "basic" ? "Базовые тренировки" : "Программа от тренера"}</small></span></div>
@@ -144,7 +179,7 @@ export default function WorkoutRenderOverview({
           <div className={styles.programTrack} role="progressbar" aria-label="Прогресс программы" aria-valuenow={completedCount} aria-valuemin={0} aria-valuemax={Math.max(total, completedCount, 1)}><span style={{width: `${total ? Math.min(100, completedCount / total * 100) : 0}%`}} /></div>
           <div className={styles.programBottom} data-testid={programType === "basic" ? "basic-workout-management" : undefined}><button type="button" data-testid="workout-program-button" onClick={onProgram}>Открыть программу<ChevronRight aria-hidden="true" /></button>{programType === "basic" ? <button type="button" data-testid="basic-manage-plan" onClick={onCreateBasicWorkout}><CalendarDays aria-hidden="true" />Изменить</button> : null}</div>
         </section>
-        <button type="button" className={styles.historyRow} data-testid="workout-records-button" onClick={onHistory}><span className={styles.historyIcon}><ChartNoAxesColumnIncreasing aria-hidden="true" /></span><span><strong>История и рекорды</strong><small>Выполнено тренировок: {completedCount}</small></span><ChevronRight aria-hidden="true" /></button>
+        <button type="button" className={styles.historyRow} data-testid="workout-records-button" onClick={onHistory}><span className={styles.historyIcon}><ChartNoAxesColumnIncreasing aria-hidden="true" /></span><span><strong>История и рекорды</strong><small>Ваши достижения за всё время</small></span><ChevronRight aria-hidden="true" /></button>
         <p className={styles.managementHint}><Info aria-hidden="true" />Вы выбираете дни. Порядок тренировок в программе сохраняется.</p>
       </main>
       {renderBottomBar ? renderBottomBar("workouts") : <ClientMainBottomBar active="workouts" isTrainerMode={isTrainerMode} {...navigation} />}

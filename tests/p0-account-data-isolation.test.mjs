@@ -97,7 +97,7 @@ test("auth bootstrap clears client data and rejects stale account responses", as
   assert.match(effectSource, /isCurrentRun: \(\) => !disposed && runId === bootstrapRunId/);
 });
 
-test("email change keeps the active Firebase session instead of forcing a sign-out", async () => {
+test("email change records success and requires an explicit re-login instead of silently forcing sign-out", async () => {
   const source = await readFile(
     new URL("../src/features/client/profile/profileAccountHandlers.js", import.meta.url),
     "utf8"
@@ -105,7 +105,8 @@ test("email change keeps the active Firebase session instead of forcing a sign-o
 
   assert.doesNotMatch(source, /await verifiedUser\.reload\(\)/);
   const request = source.slice(source.indexOf("async function requestProfileEmailChange"), source.indexOf("async function syncProfileVerifiedEmail"));
-  assert.ok(request.indexOf("verifiedUser.getIdToken(true)") < request.indexOf("await fetchAuthorizedWithTimeout"));
-  assert.doesNotMatch(request.slice(request.indexOf("await fetchAuthorizedWithTimeout")), /getIdToken\(true\)|signOut\(/);
-  assert.match(source, /Вы остаётесь в аккаунте/);
+  assert.ok(request.indexOf("verifiedUser.getIdToken(true)") < request.indexOf("fetch(getProfileUpdateEmailEndpoint()"));
+  assert.doesNotMatch(request.slice(request.indexOf("fetch(getProfileUpdateEmailEndpoint()")), /getIdToken\(true\)|signOut\(/);
+  assert.match(source, /повторный вход/);
+  assert.doesNotMatch(request, /Вы остаётесь в аккаунте/);
 });

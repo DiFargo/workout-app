@@ -1,11 +1,13 @@
 import { LOCAL_NUTRITION_SEARCH_LIMIT } from "../data/nutritionDefaults.js";
-import { nutritionFoodDatabase } from "../data/nutritionFoods.js";
+import basicFoods from "../data/nutrition-catalog/basicFoods.compact.json" with {type: "json"};
+import { createPersonalCatalogSearch } from "./personalCatalogSearch.js";
+import { unpackPersonalCatalogRow } from "./personalCatalogRows.js";
+import { toPersonalNutritionFood } from "./personalNutritionFood.js";
 import {
   findLazyNutritionCatalogByBarcode,
   findExactLazyNutritionCatalogFoods,
   searchLazyNutritionCatalog
 } from "../data/nutrition-catalog/lazyCatalog.js";
-import { normalizeNutritionQuery } from "../data/nutrition-catalog/catalogSearch.js";
 import { normalizeNutritionFood } from "./nutritionFoodModel.js";
 
 export function normalizeLocalCatalogFood(food = {}) {
@@ -47,16 +49,12 @@ export async function searchLocalNutritionFoods(query, limit = LOCAL_NUTRITION_S
 // This compact set ships in the application bundle, unlike the larger lazy
 // catalog. It keeps common searches usable when the connection changes before
 // the catalog chunks can be fetched.
+let basicSearch;
 export function searchBundledNutritionFallbackFoods(query, limit = LOCAL_NUTRITION_SEARCH_LIMIT) {
-  const normalizedQuery = normalizeNutritionQuery(query);
-  if (normalizedQuery.length < 2) return [];
-
+  if (String(query || "").trim().length < 2) return [];
   const normalizedLimit = Math.max(1, Number.parseInt(limit, 10) || LOCAL_NUTRITION_SEARCH_LIMIT);
-  return nutritionFoodDatabase
-    .filter((food) => [food.name, ...(food.aliases || [])]
-      .some((value) => normalizeNutritionQuery(value).includes(normalizedQuery)))
-    .slice(0, normalizedLimit)
-    .map(normalizeLocalCatalogFood);
+  basicSearch ||= createPersonalCatalogSearch(basicFoods.map(unpackPersonalCatalogRow));
+  return basicSearch(query, {limit: normalizedLimit}).items.map(row => ({...toPersonalNutritionFood(row), searchMatchQuery: String(query).trim()}));
 }
 
 export async function findExactLocalNutritionFoods(query) {

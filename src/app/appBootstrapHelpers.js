@@ -5,6 +5,7 @@ import { normalizeBasicWorkoutPlanState } from "../utils/basicWorkoutPlanBuilder
 import { hasCurrentAdminAccess, resolveUserRole } from "../utils/roleAccess.js";
 import { migrateLegacyUserStorage } from "../utils/userScopedStorage.js";
 import { normalizeAppTheme } from "./appTheme.js";
+import { readOfflineClientProfile, rememberOfflineClientProfile } from "../utils/offlineWorkoutAccess.js";
 
 export function getBootstrapWorkoutCalendarDates(calendar = {}) {
   return [...new Set([
@@ -89,6 +90,7 @@ export function resetAuthBootstrapState({
   setHistory,
   setPlan,
   setProfileMeasurements,
+  setProfileMeasurementSnapshot,
   setRecentNutritionFoods,
   setUser,
   setIsLoggedIn,
@@ -126,6 +128,7 @@ export function resetAuthBootstrapState({
   setHistory([]);
   setPlan({ workouts: [] });
   setProfileMeasurements([]);
+  setProfileMeasurementSnapshot?.(null);
   setRecentNutritionFoods([]);
   setCurrentUserRole(user ? "resolving" : "client");
   setUser(user);
@@ -133,8 +136,16 @@ export function resetAuthBootstrapState({
 }
 
 export function resetAuthSessionOperations(context) {
+  context.resetNutritionPhotoAiState?.();
+  context.setNutritionDeleteConfirmOpen?.(false);
+  context.setNutritionUndoDelete?.(null);
+  if (context.nutritionUndoTimerRef?.current) clearTimeout(context.nutritionUndoTimerRef.current);
+  if (context.nutritionUndoTimerRef) context.nutritionUndoTimerRef.current = null;
   if (context.workoutSaveInFlightRef) context.workoutSaveInFlightRef.current = false;
-  for (const name of ["setIsSaving", "setIsWorkoutSaved", "setShowWorkoutSavedCard", "setProfileMeasurementSaving", "setProfileProgressPhotoUploading", "setHistoryLoading", "setWorkoutIncompleteConfirmOpen"]) {
+  if (context.workoutRetryRef) context.workoutRetryRef.current = null;
+  if (context.telegramBotLinkRequestRef) context.telegramBotLinkRequestRef.current = null;
+  context.setTelegramLink?.(null);
+  for (const name of ["setIsSaving", "setIsWorkoutSaved", "setShowWorkoutSavedCard", "setProfileMeasurementSaving", "setProfileProgressPhotoUploading", "setHistoryLoading", "setWorkoutIncompleteConfirmOpen", "setTelegramLinking", "setLoginSubmitting"]) {
     context[name]?.(false);
   }
   context.setWorkoutHistorySyncState?.("idle");
@@ -147,10 +158,13 @@ export function resetAuthSessionOperations(context) {
   context.setProfileProgressPhotoPreviews?.({ front: "", side: "", back: "" });
 }
 
-export async function resolveAdminClaim({ user, setIsAdminClaim, isCurrentRun }) {
+export async function resolveAdminClaim({ user, setIsAdminClaim, isCurrentRun, readTokenResult = getIdTokenResult }) {
   setIsAdminClaim(false);
+  // An explicitly offline, previously verified client never acquires admin
+  // privileges from cached claims, and need not wait for a network token refresh.
+  if (readOfflineClientProfile(user.uid)) return {};
   try {
-    const token = await getIdTokenResult(user, true);
+    const token = await readTokenResult(user, true);
     if (isCurrentRun && !isCurrentRun()) return null;
     return token.claims || {};
   } catch (error) {
@@ -161,10 +175,22 @@ export async function resolveAdminClaim({ user, setIsAdminClaim, isCurrentRun })
   }
 }
 
+export function readBootstrapProfileResult(user, db) {
+  // Start the independent profile read while the token is refreshed. Capture
+  // rejection immediately; legacy repair still runs in the normal guarded path.
+  const offlineProfile = readOfflineClientProfile(user.uid);
+  if (offlineProfile) return Promise.resolve({ snapshot: { exists: () => true, data: () => offlineProfile,
+    metadata: { fromCache: true, hasPendingWrites: false } } });
+  return getDoc(doc(db, "users", user.uid)).then(
+    snapshot => ({ snapshot }), error => ({ error })
+  );
+}
+
 export async function loadRemoteUserBootstrapState({
   user,
   db,
   adminClaims,
+  profileRequest,
   setIsAdminClaim,
   APP_PAGES,
   AI_NUTRITION_PLAN_STORAGE_KEY,
@@ -202,8 +228,15 @@ export async function loadRemoteUserBootstrapState({
     let roleDoc;
 
     try {
-      roleDoc = await getDoc(userRef);
+      const initial = profileRequest ? await profileRequest : null;
+      if (initial?.error) throw initial.error;
+      roleDoc = initial?.snapshot || await getDoc(userRef);
     } catch (error) {
+      const offlineProfile = readOfflineClientProfile(user.uid);
+      if (offlineProfile && !["permission-denied", "unauthenticated"].includes(error?.code)) {
+        roleDoc = { exists: () => true, data: () => offlineProfile,
+          metadata: { fromCache: true, hasPendingWrites: false } };
+      } else {
       // Profiles created before role-based access can contain client data but
       // have no role. The security rule allows only this owner-only repair.
       if (error?.code !== "permission-denied" || adminClaims?.admin === true) throw error;
@@ -229,6 +262,7 @@ export async function loadRemoteUserBootstrapState({
       }
       if (isCurrentRun && !isCurrentRun()) return null;
       roleDoc = await getDoc(userRef);
+      }
     }
 
     if (isCurrentRun && !isCurrentRun()) return null;
@@ -236,6 +270,8 @@ export async function loadRemoteUserBootstrapState({
       throw new Error("role_profile_missing");
     }
     const roleData = roleDoc.exists() ? roleDoc.data() : {};
+    rememberOfflineClientProfile(user.uid, roleData,
+      roleDoc.metadata?.fromCache === false && roleDoc.metadata?.hasPendingWrites !== true);
     const isAdmin = hasCurrentAdminAccess({ claims: adminClaims, profile: roleData });
     setIsAdminClaim(isAdmin);
     const storedRole = String(roleData.role || "").trim().toLocaleLowerCase("ru");
@@ -296,6 +332,8 @@ export async function loadRemoteUserBootstrapState({
     const resolvedRole = resolveUserRole({
       isAdminClaim: isAdmin,
       role: roleData.role,
+      accountAccessStatus: roleData.accountAccessStatus,
+      trainerAssignmentState: roleData.trainerAssignmentState,
       email: user.email || roleData.email || ""
     });
     setCurrentUserRole(resolvedRole);
@@ -307,6 +345,8 @@ export async function loadRemoteUserBootstrapState({
           )
         )
       );
+    } else if (resolvedRole === "pending-client") {
+      setPage(APP_PAGES.MAIN);
     } else {
       setPage(resolvedRole === "admin" ? APP_PAGES.ADMIN_PANEL : APP_PAGES.ADMIN);
     }
@@ -365,42 +405,32 @@ export async function loadRemoteUserBootstrapState({
 export async function loadInitialSignedInUserData({
   user,
   loadWorkoutsFromFirebase,
-  loadHistory,
-  loadNutritionFromFirebase,
-  loadProfileMeasurements,
-  loadClientProgressPhotos,
-  loadClientTrainerTasks,
   replayFailedHistorySaves,
   replayFailedNutritionSync,
   replayFailedMeasurementSaves,
+  onWorkoutsLoadState = () => {},
   isCurrentRun = () => true
 }) {
-  const criticalWorkoutsLoad = Promise.resolve(
-    loadWorkoutsFromFirebase(user.uid, { preserveBasicPlanOnEmpty: true })
+  if (isCurrentRun()) onWorkoutsLoadState("loading");
+  const criticalWorkoutsLoad = Promise.resolve().then(() =>
+    loadWorkoutsFromFirebase(user.uid, { preserveBasicPlanOnEmpty: true,
+      onLoadError: () => { if (isCurrentRun()) onWorkoutsLoadState("error"); },
+      onLoadReady: () => { if (isCurrentRun()) onWorkoutsLoadState("ready"); } })
   ).catch((error) => {
     console.warn("Initial workout plan load failed", error);
+    if (isCurrentRun()) onWorkoutsLoadState("error");
   });
 
-  const backgroundLoad = Promise.allSettled([
-    loadHistory(),
-    loadNutritionFromFirebase(user.uid),
-    loadProfileMeasurements(user.uid),
-    loadClientProgressPhotos(user.uid),
-    loadClientTrainerTasks(user.uid)
-  ]).then(() => isCurrentRun() ? Promise.allSettled([
-    replayFailedHistorySaves(user.uid),
-    replayFailedNutritionSync(user.uid),
-    replayFailedMeasurementSaves(user.uid)
-  ]) : []);
+  // Durable pending writes are independent of unrelated photos/measurements.
+  // Each replay owns its baseline/merge and checks its captured auth session.
+  const pendingSync = Promise.allSettled([
+    replayFailedHistorySaves, replayFailedNutritionSync, replayFailedMeasurementSaves
+  ].map(replay => Promise.resolve().then(() => isCurrentRun() ? replay(user.uid) : null)));
 
-  // The app can open as soon as the profile and workout program are ready.
-  // Slow secondary cards keep loading in the background instead of blocking splash.
-  await Promise.race([
-    criticalWorkoutsLoad,
-    new Promise((resolve) => window.setTimeout(resolve, 5000))
-  ]);
-
-  void backgroundLoad;
+  // Membership is already verified. The shell is usable while its workout
+  // section has an explicit loading/error state and cannot start a stale plan.
+  void criticalWorkoutsLoad;
+  void pendingSync;
 }
 
 export async function hydrateRemoteTelegramProfile({
@@ -453,13 +483,15 @@ export function applySignedOutBootstrapState({
   setAppThemeCloudReady,
   setNutritionCloudReady,
   setPlan,
-  setProfileMeasurements
+  setProfileMeasurements,
+  setProfileMeasurementSnapshot
 }) {
   setCurrentUserRole("client");
   setFirstSetupProfileHydrated(true);
   setAppThemeCloudReady(true);
   setNutritionCloudReady(false);
   setProfileMeasurements([]);
+  setProfileMeasurementSnapshot?.(null);
   setClientProgressPhotos([]);
   setPlan({ workouts: [] });
 }

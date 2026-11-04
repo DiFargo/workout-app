@@ -16,7 +16,7 @@ export default defineConfig({
   testDir: "./tests/e2e",
   timeout: 30_000,
   fullyParallel: false,
-  workers: 1,
+  workers: Math.max(1, Math.min(4, Number(process.env.PW_WORKERS) || 1)),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {

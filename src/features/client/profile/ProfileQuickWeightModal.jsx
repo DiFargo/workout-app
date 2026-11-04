@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Scale } from "lucide-react";
 import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
@@ -8,8 +8,11 @@ function toWeightDraftValue(value) {
   return String(value ?? "").trim();
 }
 
-export default function ProfileQuickWeightModal({
-  open,
+export default function ProfileQuickWeightModal(props) {
+  return props.open ? <ProfileQuickWeightForm {...props} /> : null;
+}
+
+function ProfileQuickWeightForm({
   saving = false,
   onClose,
   onSave,
@@ -18,16 +21,6 @@ export default function ProfileQuickWeightModal({
   const [weight, setWeight] = useState("");
   const [status, setStatus] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-
-    setWeight("");
-    setStatus("");
-    setSaveSuccess(false);
-  }, [open]);
-
-  if (!open) return null;
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -96,6 +89,7 @@ export default function ProfileQuickWeightModal({
           <div className={styles.inputWrap}>
             <input
               data-testid="profile-quick-weight-input"
+              data-css-module-control="profile-quick-weight-modal"
               type="text"
               inputMode="decimal"
               autoComplete="off"

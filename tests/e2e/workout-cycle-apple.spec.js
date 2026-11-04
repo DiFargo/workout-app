@@ -18,31 +18,35 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 393, height: 852 }
     await page.clock.install({ time: new Date("2026-10-08T10:00:00Z") });
     await page.goto(runUrl, { waitUntil: "domcontentloaded", timeout: 60_000 });
     const rows = page.getByTestId("workout-exercise-set-row");
-    await expect(rows).toHaveCount(3, { timeout: 40_000 });
+    await expect(rows).toHaveCount(1, { timeout: 40_000 });
     await capture(page, testInfo, "exercise");
-    const row = rows.nth(1);
+    const row = rows.first();
     await row.scrollIntoViewIfNeeded();
+    // In landscape, finish scrolling the content region above the fixed dock.
+    await page.getByTestId("workout-run-stage").evaluate(el => { el.scrollTop = el.scrollHeight; });
     const edit = row.getByRole("button", { name: "Изменить подход 2" });
-    const complete = row.getByRole("button", { name: "Выполнить подход 2" });
+    const complete = page.getByTestId("workout-primary-action");
+    await expect(complete).toHaveAccessibleName("Подход выполнен");
     const a = await edit.boundingBox(), b = await complete.boundingBox();
     expect(a.width).toBe(48); expect(a.height).toBe(48);
-    expect(b.width).toBe(52); expect(b.height).toBe(52);
-    expect(a.x + a.width).toBeLessThan(b.x);
-    await expect(complete).toHaveCSS("border-radius", "50%");
+    expect(b.width).toBeGreaterThanOrEqual(48); expect(b.height).toBeGreaterThanOrEqual(48);
+    expect(a.y + a.height).toBeLessThan(b.y);
     await capture(page, testInfo, "sets");
     await edit.click();
     const editor = page.getByTestId("workout-set-edit-modal");
     await expect(editor).toBeVisible();
     await capture(page, testInfo, "editor");
     await editor.getByRole("button", { name: "Готово", exact: true }).click();
-    await expect(complete).toHaveAttribute("aria-pressed", "false");
+    await expect(row.getByRole("button", { name: "Подход 2 выполнен, действия", exact: true })).toHaveCount(0);
     await complete.click();
-    await expect(row).toHaveClass(/completed/);
-    const completedButton = row.locator('button[aria-pressed="true"]');
-    await expect(completedButton).toBeVisible();
-    await expect(completedButton).toHaveCSS("background-color", "rgb(35, 122, 66)");
-    await expect(completedButton).toHaveCSS("color", "rgb(255, 255, 255)");
     const timer = page.getByTestId("workout-rest-timer-expanded");
+    await expect(timer).toBeVisible();
+    await page.getByTestId("workout-rest-timer-minimize").click();
+    await expect(row).toHaveClass(/completed/);
+    const completedButton = row.getByRole("button", { name: "Подход 2 выполнен, действия", exact: true });
+    await expect(completedButton).toBeVisible();
+    await expect(complete).toHaveAccessibleName("Следующий подход");
+    await page.getByRole("button", { name: "Открыть таймер отдыха", exact: true }).click();
     await expect(timer).toBeVisible();
     // Bootstrap timers must run until the lazy application has mounted.
     await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now()) + 100));
@@ -107,14 +111,25 @@ test("warmup through saved result retains controls and entered values", async ({
   await page.goto(`${runUrl}&clientWorkoutRunStage=warmup`, { waitUntil: "domcontentloaded", timeout: 60_000 });
   await expect(page.getByTestId("workout-run-stage")).toBeVisible({ timeout: 40_000 });
   await page.getByRole("button", { name: "Начать тренировку", exact: true }).click();
-  await expect(page.getByTestId("workout-exercise-set-row")).toHaveCount(3);
+  await expect(page.getByTestId("workout-exercise-set-row")).toHaveCount(1);
   await page.getByRole("button", { name: "Изменить подход 2" }).click();
   const editor = page.getByTestId("workout-set-edit-modal");
-  await editor.getByRole("listbox").first().getByRole("option", { name: "12", exact: true }).click();
+  await editor.getByRole("listbox", { name: "Повторы, подход 2" }).getByRole("option", { name: "12", exact: true }).click();
   await editor.getByRole("button", { name: "Готово", exact: true }).click();
-  await expect(page.getByTestId("workout-exercise-set-row").nth(1)).toContainText("12");
-  const next = page.locator('[data-css-module-scope="workout-stage-action-panel"]').getByRole("button").last();
-  for (let step = 0; step < 4 && await next.isVisible(); step += 1) await next.click();
+  await expect(page.getByTestId("workout-exercise-set-row")).toContainText("12");
+  const next = page.getByTestId("workout-primary-action");
+  for (let step = 0; step < 10 && await next.isVisible(); step += 1) {
+    // Completing a set opens the real modal timer. Return to the dock before
+    // advancing; a background action is deliberately inaccessible to users.
+    const timer = page.getByTestId("workout-rest-timer-expanded");
+    if (await timer.isVisible()) {
+      await page.getByTestId("workout-rest-timer-minimize").click();
+      await expect(timer).toBeHidden();
+    }
+    await next.click();
+    // The primary action intentionally debounces completion and progression.
+    await page.waitForTimeout(420);
+  }
   await expect(page.getByTestId("workout-finish-screen")).toBeVisible();
   await page.getByTestId("workout-finish-screen").locator("textarea").fill("Цикл проверен");
   await page.getByRole("button", { name: "Сохранить и завершить" }).click();
@@ -125,19 +140,25 @@ test("basic workout replacement keeps the real set plan", async ({ page }, testI
   await page.setViewportSize({ width: 393, height: 852 });
   await page.goto(`${runUrl}&clientWorkoutRunMode=basic`, { waitUntil: "domcontentloaded", timeout: 60_000 });
   const rows = page.getByTestId("workout-exercise-set-row");
-  await expect(rows).toHaveCount(3, { timeout: 40_000 });
+  await expect(rows).toHaveCount(1, { timeout: 40_000 });
   const originalRows = await rows.count();
-  await page.getByRole("button", { name: "Заменить упражнение", exact: true }).click();
+  await page.getByRole("button", { name: "Другие действия с упражнением", exact: true }).click();
+  await page.getByRole("menuitem", { name: "Заменить упражнение", exact: true }).click();
   const sheet = page.getByTestId("basic-workout-exercise-swap-modal");
   await expect(sheet).toBeVisible();
   // A completed approach belongs to the original exercise; first verify the guard.
   await expect(sheet.getByRole("status")).toContainText("уже есть выполненные подходы");
   await expect(sheet.getByTestId("basic-workout-exercise-alternative")).toHaveCount(0);
   await sheet.getByRole("button", { name: "Вернуться к упражнению", exact: true }).click();
-  const firstComplete = rows.first().locator('button[aria-pressed="true"]');
+  await page.getByRole("button", { name: "Все подходы, выбран подход 2 из 3", exact: true }).click();
+  await page.getByRole("button", { name: "Перейти к подходу 1", exact: true }).click();
+  const firstComplete = rows.first().getByRole("button", { name: "Подход 1 выполнен, действия", exact: true });
   await firstComplete.click();
-  await expect(rows.first().locator('button[aria-pressed]')).toHaveAttribute("aria-pressed", "false");
-  await page.getByRole("button", { name: "Заменить упражнение", exact: true }).click();
+  await rows.first().getByRole("button", { name: "Снять отметку выполнения подхода 1", exact: true }).click();
+  await expect(firstComplete).toHaveCount(0);
+  await expect(page.getByTestId("workout-primary-action")).toHaveAccessibleName("Подход выполнен");
+  await page.getByRole("button", { name: "Другие действия с упражнением", exact: true }).click();
+  await page.getByRole("menuitem", { name: "Заменить упражнение", exact: true }).click();
   await expect(sheet).toBeVisible();
   await capture(page, testInfo, "replacement");
   const alternative = sheet.getByTestId("basic-workout-exercise-alternative").first();

@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { buildTrainerUserLists, isCurrentTrainerClient } from "../src/utils/trainerUserLists.js";
 import { mapWithConcurrency, MAX_TRAINER_LINKED_PROFILE_CONCURRENCY } from "../src/utils/trainerDataReadLimits.js";
+import { captureAuthSession } from "../src/utils/authSession.js";
+import { runSessionResource } from "../src/utils/sessionResource.js";
 
 test("trainer sync reuses queried profiles and reads only missing linked profiles", async () => {
   const source = await readFile(new URL("../src/features/trainer/trainerUserLoadHandlers.js", import.meta.url), "utf8");
@@ -10,7 +12,8 @@ test("trainer sync reuses queried profiles and reads only missing linked profile
   const snapshot = (items) => ({ forEach: (callback) => items.forEach((item) => callback({ id: item.id, data: () => item })) });
   const known = { id: "known", role: "client", trainerId: "trainer" };
   const readIds = [];
-  const loader = new Function("collection", "doc", "getDoc", "getDocs", "query", "where", "buildTrainerUserLists", "isCurrentTrainerClient", "mapWithConcurrency", "MAX_TRAINER_LINKED_PROFILE_CONCURRENCY", "isPermissionDeniedError", `${body}; return loadTrainerUsersWithDeps;`)(
+  const loader = new Function("runSessionResource", "captureAuthSession", "collection", "doc", "getDoc", "getDocs", "query", "where", "buildTrainerUserLists", "isCurrentTrainerClient", "mapWithConcurrency", "MAX_TRAINER_LINKED_PROFILE_CONCURRENCY", "isPermissionDeniedError", `const userRequests = new WeakMap(); ${body}; return loadTrainerUsersWithDeps;`)(
+    runSessionResource, captureAuthSession,
     (...parts) => parts.slice(1).join("/"), (...parts) => parts.slice(1).join("/"),
     async (path) => { readIds.push(path); return { exists: () => true, id: "missing", data: () => ({ role: "client", trainerId: "trainer" }) }; },
     async (path) => snapshot(path.endsWith("trainerClients") ? [{ id: "known" }, { id: "missing" }] : [known]),

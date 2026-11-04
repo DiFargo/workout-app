@@ -32,7 +32,8 @@ export function buildNutritionPageModel({
   nutritionMeals,
   expandedNutritionMeals,
   nutritionWeekDates,
-  nutritionCurrentStreak
+  nutritionCurrentStreak,
+  nutritionHistoryReady = true
 }) {
   const selectedNutritionDate = nutritionKeyToDate(nutritionDateKey);
   const preliminaryAiNutritionPlan = getClientNutritionDisplayPlan(
@@ -44,7 +45,7 @@ export function buildNutritionPageModel({
     },
     nutrition,
     nutrition.goals
-  ) || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
+  ) || (nutritionHistoryReady && aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
 
   const preliminaryAiNutritionProfile = preliminaryAiNutritionPlan?.profile || aiNutritionProfile || aiNutritionProfileDraft;
   const preliminaryAiNutritionWeek = getAiNutritionWeekForDate(preliminaryAiNutritionPlan, selectedNutritionDate);
@@ -67,7 +68,8 @@ export function buildNutritionPageModel({
   const fatPercent = Math.min(100, Math.round((nutritionTotals.fat / effectiveNutritionGoals.fat) * 100));
   const carbsPercent = Math.min(100, Math.round((nutritionTotals.carbs / effectiveNutritionGoals.carbs) * 100));
   const weekDates = nutritionWeekDates;
-  const nutritionStreakText = `Серия записи еды — ${nutritionCurrentStreak} ${getTrainerDayWord(nutritionCurrentStreak)} 🔥`;
+  const nutritionStreakText = nutritionHistoryReady
+    ? `Серия записи еды — ${nutritionCurrentStreak} ${getTrainerDayWord(nutritionCurrentStreak)} 🔥` : "";
   const nutritionDateTitle = isNutritionToday
     ? "Сегодня"
     : formatNutritionDateLabel(selectedNutritionDate).replace(/^./, (char) => char.toUpperCase());
@@ -80,8 +82,9 @@ export function buildNutritionPageModel({
   const activeNutritionMealStats = activeNutritionMeal
     ? mealStats[activeNutritionMeal.id] || { calories: 0, count: 0 }
     : { calories: 0, count: 0 };
-  const aiNutritionDay = buildAiNutritionDayModel({ ...nutrition, goals: effectiveNutritionGoals }, nutritionToday, { dateKey: nutritionDateKey });
-  const aiNutritionActivePlan = preliminaryAiNutritionPlan || buildAiNutritionMonthlyPlan(nutrition);
+  const aiNutritionDay = nutritionHistoryReady
+    ? buildAiNutritionDayModel({ ...nutrition, goals: effectiveNutritionGoals }, nutritionToday, { dateKey: nutritionDateKey }) : null;
+  const aiNutritionActivePlan = preliminaryAiNutritionPlan || (nutritionHistoryReady ? buildAiNutritionMonthlyPlan(nutrition) : null);
   const aiNutritionGoal = aiNutritionActivePlan?.profile?.goal || aiNutritionProfile?.goal || "recomp";
   const aiNutritionGoalText =
     aiNutritionGoal === "recomp"
@@ -103,7 +106,7 @@ export function buildNutritionPageModel({
     { id: "fat", offset: proteinScoreSegment, value: fatScoreSegment },
     { id: "carbs", offset: proteinScoreSegment + fatScoreSegment, value: carbsScoreSegment }
   ];
-  const nutritionSummaryCollapsedText = aiNutritionDay.collapsedText;
+  const nutritionSummaryCollapsedText = nutritionHistoryReady ? aiNutritionDay.collapsedText : "Анализ появится после загрузки истории";
   const nutritionOrbitItems = buildNutritionOrbitItems({
     nutritionTotals,
     effectiveNutritionGoals,

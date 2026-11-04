@@ -188,3 +188,38 @@ test("shared basic video preserves its crop through the cache without changing p
   assert.equal(applyBasicWorkoutExerciseOverride(source, { leg_press: { videoDisabled: true } }).videoCrop, null);
   assert.equal(applyBasicWorkoutExerciseOverride(source, { leg_press: { videoCrop: { x: 20, y: 0, zoom: 1 } } }).videoCrop, null);
 });
+
+test("basic poster presence survives normalization and cached partial overrides", () => {
+  for (const value of [0, 2.34567, null, -1, Infinity, "3"]) {
+    const normalized = normalizeBasicWorkoutExerciseOverrides({ leg_press: { videoPosterTime: value } });
+    assert.equal(normalized.leg_press.hasVideoPosterTime, true);
+    assert.equal(normalized.leg_press.videoPosterTime, value === 0 ? 0 : value === 2.34567 ? 2.346 : null);
+    assert.deepEqual(normalizeBasicWorkoutExerciseOverrides(normalized), normalized);
+  }
+  const partial = normalizeBasicWorkoutExerciseOverrides({ leg_press: { note: "Новая техника" } });
+  assert.equal(partial.leg_press.hasVideoPosterTime, false);
+  assert.equal(normalizeBasicWorkoutExerciseOverrides(partial).leg_press.hasVideoPosterTime, false);
+});
+
+test("basic selected frame follows its video without modifying the saved plan or prescribed load", () => {
+  const source = { id: "leg_press", name: "Жим ногами", video: "/own.mp4", videoPosterTime: 7,
+    sets: [{ reps: 12, weight: 110 }], rest: "90 сек" };
+  const before = structuredClone(source);
+  const resolve = (override) => applyBasicWorkoutExerciseOverride(source,
+    normalizeBasicWorkoutExerciseOverrides({ leg_press: override }));
+  const selected = resolve({ videoUrl: "/approved.mp4", videoPosterTime: 0 });
+  assert.equal(selected.video, "/approved.mp4");
+  assert.equal(selected.videoPosterTime, 0);
+  assert.equal(selected.sets, source.sets);
+  assert.equal(selected.rest, source.rest);
+  assert.equal(resolve({ note: "Новая техника" }).videoPosterTime, 7);
+  assert.equal(resolve({ videoUrl: "/own.mp4" }).videoPosterTime, 7);
+  assert.equal(resolve({ videoPosterTime: 2 }).videoPosterTime, 7);
+  assert.equal(resolve({ videoUrl: "/other.mp4" }).videoPosterTime, null);
+  assert.equal(resolve({ videoPosterTime: null }).videoPosterTime, null);
+  assert.equal(resolve({ videoDisabled: true, videoUrl: "/approved.mp4", videoPosterTime: 2 }).videoPosterTime, null);
+  assert.equal(applyBasicWorkoutExerciseOverride({ ...source, video: "" }, {
+    leg_press: { videoPosterTime: 2 }
+  }).videoPosterTime, null);
+  assert.deepEqual(source, before);
+});

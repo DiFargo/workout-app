@@ -3,6 +3,7 @@ import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileProgressPhotosModal.module.css";
+import PrivateProgressPhoto from "../../../components/media/PrivateProgressPhoto.jsx";
 
 const PROGRESS_PHOTO_STEPS = [
   ["front", "01", "Спереди"],
@@ -22,6 +23,7 @@ export default function ProfileProgressPhotosModal({
   photos = [],
   files,
   previews,
+  previewSources = {},
   status,
   compareIds,
   compareViews,
@@ -117,12 +119,9 @@ export default function ProfileProgressPhotosModal({
                 </strong>
               </div>
               <div>
-                {[
-                  latestPhoto.frontUrl,
-                  latestPhoto.sideUrl,
-                  latestPhoto.backUrl
-                ].filter(Boolean).map((url, index) => (
-                  <img key={`${index}_${url}`} src={url} alt="" loading="lazy" />
+                {["frontUrl", "sideUrl", "backUrl"].filter(key => latestPhoto[key]).map((key) => (
+                  <PrivateProgressPhoto key={`${key}_${latestPhoto[key]}`} source={latestPhoto[key]}
+                    preview={previewSources[latestPhoto.id]?.[key]} alt={`Фото прогресса: ${{ frontUrl: "спереди", sideUrl: "сбоку", backUrl: "со спины" }[key]}`} loading="lazy" />
                 ))}
               </div>
             </div>
@@ -235,8 +234,9 @@ export default function ProfileProgressPhotosModal({
                         <strong>{formatPhotoDate(photo)}</strong>
                       </figcaption>
                       {photo?.[activeCompareView.urlKey] ? (
-                        <img
-                          src={photo[activeCompareView.urlKey]}
+                        <PrivateProgressPhoto
+                          source={photo[activeCompareView.urlKey]}
+                          preview={previewSources[photo.id]?.[activeCompareView.urlKey]}
                           alt={`${activeCompareView.label}: ${label.toLowerCase()}`}
                           loading="lazy"
                         />

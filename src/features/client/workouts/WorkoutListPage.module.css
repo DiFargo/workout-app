@@ -2909,7 +2909,7 @@
 
 :global(:root[data-app-theme="warm-light"]) [data-testid="workout-start-button"]:active,
 :global(:root[data-app-theme="warm-light"]) [data-testid="workout-list-empty-state"] button:active {
-  background: var(--apple-action-pressed, #246397) !important;
+  background: var(--ownset-action-gradient) !important;
   transform: scale(0.98) !important;
 }
 
@@ -2918,3 +2918,7 @@
   color: var(--apple-green, #34c759) !important;
   background: #eaf8ee !important;
 }
+.loadState { margin: 16px; padding: 20px; border-radius: 20px; background: var(--apple-surface); color: var(--apple-text); }
+.loadState h2 { margin: 0 0 10px; font-size: 19px; }
+.loadState p { color: var(--apple-secondary); font-size: 14px; line-height: 1.5; }
+.loadState button { min-height: 44px; border: 0; border-radius: 12px; padding: 10px 16px; background: var(--ownset-action-gradient); color: #fff; font: inherit; }

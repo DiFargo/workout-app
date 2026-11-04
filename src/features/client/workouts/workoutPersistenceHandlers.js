@@ -2,9 +2,12 @@ import {
   replayFailedHistorySavesWithDeps,
   replayFailedNutritionSyncWithDeps
 } from "../offline/offlineReplayHandlers";
-import { loadWorkoutsFromFirebaseWithDeps } from "./workoutFirebaseLoadHandlers";
+import { isConfirmedWorkoutPlan, loadWorkoutsFromFirebaseWithDeps } from "./workoutFirebaseLoadHandlers";
 import { saveWorkoutsToFirebaseWithDeps } from "./workoutPlanFirebaseSaveHandlers";
 import { saveTrainerNextPlanWithDeps } from "./workoutPlanUpdateHandlers";
+import { captureAuthSession } from "../../../utils/authSession.js";
+import { resolveWorkoutPlanMode } from "../../../utils/workoutPlanMode.js";
+import { safeReadUserJsonStorage } from "../../../utils/userScopedStorage";
 
 export function createWorkoutPersistenceHandlers(getContext) {
   async function replayFailedHistorySaves(uid) {
@@ -17,7 +20,8 @@ export function createWorkoutPersistenceHandlers(getContext) {
       showAppError
     } = getContext();
 
-    return replayFailedHistorySavesWithDeps({
+    const session = captureAuthSession(auth);
+    const result = await replayFailedHistorySavesWithDeps({
       db,
       auth,
       uid: uid || auth.currentUser?.uid,
@@ -26,6 +30,12 @@ export function createWorkoutPersistenceHandlers(getContext) {
       loadHistory,
       showAppError
     });
+    if (result?.syncedCount && session.isCurrent() && !getContext().workoutStarted) {
+      // The replay invalidated pre-commit plan snapshots. Always give that
+      // generation a fresh successor so the section cannot stay loading.
+      await loadWorkoutsFromFirebase(session.uid, { force: true, preserveBasicPlanOnEmpty: true });
+    }
+    return result;
   }
 
   async function replayFailedNutritionSync(uid) {
@@ -55,6 +65,8 @@ export function createWorkoutPersistenceHandlers(getContext) {
       db,
       endPerformanceCheck,
       normalizeExercise,
+      readClientLoadingSnapshot,
+      onOwnPlanLoadState,
       plan,
       selectedUserId,
       workoutModePreference,
@@ -64,6 +76,13 @@ export function createWorkoutPersistenceHandlers(getContext) {
       startPerformanceCheck
     } = getContext();
 
+    const session = captureAuthSession(auth);
+    const isOwnPlan = (userIdFromClick || selectedUserId || session.uid) === session.uid;
+    const publish = state => { if (isOwnPlan && session.isCurrent()) onOwnPlanLoadState?.(state); };
+    const storedPreference = isOwnPlan && WORKOUT_MODE_STORAGE_KEY
+      ? safeReadUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, session.uid, null) : null;
+    const mode = resolveWorkoutPlanMode({ options, workoutModePreference: storedPreference || workoutModePreference });
+    if (!isOwnPlan || !isConfirmedWorkoutPlan(auth, plan, mode)) publish("loading");
     return loadWorkoutsFromFirebaseWithDeps({
       db,
       auth,
@@ -85,7 +104,14 @@ export function createWorkoutPersistenceHandlers(getContext) {
         const current = getContext().workoutLoadContextRef?.current || getContext();
         return current.selectedUserId === selectedUserId && !current.workoutStarted;
       },
-      options
+      isCurrentMediaRequest: () => {
+        const current = getContext().workoutLoadContextRef?.current || getContext();
+        return current.selectedUserId === selectedUserId;
+      },
+      options: { ...options, readSnapshot: options.readSnapshot || readClientLoadingSnapshot,
+        onLoadReady: () => { publish("ready"); options.onLoadReady?.(); },
+        onLoadError: error => { publish("error"); options.onLoadError?.(error); }
+      }
     });
   }
 

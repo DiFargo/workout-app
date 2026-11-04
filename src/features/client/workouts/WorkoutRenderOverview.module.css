@@ -1,6 +1,13 @@
 .page { margin:0 auto; height:100dvh; overflow:hidden auto; scrollbar-width:none; background:var(--apple-canvas); color:var(--apple-text); font-family:var(--font-family-sans); }
 .content { padding:2px 20px calc(92px + env(safe-area-inset-bottom,0px)); }
 .week { margin:0; }
+.historyRow.basicPickerRow { margin-top:14px; border:1px solid var(--apple-separator); text-align:left; touch-action:manipulation; }
+.basicPickerRow > span:nth-child(2) { min-width:0; }
+.basicPickerRow strong { overflow-wrap:anywhere; }
+.basicPickerRow:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
+.syncNotice { display:grid; gap:6px; margin-top:12px; padding:12px; border-radius:12px; background:var(--apple-surface); font-size:12px; line-height:1.45; }
+.syncNotice span { color:var(--apple-secondary); }
+.syncNotice button { min-height:44px; border:0; border-radius:10px; background:var(--apple-surface-muted); color:var(--apple-blue); font:inherit; }
 .sectionHead { display:flex; justify-content:space-between; align-items:center; min-height:24px; margin:18px 0 9px; padding:0 2px; }
 .sectionHead h2 { margin:0; font-size:18px; font-weight:680; line-height:1.25; letter-spacing:-.4px; }
 .sectionHead button { min-height:44px; margin-block:-9px; padding:0 3px; border:0; background:transparent; color:var(--apple-blue); font-size:12px; font-weight:550; }
@@ -26,7 +33,7 @@
 .start, .modalPrimary { background:var(--ownset-action-gradient); color:#fff; }
 .start svg { width:18px; height:18px; }
 .secondary { min-height:44px; background:var(--apple-surface-muted); color:var(--apple-blue); font-size:14px; }
-.start:active, .modalPrimary:active { background:var(--apple-action-pressed); transform:scale(.97); }
+.start:active, .modalPrimary:active { background:var(--ownset-action-gradient); transform:scale(.97); }
 .program { overflow:hidden; border:0; border-radius:18px; background:var(--apple-surface); }
 .programHead { display:flex; align-items:center; gap:10px; padding:13px 14px 0; }
 .programHead > span:last-child { display:flex; flex-direction:column; gap:4px; min-width:0; }
@@ -53,9 +60,11 @@
 .modal { width:100%; max-width:540px; max-height:90dvh; overflow-y:auto; position:relative; padding:24px 20px calc(28px + env(safe-area-inset-bottom,0px)); border-radius:25px 25px 0 0; background:var(--apple-canvas); box-shadow:0 -12px 45px #17212c15; }
 .modalClose { position:absolute; top:12px; right:14px; width:44px; height:44px; display:grid; place-items:center; border:0; border-radius:50%; color:var(--apple-text); background:var(--apple-surface-muted); }
 .modalClose svg { width:18px; height:18px; }
+.modalClose:disabled { opacity:.5; cursor:wait; }
 .modalIcon { display:grid; place-items:center; width:46px; height:46px; margin-bottom:16px; border-radius:14px; background:var(--ownset-soft-gradient); color:var(--apple-blue); }
 .modal h2 { margin:0 38px 12px 0; font-size:22px; font-weight:660; letter-spacing:-.6px; }
 .modal p { margin:0 0 16px; color:var(--apple-secondary); font-size:13px; line-height:1.55; }
+.modal .modalError { padding:10px 12px; border-radius:10px; color:var(--apple-red, #c43830); background:var(--apple-red-tint, #fff0ee); }
 .dateField { display:flex; flex-direction:column; gap:7px; margin-bottom:14px; color:var(--apple-secondary); font-size:12px; }
 .dateField input { min-height:46px; width:100%; padding:0 12px; border:1px solid var(--apple-separator); border-radius:10px; background:var(--apple-surface); color:var(--apple-text); font-size:16px; }
 .modalPrimary { width:100%; }
@@ -63,3 +72,16 @@
 .page button:focus-visible, .modal button:focus-visible { outline:2px solid var(--apple-blue); outline-offset:2px; }
 @media(min-width:700px) { .modalOverlay { align-items:center; padding:24px; } .modal { border-radius:25px; } }
 @media(max-width:360px) { .content { padding-inline:15px; } .workoutLabel > span { font-size:10px; } .workoutCopy strong { font-size:18px; } }
+@media (max-height: 500px) and (orientation: landscape) {
+  .content { padding-top: 0; }
+  .week { display: none; }
+  .sectionHead { margin-top: 8px; margin-bottom: 6px; }
+  .workoutCard { padding: 10px 14px; }
+  .workoutLabel { margin-bottom: 6px; }
+  .workoutCopy strong { font-size: 18px; }
+  .workoutCopy small { display: none; }
+  .order { height: 36px; line-height: 36px; }
+  .exerciseMeta { margin-top: 6px; padding-top: 6px; }
+  .actions { margin-top: 8px; gap: 6px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .actions > :only-child { grid-column: 1 / -1; }
+}

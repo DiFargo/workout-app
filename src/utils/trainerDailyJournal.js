@@ -6,9 +6,24 @@ import {
 
 export const TRAINER_DAILY_JOURNAL_FILTERS = [
   { id: "all", label: "Все события" },
-  { id: "reviewed", label: "Проверенные" },
+  { id: "reviewed", label: "Просмотренные" },
   { id: "recorded", label: "Записи" }
 ];
+
+export function getTrainerAttentionEventId(item, icon) {
+  const summary = item.summary || {};
+  const version = JSON.stringify([
+    item.attention?.id, item.attention?.reason, item.lastActivityTimestamp,
+    summary.lastWorkoutAt, summary.lastNutritionAt, summary.lastMeasurementAt,
+    summary.workouts7, summary.nutritionDays7, summary.workoutFeedbackAttention?.id,
+    item.client?.workoutCalendar?.updatedAt,
+    item.client?.workoutCalendar?.scheduledDates
+  ]);
+  // A local identity fingerprint, not a security hash; don't persist raw reason text.
+  let fingerprint = 2166136261;
+  for (let index = 0; index < version.length; index += 1) fingerprint = Math.imul(fingerprint ^ version.charCodeAt(index), 16777619);
+  return `attention:v2:${item.clientId || item.client?.id || "client"}:${icon}:${(fingerprint >>> 0).toString(36)}`;
+}
 
 export function filterTrainerDailyJournalItems(items = [], filterId = "all", reviewedIds = new Set()) {
   const source = Array.isArray(items) ? items : [];
@@ -246,9 +261,8 @@ export function buildTrainerDailyJournal(actionCenter = {}, now = Date.now()) {
 
   actionItems.forEach((item) => {
     if (isImmediateTrainerAction(item)) return;
-    const clientId = item.clientId || item.client?.id || "client";
     const copy = getAttentionCopy(item);
-    const id = `attention:${clientId}:${copy.icon}`;
+    const id = getTrainerAttentionEventId(item, copy.icon);
     if (seen.has(id)) return;
     seen.add(id);
     journalItems.push({

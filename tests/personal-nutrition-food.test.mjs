@@ -17,3 +17,12 @@ test('source values per 100 grams retain their units, source link and barcode',(
   assert.equal(food.calories,150);assert.equal(food.nutritionBasisPending,false);
   assert.equal(food.barcode,'4810268031793');assert.equal(food.portion,'100 г');assert.equal(food.sources.length,1);
 });
+test('official manufacturer keeps its source name and units without being attributed to Open Food Facts',()=>{
+  const food=normalizeNutritionFood(toPersonalNutritionFood({...row,id:'manufacturer-example',name:'Сыр творожный «Воздушный» сливочный 60%',brand:'SVEŽA',sourceType:'manufacturer',sourceTitle:'Производитель: ОАО «Савушкин продукт»',sourceUrl:'https://ru.savushkin.com/products/syr-tvorozhnyy/',nutrition:{basis:'100g',kcal:216,protein:6,fat:20,carbs:3}}));
+  assert.equal(food.sourceType,'manufacturer_catalog');assert.equal(food.source,'Производитель');
+  assert.equal(food.sources[0].title,'Производитель: ОАО «Савушкин продукт»');
+  assert.equal(food.sources[0].url,'https://ru.savushkin.com/products/syr-tvorozhnyy/');
+  assert.equal(food.nutritionBasisPending,false);assert.equal(food.portion,'100 г');
+  assert.equal(food.requiresReview,true);assert.equal(food.calories,216);
+  assert.equal(JSON.stringify(food).includes('Open Food Facts'),false);
+});

@@ -1,0 +1,53 @@
+.overlay { position:fixed; inset:0; z-index:12000; display:grid; place-items:center; padding:max(12px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px)); background:rgba(28,28,30,.3); box-sizing:border-box; }
+.dialog { width:min(100%,560px); max-height:calc(100dvh - max(24px,env(safe-area-inset-top,0px) + env(safe-area-inset-bottom,0px))); min-height:0; display:flex; flex-direction:column; overflow:hidden; border:1px solid var(--apple-separator,rgba(60,60,67,.12)); border-radius:28px; color:var(--apple-text,#1c1c1e); background:var(--apple-canvas,#f2f2f7); box-shadow:0 20px 60px rgba(28,28,30,.2); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif; }
+.header { flex-shrink:0; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 20px 16px; border-bottom:1px solid var(--apple-separator,rgba(60,60,67,.12)); background:var(--apple-surface,#fff); }
+.header p { margin:0 0 4px; font-size:12px; color:var(--apple-secondary,#636366); }
+.header h2 { margin:0; font-size:21px; line-height:1.2; letter-spacing:-.4px; font-weight:650; }
+.dialog .close { flex-shrink:0; display:grid; place-items:center; width:44px; height:44px; padding:0; border:0; border-radius:50%; color:var(--apple-secondary,#636366); background:var(--apple-surface-muted,#efeff4); cursor:pointer; }
+.body { overflow:auto; overscroll-behavior:contain; padding:18px; min-height:0; scrollbar-width:thin; }
+.hero { text-align:center; padding:6px 12px 20px; }
+.trophy { width:48px; height:48px; display:grid; place-items:center; margin:0 auto 10px; border-radius:16px; background:var(--apple-orange-tint,#fff5df); color:var(--apple-orange,#976600); }
+.trophy svg { width:25px; height:25px; }
+.hero > strong { display:block; font-size:52px; font-weight:700; line-height:1.08; letter-spacing:-2px; font-variant-numeric:tabular-nums; }
+.hero h3 { font-size:17px; font-weight:600; margin:5px 0 9px; }
+.hero p { margin:0 auto; max-width:340px; font-size:14px; line-height:1.5; color:var(--apple-secondary,#636366); }
+.facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:12px; }
+.facts section { padding:14px; border-radius:18px; background:var(--apple-surface,#fff); min-width:0; }
+.facts svg { display:block; width:19px; height:19px; color:var(--apple-secondary,#636366); margin-bottom:10px; }
+.facts strong { display:block; font-size:25px; font-weight:650; line-height:1.15; font-variant-numeric:tabular-nums; margin-bottom:5px; }
+.facts span { display:block; font-size:13px; line-height:1.4; color:var(--apple-secondary,#636366); }
+.chartCard { padding:16px 14px 0; border-radius:18px; background:var(--apple-surface,#fff); }
+.chartHead { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:5px 10px; }
+.chartHead h3 { margin:0; font-size:16px; font-weight:620; }
+.chartHead span { color:var(--apple-secondary,#636366); font-size:12px; }
+.chart { display:block; width:100%; height:auto; margin:12px 0 4px; overflow:visible; }
+.chart text { fill:var(--apple-secondary,#636366); font-size:10px; font-variant-numeric:tabular-nums; }
+.grid { fill:none; stroke:var(--apple-separator,rgba(60,60,67,.12)); stroke-width:1; }
+.area { fill:var(--apple-blue,#3c6faa); fill-opacity:.07; }
+.line { fill:none; stroke:var(--apple-blue,#3c6faa); stroke-width:3; stroke-linejoin:round; stroke-linecap:round; }
+.point { fill:var(--apple-surface,#fff); stroke:var(--apple-blue,#3c6faa); stroke-width:3; }
+.chartNote,.explanation { font-size:12px; line-height:1.5; color:var(--apple-secondary,#636366); margin:10px 0; }
+.values { border-top:1px solid var(--apple-separator,rgba(60,60,67,.12)); margin-top:12px; }
+.values summary { padding:10px 0; min-height:44px; box-sizing:border-box; display:flex; align-items:center; gap:6px; color:var(--apple-blue,#3c6faa); font-size:13px; cursor:pointer; }
+.values summary::after { content:"+"; margin-left:auto; font-size:18px; }
+.values[open] summary::after { content:"−"; }
+.values table { border-collapse:collapse; width:100%; font-size:12px; margin-bottom:12px; text-align:left; }
+.values caption { text-align:left; margin-bottom:8px; color:var(--apple-secondary,#636366); font-size:11px; }
+.values th,.values td { padding:9px 4px; border-top:1px solid var(--apple-separator,rgba(60,60,67,.12)); font-weight:400; }
+.values thead th { color:var(--apple-secondary,#636366); }
+.values td { text-align:right; font-variant-numeric:tabular-nums; }
+.details { margin-top:12px; background:var(--apple-surface,#fff); padding:0 14px; border-radius:18px; }
+.details p { display:flex; align-items:center; gap:11px; margin:0; padding:14px 0; }
+.details p + p { border-top:1px solid var(--apple-separator,rgba(60,60,67,.12)); }
+.details svg { width:20px; height:20px; flex-shrink:0; color:var(--apple-secondary,#636366); }
+.details strong { display:block; font-size:13px; font-weight:600; line-height:1.4; }
+.details small { display:block; color:var(--apple-secondary,#636366); font-size:12px; line-height:1.4; margin-top:4px; }
+.footerNote { color:var(--apple-secondary,#636366); font-size:12px; line-height:1.5; margin:14px 3px 0; }
+.state { text-align:center; padding:30px 12px 38px; }
+.state h3 { font-size:17px; margin:12px 0 8px; }
+.state p { font-size:14px; line-height:1.5; color:var(--apple-secondary,#636366); margin:0; }
+.retry { min-height:44px; margin-top:20px; padding:10px 22px; border:0; border-radius:12px; background:var(--ownset-action-gradient); color:#fff; font:inherit; font-size:15px; cursor:pointer; }
+.dialog button:focus-visible,.values summary:focus-visible { outline:2px solid var(--apple-blue,#3c6faa); outline-offset:2px; }
+.dialog button:active { opacity:.72; }
+@media (max-width:600px) { .overlay { align-items:end; padding-left:0; padding-right:0; padding-bottom:0; } .dialog { width:100%; max-height:calc(100dvh - max(12px,env(safe-area-inset-top,0px))); border-radius:26px 26px 0 0; border-bottom:0; } .body { padding:16px 16px max(20px,env(safe-area-inset-bottom,0px)); } .header { padding:15px 16px; } }
+@media (max-width:350px) { .facts { gap:8px; } .facts section { padding:12px; } .header h2 { font-size:19px; } }

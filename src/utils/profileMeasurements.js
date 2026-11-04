@@ -1,3 +1,5 @@
+export { getMeasurementTimestampValue } from "../../functions/measurementSnapshot.js";
+
 export function getProfileMeasurementFields() {
   return [
     {
@@ -206,12 +208,6 @@ export function getProfileMeasurementGoalText(goal = "recomp") {
   if (goal === "cut" || goal === "dry") return "Для похудения и сушки важны вес, талия и объёмы — так видно, уходит ли жир.";
   if (goal === "maintain") return "Для поддержки важно, чтобы вес и талия оставались стабильными.";
   return "Для рекомпозиции важны вес, талия и объёмы: вес может стоять, но форма должна меняться.";
-}
-
-export function getMeasurementTimestampValue(measurement = {}) {
-  const rawDate = measurement.date || measurement.createdAt || measurement.savedAt || "";
-  const timestamp = rawDate ? new Date(rawDate).getTime() : 0;
-  return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
 export function formatProfileMeasurementDate(measurement = null) {

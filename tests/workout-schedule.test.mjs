@@ -5,6 +5,7 @@ import {
   buildWorkoutScheduleCalendarEntries,
   buildWorkoutScheduleDraft,
   buildWorkoutScheduleDraftWithExistingStatuses,
+  clearWorkoutCalendarDateOrderPolicy,
   getWorkoutScheduleCalendarForWorkouts,
   syncWorkoutCalendarWithPlan
 } from "../src/utils/workoutSchedule.js";
@@ -278,4 +279,77 @@ test("same day order across assignments cannot shadow the new program's exact sl
 test("unmarked legacy positional slots remain usable only without a conflicting assignment", () => {
   const slots = buildPlannedWorkoutSlots({ workouts: [{ id: "w1" }], calendar: { plannedWorkouts: [{ order: 1, date: "2026-09-12", status: "planned" }] }, now: new Date("2026-09-10T12:00:00") });
   assert.equal(slots[0].plannedDate, "2026-09-12");
+});
+
+test("identity-pinned reordered days retain their dates through real readers and reloads", () => {
+  const rows = ["done", "b", "a"].map(id => ({ id, assignedProgramUpdatedAt: "v1", assignedProgramAddedAt: "assignment" }));
+  const calendar = { plannedWorkouts: [
+    { workoutId: "done", date: "2026-11-10", status: "completed" },
+    { workoutId: "b", date: "2026-11-14", status: "planned" },
+    { workoutId: "a", date: "2026-11-12", status: "planned" }
+  ].map(slot => ({ ...slot, assignedProgramUpdatedAt: "v1", assignedProgramAddedAt: "assignment", dateOrderPolicy: "workout_identity" })) };
+  const original = structuredClone(calendar);
+  const first = getWorkoutScheduleCalendarForWorkouts(calendar, rows);
+  const reloaded = getWorkoutScheduleCalendarForWorkouts(JSON.parse(JSON.stringify(first)), rows);
+  assert.deepEqual(first.plannedWorkouts.map(slot => slot.date), ["2026-11-10", "2026-11-14", "2026-11-12"]);
+  assert.deepEqual(reloaded.plannedWorkouts.map(slot => slot.date), first.plannedWorkouts.map(slot => slot.date));
+  assert.deepEqual(first.scheduledDates, ["2026-11-10", "2026-11-12", "2026-11-14"]);
+  const slots = buildPlannedWorkoutSlots({ workouts: rows, calendar, now: new Date("2026-11-09T12:00:00") });
+  assert.deepEqual(slots.map(slot => slot.plannedDate), first.plannedWorkouts.map(slot => slot.date));
+  assert.equal(slots[0].isCompleted, true);
+  assert.deepEqual(calendar, original);
+  const legacy = clearWorkoutCalendarDateOrderPolicy(calendar, rows);
+  assert.deepEqual(getWorkoutScheduleCalendarForWorkouts(legacy, rows).plannedWorkouts.map(slot => slot.date), ["2026-11-10", "2026-11-14", "2026-11-16"]);
+});
+
+test("new unpinned days cannot consume dates reserved by later identity-pinned days", () => {
+  for (const plannedDate of [undefined, "2026-11-10"]) {
+    const rows = [{ id: "new", plannedDate }, { id: "b" }, { id: "a" }];
+    const calendar = { plannedWorkouts: [
+      { workoutId: "a", date: "2026-11-10", dateOrderPolicy: "workout_identity" },
+      { workoutId: "b", date: "2026-11-12", dateOrderPolicy: "workout_identity" }
+    ] };
+    const saved = getWorkoutScheduleCalendarForWorkouts(calendar, rows);
+    assert.deepEqual(saved.plannedWorkouts.slice(1).map(slot => slot.date), ["2026-11-12", "2026-11-10"]);
+    assert.equal(["2026-11-10", "2026-11-12"].includes(saved.plannedWorkouts[0].date), false);
+    assert.equal(new Set(saved.scheduledDates).size, saved.scheduledDates.length);
+  }
+});
+
+test("a foreign-version or positional marker cannot opt a day into identity date order", () => {
+  const rows = [{ id: "a", assignedProgramUpdatedAt: "current" }, { id: "b", assignedProgramUpdatedAt: "current" }];
+  for (const foreign of [
+    { workoutId: "b", assignedProgramUpdatedAt: "old" },
+    { order: 2, assignedProgramUpdatedAt: "current" }
+  ]) {
+    const calendar = { plannedWorkouts: [
+      { workoutId: "a", date: "2026-11-12" },
+      { ...foreign, date: "2026-11-10", dateOrderPolicy: "workout_identity" }
+    ] };
+    const saved = getWorkoutScheduleCalendarForWorkouts(calendar, rows);
+    const legacy = getWorkoutScheduleCalendarForWorkouts({ plannedWorkouts: calendar.plannedWorkouts.map(slot => ({ ...slot, dateOrderPolicy: undefined })) }, rows);
+    assert.deepEqual(saved.plannedWorkouts.map(slot => slot.date), legacy.plannedWorkouts.map(slot => slot.date));
+  }
+  const calendar = { plannedWorkouts: [
+    { workoutId: "a", assignedProgramUpdatedAt: "current", dateOrderPolicy: "workout_identity" },
+    { workoutId: "a", assignedProgramUpdatedAt: "old", dateOrderPolicy: "workout_identity" },
+    { workoutId: "other", assignedProgramUpdatedAt: "current", dateOrderPolicy: "workout_identity" }
+  ] };
+  const cleared = clearWorkoutCalendarDateOrderPolicy(calendar, rows);
+  assert.equal(Object.hasOwn(cleared.plannedWorkouts[0], "dateOrderPolicy"), false);
+  assert.deepEqual(cleared.plannedWorkouts.slice(1), calendar.plannedWorkouts.slice(1));
+  assert.equal(calendar.plannedWorkouts[0].dateOrderPolicy, "workout_identity");
+});
+
+test("identity-pinned moved days use their effective date without mutating raw movement metadata", () => {
+  const rows = [{ id: "a" }, { id: "b" }];
+  const calendar = { plannedWorkouts: [
+    { workoutId: "a", date: "2026-11-14", dateOrderPolicy: "workout_identity" },
+    { workoutId: "b", date: "2026-11-10", movedToDate: "2026-11-12", status: "moved", dateOrderPolicy: "workout_identity" }
+  ] };
+  const original = structuredClone(calendar);
+  const saved = getWorkoutScheduleCalendarForWorkouts(calendar, rows);
+  assert.deepEqual(saved.plannedWorkouts.map(slot => slot.date), ["2026-11-14", "2026-11-12"]);
+  assert.equal(saved.plannedWorkouts[1].status, "planned");
+  assert.deepEqual(calendar, original);
 });

@@ -395,6 +395,11 @@ button.userOpenButton { font: inherit; }
 }
 
 /* Directory is the working surface; controls precede the grouped account rows. */
+.attentionFilter { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; padding: 14px; border: 1px solid rgba(60,60,67,.12); border-radius: 14px; background: #fff; }
+.attentionFilter strong { font-size: 16px; font-weight: 600; color: #1c1c1e; }
+.attentionFilter p { margin: 5px 0 0; font-size: 13px; line-height: 1.4; color: #636366; }
+.attentionFilter button { min-height: 44px; border: 1px solid rgba(60,60,67,.12); border-radius: 11px; padding: 8px 12px; background: #efeff4; color: #3f73b8; font: inherit; cursor: pointer; }
+.attentionFilter button:focus-visible { outline: 2px solid #3f73b8; outline-offset: 2px; }
 .directory { padding: 0; border: 0; box-shadow: none; background: transparent; }
 .directoryControls { grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr); gap: 12px; }
 .roleTabs { background: #e9e9ef; padding: 3px; border-radius: 13px; gap: 2px; }
@@ -421,13 +426,40 @@ button.userOpenButton { font: inherit; }
 .statusBadge { display: inline-flex; justify-self: start; font-size: 12px; font-weight: 500; padding: 3px 0; background: transparent; color: #237A42; line-height: 1.25; white-space: normal; }
 .statuspending { color: #8b631e; background: transparent; }
 .statusblocked { color: #b23e46; background: transparent; }
+.statusinactive { color: #636366; background: transparent; }
 .userMeta { color: #617078; }
-.userActions { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px; border-top: 1px solid rgba(57, 82, 91,.12); }
+.userActions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); align-items: start; gap: 8px; padding: 8px 14px; border-top: 1px solid rgba(57, 82, 91,.12); }
 .promoteButton, .assignTrainerButton { flex: 1 1 auto; width: auto; min-height: 44px; margin: 0; padding: 8px 10px; font-size: 12px; font-weight: 550; white-space: normal; background: #edf1f3; border: 0; color: #376b91; border-radius: 11px; }
 .promoteButton svg, .assignTrainerButton svg { flex-shrink: 0; }
 .userRowAction:hover { box-shadow: none; background: #fafafa; }
 .assignTrainerButton:focus-visible { outline: 2px solid #396ba6; outline-offset: 2px; }
+.roleManagement { min-width: 0; border: 0; }
+.roleManagement[open] { grid-column: 1 / -1; }
+.roleManagement summary { box-sizing: border-box; min-height: 44px; padding: 12px 8px; color: #636366; font-size: 12px; line-height: 1.4; cursor: pointer; overflow-wrap: anywhere; }
+.roleManagement summary:focus-visible { outline: 2px solid #396ba6; outline-offset: 2px; }
+.roleManagement .promoteButton { justify-content: flex-start; width: 100%; background: #fff; border: 1px solid rgba(57, 82, 91,.12); color: #636366; }
 .errorState button { min-height: 44px; }
+.secondaryFilters { display: flex; align-items: end; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.secondaryFilters label { display: grid; gap: 5px; min-width: 0; max-width: 100%; color: #636366; font-size: 12px; }
+.secondaryFilters select { box-sizing: border-box; width: 100%; max-width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid rgba(60,60,67,.12); border-radius: 11px; background: #fff; color: #1c1c1e; font: inherit; font-size: 16px; }
+.secondaryFilters > button, .resetEmpty { min-height: 44px; padding: 8px 11px; border: 1px solid rgba(60,60,67,.12); border-radius: 11px; background: #efeff4; color: #3c6faa; font: inherit; font-size: 13px; cursor: pointer; }
+.clearSearch { display: grid; place-items: center; width: 44px; min-height: 44px; flex: 0 0 44px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: #636366; cursor: pointer; }
+.searchField { padding-right: 3px; }
+.searchField input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.userFacts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.trainerName { color: #636366; font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.userMeta { display: flex; flex-direction: column; align-items: end; gap: 7px; }
+.userMeta small { color: #636366; font-size: 10px; font-weight: 400; white-space: nowrap; }
+.rowNotice { grid-column: 1 / -1; margin: 0; padding: 10px 14px; border-top: 1px solid rgba(60,60,67,.12); color: #237a42; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.rowNotice p { margin: 0; }
+.rowNotice button { min-height: 44px; margin-top: 8px; padding: 8px 10px; border: 1px solid rgba(60,60,67,.12); border-radius: 10px; background: #fff; color: #3c6faa; font: inherit; font-size: 13px; cursor: pointer; }
+.rowNoticeError { color: #b3261e; background: #fff7f6; }
+.root :is(button, summary, select):focus-visible { outline: 2px solid #3c6faa; outline-offset: 2px; }
+.root button:disabled { opacity: .6; cursor: wait; }
+@media (min-width: 1001px) {
+  .userRowWithRoleAction { grid-template-columns: minmax(0, 1fr) minmax(250px, .5fr); }
+  .userActions { border-top: 0; border-left: 1px solid rgba(57,82,91,.12); }
+}
 @media (max-width: 1000px) {
   .directoryControls { grid-template-columns: minmax(0, 1fr); }
   .searchField { grid-row: 1; }

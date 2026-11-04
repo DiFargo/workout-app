@@ -1,5 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
-
+import { invalidateWorkoutHistory, readWorkoutHistory } from "../../../utils/workoutHistoryResource.js";
 import { deleteOwnWorkoutHistory } from "./workoutCompletionPersistence.js";
 import { getFailedHistoryQueue, forgetPendingHistorySave } from "../../../utils/offlineSyncStorage";
 import { dedupeWorkoutHistory } from "./workoutHistoryDedupe";
@@ -41,7 +40,7 @@ export function createWorkoutHistoryHandlers({
   setHistoryDeletingId,
   setOpenHistoryKey
 }) {
-  async function loadHistory() {
+  async function loadHistory(options = {}) {
     const session = captureSession();
     const currentUser = auth.currentUser;
 
@@ -51,15 +50,18 @@ export function createWorkoutHistoryHandlers({
     }
 
     if (!session.isCurrent()) return;
-    const apply = (setter, value) => setter(current => session.isCurrent() ? value : current);
+    let readIsCurrent = () => session.isCurrent();
+    const apply = (setter, value) => setter(current => readIsCurrent() ? value : current);
     apply(setHistoryLoading, true);
     startPerformanceCheck(HISTORY_LOAD_LABEL);
 
     try {
-      const snapshot = await getDocs(
-        collection(db, "users", currentUser.uid, "history")
-      );
-      if (!session.isCurrent()) return;
+      const request = readWorkoutHistory(auth, db, currentUser.uid, options);
+      readIsCurrent = () => session.isCurrent() && request.isCurrent();
+      const read = await request;
+      readIsCurrent = () => session.isCurrent() && read.isCurrent();
+      if (!readIsCurrent()) return;
+      const { snapshot } = read;
 
       const workouts = [];
 
@@ -86,15 +88,18 @@ export function createWorkoutHistoryHandlers({
       apply(setHistory, nextHistory);
       endPerformanceCheck(HISTORY_LOAD_LABEL, { records: nextHistory.length });
     } catch (err) {
-      if (!session.isCurrent()) return;
+      if (!readIsCurrent()) return;
       console.error("History load failed:", err);
       const pendingWorkouts = dedupeWorkoutHistory(getPendingWorkouts(currentUser.uid))
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      if (pendingWorkouts.length) apply(setHistory, pendingWorkouts);
+      if (pendingWorkouts.length) setHistory((current) => session.isCurrent()
+        ? dedupeWorkoutHistory([...(Array.isArray(current) ? current : []), ...pendingWorkouts])
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+        : current);
       showAppError("load", ERROR_LOAD_HISTORY);
     } finally {
-      if (session.isCurrent()) apply(setHistoryLoading, false);
+      if (readIsCurrent()) apply(setHistoryLoading, false);
     }
   }
 
@@ -128,12 +133,16 @@ export function createWorkoutHistoryHandlers({
     }
 
     apply(setHistoryDeletingId, workoutItem.id);
+    invalidateWorkoutHistory(auth);
+    apply(setHistoryLoading, false);
 
     try {
       await deleteOwnWorkoutHistory({ db, uid: currentUser.uid, id: workoutItem.id, clientSaveId: workoutItem.clientSaveId || workoutItem.id });
       forgetPendingHistorySave(currentUser.uid, workoutItem.clientSaveId || workoutItem.id);
       forgetPendingHistorySave(currentUser.uid, workoutItem.id);
       if (!session.isCurrent()) return;
+      invalidateWorkoutHistory(auth);
+      apply(setHistoryLoading, false);
       apply(setHistory, (prev) => prev.filter((item) => item.id !== workoutItem.id));
       apply(setOpenHistoryKey, (prev) => (prev === workoutItem.id ? null : prev));
       apply(setHistoryDeleteCandidate, null);

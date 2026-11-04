@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { getClientWorkoutCompletionHistory } from "../../../utils/clientWorkoutEvidence.js";
 import { Check, ChevronRight, Dumbbell, Settings } from "lucide-react";
 import {
   getProgramHistoryItems,
@@ -7,6 +8,7 @@ import {
   WORKOUT_MENU_ITEMS
 } from "../../../domain/workoutPresentation";
 import { sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
+import { getClientWorkoutProgramItems } from "../../../utils/clientWorkoutProgramOrder.js";
 import { getBasicWorkoutExpectedWorkoutCount } from "../../../utils/basicWorkoutPlanBuilder";
 import { getWorkoutScheduleCalendarForWorkouts, toWorkoutDateKey } from "../../../utils/workoutSchedule";
 import {
@@ -17,7 +19,8 @@ import {
   isWorkoutCompletedWithSet
 } from "../../../utils/workoutCompletion";
 import { safeReadJsonStorage } from "../../../utils/storageSafety";
-import { getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
+import { getNewestWorkoutDraft, getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
+import { listWorkoutDraftFallbacks } from "../../../utils/workoutDraftFallbackStorage.js";
 import { canResumeWorkoutDraft } from "../../../utils/workoutDraftState";
 import { WorkoutDraftRestoreDialog } from "../../../components/workout/WorkoutDialogs";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
@@ -25,6 +28,7 @@ import { IndividualWorkoutHistoryDialog, WorkoutPlanDialog, WorkoutProgramDialog
 import WorkoutRenderOverview from "./WorkoutRenderOverview";
 import styles from "./WorkoutListPage.module.css";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
+import { formatRussianCount } from "../../../utils/russianCount.js";
 
 const versionedLocalAsset = (src, version) => {
   if (typeof src !== "string" || !src.startsWith("/")) return src;
@@ -86,6 +90,7 @@ export default function WorkoutListPage({
   fullscreenVideo,
   showFirstSetupOnboarding,
   historyLoading,
+  onLoadWorkoutAchievements,
   isTrainerMode,
   onGoMain,
   onOpenTraining,
@@ -94,6 +99,9 @@ export default function WorkoutListPage({
   onOpenTrainerClients,
   onOpenTrainerPrograms,
   loadHistory,
+  onRetrySync,
+  initialLoadState = "ready",
+  onRetryLoad,
   openWorkout,
   onOpenBasicMode,
   onOpenBasicSettings,
@@ -104,6 +112,7 @@ export default function WorkoutListPage({
   const [swipeMotion, setSwipeMotion] = useState({ offset: 0, phase: "idle" });
   const [workoutPlanModalOpen, setWorkoutPlanModalOpen] = useState(false);
   const [workoutProgramModalOpen, setWorkoutProgramModalOpen] = useState(false);
+  const [fallbackDraftState, setFallbackDraftState] = useState({ uid: "", drafts: [] });
   const basicQuizRedirectedRef = useRef(false);
   const swipeStartRef = useRef(null);
   const swipeSuppressClickRef = useRef(false);
@@ -112,12 +121,13 @@ export default function WorkoutListPage({
 
   const isIndividualWorkoutMode = workoutModePreference.mode === "individual";
   const isBasicWorkoutMode = workoutModePreference.mode === "basic";
-  const shouldOpenBasicQuiz = isBasicWorkoutMode && plan.source !== "basic";
+  const isInitialPlanReady = initialLoadState === "ready";
+  const shouldOpenBasicQuiz = isInitialPlanReady && isBasicWorkoutMode && plan.source !== "basic";
   const planWorkouts = isBasicWorkoutMode && plan.source !== "basic" ? [] : plan.workouts || [];
   const sortedWorkouts = sortWorkoutDays(planWorkouts);
   const scopedWorkoutCalendar = getWorkoutScheduleCalendarForWorkouts(workoutCalendar, sortedWorkouts);
   const assignmentVersion = getWorkoutAssignmentVersion(plan);
-  const completionHistory = history;
+  const completionHistory = getClientWorkoutCompletionHistory(plan, history);
   const completedWorkoutSet = buildCompletedWorkoutSet(
     completionHistory,
     assignmentVersion,
@@ -168,6 +178,7 @@ export default function WorkoutListPage({
     completed: isWorkoutCompleted(workoutItem),
     active: workoutIndex === activeWorkoutIndex
   }));
+  const workoutProgramItems = getClientWorkoutProgramItems(workoutPlanItems, sortedWorkouts, workoutCalendar);
   const expectedBasicWorkoutCount = isBasicWorkoutMode
     ? getBasicWorkoutExpectedWorkoutCount(plan)
     : 0;
@@ -187,9 +198,14 @@ export default function WorkoutListPage({
   const hasLocalOnlyPlanSave = plan?.cloudSyncState === "local_only";
   const todayKey = toWorkoutDateKey(new Date());
   const currentAssignmentHistoryItems = getCurrentAssignmentHistoryItems(history, assignmentVersion, sortedWorkouts);
-  const getWorkoutDraft = (workoutItem) => currentUserId && workoutItem?.id
-    ? safeReadJsonStorage(getWorkoutDraftKey(currentUserId, workoutItem.id), null)
-    : null;
+  const getWorkoutDraft = (workoutItem) => {
+    if (!currentUserId || !workoutItem?.id) return null;
+    const local = safeReadJsonStorage(getWorkoutDraftKey(currentUserId, workoutItem.id), null);
+    const localDraft = local?.workoutId === workoutItem.id && (!local.uid || local.uid === currentUserId) ? local : null;
+    const fallback = fallbackDraftState.uid === currentUserId
+      ? fallbackDraftState.drafts.find(draft => draft.workoutId === workoutItem.id) : null;
+    return getNewestWorkoutDraft(localDraft, fallback);
+  };
   const draftWorkoutIndex = sortedWorkouts.findIndex((workoutItem) => {
     const draft = getWorkoutDraft(workoutItem);
     return canResumeWorkoutDraft(draft, workoutItem, assignmentVersion, isWorkoutCompleted(workoutItem));
@@ -202,6 +218,7 @@ export default function WorkoutListPage({
     ? activeWorkoutIndex
     : draftWorkoutIndex >= 0 ? draftWorkoutIndex : (incompleteWorkoutIndexes[0]?.workoutIndex ?? activeWorkoutIndex);
   const overviewWorkout = sortedWorkouts[overviewWorkoutIndex];
+  const overviewProgramIndex = (workoutProgramItems.find(item => item.id === overviewWorkout?.id)?.programOrder ?? overviewWorkoutIndex + 1) - 1;
   const overviewWorkoutDate = getScheduledWorkoutDate(overviewWorkout, overviewWorkoutIndex, scopedWorkoutCalendar);
   const shouldShiftBasicWorkoutToToday = Boolean(
     isBasicWorkoutMode &&
@@ -215,6 +232,21 @@ export default function WorkoutListPage({
     : workoutScheduleDates;
   const activeIndividualWorkoutCompleted = isWorkoutCompleted(overviewWorkout);
   const activeWorkoutDraft = getWorkoutDraft(overviewWorkout);
+
+  useEffect(() => {
+    if (!currentUserId) return;
+    let active = true;
+    let request = 0;
+    const refresh = () => {
+      const currentRequest = ++request;
+      void listWorkoutDraftFallbacks(currentUserId).then(drafts => {
+        if (active && request === currentRequest) setFallbackDraftState({ uid: currentUserId, drafts });
+      });
+    };
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => { active = false; window.removeEventListener("focus", refresh); };
+  }, [currentUserId, plan]);
 
   useEffect(() => {
     if (!shouldOpenBasicQuiz) {
@@ -238,7 +270,7 @@ export default function WorkoutListPage({
     : activeWorkoutDraft?.workoutId === activeIndividualWorkout?.id
       ? "Продолжить тренировку"
       : "Начать тренировку";
-  const individualWorkoutHistoryItems = getProgramHistoryItems(currentAssignmentHistoryItems).slice(0, 12);
+  const individualWorkoutHistoryItems = getProgramHistoryItems(currentAssignmentHistoryItems);
   const todayCardState = hasActiveWorkoutDraft
     ? "draft"
     : isCurrentPlanCompleted
@@ -382,6 +414,19 @@ export default function WorkoutListPage({
     animateIndividualWorkout(deltaX < 0 ? "next" : "previous");
   }
 
+  if (!isInitialPlanReady) {
+    const failed = initialLoadState === "error";
+    return <div className={`${styles.page} ${adaptiveShellStyles.shell}`} data-client-adaptive-shell="true">
+      <ClientPageHeader title="Тренировки" primary titleTestId="workout-list-title" testId="workout-list-header" />
+      <section className={styles.loadState} role="status" data-testid="workout-plan-load-state">
+        <h2>{failed ? "Не удалось загрузить план" : "Загружаем план тренировок…"}</h2>
+        <p>{failed ? "Проверьте соединение и повторите загрузку. История тренировок не удалена." : "Начать тренировку можно после загрузки актуальной программы."}</p>
+        {failed && onRetryLoad && <button type="button" onClick={onRetryLoad}>Повторить загрузку</button>}
+      </section>
+      {renderClientMainBottomBar("workouts")}
+    </div>;
+  }
+
   if (shouldOpenBasicQuiz) {
     return null;
   }
@@ -394,9 +439,12 @@ export default function WorkoutListPage({
         scheduledDates={displayedWorkoutScheduleDates}
         programName={workoutProgramName}
         programType={isBasicWorkoutMode ? "basic" : "individual"}
-        index={overviewWorkoutIndex}
+        index={overviewProgramIndex}
         total={sortedWorkouts.length}
         completedCount={completedWorkoutCount}
+        localOnlyPlan={hasLocalOnlyPlanSave}
+        pendingSyncCount={currentAssignmentHistoryItems.filter(item => item.pendingSync).length}
+        onRetrySync={onRetrySync}
         todayState={todayCardState}
         missedCount={isBasicWorkoutMode ? 0 : missedWorkoutIndexes.length}
         isTrainerMode={isTrainerMode}
@@ -426,10 +474,10 @@ export default function WorkoutListPage({
         open={workoutProgramModalOpen}
         programName={workoutProgramName}
         completedCount={completedWorkoutCount}
-        workouts={workoutPlanItems}
+        workouts={workoutProgramItems}
         onClose={() => setWorkoutProgramModalOpen(false)}
       />
-      <IndividualWorkoutHistoryDialog open={Boolean(workoutHistoryModalOpen)} historyLoading={historyLoading} historyItems={individualWorkoutHistoryItems} onClose={() => setWorkoutHistoryModalOpen(false)} />
+      <IndividualWorkoutHistoryDialog open={Boolean(workoutHistoryModalOpen)} historyLoading={historyLoading} historyItems={individualWorkoutHistoryItems} historyLoader={onLoadWorkoutAchievements} historyOwnerKey={currentUserId} onClose={() => setWorkoutHistoryModalOpen(false)} />
       <WorkoutDraftRestoreDialog open={Boolean(workoutDraftRestorePrompt)} blocked={Boolean(workoutReadinessOpen || postWorkoutFeedbackOpen || fullscreenVideo || showFirstSetupOnboarding)} onClose={() => handleWorkoutDraftChoice(null)} onRestart={() => handleWorkoutDraftChoice(false)} onRestore={() => handleWorkoutDraftChoice(true)} />
     </>;
   }
@@ -608,8 +656,8 @@ export default function WorkoutListPage({
                       </span>
 
                       <span className={styles.workoutStats} data-testid="workout-card-stats">
-                        <span><b>🏋️</b>{item.exerciseCount} упражнений</span>
-                        <span><b>▰</b>{item.setCount} подходов</span>
+                        <span><b>🏋️</b>{formatRussianCount(item.exerciseCount, ["упражнение", "упражнения", "упражнений"])}</span>
+                        <span><b>▰</b>{formatRussianCount(item.setCount, ["подход", "подхода", "подходов"])}</span>
                         <span><b>⏱</b>{item.duration}</span>
                       </span>
                     </span>
@@ -739,6 +787,8 @@ export default function WorkoutListPage({
         open={Boolean(isIndividualWorkoutMode && workoutHistoryModalOpen)}
         historyLoading={historyLoading}
         historyItems={individualWorkoutHistoryItems}
+        historyLoader={onLoadWorkoutAchievements}
+        historyOwnerKey={currentUserId}
         onClose={() => setWorkoutHistoryModalOpen(false)}
       />
 

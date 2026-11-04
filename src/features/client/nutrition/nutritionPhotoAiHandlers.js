@@ -1,4 +1,6 @@
 import { createLatestAsyncRequest } from "../../../utils/latestAsyncRequest.js";
+import { captureAuthSession as captureActiveAuthSession } from "../../../utils/authSession.js";
+import { auth as defaultAuth } from "../../../firebase";
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import {
   findExistingPhotoFood,
@@ -22,7 +24,55 @@ import {
 
 const photoRequestScopes = new WeakMap();
 
+function getPhotoRequestScope(fileRef) {
+  if (!photoRequestScopes.has(fileRef)) photoRequestScopes.set(fileRef, createLatestAsyncRequest());
+  return photoRequestScopes.get(fileRef);
+}
+
+function updateForSession(session, setter, value) {
+  const isCurrent = session.isUnchanged || session.isCurrent;
+  if (!isCurrent()) return;
+  setter((current) => isCurrent()
+    ? (typeof value === "function" ? value(current) : value) : current);
+}
+
+// This reset depends only on auth identity, retained-file refs and stable React
+// setters, so bootstrap/access revocation can create it before picker handlers.
+export function createNutritionPhotoAiResetHandler({
+  auth = defaultAuth,
+  captureAuthSession = () => captureActiveAuthSession(auth),
+  nutritionPhotoInputRef,
+  nutritionPhotoLastFileRef,
+  setNutritionPhotoAiCandidates,
+  setNutritionPhotoAiConfidence,
+  setNutritionPhotoAiResult,
+  setNutritionPhotoAnalyzing,
+  setNutritionPhotoName,
+  setNutritionPhotoNotFoundOpen,
+  setNutritionPhotoPreview
+}) {
+  const requests = getPhotoRequestScope(nutritionPhotoLastFileRef);
+  return function resetNutritionPhotoAiState() {
+    const session = captureAuthSession();
+    requests.cancel();
+    updateForSession(session, setNutritionPhotoPreview, (currentPreview) => {
+      if (currentPreview?.startsWith("blob:")) URL.revokeObjectURL(currentPreview);
+      return "";
+    });
+    updateForSession(session, setNutritionPhotoName, "");
+    updateForSession(session, setNutritionPhotoAiResult, "");
+    updateForSession(session, setNutritionPhotoAiCandidates, []);
+    updateForSession(session, setNutritionPhotoAiConfidence, "");
+    updateForSession(session, setNutritionPhotoAnalyzing, false);
+    updateForSession(session, setNutritionPhotoNotFoundOpen, false);
+    nutritionPhotoLastFileRef.current = null;
+    if (nutritionPhotoInputRef.current) nutritionPhotoInputRef.current.value = "";
+  };
+}
+
 export function createNutritionPhotoAiHandlers({
+  auth = defaultAuth,
+  captureAuthSession = () => captureActiveAuthSession(auth),
   fatSecretFoods,
   nutrition,
   nutritionFoodDatabase,
@@ -56,27 +106,15 @@ export function createNutritionPhotoAiHandlers({
   setSelectedNutritionFood,
   setShowRecentNutritionFoods
 }) {
-  if (!photoRequestScopes.has(nutritionPhotoLastFileRef)) photoRequestScopes.set(nutritionPhotoLastFileRef, createLatestAsyncRequest());
-  const requests = photoRequestScopes.get(nutritionPhotoLastFileRef);
+  const requests = getPhotoRequestScope(nutritionPhotoLastFileRef);
+  const resetNutritionPhotoAiState = createNutritionPhotoAiResetHandler({
+    auth, captureAuthSession, nutritionPhotoInputRef, nutritionPhotoLastFileRef,
+    setNutritionPhotoAiCandidates, setNutritionPhotoAiConfidence, setNutritionPhotoAiResult,
+    setNutritionPhotoAnalyzing, setNutritionPhotoName, setNutritionPhotoNotFoundOpen, setNutritionPhotoPreview
+  });
 
   function resetNutritionPhotoAiSearch() {
-    requests.cancel();
-    setNutritionPhotoName("");
-    setNutritionPhotoPreview((currentPreview) => {
-      if (currentPreview?.startsWith("blob:")) {
-        URL.revokeObjectURL(currentPreview);
-      }
-      return "";
-    });
-    setNutritionPhotoAiResult("");
-    setNutritionPhotoAiCandidates([]);
-    setNutritionPhotoAiConfidence("");
-    setNutritionPhotoAnalyzing(false);
-    setNutritionPhotoNotFoundOpen(false);
-    nutritionPhotoLastFileRef.current = null;
-    if (nutritionPhotoInputRef.current) {
-      nutritionPhotoInputRef.current.value = "";
-    }
+    resetNutritionPhotoAiState();
   }
 
   async function findExistingNutritionFoodFromPhoto(product = {}) {
@@ -193,27 +231,6 @@ export function createNutritionPhotoAiHandlers({
     }
   }
 
-  function resetNutritionPhotoAiState() {
-    requests.cancel();
-    setNutritionPhotoPreview((currentPreview) => {
-      if (currentPreview?.startsWith("blob:")) {
-        URL.revokeObjectURL(currentPreview);
-      }
-      return "";
-    });
-    setNutritionPhotoName("");
-    setNutritionPhotoAiResult("");
-    setNutritionPhotoAiCandidates([]);
-    setNutritionPhotoAiConfidence("");
-    setNutritionPhotoAnalyzing(false);
-    setNutritionPhotoNotFoundOpen(false);
-    nutritionPhotoLastFileRef.current = null;
-
-    if (nutritionPhotoInputRef.current) {
-      nutritionPhotoInputRef.current.value = "";
-    }
-  }
-
   async function runNutritionPhotoAiSearch(file) {
     if (!file) return;
 
@@ -231,23 +248,34 @@ export function createNutritionPhotoAiHandlers({
       return;
     }
 
-    const request = requests.start();
+    const session = captureAuthSession();
+    if (!session.isCurrent()) return;
+    const latestRequest = requests.start();
+    const request = {
+      signal: latestRequest.signal,
+      isCurrent: () => latestRequest.isCurrent() && session.isCurrent()
+    };
+    const publish = (setter, value) => {
+      if (request.isCurrent()) setter((current) => request.isCurrent()
+        ? (typeof value === "function" ? value(current) : value) : current);
+    };
     nutritionPhotoLastFileRef.current = file;
-    setNutritionPhotoName(file.name || "Фото продукта");
+    publish(setNutritionPhotoName, file.name || "Фото продукта");
     setNutritionPhotoPreview((currentPreview) => {
+      if (!request.isCurrent()) return currentPreview;
       if (currentPreview?.startsWith("blob:")) {
         URL.revokeObjectURL(currentPreview);
       }
       return URL.createObjectURL(file);
     });
-    setNutritionPhotoAiResult("");
-    setNutritionPhotoAiCandidates([]);
-    setNutritionPhotoAiConfidence("");
-    setNutritionPhotoNotFoundOpen(false);
-    setNutritionPhotoAnalyzing(true);
-    setFatSecretError("");
-    setNutritionSearchTab("food");
-    setShowRecentNutritionFoods(false);
+    publish(setNutritionPhotoAiResult, "");
+    publish(setNutritionPhotoAiCandidates, []);
+    publish(setNutritionPhotoAiConfidence, "");
+    publish(setNutritionPhotoNotFoundOpen, false);
+    publish(setNutritionPhotoAnalyzing, true);
+    publish(setFatSecretError, "");
+    publish(setNutritionSearchTab, "food");
+    publish(setShowRecentNutritionFoods, false);
 
     try {
       startPerformanceCheck("AI photo · total", { fileSizeMb: Math.round((file.size / 1024 / 1024) * 10) / 10 });
@@ -276,9 +304,9 @@ export function createNutritionPhotoAiHandlers({
 
       if (!response.ok) {
         console.warn("[AI PHOTO] request failed", { status: response.status, apiVersion: data.apiVersion || "", code: data.code || "" });
-        setNutritionPhotoAiCandidates([]);
-        setNutritionPhotoAiConfidence("");
-        setNutritionPhotoAiResult(data.message || "Не удалось распознать продукт на фото. Попробуй другое изображение.");
+        publish(setNutritionPhotoAiCandidates, []);
+        publish(setNutritionPhotoAiConfidence, "");
+        publish(setNutritionPhotoAiResult, data.message || "Не удалось распознать продукт на фото. Попробуй другое изображение.");
         return;
       }
 
@@ -288,37 +316,37 @@ export function createNutritionPhotoAiHandlers({
 
       if (data.found === false || (!hasVerifiedBarcode && !hasVerifiedLabel)) {
         console.warn("[AI PHOTO] unverified product", { apiVersion: data.apiVersion || "", product });
-        setNutritionPhotoAiCandidates([]);
-        setNutritionPhotoAiConfidence("");
-        setNutritionPhotoAiResult("");
-        setNutritionPhotoNotFoundOpen(true);
+        publish(setNutritionPhotoAiCandidates, []);
+        publish(setNutritionPhotoAiConfidence, "");
+        publish(setNutritionPhotoAiResult, "");
+        publish(setNutritionPhotoNotFoundOpen, true);
         return;
       }
 
       // A barcode is only an identifier: its nutrition must come from the
       // catalog, never from a photo-model guess. A readable label can open a
       // reviewable draft only after the strict verification above.
-      setNutritionPhotoAiConfidence(getNutritionPhotoAiConfidenceText(product.confidence));
+      publish(setNutritionPhotoAiConfidence, getNutritionPhotoAiConfidenceText(product.confidence));
       const existingFood = await findExistingNutritionFoodFromPhoto(product);
       if (!request.isCurrent()) return;
       if (existingFood) {
         resetNutritionPhotoAiState();
-        setNutritionSearch(existingFood.name || product.name);
-        setNutritionSearchTab("food");
-        setNutritionEditPageOpen(false);
-        setNutritionEditDetailsOpen(false);
-        setNutritionMealMenuOpen(false);
-        setNutritionCreateChoiceOpen(false);
+        updateForSession(session, setNutritionSearch, existingFood.name || product.name);
+        updateForSession(session, setNutritionSearchTab, "food");
+        updateForSession(session, setNutritionEditPageOpen, false);
+        updateForSession(session, setNutritionEditDetailsOpen, false);
+        updateForSession(session, setNutritionMealMenuOpen, false);
+        updateForSession(session, setNutritionCreateChoiceOpen, false);
         saveRecentNutritionFood(existingFood);
         addNutritionFoodFromPicker(existingFood);
         return;
       }
 
       if (!hasVerifiedLabel) {
-        setNutritionPhotoAiCandidates([]);
-        setNutritionPhotoAiConfidence("");
-        setNutritionPhotoAiResult("");
-        setNutritionPhotoNotFoundOpen(true);
+        publish(setNutritionPhotoAiCandidates, []);
+        publish(setNutritionPhotoAiConfidence, "");
+        publish(setNutritionPhotoAiResult, "");
+        publish(setNutritionPhotoNotFoundOpen, true);
         return;
       }
 
@@ -334,23 +362,24 @@ export function createNutritionPhotoAiHandlers({
             : "api",
         "AI-фото сейчас недоступно. Можно ввести продукт вручную."
       );
-      setNutritionPhotoAiCandidates([]);
-      setNutritionPhotoAiConfidence("");
-      setNutritionPhotoAiResult(
+      publish(setNutritionPhotoAiCandidates, []);
+      publish(setNutritionPhotoAiConfidence, "");
+      publish(setNutritionPhotoAiResult,
         error.name === "AbortError"
           ? "Анализ фото занял слишком много времени. Попробуй ещё раз."
           : "AI-фото сейчас недоступно. Попробуй ещё раз или создай продукт вручную."
       );
     } finally {
       endPerformanceCheck("AI photo · total");
-      if (request.isCurrent()) setNutritionPhotoAnalyzing(false);
+      publish(setNutritionPhotoAnalyzing, false);
     }
   }
 
   async function handleNutritionPhotoAiSearch(event) {
+    const session = captureAuthSession();
     const file = event.target.files?.[0];
     await runNutritionPhotoAiSearch(file);
-    if (event.target) {
+    if (session.isCurrent() && event.target) {
       event.target.value = "";
     }
   }
@@ -364,9 +393,10 @@ export function createNutritionPhotoAiHandlers({
   }
 
   function retryNutritionPhotoFromNotFound() {
+    const session = captureAuthSession();
     setNutritionPhotoNotFoundOpen(false);
     resetNutritionPhotoAiState();
-    window.setTimeout(() => nutritionPhotoInputRef.current?.click(), 0);
+    window.setTimeout(() => { if (session.isCurrent()) nutritionPhotoInputRef.current?.click(); }, 0);
   }
 
   function addNutritionProductManuallyFromPhoto() {

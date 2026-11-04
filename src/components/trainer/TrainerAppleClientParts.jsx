@@ -27,7 +27,7 @@ export function AppleSchedule({ slots, children, onOpenHistory, onOpenProgramHis
       <div className={styles.scheduleEditRow}><span className={styles.symbol}><CalendarDays size={20} /></span><strong>Расписание и абонемент</strong><button type="button" onClick={() => setOpen(true)}>Редактировать</button></div>
     </AppleGroup>
     <AppleGroup title="Управление"><div className={styles.twoActions}><AppleRow title="История тренировок" description="Завершённые занятия и результаты" onClick={onOpenHistory} /><AppleRow title="История программ" description="Назначенные программы и изменения" icon={ClipboardList} onClick={onOpenProgramHistory} /></div></AppleGroup>
-    {open ? <TrainerClientUtilitySheet title="Расписание и абонемент" variant="wide" onRequestClose={() => setOpen(false)}><div className={styles.calendarContent}>{children}</div></TrainerClientUtilitySheet> : null}
+    {open ? <TrainerClientUtilitySheet title="Расписание и абонемент" variant="agenda" onRequestClose={() => setOpen(false)}><div className={styles.calendarContent}>{children}</div></TrainerClientUtilitySheet> : null}
   </>;
 }
 export function AppleRecent({ note, lastMeasurement, onFeedback, onMeasurements, onTraining, onProgress }) {

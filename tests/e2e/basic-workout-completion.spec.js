@@ -33,7 +33,7 @@ test("completed basic workout ignores a phone draft and exposes plan management"
   await page.getByTestId("workout-start-button").click();
   await expect(page.getByTestId("workout-history-dialog")).toBeVisible();
   await page.getByTestId("workout-history-dialog-close").click();
-  await page.getByTestId("basic-manage-plan").click();
+  await page.getByRole("button", { name: /Подобрать тренировку или программу/ }).click();
   await expect(page.getByTestId("client-harness-basic-workout-today")).toBeVisible();
   await page.getByTestId("basic-workout-today-header").getByRole("button", { name: "Вернуться к тренировкам", exact: true }).click();
   await expect(page.getByTestId("workout-render-overview")).toBeVisible();

@@ -1,5 +1,6 @@
 import { Bell, ChevronRight, Mail, Send } from "lucide-react";
 import styles from "./ProfileAppSettingsSection.module.css";
+import { getAccountRecoveryEmail } from "./profileAccountEmail.js";
 
 export default function ProfileAppSettingsSection({
   email,
@@ -17,6 +18,7 @@ export default function ProfileAppSettingsSection({
   disconnectedText = "Нажми, чтобы подключить",
   connectedBadge = "Подключён"
 }) {
+  const recoveryEmail = getAccountRecoveryEmail(email);
   const variantClass = variant === "account"
     ? styles.account
     : variant === "tab"
@@ -57,9 +59,9 @@ export default function ProfileAppSettingsSection({
         {showEmail && onOpenEmail && (
           <button
             type="button"
-            className={`${styles.item} ${styles.emailItem}${email ? ` ${styles.connected}` : ""}`}
+            className={`${styles.item} ${styles.emailItem}${recoveryEmail ? ` ${styles.connected}` : ""}`}
             data-testid="profile-settings-email"
-            aria-label={email ? "Открыть настройки почты" : "Привязать почту"}
+            aria-label={recoveryEmail ? "Открыть настройки почты" : "Добавить личную почту"}
             onClick={onOpenEmail}
           >
             <span className={`${styles.avatar} ${styles.emailAvatar}`} aria-hidden="true">
@@ -67,9 +69,9 @@ export default function ProfileAppSettingsSection({
             </span>
             <span className={styles.text}>
               <strong>Почта</strong>
-              <small>{email ? `${email} · привязана` : "Нажми, чтобы привязать"}</small>
+              <small>{recoveryEmail ? `${recoveryEmail} · привязана` : "Почта для восстановления не добавлена"}</small>
             </span>
-            <em className={styles.badge}>{email ? "Привязана" : "Привязать"}</em>
+            <em className={styles.badge}>{recoveryEmail ? "Привязана" : "Добавить"}</em>
             <i className={styles.arrow} aria-hidden="true"><ChevronRight /></i>
           </button>
         )}

@@ -2,6 +2,20 @@ import { expect, test } from "./app-test.js";
 import { renderInviteFixture } from "../helpers/invite-page-template.mjs";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+async function expectActionGradient(button) {
+  const gradients = await button.evaluate(node => {
+    const probe = document.createElement("span");
+    probe.style.backgroundImage = "var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%))";
+    document.body.append(probe);
+    const actual = getComputedStyle(node).backgroundImage;
+    const expected = getComputedStyle(probe).backgroundImage;
+    probe.remove();
+    return { actual, expected };
+  });
+  expect(gradients.actual).toContain("linear-gradient(");
+  expect(gradients.actual).toBe(gradients.expected);
+}
+
 test("onboarding welcome, name and navigation use the current mobile design", async ({ page }, testInfo) => {
   const assertNoErrors = failOnRuntimeErrors(page);
   await page.setViewportSize({ width: 375, height: 812 });
@@ -10,7 +24,7 @@ test("onboarding welcome, name and navigation use the current mobile design", as
   const root = page.getByTestId("first-setup-onboarding");
   await expect(root).toBeVisible();
   await expect(root).toHaveCSS("background-color", "rgb(245, 247, 248)");
-  await expect(root.getByRole("button", { name: "Начать", exact: true })).toHaveCSS("background-color", "rgb(57, 107, 166)");
+  await expectActionGradient(root.getByRole("button", { name: "Начать", exact: true }));
   const features = page.getByTestId("first-setup-welcome-features");
   await expect(features.getByRole("listitem")).toHaveCount(3);
   for (const icon of await features.locator("svg").all()) {
@@ -21,9 +35,15 @@ test("onboarding welcome, name and navigation use the current mobile design", as
   await root.getByRole("button", { name: "Начать", exact: true }).click();
   await root.getByRole("button", { name: "Женщина", exact: true }).click();
   await expect(root.getByRole("button", { name: "Женщина", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(root.locator('[data-sex-portrait="male"]')).toBeVisible();
+  await expect(root.locator('[data-sex-portrait="female"]')).toBeVisible();
+  await expect(root.getByRole("button", { name: "Женщина", exact: true })).toHaveCSS("box-shadow", "none");
+  await page.screenshot({ path: testInfo.outputPath("sex-375.png") });
   await root.getByRole("button", { name: "Далее", exact: true }).click();
   const name = root.getByRole("textbox", { name: "Ваше имя" });
+  await expect(name).toHaveAttribute("placeholder", "Как к вам обращаться?");
   await name.fill("мария");
+  await expect(name).toHaveCSS("box-shadow", "none");
   await root.getByRole("button", { name: "Далее", exact: true }).click();
   await root.getByRole("button", { name: "Назад", exact: true }).click();
   await expect(name).toHaveValue("Мария");
@@ -64,7 +84,7 @@ test("invitation password form retains validation, retry and success in the calm
   await expect(page.getByText(/нажми «Перейти ко входу» и введи логин и новый пароль/)).toBeVisible();
   await expect(page.locator("body")).toHaveCSS("background-color", "rgb(242, 242, 247)");
   const submit = page.getByRole("button", { name: "Сохранить пароль" });
-  await expect(submit).toHaveCSS("background-color", "rgb(63, 115, 184)");
+  await expectActionGradient(submit);
   await page.getByLabel("Новый пароль").fill("test-password-123");
   await page.getByLabel("Повтори пароль").fill("different-password");
   await submit.click();

@@ -9,6 +9,9 @@ import {
   writeBatch
 } from "firebase/firestore";
 import { requestTrainerExerciseCards } from "../../utils/trainerExerciseCards.js";
+import { requestEmptyProgramAssignmentDeletion } from "../../utils/trainerProgramAssignmentDelete.js";
+import { captureAuthSession } from "../../utils/authSession.js";
+import { runSessionResource } from "../../utils/sessionResource.js";
 import { mapTemplateExerciseCards } from "../../../functions/exerciseCards.js";
 
 import {
@@ -285,6 +288,7 @@ export function createTrainerProgramTemplateHandlers({
   setAdminTrainingTemplates,
   trainerExerciseCards = [],
   setTrainerExerciseCards = () => {},
+  setTrainerLibraryLoadState = () => {},
   setAdminSelectedTemplateId,
   setAdminTemplateName,
   setAdminClientStatus,
@@ -292,40 +296,70 @@ export function createTrainerProgramTemplateHandlers({
   setUsersList,
   setPlan,
   showAppConfirm,
-  recordTrainerEvent
+  recordTrainerEvent,
+  requestDeleteEmptyAssignment = requestEmptyProgramAssignmentDeletion,
+  isClientSelectionCurrent = () => true
 }) {
   async function loadAdminTrainingTemplates() {
+    return runSessionResource(auth, `trainer-library:${canUseAdminFeatures() ? "admin" : "trainer"}`, async ({ isCurrent }) => {
+    const session = captureAuthSession(auth);
+    if (!session.isCurrent()) return;
+    const publish = (patch) => {
+      if (!isCurrent() || !session.isCurrent()) return;
+      setTrainerLibraryLoadState((previous) => {
+        if (!isCurrent() || !session.isCurrent()) return previous;
+        const sameSession = Boolean(previous?.session?.isCurrent());
+        return {
+          templatesKnown: sameSession && Boolean(previous.templatesKnown),
+          cardsKnown: sameSession && Boolean(previous.cardsKnown),
+          ...patch,
+          session
+        };
+      });
+    };
+    publish({ templates: "loading", cards: "loading" });
     try {
       const templatesRef = collection(db, "trainingTemplates");
-      const currentUid = auth.currentUser?.uid || user?.uid || "";
+      const currentUid = session.uid;
       const templatesQuery = canUseAdminFeatures()
         ? templatesRef
         : query(templatesRef, where("ownerUid", "==", currentUid));
-      const snapshot = await getDocs(templatesQuery);
+      const [templatesResult, cardsResult] = await Promise.all([
+        getDocs(templatesQuery).then(value => ({ value }), error => ({ error })),
+        requestTrainerExerciseCards({ action: "list" }).then(value => ({ value }), error => ({ error }))
+      ]);
+      if (!isCurrent() || !session.isCurrent()) return;
       const templates = [];
-      snapshot.forEach((templateDoc) => {
-        templates.push({ id: templateDoc.id, ...templateDoc.data() });
-      });
-      let cards = [];
-      try {
-        cards = (await requestTrainerExerciseCards({ action: "list" })).cards || [];
-      } catch (error) {
-        setAdminClientStatus("Карточки упражнений не загрузились. Показаны сохранённые копии. Обновите библиотеку перед редактированием.");
-        console.warn("Exercise cards load failed:", error.message);
+      if (!templatesResult.error) {
+        templatesResult.value.forEach((templateDoc) => {
+          templates.push({ id: templateDoc.id, ...templateDoc.data() });
+        });
       }
-      // Ignore responses belonging to a session that has since signed out.
-      if (auth.currentUser?.uid !== currentUid) return;
-      setTrainerExerciseCards(cards);
-      templates.sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
-      setAdminTrainingTemplates(templates.map((template) => mapTemplateExerciseCards(template, cards)));
-      setAdminSelectedTemplateId((current) =>
-        current && !templates.some((template) => template.id === current) ? "" : current
-      );
+      const cards = cardsResult.error ? trainerExerciseCards : cardsResult.value.cards || [];
+      if (!cardsResult.error) setTrainerExerciseCards(cards);
+      else {
+        setAdminClientStatus("Карточки упражнений не загрузились. Показаны сохранённые копии. Обновите библиотеку перед редактированием.");
+        console.warn("Exercise cards load failed:", cardsResult.error.message);
+      }
+      if (!templatesResult.error) {
+        templates.sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
+        setAdminTrainingTemplates(templates.map((template) => mapTemplateExerciseCards(template, cards)));
+        setAdminSelectedTemplateId((current) =>
+          isCurrent() && session.isCurrent() && current && !templates.some((template) => template.id === current) ? "" : current
+        );
+      } else console.error("Template load failed:", templatesResult.error);
+      publish({
+        templates: templatesResult.error ? "error" : "ready",
+        cards: cardsResult.error ? "error" : "ready",
+        ...(!templatesResult.error ? { templatesKnown: true } : {}),
+        ...(!cardsResult.error ? { cardsKnown: true } : {})
+      });
     } catch (error) {
       console.error("Template load failed:", error);
-      setAdminTrainingTemplates([]);
-      setTrainerExerciseCards([]);
+      if (!isCurrent() || !session.isCurrent()) return;
+      publish({ templates: "error", cards: "error" });
     }
+    });
   }
 
   async function createAdminTemplateFromCurrentPlan() {
@@ -397,28 +431,32 @@ export function createTrainerProgramTemplateHandlers({
     const batch = writeBatch(db);
 
     const queueVersion = String(assignedProgramUpdatedAt || "").trim();
+    // The next setup step compares these local snapshots with the committed
+    // documents. Return exactly the metadata written here, not the pre-write
+    // template copies, so the first schedule save is not a false conflict.
+    const assignedWorkouts = appendedPlan.assignedWorkouts.map((workoutItem) => ({
+      ...workoutItem,
+      assignedProgramId: template.id,
+      assignedProgramName: template.name,
+      assignedAt: assignedProgramUpdatedAt,
+      assignedProgramUpdatedAt: queueVersion,
+      assignedProgramAddedAt: assignedProgramUpdatedAt,
+      assignedBy: assignedByUid,
+      ...buildClientProgramLifecycleMetadata({
+        assignedAt: assignedProgramUpdatedAt,
+        assignedByUid
+      })
+    }));
     const clientPatch = buildAssignedClientPatch(
       template,
-      appendedPlan.assignedWorkouts,
+      assignedWorkouts,
       assignedProgramUpdatedAt,
       assignedByUid,
       currentClientData
     );
 
-    appendedPlan.assignedWorkouts.forEach((workoutItem) => {
-      batch.set(doc(db, "users", clientId, "workouts", workoutItem.id), {
-        ...workoutItem,
-        assignedProgramId: template.id,
-        assignedProgramName: template.name,
-        assignedAt: assignedProgramUpdatedAt,
-        assignedProgramUpdatedAt: queueVersion,
-        assignedProgramAddedAt: assignedProgramUpdatedAt,
-        assignedBy: assignedByUid,
-        ...buildClientProgramLifecycleMetadata({
-          assignedAt: assignedProgramUpdatedAt,
-          assignedByUid
-        })
-      });
+    assignedWorkouts.forEach((workoutItem) => {
+      batch.set(doc(db, "users", clientId, "workouts", workoutItem.id), workoutItem);
     });
 
     batch.set(
@@ -432,7 +470,7 @@ export function createTrainerProgramTemplateHandlers({
     return {
       protectedCount: appendedPlan.protectedCount,
       previousCount: appendedPlan.previousCount,
-      nextWorkouts: appendedPlan.allWorkouts,
+      nextWorkouts: [...appendedPlan.existingWorkouts, ...assignedWorkouts],
       clientPatch
     };
   }
@@ -460,10 +498,14 @@ export function createTrainerProgramTemplateHandlers({
     // already active. In that case only the workouts move back to the queue;
     // the active profile assignment must remain untouched.
     const safeClientPatch = clientPatch && typeof clientPatch === "object" ? clientPatch : {};
-    const matches = (workout = {}) => (
-      isTrainerClientProgramAssignmentMatch(workout, assignmentKey) ||
-      isClientProgramAssignmentFallbackMatch(workout, restoreMetadata.assignment)
-    );
+    const deletedWorkoutIds = action === "delete" && Array.isArray(restoreMetadata.deletedWorkoutIds)
+      ? new Set(restoreMetadata.deletedWorkoutIds) : null;
+    const confirmedWorkoutIds = deletedWorkoutIds || (Array.isArray(restoreMetadata.matchedWorkoutIds)
+      ? new Set(restoreMetadata.matchedWorkoutIds) : null);
+    const matches = (workout = {}) => confirmedWorkoutIds
+      ? confirmedWorkoutIds.has(workout.id)
+      : (isTrainerClientProgramAssignmentMatch(workout, assignmentKey) ||
+        isClientProgramAssignmentFallbackMatch(workout, restoreMetadata.assignment));
 
     setAdminSelectedClient((current) => current?.id === clientId
       ? { ...current, ...safeClientPatch }
@@ -474,9 +516,15 @@ export function createTrainerProgramTemplateHandlers({
     setPlan((current) => {
       const visibleWorkouts = Array.isArray(current?.workouts) ? current.workouts : [];
       const archivedWorkouts = Array.isArray(current?.archivedWorkouts) ? current.archivedWorkouts : [];
-      const matchedWorkouts = visibleWorkouts.filter(matches);
 
       if (action === "archive") {
+        // Older read-only copies already live in archivedWorkouts before their
+        // archive metadata is saved. Keep them locally instead of removing them
+        // while moving only the currently visible days. Prefer the visible copy
+        // if a transient reload placed the same document in both arrays.
+        const matchedWorkouts = [...new Map(
+          [...archivedWorkouts, ...visibleWorkouts].filter(matches).map(workout => [workout.id, workout])
+        ).values()];
         const movedToArchive = matchedWorkouts.map((workout) => ({
           ...workout,
           assignedProgramLifecycleStatus: "archived",
@@ -634,12 +682,16 @@ export function createTrainerProgramTemplateHandlers({
       setAdminClientStatus(STATUS_OWN_PROGRAMS_ONLY);
       return false;
     }
+    const session = captureAuthSession(auth);
+    if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
 
     try {
-      const [workoutsSnapshot, historySnapshot] = await Promise.all([
+      const [workoutsSnapshot, historySnapshot, clientSnapshot] = await Promise.all([
         getDocs(collection(db, "users", clientId, "workouts")),
-        getDocs(collection(db, "users", clientId, "history"))
+        getDocs(collection(db, "users", clientId, "history")),
+        getDoc(doc(db, "users", clientId))
       ]);
+      if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
       const matchedWorkouts = getClientProgramAssignmentSnapshot(workoutsSnapshot.docs, assignmentKey, assignment);
       if (!matchedWorkouts.length) {
         setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_NOT_FOUND);
@@ -650,31 +702,64 @@ export function createTrainerProgramTemplateHandlers({
       const now = new Date().toISOString();
       const matchingIds = new Set(matchedWorkouts.map((workout) => workout.id));
       const remainingWorkouts = workoutsSnapshot.docs.filter((workoutDoc) => !matchingIds.has(workoutDoc.id));
-      const clientPatch = getNextActiveClientProgramPatch(
+      const clientProfile = clientSnapshot.exists() ? clientSnapshot.data() : {};
+      const calendar = clientProfile.workoutCalendar || {};
+      const isScopedEntry = entry => matchingIds.has(entry.workoutId) || (!entry.workoutId &&
+        String(entry.assignedProgramAddedAt || entry.programAssignmentId || "") === String(assignment.assignedAt || "") && Boolean(assignment.assignedAt));
+      const archivedEntries = (calendar.plannedWorkouts || []).filter(isScopedEntry);
+      const remainingEntries = (calendar.plannedWorkouts || []).filter(entry => !isScopedEntry(entry));
+      const scopedDates = new Set([...archivedEntries.map(entry => entry.date), ...matchedWorkouts.map(workout => workout.data.scheduledDate || workout.data.plannedDate)].filter(Boolean));
+      const remainingDates = [...new Set([
+        ...(calendar.scheduledDates || calendar.monthlyTrainingDates || []).filter(date => !scopedDates.has(date)),
+        ...remainingEntries.map(entry => entry.date).filter(Boolean)
+      ])].sort();
+      const profileAssignment = getClientProfileProgramAssignment(clientProfile);
+      // Read-only historical copies can still have old active metadata. Archive
+      // that concrete copy without reselecting the client's unrelated current
+      // assignment from the old queue.
+      const hasAnotherActiveAssignment = profileAssignment?.programId &&
+        profileAssignment.key !== assignmentKey &&
+        String(clientProfile.assignedProgramLifecycleStatus || "").trim().toLowerCase() !== "archived" &&
+        !["trainer_archived", "client_archived"].includes(String(clientProfile.assignedProgramVisibility || "").trim().toLowerCase());
+      const clientPatch = hasAnotherActiveAssignment ? {} : getNextActiveClientProgramPatch(
         remainingWorkouts,
         now,
         getSnapshotEntries(historySnapshot)
       );
       const batch = writeBatch(db);
+      clientPatch.workoutCalendar = {
+        ...calendar,
+        plannedWorkouts: remainingEntries,
+        scheduledDates: remainingDates,
+        monthlyTrainingDates: remainingDates,
+        updatedAt: now
+      };
 
-      matchedWorkouts.forEach((workout) => {
+      matchedWorkouts.forEach((workout, index) => {
         batch.set(doc(db, "users", clientId, "workouts", workout.id), {
           assignedProgramLifecycleStatus: "archived",
           assignedProgramVisibility: "trainer_archived",
-          assignedProgramArchivedAt: now
+          assignedProgramArchivedAt: now,
+          ...(index === 0 ? { assignedProgramArchivedCalendarEntries: archivedEntries.length
+            ? archivedEntries : workout.data.assignedProgramArchivedCalendarEntries || [] } : {})
         }, { merge: true });
       });
       batch.set(doc(db, "users", clientId), clientPatch, { merge: true });
       await batch.commit();
+      if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
 
       updateProgramAssignmentLocally(clientId, assignmentKey, "archive", clientPatch, now, {
-        assignment
+        assignment,
+        matchedWorkoutIds: matchedWorkouts.map(workout => workout.id)
       });
-      setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_ARCHIVED);
+      setAdminClientStatus(hasAnotherActiveAssignment
+        ? "Старая программа архивирована. Текущая программа клиента не изменена."
+        : STATUS_PROGRAM_ASSIGNMENT_ARCHIVED);
       await recordTrainerEvent(clientId, "program", STATUS_PROGRAM_ASSIGNMENT_ARCHIVED, assignment?.name || "");
       return true;
     } catch (error) {
       console.error("Client program archive failed:", error);
+      if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
       setAdminClientStatus(error?.code === "workout-assignment-batch-limit"
         ? error.message
         : getTrainerActionErrorStatus(error, STATUS_PROGRAM_ASSIGNMENT_ACTION_FAILED));
@@ -753,14 +838,33 @@ export function createTrainerProgramTemplateHandlers({
         Boolean(String(clientProfile?.assignedProgramId || "").trim())
       );
       const clientPatch = hasAnotherActiveProgram
-        ? null
+        ? {}
         : getNextActiveClientProgramPatch(
-          restoredWorkouts,
+          restoredWorkouts.filter(workout => matchingIds.has(workout.id)),
           now,
           historyEntries,
           currentTrainerUid,
-          clientProfile
+          {}
         );
+      const calendar = clientProfile.workoutCalendar || {};
+      const preservedEntries = (calendar.plannedWorkouts || []).filter(entry => !matchingIds.has(entry.workoutId));
+      const storedEntries = matchedWorkouts.flatMap(workout => workout.data.assignedProgramArchivedCalendarEntries || []);
+      const restoredEntries = storedEntries.length ? storedEntries.filter(entry => matchingIds.has(entry.workoutId) ||
+        (!entry.workoutId && String(entry.assignedProgramAddedAt || entry.programAssignmentId || "") === String(assignment.assignedAt || "") && Boolean(assignment.assignedAt)))
+        : matchedWorkouts.filter(workout => workout.data.scheduledDate || workout.data.plannedDate).map(workout => ({
+          workoutId: workout.id, date: workout.data.scheduledDate || workout.data.plannedDate,
+          status: workout.data.status || "planned", movedToDate: workout.data.movedToDate || "",
+          assignedProgramId: workout.data.assignedProgramId || "",
+          assignedProgramAddedAt: workout.data.assignedProgramAddedAt || workout.data.assignedAt || ""
+        }));
+      const plannedWorkouts = [...preservedEntries, ...restoredEntries];
+      const scheduledDates = [...new Set([...(calendar.scheduledDates || calendar.monthlyTrainingDates || []), ...plannedWorkouts.map(entry => entry.date).filter(Boolean)])].sort();
+      clientPatch.workoutCalendar = {
+        ...calendar, plannedWorkouts,
+        scheduledDates,
+        monthlyTrainingDates: scheduledDates,
+        updatedAt: now
+      };
       const batch = writeBatch(db);
 
       matchedWorkouts.forEach((workout) => {
@@ -782,7 +886,8 @@ export function createTrainerProgramTemplateHandlers({
       await batch.commit();
 
       updateProgramAssignmentLocally(clientId, assignmentKey, "restore", clientPatch, "", {
-        assignment
+        assignment,
+        matchedWorkoutIds: matchedWorkouts.map(workout => workout.id)
       });
       setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_RESTORED);
       await recordTrainerEvent(clientId, "program", STATUS_PROGRAM_ASSIGNMENT_RESTORED, assignment?.name || "");
@@ -808,6 +913,29 @@ export function createTrainerProgramTemplateHandlers({
       return false;
     }
 
+    // The history panel only removes old archived copies. This destructive
+    // operation is checked against authoritative history on the server, not
+    // the trainer's possibly partial local history page. Preserve the separate
+    // legacy administrator management flow below for non-archived assignments.
+    if (assignment.status === "archived" && (!isAdmin || assignment.deleteEmptyArchive === true)) {
+      const session = captureAuthSession(auth);
+      if (!session.isCurrent()) return false;
+      try {
+        const result = await requestDeleteEmptyAssignment({ clientId, assignmentKey });
+        if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
+        updateProgramAssignmentLocally(clientId, assignmentKey, "delete", result.clientPatch || {}, "", {
+          assignment,
+          deletedWorkoutIds: result.deletedWorkoutIds
+        });
+        setAdminClientStatus("Пустая программа удалена. Другие программы и история сохранены.");
+        return true;
+      } catch (error) {
+        if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
+        setAdminClientStatus(error.message || STATUS_PROGRAM_ASSIGNMENT_ACTION_FAILED);
+        throw error;
+      }
+    }
+
     try {
       const [workoutsSnapshot, historySnapshot] = await Promise.all([
         getDocs(collection(db, "users", clientId, "workouts")),
@@ -826,7 +954,10 @@ export function createTrainerProgramTemplateHandlers({
       // A trainer may remove only a program the client has not started. A
       // missed workout is also a started program and therefore stays in the
       // client history just like a completed one.
-      if (!isAdmin && matchedAssignment?.status !== "future") {
+      if (!isAdmin && (matchedAssignment?.status !== "future" || matchedAssignment.missedCount > 0 ||
+          matchedAssignment.completedCount > 0 || matchedAssignment.history.length > 0 ||
+          matchedWorkouts.some(workout => workout.data.completedAt || workout.data.completed === true ||
+            ["missed", "not_completed", "completed", "completed_off_date"].includes(String(workout.data.status || "").toLowerCase())))) {
         setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_FUTURE_ONLY);
         return false;
       }
@@ -942,6 +1073,10 @@ export function createTrainerProgramTemplateHandlers({
       setAdminClientStatus(STATUS_SELECT_CLIENT);
       return false;
     }
+    if (!canChangeProgramAssignment(clientId)) {
+      setAdminClientStatus(STATUS_OWN_PROGRAMS_ONLY);
+      return false;
+    }
 
     const confirmed = await showAppConfirm("\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u0432\u0441\u0435 \u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u043d\u044b\u0435 \u0442\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0430? \u0423 \u043a\u043b\u0438\u0435\u043d\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u043f\u0443\u0441\u0442\u0430\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430.");
     if (!confirmed) return false;
@@ -975,7 +1110,10 @@ export function createTrainerProgramTemplateHandlers({
         clientProfile: clientData
       });
       const matchedAssignment = assignmentTimeline.find((item) => item.key === assignment.key);
-      if (!canUseAdminFeatures() && matchedAssignment?.status !== "future") {
+      if (!canUseAdminFeatures() && (matchedAssignment?.status !== "future" || matchedAssignment.missedCount > 0 ||
+          matchedAssignment.completedCount > 0 || matchedAssignment.history.length > 0 ||
+          matchedWorkouts.some(workout => workout.data.completedAt || workout.data.completed === true ||
+            ["missed", "not_completed", "completed", "completed_off_date"].includes(String(workout.data.status || "").toLowerCase())))) {
         setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_FUTURE_ONLY);
         return false;
       }
@@ -1129,6 +1267,7 @@ export function createTrainerProgramTemplateHandlers({
             id: exercise.id,
             name: exercise.name,
             video: exercise.video || "",
+            videoPosterTime: exercise.videoPosterTime ?? null,
             requiresWeight: exerciseUsesExternalWeight(exercise),
             sets: makeThreeSets(exercise.sets, exercise.name?.includes("\u041f\u0440\u0435\u0441\u0441") ? 15 : 8)
           }))

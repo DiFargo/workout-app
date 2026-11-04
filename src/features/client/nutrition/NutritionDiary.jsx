@@ -1,5 +1,6 @@
 import { ChevronRight, Plus, Trash2, Utensils, X } from "lucide-react";
 import styles from "./NutritionDiary.module.css";
+import NutritionUndoDeleteToast from "./NutritionUndoDeleteToast";
 
 export default function NutritionDiary({
   nutritionZoukExpanded,
@@ -16,6 +17,9 @@ export default function NutritionDiary({
   onCloseZouk,
   onAddMealFood,
   onEditFood,
+  onRemoveFood,
+  undoDeleteItem,
+  onUndoDelete,
   onOpenMealFoods,
   onSwipeStart,
   onSwipeMove,
@@ -75,6 +79,7 @@ export default function NutritionDiary({
             </header>
 
             <div className={styles.content}>
+              <NutritionUndoDeleteToast inline open={Boolean(undoDeleteItem)} onRestore={onUndoDelete} />
               {nutritionMeals.map((meal) => {
                 const foods = (nutritionToday.foods || []).filter((item) => item.mealId === meal.id);
                 const stats = mealStats[meal.id] || { calories: 0, count: 0 };
@@ -102,7 +107,7 @@ export default function NutritionDiary({
                       <div className={styles.foods}>
                         {foods.map((item) => (
                           <div
-                            className={`${styles.swipeShell} ${deletingFoodId === item.id ? styles.deleting : ""}`}
+                            className={`${styles.swipeShell} ${onRemoveFood ? styles.withRemove : ""} ${deletingFoodId === item.id ? styles.deleting : ""}`}
                             key={item.id}
                           >
                             <div className={styles.deleteBackground}>
@@ -139,6 +144,7 @@ export default function NutritionDiary({
                               <small>ккал</small>
                             </span>
                             </button>
+                            {onRemoveFood && <button type="button" className={styles.removeButton} aria-label={`Удалить запись: ${item.name}`} disabled={deletingFoodId === item.id} onClick={() => onRemoveFood(item.id)}><Trash2 aria-hidden="true" /></button>}
                           </div>
                         ))}
                       </div>

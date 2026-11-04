@@ -1,0 +1,662 @@
+[
+  {
+    "name": "Коктейль молочный «Шоколад» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 63.2,
+      "protein": 2.3,
+      "fat": 2,
+      "carbs": 9
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП, шоколад, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «Пломбир» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 63.2,
+      "protein": 2.3,
+      "fat": 2,
+      "carbs": 9
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП, пломбир, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «Соленая карамель» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 64.8,
+      "protein": 2.3,
+      "fat": 2,
+      "carbs": 9.4
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП, соленая карамель, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «Малина» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 63.2,
+      "protein": 2.3,
+      "fat": 2,
+      "carbs": 9
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП, малина, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «ШЕЙК Клубника» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 68.8,
+      "protein": 2.9,
+      "fat": 2,
+      "carbs": 9.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП ШЕЙК, клубника, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «ШЕЙК Тоффи» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 68.8,
+      "protein": 2.9,
+      "fat": 2,
+      "carbs": 9.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП ШЕЙК, тоффи, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «ШЕЙК Кокос» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 68.8,
+      "protein": 2.9,
+      "fat": 2,
+      "carbs": 9.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП ШЕЙК, кокос, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «ШЕЙК Пломбир» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 68.8,
+      "protein": 2.9,
+      "fat": 2,
+      "carbs": 9.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП ШЕЙК, пломбир, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный «ШЕЙК Банан» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 68.8,
+      "protein": 2.9,
+      "fat": 2,
+      "carbs": 9.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП ШЕЙК, банан, 450 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный CAFE «Капучино» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 60,
+      "protein": 2.7,
+      "fat": 2,
+      "carbs": 7.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП CAFE, капучино, 330 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный CAFE «Арахисовый раф» 2%",
+    "brand": "ТОП",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 63.2,
+      "protein": 2.7,
+      "fat": 2,
+      "carbs": 8.6
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «ТОП CAFE, арахисовый раф, 330 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный PRO высокобелковый «Ваниль»",
+    "brand": "TEOS",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 56.55,
+      "protein": 9,
+      "fat": 0.15,
+      "carbs": 4.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «TEOS PRO, ваниль, 330 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный PRO высокобелковый «Клубника»",
+    "brand": "TEOS",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 56.55,
+      "protein": 9,
+      "fat": 0.15,
+      "carbs": 4.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «TEOS PRO, клубника, 330 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Коктейль молочный PRO высокобелковый «Молочный шоколад»",
+    "brand": "TEOS",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 56.55,
+      "protein": 9,
+      "fat": 0.15,
+      "carbs": 4.8
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «TEOS PRO, молочный шоколад, 330 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Паста творожная «Груша-банан» 3,5%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 111.5,
+      "protein": 7,
+      "fat": 3.5,
+      "carbs": 13
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Паста творожная Савушкин, груша-банан, 120 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Паста творожная «Вишня» 3,5%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 111.5,
+      "protein": 7,
+      "fat": 3.5,
+      "carbs": 13
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Паста творожная Савушкин, вишня, 120 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Паста творожная «Черника» 3,5%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 111.5,
+      "protein": 7,
+      "fat": 3.5,
+      "carbs": 13
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Паста творожная Савушкин, черника, 120 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Паста творожная «Кокос-миндаль» 3,5%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 111.5,
+      "protein": 7,
+      "fat": 3.5,
+      "carbs": 13
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Паста творожная Савушкин, кокос-миндаль, 120 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сырок творожный глазированный «Кактус»",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 361.1,
+      "protein": 9,
+      "fat": 23.5,
+      "carbs": 28.4
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сырок творожный глазированный Савушкин, кактус, 40 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сырок творожный глазированный «Ваниль»",
+    "brand": "Творобушки",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 358.9,
+      "protein": 9.5,
+      "fat": 22.9,
+      "carbs": 28.7
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сырок творожный глазированный Творобушки, ваниль, 40 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сырок творожный глазированный «Клубника»",
+    "brand": "Творобушки",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 358.9,
+      "protein": 9.5,
+      "fat": 22.9,
+      "carbs": 28.7
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сырок творожный глазированный Творобушки, клубника, 40 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сырок творожный глазированный «Манго»",
+    "brand": "Творобушки",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 358.9,
+      "protein": 9.5,
+      "fat": 22.9,
+      "carbs": 28.7
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сырок творожный глазированный Творобушки, манго, 40 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр рассольный «Брынза» 45%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 261.5,
+      "protein": 19.7,
+      "fat": 20.3,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/brynza/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сыр рассольный Брынза, 200 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр мягкий «Брынза Нежная» 45%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 187.6,
+      "protein": 11.5,
+      "fat": 14.8,
+      "carbs": 2.1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/brynza/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сыр мягкий Брынза Нежная, 250 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр мягкий «Моцарелла» 45%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 234,
+      "protein": 18,
+      "fat": 18,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/motsarella-shar/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сыр мягкий Моцарелла, шар, 100 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Моцарелла для пиццы» 40%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 286,
+      "protein": 23,
+      "fat": 21.6,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/motsarella-dlya-pitstsy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сыр полутвердый Моцарелла для пиццы, 200 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Сулугуни» 40%",
+    "brand": "SVEŽA",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 286,
+      "protein": 23,
+      "fat": 21.6,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/suluguni/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сыр полутвердый Сулугуни, 200 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Сыр полутвердый «Монастырский» 45%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 324.3,
+      "protein": 25.5,
+      "fat": 24.7,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/syr/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сыр полутвердый Брест-Литовск Монастырский, 200 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Молоко ультрапастеризованное 3,1%",
+    "brand": "Савушкин",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 58.7,
+      "protein": 3,
+      "fat": 3.1,
+      "carbs": 4.7
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/moloko/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Молоко Савушкин ультрапастеризованное 3,1%, 1 л»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  },
+  {
+    "name": "Масло сливочное «Классическое» 72,5%",
+    "brand": "Брест-Литовск",
+    "manufacturer": "ОАО «Савушкин продукт»",
+    "manufacturerCountry": "BY",
+    "category": "Молочные продукты и сыры",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 660.9,
+      "protein": 0.8,
+      "fat": 72.5,
+      "carbs": 1.3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ru.savushkin.com/products/maslo-slivochnoe/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Карточка «Сливочное масло Брест-Литовск Классическое, 180 г»: показатели на 100 г продукта.",
+      "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+    }
+  }
+]

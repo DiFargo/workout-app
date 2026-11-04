@@ -20,7 +20,7 @@ async function savePhotos({ db, uid, files, upload, compress, createId }) {
     const signature = `${file.name}:${file.size}:${file.lastModified}`;
     if (session.uploads[view]?.signature === signature) return;
     const compressed = await compress(file);
-    const uploaded = await upload(`progress-photos/${uid}/${session.id}/${view}.webp`, compressed, { contentType: "image/webp", cacheControl: "private,max-age=0" });
+    const uploaded = await upload(`progress-photos/${uid}/${session.id}/${view}.webp`, compressed, { contentType: "image/webp", cacheControl: "private,no-store,max-age=0" });
     session.uploads[view] = { signature, url: uploaded.url };
     if (!safeWriteUserJsonStorage(SESSION_KEY, uid, session)) throw new Error("photo-session-storage-full");
   }));

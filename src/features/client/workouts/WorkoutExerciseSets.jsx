@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Pencil } from "lucide-react";
+import { useCallback, useEffect, useId, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { Check, ChevronDown, ChevronUp, Pencil } from "lucide-react";
 import { Pause, Play } from "lucide";
 import MorphingIcon from "../../../shared/ui/MorphingIcon";
+import { useModalBackNavigation } from "../../../shared/hooks/useModalBackNavigation";
 import {
   createWorkoutCountdownDeadline,
   getWorkoutCountdownRemainingSeconds
@@ -65,9 +66,10 @@ function formatWeightValue(value) {
 function buildSetSliderState(value, plannedValue, config) {
   const fallbackValue = parseNumericValue(plannedValue, config.defaultValue);
   const currentValue = parseNumericValue(value, fallbackValue);
+  const maxGrowthStep = config.rangeStep || config.step;
   const maxValue = Math.max(
     config.floorMax,
-    Math.ceil((currentValue + config.padding) / config.step) * config.step
+    Math.ceil((currentValue + config.padding) / maxGrowthStep) * maxGrowthStep
   );
   const clampedValue = clampNumericValue(currentValue, config.min, maxValue);
 
@@ -95,6 +97,7 @@ function getWeightSliderState(value, plannedValue) {
     step: WEIGHT_SLIDER_STEP,
     floorMax: WEIGHT_SLIDER_FLOOR_MAX,
     padding: WEIGHT_SLIDER_PADDING,
+    rangeStep: 40,
     defaultValue: 0
   });
 }
@@ -147,8 +150,24 @@ export default function WorkoutExerciseSets({
   onUpdateSet,
   sharedExerciseAiWeightAdjustment,
   showTitle = true,
-  visibleSetIndexes = null
+  visibleSetIndexes = null,
+  singleSet = false,
+  primaryAction = false,
+  selectedSetIndex: controlledSetIndex = null,
+  onSelectSet,
+  completionControlRef,
+  headerAccessory = null,
+  planLabel = "План подхода"
 }) {
+  const metricsDescriptionId = useId();
+  const [selectedSet, setSelectedSet] = useState(() => {
+    const indexes = Array.isArray(visibleSetIndexes) ? visibleSetIndexes : exercise.sets.map((_, index) => index);
+    return { exerciseId: exercise.id, index: indexes.find((index) => !exercise.sets[index]?.completed) ?? indexes.at(-1) ?? 0 };
+  });
+  const setGestureRef = useRef(null);
+  const suppressSetClickRef = useRef(0);
+  const setPickerRef = useRef(null);
+  const completionMenuRef = useRef(null);
   const [editingSetDraft, setEditingSetDraft] = useState(null);
   const [activeTimedSet, setActiveTimedSet] = useState(null);
   const [pausedTimedSet, setPausedTimedSet] = useState(null);
@@ -159,24 +178,46 @@ export default function WorkoutExerciseSets({
   const wheelScrollFrameRef = useRef({ reps: null, weight: null });
   const wheelSnapTimeoutRef = useRef({ reps: null, weight: null });
   const initializedWheelKeyRef = useRef("");
+  useEffect(() => {
+    if (!singleSet) return undefined;
+    const closeOutsidePicker = (event) => {
+      [setPickerRef.current, completionMenuRef.current].forEach((picker) => {
+        if (picker?.open && !picker.contains(event.target)) picker.open = false;
+      });
+    };
+    document.addEventListener("pointerdown", closeOutsidePicker, true);
+    return () => document.removeEventListener("pointerdown", closeOutsidePicker, true);
+  }, [singleSet]);
   const editingSetIndex = editingSetDraft?.index ?? null;
   const editingSet = editingSetIndex !== null ? exercise.sets[editingSetIndex] : null;
   const editingSetKey = editingSetIndex !== null ? `${exercise.id}:${editingSetIndex}` : "";
+  const editingDraftReps = editingSetDraft?.reps;
+  const editingDraftWeight = editingSetDraft?.weight;
   const repsSliderState = useMemo(
-    () => (editingSetDraft ? getRepsSliderState(editingSetDraft.reps, editingSet?.reps) : null),
-    [editingSetDraft, editingSet?.reps]
+    () => (editingSetIndex !== null ? getRepsSliderState(editingDraftReps, editingSet?.reps) : null),
+    [editingSetIndex, editingDraftReps, editingSet?.reps]
   );
   const weightSliderState = useMemo(
-    () => (editingSetDraft ? getWeightSliderState(editingSetDraft.weight, editingSet?.weight) : null),
-    [editingSetDraft, editingSet?.weight]
+    () => (editingSetIndex !== null ? getWeightSliderState(editingDraftWeight, editingSet?.weight) : null),
+    [editingSetIndex, editingDraftWeight, editingSet?.weight]
   );
+  const repsWheelMin = repsSliderState?.min;
+  const repsWheelMax = repsSliderState?.max;
+  const repsWheelStep = repsSliderState?.step;
   const repsWheelOptions = useMemo(
-    () => (repsSliderState ? buildWheelOptions(repsSliderState, (value) => String(Math.round(value))) : []),
-    [repsSliderState]
+    () => (repsWheelMin !== undefined
+      ? buildWheelOptions({ min: repsWheelMin, max: repsWheelMax, step: repsWheelStep }, (value) => String(Math.round(value)))
+      : []),
+    [repsWheelMin, repsWheelMax, repsWheelStep]
   );
+  const weightWheelMin = weightSliderState?.min;
+  const weightWheelMax = weightSliderState?.max;
+  const weightWheelStep = weightSliderState?.step;
   const weightWheelOptions = useMemo(
-    () => (weightSliderState ? buildWheelOptions(weightSliderState, formatWeightValue) : []),
-    [weightSliderState]
+    () => (weightWheelMin !== undefined
+      ? buildWheelOptions({ min: weightWheelMin, max: weightWheelMax, step: weightWheelStep }, formatWeightValue)
+      : []),
+    [weightWheelMin, weightWheelMax, weightWheelStep]
   );
 
   const clearWheelSettleWork = useCallback(() => {
@@ -268,6 +309,8 @@ export default function WorkoutExerciseSets({
     setEditingSetDraft(null);
   }
 
+  useModalBackNavigation({ open: Boolean(editingSet), onBack: closeEditModal });
+
   function saveEditModal() {
     if (!editingSetDraft) {
       return;
@@ -289,7 +332,7 @@ export default function WorkoutExerciseSets({
     closeEditModal();
   }
 
-  function toggleSetCompleted(index) {
+  const toggleSetCompleted = useCallback((index) => {
     if (!canToggleWorkoutSetCompleted(exercise.sets, index)) return;
     if (activeTimedSet?.index === index) {
       const completionKey = `${exercise.id}:${index}:${activeTimedSet.deadline}`;
@@ -303,7 +346,11 @@ export default function WorkoutExerciseSets({
       setTimedSetSeconds(0);
     }
     onToggleSetCompleted(exercise.id, index);
-  }
+  }, [activeTimedSet, exercise.id, exercise.sets, onToggleSetCompleted, pausedTimedSet]);
+
+  // The dock uses the same completion path as the row, including cancellation
+  // of running/paused timed sets and its late-timer duplicate guard.
+  useImperativeHandle(completionControlRef, () => ({ toggleSetCompleted }), [toggleSetCompleted]);
 
   function toggleTimedSetTimer(index, durationSeconds) {
     if (exercise.sets[index]?.completed || !canToggleWorkoutSetCompleted(exercise.sets, index)) return;
@@ -350,13 +397,96 @@ export default function WorkoutExerciseSets({
   )
     .map((index) => ({ index, set: exercise.sets[index] }))
     .filter(({ set }) => Boolean(set));
+  const selectedSetIndex = Number.isInteger(controlledSetIndex) && visibleSets.some(({ index }) => index === controlledSetIndex)
+    ? controlledSetIndex
+    : selectedSet.exerciseId === exercise.id && visibleSets.some(({ index }) => index === selectedSet.index)
+    ? selectedSet.index
+    : (visibleSets.find(({ set }) => !set.completed) || visibleSets.at(-1))?.index;
+  const selectedPosition = visibleSets.findIndex(({ index }) => index === selectedSetIndex);
+  const displayedSets = singleSet ? visibleSets.filter(({ index }) => index === selectedSetIndex) : visibleSets;
+  const setSelectionCaption = displayedSets.some(({ index }) => !canToggleWorkoutSetCompleted(exercise.sets, index))
+    ? exercise.sets[selectedSetIndex]?.completed
+      ? primaryAction ? "Просмотр выполненного подхода" : "Отмените последний подход"
+      : `Сначала подход ${exercise.sets.findIndex((set) => !set.completed) + 1}`
+    : `Выполнено ${exercise.sets.filter((set) => set.completed).length} из ${exercise.sets.length}`;
+  const selectedSetCompleted = Boolean(exercise.sets[selectedSetIndex]?.completed);
+  const selectedSetStatus = selectedSetCompleted
+    ? "Выполнен"
+    : canToggleWorkoutSetCompleted(exercise.sets, selectedSetIndex)
+      ? "Нужно выполнить"
+      : setSelectionCaption;
+
+  function selectSet(index) {
+    if (!visibleSets.some((item) => item.index === index)) return;
+    const firstPendingIndex = exercise.sets.findIndex((set) => !set.completed);
+    if (primaryAction && firstPendingIndex >= 0 && index > firstPendingIndex) return;
+    setSelectedSet({ exerciseId: exercise.id, index });
+    onSelectSet?.(index);
+  }
+
+  function moveSelectedSet(direction) {
+    const next = visibleSets[selectedPosition + direction];
+    if (next) selectSet(next.index);
+  }
+
+  function closeSetPicker() {
+    if (!setPickerRef.current) return;
+    setPickerRef.current.open = false;
+    setPickerRef.current.querySelector("summary")?.focus({ preventScroll: true });
+  }
+
+  function closeCompletionMenu(restoreFocus = false) {
+    const menu = completionMenuRef.current;
+    if (!menu) return;
+    menu.open = false;
+    if (restoreFocus) menu.querySelector("summary")?.focus({ preventScroll: true });
+  }
+
+  function startSetGesture(event) {
+    if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) {
+      setGestureRef.current = null;
+      suppressSetClickRef.current = event.timeStamp + 500;
+      return;
+    }
+    suppressSetClickRef.current = 0;
+    setGestureRef.current = { id: event.pointerId, x: event.clientX, y: event.clientY, moved: false };
+  }
+
+  function moveSetGesture(event) {
+    const gesture = setGestureRef.current;
+    if (!gesture || gesture.id !== event.pointerId) return;
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+    if (Math.abs(dy) < 8 && Math.abs(dx) < 8) return;
+    gesture.moved = true;
+    if (Math.abs(dy) > Math.abs(dx) * 1.25) {
+      event.currentTarget.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    }
+  }
+
+  function endSetGesture(event) {
+    const gesture = setGestureRef.current;
+    setGestureRef.current = null;
+    if (!gesture || gesture.id !== event.pointerId || !gesture.moved) return;
+    suppressSetClickRef.current = event.timeStamp + 500;
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+    if (Math.abs(dy) >= 32 && Math.abs(dy) > Math.abs(dx) * 1.25) moveSelectedSet(dy < 0 ? 1 : -1);
+  }
 
   function setRepsFromWheel(value) {
-    setEditingSetDraft((draft) => (draft ? { ...draft, reps: String(Math.round(Number(value))) } : draft));
+    const nextReps = String(Math.round(Number(value)));
+    setEditingSetDraft((draft) => (
+      draft && draft.reps !== nextReps ? { ...draft, reps: nextReps } : draft
+    ));
   }
 
   function setWeightFromWheel(value) {
-    setEditingSetDraft((draft) => (draft ? { ...draft, weight: formatWeightValue(Number(value)) } : draft));
+    const nextWeight = formatWeightValue(Number(value));
+    setEditingSetDraft((draft) => (
+      draft && draft.weight !== nextWeight ? { ...draft, weight: nextWeight } : draft
+    ));
   }
 
   function handleWheelScroll(event, options, field) {
@@ -413,14 +543,56 @@ export default function WorkoutExerciseSets({
 
   return (
     <section
-      className={styles.root}
+      className={`${styles.root} ${singleSet ? styles.singleSet : ""} ${primaryAction ? styles.primaryActionSets : ""}`}
       data-testid="workout-exercise-sets"
       data-css-module-scope="workout-exercise-sets"
+      onKeyDown={singleSet ? (event) => {
+        if (event.target.closest('[data-modal-surface], details[open], [data-workout-set-accessory]')) return;
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+          event.preventDefault();
+          moveSelectedSet(event.key === "ArrowDown" ? 1 : -1);
+          setPickerRef.current?.querySelector("summary")?.focus({ preventScroll: true });
+        }
+      } : undefined}
     >
       {showTitle && <div className={styles.title}>План на сегодня</div>}
-      <div className={styles.columnLabels} aria-hidden="true"><span>№</span><span>{hasExternalWeight ? "Вес / повторы" : "Повторы / время"}</span></div>
+      {singleSet && visibleSets.length > 0 ? (
+        <nav className={`${styles.setNavigation} ${headerAccessory ? styles.withAccessory : ""}`} aria-label="Выбор подхода">
+          {!primaryAction && <button type="button" className={styles.setArrow} aria-label="Предыдущий подход" disabled={selectedPosition <= 0} onClick={() => moveSelectedSet(-1)}><ChevronUp size={20} aria-hidden="true" /></button>}
+          <details ref={setPickerRef} className={styles.setPicker} onBlur={(event) => {
+            // WebKit may not focus a tapped option. A null relatedTarget must
+            // not remove it before its click; outside pointerdown closes it.
+            if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
+          }} onKeyDown={(event) => {
+            if (event.key === "Escape") { event.preventDefault(); closeSetPicker(); }
+          }}>
+            <summary role="button" aria-label={`Все подходы, выбран подход ${selectedSetIndex + 1} из ${exercise.sets.length}`} aria-description={setSelectionCaption}>
+              <span className={styles.setPickerCopy}>
+                <span className={styles.setPickerLabel}>
+                  <span aria-live="polite" aria-atomic="true">Подход {selectedSetIndex + 1} из {exercise.sets.length}</span>
+                  <ChevronDown size={16} aria-hidden="true" />
+                </span>
+                {primaryAction ? <span
+                  className={`${styles.setCaption} ${styles.setStatus} ${selectedSetCompleted ? styles.setStatusCompleted : ""}`}
+                  data-testid="workout-set-status"
+                  role="status"
+                  aria-label={`Подход ${selectedSetIndex + 1}: ${selectedSetStatus.toLocaleLowerCase("ru-RU")}`}
+                >
+                  {selectedSetCompleted && <Check size={12} aria-hidden="true" />}
+                  {selectedSetStatus}
+                </span> : <span className={setSelectionCaption.startsWith("Выполнено ") ? styles.srOnly : styles.setCaption} role="status">{setSelectionCaption}</span>}
+              </span>
+            </summary>
+            <div className={styles.setOptions}>
+              {visibleSets.map(({ set, index }) => <button type="button" key={index} disabled={primaryAction && !set.completed && !canToggleWorkoutSetCompleted(exercise.sets, index)} aria-label={`Перейти к подходу ${index + 1}`} aria-current={index === selectedSetIndex ? "true" : undefined} onClick={() => { selectSet(index); closeSetPicker(); }}><span>Подход {index + 1}</span><span>{set.completed ? <Check size={18} aria-label="Выполнен" /> : "Не выполнен"}</span></button>)}
+            </div>
+          </details>
+          {!primaryAction && <button type="button" className={styles.setArrow} aria-label="Следующий подход" disabled={selectedPosition >= visibleSets.length - 1} onClick={() => moveSelectedSet(1)}><ChevronDown size={20} aria-hidden="true" /></button>}
+          {headerAccessory}
+        </nav>
+      ) : <div className={styles.columnLabels} aria-hidden="true"><span>№</span><span>{hasExternalWeight ? "Вес / повторы" : "Повторы / время"}</span></div>}
       <div className={styles.list}>
-        {visibleSets.map(({ set, index }) => {
+        {displayedSets.map(({ set, index }) => {
           const durationSeconds = getTimedSetDurationSeconds(exercise, set);
           const isTimedSet = durationSeconds > 0;
           const isTimedSetRunning = activeTimedSet?.index === index;
@@ -432,6 +604,9 @@ export default function WorkoutExerciseSets({
               : durationSeconds;
           const repsValue = getPlannedValue(set.enteredReps, set.reps);
           const weightValue = getPlannedValue(set.enteredWeight, set.weight);
+          const unifiedMetrics = singleSet && primaryAction && !isTimedSet;
+          const hasEnteredValues = [set.enteredReps, set.enteredWeight]
+            .some((value) => value != null && String(value).trim() !== "");
           const isStartingWeightEstimate = hasExternalWeight
             && set.startingWeightSource === "estimate"
             && !set.startingWeightConfirmed;
@@ -441,13 +616,31 @@ export default function WorkoutExerciseSets({
             : set.completed
               ? "Сначала снимите отметку с последнего выполненного подхода"
               : `Сначала выполните подход ${exercise.sets.findIndex((item) => !item.completed) + 1}`;
+          const planContent = <>
+            {isTimedSet ? (
+              <strong className={styles.weight}>{formatTimedSetDuration(shownTimedSetSeconds)} <small>на время</small></strong>
+            ) : <>
+              {hasExternalWeight && <strong className={styles.weight}>{weightValue ? String(weightValue).replace(".", ",") : "—"} <small>кг</small></strong>}
+              {hasExternalWeight && <span className={styles.times}>×</span>}
+              <strong className={styles.weight}>{repsValue || "—"}{!hasExternalWeight && <small> повт.</small>}</strong>
+            </>}
+            {isStartingWeightEstimate && <span className={styles.srOnly}>Стартовый вес — ориентир</span>}
+            {isTimedSetRunning && <span className={styles.srOnly}>Таймер идёт</span>}
+          </>;
 
           return (
             <div
               data-testid="workout-exercise-set-row"
-              className={`${styles.row} ${set.completed ? styles.completed : ""} ${!canToggleCompleted ? styles.locked : ""} ${isTimedSet ? styles.timedRow : ""}`}
+              className={`${styles.row} ${set.completed ? styles.completed : ""} ${!canToggleCompleted ? styles.locked : ""} ${isTimedSet ? styles.timedRow : ""} ${unifiedMetrics ? styles.unifiedMetricsRow : ""}`}
               key={`${exercise.id}:${index}`}
-              onClick={() => toggleSetCompleted(index)}
+              onClick={singleSet ? undefined : () => toggleSetCompleted(index)}
+              onPointerDown={singleSet ? startSetGesture : undefined}
+              onPointerMove={singleSet ? moveSetGesture : undefined}
+              onPointerUp={singleSet ? endSetGesture : undefined}
+              onPointerCancel={singleSet ? (event) => { setGestureRef.current = null; suppressSetClickRef.current = event.timeStamp + 500; } : undefined}
+              onClickCapture={singleSet ? (event) => {
+                if (event.timeStamp < suppressSetClickRef.current) { event.preventDefault(); event.stopPropagation(); }
+              } : undefined}
             >
               <span
                 className={styles.number}
@@ -457,6 +650,25 @@ export default function WorkoutExerciseSets({
                 {index + 1}
               </span>
 
+              {unifiedMetrics ? (
+                <button
+                  type="button"
+                  className={styles.metricsButton}
+                  data-css-module-control="workout-exercise-sets"
+                  aria-label={`Изменить подход ${index + 1}`}
+                  aria-describedby={`${metricsDescriptionId}-${index}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setEditingSetDraft({ index, reps: repsValue || "10", weight: weightValue || "0" });
+                  }}
+                >
+                  <span id={`${metricsDescriptionId}-${index}`} className={styles.metricsCopy}>
+                    <span className={styles.metricsLabel}>{set.completed ? "Результат подхода" : hasEnteredValues ? "Твои значения" : planLabel}</span>
+                    <span className={styles.plan}>{planContent}</span>
+                  </span>
+                  {!set.completed && <Pencil size={20} strokeWidth={1.65} aria-hidden="true" />}
+                </button>
+              ) : <>
               <div className={styles.actions}>
                 {isTimedSet ? (
                   <button
@@ -504,39 +716,82 @@ export default function WorkoutExerciseSets({
               </div>
 
               <div className={styles.plan}>
-                {isTimedSet ? (
-                  <strong className={styles.weight}>{formatTimedSetDuration(shownTimedSetSeconds)} <small>на время</small></strong>
-                ) : (
-                  <>
-                    {hasExternalWeight && <strong className={styles.weight}>{weightValue ? String(weightValue).replace(".", ",") : "—"} <small>кг</small></strong>}
-                    {hasExternalWeight && <span className={styles.times}>×</span>}
-                    <strong className={styles.weight}>{repsValue || "—"}{!hasExternalWeight && <small> повт.</small>}</strong>
-                  </>
-                )}
-                {isStartingWeightEstimate && <span className={styles.srOnly}>Стартовый вес — ориентир</span>}
-                {isTimedSetRunning && <span className={styles.srOnly}>Таймер идёт</span>}
+                {planContent}
               </div>
+              </>}
 
-                <button
+                {singleSet && primaryAction && set.completed ? (
+                  <details
+                    ref={completionMenuRef}
+                    className={styles.completionMenu}
+                    onPointerDown={(event) => event.stopPropagation()}
+                    onBlur={(event) => {
+                      // As in the set picker, a WebKit null relatedTarget must
+                      // not remove a tapped action before its click arrives.
+                      if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) closeCompletionMenu();
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === "Escape") {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        closeCompletionMenu(true);
+                      } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        event.currentTarget.open = true;
+                        event.currentTarget.querySelector("button:not(:disabled)")?.focus({ preventScroll: true });
+                      }
+                    }}
+                  >
+                    <summary
+                      role="button"
+                      className={styles.completeButton}
+                      aria-label={`Подход ${index + 1} выполнен, действия`}
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <Check size={18} strokeWidth={2.1} aria-hidden="true" />
+                      <span>Выполнен</span>
+                      <ChevronDown size={14} aria-hidden="true" />
+                    </summary>
+                    <div className={styles.completionOptions}>
+                      <button
+                        type="button"
+                        disabled={!canToggleCompleted}
+                        aria-label={`Снять отметку выполнения подхода ${index + 1}`}
+                        aria-description={completionHint}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          closeCompletionMenu();
+                          setPickerRef.current?.querySelector("summary")?.focus({ preventScroll: true });
+                          toggleSetCompleted(index);
+                        }}
+                      >
+                        Снять отметку выполнения
+                      </button>
+                      {!canToggleCompleted && <small>{completionHint}</small>}
+                    </div>
+                  </details>
+                ) : (!primaryAction || set.completed) ? <button
                   type="button"
                   className={styles.completeButton}
-                  aria-label={set.completed ? `Подход ${index + 1} выполнен` : `Выполнить подход ${index + 1}`}
-                  aria-pressed={set.completed}
+                  aria-label={primaryAction ? `Отменить выполнение подхода ${index + 1}` : set.completed ? `Подход ${index + 1} выполнен` : `Выполнить подход ${index + 1}`}
+                  aria-pressed={Boolean(set.completed)}
                   disabled={!canToggleCompleted}
                   title={completionHint}
                   aria-description={completionHint}
                   onClick={(event) => {
                     event.stopPropagation();
+                    if (singleSet) selectSet(index);
                     toggleSetCompleted(index);
                   }}
                 >
                   <Check size={24} strokeWidth={2.1} aria-hidden="true" />
-                </button>
+                  {singleSet && <span>{primaryAction ? "Отменить" : set.completed ? "Выполнен" : "Готово"}</span>}
+                </button> : !unifiedMetrics && <span className={styles.pendingState}>План</span>}
             </div>
           );
         })}
       </div>
-
       {editingSet && (
         <div className={styles.modalBackdrop} data-modal-backdrop="true" role="presentation" onClick={closeEditModal}>
           <div

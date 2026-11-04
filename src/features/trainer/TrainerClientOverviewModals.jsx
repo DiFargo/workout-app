@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import PrivateProgressPhoto from "../../components/media/PrivateProgressPhoto.jsx";
 import { X } from "lucide-react";
 import styles from "./TrainerClientOverviewModals.module.css";
 
@@ -135,7 +136,7 @@ export default function TrainerClientOverviewModals({
                         <strong>{formatTrainerSummaryDate(photo.date || photo.createdAt)}</strong>
                         <div>
                           {[photo.frontUrl, photo.sideUrl, photo.backUrl].filter(Boolean).map((url, index) => (
-                            <img key={`${index}_${url}`} src={url} alt="" loading="lazy" />
+                            <PrivateProgressPhoto key={`${index}_${url}`} source={url} alt="" loading="lazy" />
                           ))}
                         </div>
                         {photo.comment && <small>{photo.comment}</small>}

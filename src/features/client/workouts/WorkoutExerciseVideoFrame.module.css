@@ -45,16 +45,18 @@
   object-fit: cover;
 }
 :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl {
-  width: 72px;
-  min-width: 72px;
-  height: 72px;
-  min-height: 72px;
+  --workout-video-glass-edge: rgba(255,255,255,.18);
+  --workout-video-glass-shadow: 0 2px 8px rgba(0,0,0,.12);
+  width: 52px;
+  min-width: 52px;
+  height: 52px;
+  min-height: 52px;
   opacity: 1;
 }
 :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl > svg {
-  width: 30px;
-  height: 30px;
-  stroke-width: 3;
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.5;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .25));
 }
 :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl > svg[data-icon-state="play"] {
@@ -119,6 +121,26 @@
   object-position: center;
   cursor: pointer;
   pointer-events: auto;
+}
+
+.protectionMark {
+  position: absolute;
+  top: 12%;
+  left: 9%;
+  z-index: 1;
+  max-width: 82%;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: clamp(9px, 2.4vw, 12px);
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  animation: videoWatermarkDrift 22s ease-in-out infinite alternate;
 }
 
 .loading {
@@ -305,9 +327,9 @@
   }
 }
 
-/* Stable 4:3 media; its content scrolls independently of the fixed dock. */
+/* Stable square media; its content scrolls independently of the fixed dock. */
 :global(:root[data-app-theme="warm-light"]) .frame.frame {
-  width: 100%; max-width: none; height: auto; min-height: 0; max-height: none; aspect-ratio: 4 / 3;
+  width: 100%; max-width: none; height: auto; min-height: 0; max-height: none; aspect-ratio: 1;
   padding: 0; margin: 0; border: 0; border-radius: 26px; background: #f1eef5; box-shadow: none; overflow: hidden;
 }
 :global(:root[data-app-theme="warm-light"]) .video.video { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; margin: 0; border-radius: 26px; object-fit: contain; }
@@ -339,6 +361,9 @@
   touch-action: manipulation;
   transition: opacity 140ms ease, transform 140ms cubic-bezier(.23,1,.32,1), box-shadow 140ms ease;
 }
+:global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl {
+  background: var(--workout-video-play-surface, rgba(18,18,20,.52));
+}
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :global(:root[data-app-theme="warm-light"]) .frame.frame { --workout-video-glass-surface: rgba(18,18,20,.46); }
 }
@@ -359,8 +384,22 @@
   .inlineControl:active { transform: translate(-50%, -50%); }
   .fullscreenButton:active { transform: none; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .protectionMark { animation: none; }
+}
+
+@keyframes videoWatermarkDrift {
+  0% { transform: translate(0, 0) rotate(-8deg); }
+  30% { transform: translate(36px, 14px) rotate(-3deg); }
+  65% { transform: translate(14px, 34px) rotate(5deg); }
+  100% { transform: translate(-4px, 12px) rotate(-4deg); }
+}
 @media (prefers-reduced-transparency: reduce) {
-  :global(:root[data-app-theme="warm-light"]) .frame.frame { --workout-video-glass-surface: rgba(34,34,38,.94); }
+  :global(:root[data-app-theme="warm-light"]) .frame.frame {
+    --workout-video-glass-surface: rgba(34,34,38,.94);
+    --workout-video-play-surface: rgb(34,34,38);
+  }
   :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl,
   :global(:root[data-app-theme="warm-light"]) .fullscreenButton.fullscreenButton {
     -webkit-backdrop-filter: none;

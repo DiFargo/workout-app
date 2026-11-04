@@ -135,18 +135,25 @@ test("remote admin deletion closes the client workspace without deleting Firesto
 
 test("new trainer workspace exposes deletion only through the admin capability", async () => {
   const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
+  const actionsSheet = await readFile(new URL("../src/components/trainer/TrainerClientActionsSheet.jsx", import.meta.url), "utf8");
   const clientsRoute = await readFile(new URL("../src/features/trainer/TrainerClientsWorkspaceRoute.jsx", import.meta.url), "utf8");
   const dashboardRoute = await readFile(new URL("../src/features/trainer/TrainerDashboardWorkspaceRoute.jsx", import.meta.url), "utf8");
   const bridge = await readFile(new URL("../src/features/trainer/trainerBridgeHandlers.js", import.meta.url), "utf8");
   const functions = await readFile(new URL("../functions/index.js", import.meta.url), "utf8");
+  const adminWorkspaceCss = await readFile(new URL("../src/components/admin/AdminWorkspace.module.css", import.meta.url), "utf8");
 
   assert.match(clientsRoute, /canDeleteClients=\{canUseAdminFeatures\(\)\}/);
   assert.match(dashboardRoute, /canDeleteClients=\{canUseAdminFeatures\(\)\}/);
-  assert.match(workspace, /canDeleteClient[\s\S]*?id: "delete", label: "Удалить клиента"/);
+  assert.match(workspace, /<TrainerClientActionsSheet[\s\S]*?canDeleteClient=\{canDeleteClient\}/);
+  assert.match(actionsSheet, /canDeleteClient \? row\("delete", Trash2, "Удалить клиента"/);
   assert.match(workspace, /canDeleteClients && !\["admin", "trainer"\]\.includes/);
+  assert.match(workspace, /if \(!clientQuestionnaireCompleted\)[\s\S]*?canDeleteClient \?[\s\S]*?trainerNextPendingClientDelete[\s\S]*?runClientAction\("delete"\)/);
+  assert.match(adminWorkspaceCss, /\.header \{[^}]*border-radius: 20px;[^}]*background: #fff/);
   assert.match(bridge, /if \(action === "delete"\)[\s\S]*?deleteClientEverywhereFromAdminPanel/);
   assert.match(functions, /assertAdminContext\(context\)[\s\S]*?Only client accounts can be deleted here/);
   assert.match(functions, /collection\("loginAliases"\)\.where\("uid", "==", uid\)/);
+  assert.match(functions, /getTelegramIdentityIds\(userData\)[\s\S]*?isTelegramIdentityOwnedBy\(snapshot\.data\(\), uid\)/);
+  assert.match(functions, /collection\("telegramIdentities"\)\.doc\(telegramUserId\)/);
   assert.match(functions, /collection\("trainerClients"\)\.doc\(uid\)/);
   assert.match(functions, /"admin-delete-user"[\s\S]*?limit: 50/);
 });

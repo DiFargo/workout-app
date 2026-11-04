@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, Check, Clock3, Dumbbell, MapPin, SlidersHorizontal, Sparkles } from "lucide-react";
+import { Check, Clock3, Dumbbell, MapPin, SlidersHorizontal, Sparkles } from "lucide-react";
 
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import {
@@ -18,6 +18,7 @@ import { requestBasicWorkoutTodayPlan } from "./basicWorkoutAi";
 import { getBasicWorkoutGenerationNotice, assertBasicWorkoutGenerationAllowed } from "../../../utils/basicWorkoutGeneration.js";
 import { buildBasicWorkoutClientContext } from "../../../utils/basicWorkoutClientContext.js";
 import BasicWorkoutProfileSummary from "./BasicWorkoutProfileSummary.jsx";
+import BasicWorkoutFormatSwitcher from "./BasicWorkoutFormatSwitcher.jsx";
 import styles from "./BasicWorkoutTodayPage.module.css";
 
 const DEFAULT_PREFERENCES = {
@@ -80,7 +81,11 @@ function getInitialPreferences(basicWorkoutQuiz = {}) {
   };
 }
 
-export default function BasicWorkoutTodayPage({
+export default function BasicWorkoutTodayPage(props) {
+  return <BasicWorkoutTodaySession key={props.userId || "anonymous"} {...props} />;
+}
+
+function BasicWorkoutTodaySession({
   renderClientMainBottomBar,
   basicWorkoutQuiz,
   startingWeightProfile,
@@ -110,6 +115,12 @@ export default function BasicWorkoutTodayPage({
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [selectionNotice, setSelectionNotice] = useState("");
+  const [setupStep, setSetupStep] = useState(0);
+  const setupHeading = useRef(null);
+  function changeSetupStep(next) {
+    setSetupStep(next);
+    requestAnimationFrame(() => setupHeading.current?.focus());
+  }
   const clientContext = useMemo(() => buildBasicWorkoutClientContext({ profile: startingWeightProfile,
     measurements: profileMeasurements, history: workoutHistory }), [startingWeightProfile, profileMeasurements, workoutHistory]);
   const historyRequested = useRef("");
@@ -135,10 +146,6 @@ export default function BasicWorkoutTodayPage({
   const generationLimitMessage = generationAllowance.isLimitReached
     ? `Лимит подборок на сегодня исчерпан. Завтра снова будет ${BASIC_WORKOUT_TODAY_MAX_GENERATIONS_PER_DAY}.`
     : `Подборок на сегодня осталось: ${generationAllowance.remaining} из ${BASIC_WORKOUT_TODAY_MAX_GENERATIONS_PER_DAY}.`;
-
-  useEffect(() => {
-    setGenerationRecord(safeReadJsonStorage(generationStorageKey, null));
-  }, [generationStorageKey]);
 
   function updatePreference(field, value) {
     const next = { ...preferences, [field]: value };
@@ -296,32 +303,24 @@ export default function BasicWorkoutTodayPage({
         compact
         title="Базовые тренировки"
         eyebrow="Самостоятельный режим"
-        onBack={handleBack}
-        backAriaLabel="Вернуться к тренировкам"
+        onBack={!generatedWorkout && setupStep === 1 ? () => changeSetupStep(0) : handleBack}
+        backAriaLabel={!generatedWorkout && setupStep === 1 ? "Вернуться к выбору зон" : "Вернуться к тренировкам"}
         className={styles.topBar}
         testId="basic-workout-today-header"
         scope="basic-workout-today-header"
       />
 
-      <nav className={styles.planSwitcher} aria-label="Формат базовой тренировки" data-testid="basic-workout-plan-switcher">
-        <button type="button" aria-current="page">
-          <Dumbbell aria-hidden="true" />
-          <span><strong>На сегодня</strong><small>Быстрая тренировка</small></span>
-        </button>
-        <button type="button" onClick={onOpenLongPlan}>
-          <CalendarDays aria-hidden="true" />
-          <span><strong>На 4 недели</strong><small>Полная программа</small></span>
-        </button>
-      </nav>
+      <BasicWorkoutFormatSwitcher mode="today" onMonth={onOpenLongPlan} />
 
       {!generatedWorkout ? (
         <main className={styles.content}>
           <section className={styles.intro}>
-            <span className={styles.eyebrow}>Выбери зоны</span>
-            <h2>Что тренируем сегодня?</h2>
-            <p>Выбери до трёх зон или Full body. Gemini подберёт упражнения внутри базового шаблона. Рабочий вес задаёшь ты.</p>
+            <span className={styles.eyebrow}>Шаг {setupStep + 1} из 2</span>
+            <h2 ref={setupHeading} tabIndex={-1}>{setupStep === 0 ? "Что будем тренировать?" : "Настроим тренировку"}</h2>
+            <p>{setupStep === 0 ? "Выбери до трёх зон или всё тело." : "Укажи время и условия. Перед сохранением покажем упражнения."}</p>
           </section>
 
+          {setupStep === 0 ? <>
           <section className={styles.targetGrid} aria-label="Выбор зон тренировки" aria-describedby="basic-workout-target-help">
             {BASIC_WORKOUT_TODAY_TARGETS.map((target) => {
               const isSelected = selectedTargetIds.includes(target.id);
@@ -333,14 +332,14 @@ export default function BasicWorkoutTodayPage({
                   key={target.id}
                   type="button"
                   aria-pressed={isSelected}
-                  aria-label={`${target.label}. ${isSelected ? "Выбрано" : "Не выбрано"}.`}
+                  aria-label={`${target.id === "full_body" ? "Всё тело" : target.label}. ${isSelected ? "Выбрано" : "Не выбрано"}.`}
                   onClick={() => toggleTarget(target.id)}
                 >
                   <span className={styles.targetImage} aria-hidden="true">
                     <img src={target.image} alt="" loading="lazy" />
                   </span>
                   <span className={styles.targetCopy}>
-                    <strong>{target.label}</strong>
+                    <strong>{target.id === "full_body" ? "Всё тело" : target.label}</strong>
                     <small>{target.description}</small>
                   </span>
                   {isSelected ? <span className={styles.selectedIcon}><Check aria-hidden="true" /></span> : null}
@@ -348,6 +347,12 @@ export default function BasicWorkoutTodayPage({
               );
             })}
           </section>
+          <div className={styles.actionBar}>
+          <p id="basic-workout-target-help" className={styles.targetHelp} role="status">{selectionNotice || (selectedTargets.length ? `Выбрано: ${selectedTargetLabel.replace("Full body", "Всё тело")}` : "Выбери хотя бы одну зону")}</p>
+          <button className={styles.primaryButton} type="button" disabled={!selectedTargets.length} onClick={() => changeSetupStep(1)}>Далее: время и условия</button>
+          </div>
+          </> : <>
+          <button className={styles.selectionSummary} type="button" onClick={() => changeSetupStep(0)}><span><small>Зоны тренировки</small><strong>{selectedTargetLabel.replace("Full body", "Всё тело")}</strong></span><span>Изменить</span></button>
 
           <section className={styles.settingsCard} aria-label="Параметры тренировки">
             <div className={styles.settingGroup}>
@@ -381,8 +386,8 @@ export default function BasicWorkoutTodayPage({
             <div className={styles.locationRow}>
               <span><MapPin aria-hidden="true" /> Где тренируешься?</span>
               <div className={styles.segmentedControl}>
-                <button data-selected={preferences.location === "gym"} type="button" onClick={() => updatePreference("location", "gym")}>Зал</button>
-                <button data-selected={preferences.location === "home"} type="button" onClick={() => updatePreference("location", "home")}>Дома</button>
+                <button data-selected={preferences.location === "gym"} aria-pressed={preferences.location === "gym"} type="button" onClick={() => updatePreference("location", "gym")}>Зал</button>
+                <button data-selected={preferences.location === "home"} aria-pressed={preferences.location === "home"} type="button" onClick={() => updatePreference("location", "home")}>Дома</button>
               </div>
             </div>
           </section>
@@ -426,14 +431,11 @@ export default function BasicWorkoutTodayPage({
               </label>
             </div>
           </details>
-          <BasicWorkoutProfileSummary context={clientContext} loading={workoutHistoryLoading} onEdit={onOpenCabinet}
+          <details className={styles.advancedSettings}><summary>Данные профиля для подбора</summary><BasicWorkoutProfileSummary context={clientContext} loading={workoutHistoryLoading} onEdit={onOpenCabinet}
             specialStatus={preferences.specialStatus} onSpecialStatusChange={(value) => updatePreference("specialStatus", value)} />
-
-          <p id="basic-workout-target-help" className={styles.targetHelp} role="status">
-            {selectionNotice || (selectedTargets.length
-              ? `Выбрано: ${selectedTargetLabel}.`
-              : `Можно выбрать от одной до ${BASIC_WORKOUT_TODAY_MAX_TARGETS} зон.`)}
-          </p>
+          </details>
+          <p className={styles.targetHelp}>Рабочий вес задаёшь сам. Ограничения и пожелания — в разделе «Настроить под себя».</p>
+          <div className={styles.actionBar}>
           <p
             className={styles.generationLimit}
             data-limit-reached={generationAllowance.isLimitReached}
@@ -441,14 +443,6 @@ export default function BasicWorkoutTodayPage({
           >
             {generationLimitMessage}
           </p>
-          {selectedTargets.length ? (
-            <aside className={styles.selectionHint} role="status">
-              <strong>{selectedTargetLabel}</strong>
-              <span>{selectedTargets[0]?.id === "full_body"
-                ? "Сбалансированная тренировка на всё тело."
-                : "ИИ включит движение для каждой выбранной зоны, если оно безопасно в текущих условиях."}</span>
-            </aside>
-          ) : null}
           {error ? <p className={styles.errorMessage} role="alert">{error}</p> : null}
           <button
             className={styles.primaryButton}
@@ -459,6 +453,8 @@ export default function BasicWorkoutTodayPage({
           >
             <Sparkles aria-hidden="true" /> {isGenerating ? "Составляем тренировку…" : "Составить тренировку"}
           </button>
+          </div>
+          </>}
         </main>
       ) : (
         <main className={styles.resultContent}>

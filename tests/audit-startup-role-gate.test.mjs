@@ -26,6 +26,16 @@ const render = (role, overrides = {}) => renderToStaticMarkup(React.createElemen
   onboardingStep: 0, aiNutritionProfileDraft: {}, firstSetupSaveStatus: "", login: "", password: "", loginFieldErrors: {},
   setOnboardingStep() {}, setAiNutritionProfileDraft() {}, handleFirstSetupSubmit() {}, logout() {}, ...overrides
 }));
+const renderWithTelegramContext = (search, initData, overrides = {}) => {
+  const previousWindow = globalThis.window;
+  const hadWindow = Object.hasOwn(globalThis, "window");
+  globalThis.window = { location: { search }, Telegram: { WebApp: { initData } } };
+  try { return render("pending-client", { handleTelegramMiniAppAuth() {}, ...overrides }); }
+  finally {
+    if (hadWindow) globalThis.window = previousWindow;
+    else delete globalThis.window;
+  }
+};
 
 test("an incomplete client still sees the real onboarding", () => {
   assert.match(render("client"), /Добро пожаловать!/);
@@ -45,6 +55,64 @@ test("an unresolved role still shows the verification gate before any stale clie
   const html = render("unresolved");
   assert.match(html, /Не удалось подтвердить роль аккаунта/);
   assert.doesNotMatch(html, /Добро пожаловать!/);
+});
+
+test("a waiting client sees the restricted access placeholder instead of onboarding", () => {
+  const html = render("pending-client");
+  assert.match(html, /Ждём назначения тренера/);
+  assert.match(html, /Проверить доступ/);
+  assert.match(html, /Тренировки/);
+  assert.doesNotMatch(html, /Добро пожаловать!/);
+});
+
+test("уже вошедший Telegram-клиент может явно принять приглашение, не выходя из аккаунта", () => {
+  let operations = 0;
+  const html = renderWithTelegramContext("?telegramInvite=synthetic_invite_token_123456", "synthetic-init-data", {
+    user: { uid: "own-pending-account" }, handleTelegramMiniAppAuth() { operations++; }, logout() { operations++; }
+  });
+  assert.match(html, /Принять приглашение тренера/);
+  assert.match(html, /<button[^>]*>.*?Принять приглашение<\/button>/);
+  assert.match(html, /Проверить доступ/);
+  assert.match(html, /own-pending-account/);
+  assert.match(html, /Скопировать идентификатор аккаунта/);
+  assert.match(html, /Выйти/);
+  assert.doesNotMatch(html, /Ждём назначения тренера|Добро пожаловать!|Разделы пока закрыты/);
+  assert.equal(operations, 0, "render never accepts an invite or logs out automatically");
+});
+
+test("вход нижней кнопкой Telegram позволяет проверить приглашение без токена в URL", () => {
+  const html = renderWithTelegramContext("", "synthetic-init-data");
+  assert.match(html, /Ждём назначения тренера/);
+  assert.match(html, /Проверить приглашение/);
+  assert.match(html, /Проверить доступ/);
+  assert.doesNotMatch(html, /start=invite_/);
+});
+
+test("вне Telegram приглашение сохраняется в ссылке бота, а подтверждение не имитируется", () => {
+  const token = "synthetic_invite_token_123456";
+  const html = renderWithTelegramContext(`?telegramInvite=${token}`, "");
+  assert.match(html, new RegExp(`href="https://t.me/zmena_teleg_bot\\?start=invite_${token}"`));
+  assert.match(html, /Открыть приглашение в Telegram/);
+  assert.doesNotMatch(html, /<button[^>]*>.*?Принять приглашение<\/button>/);
+  assert.match(html, /Проверить доступ/);
+});
+
+test("некорректный токен не попадает в Telegram-ссылку", () => {
+  for (const token of ["short", "x".repeat(61), "invalid%3Cscript%3E"]) {
+    const html = renderWithTelegramContext(`?telegramInvite=${token}`, "");
+    assert.doesNotMatch(html, /start=invite_/);
+    assert.match(html, /Ждём назначения тренера/);
+  }
+});
+
+test("проверка приглашения показывает ошибку и блокирует повторные действия во время запроса", () => {
+  const html = renderWithTelegramContext("?telegramInvite=synthetic_invite_token_123456", "synthetic-init-data", {
+    loginSubmitting: true, loginError: "Срок приглашения истёк", loginNotice: "Попросите тренера прислать новое"
+  });
+  assert.match(html, /aria-busy="true"/);
+  assert.match(html, /<button[^>]*disabled=""[^>]*>.*?Проверяем приглашение…<\/button>/);
+  assert.match(html, /role="alert">Срок приглашения истёк/);
+  assert.match(html, /role="status">Попросите тренера прислать новое/);
 });
 
 test("a resolving role still shows the real splash", () => {

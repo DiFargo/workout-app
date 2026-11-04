@@ -5,6 +5,7 @@ import NutritionMealModal from "./NutritionMealModal";
 import NutritionOrbit from "./NutritionOrbit";
 import NutritionPlanDetails from "./NutritionPlanDetails";
 import NutritionSummary from "./NutritionSummary";
+import NutritionSyncRecovery from "./NutritionSyncRecovery.jsx";
 
 export default function NutritionMainContent({
   visible,
@@ -15,7 +16,8 @@ export default function NutritionMainContent({
   orbitProps,
   diaryProps,
   mealModalProps,
-  planDetailsProps
+  planDetailsProps,
+  syncRecoveryProps
 }) {
   if (!visible) {
     return null;
@@ -24,6 +26,7 @@ export default function NutritionMainContent({
   return (
     <>
       <NutritionHeader {...headerProps} />
+      <NutritionSyncRecovery {...syncRecoveryProps} />
 
       {calendarOpen && (
         <NutritionCalendarModal {...calendarProps} />

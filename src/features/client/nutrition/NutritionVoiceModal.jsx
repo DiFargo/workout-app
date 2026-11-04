@@ -1,7 +1,7 @@
 import { LoaderCircle, Trash2, X } from "lucide-react";
 import { Mic, RefreshCw, Square } from "lucide";
 import { createPortal } from "react-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import { isNutritionVoiceSearchFailure } from "./nutritionVoiceFeedback";
 import { getNutritionVoiceItemEditDraft } from "./nutritionVoiceItemEditor";
@@ -13,7 +13,7 @@ const VOICE_METER_BARS = Array.from({ length: 25 }, (_, index) => ({
   duration: `${780 + (index % 7) * 65}ms`
 }));
 
-function getVoiceCopy({ analyzing, recording, feedback, hasAddedItems, hasReviewItems, hasSearchFailure }) {
+function getVoiceCopy({ analyzing, recording, feedback, hasAddedItems, hasReviewItems, hasSearchFailure, unresolvedCount }) {
   if (analyzing) {
     return {
       eyebrow: "Голосовой ввод · тест",
@@ -32,11 +32,22 @@ function getVoiceCopy({ analyzing, recording, feedback, hasAddedItems, hasReview
     };
   }
 
+  if (unresolvedCount) {
+    return {
+      eyebrow: "Голосовой ввод · уточнение",
+      title: "Уточните продукты",
+      description: "Выберите точный вариант для каждой позиции или явно пропустите её. Невыбранные продукты ещё не добавлены.",
+      holdLabel: "Сначала уточните"
+    };
+  }
+
   if (hasReviewItems) {
     return {
       eyebrow: "Голосовой ввод · проверка",
       title: "Проверьте перед добавлением",
-      description: "Для этих позиций ИИ дал примерную оценку. Уточните КБЖУ и порцию перед добавлением в дневник.",
+      description: feedback.startsWith("Не удалось добавить:")
+        ? feedback
+        : "Для этих позиций ИИ дал примерную оценку. Уточните КБЖУ и порцию перед добавлением в дневник.",
       holdLabel: "Добавить ещё"
     };
   }
@@ -93,8 +104,11 @@ function formatVoiceAddedFoodMacros(item) {
   return `${formatVoiceNumber(item?.calories)} ккал · Б ${formatVoiceNumber(item?.protein)} · Ж ${formatVoiceNumber(item?.fat)} · У ${formatVoiceNumber(item?.carbs)}`;
 }
 
-export default function NutritionVoiceModal({
-  open,
+export default function NutritionVoiceModal(props) {
+  return props.open ? <NutritionVoiceSession {...props} /> : null;
+}
+
+function NutritionVoiceSession({
   origin = null,
   voiceState = "idle",
   feedback = "",
@@ -112,6 +126,9 @@ export default function NutritionVoiceModal({
   const [editingItemId, setEditingItemId] = useState("");
   const [editingDraft, setEditingDraft] = useState(null);
   const [editingError, setEditingError] = useState("");
+  const [discardConfirmOpen, setDiscardConfirmOpen] = useState(false);
+  const candidateSectionRef = useRef(null);
+  const discardContinueRef = useRef(null);
   const isRecording = voiceState === "recording";
   const isAnalyzing = voiceState === "analyzing";
   const normalizedAudioLevel = Math.min(1, Math.max(0, Number(audioLevel) || 0));
@@ -132,6 +149,8 @@ export default function NutritionVoiceModal({
   const reviewVoiceItems = addedVoiceItems.filter((item) => item?.kind === "review" || item?.requiresReview === true);
   const hasReviewItems = reviewVoiceItems.length > 0;
   const hasAddedItems = addedVoiceItems.length > 0;
+  const unresolvedCount = pendingVoiceCandidates.length;
+  const hasUncommittedItems = unresolvedCount > 0 || hasReviewItems;
   const editingItem = addedVoiceItems.find((item) => item.id === editingItemId) || null;
   const hasSearchFailure = !isRecording && !isAnalyzing && !hasAddedItems && !pendingVoiceCandidates.length && isNutritionVoiceSearchFailure(feedback);
   const hasOrigin = [origin?.top, origin?.left, origin?.width, origin?.height].every(Number.isFinite);
@@ -157,18 +176,29 @@ export default function NutritionVoiceModal({
     feedback,
     hasAddedItems,
     hasReviewItems,
-    hasSearchFailure
+    hasSearchFailure,
+    unresolvedCount
   });
 
-  const cancelAndClose = () => {
+  const discardAndClose = useCallback(() => {
     onVoiceEnd?.({ cancelled: true });
-    if (hasAddedItems || pendingVoiceCandidates.length > 0) onVoiceDone?.({ commit: false });
+    if (hasAddedItems || unresolvedCount > 0) onVoiceDone?.({ commit: false });
     onClose?.();
-  };
+  }, [onVoiceEnd, onVoiceDone, onClose, hasAddedItems, unresolvedCount]);
+
+  const cancelAndClose = useCallback(() => {
+    if (hasUncommittedItems) setDiscardConfirmOpen(true);
+    else discardAndClose();
+  }, [hasUncommittedItems, discardAndClose]);
 
   const finishAndClose = () => {
+    if (unresolvedCount) {
+      candidateSectionRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      candidateSectionRef.current?.querySelector("button")?.focus({ preventScroll: true });
+      return;
+    }
     onVoiceEnd?.({ cancelled: true });
-    onVoiceDone?.({ commit: true });
+    if (onVoiceDone?.({ commit: true }) === false) return;
     onClose?.();
   };
 
@@ -183,6 +213,10 @@ export default function NutritionVoiceModal({
     setEditingDraft(null);
     setEditingError("");
   };
+
+  useEffect(() => {
+    if (discardConfirmOpen) discardContinueRef.current?.focus();
+  }, [discardConfirmOpen]);
 
   const updateEditingDraft = (field, value) => {
     setEditingDraft((draft) => ({ ...draft, [field]: value }));
@@ -199,27 +233,21 @@ export default function NutritionVoiceModal({
   };
 
   useEffect(() => {
-    if (!open) return undefined;
-
     const handleKeyDown = (event) => {
       if (event.key !== "Escape") return;
       event.preventDefault();
-      onVoiceEnd?.({ cancelled: true });
-      onClose?.();
+      if (discardConfirmOpen) setDiscardConfirmOpen(false);
+      else cancelAndClose();
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open, onClose, onVoiceEnd]);
-
-  useEffect(() => {
-    if (editingItemId && !editingItem) closeItemEditor();
-  }, [editingItem, editingItemId]);
+  }, [cancelAndClose, discardConfirmOpen]);
 
   function toggleCapture() {
-    if (isAnalyzing) return;
+    if (isAnalyzing || hasUncommittedItems) return;
     if (isRecording) {
       onVoiceEnd?.();
       return;
@@ -249,7 +277,7 @@ export default function NutritionVoiceModal({
           data-testid="nutrition-voice-record"
           data-nutrition-voice-state={voiceState}
           onClick={toggleCapture}
-          disabled={isAnalyzing}
+          disabled={isAnalyzing || hasUncommittedItems}
           aria-label={isAnalyzing
             ? "Идёт поиск продуктов по голосовой записи"
             : hasSearchFailure
@@ -270,13 +298,11 @@ export default function NutritionVoiceModal({
           </span>
           <span className={styles.recordLabel}>{anchored
             ? isAnalyzing ? "Ищем продукты…" : isRecording ? "Завершить запись" : "Начать запись"
-            : copy.holdLabel}</span>
+            : hasUncommittedItems ? unresolvedCount ? "Сначала уточните" : "Сначала добавьте" : copy.holdLabel}</span>
         </button>
       </div>
     );
   }
-
-  if (!open) return null;
 
   return createPortal(
     <div
@@ -475,7 +501,7 @@ export default function NutritionVoiceModal({
         ) : null}
 
         {!editingItem && pendingVoiceCandidates.length > 0 ? (
-          <section className={styles.candidateSection} aria-label="Выбор точного продукта">
+          <section ref={candidateSectionRef} className={styles.candidateSection} aria-label="Выбор точного продукта">
             <p className={styles.candidateSectionTitle}>Выберите точный вариант</p>
 
             {pendingVoiceCandidates.map((item) => (
@@ -509,6 +535,12 @@ export default function NutritionVoiceModal({
                     );
                   })}
                 </div>
+                {item.kind === "candidate" && onVoiceAddedItemRemove ? <button
+                  type="button"
+                  className={styles.skipCandidate}
+                  data-testid="nutrition-voice-skip"
+                  onClick={() => onVoiceAddedItemRemove(item.id)}
+                >Пропустить «{item.query || "этот продукт"}» — не добавлять</button> : null}
               </div>
             ))}
           </section>
@@ -525,7 +557,9 @@ export default function NutritionVoiceModal({
             ? "Запись идёт. Нажмите кнопку ещё раз, когда закончите. До 1 минуты."
             : isAnalyzing
               ? "Не закрывайте окно — результат появится здесь."
-              : hasAddedItems
+              : unresolvedCount
+                ? `Осталось уточнить: ${unresolvedCount}. Выберите вариант или нажмите «Пропустить» у продукта.`
+                : hasAddedItems
                 ? hasReviewItems
                   ? "Проверьте позиции и нажмите «Добавить в дневник». Оценки ИИ не попадут в вашу базу продуктов."
                   : "Нажмите «Готово», когда всё верно."
@@ -542,12 +576,20 @@ export default function NutritionVoiceModal({
           data-testid="nutrition-voice-done"
           onClick={hasSearchFailure ? retryVoiceSearch : finishAndClose}
         >
-          {hasSearchFailure ? "Повторить запись" : hasReviewItems ? "Добавить в дневник" : "Готово"}
+          {hasSearchFailure ? "Повторить запись" : unresolvedCount ? "Уточнить продукты" : hasReviewItems ? "Добавить в дневник" : "Готово"}
         </button>
         </div> : null}
         </footer>
       </section>
       )}
+      {discardConfirmOpen ? <section className={styles.discardOverlay} role="alertdialog" aria-modal="true" data-modal-block-parent-backdrop="true" aria-labelledby="voice-discard-title" aria-describedby="voice-discard-description">
+        <div className={styles.discardCard}>
+          <h3 id="voice-discard-title">Не все продукты добавлены</h3>
+          <p id="voice-discard-description">Невыбранные и неподтверждённые позиции не попадут в дневник. Уже добавленные продукты сохранятся.</p>
+          <button ref={discardContinueRef} type="button" className={styles.doneButton} onClick={() => setDiscardConfirmOpen(false)}>Продолжить выбор</button>
+          <button type="button" className={styles.skipCandidate} onClick={discardAndClose}>Пропустить и закрыть</button>
+        </div>
+      </section> : null}
     </div>,
     document.body
   );

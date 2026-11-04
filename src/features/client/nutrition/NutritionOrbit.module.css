@@ -461,3 +461,4 @@
 .renderQuick svg { width:21px; height:21px; }
 .renderQuick button:active { background:var(--apple-surface-muted); transform:scale(.97); }
 @media(max-width:360px) { .renderEnergy { --energy-ring-size:88px; margin-inline:15px; gap:0 12px; } .renderQuick { margin-inline:15px; } .renderHeading { margin-inline:17px; } }
+.selectedDate { margin: 0 20px 8px; color: var(--apple-secondary); font-size: 13px; line-height: 1.4; }

@@ -397,3 +397,21 @@
 :global(:root[data-app-theme="warm-light"]) .panel.panel .button:first-child { color: #617078; -webkit-text-fill-color: #617078; background: white; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .panel.panel .button:last-child { flex: 1.8 1 8em; width: auto; min-width: min(100%,8em); color: white; -webkit-text-fill-color: white; background: var(--ownset-action-gradient); }
 .button svg { width: 17px; height: 17px; flex-shrink: 0; }
+@media(max-height:700px) {
+  :global(:root[data-app-theme="warm-light"]) .panel.panel { padding-top: 8px; padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
+  :global(:root[data-app-theme="warm-light"]) .panel.panel .navigationRow.navigationRow { padding: 3px; }
+}
+
+:global(:root[data-app-theme="warm-light"]) .dynamicPanel.panel .navigationRow.navigationRow {
+  padding: 0; border: 0; border-radius: 18px; background: transparent; box-shadow: none;
+}
+:global(:root[data-app-theme="warm-light"]) .dynamicPanel.panel .dynamicButton.button {
+  flex: 1 1 100%; width: 100%; min-height: 56px; border-radius: 18px;
+  background: var(--ownset-action-gradient); color: #fff; -webkit-text-fill-color: #fff;
+  font-size: 1rem; font-weight: 600; touch-action: manipulation;
+}
+.dynamicCopy { display: grid; gap: 1px; }
+.dynamicCopy small { font-size: .6875rem; font-weight: 400; line-height: 1.2; }
+.dynamicButton:disabled { opacity: .5; cursor: default; }
+.dynamicButton:active:not(:disabled) { opacity: .8; }
+.dynamicButton:focus-visible { outline: 3px solid var(--apple-action, #3f73b8); outline-offset: 3px; }

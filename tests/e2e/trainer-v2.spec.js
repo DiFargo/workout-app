@@ -61,8 +61,10 @@ for (const path of ["/", "/v2"]) {
     }
     await page.screenshot({path:`artifacts/trainer-card-${path === "/v2" ? "v2" : "default"}-${test.info().project.name}.png`});
     await page.getByRole("button", {name:"Действия с клиентом", exact:true}).click();
-    await expect(page.locator(".trainerClientActionSheet")).toBeVisible();
-    await page.locator(".trainerClientActionSheet header button").click();
+    const clientActions = page.getByRole("dialog", {name:"Управление клиентом", exact:true});
+    await expect(clientActions).toBeVisible();
+    await clientActions.getByRole("button", {name:"Закрыть: Управление клиентом", exact:true}).click();
+    await expect(clientActions).toBeHidden();
     await page.getByRole("button", {name:"Назад к списку клиентов", exact:true}).click();
     await navigate(page, "more");
     await expect(page.locator(".trainerNextCabinetPage")).toBeVisible();

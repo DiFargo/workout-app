@@ -229,6 +229,33 @@ test("AppCore route prop shorthand values are declared before runtime render", a
   assert.deepEqual(missing, []);
 });
 
+test("AppCore forwards existing account callbacks to routed admin pages", async () => {
+  const source = await fs.readFile("src/AppCore.jsx", "utf8");
+  const program = JsxParser.parse(source, {
+    ecmaVersion: "latest",
+    sourceType: "module",
+    locations: true
+  });
+  const routeCalls = [];
+  walk(program, (node) => {
+    if (node.type === "CallExpression" && node.callee?.type === "Identifier" && node.callee.name === "renderAppRoutePage") {
+      routeCalls.push(node);
+    }
+  });
+  assert.ok(routeCalls.length, "Expected a renderAppRoutePage call in AppCore.jsx");
+
+  for (const call of routeCalls) {
+    const context = call.arguments[0];
+    assert.equal(context?.type, "ObjectExpression", "Expected an explicit renderAppRoutePage context");
+    for (const name of ["logout", "openProfileAccount"]) {
+      const property = context.properties.find(item => item.type === "Property" && !item.computed && item.key?.name === name);
+      assert.ok(property, `renderAppRoutePage at line ${call.loc.start.line} must receive ${name}`);
+      assert.equal(property.value?.type, "Identifier", `${name} must forward the existing callback`);
+      assert.equal(property.value.name, name, `${name} must forward the existing callback`);
+    }
+  }
+});
+
 test("AppCore dependency arrays do not reference values before initialization", async () => {
   const source = await fs.readFile("src/AppCore.jsx", "utf8");
   const program = JsxParser.parse(source, {

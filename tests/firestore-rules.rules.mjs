@@ -7,6 +7,8 @@ import { persistMeasurement } from "../src/features/client/profile/measurementPe
 import { patchLibraryExercise, persistTrainerTemplateEdit } from "../src/utils/trainerLibraryEditing.js";
 import { buildTrainerClientProgramName } from "../src/utils/trainerClientProgramName.js";
 import { buildClientProgramLifecycleMetadata, buildProgramAssignmentMetadata } from "../src/utils/trainerProgramLifecycle.js";
+import { resolveAgendaScheduleInput } from "../src/utils/trainerScheduleAgenda.js";
+import { buildAiNutritionMonthlyPlan } from "../src/utils/aiNutritionPlanBuilder.js";
 import { after, before, beforeEach, test } from "node:test";
 
 import {
@@ -14,9 +16,124 @@ import {
   assertSucceeds,
   initializeTestEnvironment
 } from "@firebase/rules-unit-testing";
-import { deleteDoc, doc, getDoc, setDoc, updateDoc, writeBatch } from "firebase/firestore";
+import { collection, deleteDoc, deleteField, doc, getDoc, getDocs, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 
 let testEnv;
+
+test("nutrition cutover fences old writers and keeps server-owned protocol documents private", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/day-client"), { role: "client", trainerId: "day-trainer" });
+    await setDoc(doc(db, "users/day-trainer"), { role: "trainer" });
+    await setDoc(doc(db, "users/day-admin"), { role: "admin" });
+    await setDoc(doc(db, "users/day-other"), { role: "client" });
+    await setDoc(doc(db, "users/day-client/nutrition/state"), { days: {}, goals: {} });
+    await setDoc(doc(db, "serverConfig/nutritionDayStorage"), { writerFenceVersion: 2 });
+  });
+  const owner = testEnv.authenticatedContext("day-client").firestore();
+  await assertSucceeds(updateDoc(doc(owner, "users/day-client/nutrition/state"), { updatedAt: "before" }));
+  for (const db of [owner, testEnv.authenticatedContext("day-trainer").firestore(),
+    testEnv.authenticatedContext("day-admin", { admin: true }).firestore()]) {
+    await assertFails(setDoc(doc(db, "users/day-client/nutrition/manifest"), { writerEpoch: 0 }));
+    await assertFails(setDoc(doc(db, "users/day-client/nutritionGenerations/forged"), { metadata: {} }));
+    await assertFails(setDoc(doc(db, "users/day-client/nutritionGenerations/forged/days/2026-10-26"), { day: {} }));
+    await assertFails(setDoc(doc(db, "users/day-client/nutritionMutationReceipts/forged"), { committedRevision: 1 }));
+    await assertFails(getDoc(doc(db, "serverConfig/nutritionDayStorage")));
+    await assertFails(setDoc(doc(db, "serverConfig/nutritionDayStorage"), { cutoverEnabled: true }));
+  }
+  await testEnv.withSecurityRulesDisabled(context => setDoc(doc(context.firestore(), "users/day-client/nutrition/manifest"),
+    { sourceOfTruth: "days", generation: "g1", writerEpoch: 1 }));
+  for (const db of [owner, testEnv.authenticatedContext("day-trainer").firestore(),
+    testEnv.authenticatedContext("day-admin", { admin: true }).firestore()]) {
+    await assertFails(setDoc(doc(db, "users/day-client/nutrition/state"), { days: { old: {} }, goals: {} }));
+    await assertFails(deleteDoc(doc(db, "users/day-client/nutrition/state")));
+  }
+  await assertSucceeds(setDoc(doc(owner, "users/day-client/nutrition/myFoods"), { myFoods: {} }));
+  await assertSucceeds(getDoc(doc(owner, "users/day-client/nutrition/manifest")));
+  await assertFails(getDoc(doc(testEnv.authenticatedContext("day-other").firestore(), "users/day-client/nutrition/manifest")));
+  // A reset in the legacy generation also advances the writer fence.
+  await testEnv.withSecurityRulesDisabled(context => setDoc(doc(context.firestore(), "users/day-client/nutrition/manifest"),
+    { sourceOfTruth: "legacy", generation: "legacy", writerEpoch: 2 }));
+  await assertFails(updateDoc(doc(owner, "users/day-client/nutrition/state"), { updatedAt: "after-reset" }));
+});
+
+test("accounting markers and server ledger/config cannot be forged or read through owner/admin SDKs", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/client-ledger"), { role: "client", trainerId: "trainer-1" });
+    await setDoc(doc(db, "users/ledger-admin"), { role: "admin" });
+    await setDoc(doc(db, "users/client-ledger/history/existing"), { date: "2026-10-18", subscriptionCycleId: "server-cycle" });
+    await setDoc(doc(db, "subscriptionUsageLedger/private"), { counted: true });
+    await setDoc(doc(db, "serverConfig/subscriptionAccounting"), { paused: false });
+  });
+  for (const db of [testEnv.authenticatedContext("client-ledger").firestore(), testEnv.authenticatedContext("ledger-admin", { admin: true }).firestore()]) {
+    for (const marker of ["subscriptionCycleId", "subscriptionUsageLedgerId", "subscriptionAccountedAt"]) {
+      await assertFails(setDoc(doc(db, "users/client-ledger/history/forged"), { date: "2026-10-18", [marker]: "forged" }));
+      await assertFails(updateDoc(doc(db, "users/client-ledger/history/existing"), { [marker]: "forged" }));
+    }
+    await assertSucceeds(updateDoc(doc(db, "users/client-ledger/history/existing"), { clientComment: "Preserved edit" }));
+    for (const path of ["subscriptionUsageLedger/private", "serverConfig/subscriptionAccounting"]) {
+      await assertFails(getDoc(doc(db, path)));
+      await assertFails(setDoc(doc(db, path), { paused: false, counted: true }));
+    }
+  }
+});
+
+test("maintenance pauses history and subscription changes without blocking ordinary profile updates", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/paused-client"), { role: "client", trainerId: "paused-trainer", subscription: { purchasedSessions: 10, usedSessions: 2 } });
+    await setDoc(doc(db, "users/paused-trainer"), { role: "trainer" });
+    await setDoc(doc(db, "users/paused-client/history/existing"), { date: "2026-10-18" });
+    await setDoc(doc(db, "serverConfig/subscriptionAccounting"), { paused: true });
+  });
+  const owner = testEnv.authenticatedContext("paused-client").firestore();
+  const trainer = testEnv.authenticatedContext("paused-trainer").firestore();
+  await assertFails(setDoc(doc(owner, "users/paused-client/history/new"), { date: "2026-10-18" }));
+  await assertFails(updateDoc(doc(owner, "users/paused-client/history/existing"), { clientComment: "Wait" }));
+  await assertFails(deleteDoc(doc(owner, "users/paused-client/history/existing")));
+  await assertFails(updateDoc(doc(trainer, "users/paused-client"), { "subscription.usedSessions": 3 }));
+  await assertSucceeds(updateDoc(doc(owner, "users/paused-client"), { appTheme: "warm-light" }));
+  await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "serverConfig/subscriptionAccounting"), { paused: false }));
+  await assertSucceeds(setDoc(doc(owner, "users/paused-client/history/new"), { date: "2026-10-18" }));
+});
+
+test("trainer notes require current assignment and own notes can be deleted normally", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), "users/note-client"), { role: "client", trainerId: "note-trainer" });
+    for (const uid of ["note-trainer", "new-trainer"]) await setDoc(doc(context.firestore(), `users/${uid}`), { role: "trainer" });
+  });
+  const trainer = testEnv.authenticatedContext("note-trainer").firestore();
+  const note = doc(trainer, "trainerNotes/note-trainer_note-client");
+  await assertSucceeds(setDoc(note, { ownerUid: "note-trainer", clientId: "note-client", text: "Private note" }));
+  await assertSucceeds(getDoc(note));
+  await assertSucceeds(deleteDoc(note));
+  await assertSucceeds(setDoc(note, { ownerUid: "note-trainer", clientId: "note-client", text: "Private note" }));
+  await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "users/note-client"), { trainerId: "new-trainer" }));
+  await assertFails(getDoc(note));
+  await assertFails(updateDoc(note, { text: "Stale trainer" }));
+  await assertFails(deleteDoc(note));
+  await assertFails(getDoc(doc(testEnv.authenticatedContext("new-trainer").firestore(), "trainerNotes/note-trainer_note-client")));
+});
+
+test("unassignment blocks all member tools, preserves pending profile and reopens retained history on reassignment", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/unassigned-client"), { role: "client", trainerAssignmentState: "unassigned", accountRegistrationType: "invited" });
+    for (const collection of ["history", "workouts", "nutrition", "measurements"]) await setDoc(doc(db, `users/unassigned-client/${collection}/retained`), { value: "retained" });
+  });
+  const owner = testEnv.authenticatedContext("unassigned-client").firestore();
+  await assertSucceeds(getDoc(doc(owner, "users/unassigned-client")));
+  for (const collection of ["history", "workouts", "nutrition", "measurements"]) {
+    await assertFails(getDoc(doc(owner, `users/unassigned-client/${collection}/retained`)));
+    await assertFails(setDoc(doc(owner, `users/unassigned-client/${collection}/new`), { value: "blocked" }));
+  }
+  await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "users/unassigned-client"), { trainerAssignmentState: "assigned", trainerId: "new-trainer", accountAccessStatus: "active" }));
+  for (const collection of ["history", "workouts", "nutrition", "measurements"]) {
+    const retained = await assertSucceeds(getDoc(doc(owner, `users/unassigned-client/${collection}/retained`)));
+    assert.equal(retained.data().value, "retained");
+  }
+});
 
 before(async () => {
   testEnv = await initializeTestEnvironment({
@@ -33,6 +150,111 @@ beforeEach(async () => {
 
 after(async () => {
   await testEnv?.cleanup();
+});
+
+async function seedAdminHardwareKeyPolicy(patch = {}) {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/security-key-admin"), { role: "admin", adminClaimVersion: "admin-grant",
+      adminSecurityKeyRequired: true, adminSecurityKeyVersion: "key-version",
+      adminSecurityKeyUpdatedAt: "2026-10-31T08:00:00.000Z", ...patch });
+    await setDoc(doc(db, "users/security-key-client"), { role: "client", trainerId: "security-key-trainer" });
+    await setDoc(doc(db, "users/security-key-trainer"), { role: "trainer" });
+    await setDoc(doc(db, "adminAuditEvents/security-key-proof"), { action: "server-only-audit" });
+  });
+}
+
+const adminHardwareKeyClaims = patch => ({ admin: true, adminClaimVersion: "admin-grant",
+  adminSecurityKeyVersion: "key-version", adminSecurityKeyRoleVersion: "admin-grant",
+  adminSecurityKeyUntil: Date.now() + 60 * 60 * 1000, ...patch });
+
+test("admin hardware key proof gates enrolled administrator surfaces and preserves unenrolled access", async () => {
+  await seedAdminHardwareKeyPolicy();
+  for (const claims of [
+    { admin: true, adminClaimVersion: "admin-grant" },
+    adminHardwareKeyClaims({ adminSecurityKeyVersion: "stale" }),
+    adminHardwareKeyClaims({ adminSecurityKeyRoleVersion: "obsolete-grant" }),
+    adminHardwareKeyClaims({ adminSecurityKeyRoleVersion: "" }),
+    adminHardwareKeyClaims({ adminSecurityKeyUntil: Date.now() - 60_000 }),
+    adminHardwareKeyClaims({ adminSecurityKeyUntil: Date.now() + 9 * 60 * 60 * 1000 }),
+    adminHardwareKeyClaims({ adminSecurityKeyUntil: String(Date.now() + 60_000) }),
+    adminHardwareKeyClaims({ adminSecurityKeyUntil: Date.now() + 60_000.5 }),
+    adminHardwareKeyClaims({ adminClaimVersion: "obsolete-grant" }), adminHardwareKeyClaims({ admin: false })
+  ]) {
+    const db = testEnv.authenticatedContext("security-key-admin", claims).firestore();
+    await assertFails(getDoc(doc(db, "adminAuditEvents/security-key-proof")));
+    await assertFails(updateDoc(doc(db, "users/security-key-client"), { name: "Administrative edit" }));
+    // Own profile remains readable for enrollment/challenge UI.
+    await assertSucceeds(getDoc(doc(db, "users/security-key-admin")));
+  }
+  const valid = testEnv.authenticatedContext("security-key-admin", adminHardwareKeyClaims()).firestore();
+  await assertSucceeds(getDoc(doc(valid, "adminAuditEvents/security-key-proof")));
+  await assertSucceeds(updateDoc(doc(valid, "users/security-key-client"), { name: "Administrative edit" }));
+  for (const policy of [{ adminSecurityKeyRequired: false }, { adminSecurityKeyRequired: deleteField(), adminSecurityKeyVersion: deleteField() }]) {
+    await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "users/security-key-admin"), policy));
+    const legacy = testEnv.authenticatedContext("security-key-admin", { admin: true, adminClaimVersion: "admin-grant" }).firestore();
+    await assertSucceeds(getDoc(doc(legacy, "adminAuditEvents/security-key-proof")));
+  }
+});
+
+test("admin hardware key policy is server-only for owners and fully authorized browser administrators", async () => {
+  await seedAdminHardwareKeyPolicy();
+  const admin = testEnv.authenticatedContext("security-key-admin", adminHardwareKeyClaims()).firestore();
+  const client = testEnv.authenticatedContext("security-key-client").firestore();
+  for (const key of ["adminSecurityKeyRequired", "adminSecurityKeyVersion", "adminSecurityKeyUpdatedAt"]) {
+    await assertFails(updateDoc(doc(admin, "users/security-key-admin"), { [key]: deleteField() }));
+    await assertFails(updateDoc(doc(client, "users/security-key-client"), { [key]: key === "adminSecurityKeyRequired" ? false : "forged" }));
+    await assertFails(setDoc(doc(admin, `users/forged-policy-${key}`), { role: "client", [key]: key === "adminSecurityKeyRequired" ? false : "forged" }));
+  }
+  await assertFails(updateDoc(doc(admin, "users/security-key-admin"), { adminSecurityKeyRequired: false }));
+  await assertFails(updateDoc(doc(admin, "users/security-key-admin"), { adminSecurityKeyVersion: "replacement" }));
+  await assertFails(deleteDoc(doc(admin, "users/security-key-admin")));
+  await assertSucceeds(updateDoc(doc(client, "users/security-key-client"), { name: "Client edit" }));
+  await assertSucceeds(getDoc(doc(testEnv.authenticatedContext("security-key-trainer").firestore(), "users/security-key-client")));
+});
+
+test("admin hardware key proof is bound to the current role grant and supports an enrolled legacy grant", async () => {
+  await seedAdminHardwareKeyPolicy();
+  await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "users/security-key-admin"), { adminClaimVersion: "regranted" }));
+  const oldProofWithNewRole = testEnv.authenticatedContext("security-key-admin", adminHardwareKeyClaims({ adminClaimVersion: "regranted" })).firestore();
+  await assertFails(getDoc(doc(oldProofWithNewRole, "adminAuditEvents/security-key-proof")));
+  const newProof = testEnv.authenticatedContext("security-key-admin", adminHardwareKeyClaims({ adminClaimVersion: "regranted", adminSecurityKeyRoleVersion: "regranted" })).firestore();
+  await assertSucceeds(getDoc(doc(newProof, "adminAuditEvents/security-key-proof")));
+  await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "users/security-key-admin"), { adminClaimVersion: deleteField() }));
+  const legacyClaims = adminHardwareKeyClaims({ adminSecurityKeyRoleVersion: "legacy" });
+  delete legacyClaims.adminClaimVersion;
+  await assertSucceeds(getDoc(doc(testEnv.authenticatedContext("security-key-admin", legacyClaims).firestore(), "adminAuditEvents/security-key-proof")));
+});
+
+test("admin hardware key policy fails closed for malformed enrollment versions", async () => {
+  await seedAdminHardwareKeyPolicy();
+  for (const patch of [{ adminSecurityKeyRequired: "true" }, { adminSecurityKeyVersion: "" },
+    { adminSecurityKeyVersion: 42 }, { adminSecurityKeyVersion: deleteField() }, { adminSecurityKeyVersion: "x".repeat(257) }]) {
+    await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "users/security-key-admin"), {
+      adminSecurityKeyRequired: true, adminSecurityKeyVersion: "key-version", ...patch
+    }));
+    const db = testEnv.authenticatedContext("security-key-admin", adminHardwareKeyClaims()).firestore();
+    await assertFails(getDoc(doc(db, "adminAuditEvents/security-key-proof")));
+  }
+});
+
+test("admin hardware key credentials and challenges stay server-only including list and create", async () => {
+  await seedAdminHardwareKeyPolicy();
+  const paths = ["adminSecurityKeys/security-key-admin", "adminSecurityKeys/security-key-admin/credentials/hash", "adminSecurityKeyChallenges/ceremony"];
+  await testEnv.withSecurityRulesDisabled(async context => {
+    for (const path of paths) await setDoc(doc(context.firestore(), path), { secret: "server-value" });
+  });
+  for (const context of [testEnv.unauthenticatedContext(), testEnv.authenticatedContext("security-key-admin", adminHardwareKeyClaims()),
+    testEnv.authenticatedContext("security-key-client"), testEnv.authenticatedContext("security-key-trainer")]) {
+    const db = context.firestore();
+    for (const path of paths) {
+      await assertFails(getDoc(doc(db, path)));
+      await assertFails(setDoc(doc(db, path), { secret: "forged" }));
+      await assertFails(deleteDoc(doc(db, path)));
+    }
+    await assertFails(getDocs(collection(db, "adminSecurityKeys/security-key-admin/credentials")));
+    await assertFails(getDocs(collection(db, "adminSecurityKeyChallenges")));
+  }
 });
 
 test("owner task permissions cannot bypass trainer-only fields, payments or private collections", async () => {
@@ -57,6 +279,117 @@ test("owner task permissions cannot bypass trainer-only fields, payments or priv
   for (const name of ["history", "nutrition", "measurements"]) await assertSucceeds(setDoc(doc(db, "users", "client-1", name, "new"), { date: "2026-09-09" }));
   await assertSucceeds(setDoc(doc(testEnv.authenticatedContext("trainer-1").firestore(), "users/client-1/payments/current"), { paid: true }));
   await assertFails(setDoc(doc(testEnv.authenticatedContext("trainer-2").firestore(), "users/client-1/payments/current"), { paid: true }));
+});
+
+test("open email registrations can read only their pending profile until a trusted assignment activates it", async () => {
+  const pending = testEnv.authenticatedContext("pending-client", {
+    email: "new@example.test",
+    firebase: { sign_in_provider: "password" }
+  }).firestore();
+  const profileRef = doc(pending, "users/pending-client");
+  const beforeCreate = await getDoc(profileRef);
+  assert.equal(beforeCreate.exists(), false);
+  await assertSucceeds(setDoc(profileRef, {
+    email: "new@example.test",
+    name: "New Client",
+    role: "client",
+    active: true,
+    authProvider: "password",
+    accountRegistrationType: "open",
+    accountAccessStatus: "awaiting_trainer",
+    createdAt: "2026-10-16T00:00:00.000Z",
+    updatedAt: "2026-10-16T00:00:00.000Z"
+  }));
+  await assertSucceeds(getDoc(profileRef));
+  await assertFails(getDoc(doc(pending, "users/another-client")));
+  await assertFails(updateDoc(profileRef, { accountAccessStatus: "active", trainerId: "fake-trainer" }));
+  await assertFails(setDoc(doc(pending, "users/pending-client/workouts/private"), { name: "Not accessible" }));
+  await assertFails(setDoc(doc(pending, "users/pending-client/nutrition/private"), { calories: 100 }));
+
+  await assertFails(setDoc(doc(pending, "users/forged-trainer"), {
+    email: "new@example.test",
+    name: "Forged",
+    role: "trainer",
+    active: true,
+    authProvider: "password",
+    accountRegistrationType: "open",
+    accountAccessStatus: "active",
+    createdAt: "2026-10-16T00:00:00.000Z",
+    updatedAt: "2026-10-16T00:00:00.000Z"
+  }));
+});
+
+test("trainer-created clients cannot forge Telegram identities, staff lifecycle fields or reserved Telegram UIDs", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), "users/trainer-1"), { role: "trainer" });
+  });
+  const trainer = testEnv.authenticatedContext("trainer-1").firestore();
+  const safe = { role: "client", name: "Client", createdByUid: "trainer-1", trainerId: "trainer-1", assignedTrainerId: "trainer-1" };
+  await assertSucceeds(setDoc(doc(trainer, "users/new-client"), safe));
+  for (const [field, value] of Object.entries({
+    telegramUserId: "123456789", telegramChatId: "123456789", telegram: { telegramUserId: "123456789" },
+    telegramConnected: true, telegramUsername: "victim_user", adminClaimVersion: "forged",
+    accountAccessStatus: "active", profileIdentityOperation: { id: "forged" }, loginLower: "victim"
+  })) {
+    await assertFails(setDoc(doc(trainer, `users/forged-${field}`), { ...safe, [field]: value }));
+  }
+  await assertFails(setDoc(doc(trainer, "users/telegram_reserved"), safe));
+  await assertFails(setDoc(doc(trainer, "telegramIdentities/123456789"), { uid: "new-client" }));
+});
+
+test("Telegram link credentials are server-only even for profile owner, assigned trainer and administrator", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users/client"), { role: "client", trainerId: "trainer" });
+    await setDoc(doc(db, "users/trainer"), { role: "trainer" });
+    await setDoc(doc(db, "users/admin"), { role: "admin" });
+    await setDoc(doc(db, "telegramLinkCodes/private-hash"), { uid: "client", status: "active" });
+    await setDoc(doc(db, "telegramPendingClientInvites/123456789"), { uid: "client", token: "server-only-invite-token" });
+  });
+  for (const [uid, claims] of [["client", {}], ["trainer", {}], ["admin", { admin: true }]]) {
+    const db = testEnv.authenticatedContext(uid, claims).firestore();
+    await assertSucceeds(getDoc(doc(db, "users/client")));
+    await assertFails(getDoc(doc(db, "telegramLinkCodes/private-hash")));
+    await assertFails(setDoc(doc(db, "telegramLinkCodes/forged"), { uid: "client", status: "active" }));
+    await assertFails(getDoc(doc(db, "telegramPendingClientInvites/123456789")));
+    await assertFails(setDoc(doc(db, "telegramPendingClientInvites/123456789"), { uid: "client", token: "forged" }));
+  }
+});
+
+test("assigned trainer AI nutrition plan is validated and saved atomically to profile and nutrition state", async () => {
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    for (const id of ["trainer-1", "trainer-2"]) await setDoc(doc(db, "users", id), { role: "trainer" });
+    await setDoc(doc(db, "users/client-1"), { role: "client", assignedTrainerId: "trainer-1" });
+    await setDoc(doc(db, "users/client-new"), { role: "client", assignedTrainerId: "trainer-1" });
+    await setDoc(doc(db, "users/client-1/nutrition/state"), { foods: ["preserve"], goals: { calories: 2000 } });
+  });
+  const plan = buildAiNutritionMonthlyPlan(undefined, { weight: "80", height: "180", age: "30", sex: "male", goal: "maintain", activity: "medium" });
+  const trainer = testEnv.authenticatedContext("trainer-1").firestore();
+  const batch = writeBatch(trainer);
+  batch.update(doc(trainer, "users/client-1"), { aiNutritionPlan: plan, nutritionPlanUpdatedAt: "now" });
+  batch.update(doc(trainer, "users/client-1/nutrition/state"), { aiNutritionPlan: plan, updatedAt: "now" });
+  await assertSucceeds(batch.commit());
+  await assertFails(setDoc(doc(trainer, "users/client-new/nutrition/state"), { aiNutritionPlan: {} }));
+  await assertSucceeds(setDoc(doc(trainer, "users/client-new/nutrition/state"), { aiNutritionPlan: plan, updatedAt: "now" }));
+  assert.deepEqual((await getDoc(doc(trainer, "users/client-1/nutrition/state"))).data().foods, ["preserve"]);
+  const unrelated = testEnv.authenticatedContext("trainer-2").firestore();
+  await assertFails(updateDoc(doc(unrelated, "users/client-1"), { aiNutritionPlan: plan }));
+  await assertFails(updateDoc(doc(unrelated, "users/client-1/nutrition/state"), { aiNutritionPlan: plan }));
+  const invalidLaterWeeks = plan.weeks.map((_, index) => ({ ...plan, weeks: plan.weeks.map((week, weekIndex) =>
+    weekIndex === index ? { ...week, calories: -1 } : week) }));
+  for (const invalid of [{}, { ...plan, weeks: [] }, { ...plan, role: "admin" },
+    { ...plan, start: { ...plan.start, calories: -1 } }, ...invalidLaterWeeks]) {
+    await assertFails(updateDoc(doc(trainer, "users/client-1"), { aiNutritionPlan: invalid }));
+    await assertFails(updateDoc(doc(trainer, "users/client-1/nutrition/state"), { aiNutritionPlan: invalid }));
+  }
+  const forged = writeBatch(trainer);
+  forged.update(doc(trainer, "users/client-1"), { aiNutritionPlan: { ...plan, id: "different-plan" }, role: "admin" });
+  forged.update(doc(trainer, "users/client-1/nutrition/state"), { aiNutritionPlan: { ...plan, id: "different-plan" } });
+  await assertFails(forged.commit());
+  const unchanged = (await getDoc(doc(trainer, "users/client-1"))).data();
+  assert.equal(unchanged.role, "client");
+  assert.equal(unchanged.aiNutritionPlan.id, plan.id);
 });
 
 test("only the assigned trainer can mark test clients without changing their workouts", async () => {
@@ -1028,6 +1361,80 @@ async function personalizedAssignmentFixture({ name, actor = "trainer-1", templa
   return { batch, db };
 }
 
+test("assigned trainer can save the first keyed schedule immediately after assigning four workouts", async () => {
+  const subscription = { purchasedSessions: 8, usedSessions: 1, remainingSessions: 7, cycleId: "keep-existing-cycle" };
+  const { batch, db } = await personalizedAssignmentFixture({ name: "Первичная программа", dayCount: 4 });
+  // The balance already exists before assignment; an assignment batch is not
+  // allowed to add subscription fields together with program identity.
+  await testEnv.withSecurityRulesDisabled(context => updateDoc(doc(context.firestore(), "users/client-1"), { subscription }));
+  await assertSucceeds(batch.commit());
+  const clientRef = doc(db, "users/client-1");
+  const workoutRefs = Array.from({ length: 4 }, (_, index) => doc(db, "users/client-1/workouts", `new-${index}`));
+  const [clientSnapshot, ...workoutSnapshots] = await Promise.all([getDoc(clientRef), ...workoutRefs.map(getDoc)]);
+  const client = clientSnapshot.data();
+  const workouts = workoutSnapshots.map(snapshot => ({ id: snapshot.id, ...snapshot.data() }));
+  // The first date is a manual exception. The keyed payload must not sort it
+  // onto another workout while the rules validate the real atomic write.
+  const dates = ["2099-01-11", "2099-01-03", "2099-01-07", "2099-01-14"];
+  const trainingDays = ["wed", "sat"];
+  const input = { workoutDates: workouts.map((workout, index) => ({ workoutId: workout.id, date: dates[index] })), trainingDays };
+  const resolved = resolveAgendaScheduleInput(input, workouts, client.workoutCalendar.plannedWorkouts);
+  assert.equal(resolved.ok, true);
+  const assignmentInfo = {
+    assignedProgramId: workouts[0].assignedProgramId,
+    assignedProgramName: workouts[0].assignedProgramName,
+    assignedProgramUpdatedAt: workouts[0].assignedProgramUpdatedAt,
+    assignedProgramAddedAt: workouts[0].assignedProgramAddedAt
+  };
+  const nowIso = "2026-10-30T11:00:00.000Z";
+  const plannedWorkouts = resolved.plannedWorkouts.map(entry => ({ ...entry, ...assignmentInfo }));
+  const scheduledDates = [...new Set(plannedWorkouts.map(entry => entry.date))].sort();
+  // Keep this payload aligned with saveTrainerClientWorkoutSchedule: neither
+  // assigning dates nor choosing a weekly rhythm sells or renews sessions.
+  const nextCalendar = {
+    ...client.workoutCalendar,
+    trainingDays,
+    enabled: client.workoutCalendar.enabled !== false,
+    scheduledDates,
+    monthlyTrainingDates: scheduledDates,
+    plannedWorkouts,
+    ...assignmentInfo,
+    clientScheduleRequiresReview: false,
+    trainerScheduleReviewedAt: nowIso,
+    updatedAt: nowIso,
+    updatedBy: "trainer-1"
+  };
+  await assertSucceeds(runTransaction(db, async transaction => {
+    const [freshClient, ...freshWorkouts] = await Promise.all([transaction.get(clientRef), ...workoutRefs.map(ref => transaction.get(ref))]);
+    assert.equal(programDraftSnapshot(freshClient.data().workoutCalendar), programDraftSnapshot(client.workoutCalendar));
+    freshWorkouts.forEach(snapshot => assert.equal(snapshot.data().assignedProgramLifecycleStatus, "active"));
+    workoutRefs.forEach((ref, index) => transaction.set(ref, {
+      scheduledDate: resolved.cleanDates[index],
+      plannedDate: resolved.cleanDates[index],
+      scheduleOrder: index + 1,
+      status: plannedWorkouts[index].status || "planned",
+      movedToDate: plannedWorkouts[index].movedToDate || "",
+      statusUpdatedAt: plannedWorkouts[index].statusUpdatedAt || "",
+      ...assignmentInfo
+    }, { merge: true }));
+    transaction.set(clientRef, { workoutCalendar: nextCalendar, trainingDays, workoutTime: "", updatedAt: nowIso }, { merge: true });
+  }));
+  const savedClient = (await getDoc(clientRef)).data();
+  assert.deepEqual(savedClient.trainingDays, trainingDays);
+  assert.deepEqual(savedClient.workoutCalendar.trainingDays, trainingDays);
+  assert.deepEqual(savedClient.subscription, subscription);
+  assert.deepEqual(savedClient.workoutCalendar.plannedWorkouts.map(entry => entry.date), dates);
+  for (let index = 0; index < workoutRefs.length; index++) {
+    const saved = (await getDoc(workoutRefs[index])).data();
+    assert.equal(saved.scheduledDate, dates[index]);
+    assert.equal(saved.assignedProgramLifecycleStatus, "active");
+    assert.equal(saved.status, "planned");
+    assert.equal(saved.completed, false);
+  }
+  assert.equal((await getDoc(doc(db, "users/client-1/workouts/old"))).data().completed, true);
+  assert.equal((await getDoc(doc(db, "users/client-1/history/past"))).data().completed, true);
+});
+
 for (const name of [buildTrainerClientProgramName("Фулл бади", { name: "Илья Михайлов" }), "Мой индивидуальный план"]) {
   test(`trainer assigns personalized name atomically: ${name}`, async () => {
     const { batch, db } = await personalizedAssignmentFixture({ name });
@@ -1100,7 +1507,8 @@ test("assigned trainer can archive the final active client program", async () =>
   batch.update(doc(trainerDb, "users", "client-1", "workouts", "assigned-day-1"), {
     assignedProgramLifecycleStatus: "archived",
     assignedProgramVisibility: "trainer_archived",
-    assignedProgramArchivedAt: archivedAt
+    assignedProgramArchivedAt: archivedAt,
+    assignedProgramArchivedCalendarEntries: []
   });
   batch.update(doc(trainerDb, "users", "client-1"), {
     assignedProgramId: "",
@@ -1115,6 +1523,44 @@ test("assigned trainer can archive the final active client program", async () =>
   });
 
   await assertSucceeds(batch.commit());
+});
+
+test("archive calendar backup accepts only bounded copies from the assigned client's calendar", async () => {
+  const entry = { workoutId: "backup-day", date: "2026-11-04", assignedProgramAddedAt: "2026-10-10T10:00:00.000Z", status: "planned" };
+  const stamp = "2026-10-30T10:00:00.000Z";
+  await testEnv.withSecurityRulesDisabled(async context => {
+    const db = context.firestore();
+    await setDoc(doc(db, "users", "backup-trainer"), { role: "trainer" });
+    await setDoc(doc(db, "users", "backup-other"), { role: "trainer" });
+    await setDoc(doc(db, "users", "backup-client"), { role: "client", trainerId: "backup-trainer", workoutCalendar: { plannedWorkouts: [entry] } });
+    for (const id of ["backup-day", "empty-day", "deny-day"]) await setDoc(doc(db, "users", "backup-client", "workouts", id), {
+      assignedBy: "backup-trainer", name: "Saved day", status: "planned", exercises: [],
+      assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active"
+    });
+  });
+  const trainer = testEnv.authenticatedContext("backup-trainer").firestore();
+  const patch = backup => ({ assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "trainer_archived", assignedProgramArchivedAt: stamp,
+    assignedProgramArchivedCalendarEntries: backup });
+  const batch = writeBatch(trainer);
+  batch.set(doc(trainer, "users/backup-client/workouts/backup-day"), patch([entry]), { merge: true });
+  batch.set(doc(trainer, "users/backup-client"), { workoutCalendar: { plannedWorkouts: [], scheduledDates: [], monthlyTrainingDates: [] } }, { merge: true });
+  await assertSucceeds(batch.commit());
+  await assertSucceeds(updateDoc(doc(trainer, "users/backup-client/workouts/empty-day"), patch([])));
+  const denied = doc(trainer, "users/backup-client/workouts/deny-day");
+  for (const backup of ["invalid", {}, [123], [{ ...entry, date: "2099-12-31" }], Array.from({ length: 401 }, () => entry)])
+    await assertFails(updateDoc(denied, patch(backup)));
+  await assertFails(updateDoc(denied, { ...patch([]), assignedBy: "backup-other" }));
+  await assertFails(updateDoc(denied, { ...patch([]), exercises: [{ name: "Tampered" }] }));
+  await assertFails(updateDoc(denied, { ...patch([]), completed: true }));
+  const forged = { ...entry, date: "2099-12-31" };
+  const forgedBatch = writeBatch(trainer);
+  forgedBatch.update(doc(trainer, "users/backup-client"), { workoutCalendar: { plannedWorkouts: [forged] } });
+  forgedBatch.update(denied, patch([forged]));
+  await assertFails(forgedBatch.commit());
+  for (const actor of ["backup-other", "backup-stranger"]) {
+    const db = testEnv.authenticatedContext(actor).firestore();
+    await assertFails(updateDoc(doc(db, "users/backup-client/workouts/deny-day"), patch([])));
+  }
 });
 
 test("assigned trainer can restore and edit a client copy, but delete only an unstarted workout", async () => {

@@ -1107,3 +1107,10 @@
     transition: none;
   }
 }
+
+.discardOverlay { position:fixed; inset:0; z-index:100000; display:grid; place-items:center; padding:20px; background:rgba(28,28,30,.3); }
+.discardDialog { width:min(100%,350px); padding:20px; border-radius:20px; background:var(--apple-surface,#fff); color:var(--apple-text,#1C1C1E); box-shadow:0 12px 40px #0002; }
+.discardDialog h2 { margin:0 0 10px; font-size:20px; }
+.discardDialog p { color:var(--apple-secondary,#636366); font-size:14px; line-height:1.5; }
+.discardDialog button { width:100%; min-height:44px; margin-top:8px; padding:10px; border:0; border-radius:12px; background:var(--apple-surface-muted,#EFEFF4); color:var(--apple-blue,#3F73B8); font:inherit; font-size:14px; }
+.discardDialog button:last-child { color:var(--apple-red,#C73530); }

@@ -27,6 +27,7 @@ export default function TrainerProgramLegacyEditor({
   monthGroups,
   monthProgram,
   openCopyMonthProgramBlock,
+  onOpenExerciseLibrary,
   openMonthExerciseEditor,
   removeMonthBlock,
   removeMonthExerciseSet,
@@ -39,12 +40,10 @@ export default function TrainerProgramLegacyEditor({
   toggleMonthProgramBlock,
   toggleMonthProgramWeek,
   updateMonthExercise,
-  updateMonthExerciseName,
   updateMonthExerciseSet,
   updateMonthProgramName,
   updateMonthWorkout,
-  updateProgramMonth,
-  uploadMonthExerciseVideo
+  updateProgramMonth
 }) {
   return (
     <>
@@ -279,15 +278,14 @@ export default function TrainerProgramLegacyEditor({
                             block={block}
                             cancelMonthExerciseEdit={cancelMonthExerciseEdit}
                             handleMonthProgramBack={handleMonthProgramBack}
+                            onOpenExerciseLibrary={onOpenExerciseLibrary}
                             openMonthExerciseEditor={openMonthExerciseEditor}
                             removeMonthExerciseSet={removeMonthExerciseSet}
                             saveMonthExerciseEdit={saveMonthExerciseEdit}
                             setAdminExerciseSearch={setAdminExerciseSearch}
                             updateMonthExercise={updateMonthExercise}
-                            updateMonthExerciseName={updateMonthExerciseName}
                             updateMonthExerciseSet={updateMonthExerciseSet}
                             updateMonthWorkout={updateMonthWorkout}
-                            uploadMonthExerciseVideo={uploadMonthExerciseVideo}
                             week={activeWorkoutContext.week}
                             workout={activeWorkoutContext.workout}
                           />

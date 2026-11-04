@@ -2,7 +2,7 @@ import { useState } from "react";
 import { getWorkoutPresentation } from "../../../domain/workoutPresentation";
 import { sortWorkoutDays } from "../../../utils/workoutPlanNormalization";
 import { getBasicWorkoutMicrocycles, getBasicWorkoutSummary } from "../../../utils/basicWorkoutPlanStructure";
-import { ClientTrainingBottomBar } from "../../../shared/ui/BottomBar";
+import WorkoutSectionNavigation from "./WorkoutSectionNavigation";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 import styles from "./WorkoutPlanPage.module.css";
@@ -22,6 +22,7 @@ export default function WorkoutPlanPage({
   plan,
   history,
   user,
+  renderClientMainBottomBar,
   onGoBackToMain,
   onOpenWorkoutIndex,
   onOpenWorkouts,
@@ -72,13 +73,14 @@ export default function WorkoutPlanPage({
         className={styles.header}
         title={isBasicPlan ? "Базовый план" : "План тренировок"}
         eyebrow={isBasicPlan ? "Два микроцикла" : "Программа тренера"}
-        onBack={onGoBackToMain}
+        onBack={onOpenWorkouts || onGoBackToMain}
         backAriaLabel="Вернуться назад"
         testId="workout-plan-header"
         scope="workout-plan-header"
       />
       <main className={styles.shell}>
         <p className={styles.planName}>{plan.assignedProgramName || user?.assignedProgramName || "Индивидуальная программа"}</p>
+        <WorkoutSectionNavigation active="plan" onOpenWorkouts={onOpenWorkouts} onOpenPlan={onOpenPlan} onOpenHistory={onOpenHistory} />
 
         <section className={styles.stats} data-testid="workout-plan-stats">
           <div><strong>{isBasicPlan ? basicPlanMicrocycles.length : workoutPlanWeeks.length}</strong><span>{isBasicPlan ? "микроцикла" : "недель"}</span></div>
@@ -178,15 +180,7 @@ export default function WorkoutPlanPage({
         </div>
       </main>
 
-      <div className={styles.bottomPanel} data-testid="workout-plan-bottom-panel">
-        <ClientTrainingBottomBar
-          activeTab="plan"
-          onGoMain={onGoBackToMain}
-          onOpenWorkouts={onOpenWorkouts}
-          onOpenPlan={onOpenPlan}
-          onOpenHistory={onOpenHistory}
-        />
-      </div>
+      {renderClientMainBottomBar?.("workouts")}
     </div>
   );
 }

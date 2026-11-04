@@ -9,6 +9,22 @@ function hasNumber(value) {
   return Number.isFinite(Number(value)) && Number(value) > 0;
 }
 
+function hasSavedTrainerAssignment(client) {
+  const programId = String(client.assignedProgramId || "").trim();
+  const lifecycle = String(client.assignedProgramLifecycleStatus || "").trim().toLowerCase();
+  const visibility = String(client.assignedProgramVisibility || "").trim().toLowerCase();
+  return Boolean(
+    programId &&
+    !programId.startsWith("basic_") &&
+    !String(client.assignedProgramUpdatedAt || "").trim().startsWith("basic:") &&
+    String(client.assignedProgramAssignedByUid || "").trim() &&
+    [client.assignedProgramAddedAt, client.assignedProgramAt, client.assignedProgramPublishedAt]
+      .some((stamp) => typeof stamp === "string" && stamp.trim()) &&
+    lifecycle !== "archived" &&
+    !["archived", "client_archived", "trainer_archived"].includes(visibility)
+  );
+}
+
 function hasLegacyProgramAndSchedule(client = {}) {
   const calendar = client?.workoutCalendar || {};
   const scheduledDates = [
@@ -64,6 +80,9 @@ export function getTrainerClientSetupChecklist(client = {}) {
   const completedSteps = Object.fromEntries(
     TRAINER_CLIENT_SETUP_STEPS.map((step) => [step, raw.completedSteps?.[step] === true])
   );
+  // Assignment and checklist writes are separate. Recover only the committed
+  // program step after a failed checklist write and a subsequent remount.
+  if (hasSavedTrainerAssignment(client)) completedSteps.program = true;
   const nextStep = TRAINER_CLIENT_SETUP_STEPS.find((step) => !completedSteps[step]) || null;
 
   return {

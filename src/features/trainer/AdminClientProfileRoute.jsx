@@ -63,6 +63,7 @@ export default function AdminClientProfileRoute(props) {
   return (
     <AdminWorkspace
       activeSection="users"
+      contentLayout="client"
       adminEmail={user?.email || ""}
       adminMeta="Системное управление"
       adminName={adminName || user?.displayName || user?.name || user?.email?.split("@")[0] || "Администратор"}

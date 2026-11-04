@@ -1,0 +1,31 @@
+.screen {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top), var(--telegram-content-safe-area-top, 0px)) 16px max(24px, env(safe-area-inset-bottom), var(--telegram-content-safe-area-bottom, 0px));
+  background: #f2f2f7;
+  color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+.card {
+  box-sizing: border-box;
+  width: min(100%, 400px);
+  padding: 28px 22px 22px;
+  border: 1px solid rgba(60, 60, 67, .12);
+  border-radius: 28px;
+  background: #fff;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(28, 28, 30, .06);
+}
+
+.card img { display: block; margin: 0 auto 18px; }
+.card h1 { margin: 0 0 12px; font-size: clamp(23px, 6vw, 28px); line-height: 1.15; letter-spacing: -.025em; outline: none; }
+.card p { margin: 0; color: #636366; font-size: 16px; line-height: 1.45; }
+.actions { display: grid; gap: 10px; margin: 24px 0 16px; }
+.actions button { min-height: 50px; padding: 12px 16px; border: 0; border-radius: 15px; background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); color: #fff; font: inherit; font-size: 16px; font-weight: 650; cursor: pointer; }
+.actions .secondary { background: #efeff4; color: #3c6faa; }
+.actions button:focus-visible { outline: 3px solid #3f73b8; outline-offset: 3px; }
+.actions button:active { opacity: .78; }
+.card .hint { font-size: 13px; line-height: 1.45; }

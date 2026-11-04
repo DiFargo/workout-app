@@ -6,13 +6,24 @@ import { loadCssVariant } from './app/cssVariant.js'
 import { installGlobalErrorReporting } from './utils/errorReporting.js'
 import { registerServiceWorker } from './app/registerServiceWorker.js'
 import { initializeTelegramMiniApp } from './app/telegramMiniApp.js'
+import { acquireTelegramAppInstance } from './app/telegramSingleInstance.js'
+import { recordStartupStage } from './utils/performanceChecks.js'
 
 let telegramMiniApp = initializeTelegramMiniApp()
 let applicationMounted = false
+let telegramInstance = null
+// An invitation must remain available for retry after the first window closes.
+const hasTelegramInvitation = /^[A-Za-z0-9_-]{20,60}$/.test(new URLSearchParams(window.location.search).get('telegramInvite') || '')
+
+function closeDuplicateTelegramWindow() {
+  if (telegramInstance?.status !== 'duplicate' || hasTelegramInvitation) return
+  try { telegramMiniApp?.webApp?.close?.() } catch { /* Keep the recovery screen available. */ }
+}
 
 function syncTelegramMiniApp() {
   telegramMiniApp = initializeTelegramMiniApp() || telegramMiniApp
   if (applicationMounted) telegramMiniApp?.ready()
+  closeDuplicateTelegramWindow()
 }
 
 if (!telegramMiniApp) {
@@ -28,8 +39,20 @@ document.body.dataset.appTheme = 'warm-light'
 installGlobalErrorReporting()
 
 async function startApplication() {
-  await loadCssVariant()
-  const { default: App } = await import('./App.jsx')
+  recordStartupStage('entry-evaluated')
+  const cssReady = loadCssVariant()
+  telegramInstance = await acquireTelegramAppInstance()
+  if (telegramInstance.status === 'duplicate') {
+    await cssReady
+    const { default: TelegramDuplicateWindow } = await import('./app/TelegramDuplicateWindow.jsx')
+    createRoot(document.getElementById('root')).render(<TelegramDuplicateWindow hasInvitation={hasTelegramInvitation} />)
+    applicationMounted = true
+    telegramMiniApp?.ready()
+    closeDuplicateTelegramWindow()
+    return
+  }
+  const [{ default: App }] = await Promise.all([import('./App.jsx'), cssReady])
+  recordStartupStage('runtime-loaded')
 
   createRoot(document.getElementById('root')).render(
     <StrictMode>
@@ -47,6 +70,7 @@ async function startApplication() {
 }
 
 void startApplication().catch((error) => {
+  telegramInstance?.release?.()
   console.error('Application startup failed:', error)
   window.showStartupFailure?.()
 })

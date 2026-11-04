@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { APP_PAGES } from "./appPages";
 import {
-  loadAdminBaseLibrary,
+  loadAdminLibraryRoute,
   loadAdminPanelHub,
   loadAiCoachPage,
   loadBasicWorkoutQuizPage,
@@ -13,12 +13,10 @@ import {
   loadWorkoutPlanPage
 } from "./appRouteLoaders";
 import AccessDeniedScreen from "../components/common/AccessDeniedScreen";
-import AdminWorkspace from "../components/admin/AdminWorkspace";
 import RouteFallback from "./RouteFallback";
-import { BASIC_WORKOUT_EXERCISE_LIBRARY } from "../data/basicWorkoutExerciseLibrary";
-import { BASIC_WORKOUT_PLANS } from "../data/basicWorkoutPlans";
+import RouteContentReady from "./RouteContentReady.jsx";
 
-const AdminBaseLibrary = lazy(loadAdminBaseLibrary);
+const AdminLibraryRoute = lazy(loadAdminLibraryRoute);
 const AdminPanelHub = lazy(loadAdminPanelHub);
 const AiCoachPage = lazy(loadAiCoachPage);
 const BasicWorkoutQuizPage = lazy(loadBasicWorkoutQuizPage);
@@ -28,10 +26,6 @@ const WorkoutHistoryPage = lazy(loadWorkoutHistoryPage);
 const WorkoutListPage = lazy(loadWorkoutListPage);
 const WorkoutModePage = lazy(loadWorkoutModePage);
 const WorkoutPlanPage = lazy(loadWorkoutPlanPage);
-
-function renderLazyRoute(route) {
-  return <Suspense fallback={<RouteFallback />}>{route}</Suspense>;
-}
 
 export default function AppRouter({
   page,
@@ -99,15 +93,33 @@ export default function AppRouter({
   aiNutritionAdaptedToday,
   setAiNutritionAdaptedToday,
   nutrition,
+  nutritionHistoryReady = true,
+  nutritionLoadError,
+  loadNutritionHistory,
   plan,
   adminBaseLibraryTab,
   adminAllUsersList,
   adminTrainingTemplates,
+  loadAdminTrainingTemplates,
   user,
   workoutPlanRouteHandlers,
   getCompletedWorkoutSet,
   isWorkoutCompletedByHistory
 }) {
+  function renderLazyRoute(route) {
+    const titles = {
+      [APP_PAGES.WORKOUTS]: "Тренировки", [APP_PAGES.WORKOUT_MODE]: "Тренировки",
+      [APP_PAGES.BASIC_WORKOUT_QUIZ]: "Настройка тренировок", [APP_PAGES.BASIC_WORKOUT_TODAY]: "Тренировка",
+      [APP_PAGES.HISTORY]: "История тренировок", [APP_PAGES.WORKOUT_PLAN]: "План тренировок",
+      [APP_PAGES.MEASUREMENT_WIZARD]: "Замеры", [APP_PAGES.AI_COACH]: "Помощник",
+      [APP_PAGES.ADMIN_PANEL]: "Обзор", [APP_PAGES.ADMIN_LIBRARY]: "Библиотека"
+    };
+    const activeTab = page === APP_PAGES.MEASUREMENT_WIZARD ? "progress" : page === APP_PAGES.AI_COACH ? "cabinet" : "workouts";
+    return <Suspense fallback={<RouteFallback title={titles[page] || "Загрузка раздела"} activeTab={activeTab}
+      renderBottomBar={!canUseTrainerFeatures ? renderClientMainBottomBar : undefined} />}>
+      <RouteContentReady route={page}>{route}</RouteContentReady>
+    </Suspense>;
+  }
   if (page === APP_PAGES.ADMIN_LIBRARY) {
     if (!canUseAdminFeatures()) {
       return (
@@ -118,58 +130,9 @@ export default function AppRouter({
       );
     }
 
-    const adminBaseProgramTemplates = Array.isArray(adminTrainingTemplates)
-      ? adminTrainingTemplates.filter((template) => template?.ownerRole === "admin")
-      : [];
-    const baseProgramTemplates = [
-      ...Object.values(BASIC_WORKOUT_PLANS),
-      ...adminBaseProgramTemplates
-    ];
-    const activeAdminSection = adminBaseLibraryTab === "exercises" ? "exercises" : "programs";
-    const openAdminSection = (sectionId) => {
-      if (sectionId === "overview") {
-        onSetPage(APP_PAGES.ADMIN_PANEL);
-        return;
-      }
-
-      if (sectionId === "users") {
-        if (typeof openAdminClientsWithFilter === "function") {
-          openAdminClientsWithFilter("all");
-        } else {
-          onSetPage(APP_PAGES.ADMIN_USERS);
-        }
-        return;
-      }
-
-      if (sectionId === "programs" || sectionId === "exercises") {
-        if (typeof openAdminBaseLibrary === "function") {
-          openAdminBaseLibrary(sectionId);
-        }
-      }
-    };
-
     return renderLazyRoute(
-      <AdminWorkspace
-        activeSection={activeAdminSection}
-        adminMeta="Системное управление"
-        adminName={user?.displayName || user?.name || user?.email?.split("@")[0] || ""}
-        adminEmail={user?.email || ""}
-        headerTitle={activeAdminSection === "exercises" ? "Базовые упражнения" : "Базовые программы"}
-        onLogout={onAdminLogout}
-        onProfileClick={onAdminProfileClick}
-        onSectionChange={openAdminSection}
-        subtitle="Общие программы и упражнения приложения"
-        title="Админка"
-      >
-        <AdminBaseLibrary
-          key={adminBaseLibraryTab}
-          embedded
-          programTemplates={baseProgramTemplates}
-          exercises={BASIC_WORKOUT_EXERCISE_LIBRARY}
-          initialTab={adminBaseLibraryTab}
-          onBack={() => onSetPage(APP_PAGES.ADMIN_PANEL)}
-        />
-      </AdminWorkspace>
+      <AdminLibraryRoute {...{ adminTrainingTemplates, loadAdminTrainingTemplates, adminBaseLibraryTab, user,
+        onSetPage, openAdminClientsWithFilter, openAdminBaseLibrary, onAdminLogout, onAdminProfileClick }} />
     );
   }
 
@@ -291,6 +254,7 @@ export default function AppRouter({
   if (page === APP_PAGES.HISTORY) {
     return renderLazyRoute(
       <WorkoutHistoryPage
+        onOpenPlan={workoutPlanRouteHandlers?.onOpenWorkoutPlan}
         canUseTrainerFeatures={canUseTrainerFeatures}
         renderClientMainBottomBar={renderClientMainBottomBar}
         history={history}
@@ -317,6 +281,8 @@ export default function AppRouter({
   }
 
   if (page === APP_PAGES.AI_COACH) {
+    if (!nutritionHistoryReady || historyLoading) return <RouteFallback title="Помощник" activeTab="cabinet"
+      renderBottomBar={renderClientMainBottomBar} error={nutritionLoadError} onRetry={loadNutritionHistory} />;
     return renderLazyRoute(
       <AiCoachPage
         onGoBack={onBackToMain}
@@ -342,6 +308,7 @@ export default function AppRouter({
   if (page === APP_PAGES.WORKOUT_PLAN) {
     return renderLazyRoute(
       <WorkoutPlanPage
+        renderClientMainBottomBar={renderClientMainBottomBar}
         plan={plan}
         history={history}
         user={user}

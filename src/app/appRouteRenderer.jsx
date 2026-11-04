@@ -7,6 +7,7 @@ export function renderAppRoutePage(ctx) {
   const {
     APP_VERSION,
     auth,
+    db,
     renderClientMainBottomBar,
     canUseTrainerFeatures,
     plan,
@@ -30,6 +31,9 @@ export function renderAppRoutePage(ctx) {
     openTrainingEntry,
     setPage,
     loadHistory,
+    initialWorkoutLoadState,
+    retryInitialWorkouts,
+    retryWorkoutSync,
     setProfileActiveTab,
     openAdminClientsWithFilter,
     openAdminProgramsOverview,
@@ -44,6 +48,11 @@ export function renderAppRoutePage(ctx) {
 
   const workoutListProps = createWorkoutListProps({
     appVersion: APP_VERSION,
+    initialLoadState: initialWorkoutLoadState,
+    onRetryLoad: retryInitialWorkouts,
+    onRetrySync: retryWorkoutSync,
+    onLoadWorkoutAchievements: () => import("../features/client/profile/profileAchievementsHistory.js")
+      .then(({ loadProfileAchievementsHistory }) => loadProfileAchievementsHistory({ auth, db, plan, history, uid: user?.uid, requireDetails: true })),
     renderClientMainBottomBar,
     plan,
     history,

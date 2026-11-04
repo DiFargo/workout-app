@@ -1,30 +1,55 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Mail } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
-import SaveSuccessNotice from "../../../shared/ui/SaveSuccessNotice";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileEmailModal.module.css";
+import { getAccountRecoveryEmail } from "./profileAccountEmail.js";
+import { useProfileEmailAuthMethod } from "./useProfileEmailAuthMethod.js";
+import { useModalBackNavigation } from "../../../shared/hooks/useModalBackNavigation.js";
 
-export default function ProfileEmailModal({
-  open,
+export default function ProfileEmailModal(props) {
+  return props.open ? <ProfileEmailForm {...props} /> : null;
+}
+
+function ProfileEmailForm({
   email,
+  authUser,
   saving,
   status,
   onClose,
+  onReauthenticate,
   onRequestEmailChange
 }) {
-  const currentEmail = String(email || "").trim();
+  const currentEmail = getAccountRecoveryEmail(email);
+  const authMethod = useProfileEmailAuthMethod(authUser);
+  const customSession = authMethod === "custom";
   const [nextEmail, setNextEmail] = useState(currentEmail);
   const [currentPassword, setCurrentPassword] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
-
+  const [reauthenticatePending, setReauthenticatePending] = useState(false);
+  const [reauthenticateError, setReauthenticateError] = useState("");
+  const handoffPendingRef = useRef(false);
+  const mountedRef = useRef(true);
   useEffect(() => {
-    if (open) setSaveSuccess(false);
-  }, [open]);
-
-  if (!open) {
-    return null;
-  }
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
+  const attemptReauthentication = useCallback(async () => {
+    if (handoffPendingRef.current) return;
+    handoffPendingRef.current = true;
+    setReauthenticatePending(true);
+    setReauthenticateError("");
+    try {
+      const result = await (onReauthenticate || onClose)?.();
+      if (result === false && mountedRef.current) setReauthenticateError("Не удалось завершить выход. Попробуй ещё раз.");
+    } catch {
+      if (mountedRef.current) setReauthenticateError("Не удалось завершить выход. Попробуй ещё раз.");
+    } finally {
+      handoffPendingRef.current = false;
+      if (mountedRef.current) setReauthenticatePending(false);
+    }
+  }, [onReauthenticate, onClose]);
+  useModalBackNavigation({ open: saveSuccess, onBack: attemptReauthentication });
 
   async function submitEmailChange(event) {
     event.preventDefault();
@@ -58,7 +83,7 @@ export default function ProfileEmailModal({
           embedded
           controlsVariant="workout"
           className={styles.header}
-          title="Привязка почты"
+          title={saveSuccess ? "Почта сохранена" : currentEmail ? "Изменить почту" : "Добавить личную почту"}
           titleId="profileEmailManageTitle"
           scope="profile-email-header"
           actions={(
@@ -71,6 +96,21 @@ export default function ProfileEmailModal({
           )}
         />
 
+        {saveSuccess ? <section className={styles.form} data-testid="profile-email-success">
+          <div className={styles.preview} role="status">
+            <div className={styles.previewIcon} aria-hidden="true"><Check /></div>
+            <div>
+              <strong>Требуется повторный вход</strong>
+              <span>{customSession
+                ? "Почта сохранена. Для безопасности войди снова через Telegram в тот же аккаунт. Адрес ещё не подтверждён, пароль не создаётся автоматически. После входа ссылку для установки или смены пароля можно запросить в разделе «Пароль»."
+                : "Почта сохранена. Для безопасности войди в аккаунт заново привычным способом. Адрес ещё не подтверждён; пароль не создаётся автоматически. Если используешь пароль, вводи новый email и существующий пароль."}</span>
+            </div>
+          </div>
+          {reauthenticateError ? <p className={styles.status} role="alert" data-testid="profile-email-reauthenticate-error">{reauthenticateError}</p> : null}
+          <button type="button" className={styles.primaryButton} data-testid="profile-email-reauthenticate" autoFocus disabled={reauthenticatePending} onClick={attemptReauthentication}>
+            {reauthenticatePending ? "Завершаю выход…" : "Перейти к повторному входу"}
+          </button>
+        </section> : <>
         <div className={styles.head}>
           <div className={styles.avatar}>
             <Mail size={28} strokeWidth={2.3} />
@@ -78,8 +118,8 @@ export default function ProfileEmailModal({
           <div>
             <p className={styles.intro}>
               {currentEmail
-                ? `${currentEmail} · используется для входа и восстановления доступа.`
-                : "Добавь почту, чтобы входить в аккаунт и восстановить доступ при необходимости."}
+                ? `${currentEmail} · адрес аккаунта. Для входа по email нужен заданный пароль.`
+                : "Добавь личную почту. После сохранения адреса пароль не создаётся автоматически."}
             </p>
           </div>
         </div>
@@ -98,7 +138,7 @@ export default function ProfileEmailModal({
             />
           </label>
 
-          <label className={styles.field}>
+          {!customSession && authMethod !== "checking" && <label className={styles.field}>
             <span className={styles.fieldLabel}>Текущий пароль</span>
             <input
               className={styles.input}
@@ -109,18 +149,21 @@ export default function ProfileEmailModal({
               onChange={(event) => setCurrentPassword(event.target.value)}
               placeholder="Для Google-аккаунта откроется Google"
             />
-          </label>
+          </label>}
 
           <div className={styles.preview}>
             <div className={styles.previewIcon} aria-hidden="true"><Check /></div>
             <div>
               <strong>Подтверждение входа</strong>
-              <span>Для парольного аккаунта нужен текущий пароль. Для Google откроется окно авторизации.</span>
+              <span>{authMethod === "checking" ? "Проверяем способ текущего входа…" : customSession
+                ? "Подтверждение — текущая сессия Telegram не старше 5 минут. Если вход устарел, потребуется снова войти через Telegram в тот же аккаунт. Для установки или смены пароля после сохранения запроси ссылку в разделе «Пароль»."
+                : authMethod === "unavailable" ? "Не удалось проверить текущий вход. Закрой окно и попробуй ещё раз."
+                : "Для парольного аккаунта нужен текущий пароль. Для Google откроется окно авторизации."}</span>
             </div>
           </div>
 
-          <button type="submit" className={styles.primaryButton} data-testid="profile-email-submit" disabled={saving || saveSuccess}>
-            {saving ? "Проверяю..." : "Авторизовать и привязать"}
+          <button type="submit" className={styles.primaryButton} data-testid="profile-email-submit" disabled={saving || saveSuccess || authMethod === "checking" || authMethod === "unavailable"}>
+            {saving ? "Проверяю..." : currentEmail ? "Подтвердить и сохранить" : "Привязать почту"}
           </button>
         </form>
 
@@ -131,13 +174,7 @@ export default function ProfileEmailModal({
         <button type="button" className={styles.secondaryButton} data-testid="profile-email-dismiss" onClick={onClose} disabled={saveSuccess}>
           Закрыть
         </button>
-        {saveSuccess ? (
-          <SaveSuccessNotice
-            title="Почта изменена"
-            description="Новый адрес привязан к аккаунту и доступен для входа."
-            onComplete={onClose}
-          />
-        ) : null}
+        </>}
       </div>
     </div>
   );

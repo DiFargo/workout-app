@@ -43,8 +43,8 @@ export function useNutritionSearchEffects({
     setRetryCount((count) => count + 1);
   }, [nutritionSearch]);
   useEffect(() => {
-    if (nutritionPickerOpen && !GEMINI_ONLY_FOOD_SEARCH) warmPersonalNutritionCatalog();
-  }, [nutritionPickerOpen]);
+    if ((nutritionPickerOpen || dishIngredientPickerOpen) && !GEMINI_ONLY_FOOD_SEARCH) warmPersonalNutritionCatalog();
+  }, [nutritionPickerOpen, dishIngredientPickerOpen]);
   useEffect(() => {
     const query = nutritionSearch.trim();
 
@@ -70,7 +70,9 @@ export function useNutritionSearchEffects({
     if (!useGemini) {
       searchPersonalNutritionCatalog(query, {signal:controller.signal}).then((foods) => {
         if (cancelled) return;
-        startTransition(() => setFatSecretFoods(mergeNutritionFoodResults(foods, bundledFallbackFoods)));
+        // The worker already includes the same basic layer. Re-adding instant
+        // generic fallbacks here can falsely claim a found brand is absent.
+        startTransition(() => setFatSecretFoods(foods));
       }).catch((error) => {
         if (!cancelled && error.name !== "AbortError") {
           setFatSecretError(bundledFallbackFoods.length ? "Показаны доступные продукты на устройстве." : "Каталог пока не загружен. Проверьте соединение или используйте Gemini.");
@@ -172,6 +174,15 @@ export function useNutritionSearchEffects({
     setDishIngredientExternalFoods(bundledFallbackFoods);
     setDishIngredientFallbackSuggestions([]);
     setDishIngredientLoading(true);
+
+    if (!GEMINI_ONLY_FOOD_SEARCH) {
+      searchPersonalNutritionCatalog(query, {signal: controller.signal}).then(foods => {
+        if (!cancelled) startTransition(() => setDishIngredientExternalFoods(foods));
+      }).catch(error => {
+        if (!cancelled && error.name !== "AbortError" && !bundledFallbackFoods.length) setDishIngredientFallbackSuggestions([]);
+      }).finally(() => {if (!cancelled) setDishIngredientLoading(false);});
+      return () => {cancelled = true;controller.abort();};
+    }
 
     timer = window.setTimeout(async () => {
       try {

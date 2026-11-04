@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import vm from "node:vm";
+import { getClientWorkoutReadModel } from "../src/utils/clientWorkoutEvidence.js";
 
 const source = (await readFile(new URL("../src/features/client/workouts/workoutOpenHandlers.js", import.meta.url), "utf8"))
   .replace(/^import[\s\S]*?;\r?\n/gm, "")
@@ -23,6 +24,7 @@ function setup({ rejected = false, offline = false, workoutDraftRestorePrompt = 
     }),
     safeWriteUserJsonStorage() {},
     getWorkoutReadinessOption: (id) => ({ id }),
+    getClientWorkoutReadModel,
     navigator: { onLine: !offline },
     console: { warn() {} }
   });

@@ -1,14 +1,15 @@
 import { getWorkoutReadinessOption } from "../../../domain/workoutPresentation";
 import { buildBasicWorkoutPlanFromQuiz } from "../../../utils/basicWorkoutPlanBuilder";
 import { syncWorkoutCalendarWithPlan } from "../../../utils/workoutSchedule";
-import { safeReadJsonStorage } from "../../../utils/storageSafety";
 import { safeWriteUserJsonStorage } from "../../../utils/userScopedStorage";
 import { buildCompletedWorkoutSet, getWorkoutAssignmentVersion, isWorkoutCompletedWithSet } from "../../../utils/workoutCompletion";
-import { canResumeWorkoutDraft } from "../../../utils/workoutDraftState";
+import { canResumeWorkoutDraft, restoreWorkoutDraftPlan } from "../../../utils/workoutDraftState";
 import { doc, writeBatch } from "firebase/firestore";
+import { captureAuthSession } from "../../../utils/authSession.js";
+import { getClientWorkoutCompletionHistory, getClientWorkoutReadModel } from "../../../utils/clientWorkoutEvidence.js";
 import {
   clearWorkoutDraft,
-  getWorkoutDraftKey
+  readWorkoutDraft
 } from "../../../utils/workoutDraftStorage";
 
 export function createWorkoutOpenHandlers({
@@ -25,6 +26,8 @@ export function createWorkoutOpenHandlers({
   aiNutritionProfile,
   aiNutritionProfileDraft,
   workoutDraftRestorePrompt,
+  workoutOpenContextRef,
+  onDraftReadError,
   loadHistory,
   loadWorkoutsFromFirebase,
   setPlan,
@@ -193,7 +196,7 @@ export function createWorkoutOpenHandlers({
         : null;
 
     if (shouldRestoreDraft) {
-      setPlan(savedDraft.plan);
+      setPlan(restoreWorkoutDraftPlan(plan, savedDraft));
     } else if (freshPlan) {
       setPlan(freshPlan);
     }
@@ -235,24 +238,41 @@ export function createWorkoutOpenHandlers({
     setPostWorkoutFeedbackOpen(false);
     setWorkoutReadinessOpen(!shouldRestoreDraft);
     setIsWorkoutSaved(false);
-    setWorkoutClientComment("");
+    setWorkoutClientComment(shouldRestoreDraft && typeof savedDraft?.workoutClientComment === "string"
+      ? savedDraft.workoutClientComment : "");
     setShowWorkoutSavedCard(false);
-    loadHistory();
+    const openingPlan = freshPlan || plan;
+    const openingWorkout = openingPlan.workouts?.find(item => item.id === id);
+    const version = String(openingWorkout?.assignedProgramUpdatedAt || openingPlan.assignedProgramUpdatedAt || "").trim();
+    const readModel = getClientWorkoutReadModel(openingPlan);
+    if (!readModel || !Object.hasOwn(readModel.latestExerciseResultsByAssignment || {}, version)) loadHistory();
   }
 
-  function openWorkout(id) {
+  const openContext = workoutOpenContextRef?.current ? workoutOpenContextRef : { current: { request: 0, plan } };
+  async function openWorkout(id) {
     const currentUser = auth.currentUser || user;
-    const savedDraft = currentUser?.uid ? safeReadJsonStorage(getWorkoutDraftKey(currentUser.uid, id), null) : null;
+    const session = captureAuthSession(auth);
+    const request = ++openContext.current.request;
+    const openingPage = openContext.current.page;
+    const isCurrentOpen = () => session.isUnchanged() && request === openContext.current.request
+      && openContext.current.plan === plan && openContext.current.page === openingPage;
     const selectedPlanWorkout = plan.workouts.find((workoutItem) => workoutItem.id === id);
     const assignmentVersion = getWorkoutAssignmentVersion(plan);
     const completed = isWorkoutCompletedWithSet(selectedPlanWorkout,
-      buildCompletedWorkoutSet(history, assignmentVersion, {}, plan.workouts), assignmentVersion);
+      buildCompletedWorkoutSet(getClientWorkoutCompletionHistory(plan, history), assignmentVersion, {}, plan.workouts), assignmentVersion);
     if (completed) {
       if (currentUser?.uid) clearWorkoutDraft(currentUser.uid, id);
       loadHistory();
       setPage(APP_PAGES.HISTORY);
       return;
     }
+    let savedDraft;
+    try { savedDraft = currentUser?.uid ? await readWorkoutDraft(currentUser.uid, id) : null; }
+    catch {
+      if (isCurrentOpen()) onDraftReadError?.();
+      return;
+    }
+    if (!isCurrentOpen()) return;
     const currentAssignmentVersion =
       selectedPlanWorkout?.assignedProgramUpdatedAt ||
       plan.assignedProgramUpdatedAt ||
@@ -291,7 +311,7 @@ export function createWorkoutOpenHandlers({
     const pendingWorkout = plan.workouts.find((item) => item.id === pendingDraft.workoutId);
     const assignmentVersion = getWorkoutAssignmentVersion(plan);
     const completed = isWorkoutCompletedWithSet(pendingWorkout,
-      buildCompletedWorkoutSet(history, assignmentVersion, {}, plan.workouts), assignmentVersion);
+      buildCompletedWorkoutSet(getClientWorkoutCompletionHistory(plan, history), assignmentVersion, {}, plan.workouts), assignmentVersion);
     if (completed) {
       const currentUser = auth.currentUser || user;
       if (currentUser?.uid) clearWorkoutDraft(currentUser.uid, pendingDraft.workoutId);
@@ -299,47 +319,24 @@ export function createWorkoutOpenHandlers({
       setPage(APP_PAGES.HISTORY);
       return;
     }
+    if (shouldRestoreDraft && !canResumeWorkoutDraft(pendingDraft.savedDraft, pendingWorkout, assignmentVersion)) {
+      // The trainer may reassign the program while the restore dialog is open.
+      // Never copy entries from that previous assignment into the new plan.
+      return;
+    }
     if (!shouldRestoreDraft) {
       const currentUser = auth.currentUser || user;
-      const fallbackPlan = {
-        ...plan,
-        workouts: plan.workouts.map((workoutItem) => (
-          workoutItem.id !== pendingDraft.workoutId
-            ? workoutItem
-            : {
-                ...workoutItem,
-                exercises: workoutItem.exercises.map((exercise) => ({
-                  ...exercise,
-                  sets: exercise.sets.map((set) => {
-                    const {
-                      aiOriginalWeight,
-                      ...cleanSet
-                    } = set;
-
-                    return {
-                      ...cleanSet,
-                      weight: aiOriginalWeight || set.weight || "",
-                      enteredReps: "",
-                      enteredWeight: ""
-                    };
-                  })
-                }))
-              }
-        ))
-      };
-
-      if (currentUser?.uid) {
-        clearWorkoutDraft(currentUser.uid, pendingDraft.workoutId);
-      }
-
-      const freshPlan = await loadWorkoutsFromFirebase(currentUser?.uid);
+      const session = captureAuthSession(auth);
+      const freshPlan = await loadWorkoutsFromFirebase(currentUser?.uid, { force: true, requireFresh: true });
+      // An authoritative absence is not permission to restore a stale plan.
+      // Keep the draft intact when the assignment changed or reload failed.
+      if (!session.isCurrent() || !freshPlan?.workouts?.some((item) => item.id === pendingDraft.workoutId)) return;
+      if (currentUser?.uid) clearWorkoutDraft(currentUser.uid, pendingDraft.workoutId);
       openWorkoutWithDraftChoice(
         pendingDraft.workoutId,
         null,
         false,
-        freshPlan?.workouts?.some((item) => item.id === pendingDraft.workoutId)
-          ? freshPlan
-          : fallbackPlan
+        freshPlan
       );
       return;
     }

@@ -51,7 +51,7 @@
     min-height: 3.25rem;
     border: 0;
     border-radius: 1rem;
-    background: var(--color-app-error-action);
+    background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%));
     color: var(--color-app-error-action-text);
     font-size: 0.9375rem;
     font-weight: var(--font-weight-bold);

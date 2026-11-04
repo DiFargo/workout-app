@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef, useSyncExternalStore } from "react";
+import { consumeModalBackLayer, getModalBackLayerCount, subscribeModalBackLayers } from "./modalBackNavigation.js";
 
 export function useAppBackNavigation({
   isLoggedIn,
@@ -9,18 +10,38 @@ export function useAppBackNavigation({
   handleTransientBack,
   restorePrimaryPage
 }) {
+  const modalLayerCount = useSyncExternalStore(subscribeModalBackLayers, getModalBackLayerCount, () => 0);
+  const hasAnyTransientScreen = hasTransientScreen || modalLayerCount > 0;
+  const telegramBackStateRef = useRef({ hasAnyTransientScreen, handleTransientBack });
+  useLayoutEffect(() => {
+    telegramBackStateRef.current = { hasAnyTransientScreen, handleTransientBack };
+  }, [hasAnyTransientScreen, handleTransientBack]);
+  const shouldShowTelegramBackButton = Boolean(
+    isLoggedIn &&
+    !appLoading &&
+    page !== undefined &&
+    (hasAnyTransientScreen || page !== "main")
+  );
   useEffect(() => {
-    const shouldShowTelegramBackButton = Boolean(
-      isLoggedIn &&
-      !appLoading &&
-      page !== undefined &&
-      (hasTransientScreen || page !== "main")
-    );
-
+    if (!modalLayerCount) return undefined;
+    const onEscape = event => {
+      if (event.key !== "Escape" || !getModalBackLayerCount()) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      consumeModalBackLayer();
+    };
+    window.addEventListener("keydown", onEscape, true);
+    return () => window.removeEventListener("keydown", onEscape, true);
+  }, [modalLayerCount]);
+  useEffect(() => {
+    let boundBackButton = null;
     let removeBackButtonHandler = () => {};
     const syncTelegramBackButton = () => {
+      const backButton = window.Telegram?.WebApp?.BackButton || null;
+      if (backButton === boundBackButton) return;
       removeBackButtonHandler();
-      const backButton = window.Telegram?.WebApp?.BackButton;
+      removeBackButtonHandler = () => {};
+      boundBackButton = backButton;
       if (!backButton) return;
 
       if (!shouldShowTelegramBackButton) {
@@ -29,11 +50,12 @@ export function useAppBackNavigation({
       }
 
       const onTelegramBack = () => {
-        if (hasTransientScreen && window.history.state?.workoutAppBackTrap) {
+        const current = telegramBackStateRef.current;
+        if (current.hasAnyTransientScreen && window.history.state?.workoutAppBackTrap) {
           window.history.back();
           return;
         }
-        handleTransientBack?.();
+        if (!consumeModalBackLayer()) current.handleTransientBack?.();
       };
 
       backButton.onClick?.(onTelegramBack);
@@ -50,7 +72,7 @@ export function useAppBackNavigation({
       window.removeEventListener("telegram-mini-app-ready", syncTelegramBackButton);
       removeBackButtonHandler();
     };
-  }, [appLoading, handleTransientBack, hasTransientScreen, isLoggedIn, page]);
+  }, [shouldShowTelegramBackButton]);
 
   useEffect(() => {
     const isPrimary = Boolean(isPrimaryPage && isPrimaryPage(page));
@@ -59,7 +81,7 @@ export function useAppBackNavigation({
       !appLoading &&
       (page !== undefined) &&
       (
-        hasTransientScreen ||
+        hasAnyTransientScreen ||
         page !== "main"
       );
 
@@ -67,7 +89,7 @@ export function useAppBackNavigation({
 
     const pageIsPrimary = isPrimary;
     const shouldPushSyntheticBackEntry =
-      hasTransientScreen ||
+      hasAnyTransientScreen ||
       !pageIsPrimary;
 
     if (shouldPushSyntheticBackEntry && !window.history.state?.workoutAppBackTrap) {
@@ -81,7 +103,7 @@ export function useAppBackNavigation({
     const onAndroidBack = (event) => {
       const targetPage = event.state?.workoutAppPage;
       if (
-        !hasTransientScreen &&
+        !hasAnyTransientScreen &&
         pageIsPrimary &&
         targetPage &&
         isPrimaryPage(targetPage) &&
@@ -92,10 +114,11 @@ export function useAppBackNavigation({
         return;
       }
 
-      const handled = Boolean(handleTransientBack?.());
+      const handled = consumeModalBackLayer() || Boolean(handleTransientBack?.());
 
-      if (handled && hasTransientScreen) {
+      if (handled && hasAnyTransientScreen) {
         setTimeout(() => {
+          if (!hasTransientScreen && getModalBackLayerCount() === 0) return;
           if (!window.history.state?.workoutAppBackTrap) {
             window.history.pushState({
               ...(window.history.state || {}),
@@ -117,6 +140,7 @@ export function useAppBackNavigation({
     appLoading,
     page,
     hasTransientScreen,
+    hasAnyTransientScreen,
     isPrimaryPage,
     handleTransientBack,
     restorePrimaryPage

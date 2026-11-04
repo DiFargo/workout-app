@@ -5,7 +5,7 @@ This project is a production React + Firebase fitness application. The current g
 ## Current Shape
 
 - `src/App.jsx` is only the thin app wrapper: `AppErrorBoundary` + `AppCore`.
-- `src/main.jsx` is only the runtime entrypoint: React root, core CSS, service worker registration.
+- `src/main.jsx` owns the runtime entrypoint: Telegram instance/bootstrap setup, awaited style loading, the dynamic App import, React root and service worker registration.
 - `src/AppCore.jsx` is the coordinator. It may hold global state, assemble route context, and choose large app routes.
 - `src/app` owns app-level routing, navigation contracts and bootstrap/runtime hooks.
 - `src/features/client` owns client-facing feature UI and handlers.
@@ -36,12 +36,29 @@ Fast local verification:
 npm.cmd run verify
 ```
 
-This runs:
+`verify` selects the lightweight `release` profile in `scripts/verify.mjs`. With no extra options it runs only:
 
 - production build
-- main JS bundle budget check
-- unit tests
-- critical lint
+- static-entry, mandatory-boot and Firebase-core artifact budgets
+- `git diff --check`
+
+It does **not** run lint, unit tests, Rules tests, Functions syntax checks,
+dependency audits or browser tests. A green lightweight check is not production
+sign-off. For implementation, select the smallest relevant profile and focused
+tests; for production sign-off use:
+
+```powershell
+npm.cmd run verify:full
+```
+
+`verify:full` runs full ESLint, unit tests, Firestore/Storage Rules emulator
+tests, all declared Functions codebases' syntax checks, isolated staging and
+fresh production builds, artifact budgets, root/Functions dependency audits,
+diff whitespace checks and the configured Playwright suite.
+`verify:core` runs that full profile without the complete Playwright suite;
+React DOM unit tests still need Chromium. Neither command substitutes for
+approved staging/production smoke results. See the authoritative
+[release checklist](release-operations.md#release-procedure).
 
 Browser smoke tests:
 
@@ -75,7 +92,7 @@ They protect:
 - client/trainer feature separation
 - pure `domain` and `utils` layers
 - route prop/dependency initialization order
-- main app JS chunk size after `vite build`
+- deployable harness exclusion and bounded static-entry/mandatory-boot graphs after `vite build`
 
 When changing the structure, update these tests intentionally instead of working around them.
 
@@ -83,11 +100,56 @@ When changing the structure, update these tests intentionally instead of working
 
 `npm.cmd run verify` runs `scripts/check-build-budget.mjs` immediately after the production build.
 
-Current limits:
+Current gzip limits (each emitted file compressed separately with Node zlib):
 
-- main `dist/assets/index-*.js` raw size: `600 KiB`
-- main `dist/assets/index-*.js` gzip size: `170 KiB`
-- main `dist/assets/index-*.css` raw size: `2100 KiB`
-- main `dist/assets/index-*.css` gzip size: `270 KiB`
+- static entry closure, including its CSS and React: `100 KiB`;
+- mandatory normal boot path: `640 KiB`;
+- Firebase core, excluding optional App Check and Storage: `170 KiB`.
 
-These limits intentionally track the initial app JavaScript and CSS chunks only. Route chunks can grow independently when they belong to lazy-loaded screens.
+The mandatory boot union includes the entry and `src/App.jsx`,
+their recursive **static** imports and emitted CSS. As of 3.0.852, trainer V2
+styles load with trainer routes instead of blocking every login. Assets shared between roots
+are counted once. Roots are selected by manifest source identity, not hashed
+chunk names; a missing, ambiguous or disconnected root fails closed. Optional
+route dynamic imports and App Check are not automatically included.
+
+The [3.0.849 artifact baseline](../artifacts/comprehensive-audit-2026-10-18/boot-metrics.json)
+was `569.42 KiB` for the deduplicated mandatory union, versus `71.34 KiB` for
+the static entry alone. The `640 KiB` bound permits limited remediation growth,
+not indefinite baseline inflation. Increasing App/static-dependency/CSS bytes
+must fail this bound even after chunk renaming; an unused lazy admin route must
+not inflate the normal boot subtotal. Tests live in
+`tests/remediation-architecture.test.mjs` and `tests/production-bundle-boundaries.test.mjs`.
+
+These are artifact-byte regression guards, not HTTP transfer measurements,
+first-interactive timing or Core Web Vitals. The baseline has no cold network
+waterfall; record one before changing startup sequencing or deferring mandatory
+styles. No such runtime optimization is implied by this budget correction.
+
+## Visual token ownership
+
+The approved product palette remains [AGENTS.md](../AGENTS.md#ui-design-system):
+canvas `#F2F2F7`, text `#1C1C1E`, accent `#3C6FAA`, success `#237A42`.
+On 2026-10-30 the user explicitly reaffirmed the green-to-blue fill for primary
+actions: `--ownset-action-gradient` in `src/styles/_variables.css` is canonical.
+Use it for filled client, trainer, admin, auth and modal primary buttons, including
+pressed/loading states. Text, chart, border and semantic colour tokens remain
+colours. The OwnSet preview's historical layout does not replace current geometry.
+
+The existing runtime cascade is not a second approved palette. `main.jsx` sets
+`data-app-theme="warm-light"`; AppCore loads base `_variables.css`, Foundation,
+Theme/Surface/Layout and client flow/visual modules, then
+`AppCoreClientAppleTheme.css`. AppBootstrap also imports
+`AppCoreClientIosTheme.module.css` and marks the root with its contract class.
+The Apple/iOS files' `html:root[data-app-theme="warm-light"]` token selectors
+override lower-specificity base aliases; equal-specificity declarations still
+depend on emitted source order, and component-specific rules can override them.
+Inspect computed styles on the actual shell rather than assuming one file
+always wins every property.
+
+Today those active overrides contain canvas `#f5f7f8`, text `#1c282e` and action
+`#396ba6`; base aliases still contain older green values. This documented
+implementation drift is not permission to restore purple, dark cards or a
+different historical theme. The primary-action gradient is the explicit
+user-approved exception above. Keep layout ownership in colocated CSS Modules
+and preserve the current light surfaces; verify computed styles route by route.

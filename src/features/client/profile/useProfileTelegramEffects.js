@@ -1,55 +1,51 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { parseTelegramAuthResultFromHash } from "../../../utils/telegramProfile";
 
 export function useProfileTelegramEffects({
   APP_PAGES,
-  TELEGRAM_BOT_USERNAME,
   telegramConnectOpen,
-  telegramLoginContainerRef,
+  telegramLinkCode,
   handleTelegramLoginAuth,
   refreshTelegramConnection,
   setPage,
   setTelegramConnectOpen,
-  setTelegramLoginWidgetReady,
   setTelegramStatus
 }) {
+  const refreshRef = useRef(refreshTelegramConnection);
   useEffect(() => {
-    if (!telegramConnectOpen) return;
+    refreshRef.current = refreshTelegramConnection;
+  }, [refreshTelegramConnection]);
 
-    window.onTelegramAuthForWorkoutApp = async (telegramUser) => {
-      if (import.meta.env.DEV) console.debug("TELEGRAM CALLBACK WORKS:", telegramUser);
-      setTelegramStatus("Telegram подтвердил вход. Проверяю данные...");
-      await handleTelegramLoginAuth(telegramUser);
+  useEffect(() => {
+    if (!telegramConnectOpen || !telegramLinkCode) return;
+    let disposed = false;
+    let checking = false;
+    let webApp;
+    const refreshOnReturn = async () => {
+      if (disposed || checking || document.visibilityState === "hidden") return;
+      checking = true;
+      try { await refreshRef.current(); } catch { /* Manual retry remains available. */ }
+      finally { checking = false; }
     };
-
-    const container = telegramLoginContainerRef.current;
-    if (!container) return;
-
-    container.innerHTML = "";
-    setTelegramLoginWidgetReady(false);
-
-    const script = document.createElement("script");
-    script.src = "https://telegram.org/js/telegram-widget.js?22";
-    script.async = true;
-    script.setAttribute("data-telegram-login", TELEGRAM_BOT_USERNAME);
-    script.setAttribute("data-size", "large");
-    script.setAttribute("data-radius", "14");
-    script.setAttribute("data-userpic", "true");
-    script.setAttribute("data-request-access", "write");
-    script.setAttribute("data-onauth", "onTelegramAuthForWorkoutApp(user)");
-    script.onload = () => setTelegramLoginWidgetReady(true);
-
-    container.appendChild(script);
+    const bindTelegram = () => {
+      try { webApp?.offEvent?.("activated", refreshOnReturn); } catch { /* Optional SDK. */ }
+      webApp = window.Telegram?.WebApp;
+      try { webApp?.onEvent?.("activated", refreshOnReturn); } catch { /* Browser fallback. */ }
+    };
+    bindTelegram();
+    window.addEventListener("focus", refreshOnReturn);
+    window.addEventListener("telegram-mini-app-ready", bindTelegram);
+    document.addEventListener("visibilitychange", refreshOnReturn);
 
     return () => {
-      if (window.onTelegramAuthForWorkoutApp) {
-        delete window.onTelegramAuthForWorkoutApp;
-      }
+      disposed = true;
+      window.removeEventListener("focus", refreshOnReturn);
+      window.removeEventListener("telegram-mini-app-ready", bindTelegram);
+      document.removeEventListener("visibilitychange", refreshOnReturn);
+      try { webApp?.offEvent?.("activated", refreshOnReturn); } catch { /* Optional SDK. */ }
     };
-    // Recreating the Telegram widget for handler identity changes breaks its iframe.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [telegramConnectOpen]);
+  }, [telegramConnectOpen, telegramLinkCode]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);

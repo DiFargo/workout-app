@@ -1,9 +1,31 @@
-.status { margin:16px auto; width:calc(100% - 32px); max-width:1200px; box-sizing:border-box; padding:16px; background:#fff; border:1px solid #3c3c431f; border-radius:16px; color:#1c282e; font-size:14px; }
-.status p,.status small { color:#617078; line-height:1.5; }
-.status p { margin:6px 0 10px; }
-.status summary { color:#376b91; padding:12px 0; min-height:44px; box-sizing:border-box; cursor:pointer; }
-.status ul { list-style:none; margin:0; padding:0; }
-.status li { display:flex; gap:12px; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid #3c3c431f; }
-.status li span { min-width:0; overflow-wrap:anywhere; }
-.status small { display:block; font-size:12px; }
-.status button { min-height:44px; padding:8px 12px; border:0; border-radius:10px; color:#376b91; background:#f5f7f8; font:inherit; cursor:pointer; }
+.status { position: relative; z-index: 80; display: flex; justify-content: flex-end; width: calc(100% - 32px); max-width: 1200px; min-height: 44px; margin: 6px auto; box-sizing: border-box; color: var(--apple-text, #1c1c1e); font: inherit; }
+.status * { box-sizing: border-box; }
+.disclosure { position: relative; max-width: 100%; }
+.trigger { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; max-width: 100%; padding: 8px 12px; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 12px; background: var(--apple-card, #fff); color: var(--apple-muted, #636366); font-size: 12px; font-weight: 500; line-height: 1.4; cursor: pointer; list-style: none; }
+.trigger::-webkit-details-marker { display: none; }
+.trigger > svg { flex: 0 0 auto; }
+.trigger span { min-width: 0; overflow-wrap: anywhere; }
+.disclosure[open] .chevron { transform: rotate(180deg); }
+.panel { position: absolute; top: calc(100% + 8px); right: 0; width: min(380px, calc(100vw - 32px)); max-height: min(480px, calc(100dvh - 144px)); padding: 14px; overflow: auto; overscroll-behavior: contain; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 18px; background: var(--apple-card, #fff); box-shadow: 0 12px 40px rgba(28,28,30,.16); font-size: 13px; }
+.panel header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.panel header > strong { font-size: 14px; line-height: 1.4; }
+.panel p { margin: 4px 0 12px; color: var(--apple-muted, #636366); font-size: 12px; line-height: 1.5; }
+.panel ul { list-style: none; margin: 0; padding: 0; }
+.panel li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 12px; padding: 12px 0; border-top: 1px solid var(--apple-separator, rgba(60,60,67,.12)); }
+.panel li > div { min-width: 0; overflow-wrap: anywhere; }
+.panel li strong { font-size: 13px; line-height: 1.5; }
+.panel small { display: block; color: var(--apple-muted, #636366); font-size: 12px; line-height: 1.5; }
+.sources { grid-column: 1; }
+.panel li > button { grid-column: 2; grid-row: 1 / span 2; }
+.panel button { min-width: 44px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 10px; color: var(--apple-text, #1c1c1e); background: var(--apple-surface-secondary, #efeff4); font: inherit; font-size: 12px; font-weight: 500; line-height: 1.4; white-space: normal; cursor: pointer; }
+.panel button:disabled { opacity: .6; cursor: wait; }
+.panel .close { display: grid; place-items: center; padding: 0; flex: 0 0 44px; border: 0; border-radius: 50%; background: transparent; }
+.deferred { display: grid; gap: 8px; padding-bottom: 12px; color: var(--apple-muted, #636366); }
+.panel .primary { color: #fff; border-color: transparent; background: var(--ownset-action-gradient, linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%)); }
+.panel .error { color: var(--apple-danger, #b3261e); }
+.trigger:focus-visible, .panel button:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }
+.trigger:active, .panel button:not(:disabled):active { filter: brightness(.94); }
+.spinner { animation: summarySpin 1s linear infinite; }
+@keyframes summarySpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+@media (max-width: 380px) { .panel { padding: 12px; } .panel li { grid-template-columns: 1fr; } .panel li > button { grid-column: 1; grid-row: auto; justify-self: start; } }

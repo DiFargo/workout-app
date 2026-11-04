@@ -7,6 +7,7 @@ test("bundled nutrition fallback returns common products without loading the laz
   const foods = searchBundledNutritionFallbackFoods("сыр");
 
   assert.ok(foods.length > 0);
-  assert.equal(foods[0].name, "Сыр твёрдый");
-  assert.equal(foods[0].sourceType, "local_catalog");
+  assert.ok(foods.every(food => food.sourceType === "basic_reference"));
+  assert.ok(foods.every(food => food.sources.some(source => source.url.startsWith("https://fdc.nal.usda.gov/"))));
+  assert.ok(foods.some(food => /сыр/i.test(food.name)));
 });

@@ -42,7 +42,7 @@ export function normalizeClientSubscription(subscription = {}) {
 export function getSubscriptionStatus(subscription = {}, now = new Date(), settings = {}) {
   const normalized = normalizeClientSubscription(subscription);
   const today = startOfUtcDay(now);
-  const end = startOfUtcDay(normalized.endDate);
+  const end = normalized.periodMode === "sessions" ? null : startOfUtcDay(normalized.endDate);
   const frozenUntil = startOfUtcDay(normalized.frozenUntil);
   const frozen = subscription.frozen === true || (frozenUntil && today && frozenUntil >= today);
   const daysRemaining = end && today ? Math.ceil((end - today) / DAY_MS) : null;
@@ -76,13 +76,14 @@ export function getSubscriptionAttentionLabel(subscription = {}, now = new Date(
 export function getDueSubscriptionReminders(subscription = {}, settings = {}, now = new Date()) {
   const status = getSubscriptionStatus(subscription, now, settings);
   if (status.id === "frozen" || (!status.endDate && !status.purchasedSessions)) return [];
-  const dateEnabled = settings.dateEnabled !== false;
+  const dateEnabled = status.periodMode !== "sessions" && settings.dateEnabled !== false;
   const sessionsEnabled = settings.sessionsEnabled !== false;
   const dayThresholds = [...new Set([...(Array.isArray(settings.dayThresholds) ? settings.dayThresholds : [7, 3, 0]), Number(settings.warningDays)])].filter(Number.isFinite);
   const sessionThresholds = [...new Set([...(Array.isArray(settings.sessionThresholds) ? settings.sessionThresholds : [3, 1, 0]), Number(settings.warningSessions)])].filter(Number.isFinite);
   const reminders = [];
 
   if (status.id === "expired") {
+    if (status.periodMode === "sessions" && !sessionsEnabled) return [];
     return [{ kind: "expired", threshold: 0, key: `${status.cycleId}_expired` }];
   }
 

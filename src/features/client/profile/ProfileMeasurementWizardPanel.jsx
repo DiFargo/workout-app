@@ -1,16 +1,13 @@
 import { Camera, ChevronRight, Ruler, Trophy } from "lucide-react";
 import { useState } from "react";
 import styles from "./ProfileMeasurementWizardPanel.module.css";
+import { measurementTimestamp as getTimestamp, progressPeriodRange, getPeriodMeasurements, buildWeightChart } from "./profileProgressChart.js";
+import ProfileAchievementsModal from "./ProfileAchievementsModal.jsx";
 
 function toNumber(value) {
   if (value === null || value === undefined || String(value).trim() === "") return null;
   const number = Number(String(value).replace(",", "."));
   return Number.isFinite(number) ? number : null;
-}
-
-function getTimestamp(measurement = {}) {
-  const timestamp = new Date(measurement?.date || measurement?.createdAt || measurement?.savedAt || 0).getTime();
-  return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
 function formatNumber(value) {
@@ -39,43 +36,10 @@ function buildFieldComparison(measurements, field) {
 }
 
 const PERIOD_OPTIONS = [
-  { id: "month", label: "Месяц", days: 31 },
+  { id: "month", label: "Месяц", days: 30 },
   { id: "halfYear", label: "6 месяцев", days: 183 },
   { id: "year", label: "Год", days: 366 }
 ];
-
-function getPeriodMeasurements(measurements, period) {
-  const option = PERIOD_OPTIONS.find((item) => item.id === period) || PERIOD_OPTIONS[0];
-  const timestamps = measurements.map(getTimestamp).filter(Boolean);
-  const anchor = Math.max(...timestamps, 0);
-  if (!anchor) return measurements;
-  const from = anchor - option.days * 24 * 60 * 60 * 1000;
-  const filtered = measurements.filter((measurement) => getTimestamp(measurement) >= from);
-  return filtered.length ? filtered : measurements.slice(-1);
-}
-
-function buildWeightChart(measurements, maxPoints = 12) {
-  const allPoints = measurements
-    .map((measurement) => ({ value: toNumber(measurement?.weight), timestamp: getTimestamp(measurement), measurement }))
-    .filter((item) => item.value !== null && item.timestamp)
-    .sort((a, b) => a.timestamp - b.timestamp);
-  const points = allPoints.length <= maxPoints
-    ? allPoints
-    : Array.from({ length: maxPoints }, (_, index) => allPoints[Math.round(index * (allPoints.length - 1) / (maxPoints - 1))]);
-  if (!points.length) return { points: [], path: "", area: "", min: 0, max: 0 };
-
-  const values = points.map((item) => item.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = Math.max(max - min, 1);
-  const coordinates = points.map((item, index) => ({
-    ...item,
-    x: points.length === 1 ? 160 : 8 + (index / (points.length - 1)) * 304,
-    y: 18 + ((max - item.value) / range) * 62
-  }));
-  const path = coordinates.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
-  return { points: coordinates, path, area: `${path} L${coordinates.at(-1).x.toFixed(1)} 92 L${coordinates[0].x.toFixed(1)} 92 Z`, min, max };
-}
 
 export default function ProfileMeasurementWizardPanel({
   visible,
@@ -87,13 +51,18 @@ export default function ProfileMeasurementWizardPanel({
   progressPhotos = [],
   onStart,
   onOpenPhotos,
-  onAddWeight
+  onAddWeight,
+  onLoadAchievements,
+  now = new Date()
 }) {
   const [period, setPeriod] = useState("month");
+  const [achievementsOpen, setAchievementsOpen] = useState(false);
   if (!visible) return null;
   const sortedMeasurements = [...(Array.isArray(measurements) ? measurements : [])].sort((a, b) => getTimestamp(b) - getTimestamp(a));
   const effectiveMeasurements = sortedMeasurements.length ? sortedMeasurements : latestMeasurement ? [latestMeasurement] : [];
-  const periodMeasurements = getPeriodMeasurements([...effectiveMeasurements].reverse(), period);
+  const periodMeasurements = getPeriodMeasurements([...effectiveMeasurements].reverse(), period, now);
+  const periodRange = progressPeriodRange(period, now);
+  const rangeDate = date => date.toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" });
   const weightField = measurementFields.find((field) => field.id === "weight") || measurementFields[0];
   const weightComparison = weightField ? buildFieldComparison(effectiveMeasurements, weightField) : { value: null, delta: null };
   const chart = buildWeightChart(periodMeasurements, period === "month" ? 8 : 12);
@@ -118,8 +87,9 @@ export default function ProfileMeasurementWizardPanel({
       >{option.label}</button>)}
     </div>
     <section className={styles.chartCard} data-testid="profile-progress-weight-card">
+      <p className={styles.periodRange} data-testid="profile-progress-period-range">{period === "month" ? "Последние 30 дней · " : ""}{rangeDate(periodRange.from)} — {rangeDate(periodRange.to)}</p>
       <div className={styles.chartTop}>
-        <div><span>Текущий вес</span><strong>{weightComparison.value === null ? "—" : formatNumber(weightComparison.value)} <small>кг</small></strong></div>
+        <div><span>Последний вес</span><strong>{weightComparison.value === null ? "—" : formatNumber(weightComparison.value)} <small>кг</small></strong></div>
         <div className={styles.weightChange} data-testid="profile-progress-weight-delta"><strong>{formatDelta(weightComparison.delta, "кг")}</strong><small>{weightComparison.delta === null ? "Добавьте ещё один замер" : "с прошлого замера"}</small></div>
       </div>
       {chart.points.length ? <>
@@ -149,14 +119,17 @@ export default function ProfileMeasurementWizardPanel({
           })}
         </svg>
         <div className={styles.chartDates}><span>{formatMeasurementDate(firstPoint.measurement)}</span><span>{formatMeasurementDate(lastPoint.measurement)}</span></div>
-      </> : <p className={styles.chartEmpty}>Добавьте первый вес, чтобы увидеть реальную динамику.</p>}
+        <details className={styles.chartValues}><summary>Даты и значения</summary><ul>{periodMeasurements.filter(item => toNumber(item.weight) !== null).map((item, index) => <li key={`${getTimestamp(item)}-${index}`}>{formatMeasurementDate(item)} · {formatNumber(toNumber(item.weight))} кг</li>)}</ul></details>
+      </> : <p className={styles.chartEmpty}>{weightComparison.value === null ? "Добавьте первый вес, чтобы увидеть реальную динамику." : `За выбранный период свежих замеров веса нет. ${weightNote}.`}</p>}
       {onAddWeight ? <div className={styles.chartEntry}><small>{weightNote}</small><button type="button" data-testid="profile-progress-add-weight" onClick={onAddWeight}>Добавить вес</button></div> : null}
     </section>
 
     <div className={styles.sectionHead}><h3>Достижения</h3></div>
-    <section className={styles.achievement} data-testid="profile-progress-achievement">
+    <button type="button" className={styles.achievement} data-testid="profile-progress-achievement" aria-haspopup="dialog" onClick={() => setAchievementsOpen(true)}>
       <span><Trophy aria-hidden="true" /></span><div><strong>{totalWorkouts > 0 ? `${totalWorkouts} тренировок завершено` : "Первая тренировка впереди"}</strong><small>Каждое занятие — шаг вперёд</small></div>
-    </section>
+      <ChevronRight className={styles.achievementChevron} aria-hidden="true" />
+    </button>
+    {achievementsOpen && <ProfileAchievementsModal historyLoader={onLoadAchievements} now={now} onClose={() => setAchievementsOpen(false)} />}
 
     <div className={styles.sectionHead}><h3>Контроль тела</h3></div>
     <section className={styles.controlGroup} data-testid="profile-progress-controls">

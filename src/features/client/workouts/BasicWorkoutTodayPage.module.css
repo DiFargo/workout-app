@@ -7,7 +7,7 @@
   width: min(100%, 430px);
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 0 16px calc(130px + env(safe-area-inset-bottom, 0px));
+  padding: 0 16px calc(225px + env(safe-area-inset-bottom, 0px));
   color: var(--apple-text, #1c282e);
   background: var(--apple-canvas, #f5f7f8);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
@@ -46,7 +46,7 @@
 }
 
 .planSwitcher button[aria-current="page"] {
-  color: #664ea2;
+  color: var(--apple-blue, #3C6FAA);
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(69, 57, 85, 0.09);
 }
@@ -85,8 +85,20 @@
 .content,
 .resultContent {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
+
+.intro h2:focus { outline: none; }
+.actionBar { position:fixed; z-index:80; bottom:calc(70px + max(env(safe-area-inset-bottom,0px),var(--telegram-safe-area-bottom,0px),var(--telegram-content-safe-area-bottom,0px))); left:50%; transform:translateX(-50%); width:min(100%,430px); display:grid; gap:8px; padding:10px 16px; background:var(--apple-canvas,#F2F2F7); border-top:1px solid var(--apple-separator,rgba(60,60,67,.12)); }
+.actionBar .generationLimit { padding:0; border:0; background:transparent; font-size:12px; }
+.actionBar .primaryButton { width:100%; box-shadow:none; }
+.selectionSummary { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:64px; padding:12px; border:1px solid var(--apple-separator,rgba(60,60,67,.12)); border-radius:16px; background:#fff; color:var(--apple-blue,#3C6FAA); text-align:left; font:inherit; cursor:pointer; }
+.selectionSummary > span:first-child { display:grid; gap:4px; min-width:0; }
+.selectionSummary small { color:var(--apple-secondary,#636366); font-size:12px; }
+.selectionSummary strong { color:var(--apple-text,#1C1C1E); font-size:15px; overflow-wrap:anywhere; }
+.selectionSummary > span:last-child { font-size:13px; }
+.selectionSummary:focus-visible { outline:3px solid var(--apple-blue,#3C6FAA); outline-offset:2px; }
+.settingGroup .chipRow { grid-auto-columns:minmax(0,1fr); grid-auto-flow:column; grid-template-columns:none; }
 
 .intro {
   display: grid;
@@ -108,7 +120,7 @@
 .loadingCard h2 {
   margin: 0;
   color: var(--apple-text, #1c282e);
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 750;
   letter-spacing: -0.65px;
   line-height: 1.12;
@@ -157,11 +169,11 @@
 
 .targetCard {
   min-width: 0;
-  min-height: 140px;
+  min-height: 100px;
   padding: 8px 7px 10px;
   position: relative;
   display: grid;
-  grid-template-rows: minmax(76px, 1fr) auto;
+  grid-template-rows: 58px auto;
   align-items: stretch;
   overflow: hidden;
   color: var(--apple-text, #1c282e);
@@ -172,11 +184,11 @@
   box-shadow: 0 2px 8px rgba(63, 54, 75, 0.04);
   cursor: pointer;
   touch-action: manipulation;
-  transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+  transition: border-color 160ms ease, background-color 160ms ease;
 }
 
 .targetCard:active {
-  transform: scale(0.975);
+  opacity: .75;
 }
 
 .targetCard:focus-visible,
@@ -190,7 +202,7 @@
 }
 
 .targetCard[data-selected="true"] {
-  background: #f5f0ff;
+  background: #edf4f5;
   border-color: var(--apple-action, #396ba6);
   box-shadow: 0 6px 18px rgba(40, 110, 91, 0.14), inset 0 0 0 1px rgba(47, 125, 104, 0.25);
 }
@@ -206,7 +218,7 @@
 
 .targetImage img {
   width: 100%;
-  height: 80px;
+  height: 58px;
   object-fit: cover;
   object-position: center 24%;
   mix-blend-mode: multiply;
@@ -320,9 +332,9 @@
 
 .chipRow button[data-selected="true"],
 .segmentedControl button[data-selected="true"] {
-  color: #664ea2;
+  color: var(--apple-blue, #3C6FAA);
   background: #e6f2eb;
-  border-color: #d6caee;
+  border-color: var(--apple-blue, #3C6FAA);
 }
 
 .locationRow {
@@ -342,7 +354,7 @@
 
 .segmentedControl button {
   min-width: 60px;
-  min-height: 38px;
+  min-height: 44px;
   background: transparent;
   border-radius: 11px;
 }
@@ -404,7 +416,7 @@
   padding: 0 11px;
   color: var(--apple-text, #1c282e);
   font: inherit;
-  font-size: 14px;
+  font-size: 16px;
   background: var(--apple-surface-muted, #edf1f3);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 12px;
@@ -455,7 +467,7 @@
 
 .primaryButton {
   color: #ffffff;
-  background: var(--apple-blue-pressed, #315f91);
+  background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
   box-shadow: 0 9px 18px rgba(40, 110, 91, 0.22);
@@ -558,8 +570,8 @@
 }
 
 .safetyNote {
-  color: #6b5b97;
-  background: #f1ecfa;
+  color: var(--apple-secondary, #636366);
+  background: var(--apple-surface-muted, #EFEFF4);
   border-radius: 13px;
 }
 
@@ -623,7 +635,7 @@
 .secondaryButton {
   color: var(--apple-blue-pressed, #315f91);
   background: #ffffff;
-  border: 1px solid #d9ceef;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 17px;
 }
 
@@ -682,6 +694,7 @@
 }
 
 @media (min-width: 700px) {
+  .actionBar { width:min(720px,calc(100vw - 48px)); padding-inline:24px; bottom:calc(82px + max(env(safe-area-inset-bottom,0px),var(--telegram-safe-area-bottom,0px),var(--telegram-content-safe-area-bottom,0px))); }
   .page {
     width: min(720px, calc(100vw - 48px));
     max-width: 720px;
@@ -703,24 +716,24 @@
   }
 
   .targetCard {
-    min-height: 172px;
-    grid-template-rows: minmax(104px, 1fr) auto;
+    min-height: 110px;
+    grid-template-rows: 64px auto;
   }
 
   .targetImage img {
-    height: 108px;
+    height: 64px;
   }
 
   .targetCopy small {
-    display: block;
+    display: none;
   }
 }
 
 @media (max-width: 374px) {
   .page { padding-right: 12px; padding-left: 12px; }
   .targetGrid { gap: 7px; }
-  .targetCard { min-height: 128px; border-radius: 16px; }
-  .targetImage img { height: 72px; }
+  .targetCard { min-height: 100px; border-radius: 16px; }
+  .targetImage img { height: 58px; }
   .targetCopy strong { font-size: 12px; }
   .chipRow button { font-size: 11px; }
 }

@@ -1318,3 +1318,33 @@
 :global(:root) .modern progress.calorieTrack[data-over-limit="true"]::-moz-progress-bar {
   background: #b56570;
 }
+.historyPending {
+  display: grid;
+  gap: 16px;
+  min-height: 140px;
+  padding: 20px 4px;
+  align-content: center;
+  color: var(--apple-secondary, #636366);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.historyPending p { margin: 0; }
+
+.historyRetry {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
+  border-radius: 14px;
+  background: var(--apple-surface, #fff);
+  color: var(--apple-action, #3F73B8);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.historyRetry:disabled { opacity: .55; cursor: default; }
+.historyRetry:active:not(:disabled) { opacity: .7; }
+.historyRetry:focus-visible { outline: 2px solid var(--apple-action, #3F73B8); outline-offset: 3px; }

@@ -1,20 +1,23 @@
+import ProtectedExerciseVideo from "../../components/media/ProtectedExerciseVideo.jsx";
+import TrainerExerciseLibrarySearch from "../../components/trainer/TrainerExerciseLibrarySearch";
 import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
 import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
+import { getTrainerExerciseSelectionPatch } from "./trainerWorkoutEditHelpers";
 
 export default function TrainerProgramExerciseCard({
   adminExerciseVideoUploadingId,
+  adminExerciseLibrary = [],
   blockId,
   cancelMonthExerciseEdit,
   exercise,
   exerciseIndex,
   isExerciseSelected,
   openMonthExerciseEditor,
+  onOpenExerciseLibrary,
   removeMonthExerciseSet,
   saveMonthExerciseEdit,
   updateMonthExercise,
-  updateMonthExerciseName,
   updateMonthExerciseSet,
-  uploadMonthExerciseVideo,
   weekId,
   workoutId,
   addMonthExerciseSet
@@ -72,37 +75,31 @@ export default function TrainerProgramExerciseCard({
 
           <div className="monthExerciseVideoBlock">
             {exercise.video ? (
-              <video src={exercise.video} controls playsInline preload="metadata" />
+              <ProtectedExerciseVideo src={exercise.video} controls playsInline preload="metadata" />
             ) : (
               <span>Видео пока не загружено</span>
             )}
-            <label className={exercise.video ? "monthVideoUploadBtn added" : "monthVideoUploadBtn"}>
-              <input
-                type="file"
-                accept="video/*"
-                disabled={adminExerciseVideoUploadingId === exercise.id}
-                onChange={(event) => uploadMonthExerciseVideo(blockId, weekId, workoutId, exercise.id, event.target.files?.[0])}
-              />
-              {adminExerciseVideoUploadingId === exercise.id
-                ? "Загружаю видео..."
-                : exercise.video
-                  ? "Заменить видео"
-                  : "Загрузить видео"}
-            </label>
+            <small>Видео и само упражнение изменяются в библиотеке.</small>
+            <button className="monthVideoUploadBtn" type="button" disabled={typeof onOpenExerciseLibrary !== "function"} onClick={onOpenExerciseLibrary}>
+              Перейти в «Упражнения»
+            </button>
           </div>
 
           <div className="monthProgramPremiumExerciseNumber">{exerciseIndex + 1}</div>
           <div className="monthExerciseRow compact">
-            <input
-              value={exercise.name || ""}
-              onChange={(event) => updateMonthExerciseName(
+            <TrainerExerciseLibrarySearch
+              key={`${exercise.id}:${exercise.name || ""}`}
+              exercise={exercise}
+              items={adminExerciseLibrary}
+              disabled={adminExerciseVideoUploadingId === exercise.id}
+              onSelect={(source) => updateMonthExercise(
                 blockId,
                 weekId,
                 workoutId,
-                exercise,
-                event.target.value
+                exercise.id,
+                getTrainerExerciseSelectionPatch(source, exercise)
               )}
-              placeholder="Название упражнения"
+              onOpenLibrary={onOpenExerciseLibrary}
             />
           </div>
 

@@ -17,13 +17,16 @@ export default function WorkoutRestTimer({
   onMinimize,
   docked = false,
   onExpand,
+  restCompleted = false,
   showCompletionAction = false,
   completionActionLabel = "К следующему упражнению",
+  completionActionHint = "",
+  completionActionDisabled = false,
   onCompletionAction
 }) {
   useBodyScrollLock(expanded, { lockHtml: true });
 
-  const shownSeconds = seconds > 0 ? seconds : duration;
+  const shownSeconds = restCompleted ? 0 : seconds > 0 ? seconds : duration;
   const primaryActionLabel = running ? "Стоп" : seconds > 0 ? "Продолжить" : "Старт";
   const primaryActionAriaLabel = running
     ? "Остановить таймер отдыха"
@@ -53,9 +56,31 @@ export default function WorkoutRestTimer({
   }
 
   if (expanded) {
+    const completionButton = canCompleteRest ? (
+      <button
+        type="button"
+        className={styles.completionAction}
+        data-testid="workout-rest-timer-completion-action"
+        data-emphasis="primary"
+        aria-label={completionActionLabel}
+        aria-description={!restCompleted && completionActionHint || undefined}
+        disabled={completionActionDisabled}
+        onClick={onCompletionAction}
+      >
+        <span className={styles.completionCopy}>
+          <span>{completionActionLabel}</span>
+          {!restCompleted && completionActionHint && <small>{completionActionHint}</small>}
+        </span>
+        <ArrowRight aria-hidden="true" />
+      </button>
+    ) : (
+      <button type="button" className={restCompleted ? styles.completionAction : styles.keepCompactButton} onClick={onMinimize}>
+        {restCompleted ? "Вернуться к подходу" : "Свернуть таймер"}
+      </button>
+    );
     return (
       <div className={styles.expandedBackdrop} data-modal-backdrop="true" role="presentation">
-        <section className={styles.expandedTimer} data-testid="workout-rest-timer-expanded" role="dialog" aria-modal="true" aria-label="Таймер отдыха" data-modal-surface="true">
+        <section className={styles.expandedTimer} data-testid="workout-rest-timer-expanded" role="dialog" aria-modal="true" aria-label="Таймер отдыха" data-modal-surface="true" data-rest-completed={restCompleted ? "true" : "false"}>
           <button
             type="button"
             className={styles.minimizeButton}
@@ -69,6 +94,12 @@ export default function WorkoutRestTimer({
             <Clock3 aria-hidden="true" />
             <span>Таймер отдыха</span>
           </div>
+          {restCompleted ? (
+            <div className={styles.completedRest}>
+              <p className={styles.completedStatus} role="status">Отдых завершён</p>
+              {completionButton}
+            </div>
+          ) : <>
           <div className={styles.timerFace}>
             <svg className={styles.timerRing} viewBox="0 0 100 100" aria-hidden="true">
               <circle className={styles.timerTrack} cx="50" cy="50" r="46" />
@@ -92,35 +123,33 @@ export default function WorkoutRestTimer({
             </button>
             <button type="button" onClick={() => changeSeconds(15)} aria-label="Добавить 15 секунд">+15</button>
           </div>
-          {canCompleteRest ? (
-            <button
-              type="button"
-              className={styles.completionAction}
-              data-testid="workout-rest-timer-completion-action"
-              data-emphasis="primary"
-              onClick={onCompletionAction}
-            >
-              <span>{completionActionLabel}</span>
-              <ArrowRight aria-hidden="true" />
-            </button>
-          ) : (
-            <button type="button" className={styles.keepCompactButton} onClick={onMinimize}>
-              Свернуть таймер
-            </button>
-          )}
+          {completionButton}
+          </>}
         </section>
       </div>
     );
   }
 
   if (docked) {
+    const idle = !running && seconds <= 0 && !restCompleted;
     return (
-      <section className={styles.dockedTimer} data-testid="workout-rest-timer">
-        <button type="button" onClick={onExpand} aria-label="Открыть таймер отдыха">
-          <Clock3 aria-hidden="true" /><span>Отдых <b>{formatCompactTimer(shownSeconds)}</b></span><ArrowRight aria-hidden="true" />
-        </button>
-        <button type="button" onClick={toggleTimer} data-testid="workout-rest-timer-start" aria-label={primaryActionAriaLabel}>
-          <MorphingIcon icon={running ? Pause : Play} data-icon-state={running ? "pause" : "play"} />
+      <section className={styles.dockedTimer} data-testid="workout-rest-timer" data-rest-completed={restCompleted ? "true" : "false"}>
+        <button
+          type="button"
+          className={styles.dockedOpen}
+          onClick={onExpand}
+          data-testid={idle ? "workout-rest-timer-start" : undefined}
+          aria-label={idle ? "Запустить таймер отдыха" : "Открыть таймер отдыха"}
+          aria-description={restCompleted ? "Отдых завершён" : idle
+            ? `Длительность ${formatCompactTimer(shownSeconds)}`
+            : `${running ? "Идёт отдых" : "На паузе"}. Осталось ${formatCompactTimer(shownSeconds)}`}
+        >
+          <Clock3 aria-hidden="true" />
+          <span className={styles.dockedCopy}>
+            <span>{restCompleted ? "Отдых завершён" : !running && seconds > 0 ? "Отдых на паузе" : "Отдых"}</span>
+            <b>{formatCompactTimer(shownSeconds)}</b>
+          </span>
+          <span className={styles.dockedAction}>{idle ? "Запустить" : "Открыть"}</span>
         </button>
       </section>
     );

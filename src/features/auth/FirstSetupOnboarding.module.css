@@ -7,7 +7,7 @@
   --setup-secondary: var(--apple-secondary, #617078);
   --setup-border: var(--apple-separator, rgba(57, 82, 91, 0.12));
   --setup-accent: var(--apple-blue, #376b91);
-  --setup-action: var(--apple-action, #396ba6);
+  --setup-action: var(--ownset-action-gradient);
   --setup-tint: var(--apple-blue-tint, #e8f1f2);
   height: var(--app-viewport-height, 100dvh);
   position: fixed;
@@ -202,6 +202,7 @@
 }
 
 .firstSetupSexGrid button {
+  position: relative;
   min-height: 168px;
   padding: 16px 10px;
   display: flex;
@@ -212,21 +213,32 @@
   border-radius: 22px;
 }
 
-.firstSetupSexGrid button span {
-  width: 72px;
-  height: 72px;
+.firstSetupSexIcon {
+  width: 76px;
+  height: 76px;
   display: grid;
   place-items: center;
-  border-radius: 24px;
+  border-radius: 50%;
   background: var(--setup-muted);
-  color: var(--setup-accent);
 }
 
-.firstSetupSexGrid button span svg {
-  width: 36px;
-  height: 36px;
-  stroke-width: 1.9;
-  line-height: 1;
+.firstSetupSexIllustration {
+  display: block;
+  width: 76px;
+  height: 76px;
+}
+
+.firstSetupSexSelected {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--setup-accent);
+  color: #fff;
 }
 
 .firstSetupSexGrid button strong {
@@ -234,7 +246,16 @@
   font-weight: 740;
 }
 
-.firstSetupSexGrid button:global(.active),
+.firstSetupSexGrid button:global(.active) {
+  border-color: var(--setup-accent);
+  background: var(--setup-tint);
+  box-shadow: none;
+}
+
+.firstSetupSexGrid button:global(.active) .firstSetupSexIcon {
+  background: var(--setup-surface);
+}
+
 .firstSetupActivityList button:global(.active),
 .firstSetupGoalGrid button:global(.active) {
   border-color: var(--setup-accent);
@@ -282,7 +303,12 @@
 .firstSetupInput:focus,
 .firstSetupMetricInput input:focus {
   border-color: var(--setup-accent);
-  box-shadow: 0 0 0 3px var(--setup-tint);
+  box-shadow: none;
+}
+
+.firstSetupInput:focus-visible {
+  border-color: var(--setup-border);
+  outline-offset: 2px;
 }
 
 .firstSetupMetricSlider {
@@ -697,7 +723,7 @@
 
 .firstSetupExitConfirmCard button:global(.primary) {
   border-color: transparent;
-  background: var(--setup-accent);
+  background: var(--ownset-action-gradient);
   color: var(--setup-surface);
 }
 
@@ -744,9 +770,13 @@
     min-height: 132px;
   }
 
-  .firstSetupSexGrid button span {
-    font-size: 56px;
+  .firstSetupSexIcon,
+  .firstSetupSexIllustration {
+    width: 64px;
+    height: 64px;
   }
+
+  .firstSetupSexSelected { top: 10px; right: 10px; }
 
   .firstSetupMetricSlider {
     min-height: 240px;

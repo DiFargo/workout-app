@@ -18,6 +18,19 @@ test("auth change clears blocked saves and confirmation sheets from the previous
   assert.deepEqual(state, { isSaving: false, saved: false, historyLoading: false, deleting: "", candidate: null, files: { front: null, side: null, back: null } });
 });
 
+test("auth change clears private Telegram links and releases old connection and login operations", () => {
+  const state = { link: { uid: "A", code: "old-private-code" }, linking: true, loginSubmitting: true };
+  const requestRef = { current: { session: { uid: "A" } } };
+  resetAuthSessionOperations({
+    telegramBotLinkRequestRef: requestRef,
+    setTelegramLink: value => { state.link = value; },
+    setTelegramLinking: value => { state.linking = value; },
+    setLoginSubmitting: value => { state.loginSubmitting = value; }
+  });
+  assert.equal(requestRef.current, null);
+  assert.deepEqual(state, { link: null, linking: false, loginSubmitting: false });
+});
+
 function telegramHarness() {
   let current = true;
   let finish;

@@ -71,11 +71,11 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
     const dailyActions = journal.items.filter((item) => item.requiresAction);
 
     return [...standingActions, ...dailyActions].filter((action) => {
-      if (!action?.id || seen.has(action.id) || reviewedIds.has(action.id)) return false;
+      if (!action?.id || seen.has(action.id)) return false;
       seen.add(action.id);
       return true;
     }).sort(sortImmediateActions);
-  }, [immediateActions, journal.items, reviewedIds]);
+  }, [immediateActions, journal.items]);
   const timelineItems = useMemo(
     () => journal.items.filter((item) => !item.requiresAction || reviewedIds.has(item.id)),
     [journal.items, reviewedIds]
@@ -108,9 +108,7 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
   }
 
   function openImmediateAction(action) {
-    // A standing task (for example, an unassigned client) stays here until
-    // the underlying state actually changes. Daily signals can be marked as
-    // reviewed when the trainer opens the related client card.
+    // Opening means viewed, never resolved: the signal stays until source data changes.
     if (!action.isStanding) acknowledge(action.id);
     openClient(action);
   }
@@ -121,11 +119,9 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
         <section className={styles.immediateActionsSection} aria-label="Действия, которые нужно выполнить сейчас">
           <header className={styles.immediateActionsHead}>
             <div>
-              <span>СЕЙЧАС</span>
-              <h2>Требуют действия</h2>
-              <p>Сначала показаны наиболее важные задачи.</p>
+              <h2>Нужно проверить</h2>
             </div>
-            <strong>{actionsNow.length}</strong>
+            <strong aria-label={`Задач для проверки: ${actionsNow.length}`}>{actionsNow.length}</strong>
           </header>
           <div className={styles.immediateActionsList}>
             {actionsNow.map((action) => (
@@ -158,13 +154,8 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
       <section className={styles.dailyJournalSection} aria-label="Журнал дня">
         <header className={styles.dailyJournalHead}>
           <div>
-            <span>ЖУРНАЛ ДНЯ</span>
-            <h2>Хронология событий</h2>
-            <p>События дня и уже проверенные сигналы по данным клиентов.</p>
+            <h2>События за сегодня</h2>
           </div>
-          <strong className={actionsNow.length ? styles.attention : styles.calm}>
-            {actionsNow.length ? `${actionsNow.length} требуют действия` : "Всё просмотрено"}
-          </strong>
         </header>
 
         <div className={styles.dailyJournalFilters} role="group" aria-label="Фильтр журнала дня">
@@ -176,16 +167,16 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
                 key={filter.id}
                 className={journalFilter === filter.id ? styles.active : ""}
                 aria-pressed={journalFilter === filter.id}
+                aria-label={`${filter.label}: ${count}`}
                 onClick={() => setJournalFilter(filter.id)}
               >
-                {filter.label}<span>{count}</span>
+                {filter.id === "all" ? "Все" : filter.id === "reviewed" ? "Просмотрено" : filter.label}<span>{count}</span>
               </button>
             );
           })}
         </div>
 
         <div className={styles.dailyJournalTimeline}>
-          {filteredItems.length ? <div className={`${styles.dailyJournalBoundary} ${styles.start}`}>Начало дня</div> : null}
           {filteredItems.map((event) => {
             const reviewed = reviewedIds.has(event.id);
             return (
@@ -212,7 +203,7 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
                 </div>
                 {event.requiresAction ? (
                   reviewed ? (
-                    <span className={styles.dailyJournalReviewed}><Check size={14} aria-hidden="true" />Проверено</span>
+                    <span className={styles.dailyJournalReviewed}><Check size={14} aria-hidden="true" />Просмотрено</span>
                   ) : (
                     <span className={styles.dailyJournalEventAction} aria-hidden="true">{event.actionLabel || "Открыть"}</span>
                   )
@@ -220,11 +211,12 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
               </article>
             );
           })}
-          {filteredItems.length ? <div className={`${styles.dailyJournalBoundary} ${styles.end}`}>Сейчас</div> : null}
           {!filteredItems.length ? (
             <div className={styles.dailyJournalEmpty}>
               <Check size={18} aria-hidden="true" />
-              {timelineItems.length ? "По этому фильтру событий нет." : "В журнале пока нет событий. Незакрытые задачи показаны выше."}
+              {timelineItems.length ? "По этому фильтру событий нет." : actionsNow.length
+                ? "В журнале пока нет событий. Незакрытые задачи показаны выше."
+                : "В журнале пока нет событий. Здесь появится хронология активности клиентов за день."}
             </div>
           ) : null}
         </div>
@@ -233,10 +225,10 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
   );
 }
 
-export default function TrainerDailyJournal({ actionCenter, onOpenClient, renderAvatar, trainerName }) {
+export default function TrainerDailyJournal({ actionCenter, onOpenClient, renderAvatar, trainerName, trainerUid }) {
   const immediateActions = useMemo(() => buildTrainerImmediateActions(actionCenter), [actionCenter]);
   const journal = useMemo(() => buildTrainerDailyJournal(actionCenter), [actionCenter]);
-  const contentKey = `${trainerName || "trainer"}:${journal.dateKey}`;
+  const contentKey = `${trainerUid || trainerName || "trainer"}:${journal.dateKey}`;
 
   return (
     <TrainerDailyJournalContent
@@ -245,7 +237,7 @@ export default function TrainerDailyJournal({ actionCenter, onOpenClient, render
       journal={journal}
       onOpenClient={onOpenClient}
       renderAvatar={renderAvatar}
-      trainerName={trainerName}
+      trainerName={trainerUid || trainerName}
     />
   );
 }

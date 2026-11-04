@@ -10,17 +10,13 @@ export function getLoginResolutionEndpoint() {
   return "/api/auth/resolve-login";
 }
 
-export async function resolveEmailForLogin(
-  validation,
+async function sendAliasRequest(
+  body,
   {
     fetchImpl = globalThis.fetch,
     timeoutMs = 10000
   } = {}
 ) {
-  if (validation.isEmail) {
-    return validation.email.toLowerCase();
-  }
-
   if (typeof fetchImpl !== "function") {
     throw makeLoginResolutionError("auth/network-request-failed");
   }
@@ -32,7 +28,7 @@ export async function resolveEmailForLogin(
     const response = await fetchImpl(getLoginResolutionEndpoint(), {
       method: "POST",
       headers: await getAppCheckApiHeaders({ "Content-Type": "application/json" }),
-      body: JSON.stringify({ login: validation.loginAlias }),
+      body: JSON.stringify(body),
       signal: controller.signal
     });
     const payload = await response.json().catch(() => ({}));
@@ -40,17 +36,34 @@ export async function resolveEmailForLogin(
     if (!response.ok || payload.ok !== true) {
       const errorCode = response.status === 429
         ? "auth/too-many-requests"
-        : payload.error || "auth/login-not-found";
+        : "auth/invalid-credential";
       throw makeLoginResolutionError(errorCode);
     }
 
-    const email = String(payload.email || "").trim().toLowerCase();
-    if (!email) throw makeLoginResolutionError("auth/login-not-found");
-    return email;
+    return payload;
   } catch (error) {
     if (error?.code) throw error;
     throw makeLoginResolutionError("auth/network-request-failed");
   } finally {
     clearTimeout(timeoutId);
   }
+}
+
+export async function authenticateWithLoginAlias(validation, password = validation.password, options = {}) {
+  const payload = await sendAliasRequest({ login: validation.loginAlias, password }, options);
+  if (typeof payload.customToken !== "string" || !payload.customToken || payload.customToken.length > 16384) {
+    throw makeLoginResolutionError("auth/invalid-credential");
+  }
+  return payload.customToken;
+}
+
+export async function requestLoginAliasPasswordReset(validation, options = {}) {
+  await sendAliasRequest({ login: validation.loginAlias, action: "reset-password" }, options);
+}
+
+// Deliberately email-only: compatibility for callers must not restore the
+// former public alias-to-email resolution behavior.
+export async function resolveEmailForLogin(validation) {
+  if (!validation.isEmail) throw makeLoginResolutionError("auth/invalid-credential");
+  return validation.email.toLowerCase();
 }

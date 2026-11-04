@@ -3,9 +3,11 @@ import { APP_PAGES } from "../../app/appPages";
 import AdminClientAssignmentModal from "../../components/admin/AdminClientAssignmentModal";
 import AdminTrainerInviteModal from "../../components/admin/AdminTrainerInviteModal";
 import AdminUsersWorkspace, { getAdminUserName, getAdminUserRole } from "../../components/admin/AdminUsersWorkspace";
-import AdminWorkspace from "../../components/admin/AdminWorkspace";
+import AdminWorkspace, { getAdminRecoveryAccountLabel } from "../../components/admin/AdminWorkspace";
 import { fetchAuthorizedWithTimeout } from "../../utils/apiClient";
 import { assignAdminClient, getAdminOperationalUserId, updateAdminUserRole } from "./adminOperationalApi";
+import { getAdminAttentionFilter } from "../../components/admin/adminAttentionQueue.js";
+import { isAdminAssignableTrainer } from "../../utils/adminAssignableTrainer.js";
 
 function canUseAdmin(canUseAdminFeatures) {
   return typeof canUseAdminFeatures === "function"
@@ -18,6 +20,9 @@ function getUsersLoadError(status) {
   const normalized = message.toLocaleLowerCase("ru");
 
   if (!message) return "";
+  if (normalized.includes("права firestore") && normalized.includes("для роли тренера")) {
+    return "Не удалось загрузить пользователей. Проверьте подключение и права администратора, затем повторите попытку.";
+  }
 
   return normalized.includes("загрузить пользователей")
     || normalized.includes("загрузить клиентов")
@@ -41,13 +46,6 @@ function normalizeLogin(value) {
 
 function isValidLogin(value) {
   return /^[a-z0-9._-]{3,32}$/.test(value);
-}
-
-function isActiveTrainerAccount(user) {
-  const status = String(user?.accountStatus || user?.status || "").trim().toLocaleLowerCase("ru");
-  return getAdminUserRole(user) === "trainer"
-    && !user?.accessDisabled
-    && !["disabled", "blocked", "suspended", "inactive", "revoked", "отозван"].includes(status);
 }
 
 /**
@@ -89,11 +87,13 @@ export default function AdminUsersWorkspaceRoute(ctx) {
   const [clientAssignmentSaving, setClientAssignmentSaving] = useState(false);
   const [clientAssignmentStatus, setClientAssignmentStatus] = useState("");
   const [selectedAssignmentClient, setSelectedAssignmentClient] = useState(null);
+  const [directoryRefreshing, setDirectoryRefreshing] = useState(false);
 
   const users = Array.isArray(adminAllUsersList) ? adminAllUsersList : [];
   const error = getUsersLoadError(adminClientStatus);
-  const activeRole = getRoleFilter(adminUsersSelectedTab, adminClientFilter);
-  const activeTrainers = users.filter(isActiveTrainerAccount);
+  const attentionFilter = getAdminAttentionFilter(adminClientFilter);
+  const activeRole = attentionFilter?.role || getRoleFilter(adminUsersSelectedTab, adminClientFilter);
+  const activeTrainers = users.filter(isAdminAssignableTrainer);
 
   const openSection = (sectionId) => {
     if (sectionId === "users") return;
@@ -137,15 +137,18 @@ export default function AdminUsersWorkspaceRoute(ctx) {
     setPage?.(APP_PAGES.ADMIN_USERS);
   };
 
-  const retry = () => {
+  const retry = async () => {
+    if (directoryRefreshing) return;
     setAdminClientStatus?.("");
-
-    if (typeof ctx.loadUsers === "function") {
-      void ctx.loadUsers();
-      return;
+    setDirectoryRefreshing(true);
+    try {
+      if (typeof ctx.loadUsers === "function") await ctx.loadUsers();
+      else await refreshPage?.();
+    } catch {
+      setAdminClientStatus?.("Не удалось загрузить пользователей. Проверьте подключение и повторите попытку.");
+    } finally {
+      setDirectoryRefreshing(false);
     }
-
-    refreshPage?.();
   };
 
   const changeRoleFilter = (role) => {
@@ -259,9 +262,9 @@ export default function AdminUsersWorkspaceRoute(ctx) {
 
     const name = getAdminUserName(client);
     const confirmed = await showAppConfirm({
-      title: "Назначить тренером?",
-      text: `${name} получит доступ к панели тренера, клиентам, программам и личной библиотеке. Данные аккаунта сохранятся.`,
-      confirmText: "Назначить тренером",
+      title: "Изменить роль на «Тренер»?",
+      text: `${getAdminRecoveryAccountLabel({ ...client, id: targetId, name })}. ID: ${targetId}. Этот аккаунт получит доступ к панели тренера, клиентам, программам и личной библиотеке. Это смена роли, а не назначение тренера клиенту. Данные аккаунта сохранятся.`,
+      confirmText: "Изменить роль на «Тренер»",
       cancelText: "Отмена"
     });
 
@@ -349,11 +352,21 @@ export default function AdminUsersWorkspaceRoute(ctx) {
       subtitle="Управление типами аккаунтов и доступом к рабочим разделам"
       testId="admin-users-workspace-route"
       title="Админка"
+      canRecoverTelegramAccess
+      telegramRecoveryClients={users.filter(item => getAdminUserRole(item) === "client"
+        && item.active !== false && item.archived !== true && item.accessDisabled !== true && item.disabled !== true
+        && item.accountAccessStatus !== "awaiting_trainer"
+        && !["revoked", "suspended"].includes(item.membershipStatus)
+        && !["disabled", "blocked", "suspended", "inactive", "revoked", "invited", "pending", "created"].includes(String(item.accountStatus || item.status || "").toLowerCase()))
+        .map(item => ({ id: getAdminOperationalUserId(item), name: getAdminUserName(item), email: item.email || "" }))
+        .filter(item => item.id)}
     >
       <AdminUsersWorkspace
         activeRole={activeRole}
+        attentionFilter={attentionFilter?.id || ""}
+        onClearAttentionFilter={() => changeRoleFilter(activeRole)}
         error={error}
-        isLoading={Boolean(trainerClientSummariesLoading && !users.length && !error)}
+        isLoading={Boolean(directoryRefreshing || (trainerClientSummariesLoading && !error))}
         search={adminUsersSearch}
         users={users}
         onOpenClient={openClient}

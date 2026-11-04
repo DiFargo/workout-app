@@ -6,21 +6,22 @@ import {
   getTrainerNextWorkoutSourceExercise
 } from "./trainerWorkoutArgs";
 import {
-  getTrainerExercisePresentationIdentity,
+  getTrainerExerciseSelectionPatch,
   mapTrainerNextWorkoutSetExercise,
-  normalizeTrainerNextExerciseDefaults
+  resolveTrainerLibraryExercise
 } from "./trainerWorkoutEditHelpers";
-import { exerciseUsesExternalWeight } from "../../utils/auditSafety";
 import { sanitizeExerciseSetPatch } from "../../utils/exerciseWeightInput";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
 import { requestTrainerExerciseCards, exerciseCardMutation, exerciseCardLibraryItem } from "../../utils/trainerExerciseCards.js";
 import { mapTemplateExerciseCards } from "../../../functions/exerciseCards.js";
+import { moveTrainerWorkoutDay } from "../../utils/trainerWorkoutDayOrder.js";
+import { copyTrainerWorkoutDay } from "../../utils/trainerWorkoutCopy.js";
+import { runTransaction } from "firebase/firestore";
+import { programDraftSnapshot } from "../../utils/trainerProgramDraft.js";
 
 const DEFAULT_EXERCISE_NAME = "\u041d\u043e\u0432\u043e\u0435 \u0443\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
 const DEFAULT_DAY_NAME = "\u0414\u0435\u043d\u044c";
-const DEFAULT_WORKOUT_NAME = "\u0422\u0440\u0435\u043d\u0438\u0440\u043e\u0432\u043a\u0430";
 const DEFAULT_EXERCISE_COPY_NAME = "\u0423\u043f\u0440\u0430\u0436\u043d\u0435\u043d\u0438\u0435";
-const COPY_SUFFIX = " \u2014 \u043a\u043e\u043f\u0438\u044f";
 const ABS_EXERCISE_MARKER = "\u041f\u0440\u0435\u0441\u0441";
 
 function getPlanWorkouts(plan) {
@@ -46,7 +47,6 @@ export function createTrainerPlanEditorHandlers({
   plan,
   setPlan,
   saveWorkoutsToFirebase,
-  adminExerciseSearch,
   trainerExerciseLibraryItems,
   selectedUserId,
   auth,
@@ -60,8 +60,8 @@ export function createTrainerPlanEditorHandlers({
   canManageTrainingTemplate,
   db,
   doc,
-  setDoc,
-  draftOnly = false
+  draftOnly = false,
+  completedWorkoutIds = []
 }) {
   const persistPlan = (nextPlan) => {
     setPlan(nextPlan);
@@ -131,34 +131,30 @@ export function createTrainerPlanEditorHandlers({
       return false;
     }
 
-    const nextExercises = exercises.map((exercise, index) => (
-      index === resolvedExerciseIndex ? { ...exercise, ...patch } : exercise
-    ));
-    const nextWorkout = { ...targetWorkout, exercises: nextExercises };
-    const nextWorkouts = workouts.map((workout, index) => (
-      index === resolvedWorkoutIndex ? nextWorkout : workout
-    ));
-    const assignedProgramId = nextWorkout.assignedProgramId || plan?.assignedProgramId || "";
-    const assignedTemplate = (adminTrainingTemplates || []).find((template) => template.id === assignedProgramId);
 
     try {
-      await setDoc(doc(db, "users", ownerUid, "workouts", nextWorkout.id), {
-        ...Object.fromEntries(Object.entries(nextWorkout).filter(([key]) => !key.startsWith("_editor"))),
-        id: nextWorkout.id,
-        order: Number(nextWorkout.order || resolvedWorkoutIndex + 1),
-        sortOrder: Number(nextWorkout.sortOrder || resolvedWorkoutIndex + 1),
-        assignedProgramId,
-        assignedProgramName: nextWorkout.assignedProgramName || plan?.assignedProgramName || assignedTemplate?.name || "",
-        assignedProgramUpdatedAt: nextWorkout.assignedProgramUpdatedAt || plan?.assignedProgramUpdatedAt || "",
-        assignedBy: auth.currentUser?.uid || nextWorkout.assignedBy || "",
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
-      setPlan(createTrainerNextPlan(plan, nextWorkouts));
+      const savedWorkout = await runTransaction(db, async (transaction) => {
+        const ref = doc(db, "users", ownerUid, "workouts", targetWorkout.id);
+        const snapshot = await transaction.get(ref);
+        const fresh = snapshot.exists() ? snapshot.data() : null;
+        if (!fresh || (targetWorkout._editorSnapshot
+          ? targetWorkout._editorSnapshot !== programDraftSnapshot(fresh)
+          : (fresh.updatedAt || "") !== (targetWorkout.updatedAt || "")) ||
+            ["status", "movedToDate", "statusUpdatedAt", "completedAt"].some(key => (fresh[key] || "") !== (targetWorkout[key] || ""))) {
+          throw new Error("Тренировка изменилась. Обновите программу перед корректировкой нагрузки.");
+        }
+        const freshExercises = fresh.exercises || [];
+        if (!freshExercises.some(exercise => exercise.id === targetExercise.id)) throw new Error("Упражнение изменилось. Обновите программу.");
+        const update = { exercises: freshExercises.map(exercise => exercise.id === targetExercise.id ? { ...exercise, ...patch } : exercise), updatedAt: new Date().toISOString() };
+        transaction.set(ref, update, { merge: true });
+        return { ...targetWorkout, ...fresh, ...update, _editorSnapshot: programDraftSnapshot({ ...fresh, ...update }) };
+      });
+      setPlan(current => createTrainerNextPlan(current, getPlanWorkouts(current).map(workout => workout.id === savedWorkout.id ? savedWorkout : workout)));
       setAdminClientStatus("Нагрузка упражнения обновлена.");
       return true;
     } catch (error) {
       console.error("Trainer exercise progress adjustment save failed:", error);
-      setAdminClientStatus("Не удалось сохранить изменение нагрузки.");
+      setAdminClientStatus(error.message || "Не удалось сохранить изменение нагрузки.");
       return false;
     }
   }
@@ -300,29 +296,22 @@ export function createTrainerPlanEditorHandlers({
   function addTrainerNextExercise(...args) {
     const constructorMode = args.length >= 4;
     const workoutId = getTrainerNextWorkoutId(args, constructorMode);
-    const sourceExercise = getTrainerNextWorkoutSourceExercise(args, constructorMode);
+    const sourceExercise = resolveTrainerLibraryExercise(
+      getTrainerNextWorkoutSourceExercise(args, constructorMode), trainerExerciseLibraryItems
+    );
 
-    if (!workoutId) return;
+    if (!workoutId || !sourceExercise) {
+      setAdminClientStatus?.("Выберите упражнение из библиотеки. Новые упражнения создаются в разделе «Упражнения».");
+      return false;
+    }
 
     const workouts = getPlanWorkouts(plan);
-    const exerciseName = String(
-      sourceExercise?.name
-      || workouts.find((workout) => workout.id === workoutId)?.name
-      || adminExerciseSearch
-      || DEFAULT_EXERCISE_NAME
-    ).trim() || DEFAULT_EXERCISE_NAME;
-
-    const sourceVideo = sourceExercise?.video || sourceExercise?.videoUrl || sourceExercise?.videoURL || "";
-    const newExercise = sourceExercise ? {
+    if (!workouts.some((workout) => workout.id === workoutId)) return false;
+    const newExercise = {
       id: `exercise_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      ...getTrainerExercisePresentationIdentity(sourceExercise),
-      name: sourceExercise.name || exerciseName,
-      video: sourceVideo,
-      videoAutoFilledFrom: sourceVideo ? sourceExercise.name : "",
-      requiresWeight: exerciseUsesExternalWeight(sourceExercise),
-      usesWeight: exerciseUsesExternalWeight(sourceExercise),
-      sets: [createEmptySet(getDefaultExerciseReps(exerciseName))]
-    } : normalizeTrainerNextExerciseDefaults(exerciseName, trainerExerciseLibraryItems);
+      ...getTrainerExerciseSelectionPatch(sourceExercise),
+      sets: [createEmptySet(getDefaultExerciseReps(sourceExercise.name))]
+    };
 
     const nextWorkouts = mapTrainerNextWorkoutSetExercise(workouts, workoutId, null, (exercises) => [
       ...exercises,
@@ -382,7 +371,7 @@ export function createTrainerPlanEditorHandlers({
     const duplicatedExercise = {
       ...targetExercise,
       id: `exercise_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      name: `${targetExercise.name || DEFAULT_EXERCISE_COPY_NAME}${COPY_SUFFIX}`,
+      name: targetExercise.name || DEFAULT_EXERCISE_COPY_NAME,
       sets: (targetExercise.sets || []).map((set, setIndex) => ({
         ...set,
         ...(set?.id ? { id: `${set.id}_copy_${setIndex}` } : {})
@@ -447,7 +436,7 @@ export function createTrainerPlanEditorHandlers({
       const url = uploadedVideo.url;
 
       const applyVideo = (currentPlan) => createTrainerNextPlan(currentPlan, mapTrainerNextWorkoutSetExercise(getPlanWorkouts(currentPlan), workoutId, exerciseId, (exercises) => exercises.map((exercise) => (
-        exercise.id === exerciseId ? { ...exercise, video: url, videoAutoFilledFrom: "" } : exercise
+        exercise.id === exerciseId ? { ...exercise, video: url, videoAutoFilledFrom: "", videoPosterTime: null } : exercise
       ))));
 
       if (draftOnly) {
@@ -528,26 +517,29 @@ export function createTrainerPlanEditorHandlers({
     const targetWorkout = workouts.find((workout) => workout.id === workoutId);
     if (!targetWorkout) return;
 
-    const duplicatedWorkout = {
-      ...targetWorkout,
-      id: `workout_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      name: `${targetWorkout.name || DEFAULT_WORKOUT_NAME}${COPY_SUFFIX}`,
-      exercises: (targetWorkout.exercises || []).map((exercise, index) => ({
-        ...exercise,
-        id: `${exercise.id || "exercise"}_copy_${Date.now()}_${index}`,
-        sets: (exercise.sets || []).map((set, setIndex) => ({
-          ...set,
-          ...(set?.id ? { id: `${set.id}_copy_${setIndex}` } : {})
-        }))
-      }))
-    };
+    const suffix = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const order = Math.max(workouts.length, ...workouts.flatMap(workout => [Number(workout.order), Number(workout.sortOrder)]).filter(Number.isFinite)) + 1;
+    const duplicatedWorkout = copyTrainerWorkoutDay(targetWorkout, { suffix, order });
     const index = workouts.findIndex((workout) => workout.id === workoutId);
     if (index < 0) return;
 
     const nextWorkouts = [...workouts];
-    nextWorkouts.splice(index + 1, 0, duplicatedWorkout);
+    // Completed days retain their exact positions in the explicit-save draft.
+    nextWorkouts.splice(draftOnly ? nextWorkouts.length : index + 1, 0, duplicatedWorkout);
 
     persistPlan(createTrainerNextPlan(plan, nextWorkouts));
+    return duplicatedWorkout.id;
+  }
+
+  function moveTrainerNextWorkoutDay(workoutId, direction) {
+    // Reordering belongs to the explicit-save client editor, never live autosave.
+    if (!draftOnly) return false;
+    const workouts = getPlanWorkouts(plan);
+    if (moveTrainerWorkoutDay(workouts, workoutId, direction, completedWorkoutIds) === workouts) return false;
+    setPlan(current => createTrainerNextPlan(current, moveTrainerWorkoutDay(
+      getPlanWorkouts(current), workoutId, direction, completedWorkoutIds
+    )));
+    return true;
   }
 
   function removeTrainerNextWorkoutDay(...args) {
@@ -580,6 +572,7 @@ export function createTrainerPlanEditorHandlers({
     uploadTrainerLibraryExerciseVideo,
     addTrainerNextWorkoutDay,
     duplicateTrainerNextWorkoutDay,
+    moveTrainerNextWorkoutDay,
     removeTrainerNextWorkoutDay
   };
 }

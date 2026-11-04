@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -34,6 +34,16 @@ const childEnvironment = {
   VITE_FIREBASE_ENVIRONMENT: environment
 };
 
+// Keep the search-only payload consistent with the archive and quarantine.
+// This never edits old food tuples or any user data.
+for (const script of ["build-basic-nutrition-foods.mjs", "build-personal-search-catalog.mjs"]) {
+  await new Promise((done, reject) => {
+    const child = spawn(process.execPath, [fileURLToPath(new URL(script, import.meta.url)), "--apply"], {stdio: "inherit"});
+    child.once("error", reject);
+    child.once("exit", code => code === 0 ? done() : reject(new Error(`${script}: ${code}`)));
+  });
+}
+
 if (environment === "staging" && String(childEnvironment.VITE_FIREBASE_PROJECT_ID || "").trim() === productionProjectId) {
   throw new Error("A staging artifact cannot use the production Firebase project.");
 }
@@ -62,6 +72,14 @@ if (!firebaseProjectId) {
 }
 
 await mkdir(outputDirectory, { recursive: true });
+// These source fixtures remain available in DEV, but production playback goes
+// through the authenticated short-lived Storage URL endpoint, never Hosting.
+const publicVideos = resolve(outputDirectory, "videos");
+for (const entry of await readdir(publicVideos, { withFileTypes: true }).catch(() => [])) {
+  if (entry.isFile() && /\.(mp4|mov|m4v|webm)$/i.test(entry.name)) {
+    await rm(resolve(publicVideos, entry.name));
+  }
+}
 await writeFile(
   resolve(outputDirectory, ".workout-release.json"),
   JSON.stringify({

@@ -1,7 +1,7 @@
 import { test, expect } from "./app-test.js";
 import { buildLocalHybridWorkoutPlan } from "../../functions/basicWorkoutHybridPlan.js";
 
-test("approved slider flow works by keyboard and supports a one-day plan on iPhone 17 Pro", async ({ page }, testInfo) => {
+test("direct answer flow works by keyboard and supports a one-day plan on iPhone 17 Pro", async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 402, height: 874 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(() => localStorage.setItem("basic-workout-long-plan-access:client-harness", JSON.stringify({ activated: true })));
@@ -9,14 +9,9 @@ test("approved slider flow works by keyboard and supports a one-day plan on iPho
   const card = page.getByTestId("basic-quiz-card");
   const labels = ["Хорошая форма", "Я новичок", "В тренажёрном зале", "1 тренировка", "Около 30 минут"];
   for (let step = 0; step < labels.length; step++) {
-    const slider = card.getByRole("slider");
-    await expect(slider).toBeVisible();
-    await slider.focus(); await slider.press("End");
-    await page.screenshot({ path: testInfo.outputPath(`step-${step + 1}-last.png`), scale: "css" });
-    await slider.press("Home");
-    await slider.press("ArrowRight");
-    await page.screenshot({ path: testInfo.outputPath(`step-${step + 1}-second.png`), scale: "css" });
-    await slider.press("Home");
+    const answer = card.getByRole("button", { name: labels[step], exact: true });
+    await answer.focus();
+    await answer.press("Enter");
     await expect(card.getByRole("button", { name: labels[step], exact: true })).toHaveAttribute("aria-pressed", "true");
     const next = card.getByRole("button", { name: "Далее", exact: true });
     const bounds = await next.boundingBox();

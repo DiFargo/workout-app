@@ -1,5 +1,6 @@
 import { exerciseLibraryNameKey as nameKey } from "./exerciseLibraryIdentity.js";
 import { findCurrentExerciseCard, publicExerciseCard, isExerciseCardWorkoutMutable, mapTemplateExerciseCards } from "./exerciseCards.js";
+import { normalizeExerciseVideoPosterTime } from "./exerciseVideoPoster.js";
 
 const text = (value) => typeof value === "string" ? value.trim() : "";
 const videoOf = (exercise) => text(exercise?.video || exercise?.videoUrl || exercise?.videoURL);
@@ -60,7 +61,8 @@ export function resolveClientExerciseMedia(workouts, templates, trainerId, cards
       const match = uniqueVideo(sameTemplate) || uniqueVideo(byId) || (!byId.length ? uniqueVideo(byName) : null);
       const inheritedCard = match && findCurrentExerciseCard(match, cards, trainerId);
       if (inheritedCard) media.push({ ...envelope, card: publicExerciseCard(inheritedCard) });
-      else if (match) media.push({ ...envelope, video: videoOf(match), sourceName: match.name });
+      else if (match) media.push({ ...envelope, video: videoOf(match), sourceName: match.name,
+        videoPosterTime: normalizeExerciseVideoPosterTime(match.videoPosterTime) });
       else if (alternativeCards.length) media.push(envelope);
     }
   }

@@ -2,6 +2,10 @@ import { APP_PAGES } from "../../../app/appPages";
 
 export function createWorkoutListProps({
   appVersion,
+  initialLoadState = "ready",
+  onRetryLoad,
+  onRetrySync,
+  onLoadWorkoutAchievements,
   renderClientMainBottomBar,
   plan,
   history,
@@ -37,6 +41,10 @@ export function createWorkoutListProps({
 }) {
   return {
     appVersion,
+    initialLoadState,
+    onRetryLoad,
+    onRetrySync,
+    onLoadWorkoutAchievements,
     renderClientMainBottomBar,
     plan,
     history,

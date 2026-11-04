@@ -66,3 +66,70 @@
   .adjustmentInput { width: 108px; }
   .scheduleGrid button { height: clamp(32px, 10vw, 40px); }
 }
+
+/* The setup uses the same calm, grouped form language as the schedule editor. */
+.sheet { box-sizing: border-box; --trainer-v2-ink: #1c1c1e; --trainer-v2-muted: #636366; --trainer-v2-accent: #3c6faa; --trainer-v2-line: rgba(60,60,67,.12); --trainer-v2-surface: #efeff4; --trainer-v2-shadow-rgb: 60 60 67; }
+.sheet .content { background: #f2f2f7; }
+.sheet .description { max-width: 64ch; margin-bottom: 18px; }
+.sheet .header h2 { font-size: 25px; line-height: 1.2; }
+.sheet .clientName { letter-spacing: 0; font-size: 14px; }
+.sheet .summary { gap: 6px; padding: 16px; border: 1px solid var(--trainer-v2-line); background: #fff; }
+.sheet .summary span { line-height: 1.4; }
+.sheet .adjustment { grid-template-columns: minmax(0,1fr) 126px 110px; padding: 14px; gap: 16px; min-height: 88px; background: #fff; }
+.sheet .adjustmentCopy { display: grid; gap: 6px; }
+.sheet .adjustmentCopy strong { display: block; white-space: normal; overflow: visible; font-size: 16px; line-height: 1.35; }
+.sheet .adjustmentCopy small { display: block; white-space: normal; overflow: visible; font-size: 13px; }
+.sheet .adjustmentInput { margin: 0; gap: 6px; align-self: center; }
+.sheet .adjustmentInputLabel { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0; text-align: left; line-height: 1.3; }
+.sheet .adjustmentInputControl { margin: 0; }
+.sheet .adjustmentInput input { min-height: 44px; background: #fff; font-size: 16px; }
+.sheet .adjustmentResult { display: grid; gap: 6px; align-self: center; font-variant-numeric: tabular-nums; }
+.adjustmentResult > span { color: var(--trainer-v2-muted); font-size: 12px; line-height: 1.3; }
+.adjustmentResult > strong { display: grid; align-items: center; min-height: 44px; color: var(--trainer-v2-ink); font-size: 16px; line-height: 1.3; }
+.sheet .primary { background: var(--ownset-action-gradient, linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%)); box-shadow: none; }
+.sheet .scheduleSummary { padding: 14px 16px; background: #fff; }
+.sheet .scheduleSummary > div { min-width: 0; }
+.sheet .scheduleSummary strong { font-size: 16px; overflow-wrap: anywhere; }
+.sheet .scheduleReady { color: #237a42; }
+.weekdaysField { min-width: 0; margin: 0; padding: 0; border: 0; }
+.weekdaysField legend { margin-bottom: 8px; padding: 0; font-size: 14px; font-weight: 600; color: var(--trainer-v2-muted); }
+.weekdayGrid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 8px; }
+.sheet .weekday { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 46px; min-width: 0; padding: 0 6px; border: 1px solid var(--trainer-v2-line); border-radius: 12px; background: #fff; cursor: pointer; }
+.sheet .weekday input { width: 17px; height: 17px; margin: 0; accent-color: var(--trainer-v2-accent); }
+.sheet .weekday > span { display: inline; margin: 0; font-size: 14px; font-weight: 600; color: var(--trainer-v2-ink); }
+.sheet .weekdaySelected { border-color: var(--trainer-v2-accent); background: #edf3fa; }
+.startDateRow { display: grid; grid-template-columns: minmax(160px, .85fr) minmax(0, 1fr); align-items: center; gap: 16px; }
+.startDateRow > p { margin: 0; color: var(--trainer-v2-muted); font-size: 13px; line-height: 1.45; }
+.previewHeading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 10px; }
+.previewHeading h3 { margin: 0; color: var(--trainer-v2-ink); font-size: 16px; }
+.previewHeading > span { color: var(--trainer-v2-muted); font-size: 12px; }
+.dateList { border: 1px solid var(--trainer-v2-line); border-radius: 16px; background: #fff; overflow: hidden; }
+.dateRow { display: grid; grid-template-columns: minmax(0,1fr) 184px; align-items: center; gap: 14px; padding: 12px 14px; }
+.dateRow + .dateRow { border-top: 1px solid var(--trainer-v2-line); }
+.dateRow > div { display: grid; min-width: 0; gap: 4px; }
+.dateRow strong { color: var(--trainer-v2-ink); font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; }
+.dateRow small { color: var(--trainer-v2-muted); font-size: 12px; }
+.sheet .dateRow input { min-width: 0; height: 46px; padding: 0 10px; font-size: 16px; background: #fff; }
+.sheet .subscriptionPreview { border: 0; background: #efeff4; }
+.sheet .subscriptionPreview strong { color: var(--trainer-v2-ink); font-size: 13px; }
+.sheet .subscriptionPreview > span { background: transparent; }
+.sheet :is(button,input,select):focus-visible { outline: 3px solid #3c6faa; outline-offset: 2px; }
+.visuallyHidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px !important; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (max-width: 640px) {
+  .sheet .header { padding: 18px 16px; }
+  .sheet .header h2 { font-size: 21px; }
+  .sheet .headerCopy { gap: 10px; }
+  .sheet .icon { display: none; }
+  .sheet .content { padding: 16px; }
+  .sheet .progress { padding: 12px 16px 0; }
+  .sheet .footer { padding: 12px 16px max(12px,env(safe-area-inset-bottom)); gap: 8px; }
+  .sheet .footer .later { min-height: 44px; }
+  .sheet .adjustment { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px 16px; }
+  .sheet .adjustmentCopy { grid-column: 1 / -1; }
+  .sheet .adjustmentInput { width: 100%; }
+  .weekdayGrid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .startDateRow { grid-template-columns: minmax(0,1fr); gap: 8px; }
+  .dateRow { grid-template-columns: minmax(0,1fr); gap: 8px; }
+  .sheet .scheduleSummary > b { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }

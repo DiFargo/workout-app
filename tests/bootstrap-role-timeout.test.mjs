@@ -124,7 +124,7 @@ function harness() {
   return { state, roles, workouts, signIn, verify };
 }
 
-test("a verified client role survives the 9s fallback while initial workouts wait until the 12s bound", async () => {
+test("a verified client opens its shell before workouts finish and survives the 9s role fallback", async () => {
   const h = harness();
   const { request } = await h.signIn("A");
   await advanceTo(7000);
@@ -132,7 +132,8 @@ test("a verified client role survives the 9s fallback while initial workouts wai
   assert.equal(h.state.setCurrentUserRole, "client");
   await advanceTo(9000);
   assert.equal(h.state.setCurrentUserRole, "client");
-  assert.equal(h.state.setAppLoading, true, "workouts remain pending within their 5s allowance");
+  assert.equal(h.state.setAppLoading, false, "verified shell is not blocked by a slow workout request");
+  assert.equal(h.state.setInitialWorkoutLoadState, "loading", "the workout section remains explicitly pending");
   await advanceTo(12000);
   await request;
   assert.equal(h.state.setAppLoading, false);

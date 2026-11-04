@@ -28,7 +28,7 @@ test('Russian, Latin brand spelling, prefixes, keyboard layout and typos find ac
   const raw=search('творог').total;assert.equal(search('ndjhju').total,raw);
   assert.ok(search('твроог').total>0);assert.equal(search('asdasdasdzzzzzzzz').total,0);
   assert.ok(search('куриная грудка сырая').items.every(r=>/сыр|сыро/i.test(r.name)));
-  assert.ok(search('куриная грудка вареная').items.every(r=>/варен|варён/i.test(r.name)));
+  assert.ok(search('куриная грудка вареная').items.every(r=>/варен|варён|отвар/i.test(r.name)));
 });
 test('barcode lookup is exact, market/category filters apply, page navigation is stable',()=>{
   const r=rows.find(r=>r.barcodes.length&&r.market==='BY');

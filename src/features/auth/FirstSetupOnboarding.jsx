@@ -4,6 +4,7 @@ import {
   Apple,
   Armchair,
   CakeSlice,
+  Check,
   Dumbbell,
   Flame,
   Footprints,
@@ -61,7 +62,7 @@ const ONBOARDING_TITLES = [
 const ONBOARDING_SUBTITLES = [
   "Давайте настроим ваш профиль, чтобы тренировки и рекомендации были максимально точными.",
   "Это поможет учитывать ваши особенности.",
-  "Введите ваше имя.",
+  "Так к вам будут обращаться в приложении.",
   "Введите ваш возраст.",
   "Введите ваш текущий вес.",
   "Введите ваш рост.",
@@ -84,6 +85,38 @@ const METRIC_STEP_FIELDS = {
   5: "height",
   8: "targetWeight"
 };
+
+function FirstSetupSexIllustration({ sex }) {
+  const isFemale = sex === "female";
+
+  return (
+    <svg className={styles.firstSetupSexIllustration} data-sex-portrait={sex} viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      <circle cx="32" cy="32" r="32" fill="var(--setup-muted)" />
+      {isFemale ? (
+        <>
+          <path d="M15 30c-3-15 4-24 17-24s20 9 17 24l-2 20 7 14H10l7-14z" fill="#40515b" />
+          <path d="M27 36h10v10H27z" fill="#e8b893" />
+          <path d="M8 64c1-12 9-19 20-20l4 4 4-4c12 1 19 8 20 20z" fill="#4d8585" />
+          <ellipse cx="32" cy="24" rx="10" ry="12" fill="#f2c6a4" />
+          <path d="M22 22c1-9 5-14 11-14 7 0 11 5 11 14-4-1-8-4-11-7-3 4-7 6-11 7z" fill="#40515b" />
+          <path d="M20 22c0 9 0 15-4 21 4 1 7-3 8-8V23M44 22c0 9 0 15 4 21-4 1-7-3-8-8V23" fill="#40515b" />
+          <path d="M28 27h.1M36 27h.1" stroke="#29383f" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M29 33c2 2 4 2 6 0" fill="none" stroke="#a66e5d" strokeWidth="1.5" strokeLinecap="round" />
+        </>
+      ) : (
+        <>
+          <path d="M19 25c-2-12 3-19 13-19s15 7 13 19l-3 13H22z" fill="#40515b" />
+          <path d="M27 36h10v10H27z" fill="#e8b893" />
+          <path d="M8 64c1-12 9-19 20-20l4 4 4-4c12 1 19 8 20 20z" fill="#4778a4" />
+          <ellipse cx="32" cy="24" rx="10" ry="12" fill="#f2c6a4" />
+          <path d="M22 21c1-8 5-13 11-13 7 0 10 5 10 13-4-1-8-3-11-6-3 3-6 5-10 6z" fill="#40515b" />
+          <path d="M28 27h.1M36 27h.1" stroke="#29383f" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M29 33c2 2 4 2 6 0" fill="none" stroke="#a66e5d" strokeWidth="1.5" strokeLinecap="round" />
+        </>
+      )}
+    </svg>
+  );
+}
 
 function normalizeNumberValue(value) {
   const rawValue = String(value ?? "").trim();
@@ -121,17 +154,10 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
   const numericValue = normalizeNumberValue(value);
   const sliderValue = numericValue ?? safeFallback;
   const rangeValue = Math.min(config.max, Math.max(config.min, sliderValue));
-  const [isWeightSliderDragging, setIsWeightSliderDragging] = useState(false);
-  const [weightWindowCenter, setWeightWindowCenter] = useState(rangeValue);
-
-  useEffect(() => {
-    if (field === "weight" && !isWeightSliderDragging) {
-      setWeightWindowCenter(rangeValue);
-    }
-  }, [field, isWeightSliderDragging, rangeValue]);
+  const [weightDragCenter, setWeightDragCenter] = useState(null);
 
   const weightWindow = field === "weight"
-    ? getWeightSliderWindow(weightWindowCenter)
+    ? getWeightSliderWindow(weightDragCenter ?? rangeValue)
     : null;
   const usesCenteredScale = field === "age";
   const nativeSliderValue = field === "age"
@@ -166,11 +192,12 @@ function FirstSetupMetricSlider({ field, value, onChange, fallback }) {
         step={nativeSliderStep}
         value={nativeSliderValue}
         onChange={handleRangeChange}
-        onPointerDown={() => field === "weight" && setIsWeightSliderDragging(true)}
-        onPointerUp={() => field === "weight" && setIsWeightSliderDragging(false)}
-        onPointerCancel={() => field === "weight" && setIsWeightSliderDragging(false)}
-        onKeyDown={() => field === "weight" && setIsWeightSliderDragging(true)}
-        onKeyUp={() => field === "weight" && setIsWeightSliderDragging(false)}
+        onPointerDown={() => field === "weight" && setWeightDragCenter(rangeValue)}
+        onPointerUp={() => field === "weight" && setWeightDragCenter(null)}
+        onPointerCancel={() => field === "weight" && setWeightDragCenter(null)}
+        onKeyDown={() => field === "weight" && setWeightDragCenter(current => current ?? rangeValue)}
+        onKeyUp={() => field === "weight" && setWeightDragCenter(null)}
+        onBlur={() => field === "weight" && setWeightDragCenter(null)}
       />
       <div className={styles.firstSetupMetricTicks} aria-hidden="true">
         {Array.from({ length: 21 }, (_, index) => <i key={index} />)}
@@ -258,12 +285,13 @@ export default function FirstSetupOnboarding({
       ? getSuggestedTargetWeight(profileDraft)
       : NUMBER_SLIDER_CONFIG[field].fallback;
 
-    setProfileDraft((prev) => ({
+    setProfileDraft((prev) => normalizeNumberValue(prev[field]) !== null ? prev : ({
       ...prev,
       [field]: formatNumberValue(fallback, NUMBER_SLIDER_CONFIG[field].step)
     }));
   }, [
     onboardingStep,
+    profileDraft,
     setProfileDraft
   ]);
 
@@ -330,8 +358,9 @@ export default function FirstSetupOnboarding({
                 aria-pressed={profileDraft.sex === "male"}
                 onClick={() => updateProfileDraft({ sex: "male" })}
               >
-                <span><PersonStanding aria-hidden="true" /></span>
+                <span className={styles.firstSetupSexIcon}><FirstSetupSexIllustration sex="male" /></span>
                 <strong>Мужчина</strong>
+                {profileDraft.sex === "male" ? <span className={styles.firstSetupSexSelected} aria-hidden="true"><Check size={14} strokeWidth={2.8} /></span> : null}
               </button>
 
               <button
@@ -340,8 +369,9 @@ export default function FirstSetupOnboarding({
                 aria-pressed={profileDraft.sex === "female"}
                 onClick={() => updateProfileDraft({ sex: "female" })}
               >
-                <span><UserRound aria-hidden="true" /></span>
+                <span className={styles.firstSetupSexIcon}><FirstSetupSexIllustration sex="female" /></span>
                 <strong>Женщина</strong>
+                {profileDraft.sex === "female" ? <span className={styles.firstSetupSexSelected} aria-hidden="true"><Check size={14} strokeWidth={2.8} /></span> : null}
               </button>
             </div>
           )}
@@ -351,7 +381,7 @@ export default function FirstSetupOnboarding({
               <span>Ваше имя</span>
               <input
                 className={styles.firstSetupInput}
-                placeholder="Например, Илья"
+                placeholder="Как к вам обращаться?"
                 type="text"
                 autoComplete="name"
                 autoCapitalize="words"

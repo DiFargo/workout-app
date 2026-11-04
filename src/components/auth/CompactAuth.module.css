@@ -1,0 +1,82 @@
+.loginPage.compactLoginPage {
+  --auth-canvas: #f2f2f7;
+  --auth-surface: #fff;
+  --auth-muted-surface: #efeff4;
+  --auth-text: #1c1c1e;
+  --auth-secondary: #636366;
+  --auth-accent: #3c6faa;
+  --auth-border: rgba(60, 60, 67, .12);
+  box-sizing: border-box;
+  width: min(100%, 402px);
+  min-height: var(--app-viewport-height, 100dvh);
+  margin: 0 auto;
+  padding: max(32px, calc(env(safe-area-inset-top) + 16px), calc(var(--telegram-safe-area-top, 0px) + 16px), calc(var(--telegram-content-safe-area-top, 0px) + 16px)) 22px max(16px, env(safe-area-inset-bottom), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  background: var(--auth-canvas);
+  color: var(--auth-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+
+.loginPage *, .loginPage *::before, .loginPage *::after { box-sizing: border-box; }
+.loginPage button, .loginPage input { font: inherit; }
+.loginPage button, .loginPage summary { cursor: pointer; touch-action: manipulation; }
+.loginPage button:disabled { cursor: wait; opacity: .58; }
+.loginPage button:focus-visible, .loginPage a:focus-visible, .loginPage summary:focus-visible { outline: 3px solid #82a7d7; outline-offset: 3px; }
+.compactBrand { display: flex; justify-content: center; align-items: center; gap: 10px; }
+.compactBrand img { width: 38px; height: 38px; border-radius: 12px; }
+.compactBrand span { color: var(--auth-text); font-size: 24px; font-weight: 750; line-height: 1.2; letter-spacing: -.7px; }
+.loginCard.compactLoginCard { width: 100%; padding: 24px 20px 16px; display: flex; flex-direction: column; gap: 20px; border-radius: 28px; background: var(--auth-surface); box-shadow: 0 3px 18px rgba(28, 28, 30, .035); }
+.compactLoginCard h1 { margin: 0; color: var(--auth-text); font-size: 26px; font-weight: 750; letter-spacing: -.6px; line-height: 1.2; overflow-wrap: anywhere; }
+.methodSwitch { display: flex; gap: 3px; padding: 3px; border-radius: 12px; background: var(--auth-muted-surface); }
+.methodSwitch button { flex: 1; min-width: 0; min-height: 42px; padding: 7px 5px; border: 0; border-radius: 9px; background: transparent; color: var(--auth-text); font-size: 13px; font-weight: 600; line-height: 1.3; }
+.methodSwitch button[aria-pressed="true"] { background: var(--auth-surface); box-shadow: 0 1px 4px rgba(0, 0, 0, .1); }
+.loginAlternateForm.compactForm { display: flex; flex-direction: column; gap: 17px; margin: 0; }
+.loginField { display: flex; flex-direction: column; gap: 8px; color: var(--auth-text); font-size: 14px; font-weight: 500; }
+.loginField > span { color: var(--auth-text); }
+.loginField input { display: block; width: 100%; min-width: 0; min-height: 52px; padding: 13px 14px; border: 1px solid var(--auth-border); border-radius: 13px; background: #fafafc; color: var(--auth-text); font-size: 16px; font-weight: 400; line-height: 1.4; }
+.loginField input::placeholder { color: #797980; opacity: 1; }
+.loginField input:focus { outline: 2px solid #82a7d7; outline-offset: 2px; }
+.loginField input[aria-invalid="true"] { border-color: #a12d38; }
+.passwordBox { position: relative; width: 100%; }
+.passwordBox input { padding-right: 52px; }
+.eyeBtn { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--auth-secondary); }
+.loginBtn, .loginTelegramBtn { width: 100%; min-height: 54px; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 14px 12px; border: 0; border-radius: 16px; background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); color: #fff; font-size: 16px; font-weight: 650; line-height: 1.3; text-decoration: none; text-align: center; }
+.loginBtn:active:not(:disabled), .loginTelegramBtn:active:not(:disabled) { filter: brightness(.94); }
+.compactResetLink { align-self: flex-end; min-height: 44px; margin: -12px 0 -9px; padding: 8px 0; border: 0; background: transparent; color: var(--auth-accent); font-size: 13px !important; font-weight: 500; }
+.compactSignupRow { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 0 6px; color: var(--auth-secondary); font-size: 13px; line-height: 1.4; }
+.inlineAuthLink { min-height: 44px; padding: 9px 0; border: 0; background: transparent; color: var(--auth-accent); font-weight: 500; }
+.compactTelegram { display: flex; align-items: center; flex-direction: column; gap: 18px; }
+.compactTelegramIcon { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 20px; background: #eaf0f7; color: var(--auth-accent); }
+.compactNote { margin: 0; color: var(--auth-secondary); font-size: 14px; line-height: 1.5; }
+.compactTelegram > .compactNote { text-align: center; }
+.existingAccountNote { margin: 0; color: var(--auth-secondary); font-size: 13px; line-height: 1.5; }
+.existingAccountNote .inlineAuthLink { display: inline; min-height: 0; margin: -11px 0; padding: 11px 0; text-decoration: underline; text-underline-offset: 3px; }
+.trainerAccessNote { margin: 0; padding: 13px 14px; border-radius: 13px; background: #eaf0f7; color: #315e95; font-size: 13px; line-height: 1.5; }
+.loginBackBtn { display: flex; align-items: center; align-self: flex-start; gap: 3px; min-height: 44px; margin: -10px 0 -8px -6px; padding: 8px 6px; border: 0; background: transparent; color: var(--auth-accent); font-size: 14px !important; }
+.loginError, .loginNotice { padding: 12px; border-radius: 13px; background: #fff0f1; color: #9d2432; font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+.loginNotice { background: #eef7f0; color: #237a42; }
+.loginFieldError { color: #9d2432; font-size: 13px; line-height: 1.4; font-weight: 400; }
+.compactAuthFooter { display: flex; align-items: stretch; flex-direction: column; gap: 8px; margin-top: auto; }
+.loginHelp { color: var(--auth-secondary); font-size: 13px; line-height: 1.5; }
+.loginHelp summary { display: flex; justify-content: center; align-items: center; min-height: 44px; padding: 10px 0; color: var(--auth-accent); list-style: none; text-align: center; }
+.loginHelp summary::-webkit-details-marker { display: none; }
+.loginHelp > div { padding: 16px; border-radius: 18px; background: var(--auth-surface); }
+.loginHelp h2 { margin: 18px 0 6px; color: var(--auth-text); font-size: 14px; line-height: 1.4; font-weight: 600; }
+.loginHelp h2:first-child { margin-top: 0; }
+.loginHelp p { margin: 0; }
+.privacyLink { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 0; color: var(--auth-secondary); font-size: 12px; line-height: 1.4; text-align: center; text-underline-offset: 3px; }
+.compactForm .privacyLink { margin: -8px 0; }
+
+@media (max-width: 359px) {
+  .loginPage.compactLoginPage { padding-inline: 16px; gap: 20px; }
+  .loginCard.compactLoginCard { padding-inline: 16px; }
+  .compactLoginCard h1 { font-size: 24px; }
+}
+
+@media (max-height: 600px) {
+  .loginPage.compactLoginPage { padding-top: max(16px, env(safe-area-inset-top), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px)); gap: 16px; }
+  .compactAuthFooter { margin-top: 0; }
+}

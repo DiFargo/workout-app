@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { advanceAuthSession } from "../utils/authSession";
+import { recordStartupStage } from "../utils/performanceChecks.js";
+import { cancelAuthProfilePreparation, waitForAuthProfilePreparation } from "../features/auth/authProfilePreparation.js";
 
 import {
   applySignedOutBootstrapState,
@@ -9,6 +11,7 @@ import {
   loadInitialSignedInUserData,
   loadRemoteUserBootstrapState,
   resolveAdminClaim,
+  readBootstrapProfileResult,
   resetAuthSessionOperations,
   resetAuthBootstrapState
 } from "./appBootstrapHelpers";
@@ -73,12 +76,14 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       setOnboardingStep,
       setPage,
       setPlan,
+      setInitialWorkoutLoadState,
       setProfileAccount,
       setProfileAccountAvatarFile,
       setProfileAccountAvatarPreview,
       setProfileAccountDraft,
       setProfileAccountStatus,
       setProfileMeasurements,
+      setProfileMeasurementSnapshot,
       setProfileWorkoutCalendarData,
       setProfileWorkoutCalendarDraftDates,
       setProfileWorkoutCalendarEditing,
@@ -97,42 +102,32 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
     } = bootstrapContext;
     let disposed = false;
     let bootstrapRunId = 0;
-    let splashTimerId = null;
     let bootstrapFallbackTimerId = null;
 
     function clearBootstrapTimers() {
-      if (splashTimerId) {
-        window.clearTimeout(splashTimerId);
-        splashTimerId = null;
-      }
       if (bootstrapFallbackTimerId) {
         window.clearTimeout(bootstrapFallbackTimerId);
         bootstrapFallbackTimerId = null;
       }
     }
 
-    function finishBootstrapLoading({ runId, startedAt }) {
+    function finishBootstrapLoading({ runId }) {
       if (disposed || runId !== bootstrapRunId) return;
       clearBootstrapTimers();
 
-      const elapsed = Date.now() - startedAt;
-      const minimumSplashTime = 900;
-
-      splashTimerId = window.setTimeout(() => {
-        if (!disposed && runId === bootstrapRunId) {
-          setAppLoading(false);
-        }
-      }, Math.max(0, minimumSplashTime - elapsed));
+      setAppLoading(false);
+      recordStartupStage("role-gate-released");
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
+      if (!u) cancelAuthProfilePreparation(auth);
       advanceAuthSession(auth, u);
       resetAuthSessionOperations(bootstrapContext);
       const runId = bootstrapRunId + 1;
       bootstrapRunId = runId;
       clearBootstrapTimers();
-      const startedAt = Date.now();
       startPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
+      setInitialWorkoutLoadState?.("idle");
       setAppLoading(true);
 
       bootstrapFallbackTimerId = window.setTimeout(() => {
@@ -176,6 +171,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           setHistory,
           setPlan,
           setProfileMeasurements,
+          setProfileMeasurementSnapshot,
           setRecentNutritionFoods,
           setUser,
           setIsLoggedIn,
@@ -217,17 +213,23 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
         });
 
         if (u) {
+          await waitForAuthProfilePreparation(auth);
+          if (disposed || runId !== bootstrapRunId) return;
+          startPerformanceCheck("Auth · verified identity and profile");
+          const profileRequest = readBootstrapProfileResult(u, db);
           const adminClaims = await resolveAdminClaim({
             user: u,
             setIsAdminClaim,
             isCurrentRun: () => !disposed && runId === bootstrapRunId
           });
+          recordStartupStage("identity-verified");
           if (disposed || runId !== bootstrapRunId) return;
 
           const resolvedRole = await loadRemoteUserBootstrapState({
             user: u,
             db,
             adminClaims,
+            profileRequest,
             setIsAdminClaim,
             APP_PAGES,
             AI_NUTRITION_PLAN_STORAGE_KEY,
@@ -260,12 +262,14 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             setWorkoutModeRemember,
             isCurrentRun: () => !disposed && runId === bootstrapRunId
           });
+          endPerformanceCheck("Auth · verified identity and profile");
+          recordStartupStage("profile-verified", { role: resolvedRole || "unresolved" });
 
           if (disposed || runId !== bootstrapRunId || !resolvedRole) return;
 
           // The fallback protects role verification. A slow workout load must
           // not revoke a role already verified from the current profile.
-          if (["client", "trainer", "admin"].includes(resolvedRole) && bootstrapFallbackTimerId) {
+          if (["client", "pending-client", "trainer", "admin"].includes(resolvedRole) && bootstrapFallbackTimerId) {
             window.clearTimeout(bootstrapFallbackTimerId);
             bootstrapFallbackTimerId = null;
           }
@@ -282,6 +286,10 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
               replayFailedHistorySaves,
               replayFailedNutritionSync,
               replayFailedMeasurementSaves,
+              onWorkoutsLoadState: state => {
+                setInitialWorkoutLoadState?.(state);
+                if (state === "ready") recordStartupStage("critical-workouts-ready");
+              },
               isCurrentRun: () => !disposed && runId === bootstrapRunId
             });
           } else {
@@ -289,6 +297,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             setNutrition(defaultNutritionState);
             setRecentNutritionFoods([]);
             setProfileMeasurements([]);
+            setProfileMeasurementSnapshot?.(null);
             setClientProgressPhotos([]);
             setProfileWorkoutCalendarData({});
             setProfileWorkoutScheduledDates([]);
@@ -309,6 +318,11 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             safeWriteUserJsonStorage,
             setTelegramDraft,
             setTelegramProfile,
+            readProfile: async () => {
+              const result = await profileRequest;
+              if (result.error) throw result.error;
+              return result.snapshot;
+            },
             isCurrentRun: () => !disposed && runId === bootstrapRunId
           });
         } else {
@@ -320,7 +334,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             setAppThemeCloudReady,
             setNutritionCloudReady,
             setPlan,
-            setProfileMeasurements
+            setProfileMeasurements,
+            setProfileMeasurementSnapshot
           });
         }
       } catch (error) {
@@ -329,7 +344,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
         setAppThemeCloudReady(true);
       } finally {
         endPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
-        finishBootstrapLoading({ runId, startedAt });
+        finishBootstrapLoading({ runId });
       }
     });
 

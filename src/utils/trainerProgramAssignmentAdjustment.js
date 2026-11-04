@@ -52,14 +52,25 @@ export function getTrainerProgramAssignmentExercises(workouts = []) {
   (Array.isArray(workouts) ? workouts : []).forEach((workout) => {
     (workout.exercises || []).forEach((exercise) => {
       const key = normalizeExerciseName(exercise?.name);
-      if (!key || exercises.has(key)) return;
+      if (!key) return;
 
       const weights = (exercise.sets || [])
         .map((set) => parseAdjustment(set?.weight))
         .filter((weight) => weight > 0);
+      const existing = exercises.get(key);
+      if (existing) {
+        existing.occurrences += 1;
+        existing.usesWeight ||= exerciseUsesWeight(exercise);
+        if (weights.length) {
+          existing.plannedMinWeight = Math.min(existing.plannedMinWeight ?? Infinity, ...weights);
+          existing.plannedMaxWeight = Math.max(existing.plannedMaxWeight ?? 0, ...weights);
+        }
+        return;
+      }
       exercises.set(key, {
         key,
         name: String(exercise?.name || "Упражнение").trim(),
+        sourceExercise: exercise,
         usesWeight: exerciseUsesWeight(exercise),
         plannedMinWeight: weights.length ? Math.min(...weights) : null,
         plannedMaxWeight: weights.length ? Math.max(...weights) : null,

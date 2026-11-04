@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { adjustSubscriptionUsageForHistoryEventWithLedger } from "../functions/subscriptionUsageLedger.js";
 
 const functionsSource = await readFile(new URL("../functions/index.js", import.meta.url), "utf8");
 const appSource = await readFile(new URL("../src/App.jsx", import.meta.url), "utf8");
@@ -133,7 +134,7 @@ test("client API calls send Firebase ID tokens", () => {
 
 test("App Check starts without blocking the application and protects API traffic when configured", () => {
   const appCheckInitialization = mainSource.indexOf("void initializeClientAppCheck()");
-  const applicationImport = mainSource.indexOf("await import('./App.jsx')");
+  const applicationImport = mainSource.indexOf("import('./App.jsx')");
 
   assert.notEqual(appCheckInitialization, -1, "the client must initialize App Check");
   assert.notEqual(applicationImport, -1, "the application must be loaded dynamically");
@@ -179,7 +180,7 @@ test("profile owners cannot change role and trainer assignment fields", () => {
   assert.match(rulesSource, /function isLegacyClientActivation\(uid\)/);
   assert.match(
     rulesSource,
-    /allow update: if isAdmin\(\) \|\| isSafeOwnerUpdate\(uid\) \|\| isLegacyClientActivation\(uid\) \|\| isTrainerClientUpdate\(\)/
+    /allow update: if !request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasAny\(adminSecurityKeyFields\(\)\) &&\s*\(!request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasAny\(\["subscription"\]\) \|\| accountingWritesAvailable\(\)\) &&\s*\(isAdmin\(\) \|\| isSafeOwnerUpdate\(uid\) \|\| isLegacyClientActivation\(uid\) \|\| isTrainerClientUpdate\(\)\);/
   );
   assert.match(
     rulesSource,
@@ -189,6 +190,33 @@ test("profile owners cannot change role and trainer assignment fields", () => {
   assert.match(rulesSource, /"trainerAssignmentState"/);
   assert.match(rulesSource, /function isActiveMember\(\)/);
   assert.match(rulesSource, /function isTrainerTelegramPreferenceUpdate\(\)/);
+});
+
+test("ledger accepts a valid renewal boundary when an older cycleStartedAt is malformed", async () => {
+  const createTime = { seconds: Math.floor(Date.parse("2026-10-18T12:01:00Z") / 1000), nanoseconds: 123 };
+  const historyRef = { path: "users/synthetic/history/one", id: "one" };
+  const documents = new Map([["users/synthetic", { subscription: { cycleId: "named-cycle", periodMode: "sessions",
+    cycleStartedAt: "malformed", lastRenewedAt: "2026-10-18T10:00:00.000Z", purchasedSessions: 12, usedSessions: 2 } }],
+  [historyRef.path, { date: "2026-10-18" }]]);
+  const db = { collection: name => ({ doc: id => ({ path: `${name}/${id}` }) }), runTransaction: async callback => {
+    const writes = [];
+    const result = await callback({
+      get: async ref => ({ exists: documents.has(ref.path), createTime,
+        data: () => structuredClone(documents.get(ref.path)) }),
+      set: (ref, value, options) => writes.push([ref.path, value, options])
+    });
+    for (const [path, value, options] of writes) documents.set(path, options?.merge
+      ? { ...documents.get(path), subscription: { ...documents.get(path)?.subscription, ...value.subscription } } : value);
+    return result;
+  } };
+  const result = await adjustSubscriptionUsageForHistoryEventWithLedger({ db,
+    FieldValue: { serverTimestamp: () => "synthetic-server-time" }, getResourceDateKey: value => String(value).slice(0, 10),
+    cutoverTimestamp: "2026-10-18T12:00:00.000Z", delta: 1,
+    event: { id: "synthetic-create", params: { uid: "synthetic", historyId: "one" },
+      data: { ref: historyRef, createTime, data: () => ({ date: "2026-10-18" }) } } });
+  assert.equal(result.appliedDelta, 1);
+  assert.equal(documents.get("users/synthetic").subscription.usedSessions, 3);
+  assert.equal(documents.get("users/synthetic").subscription.lastRenewedAt, "2026-10-18T10:00:00.000Z");
 });
 
 test("assigned trainer access requires the trainer role and guarded routes", () => {
@@ -204,7 +232,7 @@ test("assigned trainer access requires the trainer role and guarded routes", () 
   );
   assert.match(
     appBootstrapHelpersSource,
-    /resolvedRole === "client"[\s\S]*?setPage\([\s\S]*?APP_PAGES\.MAIN[\s\S]*?\} else \{\s*setPage\(resolvedRole === "admin" \? APP_PAGES\.ADMIN_PANEL : APP_PAGES\.ADMIN\);/
+    /resolvedRole === "client"[\s\S]*?setPage\([\s\S]*?APP_PAGES\.MAIN[\s\S]*?\} else if \(resolvedRole === "pending-client"\)[\s\S]*?setPage\(APP_PAGES\.MAIN\);\s*\} else \{\s*setPage\(resolvedRole === "admin" \? APP_PAGES\.ADMIN_PANEL : APP_PAGES\.ADMIN\);/
   );
   assert.match(appNavigationSource, /function isTrainerForbiddenClientPage\(page\)[\s\S]*?CLIENT_CORE[\s\S]*?CLIENT_WORKFLOW[\s\S]*?APP_PAGES\.AI_COACH/);
   assert.match(appRuntimeEffectsSource, /isTrainerForbiddenClientPage\(page\)[\s\S]*?setPage\(APP_PAGES\.ADMIN\)/);
@@ -248,12 +276,12 @@ test("assigned trainer nutrition writes are limited to plan fields", () => {
   assert.match(rulesSource, /function isTrainerNutritionStatePlanUpdate\(uid, docId\)/);
   assert.match(
     rulesSource,
-    /function isTrainerClientUpdate\(\) \{[\s\S]*?isTrainerProgramAssignmentFields\(\)[\s\S]*?isTrainerNutritionPlanUpdateFields\(\)[\s\S]*?isTrainerClientScheduleUpdateFields\(\)[\s\S]*?isTrainerClientArchiveUpdateFields\(\)/
+    /function isTrainerClientUpdate\(\) \{[\s\S]*?isTrainerProgramAssignmentFields\(\)[\s\S]*?isTrainerNutritionPlanUpdateFields\(changedKeys\)[\s\S]*?isTrainerClientScheduleUpdateFields\(\)[\s\S]*?isTrainerClientArchiveUpdateFields\(\)/
   );
   assert.match(rulesSource, /function isTrainerClientArchiveUpdate\(\)/);
   assert.match(
     rulesSource,
-    /request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasOnly\(trainerNutritionStateFields\(\)\)/
+    /function isTrainerNutritionStatePlanUpdate\(uid, docId\) \{\s*let changedKeys = request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\);[\s\S]*?changedKeys\.hasOnly\(trainerNutritionStateFields\(\)\)/
   );
 });
 

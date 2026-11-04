@@ -112,7 +112,7 @@ test("long sheets still scroll by touch and return background scrolling after ne
   await expect(inner).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => document.body.style.position)).toBe("fixed");
   expect(await outer.evaluate(node => node.scrollTop)).toBe(130);
-  expect(await page.locator("#outer-scroll-dialog").evaluate(node => getComputedStyle(node).backdropFilter)).toBe("blur(4px)");
+  await expect.poll(() => page.locator("#outer-scroll-dialog").evaluate(node => getComputedStyle(node).backdropFilter)).toBe("blur(4px)");
   expect(await page.locator("#scroll-guard-fixture").evaluate(node => node.scrollTop)).toBe(170);
   await outer.getByRole("button", { name: "Закрыть" }).click();
   await expect.poll(() => page.evaluate(() => document.body.style.position)).not.toBe("fixed");
@@ -176,6 +176,9 @@ test("release navigation keeps trainer client dialogs and tabs usable", async ({
   await page.locator(".trainerNextClientMobileNav").getByRole("button", { name: "Тренировки", exact: true }).click();
   await page.locator(".trainerNextClientMobileNav").getByRole("button", { name: "Питание", exact: true }).click();
   const nutritionEditor = page.getByRole("dialog", { name: "Изменить план", exact: true });
+  await expect(nutritionEditor).toHaveCount(0);
+  await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
+  await page.getByRole("button", { name: "Создать план питания", exact: true }).click();
   await expect(nutritionEditor).toBeVisible();
   await assertBackgroundLocked(page, nutritionEditor);
   await nutritionEditor.locator(".trainerNextModalClose").click();
@@ -187,7 +190,11 @@ test("release navigation keeps trainer client dialogs and tabs usable", async ({
 test("release navigation keeps admin sections and denied access intact", async ({ page }) => {
   const assertNoErrors = failOnRuntimeErrors(page);
   await page.goto("/?adminHarness=1");
-  await expect(page.getByTestId("admin-panel-hub")).toBeVisible();
+  await expect(page.getByTestId("admin-panel-hub")).toBeVisible({ timeout: 40_000 });
+  await expect(page.getByRole("heading", { name: "Telegram-бот", exact: true })).toBeVisible();
+  await expect(page.getByText("Серверное подключение не проверено.", { exact: false })).toBeVisible();
+  await page.getByText("Обслуживание бота", { exact: true }).click();
+  await expect(page.getByRole("button", { name: "Переподключить webhook", exact: true })).toBeVisible();
   const sections = page.getByRole("region", { name: "Разделы админки" });
   await expect(sections.getByRole("button")).toHaveCount(3);
   await sections.getByRole("button", { name: /Пользователи и роли/ }).click();

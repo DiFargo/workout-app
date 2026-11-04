@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { Check, Copy, Link2, UserPlus, X } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useModalBackNavigation } from "../../shared/hooks/useModalBackNavigation.js";
 import styles from "./AdminTrainerInviteModal.module.css";
 
 function getInviteUrl(invite) {
@@ -11,49 +12,44 @@ function getInviteUrl(invite) {
  * Admin-only account creation sheet. It never creates a client or attaches a
  * trainer to client data: the API called by its parent creates a trainer invite.
  */
-export default function AdminTrainerInviteModal({
+export default function AdminTrainerInviteModal(props) {
+  // A new opening is a new form session, not a reset performed after paint.
+  return props.open ? <AdminTrainerInviteForm {...props} /> : null;
+}
+
+function AdminTrainerInviteForm({
   createdInvite,
   isSubmitting = false,
   onClose,
   onSubmit,
-  open = false,
   status = ""
 }) {
   const [name, setName] = useState("");
   const [login, setLogin] = useState("");
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState("");
+  const [localPending, setLocalPending] = useState(false);
+  const [localError, setLocalError] = useState("");
+  const pending = useRef(false);
+  const busy = isSubmitting || localPending;
   const inviteUrl = getInviteUrl(createdInvite);
   const isCreated = Boolean(createdInvite && inviteUrl);
-
-  useEffect(() => {
-    if (!open) return;
-
-    setName("");
-    setLogin("");
-    setCopied(false);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || typeof window === "undefined") return undefined;
-
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape" && !isSubmitting) onClose?.();
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSubmitting, onClose, open]);
-
-  if (!open) return null;
+  const close = () => { if (!busy && !pending.current) onClose?.(); };
+  useModalBackNavigation({ open: true, onBack: close });
 
   const copyInviteLink = async () => {
     if (!inviteUrl) return;
 
     try {
-      await navigator.clipboard?.writeText(inviteUrl);
+      if (typeof navigator === "undefined" || typeof navigator.clipboard?.writeText !== "function") {
+        throw new Error("clipboard_unavailable");
+      }
+      await navigator.clipboard.writeText(inviteUrl);
       setCopied(true);
+      setCopyError("");
     } catch {
       setCopied(false);
+      setCopyError("Не удалось скопировать автоматически. Выделите и скопируйте ссылку вручную.");
     }
   };
 
@@ -62,7 +58,7 @@ export default function AdminTrainerInviteModal({
       className={styles.backdrop} data-modal-backdrop="true"
       role="presentation"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget && !isSubmitting) onClose?.();
+        if (event.target === event.currentTarget) close();
       }}
     >
       <section
@@ -70,6 +66,7 @@ export default function AdminTrainerInviteModal({
         aria-modal="true"
         className={styles.modal}
         role="dialog"
+        onKeyDown={(event) => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); } }}
       >
         <header className={styles.header}>
           <span className={styles.icon} aria-hidden="true"><UserPlus size={22} strokeWidth={2} /></span>
@@ -78,7 +75,7 @@ export default function AdminTrainerInviteModal({
             <h2 id="admin-trainer-invite-title">Пригласить тренера</h2>
             <span>Тренер сам задаст пароль по ссылке и получит отдельный рабочий кабинет.</span>
           </div>
-          <button aria-label="Закрыть" disabled={isSubmitting} type="button" onClick={onClose}>
+          <button aria-label="Закрыть" disabled={busy} type="button" onClick={close}>
             <X size={22} strokeWidth={2.2} />
           </button>
         </header>
@@ -88,62 +85,74 @@ export default function AdminTrainerInviteModal({
             <span className={styles.successIcon} aria-hidden="true"><Check size={24} strokeWidth={2.4} /></span>
             <div>
               <h3>Приглашение готово</h3>
-              <p>Передайте тренеру ссылку ниже. Его аккаунт появится в списке с пометкой «Ожидает активации».</p>
+              <p>Передайте тренеру ссылку ниже — автоматически она не отправляется. Аккаунт ожидает активации, клиенты ему ещё не назначены.</p>
             </div>
             <div className={styles.credentials}>
               <span>Логин</span>
               <strong>{createdInvite.login || login}</strong>
               <span>Ссылка активации</span>
-              <code>{inviteUrl}</code>
+              <input aria-label="Ссылка активации для ручного копирования" readOnly value={inviteUrl} onFocus={(event) => event.target.select()} />
               <button type="button" onClick={copyInviteLink}>
                 {copied ? <Check aria-hidden="true" size={17} strokeWidth={2.2} /> : <Copy aria-hidden="true" size={17} strokeWidth={2} />}
                 {copied ? "Ссылка скопирована" : "Скопировать ссылку"}
               </button>
+              {copyError ? <p role="status">{copyError}</p> : null}
             </div>
           </div>
         ) : (
           <form
             className={styles.content}
             id="admin-trainer-invite-form"
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
               event.preventDefault();
-              onSubmit?.({ login, name });
+              if (busy || pending.current || typeof onSubmit !== "function") return;
+              if (!name.trim()) { setLocalError("Укажите имя тренера."); return; }
+              if (!/^[a-z0-9._-]{3,32}$/.test(login.trim())) { setLocalError("Логин: 3–32 символа, латиница, цифры, точка, дефис или _."); return; }
+              pending.current = true;
+              setLocalPending(true);
+              setLocalError("");
+              try { await onSubmit({ login: login.trim(), name: name.trim() }); }
+              catch { setLocalError("Не удалось создать приглашение. Проверьте подключение и повторите попытку."); }
+              finally { pending.current = false; setLocalPending(false); }
             }}
           >
             <label>
-              <span>Имя тренера</span>
+              <span id="admin-trainer-name-label">Имя тренера</span>
               <input
+                aria-labelledby="admin-trainer-name-label"
                 autoComplete="name"
-                disabled={isSubmitting}
+                disabled={busy}
                 placeholder="Например: Мария"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
               />
             </label>
             <label>
-              <span>Логин для входа</span>
+              <span id="admin-trainer-login-label">Логин для входа</span>
               <input
+                aria-labelledby="admin-trainer-login-label"
+                aria-describedby="admin-trainer-login-help"
                 autoCapitalize="none"
                 autoComplete="username"
-                disabled={isSubmitting}
+                disabled={busy}
                 placeholder="Например: maria.fit"
                 spellCheck="false"
                 value={login}
                 onChange={(event) => setLogin(event.target.value.toLowerCase())}
               />
-              <small>От 3 до 32 символов: латиница, цифры, точка, дефис или _.</small>
+              <small id="admin-trainer-login-help">От 3 до 32 символов: латиница, цифры, точка, дефис или _.</small>
             </label>
-            {status ? <p className={styles.status} role="alert">{status}</p> : null}
+            {localError || status ? <p className={styles.status} role="alert">{localError || status}</p> : null}
           </form>
         )}
 
         <footer className={styles.footer}>
           {isCreated ? (
-            <button className={styles.primaryButton} type="button" onClick={onClose}>Готово</button>
+            <button className={styles.primaryButton} type="button" onClick={close}>Готово</button>
           ) : (
-            <button className={styles.primaryButton} disabled={isSubmitting} form="admin-trainer-invite-form" type="submit">
+            <button className={styles.primaryButton} disabled={busy || typeof onSubmit !== "function"} form="admin-trainer-invite-form" type="submit">
               <Link2 aria-hidden="true" size={18} strokeWidth={2.1} />
-              {isSubmitting ? "Создаём приглашение…" : "Создать приглашение"}
+              {busy ? "Создаём приглашение…" : "Создать приглашение"}
             </button>
           )}
         </footer>

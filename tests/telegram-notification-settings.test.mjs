@@ -15,7 +15,7 @@ function saveFixture(request, options = {}) {
     auth, telegramDraft: draft,
     setTelegramProfile: next => { profile = typeof next === "function" ? next(profile) : next; },
     setTelegramDraft: next => { draft = typeof next === "function" ? next(draft) : next; },
-    setTelegramStatus: next => { status = next; },
+    setTelegramStatus: next => { status = typeof next === "function" ? next(status) : next; },
     request,
     writeCache: (uid, next) => { cached.push({ uid, ...next }); if (options.storageError) throw new Error("Storage unavailable"); }
   });
@@ -95,6 +95,7 @@ async function scheduledDeliveries(preferences, calendarOverrides = {}, alreadyS
     getNextScheduledWorkout: () => ({ key: "2026-09-08" }),
     getDueReminderOffsets: () => [24],
     getLatestClientResourceDateKey: async () => "2026-08-01",
+    getLatestClientMeasurementDateKeys: async () => ({ weightDateKey: "", measurementDateKey: "" }),
     getDueProgressReminderTypes: () => [{ type: "photo", dueDateKey: "2026-09-07" }, { type: "measurements", dueDateKey: "2026-09-07" }],
     sendWorkoutReminderForClient: async () => sent.push("workout"),
     sendProgressReminderForUser: async (_doc, _user, reminder) => sent.push(reminder.type)

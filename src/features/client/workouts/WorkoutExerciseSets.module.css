@@ -625,7 +625,6 @@
   font-weight: 850;
   line-height: 1;
   scroll-snap-align: center;
-  scroll-snap-stop: always;
   cursor: pointer;
   opacity: 0.58;
   transition: background-color 120ms ease, box-shadow 120ms ease, color 120ms ease, font-size 120ms ease, opacity 120ms ease, transform 120ms ease;
@@ -822,7 +821,10 @@
   position: static; align-self: center; justify-self: center; width: 30px; min-width: 30px; max-width: 30px; height: 30px; min-height: 30px; max-height: 30px;
   color: #617078; background: #edf1f3; font-size: 0.9375rem; font-weight: 500;
 }
-:global(html[data-app-theme="warm-light"]) .completed .number.number { color: #176332; background: #d5eadb; }
+:global(html[data-app-theme="warm-light"]) .completed .number.number {
+  color: var(--color-workout-set-complete-active);
+  background: var(--gradient-workout-set-complete-active);
+}
 :global(html[data-app-theme="warm-light"]) .plan.plan { height: auto; min-height: 56px; max-height: none; display: flex; flex-flow: row wrap; align-items: center; align-content: center; justify-content: flex-start; gap: 5px; min-width: 0; overflow: visible; }
 :global(html[data-app-theme="warm-light"]) .weight.weight { color: #1c282e; font-size: var(--workout-set-value-size, 1.375rem); line-height: 1.25; font-weight: 600; letter-spacing: -.6px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .weight small { font-size: 0.75rem; font-weight: 400; letter-spacing: 0; color: #617078; }
@@ -834,12 +836,29 @@
 }
 :global(html[data-app-theme="warm-light"]) .editButton.editButton svg { width: 18px; height: 18px; stroke-width: 1.65; }
 :global(html[data-app-theme="warm-light"]) .completeButton.completeButton {
-  position: static; width: 52px; min-width: 52px; max-width: 52px; height: 52px; min-height: 52px; max-height: 52px;
-  padding: 0; border: 0; border-radius: 50%; background: #edf1f3; color: #617078; box-shadow: none;
+  position: relative; inset: auto; isolation: isolate; place-self: center;
+  width: 48px; min-width: 48px; max-width: 48px; height: 48px; min-height: 48px; max-height: 48px;
+  display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent;
+  color: var(--color-workout-set-complete); box-shadow: none;
 }
-:global(html[data-app-theme="warm-light"]) .completeButton.completeButton svg { width: 24px; height: 24px; }
-:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton { background: #237a42; color: #fff; box-shadow: 0 2px 6px rgba(35,122,66,.22); }
-:global(html[data-app-theme="warm-light"]) .row.completed { border-color: #a9cfb2; background: #f0f7f2; }
+:global(html[data-app-theme="warm-light"]) .completeButton.completeButton::before {
+  position: absolute; z-index: 0; top: 50%; left: 50%; width: 40px; height: 40px;
+  border-radius: 50%; background: var(--color-workout-set-complete-surface); content: "";
+  transform: translate(-50%, -50%); pointer-events: none;
+}
+:global(html[data-app-theme="warm-light"]) .completeButton.completeButton svg { position: relative; z-index: 1; width: 20px; height: 20px; }
+:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton {
+  background: transparent; color: var(--color-workout-set-complete-active); box-shadow: none;
+}
+:global(html[data-app-theme="warm-light"]) .completed .completeButton.completeButton::before {
+  background: var(--gradient-workout-set-complete-active);
+}
+:global(html[data-app-theme="warm-light"]) .row.completed {
+  border-color: transparent;
+  border-radius: 18px;
+  background: var(--gradient-workout-set-row-completed);
+  box-shadow: none;
+}
 :global(html[data-app-theme="warm-light"]) .row.locked { cursor: default; }
 :global(html[data-app-theme="warm-light"]) .completeButton.completeButton:disabled,
 :global(html[data-app-theme="warm-light"]) .timerButton.timerButton:disabled { cursor: default; }
@@ -857,22 +876,173 @@
 
 /* Keep independent edit/confirm targets usable on both touch platforms. */
 :global(html[data-app-theme="warm-light"]) .row.row,
-.columnLabels { grid-template-columns: 30px 48px minmax(0,1fr) 52px; gap: clamp(4px, 2vw, 8px); }
+.columnLabels { grid-template-columns: 30px 48px minmax(0,1fr) 48px; gap: clamp(4px, 2vw, 8px); }
+:global(html[data-app-theme="warm-light"]) .row.row { padding-inline: 4px; }
+.columnLabels { padding-inline: 20px; }
 :global(html[data-app-theme="warm-light"]) .root.root .editButton.editButton,
 :global(html[data-app-theme="warm-light"]) .root.root .timerButton.timerButton { width: 48px; min-width: 48px; max-width: 48px; height: 48px; min-height: 48px; max-height: 48px; }
 :global(html[data-app-theme="warm-light"]) .weight.weight { white-space: normal; overflow-wrap: anywhere; }
-:global(html[data-app-theme="warm-light"]) .plan.plan { padding-block: 4px; }
+:global(html[data-app-theme="warm-light"]) .plan.plan { min-height: 48px; padding-block: 0; }
+@media(max-width:350px) {
+  :global(html[data-app-theme="warm-light"]) .row.row { padding-inline: 4px; }
+  .columnLabels { padding-inline: 16px; }
+}
 
-:global(html[data-app-theme="warm-light"]) .modalBackdrop.modalBackdrop { display: grid; place-items: end center; padding: max(20px,env(safe-area-inset-top)) 0 0; background: rgba(28,28,30,.22); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-:global(html[data-app-theme="warm-light"]) .modal.modal { position: relative; width: min(100%,520px); max-height: calc(100dvh - 20px - env(safe-area-inset-top)); padding: 34px 24px max(24px,env(safe-area-inset-bottom)); border: 0; border-radius: 34px 34px 0 0; background: #f5f7f8; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; }
+:global(html[data-app-theme="warm-light"]) .modalBackdrop.modalBackdrop { --set-editor-top: max(20px, env(safe-area-inset-top), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px)); display: grid; place-items: end center; padding: var(--set-editor-top) 0 0; background: rgba(28,28,30,.22); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+:global(html[data-app-theme="warm-light"]) .modal.modal { position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; width: min(100%,520px); max-height: calc(100dvh - var(--set-editor-top)); padding: 34px 24px max(24px, env(safe-area-inset-bottom), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px)); border: 0; border-radius: 34px 34px 0 0; background: #f5f7f8; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; }
 .modal.modal::before { content: ""; position: absolute; top: 10px; left: calc(50% - 16px); width: 32px; height: 4px; border-radius: 9px; background: #d1d1d8; }
 :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader { position: relative; min-height: 48px; padding-inline: 32px; justify-content: center; text-align: center; margin-bottom: 20px; overflow-wrap: anywhere; }
 :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader span { font-size: 1.0625rem; font-weight: 600; color: #1c282e; }
 :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader strong { font-size: 0.8125rem; font-weight: 400; color: #617078; margin-top: 6px; }
 :global(html[data-app-theme="warm-light"]) .modal.modal .closeButton.closeButton { position: absolute; right: -8px; top: -8px; border-radius: 50%; width: 48px; height: 48px; font-size: 25px; }
-:global(html[data-app-theme="warm-light"]) .modalFields.modalFields { background: white; border-radius: 22px; padding: 8px; gap: 16px; }
+:global(html[data-app-theme="warm-light"]) .modalFields.modalFields { min-height: 0; overflow-y: auto; overscroll-behavior: contain; background: white; border-radius: 22px; padding: 8px; gap: 16px; }
 :global(html[data-app-theme="warm-light"]) .wheelField.wheelField > span { font-size: 0.875rem; font-weight: 400; }
 :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker { background: white; border-radius: 12px; }
 :global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption { font-size: 1.5625rem; font-weight: 400; transition: color 120ms ease; transform: none; }
 :global(html[data-app-theme="warm-light"]) .modal.modal .wheelOption.wheelOption.active { font-size: 1.5625rem; font-weight: 600; background: #edf1f3; transform: none; }
 :global(html[data-app-theme="warm-light"]) .modal.modal .doneButton.doneButton { margin-top: 20px; height: auto; min-height: max(52px,3.25rem); padding: .5em 12px; border-radius: 99px; font-size: 1.0625rem; font-weight: 600; }
+
+@media (max-height: 580px) {
+  :global(html[data-app-theme="warm-light"]) .modal.modal {
+    padding: 24px 20px max(12px, env(safe-area-inset-bottom), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px));
+    max-height: calc(100dvh - max(12px, env(safe-area-inset-top), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px)));
+  }
+  :global(html[data-app-theme="warm-light"]) .modalHeader.modalHeader { margin-bottom: 8px; }
+  :global(html[data-app-theme="warm-light"]) .wheelPicker.wheelPicker {
+    height: calc(var(--workout-set-wheel-item-height) * 3);
+    padding-block: var(--workout-set-wheel-item-height);
+    scroll-padding-block: var(--workout-set-wheel-item-height);
+  }
+  :global(html[data-app-theme="warm-light"]) .modal.modal .doneButton.doneButton { margin-top: 10px; }
+}
+
+/* Approved compact single-set layout. The list variant stays unchanged. */
+:global(html[data-app-theme="warm-light"]) .singleSet.singleSet {
+  height: auto;
+  padding: 0;
+  background: var(--apple-canvas, #f2f2f7);
+}
+.setNavigation { display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; align-items: center; gap: 6px; margin-bottom: 4px; }
+.primaryActionSets .setNavigation.withAccessory { grid-template-columns: 44px minmax(0, 1fr) 44px; }
+.primaryActionSets .setNavigation.withAccessory .setPicker { grid-column: 2; grid-row: 1; }
+.primaryActionSets .setNavigation.withAccessory > [data-workout-set-accessory] { grid-column: 3; grid-row: 1; }
+.primaryActionSets .withAccessory .setPicker summary { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; min-width: 0; padding-inline: 0; }
+.primaryActionSets .withAccessory .setPickerCopy { width: 100%; grid-template-columns: minmax(0, 1fr); text-align: center; }
+.setPickerLabel { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.primaryActionSets .setPickerLabel { position: relative; display: block; width: max-content; min-width: 0; max-width: calc(100% - 42px); margin-inline: auto; overflow-wrap: anywhere; }
+.primaryActionSets .setPickerLabel > svg { position: absolute; left: calc(100% + 5px); top: 50%; transform: translateY(-50%); }
+.setArrow { display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px; padding: 0; border: 0; border-radius: 14px; background: #fff; color: var(--apple-action, #3f73b8); cursor: pointer; }
+.setArrow:disabled { opacity: .35; cursor: default; }
+.setPicker { position: relative; min-width: 0; }
+.setPicker summary { min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 4px; list-style: none; color: var(--apple-text, #1c1c1e); font-size: .9375rem; font-weight: 600; cursor: pointer; text-align: center; }
+.setPicker summary::-webkit-details-marker { display: none; }
+.setPicker summary svg { flex-shrink: 0; color: var(--apple-secondary, #636366); }
+.setPickerCopy { display: grid; gap: 1px; min-width: 0; }
+.setCaption { color: var(--apple-secondary, #636366); font-size: .75rem; font-weight: 400; line-height: 1.2; }
+.setPicker summary:focus-visible { outline: 3px solid var(--apple-action, #3f73b8); outline-offset: 1px; border-radius: 12px; }
+.setOptions { position: absolute; bottom: calc(100% + 6px); left: 50%; z-index: 30; width: min(280px, calc(100vw - 40px)); max-height: min(260px, 45dvh); padding: 6px; overflow-y: auto; overscroll-behavior: contain; transform: translateX(-50%); border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 18px; background: #fff; box-shadow: 0 8px 28px rgba(28,28,30,.14); }
+.setOptions button { width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border: 0; border-radius: 12px; background: transparent; color: var(--apple-text, #1c1c1e); font: inherit; font-size: .9375rem; text-align: left; cursor: pointer; }
+.setOptions button > span:last-child { display: flex; color: var(--apple-secondary, #636366); font-size: .75rem; }
+.setOptions button[aria-current="true"] { background: var(--apple-surface-muted, #efeff4); }
+:global(html[data-app-theme="warm-light"]) .singleSet.singleSet .row.row {
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  min-height: 56px; margin: 0; padding: 4px 8px; gap: 4px;
+  border: 0; border-radius: 18px; background: #fff;
+  cursor: default; touch-action: pan-x; user-select: none;
+}
+:global(html[data-app-theme="warm-light"]) .singleSet .number.number { display: none; }
+:global(html[data-app-theme="warm-light"]) .singleSet.singleSet .plan.plan { min-height: 48px; gap: 4px; }
+:global(html[data-app-theme="warm-light"]) .singleSet.singleSet .weight.weight { font-size: clamp(1.125rem, 5.5vw, 1.5rem); font-weight: 650; }
+:global(html[data-app-theme="warm-light"]) .singleSet.singleSet .completeButton.completeButton {
+  position: static; display: flex; align-items: center; justify-content: center; gap: 5px;
+  width: auto; min-width: 96px; max-width: none; height: auto; min-height: 48px; max-height: none;
+  padding: 8px 12px; border: 0; border-radius: 14px;
+  background: var(--ownset-action-gradient); color: #fff; font-size: .875rem; font-weight: 600;
+}
+:global(html[data-app-theme="warm-light"]) .singleSet .completeButton.completeButton::before { display: none; }
+:global(html[data-app-theme="warm-light"]) .singleSet .completeButton.completeButton svg { width: 18px; height: 18px; flex-shrink: 0; }
+:global(html[data-app-theme="warm-light"]) .singleSet.singleSet .completed .completeButton.completeButton { background: var(--apple-surface-muted, #efeff4); color: var(--apple-success, #237a42); }
+.setArrow:active:not(:disabled), .setOptions button:active { opacity: .7; }
+.primaryActionSets .setNavigation { grid-template-columns: minmax(0, 1fr); }
+.primaryActionSets .setOptions button:disabled { opacity: .45; cursor: default; }
+.pendingState { color: var(--apple-secondary, #636366); padding-inline: 8px; font-size: .8125rem; }
+:global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet .completeButton.completeButton {
+  min-width: 88px; padding-inline: 8px; background: transparent;
+  color: var(--apple-action, #3f73b8); font-size: .8125rem;
+}
+.completionMenu { position: relative; min-width: 0; justify-self: end; }
+.completionMenu > summary { list-style: none; cursor: pointer; }
+.completionMenu > summary::-webkit-details-marker { display: none; }
+.completionMenu > summary:focus-visible { outline: 3px solid var(--apple-action, #3f73b8); outline-offset: 2px; }
+.completionMenu > summary:active { opacity: .7; }
+.completionOptions {
+  position: absolute; right: 0; bottom: calc(100% + 6px); z-index: 31;
+  width: min(264px, calc(100vw - 40px)); padding: 6px;
+  border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 18px;
+  background: var(--apple-surface, #fff); color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 8px 28px rgba(28,28,30,.14);
+}
+.completionOptions button {
+  width: 100%; min-height: 48px; padding: 10px 12px; border: 0; border-radius: 12px;
+  background: transparent; color: inherit; font: inherit; font-size: .9375rem;
+  text-align: left; line-height: 1.3; cursor: pointer;
+}
+.completionOptions button:active:not(:disabled) { background: var(--apple-surface-muted, #efeff4); }
+.completionOptions button:disabled { opacity: .45; cursor: default; }
+.completionOptions small { display: block; padding: 0 12px 8px; color: var(--apple-secondary, #636366); font-size: .75rem; line-height: 1.4; }
+:global(html[data-app-theme="warm-light"]) .singleSet .completionMenu .completeButton svg:last-child { width: 14px; height: 14px; }
+@media (max-width: 350px) {
+  :global(html[data-app-theme="warm-light"]) .singleSet.singleSet .row.row { padding-inline: 4px; }
+  :global(html[data-app-theme="warm-light"]) .singleSet.singleSet .completeButton.completeButton { min-width: 84px; padding-inline: 8px; font-size: .8125rem; }
+}
+
+/* One card for the current set and its editable prescription. */
+:global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet {
+  padding: 4px 8px 8px;
+  border-radius: inherit;
+  background: var(--apple-surface, #fff);
+}
+.primaryActionSets .setNavigation { margin-bottom: 0; }
+.primaryActionSets .setPicker summary { min-height: 44px; }
+:global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet .row.unifiedMetricsRow {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 66px;
+  padding: 0 8px;
+  gap: 6px;
+  border-radius: 14px;
+  background: var(--apple-surface-muted, #efeff4);
+}
+.metricsButton {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex: 1 1 7rem;
+  width: 100%; min-width: 0; min-height: 66px; padding: 8px 4px;
+  border: 0; border-radius: 10px; background: transparent;
+  color: var(--apple-text, #1c1c1e); font: inherit; text-align: left; cursor: pointer;
+}
+.metricsButton > svg { flex-shrink: 0; color: var(--apple-secondary, #636366); }
+.metricsCopy { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3px; min-width: 0; }
+.metricsLabel { color: var(--apple-secondary, #636366); font-size: .75rem; font-weight: 400; line-height: 1.25; overflow-wrap: anywhere; }
+.unifiedMetricsRow .completionMenu { margin-left: auto; }
+:global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet .metricsButton .plan {
+  min-height: 0; justify-content: flex-start; flex-wrap: wrap; gap: 5px;
+}
+:global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet .metricsButton .weight {
+  font-size: clamp(1.375rem, 6.5vw, 1.75rem); line-height: 1.15; overflow-wrap: anywhere;
+}
+.metricsButton:focus-visible { outline: 3px solid var(--apple-action, #3f73b8); outline-offset: 1px; }
+.metricsButton:active { opacity: .7; }
+.setStatus {
+  display: inline-flex; align-items: center; justify-content: center; gap: 3px;
+  min-height: 15px; color: var(--apple-secondary, #636366);
+  font-size: .75rem; line-height: 1.25; font-weight: 400;
+}
+.setStatusCompleted { color: var(--apple-success, #237a42); }
+.setStatus svg { flex-shrink: 0; }
+.setPicker .setStatusCompleted svg { color: inherit; }
+:global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet .unifiedMetricsRow.completed {
+  background: color-mix(in srgb, var(--apple-success, #237a42) 8%, var(--apple-surface, #fff));
+}
+:global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet .unifiedMetricsRow.completed .weight {
+  font-size: clamp(1.125rem, 5.5vw, 1.5rem);
+}

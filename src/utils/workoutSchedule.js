@@ -19,6 +19,26 @@ function getWorkoutKey(value = "") {
   return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+function matchesWorkoutAssignment(slot = {}, workout = {}) {
+  const assignment = String(workout.assignedProgramAddedAt || workout.programAssignmentId || "").trim();
+  const slotAssignment = String(slot.assignedProgramAddedAt || slot.programAssignmentId || "").trim();
+  const version = String(workout.assignedProgramUpdatedAt || "").trim();
+  const slotVersion = String(slot.assignedProgramUpdatedAt || slot.assignmentVersion || "").trim();
+  return (!assignment || !slotAssignment || assignment === slotAssignment) && (!version || !slotVersion || version === slotVersion);
+}
+
+// Explicit date editing opts this scope back into the existing chronological
+// scheduling rules. Other assignments, including their pins, are untouched.
+export function clearWorkoutCalendarDateOrderPolicy(calendar = {}, workouts = []) {
+  return { ...calendar, plannedWorkouts: (Array.isArray(calendar.plannedWorkouts) ? calendar.plannedWorkouts : []).map(slot => {
+    const workout = workouts.find(item => String(item?.id || "").trim() === String(slot?.workoutId || "").trim());
+    if (!workout || !matchesWorkoutAssignment(slot, workout) || !Object.hasOwn(slot, "dateOrderPolicy")) return slot;
+    const next = { ...slot };
+    delete next.dateOrderPolicy;
+    return next;
+  }) };
+}
+
 function getHistoryDate(item = {}) {
   return toWorkoutDateKey(item.date || item.completedAt || item.finishedAt || item.createdAt);
 }
@@ -275,10 +295,19 @@ export function normalizeWorkoutCalendarSchedule(calendar = {}, workouts = []) {
     ...safeWorkouts.map((workout) => workout?.movedToDate || workout?.scheduledDate || workout?.plannedDate)
   ].map(toWorkoutDateKey).filter(Boolean))].sort();
   const usedDates = new Set();
+  const matchingSlots = safeWorkouts.map((workout, index) => findMatchingPlannedWorkout(plannedWorkouts, workout, index));
+  const pinnedDates = new Map();
+  matchingSlots.forEach((slot, index) => {
+    const workout = safeWorkouts[index];
+    const id = String(workout?.id || "").trim();
+    const date = toWorkoutDateKey(slot?.movedToDate || slot?.date);
+    if (slot.dateOrderPolicy === "workout_identity" && id && String(slot.workoutId || "").trim() === id &&
+      matchesWorkoutAssignment(slot, workout) && date && !pinnedDates.has(date)) pinnedDates.set(date, index);
+  });
   let previousDate = "";
 
   const normalizedPlannedWorkouts = safeWorkouts.map((workout, index) => {
-    const existing = findMatchingPlannedWorkout(plannedWorkouts, workout, index);
+    const existing = matchingSlots[index];
     const requestedDate = toWorkoutDateKey(
       existing?.movedToDate ||
       existing?.date ||
@@ -287,21 +316,23 @@ export function normalizeWorkoutCalendarSchedule(calendar = {}, workouts = []) {
       workout?.plannedDate ||
       ""
     );
+    const pinned = pinnedDates.get(requestedDate) === index;
+    const canUseDate = date => !usedDates.has(date) && (!pinnedDates.has(date) || pinnedDates.get(date) === index);
     const canKeepRequestedDate = requestedDate &&
-      !usedDates.has(requestedDate) &&
-      (!previousDate || requestedDate > previousDate);
+      canUseDate(requestedDate) &&
+      (pinned || !previousDate || requestedDate > previousDate);
     let date = canKeepRequestedDate ? requestedDate : candidateDates.find((candidate) => (
-      !usedDates.has(candidate) && (!previousDate || candidate > previousDate)
+      canUseDate(candidate) && (!previousDate || candidate > previousDate)
     ));
 
-    if (!date && requestedDate && previousDate) {
-      date = addDays(previousDate, 2);
-      while (date && usedDates.has(date)) date = addDays(date, 2);
+    if (!date && requestedDate && (previousDate || pinnedDates.has(requestedDate))) {
+      date = addDays(previousDate || requestedDate, 2);
+      while (date && !canUseDate(date)) date = addDays(date, 2);
     }
 
     if (date) {
       usedDates.add(date);
-      previousDate = date;
+      previousDate = previousDate && previousDate > date ? previousDate : date;
     }
 
     const status = String(existing?.status || workout?.status || "planned").trim().toLowerCase();
@@ -318,7 +349,7 @@ export function normalizeWorkoutCalendarSchedule(calendar = {}, workouts = []) {
   });
   const scheduledDates = normalizedPlannedWorkouts
     .map((item) => item.date)
-    .filter(Boolean);
+    .filter(Boolean).sort();
 
   return {
     ...safeCalendar,

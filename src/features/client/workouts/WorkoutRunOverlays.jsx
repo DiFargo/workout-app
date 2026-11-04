@@ -1,4 +1,6 @@
+import ProtectedExerciseVideo from "../../../components/media/ProtectedExerciseVideo.jsx";
 import { ChevronDown, ChevronLeft, RefreshCw, X } from "lucide-react";
+import WorkoutVideoProtectionMark from "./WorkoutVideoProtectionMark";
 import styles from "./WorkoutRunOverlays.module.css";
 
 export function WorkoutNotFoundPage({ onBackToMenu }) {
@@ -36,15 +38,23 @@ export function WorkoutFullscreenVideoOverlay({ videoSrc, onClose, onVideoError 
         ✕
       </button>
 
-      <video
-        src={videoSrc}
-        controls
-        autoPlay
-        playsInline
-        onError={onVideoError}
-        onClick={(event) => event.stopPropagation()}
-        className={styles.fullscreenVideo}
-      />
+      <div className={styles.fullscreenVideoFrame}>
+        <ProtectedExerciseVideo
+          src={videoSrc}
+          controls
+          autoPlay
+          playsInline
+          controlsList="nodownload noremoteplayback"
+          disablePictureInPicture
+          disableRemotePlayback
+          draggable={false}
+          onContextMenu={(event) => event.preventDefault()}
+          onError={onVideoError}
+          onClick={(event) => event.stopPropagation()}
+          className={styles.fullscreenVideo}
+        />
+        <WorkoutVideoProtectionMark className={styles.fullscreenVideoWatermark} />
+      </div>
     </div>
   );
 }
@@ -90,7 +100,10 @@ export function WorkoutStageHeading({
   onOpenSwap,
   showSwapButton = false,
   inFlow = false,
-  progressLabel = ""
+  progressLabel = "",
+  onPrevious,
+  onOpenExercisePicker,
+  exercisePickerOpen = false
 }) {
   const exerciseTitle = [exercise?.name, exercise?.title, exercise?.exerciseName]
     .map((value) => String(value || "").trim())
@@ -106,7 +119,18 @@ export function WorkoutStageHeading({
         className={`${styles.stageTitle} ${showSwapButton ? styles.stageTitleWithSwap : ""} ${inFlow ? styles.stageTitleInFlow : ""}`}
         data-css-module-scope="workout-stage-heading"
       >
+        {onPrevious && <button type="button" className={styles.previousExercise} onClick={onPrevious} aria-label="Предыдущее упражнение"><ChevronLeft aria-hidden="true" /></button>}
         <div className={styles.stageTitleContent}>
+          {onOpenExercisePicker && inFlow && !isFinishSlide ? <button
+            type="button" className={styles.exercisePickerTrigger}
+            onClick={onOpenExercisePicker} aria-label={`Выбрать упражнение. ${exerciseTitle}. ${progressLabel}`}
+            aria-haspopup="dialog" aria-expanded={exercisePickerOpen} data-testid="workout-exercise-picker-trigger"
+          >
+            <span className={`${styles.stageTitleText} ${styles.exerciseTitle}`}>{exerciseTitle}</span>
+            <span className={styles.stageTitleProgress} data-testid="workout-exercise-progress">
+              <span>{progressLabel}</span><ChevronDown aria-hidden="true" />
+            </span>
+          </button> : <>
           <span className={`${styles.stageTitleText} ${!isFinishSlide ? styles.exerciseTitle : ""}`}>
             {isFinishSlide
               ? isWorkoutSaved
@@ -120,6 +144,7 @@ export function WorkoutStageHeading({
               <ChevronDown aria-hidden="true" />
             </span>
           ) : null}
+          </>}
         </div>
       </div>
       {showSwapButton && (

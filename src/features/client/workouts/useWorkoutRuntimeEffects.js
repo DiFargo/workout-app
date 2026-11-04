@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { safeWriteJsonStorage } from "../../../utils/storageSafety";
-import { clearWorkoutDraft, getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
+import { clearWorkoutDraft, saveWorkoutDraft } from "../../../utils/workoutDraftStorage";
+import { captureAuthSession } from "../../../utils/authSession.js";
+import { createWorkoutDraftPlan } from "../../../utils/workoutDraftState";
+import { compactStoredWorkoutPlans } from "../../../utils/workoutPlanStorage.js";
 import { getWorkoutExecutionSteps } from "../../../utils/workoutPlanNormalization";
 import {
   createWorkoutCountdownDeadline,
@@ -84,7 +86,9 @@ export function useWallClockCountdown({
       deadlineRef.current = 0;
       secondsRef.current = remainingSeconds;
       lastReportedSecondsRef.current = remainingSeconds;
-      setSeconds((current) => (current === remainingSeconds ? current : remainingSeconds));
+      // A deliberate reset and pause may be committed together (skip rest).
+      // Cleanup must not resurrect the old remaining time after that reset.
+      setSeconds((current) => (current === 0 || current === remainingSeconds ? current : remainingSeconds));
     };
   }, [completionVibration, running, setRunning, setSeconds]);
 
@@ -109,6 +113,7 @@ export function useWorkoutRuntimeEffects({
   auth,
   currentExerciseIndex,
   inlineVideoControlsTimerRef,
+  inlineVideoControlsHideDelay = 850,
   isWorkoutSaved,
   plan,
   postWorkoutFeedback,
@@ -124,6 +129,7 @@ export function useWorkoutRuntimeEffects({
   warmupTimerSeconds,
   workout,
   workoutFinishedAt,
+  workoutClientComment = "",
   workoutReadiness,
   workoutStarted,
   workoutStartedAt,
@@ -142,6 +148,14 @@ export function useWorkoutRuntimeEffects({
   setWarmupTimerRunning,
   setWarmupTimerSeconds
 }) {
+  const [draftWriteFailure, setDraftWriteFailure] = useState(null);
+  const draftWriteRequestRef = useRef(0);
+  const draftUid = (auth.currentUser || user)?.uid;
+  const workoutDraftSaveWarning = workoutStarted && !isWorkoutSaved &&
+    draftWriteFailure?.uid === draftUid && draftWriteFailure?.workoutId === selectedWorkoutId &&
+    draftWriteFailure?.startedAt === workoutStartedAt
+    ? "Не удалось сохранить тренировку на устройстве. Не закрывайте приложение до завершения тренировки."
+    : "";
   useWallClockCountdown({
     completionVibration: "warmup",
     running: warmupTimerRunning,
@@ -200,12 +214,16 @@ export function useWorkoutRuntimeEffects({
     }
     if (!workoutStarted) return;
 
+    const draftPlan = createWorkoutDraftPlan(plan, selectedWorkoutId);
+    if (!draftPlan) return;
+
     const draftAssignmentVersion =
       plan.workouts.find((workoutItem) => workoutItem.id === selectedWorkoutId)
         ?.assignedProgramUpdatedAt ||
       plan.assignedProgramUpdatedAt ||
       "";
     const draft = {
+      version: 2,
       uid: currentUser.uid,
       workoutId: selectedWorkoutId,
       selectedWorkoutId,
@@ -216,34 +234,68 @@ export function useWorkoutRuntimeEffects({
       assignmentVersion: draftAssignmentVersion,
       selectedReadiness: workoutReadiness,
       selectedPostWorkoutFeedback: postWorkoutFeedback,
+      workoutClientComment,
       warmupCompletedSteps,
       warmupTimerDuration,
       warmupTimerSeconds,
       restTimerDuration,
       restTimerSeconds,
-      plan,
+      plan: draftPlan,
       savedAt: new Date().toISOString()
     };
 
+    const session = captureAuthSession(auth);
+    let active = true;
+    let fallbackNoticeTimer = null;
     const writeDraft = () => {
-      safeWriteJsonStorage(getWorkoutDraftKey(currentUser.uid, selectedWorkoutId), {
+      const request = ++draftWriteRequestRef.current;
+      compactStoredWorkoutPlans(currentUser.uid);
+      const result = saveWorkoutDraft(currentUser.uid, selectedWorkoutId, {
         ...draft,
         savedAt: new Date().toISOString()
       });
-    };
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") writeDraft();
+      const reportResult = (saved) => {
+        if (!active || !session.isUnchanged() || request !== draftWriteRequestRef.current) return;
+        setDraftWriteFailure((current) => {
+          if (!active || !session.isUnchanged() || request !== draftWriteRequestRef.current) return current;
+          if (saved) return null;
+          if (current?.uid === currentUser.uid && current.workoutId === selectedWorkoutId &&
+            current.startedAt === workoutStartedAt) return current;
+          return { uid: currentUser.uid, workoutId: selectedWorkoutId, startedAt: workoutStartedAt };
+        });
+      };
+      if (typeof result?.then === "function") {
+        // A pending fallback is not yet a saved draft. A slow/denied IndexedDB
+        // must not silence the warning while countdown updates replace effects.
+        if (fallbackNoticeTimer) window.clearTimeout(fallbackNoticeTimer);
+        fallbackNoticeTimer = window.setTimeout(() => reportResult(false), 300);
+        result.then(saved => {
+          if (request === draftWriteRequestRef.current) window.clearTimeout(fallbackNoticeTimer);
+          reportResult(saved);
+        }, () => reportResult(false));
+      }
+      else {
+        if (fallbackNoticeTimer) window.clearTimeout(fallbackNoticeTimer);
+        reportResult(result);
+      }
     };
 
     writeDraft();
     window.addEventListener("pagehide", writeDraft);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", writeDraft);
+    window.addEventListener("focus", writeDraft);
+    document.addEventListener("visibilitychange", writeDraft);
 
     return () => {
+      active = false;
+      if (fallbackNoticeTimer) window.clearTimeout(fallbackNoticeTimer);
       window.removeEventListener("pagehide", writeDraft);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", writeDraft);
+      window.removeEventListener("focus", writeDraft);
+      document.removeEventListener("visibilitychange", writeDraft);
     };
   }, [
+    auth,
     auth.currentUser,
     user,
     selectedWorkoutId,
@@ -254,6 +306,7 @@ export function useWorkoutRuntimeEffects({
     workoutFinishedAt,
     workoutReadiness,
     postWorkoutFeedback,
+    workoutClientComment,
     warmupCompletedSteps,
     warmupTimerDuration,
     warmupTimerSeconds,
@@ -309,4 +362,13 @@ export function useWorkoutRuntimeEffects({
       setCurrentExerciseIndex(0);
     }
   }, [currentExerciseIndex, setCurrentExerciseIndex, workout]);
+
+  return { workoutDraftSaveWarning, showInlineVideoControlsTemporarily() {
+    if (inlineVideoControlsTimerRef.current) window.clearTimeout(inlineVideoControlsTimerRef.current);
+    setInlineVideoControlsVisible(true);
+    inlineVideoControlsTimerRef.current = window.setTimeout(() => {
+      setInlineVideoControlsVisible(false);
+      inlineVideoControlsTimerRef.current = null;
+    }, inlineVideoControlsHideDelay);
+  } };
 }

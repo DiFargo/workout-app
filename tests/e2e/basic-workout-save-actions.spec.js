@@ -3,6 +3,7 @@ import { test, expect } from "./app-test.js";
 async function generateLocalWorkout(page, extraQuery = "") {
   await page.goto(`/?clientHarness=1&clientHarnessPage=basicWorkoutToday&clientWorkoutProgramMode=basic${extraQuery}`);
   await page.getByRole("region", { name: "Выбор зон тренировки" }).getByRole("button").first().click();
+  await page.getByRole("button", { name: "Далее: время и условия" }).click();
   await page.getByTestId("basic-workout-today-generate").click();
   await expect(page.getByTestId("basic-workout-save-start")).toBeVisible();
   await expect(page.getByTestId("basic-workout-save-later")).toBeVisible();

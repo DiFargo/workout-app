@@ -1,0 +1,73 @@
+.root.root{--history-card:#fff;--history-secondary:#efeff4;--history-text:#1c1c1e;--history-muted:#636366;--history-line:rgba(60,60,67,.12);--history-accent:#3c6faa;--history-success:#237a42;--history-danger:#b23c45;--history-soft:#edf3fa;color:var(--history-text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;min-width:0}
+.root *{box-sizing:border-box}
+.root [hidden]{display:none!important}
+.root .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:480px;padding:4px;margin:0 0 20px;gap:4px;border-radius:14px;background:var(--history-secondary)}
+.root .tabs button{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:44px;padding:9px 12px;border:0;border-radius:10px;background:transparent;color:var(--history-muted);box-shadow:none;font:inherit;font-size:14px;font-weight:600;line-height:1.4;cursor:pointer;touch-action:manipulation}
+.root .tabs button[aria-selected="true"]{background:var(--history-card);color:var(--history-accent);box-shadow:0 1px 4px #0000000a}
+.root .tabCount{min-width:21px;padding:2px 5px;border-radius:6px;background:var(--history-secondary);font-size:11px;line-height:1.4;font-variant-numeric:tabular-nums}
+.root .archiveCaption{margin:-4px 0 14px;color:var(--history-muted);font-size:13px;line-height:1.5}
+.columns{display:grid;grid-template-columns:minmax(230px,.8fr) minmax(0,1.45fr);gap:24px;align-items:start}
+.currentSection,.otherSection{min-width:0}
+.root h3{margin:0 0 12px;font-size:17px;font-weight:650;line-height:1.35;color:var(--history-text)}
+.sectionHeading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sectionHeading>span{margin-bottom:12px;font-size:13px;color:var(--history-muted);font-variant-numeric:tabular-nums}
+.currentCard,.assignmentList,.empty{background:var(--history-card);border:1px solid var(--history-line);border-radius:18px;overflow:hidden}
+.currentCard{padding:17px}
+.root .currentCard h4{margin:10px 0 5px;font-size:20px;line-height:1.35;font-weight:650;overflow-wrap:anywhere;letter-spacing:-.35px}
+.root .currentCard>p{margin:0;font-size:13px;line-height:1.5;color:var(--history-muted)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:7px;font-size:12px;font-weight:600;line-height:1.4}
+.badge.neutral{background:var(--history-secondary);color:var(--history-muted)}
+.badge.active{background:var(--history-soft);color:var(--history-accent)}
+.badge.success{background:#edf7ef;color:var(--history-success)}
+.progress{margin:16px 0}
+.progress>div:first-child{display:flex;justify-content:space-between;gap:8px;font-size:13px;line-height:1.4;font-variant-numeric:tabular-nums}
+.track{height:5px;margin-top:7px;overflow:hidden;background:var(--history-secondary);border-radius:5px}
+.track>span{display:block;height:100%;border-radius:inherit;background:var(--ownset-action-gradient,linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%))}
+.root .primaryButton,.root .secondaryButton,.root .deleteButton{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:11px 14px;border-radius:12px;font:inherit;font-size:14px;font-weight:600;line-height:1.4;touch-action:manipulation;cursor:pointer;box-shadow:none}
+.root .primaryButton{border:1px solid transparent;background:var(--ownset-action-gradient,linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%));color:#fff}
+.root .secondaryButton{border:1px solid transparent;background:var(--history-secondary);color:var(--history-accent)}
+.root .deleteButton{border:1px solid var(--history-line);background:var(--history-card);color:var(--history-danger)}
+.root button:active{filter:brightness(.95)}
+.root button:disabled{opacity:.5;cursor:default}
+.root button:focus-visible,.root input:focus-visible,.root summary:focus-visible{outline:2px solid var(--history-accent);outline-offset:2px}
+.root .caption{margin:10px 2px 0;color:var(--history-muted);font-size:12px;line-height:1.55}
+.assignment{border-bottom:1px solid var(--history-line)}
+.assignment:last-child{border-bottom:0}
+.root .assignmentToggle{display:flex;align-items:center;gap:12px;width:100%;min-width:0;min-height:90px;margin:0;padding:14px;border:0;border-radius:0;background:var(--history-card);color:var(--history-text);text-align:left;box-shadow:none;cursor:pointer;touch-action:manipulation}
+.assignmentToggle>svg{flex:0 0 18px;color:var(--history-muted)}
+.dateTile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:0 0 42px;width:42px;min-height:48px;border-radius:11px;background:var(--history-secondary);font-size:15px;font-weight:600;line-height:1.35;font-variant-numeric:tabular-nums}
+.dateTile small{font-size:10px;font-weight:500;color:var(--history-muted)}
+.assignmentCopy{flex:1;min-width:0}
+.assignmentCopy strong{display:block;font-size:15px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.assignmentCopy small{display:block;margin-top:4px;font-size:12px;line-height:1.4;color:var(--history-muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.details{padding:0 14px 16px;min-width:0}
+.currentCard .details{padding:16px 0 0}
+.detailsTop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.detailsTop>span:last-child{font-size:12px;color:var(--history-muted)}
+.root .notice{margin:0 0 12px;padding:11px 12px;background:var(--history-secondary);border-radius:12px;color:var(--history-muted);font-size:12px;line-height:1.55}
+.workouts{list-style:none;margin:0;padding:0;border-top:1px solid var(--history-line)}
+.workouts>li{border-bottom:1px solid var(--history-line)}
+.root .workouts summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:11px 0;cursor:pointer;list-style:none}
+.workouts summary::-webkit-details-marker{display:none}
+.workouts summary>span:first-child{min-width:0;flex:1}
+.workouts summary strong{display:block;font-size:13px;line-height:1.4;font-weight:600;overflow-wrap:anywhere}
+.workouts summary small{display:block;margin-top:4px;font-size:11px;line-height:1.4;color:var(--history-muted)}
+.completed,.workoutState{display:inline-flex;align-items:center;gap:4px;font-size:11px;line-height:1.4;color:var(--history-muted);text-align:right}
+.completed{color:var(--history-success)}
+.exerciseList{padding:0 0 12px 20px;margin:0;font-size:12px;line-height:1.5;color:var(--history-muted)}
+.exerciseList li{margin:8px 0;overflow-wrap:anywhere}
+.exerciseList strong{display:block;font-size:12px;color:var(--history-text);font-weight:500}
+.root .emptyDetails{margin:8px 0 12px;font-size:12px;line-height:1.5;color:var(--history-muted)}
+.actions{display:grid;gap:12px;margin-top:16px}
+.deleteGroup{border-top:1px solid var(--history-line);padding-top:12px}
+.deleteGroup>small{display:block;margin-top:7px;color:var(--history-muted);font-size:11px;line-height:1.5}
+.root .basicToggle{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;margin:10px 2px 0;color:var(--history-muted);font-size:13px;line-height:1.4;cursor:pointer}
+.root .basicToggle input{width:20px;height:20px;flex:0 0 20px;margin:0;accent-color:var(--history-accent)}
+.empty{padding:22px 17px;display:flex;align-items:flex-start;flex-direction:column;gap:10px}
+.empty>svg{color:var(--history-muted)}
+.root .empty h4{margin:0;font-size:16px;line-height:1.4;font-weight:600}
+.root .empty p{margin:0;font-size:13px;line-height:1.5;color:var(--history-muted)}
+.root .status{margin:16px 0 0;padding:12px 14px;background:var(--history-secondary);border-radius:12px;color:var(--history-text);font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:760px){.columns{grid-template-columns:minmax(0,1fr);gap:24px}.root .currentCard h4{font-size:19px}}
+@media(max-width:380px){.root .assignmentToggle{padding:12px 10px;gap:10px}.dateTile{flex-basis:36px;width:36px}.assignmentCopy strong{font-size:14px}.root .workouts summary{flex-wrap:wrap;gap:5px}.workouts summary>span:first-child{flex-basis:100%}.details{padding-left:10px;padding-right:10px}}
+@media(prefers-reduced-motion:reduce){.root *{scroll-behavior:auto!important}}

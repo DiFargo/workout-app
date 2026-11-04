@@ -153,7 +153,22 @@
 
 .progressModal {
   gap: 12px;
+  min-height: 0;
+  max-height: calc(100dvh - 40px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
 }
+.progressModal .closeButton { width: 44px; min-width: 44px; max-width: 44px; height: 44px; min-height: 44px; max-height: 44px; }
+.progressModal .progressContent { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+
+.historyEntries { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.historyEntries li { display: grid; gap: 5px; padding: 12px; border-radius: 12px; background: var(--apple-surface, #fff); }
+.historyEntries time { color: var(--apple-secondary, #636366); font-size: .8125rem; }
+.historyEntries strong { font-size: .9375rem; font-weight: 600; overflow-wrap: anywhere; }
+.historyError { display: grid; gap: 8px; }
+.historyError button { justify-self: start; min-height: 44px; padding: 8px 14px; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 12px; background: var(--apple-surface, #fff); color: var(--apple-action, #3f73b8); font: inherit; cursor: pointer; }
+.historyMore { width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 12px; background: var(--apple-surface-muted, #efeff4); color: var(--apple-action, #3f73b8); font: inherit; cursor: pointer; }
+.historyMore:disabled { opacity: .55; cursor: default; }
 
 .progressContent {
   display: grid;
@@ -397,3 +412,51 @@
 :global(:root[data-app-theme="warm-light"]) .alternativeButton.alternativeButton small { font-size: 13px; font-weight: 400; margin-top: 4px; }
 :global(:root[data-app-theme="warm-light"]) .alternativeButton.alternativeButton > b { font-size: 13px; font-weight: 500; }
 @media(max-width:350px) { :global(:root[data-app-theme="warm-light"]) .modal.modal { padding-inline: 16px; } }
+
+/* The note follows the visible viewport, including Android WebView keyboards. */
+.overlay.noteOverlay {
+  inset: auto;
+  top: var(--workout-note-visible-top, 0px);
+  left: var(--workout-note-visible-left, 0px);
+  width: var(--workout-note-visible-width, 100%);
+  height: var(--workout-note-visible-height, 100dvh);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.modal.noteModal,
+:global(:root[data-app-theme="warm-light"]) .modal.noteModal {
+  min-width: 0;
+  max-width: 100%;
+  max-height: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(44px, 1fr) auto;
+  overflow: hidden;
+}
+
+.noteModal > .textarea,
+:global(:root[data-app-theme="warm-light"]) .noteModal > .textarea.textarea {
+  min-width: 0;
+  min-height: 44px;
+  height: 200px;
+  max-height: 100%;
+  resize: none;
+  overflow: auto;
+  overscroll-behavior: contain;
+  font-size: 16px;
+}
+
+.noteModal > .doneButton,
+:global(:root[data-app-theme="warm-light"]) .noteModal > .doneButton.doneButton {
+  box-sizing: border-box;
+  margin-top: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .noteModal.noteModal > header {
+  margin-bottom: 0;
+}
+
+:global(:root[data-app-theme="warm-light"]) .noteModal.noteModal > header small {
+  max-width: 100%;
+}

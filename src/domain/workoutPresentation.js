@@ -1,3 +1,6 @@
+import { parseWorkoutWeightValue } from "../../functions/workoutWeightValue.js";
+export { parseWorkoutWeightValue };
+
 export function getWorkoutCover(workout) {
   const coverRules = [
     { file: "/workout-covers/legs.webp", patterns: [/жим\s+ног/] },
@@ -280,12 +283,14 @@ export function buildWorkoutFinishSummary({
       : "В следующий раз заполни вес и повторы, чтобы видеть прогресс.";
   const syncText =
     workoutHistorySyncState === "saving"
-      ? "Сохранение..."
-      : workoutHistorySyncState === "local"
-        ? "Сохранено локально · ждёт синхронизации"
-        : workoutHistorySyncState === "synced"
-          ? "Синхронизировано"
-          : "";
+      ? "Сохраняем результат… Дождитесь подтверждения."
+      : isWorkoutSaved && workoutHistorySyncState === "local"
+        ? "Сохранено на устройстве. Отправка в облако ещё не подтверждена. Не очищайте данные приложения."
+        : isWorkoutSaved && workoutHistorySyncState === "synced"
+          ? "Сохранено в облаке."
+          : workoutHistorySyncState === "error"
+            ? "Не удалось сохранить результат. Проверьте интернет или освободите место на устройстве и повторите сохранение."
+            : "";
 
   return { stats, progressText, adviceText, syncText };
 }
@@ -372,11 +377,6 @@ export function getAdjustedWorkoutWeight(weight, readinessId) {
   }
 
   return String(weight).trim();
-}
-
-export function parseWorkoutWeightValue(value) {
-  const numeric = Number(String(value || "").replace(",", "."));
-  return Number.isFinite(numeric) && numeric > 0 ? numeric : 0;
 }
 
 function getBestProgressiveSetWeight(exerciseName, setIndex, history = []) {

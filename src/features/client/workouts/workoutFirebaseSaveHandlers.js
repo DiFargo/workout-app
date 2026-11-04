@@ -8,6 +8,8 @@ import {
 import { addUserLocalBackup } from "../../../utils/userScopedStorage";
 import { clearWorkoutDraft } from "../../../utils/workoutDraftStorage";
 import { captureAuthSession } from "../../../utils/authSession.js";
+import { invalidateWorkoutHistory } from "../../../utils/workoutHistoryRevision.js";
+import { invalidateWorkoutPlan } from "../../../utils/workoutPlanAuthority.js";
 import { captureWorkoutSetPrescription } from "../../../utils/workoutPrescription.js";
 import {
   getWorkoutCompletion,
@@ -163,6 +165,9 @@ export async function saveCompletedWorkoutToFirebase({
   const backupId = historySaveId;
   const completion = buildWorkoutCompletionOperation(plan, workout);
 
+  invalidateWorkoutHistory(auth);
+  invalidateWorkoutPlan(auth);
+
   try {
     try {
       addUserLocalBackup(WORKOUT_HISTORY_BACKUP_STORAGE_KEY, currentUser.uid, {
@@ -180,10 +185,12 @@ export async function saveCompletedWorkoutToFirebase({
     forgetPendingHistorySave(currentUser.uid, historySaveId);
     removePendingHistoryBackups(currentUser.uid, backupId);
     if (!session.isCurrent()) return;
+    invalidateWorkoutHistory(auth);
+    invalidateWorkoutPlan(auth);
     clearWorkoutDraft(currentUser.uid, workout.id);
     if (result.plan) applyState(setPlan, result.plan);
 
-    await loadHistory();
+    await loadHistory({ force: true });
     if (!session.isCurrent()) return;
     applyState(setIsWorkoutSaved, true);
     applyState(setWorkoutHistorySyncState, "synced");
@@ -205,6 +212,8 @@ export async function saveCompletedWorkoutToFirebase({
       return;
     }
     if (!session.isCurrent()) return;
+    invalidateWorkoutHistory(auth);
+    invalidateWorkoutPlan(auth);
     clearWorkoutDraft(currentUser.uid, workout.id);
     applyState(setHistory, (prev) => [
       { id: historySaveId, ...historyEntry, pendingSync: true },

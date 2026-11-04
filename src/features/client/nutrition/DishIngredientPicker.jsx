@@ -1,4 +1,4 @@
-import { nutritionFoodDatabase } from "../../../data/nutritionFoods";
+import { searchBundledNutritionFallbackFoods } from "../../../utils/localNutritionCatalog";
 import {
   getNutritionFoodSearchText,
   getSearchHistoryName
@@ -19,6 +19,7 @@ function getIngredientSourceLabel(food = {}) {
     return "Примерная оценка ИИ";
   }
   if (sourceType === "local_catalog") return source ? `Проверенная база · ${source}` : "Проверенная база";
+  if (sourceType === "basic_reference") return "Базовый продукт · USDA";
   return source || "Общая база";
 }
 
@@ -39,7 +40,7 @@ function buildDishIngredientResults({
     ...myFoodsList,
     ...recentFoodsList,
     ...externalFoodsList,
-    ...nutritionFoodDatabase.map(normalizeNutritionFood),
+    ...searchBundledNutritionFallbackFoods(search, 18).map(normalizeNutritionFood),
     ...(fallbackSuggestions || []).map((name) => normalizeNutritionFood({
       id: `suggestion_${name}`,
       foodId: `suggestion_${name}`,
@@ -62,23 +63,19 @@ function buildDishIngredientResults({
 
   allFoods.forEach((food) => {
     const normalizedFood = normalizeNutritionFood(food);
+    if (cleanQuery && normalizedFood.searchMatchQuery !== search.trim()
+      && !getNutritionFoodSearchText(normalizedFood).includes(cleanQuery)
+      && !getSearchHistoryName(normalizedFood).toLowerCase().includes(cleanQuery)) return;
     const barcode = String(normalizedFood.barcode || "").trim();
     const key = barcode
       ? `barcode:${barcode}`
-      : `name:${String(normalizedFood.name || "").normalize("NFKC").toLowerCase().trim()}`;
+      : `name:${String(normalizedFood.name || "").normalize("NFKC").toLowerCase().trim()}|brand:${normalizedFood.brand.toLowerCase().trim()}`;
     if (seenFoodIds.has(key)) return;
     seenFoodIds.add(key);
     uniqueFoods.push(normalizedFood);
   });
 
-  return uniqueFoods
-    .filter((food) => {
-      if (!cleanQuery) return true;
-      const foodName = getNutritionFoodSearchText(food);
-      const shortName = getSearchHistoryName(food).toLowerCase();
-      return foodName.includes(cleanQuery) || shortName.includes(cleanQuery);
-    })
-    .slice(0, 18);
+  return uniqueFoods.slice(0, 18);
 }
 
 export default function DishIngredientPicker({
@@ -236,7 +233,7 @@ export default function DishIngredientPicker({
                     >
                       <span className={styles.resultIcon} data-css-module-text="dish-ingredient-picker">{food.icon || getFoodIcon(food)}</span>
                       <div className={styles.resultContent}>
-                        <strong className={styles.resultTitle} data-css-module-text="dish-ingredient-picker">{food.name}</strong>
+                        <strong className={`${styles.resultTitle} ${food.sourceType === "basic_reference" ? styles.basicTitle : ""}`} data-css-module-text="dish-ingredient-picker">{food.name}</strong>
                         <small className={styles.resultMeta} data-css-module-text="dish-ingredient-picker">{getIngredientSourceLabel(food)} · {Math.round(Number(food.calories) || 0)} ккал</small>
                       </div>
                       <em className={styles.resultAction} aria-hidden="true" data-css-module-text="dish-ingredient-picker"><Plus /></em>

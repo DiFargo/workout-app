@@ -36,7 +36,7 @@ function formatSelectedDate(dateKey, title) {
   if (!dateKey) return title === "Сегодня" ? "Сегодня" : title;
   const date = new Date(`${dateKey}T12:00:00`);
   if (Number.isNaN(date.getTime())) return title;
-  return date.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+  return date.toLocaleDateString("ru-RU", { day: "numeric", month: "long", ...(date.getFullYear() !== new Date().getFullYear() ? { year: "numeric" } : {}) });
 }
 
 function getVoiceButtonOrigin(target) {
@@ -139,18 +139,29 @@ export default function NutritionOrbit({
     setVoiceButtonOrigin(null);
   }
 
+  function finishVoiceResult(options) {
+    const result = onVoiceDone?.(options);
+    if (result === false) return false;
+    closeVoiceModal();
+    return result;
+  }
+
   function openPhotoSearch() {
     photoSearchInputRef.current?.click();
   }
 
   if (voiceEnabled) {
     const targetCalories = getNumericText(calories.target || "0");
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    const isSelectedToday = !dateKey || dateKey === todayKey;
     return <>
+      <p className={styles.selectedDate} data-testid="nutrition-selected-date">{isSelectedToday ? "Сегодня" : formatSelectedDate(dateKey, dateTitle)}{isSelectedToday && dateKey ? ` · ${formatSelectedDate(dateKey, dateTitle)}` : ""}</p>
       <section className={styles.renderEnergy} data-testid="nutrition-orbit">
         <div className={styles.renderRing} style={{ "--nutrition-progress": `${calorieProgressRounded * 3.6}deg` }}><span><strong>{getNumericText(calories.amount)}</strong><small>из {targetCalories} ккал</small></span></div>
         <div className={styles.renderCopy}>
           <div className={styles.renderCopyHead} data-testid="nutrition-energy-heading-row">
-            <p data-testid="nutrition-progress-status" aria-label={progressStatus}>{caloriesAmount > Number(targetCalories) && Number(targetCalories) > 0 ? "Сверх дневной цели" : caloriesAmount > 0 ? "Осталось на сегодня" : "Дневник пока пуст"}</p>
+            <p data-testid="nutrition-progress-status" aria-label={progressStatus}>{caloriesAmount > Number(targetCalories) && Number(targetCalories) > 0 ? "Сверх дневной цели" : caloriesAmount > 0 ? (isSelectedToday ? "Осталось на сегодня" : "Остаток за выбранный день") : "Дневник пока пуст"}</p>
             <h2>{Math.abs(Number(targetCalories) - caloriesAmount).toLocaleString("ru-RU")} <small>ккал</small></h2>
           </div>
           {streakDays > 0 ? <span className={styles.renderStreak} data-testid="nutrition-streak"><Flame aria-hidden="true" />{getStreakLabel(streakDays)}</span> : <p className={styles.emptyHint}>Добавьте первый приём пищи</p>}
@@ -165,7 +176,7 @@ export default function NutritionOrbit({
         <button type="button" data-testid="nutrition-orbit-calendar" onClick={onOpenCalendar}><span><CalendarDays aria-hidden="true" /></span>Календарь</button>
         <input ref={photoSearchInputRef} className={styles.photoSearchInput} data-testid="nutrition-orbit-photo-input" type="file" accept="image/*" capture="environment" onChange={onPhotoSearch}/>
       </div>
-      <NutritionVoiceModal open={voiceModalOpen} origin={voiceButtonOrigin} voiceState={voiceState} audioLevel={voiceAudioLevel} feedback={voiceFeedback} voiceAddedItems={voiceAddedItems} onClose={closeVoiceModal} onVoiceStart={onVoiceStart} onVoiceEnd={onVoiceEnd} onVoiceAddedItemRemove={onVoiceAddedItemRemove} onVoiceAddedItemUpdate={onVoiceAddedItemUpdate} onVoiceDone={(options) => { onVoiceDone?.(options); closeVoiceModal(); }}/>
+      <NutritionVoiceModal open={voiceModalOpen} origin={voiceButtonOrigin} voiceState={voiceState} audioLevel={voiceAudioLevel} feedback={voiceFeedback} voiceAddedItems={voiceAddedItems} onClose={closeVoiceModal} onVoiceStart={onVoiceStart} onVoiceEnd={onVoiceEnd} onVoiceAddedItemRemove={onVoiceAddedItemRemove} onVoiceAddedItemUpdate={onVoiceAddedItemUpdate} onVoiceDone={finishVoiceResult}/>
     </>;
   }
 
@@ -296,10 +307,7 @@ export default function NutritionOrbit({
         onVoiceEnd={onVoiceEnd}
         onVoiceAddedItemRemove={onVoiceAddedItemRemove}
         onVoiceAddedItemUpdate={onVoiceAddedItemUpdate}
-        onVoiceDone={(options) => {
-          onVoiceDone?.(options);
-          closeVoiceModal();
-        }}
+        onVoiceDone={finishVoiceResult}
       />
     </>
   );

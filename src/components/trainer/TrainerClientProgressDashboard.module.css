@@ -518,3 +518,19 @@
 :global(html[data-trainer-variant="v2"]) .periods button {min-height:44px;font-size:12px}
 :global(html[data-trainer-variant="v2"]) .signal {min-height:44px}
 :global(html[data-trainer-variant="v2"]) .signal h3 {font-size:13px}
+
+.coverage, .chartReadout, .chartData {
+  color: var(--text-secondary, #636366);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.coverage { padding: 12px; border: 1px solid rgba(60,60,67,.12); border-radius: 12px; margin-bottom: 12px; }
+.coverage p { margin: 0 0 8px; }
+.coverage button, .chartData summary { min-height: 44px; cursor: pointer; }
+.chartData summary { display: flex; align-items: center; }
+.chartData table { width: 100%; border-collapse: collapse; text-align: left; }
+.chartData th, .chartData td { padding: 8px 4px; border-bottom: 1px solid rgba(60,60,67,.12); }
+.chartData caption { text-align: left; padding: 8px 0; }
+.chartWrap circle[role="button"] { cursor: pointer; }
+.chartWrap circle[role="button"]:focus-visible { stroke: var(--trainer-accent, #3F73B8); stroke-width: 2px; outline: none; }

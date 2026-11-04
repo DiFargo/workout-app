@@ -1,4 +1,4 @@
-import { Check, Clock3, Lightbulb, LoaderCircle, Trophy } from "lucide-react";
+import { Check, CircleAlert, Clock3, Lightbulb, LoaderCircle, Trophy } from "lucide-react";
 import styles from "./WorkoutFinishStage.module.css";
 
 export default function WorkoutFinishStage({
@@ -23,12 +23,22 @@ export default function WorkoutFinishStage({
   workoutClientComment,
   workoutHistorySyncState
 }) {
+  const showSaveStatusFirst = workoutHistorySyncState === "saving" || workoutHistorySyncState === "error";
+  const saveStatus = finishSyncText && (isWorkoutSaved || showSaveStatusFirst) ? (
+    <div className={`${styles.syncStatus} ${styles[workoutHistorySyncState] || ""}`} role={workoutHistorySyncState === "error" ? "alert" : "status"} aria-atomic="true" data-testid="workout-finish-save-status" data-save-state={workoutHistorySyncState}>
+      <span aria-hidden="true">
+        {workoutHistorySyncState === "local" ? <Clock3 /> : workoutHistorySyncState === "synced" ? <Check /> : workoutHistorySyncState === "error" ? <CircleAlert /> : <LoaderCircle />}
+      </span>
+      {finishSyncText}
+    </div>
+  ) : null;
+
   return (
     <>
-      {showWorkoutSavedCard && (
-        <div className={styles.savedCard} data-css-module-scope="workout-finish-stage">
-          <div className={styles.savedCheck}><Check aria-hidden="true" /></div>
-          <strong>Тренировка сохранена</strong>
+      {showWorkoutSavedCard && isWorkoutSaved && (
+        <div className={styles.savedCard} role="status" aria-atomic="true" data-save-state={workoutHistorySyncState} data-css-module-scope="workout-finish-stage">
+          <div className={styles.savedCheck}>{workoutHistorySyncState === "local" ? <Clock3 aria-hidden="true" /> : <Check aria-hidden="true" />}</div>
+          <strong>{workoutHistorySyncState === "local" ? "Сохранено на устройстве" : workoutHistorySyncState === "synced" ? "Сохранено в облаке" : "Тренировка сохранена"}</strong>
           <span>{postWorkoutFeedback?.advice || "Отличная работа"}</span>
         </div>
       )}
@@ -52,9 +62,11 @@ export default function WorkoutFinishStage({
       >
         <div className={styles.card} data-testid="workout-finish-card">
           <div className={styles.top}>
-            <span>{isWorkoutSaved ? "Выполнена" : "Готова к сохранению"}</span>
+            <span>{isWorkoutSaved ? "Выполнена" : workoutHistorySyncState === "error" ? "Не сохранена" : "Готова к сохранению"}</span>
             <span>{finishPresentation.day}</span>
           </div>
+
+          {showSaveStatusFirst ? saveStatus : null}
 
           <div className={styles.result}>
             <span className={styles.trophy} aria-hidden="true"><Trophy /></span>
@@ -111,14 +123,7 @@ export default function WorkoutFinishStage({
             <p>{finishAdviceText}</p>
           </div>
 
-          {finishSyncText && workoutHistorySyncState !== "synced" && (
-            <div className={`${styles.syncStatus} ${styles[workoutHistorySyncState] || ""}`}>
-              <span aria-hidden="true">
-                {workoutHistorySyncState === "local" ? <Clock3 /> : workoutHistorySyncState === "synced" ? <Check /> : <LoaderCircle />}
-              </span>
-              {finishSyncText}
-            </div>
-          )}
+          {!showSaveStatusFirst ? saveStatus : null}
         </div>
       </div>
 
@@ -148,9 +153,11 @@ export default function WorkoutFinishStage({
             disabled={isSaving}
           >
             {isSaving
-              ? "Сохраняю..."
+              ? "Сохраняем…"
               : isWorkoutSaved
               ? "Вернуться в меню"
+              : workoutHistorySyncState === "error"
+              ? "Повторить сохранение"
               : "Сохранить и завершить"}
           </button>
         </div>

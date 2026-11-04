@@ -7,6 +7,10 @@ export default function WorkoutStageActionPanel({
   onNext,
   onPrevious,
   onWarmupBack,
+  primaryAction,
+  onPrimaryAction,
+  primaryActionDisabled = false,
+  skippingRest = false,
   children
 }) {
   if (isWarmup) {
@@ -41,11 +45,28 @@ export default function WorkoutStageActionPanel({
 
   return (
     <div
-      className={`${styles.panel} ${styles.exercisePanel}`}
+      className={`${styles.panel} ${styles.exercisePanel} ${primaryAction ? styles.dynamicPanel : ""}`}
       data-css-module-scope="workout-stage-action-panel"
     >
       {children}
       <div className={`${styles.navigationRow} ${styles.exerciseNavigationRow}`}>
+        {primaryAction ? <button
+          type="button"
+          className={`${styles.button} ${styles.exerciseNextButton} ${styles.dynamicButton}`}
+          data-testid="workout-primary-action"
+          data-action={primaryAction.kind}
+          data-css-module-control="workout-stage-action-panel"
+          disabled={primaryActionDisabled || primaryAction.disabled}
+          onClick={onPrimaryAction}
+          aria-label={primaryAction.label}
+          aria-description={skippingRest ? "Переход с пропуском оставшегося отдыха" : undefined}
+        >
+          <span className={styles.dynamicCopy}>
+            <span>{primaryAction.label}</span>
+            {skippingRest ? <small>Пропустить остаток отдыха</small> : null}
+          </span>
+          {primaryAction.kind !== "complete" ? <ChevronRight aria-hidden="true" /> : null}
+        </button> : <>
         <button
           type="button"
           className={`${styles.button} ${styles.exercisePrevButton}`}
@@ -54,7 +75,6 @@ export default function WorkoutStageActionPanel({
         >
           <ChevronLeft aria-hidden="true" />Предыдущее
         </button>
-
         <button
           type="button"
           className={`${styles.button} ${styles.exerciseNextButton}`}
@@ -64,6 +84,7 @@ export default function WorkoutStageActionPanel({
           {isLastExercise ? "Завершить" : "Следующее"}
           <ChevronRight aria-hidden="true" />
         </button>
+        </>}
       </div>
     </div>
   );

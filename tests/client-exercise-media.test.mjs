@@ -1,9 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import vm from "node:vm";
+import { installRuntimeImports } from "./helpers/runtime-imports.mjs";
 import { programDraftSnapshot } from "../src/utils/trainerProgramDraft.js";
-import { captureAuthSession } from "../src/utils/authSession.js";
 import { normalizeExercise } from "../src/utils/workoutPlanNormalization.js";
 import { mediaTrainerId, readClientExerciseMedia, resolveClientExerciseMedia } from "../functions/clientExerciseMedia.js";
 import { loadClientExerciseMedia, withClientExerciseMedia } from "../src/utils/clientExerciseMedia.js";
@@ -137,34 +136,41 @@ test("release wires media API through active membership and both plan loaders", 
   }
 });
 
-test("actual client loader displays newly uploaded library video on reopening an old assignment", async () => {
+test("actual client loader displays newly uploaded library video on reopening an old assignment", async (t) => {
   let displayed;
   let currentTemplate = structuredClone(template);
   const profile = { assignedProgramId: "program", assignedProgramUpdatedAt: "v1" };
   const snapshot = (values) => { const docs = values.map(item => ({ id: item.id, data: () => item })); return { docs, forEach: callback => docs.forEach(callback) }; };
-  const context = { console, Promise, Map, Set, String, Boolean, Array, programDraftSnapshot, captureAuthSession, withClientExerciseMedia,
+  const context = {
     collection: (_db, ...parts) => ({ path: parts.join("/") }), doc: (_db, ...parts) => ({ path: parts.join("/") }),
     getDocs: async ref => snapshot(ref.path.endsWith("/workouts") ? [workout] : []),
     getDoc: async () => ({ exists: () => true, data: () => profile }),
-    loadClientExerciseMedia: async () => resolveClientExerciseMedia([workout], [currentTemplate], "trainer"),
-    safeReadUserJsonStorage: () => null, safeWriteUserJsonStorage: () => {}, clearStaleWorkoutCaches: () => {},
-    resolveWorkoutPlanMode: () => "individual", isBasicWorkoutPlanItem: () => false,
-    isTrainerProgramClientVisible: () => true, isTrainerClientCurrentAssignmentWorkout: () => true,
-    buildTrainerClientProgramTimeline: () => [{ status: "active", workouts: [workout] }]
+    loadClientExerciseMedia: async () => resolveClientExerciseMedia([workout], [currentTemplate], "trainer")
   };
-  const source = await readFile("src/features/client/workouts/workoutFirebaseLoadHandlers.js", "utf8");
-  vm.runInNewContext(source.replace(/import\s[\s\S]*?from\s+"[^"]+";\r?\n/g, "").replace(/export /g, ""), context);
-  const settings = { db: {}, auth: { currentUser: { uid: "client" } }, plan: {}, normalizeExercise,
+  const auth = { currentUser: { uid: "client" } };
+  const cleanup = installRuntimeImports({
+    "firebase/firestore": { collection: context.collection, doc: context.doc, getDocs: context.getDocs, getDoc: context.getDoc },
+    "/src/firebase.js": { auth, db: {} },
+    "/src/utils/clientExerciseMedia.js": { loadClientExerciseMedia: context.loadClientExerciseMedia, withClientExerciseMedia }
+  });
+  t.after(cleanup);
+  const previousStorage = globalThis.localStorage;
+  const values = new Map();
+  globalThis.localStorage = { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value),
+    removeItem: key => values.delete(key), key: index => [...values.keys()][index], get length() { return values.size; } };
+  t.after(() => { globalThis.localStorage = previousStorage; });
+  const { loadWorkoutsFromFirebaseWithDeps } = await import("../src/features/client/workouts/workoutFirebaseLoadHandlers.js");
+  const settings = { db: {}, auth, plan: {}, normalizeExercise,
     sortWorkoutDays: days => days, canUseAdminFeatures: () => false, startPerformanceCheck: () => {},
     endPerformanceCheck: () => {}, showAppError: () => assert.fail("Plan load failed"), setPlan: update => { displayed = typeof update === "function" ? update(displayed) : update; } };
-  await context.loadWorkoutsFromFirebaseWithDeps(settings);
+  await loadWorkoutsFromFirebaseWithDeps(settings);
   assert.equal(displayed.workouts[0].exercises[0].video, "https://example.com/new.mp4");
   assert.equal(displayed.workouts[0]._editorSnapshot, programDraftSnapshot(workout));
   assert.equal(displayed.workouts[0].exercises[0].sets.length, workout.exercises[0].sets.length);
   assert.deepEqual(displayed.workouts[0].exercises[0].sets.map(({ reps, weight }) => ({ reps, weight })),
     workout.exercises[0].sets.map(({ reps, weight }) => ({ reps, weight })));
   currentTemplate.blocks[0].weeks[0].workouts[0].exercises[0].video = "https://example.com/replaced.mp4";
-  await context.loadWorkoutsFromFirebaseWithDeps(settings);
+  await loadWorkoutsFromFirebaseWithDeps(settings);
   assert.equal(displayed.workouts[0].exercises[0].video, "https://example.com/replaced.mp4");
   assert.equal(displayed.workouts[0].exercises[0].sets.length, 2);
   assert.equal(workout.exercises[0].video, "", "Display lookup must not rewrite the persisted assignment");

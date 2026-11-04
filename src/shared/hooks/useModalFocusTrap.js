@@ -35,7 +35,7 @@ export function useModalFocusTrap() {
     };
 
     const activateDialog = () => {
-      const dialogs = [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
+      const dialogs = [...document.querySelectorAll('[aria-modal="true"]:is([role="dialog"], [role="alertdialog"])')]
         .filter((dialog) => (
           dialog instanceof HTMLElement &&
           !dialog.hidden &&
@@ -56,11 +56,10 @@ export function useModalFocusTrap() {
 
       const backdropSelector = '[data-modal-backdrop="true"], [data-trainer-modal-backdrop="true"]';
       const activeBackdrop = dialog.closest(backdropSelector) ||
-        [...(dialog.parentElement?.children || [])].find(element => element.matches(backdropSelector));
-      if (activeBackdrop) {
-        mutedBackdrops = [...document.querySelectorAll(backdropSelector)].filter(element => element !== activeBackdrop);
-        mutedBackdrops.forEach(element => element.setAttribute("data-modal-backdrop-muted", "true"));
-      }
+        (dialog.hasAttribute("data-modal-block-parent-backdrop") ? null :
+          [...(dialog.parentElement?.children || [])].find(element => element.matches(backdropSelector)));
+      mutedBackdrops = [...document.querySelectorAll(backdropSelector)].filter(element => element !== activeBackdrop);
+      mutedBackdrops.forEach(element => element.setAttribute("data-modal-backdrop-muted", "true"));
 
       activeDialog = dialog;
       previousFocus = document.activeElement;
@@ -69,7 +68,7 @@ export function useModalFocusTrap() {
       while (current.parentElement && current.parentElement.id !== "root") {
         const parent = current.parentElement;
         [...parent.children].forEach((sibling) => {
-          if (sibling === current || !(sibling instanceof HTMLElement) || sibling.matches('[data-modal-backdrop="true"], [data-trainer-modal-backdrop="true"]')) return;
+          if (sibling === current || sibling === activeBackdrop || !(sibling instanceof HTMLElement)) return;
           restoreBackground.push({
             element: sibling,
             inert: sibling.inert,

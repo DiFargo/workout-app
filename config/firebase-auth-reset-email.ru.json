@@ -1,0 +1,13 @@
+{
+  "notification": {
+    "defaultLocale": "ru",
+    "sendEmail": {
+      "resetPasswordTemplate": {
+        "senderDisplayName": "Zmena",
+        "subject": "Смена пароля Zmena",
+        "bodyFormat": "HTML",
+        "body": "<div lang=\"ru\" style=\"margin:0;padding:24px 12px;background:#F2F2F7;color:#1C1C1E;font-family:Arial,Helvetica,sans-serif;\"><table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"max-width:520px;margin:0 auto;background:#FFFFFF;border:1px solid #E5E5EA;border-radius:20px;\"><tr><td style=\"padding:28px 24px;\"><p style=\"margin:0 0 24px;color:#3C6FAA;font-size:20px;font-weight:bold;\">Zmena</p><h1 style=\"margin:0 0 16px;font-size:26px;line-height:1.25;\">Новый пароль</h1><p style=\"margin:0 0 24px;font-size:16px;line-height:1.5;\">Вы запросили смену пароля для аккаунта <strong>%EMAIL%</strong> в Zmena.</p><table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin:0 0 20px;\"><tr><td bgcolor=\"#3F73B8\" style=\"border-radius:12px;text-align:center;\"><a href=\"%LINK%\" style=\"display:inline-block;padding:16px 24px;color:#FFFFFF;font-size:16px;line-height:1.25;font-weight:bold;text-decoration:none;\">Задать новый пароль</a></td></tr></table><p style=\"margin:0 0 20px;font-size:14px;line-height:1.5;color:#636366;\">Если кнопка не открывается, <a href=\"%LINK%\" style=\"color:#3C6FAA;\">перейдите по этой ссылке</a>. Если ссылка устарела, запросите новую в приложении.</p><p style=\"margin:0 0 16px;font-size:14px;line-height:1.5;color:#636366;\">Если вы не запрашивали смену пароля, просто проигнорируйте это письмо. Ваш пароль не изменится.</p><p style=\"margin:0 0 24px;font-size:14px;line-height:1.5;color:#636366;\">Не пересылайте это письмо: ссылка позволяет изменить пароль.</p><p style=\"margin:0;padding-top:20px;border-top:1px solid #E5E5EA;font-size:12px;line-height:1.5;color:#636366;\">Команда Zmena<br>Это письмо отправлено автоматически. Отвечать на него не нужно.</p></td></tr></table></div>"
+      }
+    }
+  }
+}

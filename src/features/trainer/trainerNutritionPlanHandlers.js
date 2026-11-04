@@ -1,6 +1,7 @@
-import { doc, setDoc } from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 
 import { buildTrainerNutritionPlanUpdate } from "../../utils/trainerNutritionPlan";
+import { isNutritionDayStorageEnabled } from "../../utils/nutritionDayStorageConfig.js";
 
 const STATUS_SELECT_CLIENT = "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0432\u044b\u0431\u0435\u0440\u0438 \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 const STATUS_REQUIRED_MACROS = "\u0423\u043a\u0430\u0436\u0438 \u043a\u0430\u043b\u043e\u0440\u0438\u0438 \u0438 \u0431\u0435\u043b\u043e\u043a \u0434\u043b\u044f \u043f\u043b\u0430\u043d\u0430 \u043f\u0438\u0442\u0430\u043d\u0438\u044f.";
@@ -51,6 +52,12 @@ export function createTrainerNutritionPlanHandlers({
       return false;
     }
 
+    const dayStorage = isNutritionDayStorageEnabled();
+    let currentNutrition = adminClientNutrition;
+    if (dayStorage) {
+      try { currentNutrition = (await (await import("../../utils/nutritionDayClient.js")).readNutritionState(clientId, { mode: "full" })).state; }
+      catch (error) { console.error("Nutrition history load error", error); setAdminClientStatus(STATUS_FAILED); return false; }
+    }
     const updatedAt = new Date().toISOString();
     const {
       goals: syncedGoals,
@@ -60,16 +67,20 @@ export function createTrainerNutritionPlanHandlers({
       nutritionStatePatch
     } = buildTrainerNutritionPlanUpdate({
       planDraft,
-      currentNutrition: adminClientNutrition,
+      currentNutrition,
       updatedAt,
       updatedBy: auth.currentUser?.uid || ""
     });
 
     try {
-      await Promise.all([
-        setDoc(doc(db, "users", clientId), userPatch, { merge: true }),
-        setDoc(doc(db, "users", clientId, "nutrition", "state"), nutritionStatePatch, { merge: true })
-      ]);
+      if (dayStorage) {
+        await (await import("../../utils/nutritionDayClient.js")).saveNutritionDaySnapshot(clientId, nutritionStatePatch, { planOnly: true, userPatch });
+      } else {
+        const batch = writeBatch(db);
+        batch.set(doc(db, "users", clientId), userPatch, { merge: true });
+        batch.set(doc(db, "users", clientId, "nutrition", "state"), nutritionStatePatch, { merge: true });
+        await batch.commit();
+      }
 
       setAdminSelectedClient((prev) => prev?.id === clientId ? {
         ...prev,

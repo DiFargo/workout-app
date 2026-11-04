@@ -18,6 +18,9 @@ export function captureAuthSession(auth) {
 
   return {
     uid: session?.uid || "",
+    isUnchanged: () => Boolean(session)
+      && auth?.currentUser === session.user
+      && sessions.get(auth) === session,
     isCurrent: () => Boolean(session?.uid)
       && auth?.currentUser === session.user
       && sessions.get(auth) === session

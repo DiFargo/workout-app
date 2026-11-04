@@ -307,6 +307,7 @@ test("old nutrition read failure does not display an error or change readiness i
   readIo = () => read.promise;
   const { auth, h, initial, errors, handlers } = nutritionLoaderContext();
   const loading = handlers.loadNutritionFromFirebase("A");
+  await Promise.resolve(); // The shared resource starts its I/O on a microtask.
   transition(auth, { uid: "B" });
   read.reject(new Error("unavailable"));
   await loading;

@@ -19,8 +19,6 @@ export function loadCssVariant() {
   document.documentElement.dataset.cssVariant = variant;
   document.body.dataset.cssVariant = variant;
 
-  return Promise.all([
-    isCssV2 ? import("./CssVariantPreview.module.css") : Promise.resolve(),
-    import("../components/trainer/TrainerWorkspaceV2.module.css")
-  ]);
+  // Role-specific styles travel with the trainer routes, not every login.
+  return isCssV2 ? import("./CssVariantPreview.module.css") : Promise.resolve();
 }

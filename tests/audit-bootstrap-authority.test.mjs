@@ -93,6 +93,15 @@ test("deferred remote profile callback preserves a new account's draft", async (
   assert.equal(update(nextDraft), nextDraft);
 });
 
+test("pending open registrations resolve to a locked role without hydrating client data", async () => {
+  profileRead = async () => snapshot({ role: "client", active: true, accountRegistrationType: "open", accountAccessStatus: "awaiting_trainer" });
+  const h = harness();
+  assert.equal(await loadRemoteUserBootstrapState(h.options), "pending-client");
+  assert.equal(h.updates.find(([name]) => name === "setCurrentUserRole")[1], "pending-client");
+  assert.equal(h.updates.find(([name]) => name === "setPage")[1], "main");
+  assert.equal(h.updates.some(([name]) => name === "setPlan"), false);
+});
+
 test("deferred cached profile callback preserves a new account's draft", () => {
   const h = harness();
   h.options.safeReadUserJsonStorage = (key, _uid, fallback) => key === "profile" ? { name: "A", weight: "81" } : fallback;

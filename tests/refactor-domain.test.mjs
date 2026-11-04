@@ -40,6 +40,7 @@ test("workout finish summary builds stats and progress copy", () => {
     totalSetsDone: 14,
     totalVolumeDone: 12345.6,
     volumeProgress: 8,
+    isWorkoutSaved: true,
     workoutHistorySyncState: "synced"
   });
 
@@ -52,7 +53,7 @@ test("workout finish summary builds stats and progress copy", () => {
   assert.match(summary.stats[3].value, /12\s346 кг/);
   assert.match(summary.progressText, /объём \+8%/);
   assert.match(summary.adviceText, /Восстановись/);
-  assert.equal(summary.syncText, "Синхронизировано");
+  assert.match(summary.syncText, /Сохранено в облаке/);
 });
 
 test("workout finish summary handles first saved point", () => {
@@ -67,7 +68,8 @@ test("workout finish summary handles first saved point", () => {
   assert.deepEqual(summary.stats, [{ label: "Время", value: "меньше минуты" }]);
   assert.equal(summary.progressText, "Первая точка прогресса сохранена.");
   assert.match(summary.adviceText, /заполни вес/);
-  assert.equal(summary.syncText, "Сохранено локально · ждёт синхронизации");
+  assert.match(summary.syncText, /Сохранено на устройстве/);
+  assert.match(summary.syncText, /ещё не подтверждена/);
 });
 
 test("explicit workout duration remains the preferred estimate", () => {

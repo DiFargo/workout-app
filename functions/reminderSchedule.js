@@ -152,6 +152,13 @@ export function getDueProgressReminderTypes(calendar = {}, lastActivity = {}, no
       lastDateKey: lastActivity.photoDateKey
     },
     {
+      type: "weight",
+      enabled: settings.weightEnabled === true || calendar.weightReminderEnabled === true,
+      title: "Взвешивание",
+      intervalDays: Math.max(1, Number(settings.weightIntervalDays || calendar.weightReminderIntervalDays || settings.intervalDays || calendar.progressReminderIntervalDays || 7) || 7),
+      lastDateKey: lastActivity.weightDateKey
+    },
+    {
       type: "measurements",
       enabled: settings.measurementsEnabled === true || calendar.measurementsReminderEnabled === true,
       title: "Замеры",

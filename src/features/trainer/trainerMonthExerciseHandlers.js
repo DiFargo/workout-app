@@ -1,14 +1,11 @@
-import {
-  exerciseUsesExternalWeight,
-  findExerciseLibraryMatch
-} from "../../utils/auditSafety";
+import { findExerciseLibraryMatch } from "../../utils/auditSafety";
 import { appendExerciseSets } from "./trainerExerciseSetUtils";
-import { getTrainerExercisePresentationIdentity } from "./trainerWorkoutEditHelpers";
+import { getTrainerExerciseSelectionPatch, resolveTrainerLibraryExercise } from "./trainerWorkoutEditHelpers";
 import { sanitizeExerciseSetPatch } from "../../utils/exerciseWeightInput";
 
 export function createTrainerMonthExerciseHandlers({
   adminExerciseEditSnapshotRef,
-  adminExerciseSearch,
+  getAdminExerciseEditSnapshotRef = () => adminExerciseEditSnapshotRef,
   adminExerciseLibrary,
   monthWorkouts,
   saveMonthProgramToLibrary,
@@ -33,29 +30,25 @@ export function createTrainerMonthExerciseHandlers({
   }
 
   function addMonthExercise(blockId, weekId, workoutId, sourceExercise = null, openEditor = true) {
-    const newExerciseId = `exercise_${Date.now()}`;
-    const exerciseName = String(sourceExercise?.name || adminExerciseSearch || "Новое упражнение").trim() || "Новое упражнение";
-    const libraryExercise = sourceExercise || findExerciseLibraryMatch(adminExerciseLibrary, exerciseName);
-    const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
+    const libraryExercise = resolveTrainerLibraryExercise(sourceExercise, adminExerciseLibrary);
+    const sourceWorkout = monthWorkouts.find((workout) => workout.id === workoutId);
+    if (!libraryExercise || !sourceWorkout) return false;
+    const newExerciseId = `exercise_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const newExercise = {
+      id: newExerciseId,
+      ...getTrainerExerciseSelectionPatch(libraryExercise),
+      sets: [{ reps: 8, weight: "" }]
+    };
     updateMonthWorkout(blockId, weekId, workoutId, {
       exercises: [
-        ...((monthWorkouts.find((workout) => workout.id === workoutId)?.exercises) || []),
-        {
-          id: newExerciseId,
-          ...getTrainerExercisePresentationIdentity(libraryExercise),
-          name: exerciseName,
-          video: libraryVideo,
-          videoAutoFilledFrom: libraryVideo ? libraryExercise.name : "",
-          requiresWeight: exerciseUsesExternalWeight(libraryExercise || { name: exerciseName }),
-          sets: [{ reps: 8, weight: "" }]
-        }
+        ...(sourceWorkout.exercises || []), newExercise
       ]
     });
     if (!openEditor) {
       setAdminExerciseSearch("");
-      return;
+      return newExercise;
     }
-    adminExerciseEditSnapshotRef.current = {
+    getAdminExerciseEditSnapshotRef().current = {
       isNew: true,
       blockId,
       weekId,
@@ -71,10 +64,11 @@ export function createTrainerMonthExerciseHandlers({
         block: "center"
       });
     });
+    return newExercise;
   }
 
   function openMonthExerciseEditor(blockId, weekId, workoutId, exercise) {
-    adminExerciseEditSnapshotRef.current = {
+    getAdminExerciseEditSnapshotRef().current = {
       isNew: false,
       blockId,
       weekId,
@@ -89,7 +83,7 @@ export function createTrainerMonthExerciseHandlers({
   }
 
   function cancelMonthExerciseEdit() {
-    const snapshot = adminExerciseEditSnapshotRef.current;
+    const snapshot = getAdminExerciseEditSnapshotRef().current;
     if (!snapshot) {
       setAdminSelectedExerciseId("");
       return;
@@ -107,14 +101,14 @@ export function createTrainerMonthExerciseHandlers({
       );
     }
 
-    adminExerciseEditSnapshotRef.current = null;
+    getAdminExerciseEditSnapshotRef().current = null;
     setAdminSelectedExerciseId("");
   }
 
   async function saveMonthExerciseEdit() {
     const saved = await saveMonthProgramToLibrary();
     if (!saved) return;
-    adminExerciseEditSnapshotRef.current = null;
+    getAdminExerciseEditSnapshotRef().current = null;
     setAdminSelectedExerciseId("");
   }
 
@@ -186,24 +180,9 @@ export function createTrainerMonthExerciseHandlers({
 
   function updateMonthExerciseName(blockId, weekId, workoutId, exercise, name) {
     const libraryExercise = findExerciseLibraryMatch(adminExerciseLibrary, name, exercise.id);
-    const libraryVideo = libraryExercise?.video || libraryExercise?.videoUrl || libraryExercise?.videoURL || "";
-    const patch = { name };
-
-    if (libraryExercise) {
-      Object.assign(patch, getTrainerExercisePresentationIdentity(libraryExercise));
-      patch.requiresWeight = exerciseUsesExternalWeight(libraryExercise);
-      patch.usesWeight = exerciseUsesExternalWeight(libraryExercise);
-    }
-
-    if (libraryVideo && (!exercise.video || exercise.videoAutoFilledFrom)) {
-      patch.video = libraryVideo;
-      patch.videoAutoFilledFrom = libraryExercise.name;
-    } else if (exercise.videoAutoFilledFrom && !libraryVideo) {
-      patch.video = "";
-      patch.videoAutoFilledFrom = "";
-    }
-
-    updateMonthExercise(blockId, weekId, workoutId, exercise.id, patch);
+    if (!libraryExercise || !resolveTrainerLibraryExercise(libraryExercise, adminExerciseLibrary)) return false;
+    updateMonthExercise(blockId, weekId, workoutId, exercise.id, getTrainerExerciseSelectionPatch(libraryExercise, exercise));
+    return true;
   }
 
   function duplicateMonthExercise(blockId, weekId, workoutId, exerciseId) {
@@ -214,7 +193,7 @@ export function createTrainerMonthExerciseHandlers({
     const duplicatedExercise = {
       ...sourceExercise,
       id: `exercise_${stamp}`,
-      name: `${sourceExercise.name || "Упражнение"} — копия`,
+      name: sourceExercise.name || "Упражнение",
       sets: (sourceExercise.sets || []).map((set, setIndex) => ({
         ...set,
         ...(set?.id ? { id: `set_${stamp}_${setIndex}` } : {})

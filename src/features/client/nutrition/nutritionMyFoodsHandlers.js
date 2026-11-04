@@ -1,6 +1,7 @@
 import { runTransaction } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { mergeDeletionTimes, mergeMyFoods } from "../../../utils/nutritionSyncModel.js";
+import { assertNutritionDocumentBudget } from "../../../utils/nutritionDocumentBudget.js";
 
 import { makePersonalFoodKey } from "../../../utils/nutritionFoodModel";
 import {
@@ -82,7 +83,9 @@ export function createNutritionMyFoodsHandlers({
       const snapshot = await transaction.get(ref);
       const current = snapshot.exists() ? snapshot.data() : {};
       const deleted = mergeDeletionTimes(current.deletedMyFoods, deletedMyFoods);
-      transaction.set(ref, { ...current, ...payload, deletedMyFoods: deleted, myFoods: mergeMyFoods(current.myFoods, payload.myFoods, deleted) });
+      const next = { ...current, ...payload, deletedMyFoods: deleted, myFoods: mergeMyFoods(current.myFoods, payload.myFoods, deleted) };
+      assertNutritionDocumentBudget(next);
+      transaction.set(ref, next);
     })
       .then(() => removeUserLocalBackup(GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY, uid, backupId))
       .catch((error) => {

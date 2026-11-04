@@ -1,4 +1,7 @@
 import styles from "./appFeedback.module.css";
+import { registerModalBackLayer } from "../shared/hooks/modalBackNavigation.js";
+
+let closeActiveConfirm = null;
 
 function getAppErrorPreset(type = "api") {
   const presets = {
@@ -29,6 +32,10 @@ function getAppErrorPreset(type = "api") {
     load: {
       title: "Не удалось загрузить данные",
       text: "Проверь интернет или попробуй обновить страницу."
+    },
+    logout: {
+      title: "Не удалось выйти",
+      text: "Аккаунт остаётся открыт. Попробуй выйти ещё раз."
     }
   };
 
@@ -44,6 +51,8 @@ export function showAppError(type = "api", customText = "") {
 
   const toast = document.createElement("div");
   toast.className = `appErrorToast appErrorToast--${type}`;
+  toast.setAttribute("role", "alert");
+  toast.setAttribute("aria-atomic", "true");
 
   const title = document.createElement("div");
   title.className = "appErrorToastTitle";
@@ -76,10 +85,11 @@ export function showAppConfirm(messageOrOptions = "", maybeOptions = {}) {
   const cancelText = options.cancelText || "Отмена";
   const danger = Boolean(options.danger || /удал|сброс/i.test(bodyText));
 
+  closeActiveConfirm?.(false);
   const existing = document.querySelector(".appConfirmOverlay");
   if (existing) existing.remove();
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const overlay = document.createElement("div");
     overlay.className = styles.confirmOverlay;
 
@@ -111,11 +121,18 @@ export function showAppConfirm(messageOrOptions = "", maybeOptions = {}) {
     confirmButton.textContent = confirmText;
 
     let resolved = false;
+    let releaseBackLayer = null;
+    const cleanup = () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      releaseBackLayer?.();
+      releaseBackLayer = null;
+      overlay.remove();
+      if (closeActiveConfirm === close) closeActiveConfirm = null;
+    };
     const close = (value) => {
       if (resolved) return;
       resolved = true;
-      document.removeEventListener("keydown", handleKeyDown);
-      overlay.remove();
+      cleanup();
       resolve(value);
     };
     const handleKeyDown = (event) => {
@@ -127,12 +144,19 @@ export function showAppConfirm(messageOrOptions = "", maybeOptions = {}) {
     overlay.addEventListener("click", (event) => {
       if (event.target === overlay) close(false);
     });
-    document.addEventListener("keydown", handleKeyDown);
-
-    actions.append(cancelButton, confirmButton);
-    dialog.append(title, text, actions);
-    overlay.append(dialog);
-    document.body.appendChild(overlay);
-    cancelButton.focus({ preventScroll: true });
+    try {
+      document.addEventListener("keydown", handleKeyDown);
+      actions.append(cancelButton, confirmButton);
+      dialog.append(title, text, actions);
+      overlay.append(dialog);
+      document.body.appendChild(overlay);
+      releaseBackLayer = registerModalBackLayer(() => close(false));
+      closeActiveConfirm = close;
+      cancelButton.focus({ preventScroll: true });
+    } catch (error) {
+      resolved = true;
+      cleanup();
+      reject(error);
+    }
   });
 }

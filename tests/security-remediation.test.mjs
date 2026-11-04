@@ -25,8 +25,10 @@ const source = {
     export const onCall = (_options, handler) => handler;`,
   "firebase-functions/v2/scheduler": "export const onSchedule = (_options, handler) => handler;",
   "firebase-functions/v2/firestore": "export const onDocumentCreated = (_options, handler) => handler; export const onDocumentDeleted = onDocumentCreated;",
+  "firebase-functions/v2/storage": "export const onObjectFinalized = (_options, handler) => handler;",
   "firebase-functions/params": `export const defineBoolean = (_name, options) => ({ value: () => options.default });
-    export const defineString = (_name, options) => ({ value: () => options.default });
+    export const storageBucket = { value: () => "demo-security-remediation.firebasestorage.app" };
+    export const defineString = (name, options) => ({ value: () => name === "WORKOUT_WEB_API_KEY" ? "synthetic-web-api-key" : options.default });
     export const defineSecret = () => ({ value: globalThis[${JSON.stringify(token)}].secret });`
 };
 const hook = registerHooks({ resolve(specifier, context, next) {
@@ -43,34 +45,57 @@ function createFixture(extraDocs = {}) {
     "users/client": { role: "client", email: "client@example.test", loginLower: "clientlogin", trainerId: "trainer" },
     "users/trainer": { role: "trainer" }, ...extraDocs
   }).map(([path, data]) => [path, structuredClone(data)]));
-  const calls = [], bucketNames = [], storageFiles = new Set();
+  const calls = [], bucketNames = [], storageFiles = new Set(), createTimes = new Map();
   const authUsers = new Map([...docs].filter(([path]) => /^users\/[^/]+$/.test(path)).map(([path, data]) => {
     const uid = path.split("/")[1];
     return [uid, { uid, email: data.email, customClaims: { admin: data.role === "admin", keep: "preserved" }, tokensValidAfterTime: "1970-01-01T00:00:00Z" }];
   }));
   const tokens = new Map([...authUsers].map(([uid, user]) => [uid, { uid, admin: user.customClaims.admin, auth_time: 400 }]));
-  const f = { docs, calls, authUsers, tokens, bucketNames, storageFiles, telegramToken: "synthetic-bot-token",
+  const f = { docs, calls, authUsers, tokens, bucketNames, storageFiles, createTimes, telegramToken: "synthetic-bot-token",
     failStoragePrefix: "", failRecursiveDeleteAfterRemoval: false, failCompletedWrite: false, failRevoke: false };
   function write(path, patch, options = {}) {
     if (f.failCompletedWrite && path.startsWith("accountDeletions/") && patch.status === "completed") {
       f.failCompletedWrite = false; throw new Error("Synthetic completion write failure");
     }
-    const data = options.merge ? { ...docs.get(path) } : {};
-    for (const [key, value] of Object.entries(patch)) {
-      if (value?.deleteField) delete data[key]; else data[key] = structuredClone(value);
-    }
+    const data = options.merge || options.mergeFields ? structuredClone(docs.get(path) || {}) : {};
+    const assign = (target, parts, value) => {
+      const key = parts[0];
+      if (parts.length > 1) {
+        if (!target[key] || typeof target[key] !== "object") target[key] = {};
+        assign(target[key], parts.slice(1), value);
+      } else if (value?.deleteField) delete target[key];
+      else target[key] = structuredClone(value);
+    };
+    const merge = (target, update) => {
+      for (const [key, value] of Object.entries(update)) {
+        if (value?.deleteField) delete target[key];
+        else if (value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).length) {
+          if (!target[key] || typeof target[key] !== "object" || Array.isArray(target[key])) target[key] = {};
+          merge(target[key], value);
+        } else target[key] = structuredClone(value);
+      }
+    };
+    // Firestore merge:true writes nested leaves; mergeFields:["telegram"]
+    // replaces that complete map. Shallow spread concealed unlink regressions.
+    if (options.mergeFields) {
+      for (const field of options.mergeFields) assign(data, field.split("."), valueAt(patch, field));
+    } else if (options.merge) merge(data, patch);
+    else merge(data, patch);
     docs.set(path, data); calls.push(["set", path, structuredClone(patch)]);
   }
   function snapshot(path) {
-    return { id: path.split("/").at(-1), ref: doc(path), exists: docs.has(path), data: () => structuredClone(docs.get(path)) };
+    const data = structuredClone(docs.get(path));
+    return { id: path.split("/").at(-1), ref: doc(path), exists: docs.has(path),
+      createTime: createTimes.get(path), data: () => structuredClone(data) };
   }
   function doc(path) {
     return { path, get: async () => snapshot(path), set: async (data, options) => write(path, data, options),
       delete: async () => { calls.push(["delete", path]); docs.delete(path); }, collection: (name) => collection(`${path}/${name}`) };
   }
   function collection(path, filters = [], max = Infinity) {
-    return { doc: (id) => doc(`${path}/${id}`),
+    return { doc: (id = `auto-${calls.length}`) => doc(`${path}/${id}`),
       where: (key, op, value) => { assert.equal(op, "=="); return collection(path, [...filters, [key, value]], max); },
+      orderBy: () => collection(path, filters, max),
       limit: (limit) => collection(path, filters, limit),
       get: async () => {
         calls.push(["query", path, filters]);
@@ -82,7 +107,15 @@ function createFixture(extraDocs = {}) {
   }
   f.db = { collection, doc,
     batch: () => { const queued = []; return { set: (...args) => queued.push(args), commit: async () => { for (const [ref, data, options] of queued) write(ref.path, data, options); } }; },
-    runTransaction: async (fn) => fn({ get: (ref) => ref.get(), set: (ref, data, options) => write(ref.path, data, options) }),
+    runTransaction: async (fn) => {
+      const writes = [];
+      const result = await fn({ get: (ref) => ref.get(),
+        set: (ref, data, options) => writes.push(() => write(ref.path, data, options)),
+        create: (ref, data) => writes.push(() => write(ref.path, data)),
+        delete: (ref) => writes.push(() => { calls.push(["delete", ref.path]); docs.delete(ref.path); }) });
+      writes.forEach(commit => commit());
+      return result;
+    },
     recursiveDelete: async (ref) => {
       calls.push(["recursiveDelete", ref.path]);
       for (const path of [...docs.keys()]) if (path === ref.path || path.startsWith(ref.path + "/")) docs.delete(path);
@@ -102,6 +135,7 @@ function createFixture(extraDocs = {}) {
       if (!authUsers.has(uid)) throw Object.assign(new Error("Missing account"), { code: "auth/user-not-found" });
       return structuredClone(authUsers.get(uid));
     },
+    updateUser: async (uid, patch) => Object.assign(authUsers.get(uid), patch),
     setCustomUserClaims: async (uid, claims) => { calls.push(["setCustomUserClaims", uid]); authUsers.get(uid).customClaims = claims; },
     revokeRefreshTokens: async (uid) => {
       calls.push(["revokeRefreshTokens", uid]); if (f.failRevoke) throw new Error("Synthetic Auth unavailable");
@@ -111,7 +145,8 @@ function createFixture(extraDocs = {}) {
   };
   f.bucket = { deleteFiles: async (options) => {
     calls.push(["deleteFiles", options]);
-    assert.equal(docs.get("users/client")?.accessDisabled ?? true, true, "uploads must be blocked before Storage cleanup");
+    const targetUid = options.prefix.split("/")[1];
+    assert.equal(docs.get(`users/${targetUid}`)?.accessDisabled ?? true, true, "uploads must be blocked before Storage cleanup");
     if (f.failStoragePrefix === options.prefix) { f.failStoragePrefix = ""; throw new Error("Synthetic Storage unavailable"); }
     for (const path of [...storageFiles]) if (path.startsWith(options.prefix)) storageFiles.delete(path);
   } };
@@ -119,6 +154,12 @@ function createFixture(extraDocs = {}) {
   return f;
 }
 const callable = (uid, data, auth_time = 400) => ({ auth: { uid, token: { admin: true, auth_time } }, data });
+function seedTelegramLinkCode(f, { uid = "client", code, ...options }) {
+  const hash = crypto.createHash("sha256").update(code).digest("hex");
+  f.docs.set(`telegramLinkCodes/${hash}`, { uid, status: "active", createdByUid: uid,
+    expiresAt: "2099-01-01T00:00:00Z", ...options });
+  f.docs.set(`telegramLinkCodes/owner_${uid}`, { uid, activeCodeHash: hash });
+}
 async function http(name, body = {}, uid = "adminA", extra = {}) {
   const res = { status(code) { this.code = code; return this; }, set() { return this; }, send(payload) { this.payload = JSON.parse(payload); return this; } };
   await handlers[name]({ method: "POST", headers: { authorization: `Bearer ${uid}` }, body, ...extra }, res);
@@ -188,8 +229,176 @@ async function telegram(message, secret) {
   return http("telegramWebhook", { message }, "", { headers: { "x-telegram-bot-api-secret-token": secret ?? expected } });
 }
 const privateMessage = () => ({ from: { id: 123 }, chat: { id: 123, type: "private" }, message_id: 456, text: "Личное сообщение" });
+test("private Telegram /start points to the persistent menu without a duplicate Mini App button", async (t) => {
+  createFixture();
+  let sentPayload = null;
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    sentPayload = JSON.parse(init.body);
+    return { ok: true, json: async () => ({ ok: true, result: { message_id: 789 } }) };
+  });
+
+  const result = await telegram({
+    ...privateMessage(),
+    from: { id: 123, first_name: "Илья" },
+    text: "/start"
+  });
+
+  assert.equal(result.status, 200);
+  assert.match(sentPayload.text, /Привет, Илья!/);
+  assert.match(sentPayload.text, /помощник по тренировкам и прогрессу/);
+  assert.equal(sentPayload.parse_mode, "HTML");
+  assert.match(sentPayload.text, /«Открыть приложение» слева от поля сообщения/);
+  assert.equal(sentPayload.reply_markup, undefined);
+});
+
+test("plain /start connects the private bot chat to one already-linked active account", async (t) => {
+  const f = createFixture({
+    "users/client": {
+      role: "client",
+      telegramConnected: true,
+      telegramUserId: "123",
+      telegram: { connected: true, telegramUserId: "123", notificationsEnabled: true }
+    },
+    "telegramIdentities/123": { uid: "client", telegramUserId: "123" }
+  });
+  let sentPayload = null;
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    sentPayload = JSON.parse(init.body);
+    return { ok: true, json: async () => ({ ok: true, result: { message_id: 790 } }) };
+  });
+
+  const result = await telegram({ ...privateMessage(), text: "/start" });
+
+  assert.equal(result.status, 200);
+  assert.equal(f.docs.get("users/client").telegram.chatId, "123");
+  assert.equal(f.docs.get("users/client").telegramChatId, "123");
+  assert.match(sentPayload.text, /Telegram подключён/);
+});
+
+test("plain /start never auto-links a Telegram identity shared by multiple accounts", async (t) => {
+  const f = createFixture({
+    "users/client": { role: "client", telegramUserId: "123", telegram: { telegramUserId: "123" } },
+    "users/another-client": { role: "client", telegramUserId: "123", telegram: { telegramUserId: "123" } }
+  });
+  let sentPayload = null;
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    sentPayload = JSON.parse(init.body);
+    return { ok: true, json: async () => ({ ok: true, result: { message_id: 791 } }) };
+  });
+
+  await telegram({ ...privateMessage(), text: "/start" });
+
+  assert.equal(f.docs.get("users/client").telegram.chatId, undefined);
+  assert.equal(f.docs.get("users/another-client").telegram.chatId, undefined);
+  assert.match(sentPayload.text, /Профиль → Telegram/);
+});
+
+test("Telegram help and settings commands reply privately with a clear app entry point", async (t) => {
+  const f = createFixture({
+    "users/client": {
+      role: "client",
+      telegram: { connected: true, chatId: "123", telegramUserId: "123" },
+      telegramChatId: "123",
+      telegramUserId: "123"
+    }
+  });
+  const sentPayloads = [];
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    sentPayloads.push(JSON.parse(init.body));
+    return { ok: true, json: async () => ({ ok: true, result: { message_id: sentPayloads.length } }) };
+  });
+
+  for (const [text, heading] of [
+    ["/help@zmena_teleg_bot", "Как начать"],
+    ["настройки", "Настройки напоминаний"],
+    ["/app", "Приложение ZMENA"]
+  ]) {
+    assert.equal((await telegram({ ...privateMessage(), text })).status, 200);
+    assert.match(sentPayloads.at(-1).text, new RegExp(heading));
+    assert.equal(sentPayloads.at(-1).parse_mode, "HTML");
+    assert.equal(sentPayloads.at(-1).reply_markup, undefined);
+  }
+
+  assert.equal([...f.docs.keys()].filter((path) => path.includes("telegramMessages")).length, 0);
+  assert.equal((await telegram({ ...privateMessage(), chat: { id: -12, type: "group" }, text: "/help" })).status, 200);
+  assert.equal(sentPayloads.length, 3, "group commands must not receive a personal bot reply");
+});
+
+test("due progress reminders point to the existing menu without another Mini App button", async (t) => {
+  const now = new Date();
+  const timeParts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Minsk", hour: "2-digit", minute: "2-digit", hour12: false
+  }).formatToParts(now);
+  const reminderTime = `${timeParts.find((part) => part.type === "hour")?.value}:${timeParts.find((part) => part.type === "minute")?.value}`;
+  createFixture({
+    "users/client": {
+      role: "client",
+      telegramConnected: true,
+      telegram: { chatId: "123", telegramUserId: "123", notificationsEnabled: true },
+      workoutCalendar: {
+        progressReminderSettings: {
+          photoEnabled: true,
+          weightEnabled: true,
+          measurementsEnabled: true,
+          photoIntervalDays: 14,
+          weightIntervalDays: 7,
+          measurementsIntervalDays: 30,
+          reminderTime,
+          startedAt: "2026-09-01"
+        }
+      }
+    }
+  });
+  const sentPayloads = [];
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    sentPayloads.push(JSON.parse(init.body));
+    return { ok: true, json: async () => ({ ok: true, result: { message_id: sentPayloads.length } }) };
+  });
+
+  await handlers.telegramDailyWorkoutReminders();
+
+  assert.equal(sentPayloads.length, 3);
+  assert.ok(sentPayloads.every((payload) => payload.parse_mode === "HTML"));
+  assert.ok(sentPayloads.every((payload) => payload.reply_markup === undefined));
+  assert.ok(sentPayloads.every((payload) => /«Открыть приложение» слева от поля сообщения/.test(payload.text)));
+  assert.ok(sentPayloads.some((payload) => /фото прогресса/i.test(payload.text)));
+  assert.ok(sentPayloads.some((payload) => /взвеситься/i.test(payload.text)));
+  assert.ok(sentPayloads.some((payload) => /замеры тела/i.test(payload.text)));
+});
+
+test("workout reminder delivery formats the message and refers to the persistent menu", async (t) => {
+  createFixture({
+    "users/client": {
+      role: "client",
+      telegramConnected: true,
+      telegramNotificationsEnabled: true,
+      telegram: { chatId: "123", telegramUserId: "123", notificationsEnabled: true },
+      workoutCalendar: {}
+    },
+    "users/client/workouts/day_1": { name: "Ноги <A&B>", exercises: [{}, {}] }
+  });
+  let sentPayload = null;
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    sentPayload = JSON.parse(init.body);
+    return { ok: true, json: async () => ({ ok: true, result: { message_id: 321 } }) };
+  });
+
+  const result = await http("telegramTestWorkoutReminder", {}, "client");
+
+  assert.equal(result.status, 200);
+  assert.match(sentPayload.text, /Проверка напоминаний/);
+  assert.match(sentPayload.text, /Ноги &lt;A&amp;B&gt;/);
+  assert.match(sentPayload.text, /В плане 2 упражнения/);
+  assert.equal(sentPayload.parse_mode, "HTML");
+  assert.match(sentPayload.text, /«Открыть приложение» — слева от поля сообщения/);
+  assert.equal(sentPayload.reply_markup, undefined);
+});
+
 test("Telegram accepts linked private text and excludes group/channel/foreign/unlinked/inactive sources", async () => {
-  const f = createFixture({ "users/client": { role: "client", telegram: { telegramUserId: "123", chatId: "123", connected: true } } });
+  const f = createFixture({
+    "users/client": { role: "client", telegram: { telegramUserId: "123", chatId: "123", connected: true } },
+    "telegramIdentities/123": { uid: "client", telegramUserId: "123" }
+  });
   assert.equal((await telegram(privateMessage())).status, 200);
   const messages = () => [...f.docs].filter(([path]) => path.startsWith("users/client/telegramMessages/"));
   assert.equal(messages().length, 1); assert.equal(messages()[0][1].text, "Личное сообщение");
@@ -208,6 +417,7 @@ test("Telegram accepts linked private text and excludes group/channel/foreign/un
 test("Telegram private /start linking still works and consumes the code", async (t) => {
   const code = "123456789012345678901234";
   const f = createFixture({ "users/client": { role: "client", telegramLinkCode: code, telegramLinkCodeExpiresAt: "2099-01-01T00:00:00Z" } });
+  seedTelegramLinkCode(f, { code });
   t.mock.method(globalThis, "fetch", async () => ({ ok: true, json: async () => ({ ok: true, result: { photos: [] } }) }));
   await telegram({ ...privateMessage(), text: `/start ${code}` });
   const profile = f.docs.get("users/client");
@@ -221,7 +431,7 @@ function deletionFixture() {
   const f = createFixture({
     "users/client/history/one": { value: "private" }, "users/trainer/trainerClients/client": { name: "Client" },
     "loginAliases/clientlogin": { uid: "client" }, "clientInvites/client@example.test": { authUid: "client" },
-    "inviteLinks/link": { email: "client@example.test" }
+    "inviteLinks/link": { email: "client@example.test", uid: "client" }
   });
   for (const path of ["users/client/profile/avatar.png", "progress-photos/client/session/front.webp", "feedback/client/one/file.pdf", "telegram-avatars/client/avatar.jpg", "progress-photos/client-other/session/front.webp", "users/trainer/profile/avatar.png", "exercise-videos/client/program/video.mp4", "template-exercise-videos/trainer/program/video.mp4"]) f.storageFiles.add(path);
   return f;
@@ -276,4 +486,4 @@ test("client deletion rejects self, non-client, malformed UID and non-admin befo
 
 // Share only synthetic I/O fixtures with the independently added avatar race
 // regressions; both suites continue importing the actual production handlers.
-export { handlers, createFixture, deletionFixture, http };
+export { handlers, createFixture, deletionFixture, http, seedTelegramLinkCode };

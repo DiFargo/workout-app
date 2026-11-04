@@ -14,6 +14,21 @@ import { getExerciseActualProgress } from "../src/utils/exerciseProgress.js";
 
 const context = { uid: "trainer", role: "trainer" };
 const movement = { id: "press", name: "Жим ногами", video: "https://example.test/old.mp4", technique: "Исходная техника", rest: "100 сек", requiresWeight: true, sets: Array.from({ length: 3 }, () => ({ reps: 12, weight: 110 })) };
+
+test("exercise video metadata accepts only app-bucket allowlisted gs objects, never gs poster/image fields", async () => {
+  const db = exerciseCardDatabase({});
+  const source = "gs://tren-85720.firebasestorage.app/exercise-videos/trainer/program/Жим.mp4";
+  const result = await manageTrainerExerciseCards({ db, context, body: { action: "create", patch: { name: "Жим", video: source } } });
+  assert.equal(result.card.video, source);
+  for (const patch of [
+    { video: "gs://other-project.firebasestorage.app/exercise-videos/one.mp4" },
+    { video: "gs://tren-85720.firebasestorage.app/users/client/private.mp4" },
+    { video: "gs://tren-85720.firebasestorage.app/exercise-videos/../workout-videos/one.mp4" },
+    { videoPoster: source }, { videoThumbnail: source }
+  ]) {
+    await assert.rejects(manageTrainerExerciseCards({ db, context, body: { action: "create", patch: { name: "Invalid", ...patch } } }), { status: 400 });
+  }
+});
 function fixture() {
   const template = { id: "template", ownerUid: "trainer", workouts: [{ id: "day", exercises: [structuredClone(movement)] }] };
   const second = { ...structuredClone(template), id: "second" };

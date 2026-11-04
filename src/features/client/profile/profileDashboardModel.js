@@ -1,6 +1,12 @@
 import { isWorkoutPlanForMode } from "../../../utils/workoutPlanMode.js";
 import { getWorkoutScheduleCalendarForWorkouts, normalizeWorkoutCalendarSchedule } from "../../../utils/workoutSchedule.js";
 import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
+import { getClientReminderSettings } from "../../../utils/clientReminderSettings.js";
+import { getProfileBodyMeasurementCheckInState, getProfileProgressPhotoCheckInState } from "./profileDashboardTasks.js";
+import { getProfileOverviewMeasurements } from "../../../utils/profileOverviewMeasurements.js";
+import { getClientWorkoutCompletionHistory } from "../../../utils/clientWorkoutEvidence.js";
+import { isBodyMeasurementRecord } from "../../../utils/bodyMeasurementRecords.js";
+import { getDashboardEmptyWorkoutAction } from "./profileDashboardPresentation.js";
 
 export function getTimeOfDayGreeting(date = new Date()) {
   const hour = date instanceof Date && Number.isFinite(date.getTime())
@@ -148,9 +154,10 @@ export function buildProfileDashboardModel(ctx) {
     getProfileNextTrainingText,
     getProgramHistoryItems,
     getTimestampValue,
-    history,
+    history: fullHistory,
     makeEmptyNutritionDay,
     nutrition,
+    nutritionHistoryReady = true,
     nutritionCalendarDays,
     nutritionDateKey,
     nutritionKeyToDate,
@@ -159,6 +166,7 @@ export function buildProfileDashboardModel(ctx) {
     profileAccount,
     profileActiveTab,
     profileMeasurements,
+    profileMeasurementSnapshot,
     profileProgressPhotoCompareIds,
     profileProgressPhotoCompareView,
     profileProgressPhotoFiles,
@@ -187,6 +195,8 @@ export function buildProfileDashboardModel(ctx) {
   } = ctx;
 
     const isMainDashboard = page === APP_PAGES.MAIN;
+    const history = isMainDashboard ? getClientWorkoutCompletionHistory(plan, fullHistory) : fullHistory;
+    const overviewMeasurements = getProfileOverviewMeasurements(profileMeasurementSnapshot, profileMeasurements);
     const visibleProfileTab = isMainDashboard
       ? "cabinet"
       : (profileActiveTab === "nutrition" || profileActiveTab === "progress" ? "cabinet" : profileActiveTab);
@@ -196,14 +206,32 @@ export function buildProfileDashboardModel(ctx) {
       ...(aiNutritionProfile || {}),
       ...aiNutritionProfileDraft
     };
-    const bodyMeasurements = (Array.isArray(profileMeasurements) ? profileMeasurements : [])
-      .filter((measurement) => measurement?.measurementType !== "weight_checkin");
+    const bodyMeasurements = overviewMeasurements.filter(isBodyMeasurementRecord);
     const latestProfileMeasurement = bodyMeasurements.length
       ? bodyMeasurements[0]
       : null;
     const latestClientProgressPhoto = Array.isArray(clientProgressPhotos) && clientProgressPhotos.length
       ? clientProgressPhotos[0]
       : null;
+    const progressReminderSettings = getClientReminderSettings(profileWorkoutCalendarData);
+    const measurementsCheckIn = {
+      ...getProfileBodyMeasurementCheckInState(overviewMeasurements, {
+        intervalDays: progressReminderSettings.measurementsIntervalDays
+      }),
+      enabled: progressReminderSettings.measurementsEnabled,
+      ready: !isMainDashboard || (profileMeasurementSnapshot?.kind === "measurements" &&
+        profileMeasurementSnapshot.coverage?.measurements === "complete")
+    };
+    const progressPhotoCheckInState = getProfileProgressPhotoCheckInState(clientProgressPhotos, {
+      intervalDays: progressReminderSettings.photoIntervalDays
+    });
+    const progressPhotoCheckIn = {
+      ...progressPhotoCheckInState,
+      enabled: progressReminderSettings.photoEnabled,
+      latestDateText: progressPhotoCheckInState.latestPhoto
+        ? formatProfileProgressPhotoDate(progressPhotoCheckInState.latestPhoto)
+        : ""
+    };
     const previousClientProgressPhoto = Array.isArray(clientProgressPhotos) && clientProgressPhotos.length > 1
       ? clientProgressPhotos[1]
       : null;
@@ -232,7 +260,7 @@ export function buildProfileDashboardModel(ctx) {
           .map((day) => day.short)
           .join(", ")
       : "не выбраны";
-    const liveNutritionPreviewPlan = buildAiNutritionMonthlyPlan(nutrition, activeProfile, history, null);
+    const liveNutritionPreviewPlan = nutritionHistoryReady ? buildAiNutritionMonthlyPlan(nutrition, activeProfile, fullHistory, null) : null;
     const activePlan = getClientNutritionDisplayPlan(
       {
         aiNutritionPlan: aiNutritionSavedPlan,
@@ -242,7 +270,7 @@ export function buildProfileDashboardModel(ctx) {
       },
       nutrition,
       nutrition.goals
-    ) || liveNutritionPreviewPlan || aiNutritionSavedPlan || (aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, history) : null);
+    ) || liveNutritionPreviewPlan || aiNutritionSavedPlan || (nutritionHistoryReady && aiNutritionProfile ? buildAiNutritionMonthlyPlan(nutrition, aiNutritionProfile, fullHistory) : null);
     const activeWeek = activePlan?.weeks?.[getAiNutritionCurrentWeek(activePlan) - 1] || activePlan?.weeks?.[0];
     const activePlanProfile = activePlan?.profile || activeProfile;
     const activeGoalLabel = activePlan?.goalLabel || getAiNutritionGoalLabel(activePlanProfile?.goal || "recomp");
@@ -252,7 +280,7 @@ export function buildProfileDashboardModel(ctx) {
       ...aiNutritionProfileDraft,
       trainingDays: getAiNutritionTrainingDays(aiNutritionProfileDraft)
     };
-    const profileNutritionDraftPlan = buildAiNutritionMonthlyPlan(nutrition, profileNutritionDraftProfile, history, null);
+    const profileNutritionDraftPlan = nutritionHistoryReady ? buildAiNutritionMonthlyPlan(nutrition, profileNutritionDraftProfile, fullHistory, null) : null;
     const profileNutritionDraftWeek = profileNutritionDraftPlan?.weeks?.[0] || profileNutritionDraftPlan?.start || nutrition.goals;
     const profileNutritionDraftMacros = getAiNutritionDayMacros(profileNutritionDraftWeek, profileNutritionDraftProfile);
     const trainerNotificationCount = getActiveTrainerTasksCount(clientTrainerTasks);
@@ -332,23 +360,11 @@ export function buildProfileDashboardModel(ctx) {
     const hasWorkoutPlan = profileCalendarWorkouts.length > 0;
     const hasPlanInAnotherMode = !hasWorkoutPlan && Array.isArray(plan?.workouts) && plan.workouts.length > 0;
     const hasPendingWorkout = profileWorkoutSlots.some((slot) => !slot.isCompleted);
-    const homeWorkoutAction = !hasWorkoutPlan && hasPlanInAnotherMode
+    const homeWorkoutAction = !hasWorkoutPlan
       ? {
-          state: "choose",
           eyebrow: "ТРЕНИРОВКИ",
-          title: "Выберите режим тренировок",
-          dateText: "У вас уже есть план — выберите, как его открыть",
           exerciseCount: 0,
-          actionLabel: "Выбрать режим"
-        }
-      : !hasWorkoutPlan
-      ? {
-          state: "create",
-          eyebrow: "ТРЕНИРОВКИ",
-          title: "Создайте первый план",
-          dateText: "Выберите формат — приложение подготовит стартовую программу",
-          exerciseCount: 0,
-          actionLabel: "Перейти к тренировке"
+          ...getDashboardEmptyWorkoutAction(selectedWorkoutMode, hasPlanInAnotherMode)
         }
       : !hasPendingWorkout
         ? {
@@ -470,8 +486,10 @@ export function buildProfileDashboardModel(ctx) {
               String(existing.status || "").trim().toLowerCase()
             ) || Boolean(existing.completedDate);
 
+            const redated = { ...existing };
+            delete redated.dateOrderPolicy;
             return {
-              ...existing,
+              ...redated,
               ...entry,
               ...assignmentInfo,
               status: isCompleted ? existing.status || "completed" : entry.status,
@@ -570,11 +588,11 @@ export function buildProfileDashboardModel(ctx) {
     const profileAvatarUrl = profileAccount.avatarUrl || telegramProfile.avatarUrl || auth.currentUser?.photoURL || "";
     const profileStreak = Math.min(30, Math.max(0, totalWorkouts));
     const mainProfileWeight = Number(activeProfile?.weight);
-    const savedMainMeasurementSeries = (Array.isArray(profileMeasurements) ? profileMeasurements : [])
+    const savedMainMeasurementSeries = overviewMeasurements
       .slice(0, 7)
       .reverse()
       .map((measurement) => {
-        const weight = Number(measurement?.weight);
+        const weight = Number(String(measurement?.weight ?? measurement?.values?.weight ?? "").replace(",", "."));
         const dateLabel = formatProfileMeasurementDate(measurement)
           .split(".")
           .slice(0, 2)
@@ -596,17 +614,22 @@ export function buildProfileDashboardModel(ctx) {
       : Number.isFinite(mainProfileWeight) && mainProfileWeight > 0
         ? [{ weight: mainProfileWeight, dateLabel: "Сейчас" }]
         : [];
-    const mainLatestWeight = mainMeasurementSeries.at(-1)?.weight ||
+    const latestSavedWeight = overviewMeasurements.map(item => Number(String(item?.weight ?? item?.values?.weight ?? "").replace(",", ".")))
+      .find(weight => Number.isFinite(weight) && weight > 0);
+    const mainLatestWeight = latestSavedWeight || mainMeasurementSeries.at(-1)?.weight ||
       (Number.isFinite(mainProfileWeight) && mainProfileWeight > 0 ? mainProfileWeight : 0);
     const mainPreviousWeight = mainMeasurementSeries.at(-2)?.weight || 0;
     const mainWeightTrendPeriod = getProfileMeasurementTrendPeriodLabel(
       mainMeasurementSeries.at(-1)?.timestamp,
       mainMeasurementSeries.at(-2)?.timestamp
     );
-    const mainWeightChange = mainLatestWeight && mainPreviousWeight
+    const mainWeightComparisonAvailable = Boolean(mainLatestWeight && mainPreviousWeight);
+    const mainWeightChange = mainWeightComparisonAvailable
       ? mainLatestWeight - mainPreviousWeight
       : 0;
-    const weightCheckInState = getProfileWeightCheckInState(profileMeasurements);
+    const weightCheckInState = getProfileWeightCheckInState(overviewMeasurements, {
+      intervalDays: progressReminderSettings.weightIntervalDays
+    });
     const weightCheckInLatestDateText = weightCheckInState.latestMeasurement
       ? formatProfileMeasurementDate(weightCheckInState.latestMeasurement)
       : "";
@@ -618,21 +641,22 @@ export function buildProfileDashboardModel(ctx) {
       : "";
     const weightCheckIn = {
       ...weightCheckInState,
+      enabled: progressReminderSettings.weightEnabled,
       latestDateText: weightCheckInLatestDateText,
       nextDueDateText: weightCheckInNextDateText,
       cabinetText: weightCheckInState.isDue
         ? (weightCheckInState.isFirst ? "Добавьте первый вес" : "Пора взвеситься")
         : `Следующее взвешивание ${weightCheckInNextDateText}`
     };
-    const progressInsight = buildProgressInsight({
-      history,
-      measurements: bodyMeasurements,
+    const progressInsight = nutritionHistoryReady ? buildProgressInsight({
+      history: fullHistory,
+      measurements: (Array.isArray(profileMeasurements) ? profileMeasurements : []).filter(item => item?.measurementType !== "weight_checkin"),
       nutrition,
       calorieGoal: Number(profileMacros.calories || nutrition.goals.calories),
       proteinGoal: Number(profileMacros.protein || nutrition.goals.protein),
       scheduledDates: dashboardScheduledDates,
       goal: currentGoalId
-    });
+    }) : null;
   return {
     isMainDashboard,
     visibleProfileTab,
@@ -641,6 +665,8 @@ export function buildProfileDashboardModel(ctx) {
     activeProfile,
     latestProfileMeasurement,
     latestClientProgressPhoto,
+    progressPhotoCheckIn,
+    measurementsCheckIn,
     previousClientProgressPhoto,
     selectedClientProgressPhotoBefore,
     selectedClientProgressPhotoAfter,
@@ -717,6 +743,7 @@ export function buildProfileDashboardModel(ctx) {
     mainLatestWeight,
     mainPreviousWeight,
     mainWeightChange,
+    mainWeightComparisonAvailable,
     mainWeightTrendPeriod,
     weightCheckIn,
     progressInsight

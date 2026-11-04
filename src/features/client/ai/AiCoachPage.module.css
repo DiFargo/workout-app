@@ -438,7 +438,7 @@
 .planActions button {
   width: 100%;
   border: 0;
-  background: var(--gradient-ai-coach-primary);
+  background: var(--ownset-action-gradient);
   color: var(--color-ai-coach-primary-text);
   -webkit-text-fill-color: var(--color-ai-coach-primary-text);
   font-family: inherit;
@@ -961,6 +961,18 @@
   font-size: 14px;
   font-weight: 560;
   line-height: 1.4;
+}
+
+:global(:root[data-app-theme="warm-light"]) .resultTop h2,
+:global(:root[data-app-theme="warm-light"]) .miniBlock h3 {
+  font-weight: 700;
+}
+
+:global(:root[data-app-theme="warm-light"]) .resultTop p,
+:global(:root[data-app-theme="warm-light"]) .miniBlock p {
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.5;
 }
 
 :global(:root[data-app-theme="warm-light"]) .resultCard,

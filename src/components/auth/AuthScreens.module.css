@@ -411,6 +411,61 @@
   font-weight: 700;
 }
 
+.loginMethodChoices {
+  display: grid;
+  gap: 8px;
+}
+
+.loginMethodChoices button,
+.loginBackBtn {
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--apple-surface-muted, #efeff4);
+  color: var(--apple-accent, #3c6faa);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
+}
+
+.loginBackBtn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  min-height: 44px;
+  padding-inline: 0;
+  background: transparent;
+}
+
+.loginMethodChoices button:focus-visible,
+.loginBackBtn:focus-visible {
+  outline: 3px solid var(--apple-accent, #3c6faa);
+  outline-offset: 2px;
+}
+
+.loginMethodChoices button:disabled,
+.loginBackBtn:disabled { opacity: .5; cursor: wait; }
+
+.loginPage.loginFormPage,
+:global(html:root[data-app-theme="warm-light"]) .loginPage.loginPage.loginFormPage {
+  justify-content: flex-start;
+  gap: 18px;
+  padding-top: max(20px, env(safe-area-inset-top), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px));
+}
+
+.loginFormPage .loginHero { display: grid; grid-template-columns: 40px auto; align-items: center; gap: 10px; text-align: left; }
+.loginFormPage .appLogo { grid-row: 1 / 3; width: 40px; height: 40px; margin: 0; border-radius: 12px; }
+.loginFormPage .loginHero h1 { font-size: 23px; }
+.loginFormPage .loginHero p { margin: 0; font-size: 12px; }
+.loginFormPage .loginEyebrow { display: none; }
+.loginFormPage .loginAlternate { border: 0; padding: 0; }
+.loginFormPage .loginAlternateForm { margin: 0; }
+
 @media (prefers-reduced-motion: reduce) {
   .loginTelegramBtn {
     transition: none;
@@ -516,7 +571,7 @@
   border: 0;
   background: var(--ownset-action-gradient);
   color: #fff;
-  box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
+  box-shadow: none;
   font-size: 16px;
 }
 
@@ -562,7 +617,7 @@
   cursor: wait;
   background: var(--ownset-action-gradient);
   color: #fff;
-  box-shadow: 0 8px 18px rgba(105, 82, 157, 0.18);
+  box-shadow: none;
 }
 
 .loginHint {
@@ -603,7 +658,7 @@
 :global(html:root[data-app-theme="warm-light"]) .loginBtn.loginBtn {
   background: var(--ownset-action-gradient);
   color: #fff;
-  box-shadow: 0 10px 22px rgba(105, 82, 157, 0.24);
+  box-shadow: none;
 }
 
 :global(html:root[data-app-theme="warm-light"]) .loginCard.loginCard input {
@@ -861,3 +916,146 @@
     display: none;
   }
 }
+
+.loginTelegramMethod {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(60, 111, 170, 0.12);
+  border-radius: 18px;
+  background: #f5f8fb;
+}
+
+.loginMethodHeading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loginMethodHeading > div {
+  min-width: 0;
+}
+
+.loginMethodHeading strong {
+  display: block;
+  color: var(--apple-text, #1c282e);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.loginMethodHeading p {
+  margin: 3px 0 0;
+  color: var(--apple-secondary, #617078);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.loginMethodIcon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #e8f0f5;
+  color: var(--apple-blue-pressed, #315f91);
+}
+
+.loginTelegramInfo {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--apple-secondary, #617078);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.loginTelegramBtn {
+  text-decoration: none;
+}
+
+.loginMethodsDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--apple-secondary, #617078);
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.loginMethodsDivider::before,
+.loginMethodsDivider::after {
+  height: 1px;
+  flex: 1;
+  background: var(--apple-separator, rgba(57, 82, 91, .12));
+  content: "";
+}
+
+.loginGoogleBtn {
+  min-height: 52px;
+  border-color: var(--apple-separator, rgba(57, 82, 91, .16));
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.loginAlternate summary {
+  color: var(--apple-text, #1c282e);
+}
+
+.loginAlternate[open] summary {
+  margin-bottom: 8px;
+}
+
+@media (min-width: 700px) {
+  .loginPage {
+    width: min(100%, 520px);
+    min-height: 100dvh;
+    margin: 0 auto;
+    padding: 40px 28px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+}
+
+@media (min-width: 960px) {
+  .loginPage {
+    display: grid;
+    width: min(100%, 1000px);
+    grid-template-columns: minmax(0, 1fr) minmax(380px, 460px);
+    align-items: center;
+    gap: clamp(48px, 8vw, 100px);
+    padding: 56px 48px;
+  }
+
+  .loginHero {
+    text-align: left;
+  }
+
+  .appLogo {
+    margin: 0 0 22px;
+  }
+
+  .loginHero p {
+    max-width: 320px;
+    margin: 10px 0 0;
+  }
+}
+.privacyLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin: 0 0 8px;
+  color: var(--apple-blue, #3c6faa);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+  text-underline-offset: 3px;
+}
+.privacyLink:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 6px; }

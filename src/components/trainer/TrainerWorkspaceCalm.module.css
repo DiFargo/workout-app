@@ -2293,12 +2293,11 @@
 }
 
 .workspaceRoot :global(.trainerNextLibrary article strong) {
-  overflow: hidden;
+  overflow-wrap: anywhere;
   color: var(--tn-text);
   font-size: 14px;
   font-weight: 720;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .workspaceRoot :global(.trainerNextLibrary article small) {
@@ -2439,6 +2438,65 @@
 
 .workspaceRoot :global(.trainerNextCreateClientModal > .trainerNextModalIcon) {
   margin-left: 18px;
+}
+
+.workspaceRoot :global(.trainerNextModal.trainerNextCreateClientModal > header) {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  padding-right: 64px;
+}
+
+.workspaceRoot :global(.trainerNextCreateClientModal > header .trainerNextModalIcon) {
+  margin: 0;
+  flex: none;
+}
+
+.workspaceRoot :global(.trainerInviteHeaderCopy) { min-width: 0; }
+.workspaceRoot :global(.trainerInviteHeaderCopy h2) { overflow-wrap: normal; word-break: normal; }
+.workspaceRoot :global(.trainerInviteHeaderCopy p) {
+  margin: 8px 0 0;
+  color: var(--tn-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+:global(.trainerNextRoot .trainerNotificationSaveStatus) {
+  position: sticky;
+  top: -12px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 12px;
+  background: var(--tn-surface);
+  color: var(--tn-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+:global(.trainerNextRoot .trainerNotificationSaveStatus[data-save-state="error"]) { color: var(--tn-red); }
+:global(.trainerNextRoot .trainerNotificationSaveStatus button) {
+  flex: none;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--tn-line);
+  border-radius: 10px;
+  background: var(--tn-surface);
+  color: var(--tn-purple-strong);
+  font: inherit;
+  cursor: pointer;
+}
+
+.workspaceRoot :global(.trainerClientFilterDisclosure) { display: none; }
+
+@media (max-width: 699px) {
+  .workspaceRoot :global(.trainerNextModal.trainerNextCreateClientModal > header) { padding: 16px 64px 16px 16px; }
 }
 
 .workspaceRoot :global(.trainerNextMoreBackdrop) {
@@ -2967,7 +3025,7 @@
     bottom: calc(10px + env(safe-area-inset-bottom));
     left: 12px;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     min-height: 68px;
     padding: 6px;
     border: 1px solid rgb(var(--trainer-v2-line-rgb, 239 235 243) / 0.95);

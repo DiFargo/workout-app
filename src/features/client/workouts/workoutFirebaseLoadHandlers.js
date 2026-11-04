@@ -2,6 +2,14 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { programDraftSnapshot } from "../../../utils/trainerProgramDraft.js";
 import { loadClientExerciseMedia, withClientExerciseMedia } from "../../../utils/clientExerciseMedia.js";
 import { captureAuthSession } from "../../../utils/authSession.js";
+import { invalidateSessionResource, runSessionResource } from "../../../utils/sessionResource.js";
+import { getWorkoutHistoryRevision, invalidateWorkoutHistory, readWorkoutHistory } from "../../../utils/workoutHistoryResource.js";
+import { workoutPlanLoadGenerations as loadGenerations, confirmedWorkoutPlans as confirmedPlans, isConfirmedWorkoutPlan } from "../../../utils/workoutPlanAuthority.js";
+import { validateClientLoadingSnapshot } from "../../../utils/clientLoadingSnapshot.js";
+import { rememberClientWorkoutEvidence } from "../../../utils/clientWorkoutEvidence.js";
+import { rememberOfflineWorkoutPlan, readOfflineWorkoutPlan } from "../../../utils/offlineWorkoutAccess.js";
+import { mergeLateWorkoutMedia } from "../../../utils/workoutMediaMerge.js";
+export { invalidateWorkoutPlan, getWorkoutPlanReadOrigin, isServerConfirmedWorkoutPlan, isConfirmedWorkoutPlan } from "../../../utils/workoutPlanAuthority.js";
 
 import {
   safeReadUserJsonStorage,
@@ -22,7 +30,23 @@ import {
   isTrainerClientCurrentAssignmentWorkout
 } from "../../../utils/trainerClientProgramAssignments.js";
 
-const loadGenerations = new Map();
+const WORKOUT_LOAD_TIMEOUT_MS = 10000;
+
+async function withWorkoutLoadDeadline(request, timeoutMs) {
+  let timer;
+  try {
+    return await Promise.race([request, new Promise((_resolve, reject) => {
+      timer = setTimeout(() => reject(new Error("Workout plan load timed out")), timeoutMs);
+    })]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function serverRowsSnapshot(rows, rawDocuments = false) {
+  const docs = rows.map(row => ({ id: row.id, data: () => rawDocuments ? row.data : row }));
+  return { docs, forEach: callback => docs.forEach(callback), metadata: { fromCache: false, hasPendingWrites: false } };
+}
 
 function getGroupExerciseMetadata(taskBlocks = []) {
   const metadataByExerciseId = new Map();
@@ -64,15 +88,14 @@ export async function loadWorkoutsFromFirebaseWithDeps({
   setPlan,
   userIdFromClick,
   options = {},
-  isCurrentRequest = () => true
+  isCurrentRequest = () => true,
+  isCurrentMediaRequest = isCurrentRequest
 }) {
   const session = captureSession();
   const preserveCurrentPlanOnError = options.preserveCurrentPlanOnError === true;
   const currentUser = auth.currentUser;
   const targetUserId = userIdFromClick || selectedUserId || currentUser?.uid;
   const isOwnPlan = currentUser?.uid === targetUserId;
-  const generation = (loadGenerations.get(targetUserId) || 0) + 1;
-  loadGenerations.set(targetUserId, generation);
   const storedWorkoutModePreference = isOwnPlan && currentUser?.uid && workoutModeStorageKey
     ? safeReadUserJsonStorage(workoutModeStorageKey, currentUser.uid, null)
     : null;
@@ -83,9 +106,20 @@ export async function loadWorkoutsFromFirebaseWithDeps({
       })
     : "individual";
 
-  const requestIsCurrent = () => {
+  const confirmed = confirmedPlans.get(auth);
+  const maxAgeMs = Math.max(0, Math.min(Number(options.maxAgeMs) || 0, 3000));
+  if (!options.force && maxAgeMs && isConfirmedWorkoutPlan(auth, plan, requestedMode)
+      && confirmed.origin === "server" && confirmed.historyRevision === getWorkoutHistoryRevision(auth)
+      && Date.now() - confirmed.loadedAt < maxAgeMs && isCurrentRequest()) {
+    options.onLoadReady?.();
+    return plan;
+  }
+  const generation = (loadGenerations.get(targetUserId) || 0) + 1;
+  loadGenerations.set(targetUserId, generation);
+
+  const requestIsCurrent = (isCurrent = isCurrentRequest) => {
     if (!session.isCurrent()) return false;
-    if (loadGenerations.get(targetUserId) !== generation || !isCurrentRequest()) return false;
+    if (loadGenerations.get(targetUserId) !== generation || !isCurrent()) return false;
     if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return false;
     const currentPreference = isOwnPlan ? safeReadUserJsonStorage(workoutModeStorageKey, targetUserId, null) : null;
     return !currentPreference?.mode || currentPreference.mode === requestedMode;
@@ -101,6 +135,19 @@ export async function loadWorkoutsFromFirebaseWithDeps({
 
     if (!requestIsCurrent()) return { workouts: [] };
 
+    const offlinePlan = isOwnPlan ? readOfflineWorkoutPlan(targetUserId, requestedMode,
+      requestedMode === "basic" ? basicWorkoutPlanStorageKey : storageKey) : null;
+    if (offlinePlan) {
+      const confirmation = { session, mode: requestedMode, plans: new WeakSet([offlinePlan]), origin: "offline",
+        loadedAt: Date.now(), historyRevision: getWorkoutHistoryRevision(auth) };
+      confirmedPlans.set(auth, confirmation);
+      if (offlinePlan.readModel) rememberClientWorkoutEvidence(offlinePlan.readModel, () => session.isCurrent() &&
+        confirmedPlans.get(auth) === confirmation && confirmation.historyRevision === getWorkoutHistoryRevision(auth));
+      applyPlan(offlinePlan);
+      options.onLoadReady?.();
+      return offlinePlan;
+    }
+
     const isAdminLoadingClient = Boolean(userIdFromClick || selectedUserId) && canUseAdminFeatures();
 
     startPerformanceCheck("Firebase · workouts load", {
@@ -110,12 +157,38 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     });
 
     // Client sees only workouts assigned by trainer in users/{uid}/workouts.
-    const [querySnapshot, profileSnapshot, historySnapshot, exerciseMedia] = await Promise.all([
-      getDocs(collection(db, "users", targetUserId, "workouts")),
-      getDoc(doc(db, "users", targetUserId)),
-      getDocs(collection(db, "users", targetUserId, "history")),
-      requestedMode === "individual" ? loadClientExerciseMedia(targetUserId) : Promise.resolve([])
-    ]);
+    let exerciseMedia = [], mediaResolved = requestedMode !== "individual";
+    const mediaRequest = requestedMode === "individual"
+      ? runSessionResource(auth, `workout-media:${targetUserId}`, () => loadClientExerciseMedia(targetUserId), { force: options.force === true })
+        .then(media => { exerciseMedia = media; mediaResolved = true; return media; })
+        .catch(() => { mediaResolved = true; return []; })
+      : Promise.resolve([]);
+    // Media is optional; assignment and completed-history reconciliation are
+    // not. Never release the ready gate on a history/profile/workout timeout.
+    const timeoutMs = Number.isFinite(options.timeoutMs)
+      ? Math.max(1, Math.min(options.timeoutMs, WORKOUT_LOAD_TIMEOUT_MS)) : WORKOUT_LOAD_TIMEOUT_MS;
+    const historyRevision = getWorkoutHistoryRevision(auth);
+    const critical = await withWorkoutLoadDeadline(runSessionResource(auth,
+      `workout-plan:${targetUserId}:${requestedMode}:${historyRevision}`, async ({ isCurrent }) => {
+        if (isOwnPlan && typeof options.readSnapshot === "function") {
+          const loadingSnapshot = validateClientLoadingSnapshot(await options.readSnapshot({ kind: "workouts" }), "workouts", targetUserId);
+          return {
+            querySnapshot: serverRowsSnapshot(loadingSnapshot.workouts, true),
+            profileSnapshot: { exists: () => true, data: () => loadingSnapshot.profile, metadata: { fromCache: false } },
+            historySnapshot: serverRowsSnapshot(loadingSnapshot.completionHistory), loadingSnapshot,
+            isCurrent: () => isCurrent() && historyRevision === getWorkoutHistoryRevision(auth)
+          };
+        }
+        const [querySnapshot, profileSnapshot, history] = await Promise.all([
+          getDocs(collection(db, "users", targetUserId, "workouts")),
+          getDoc(doc(db, "users", targetUserId)),
+          readWorkoutHistory(auth, db, targetUserId, { force: options.force === true })
+        ]);
+        return { querySnapshot, profileSnapshot, historySnapshot: history.snapshot,
+          isCurrent: () => isCurrent() && history.isCurrent() };
+      }, { force: options.force === true }), timeoutMs);
+    if (!critical?.isCurrent()) return { workouts: [] };
+    const { querySnapshot, profileSnapshot, historySnapshot } = critical;
     if (!requestIsCurrent()) return { workouts: [] };
     const profileData = profileSnapshot.exists() ? profileSnapshot.data() : {};
     const assignedProgramUpdatedAt = profileData.assignedProgramUpdatedAt || profileData.assignedProgramAt || "";
@@ -266,10 +339,50 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     }
 
     if (!requestIsCurrent()) return { workouts: [] };
+    if (critical.loadingSnapshot) nextPlan = { ...nextPlan, readModel: {
+      schemaVersion: 1, coverage: "complete", sourceRevision: critical.loadingSnapshot.sourceRevision,
+      uid: targetUserId, verifiedAt: critical.loadingSnapshot.verifiedAt,
+      completionHistory: critical.loadingSnapshot.completionHistory,
+      latestExerciseResultsByAssignment: critical.loadingSnapshot.latestExerciseResultsByAssignment,
+      latestExerciseResultDatesByAssignment: critical.loadingSnapshot.latestExerciseResultDatesByAssignment
+    } };
     if (isOwnPlan && currentUser?.uid && requestedMode === "individual") {
-      clearStaleWorkoutCaches(currentUser.uid, assignedProgramUpdatedAt);
+      clearStaleWorkoutCaches(currentUser.uid, assignedProgramUpdatedAt, { workouts: nextPlan.workouts });
     }
+    const snapshots = [querySnapshot, profileSnapshot, historySnapshot];
+    const origin = snapshots.some(snapshot => snapshot.metadata?.hasPendingWrites === true) ? "pending"
+      : snapshots.some(snapshot => snapshot.metadata?.fromCache === true) ? "cache"
+      : snapshots.every(snapshot => snapshot.metadata?.fromCache === false) ? "server" : "unknown";
+    // Session reconciliation and server freshness are distinct. Keep current
+    // offline behaviour; callers can explicitly inspect server confirmation.
+    const confirmation = { session, mode: requestedMode, plans: new WeakSet([nextPlan]),
+      origin, loadedAt: Date.now(), historyRevision };
+    if (isOwnPlan) confirmedPlans.set(auth, confirmation);
+    if (isOwnPlan && nextPlan.readModel) rememberClientWorkoutEvidence(nextPlan.readModel, () => session.isCurrent() &&
+      confirmedPlans.get(auth) === confirmation && confirmation.historyRevision === getWorkoutHistoryRevision(auth));
+    if (isOwnPlan && origin === "server") rememberOfflineWorkoutPlan(targetUserId, requestedMode, nextPlan, profileData);
     applyPlan(nextPlan);
+    if (requestIsCurrent()) options.onLoadReady?.();
+
+    if (!mediaResolved) void mediaRequest.then(media => {
+      if (!media.length || !requestIsCurrent(isCurrentMediaRequest)) return;
+      const enrichedWorkouts = nextPlan.workouts.map(workout => {
+        const enriched = withClientExerciseMedia(workout, media);
+        return enriched.exercises?.every((exercise, index) => exercise === workout.exercises?.[index]) ? workout : enriched;
+      });
+      if (enrichedWorkouts.every((workout, index) => workout === nextPlan.workouts[index])) return;
+      const enrichedPlan = { ...nextPlan, workouts: enrichedWorkouts };
+      // Runtime edits win. A late media response may fill preview metadata
+      // during training, but cannot replace performed sets or another assignment.
+      setPlan(current => {
+        if (!requestIsCurrent(isCurrentMediaRequest)) return current;
+        const merged = mergeLateWorkoutMedia(current, nextPlan, enrichedPlan);
+        if (merged !== current && confirmedPlans.get(auth) === confirmation && confirmation.plans.has(current)) {
+          confirmation.plans.add(merged);
+        }
+        return merged;
+      });
+    }).catch(() => { /* Optional late metadata must not fail the workout. */ });
 
     if (isOwnPlan && currentUser?.uid) {
       if (requestedMode === "basic" && nextPlan.source === "basic") {
@@ -286,7 +399,15 @@ export async function loadWorkoutsFromFirebaseWithDeps({
     return nextPlan;
   } catch (err) {
     if (!requestIsCurrent()) return { workouts: [] };
+    if (err.message === "Workout plan load timed out") {
+      invalidateSessionResource(auth, key => key.startsWith(`workout-plan:${targetUserId}:`));
+      invalidateWorkoutHistory(auth);
+    }
+    if (isOwnPlan) confirmedPlans.delete(auth);
+    options.onLoadError?.(err);
     console.error("Ошибка загрузки тренировок:", err);
+    if (options.requireFresh) return null;
+    if ([401, 403].includes(err?.status) || /permission-denied|unauthenticated/.test(String(err?.code || ""))) return null;
     if (isOwnPlan && auth.currentUser?.uid !== targetUserId) return { workouts: [] };
     const currentPlanMatchesMode = requestedMode === "basic"
       ? plan?.source === "basic"

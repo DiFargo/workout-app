@@ -492,3 +492,6 @@
 :global(:root[data-app-theme="warm-light"]) .amount { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-weight: 450; }
 :global(:root[data-app-theme="warm-light"]) .arrow { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); }
 :global(:root[data-app-theme="warm-light"]) .addButton { min-height: 54px; border: 0; border-radius: 18px; background: var(--ownset-action-gradient); color: #fff; box-shadow: none; font-weight: 600; }
+.withRemove { display: grid; grid-template-columns: minmax(0, 1fr) 44px; }
+.removeButton { position: relative; z-index: 2; min-width: 44px; min-height: 44px; border: 0; background: var(--apple-surface, #fff); color: var(--apple-red, #b42318); display: grid; place-items: center; }
+.removeButton svg { width: 18px; height: 18px; }

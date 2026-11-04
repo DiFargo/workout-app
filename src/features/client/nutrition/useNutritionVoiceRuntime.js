@@ -5,6 +5,7 @@ import {
   loadNutritionVoiceMode
 } from "./nutritionVoiceHandlers";
 import { buildUpdatedNutritionVoiceItem } from "./nutritionVoiceItemEditor";
+import { getUnresolvedVoiceCandidates, hasUncommittedVoiceItems } from "./nutritionVoiceCompletion.js";
 
 const VOICE_ACTIVITY_LEVEL = 0.06;
 
@@ -181,7 +182,7 @@ export function useNutritionVoiceRuntime({
   }, []);
 
   const {
-    startNutritionVoiceCapture,
+    startNutritionVoiceCapture: startCapture,
     stopNutritionVoiceCapture,
     toggleNutritionVoiceMode
   } = createNutritionVoiceHandlers({
@@ -289,21 +290,46 @@ export function useNutritionVoiceRuntime({
   }
 
   function finishNutritionVoiceResult({ commit = true } = {}) {
+    if (commit && getUnresolvedVoiceCandidates(nutritionVoiceAddedItemsRef.current).length) {
+      setNutritionVoiceFeedback("Выберите точный вариант или явно пропустите оставшиеся продукты.");
+      return false;
+    }
     const pendingReviewItems = nutritionVoiceAddedItemsRef.current.filter((item) => item?.kind === "review");
 
     if (commit) {
-      pendingReviewItems.forEach((item) => {
-        addNutritionFood(item.food, item.mealId, item.amount, {
-          amountMode: item.amountMode || "grams",
-          note: item.note || "",
-          expandMeal: false,
-          saveToMyFoods: false
-        });
-      });
+      const failedItems = [];
+      for (const item of pendingReviewItems) {
+        try {
+          const added = addNutritionFood(item.food, item.mealId, item.amount, {
+            amountMode: item.amountMode || "grams",
+            note: item.note || "",
+            expandMeal: false,
+            saveToMyFoods: false
+          });
+          if (added === false) failedItems.push(item);
+        } catch {
+          failedItems.push(item);
+        }
+      }
+      if (failedItems.length) {
+        // Successful positions are already in the diary: never retry them.
+        setVoiceAddedItems(failedItems);
+        setNutritionVoiceFeedback(`Не удалось добавить: ${failedItems.length}. Уже добавленные продукты сохранены. Проверьте оставшиеся позиции и повторите.`);
+        return false;
+      }
     }
 
     setVoiceAddedItems([]);
     setNutritionVoiceFeedback("");
+    return true;
+  }
+
+  function startNutritionVoiceCapture() {
+    if (hasUncommittedVoiceItems(nutritionVoiceAddedItemsRef.current)) {
+      setNutritionVoiceFeedback("Сначала выберите, добавьте или пропустите продукты текущей записи.");
+      return;
+    }
+    startCapture();
   }
 
   return {

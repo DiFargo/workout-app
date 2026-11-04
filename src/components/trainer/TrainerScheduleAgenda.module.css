@@ -1,0 +1,1523 @@
+.root {
+  --agenda-canvas: #f2f2f7;
+  --agenda-card: #fff;
+  --agenda-secondary: #efeff4;
+  --agenda-border: rgba(60, 60, 67, .12);
+  --agenda-text: #1c1c1e;
+  --agenda-muted: #636366;
+  --agenda-primary: #3f73b8;
+  --agenda-accent: #3c6faa;
+  --agenda-selected: #edf3fb;
+  --agenda-success: #237a42;
+  --agenda-danger: #b3261e;
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  color: var(--agenda-text);
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.root *,
+.root *::before,
+.root *::after {
+  box-sizing: border-box;
+}
+
+.root :where(button, input, select, textarea) {
+  font: inherit;
+}
+
+.root :is(button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--agenda-accent);
+  outline-offset: 3px;
+}
+
+.root button {
+  touch-action: manipulation;
+}
+
+/* This component replaces the legacy calendar card, not another nested card. */
+.root.root.root {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.root > [role='tabpanel'] {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.heading p,
+.subscriptionCard p {
+  margin: 4px 0 0;
+  color: var(--agenda-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.detailHeading h3 {
+  margin: 4px 0 0;
+  font-size: 19px;
+}
+
+.detailHeading small,
+.previewRow small {
+  display: block;
+  color: var(--agenda-muted);
+  font-size: 12px;
+}
+
+.root button:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--agenda-secondary);
+}
+
+.tabs > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--agenda-muted);
+  font-weight: 600;
+  font-size: 14px;
+  overflow-wrap: normal;
+  cursor: pointer;
+}
+
+.tabs > .activeTab {
+  background: var(--agenda-card);
+  color: var(--agenda-accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+}
+
+.topLine,
+.heading,
+.headingActions,
+.toolbar,
+.subscriptionActions,
+.formActions,
+.calendarHead,
+.overlayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.topLine,
+.headingActions,
+.toolbar,
+.subscriptionActions,
+.formActions {
+  flex-wrap: wrap;
+}
+
+.balanceButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  min-height: 64px;
+  padding: 12px 16px;
+  border: 1px solid var(--agenda-border);
+  border-radius: 16px;
+  background: var(--agenda-card);
+  color: var(--agenda-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.balanceCopy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.balanceCopy strong {
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.balanceCopy :is(small, span) {
+  color: var(--agenda-muted);
+  font-size: 13px;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #d7e3f2;
+  border-radius: 14px;
+  background: var(--agenda-selected);
+  color: #344d6e;
+  font-size: 14px;
+}
+
+.notice p,
+.notice strong {
+  margin: 0;
+}
+
+.notice > div {
+  min-width: 0;
+}
+
+.heading :is(h2, h3),
+.detailHeading,
+.overlayHeader :is(h2, h3),
+.subscriptionCard :is(h2, h3) {
+  margin: 0;
+  color: var(--agenda-text);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.primaryButton,
+.secondaryButton,
+.reviewButton,
+.iconButton,
+.historyToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, opacity 140ms ease;
+}
+
+.primaryButton {
+  border-color: var(--agenda-primary);
+  background: var(--ownset-action-gradient);
+  color: #fff;
+}
+
+.secondaryButton,
+.reviewButton {
+  border-color: var(--agenda-border);
+  background: var(--agenda-card);
+  color: var(--agenda-accent);
+}
+
+.reviewButton {
+  flex: 0 0 auto;
+}
+
+.iconButton {
+  flex: 0 0 44px;
+  width: 44px;
+  padding: 10px;
+  background: var(--agenda-secondary);
+  color: var(--agenda-accent);
+}
+
+.root :is(.primaryButton, .secondaryButton, .reviewButton, .iconButton, .sessionRow, .weekday, .calendarDay):active:not(:disabled) {
+  opacity: .75;
+}
+
+.help,
+.detailNote {
+  margin: 0;
+  color: var(--agenda-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.scheduleGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.sessionList {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sessionRow {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto 16px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  min-height: 84px;
+  padding: 12px;
+  border: 1px solid var(--agenda-border);
+  border-radius: 16px;
+  background: var(--agenda-card);
+  color: var(--agenda-text);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.selectedRow {
+  border-color: var(--agenda-accent);
+  background: var(--agenda-selected);
+  box-shadow: inset 0 0 0 1px var(--agenda-accent);
+}
+
+.dateBadge {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1px;
+  width: 52px;
+  min-height: 58px;
+  padding: 6px 4px;
+  border-radius: 12px;
+  background: var(--agenda-secondary);
+  color: var(--agenda-muted);
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.dateBadge strong {
+  color: var(--agenda-text);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.selectedRow .dateBadge {
+  background: var(--agenda-card);
+}
+
+.sessionCopy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.sessionCopy strong {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.sessionCopy :is(small, span) {
+  color: var(--agenda-muted);
+  font-size: 13px;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 132px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: var(--agenda-secondary);
+  color: var(--agenda-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.status[data-status='completed'],
+.status[data-status='completed_off_date'],
+.status[data-status='pastCompleted'],
+.status[data-tone='positive'],
+.status[data-tone='success'] {
+  background: #edf6ef;
+  color: var(--agenda-success);
+}
+
+.status[data-status='planned'],
+.status[data-tone='primary'] {
+  background: var(--agenda-selected);
+  color: var(--agenda-accent);
+}
+
+.status[data-status='rescheduled'],
+.status[data-tone='warning'] {
+  background: #fff5e6;
+  color: #8c560c;
+}
+
+.details,
+.subscriptionCard,
+.inlinePanel,
+.overlayPanel {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--agenda-border);
+  border-radius: 18px;
+  background: var(--agenda-card);
+}
+
+.detailList {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detailList > div,
+.detailList > li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--agenda-border);
+}
+
+.detailList > :last-child {
+  border-bottom: 0;
+}
+
+.detailList :is(dt, dd) {
+  margin: 0;
+  font-size: 14px;
+}
+
+.detailList dt {
+  color: var(--agenda-muted);
+}
+
+.detailList dd {
+  color: var(--agenda-text);
+  font-weight: 600;
+  text-align: right;
+}
+
+.detailNote {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--agenda-canvas);
+}
+
+.toolbar {
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.subscriptionGrid {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.count {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px 0;
+  color: var(--agenda-muted);
+  font-size: 13px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.count + .count {
+  border-left: 1px solid var(--agenda-border);
+}
+
+.count strong {
+  color: var(--agenda-text);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.progress {
+  display: block;
+  width: 100%;
+  height: 7px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 99px;
+  background: var(--agenda-secondary);
+  accent-color: var(--agenda-accent);
+}
+
+.progress > span,
+.progress > div {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--agenda-accent);
+}
+
+.progress::-webkit-progress-bar {
+  border-radius: inherit;
+  background: var(--agenda-secondary);
+}
+
+.progress::-webkit-progress-value {
+  border-radius: inherit;
+  background: var(--agenda-accent);
+}
+
+.progress::-moz-progress-bar {
+  border-radius: inherit;
+  background: var(--agenda-accent);
+}
+
+.subscriptionActions {
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+.inlinePanel {
+  border-color: #cbdbee;
+}
+
+.scheduleEditor {
+  width: min(100%, 760px);
+  justify-self: center;
+  gap: 20px;
+}
+
+.weekdaysField {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.weekdaysField legend {
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--agenda-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.scheduleEditor .weekdayGrid {
+  grid-template-columns: repeat(7, minmax(44px, 1fr));
+  gap: 6px;
+}
+
+.startDateRow {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  align-items: end;
+  gap: 12px 20px;
+}
+
+.startDateRow > p {
+  padding-bottom: 8px;
+}
+
+.datePreview {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.previewHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 3px 12px;
+}
+
+.previewHeading h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.previewHeading span {
+  color: var(--agenda-muted);
+  font-size: 12px;
+}
+
+.previewRow.datePreviewRow {
+  flex-wrap: nowrap;
+  min-height: 56px;
+  padding: 6px 10px;
+}
+
+.datePreviewRow > div {
+  min-width: 0;
+}
+
+.datePreviewField {
+  flex: 0 0 165px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.root.pinnedActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.pinnedActions > button {
+  flex: 0 1 auto;
+}
+
+.pinnedActions > .primaryButton {
+  border-color: var(--agenda-primary);
+  background: var(--ownset-action-gradient);
+  color: #fff;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  color: var(--agenda-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.field :is(input, select, textarea) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--agenda-border);
+  border-radius: 11px;
+  background: var(--agenda-card);
+  color: var(--agenda-text);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.field :is(input, select, textarea)[aria-invalid='true'] {
+  border-color: var(--agenda-danger);
+}
+
+.field :is(input, select, textarea):disabled {
+  background: var(--agenda-secondary);
+  color: var(--agenda-muted);
+}
+
+.field textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.formActions {
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--agenda-border);
+}
+
+.error,
+.success,
+.warning,
+.loading,
+.empty {
+  margin: 0;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.error {
+  background: #fcefee;
+  color: var(--agenda-danger);
+}
+
+.success {
+  background: #edf6ef;
+  color: var(--agenda-success);
+}
+
+.warning {
+  background: #fff5e6;
+  color: #8c560c;
+}
+
+.empty,
+.loading {
+  padding: 24px 16px;
+  border: 1px solid var(--agenda-border);
+  background: var(--agenda-card);
+  color: var(--agenda-muted);
+  text-align: center;
+}
+
+/* Compatibility shell: editing stays in the current modal, never a second overlay. */
+.overlay {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  background: transparent;
+}
+
+.overlayPanel {
+  width: 100%;
+}
+
+.overlayHeader {
+  align-items: flex-start;
+}
+
+.weekdayGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  gap: 8px;
+}
+
+.weekday {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 4px;
+  border: 1px solid var(--agenda-border);
+  border-radius: 11px;
+  background: var(--agenda-card);
+  color: var(--agenda-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.weekday input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0 5px 0 0;
+  accent-color: var(--agenda-primary);
+}
+
+.calendarDay[data-subscription-range='true'] {
+  background: var(--agenda-selected);
+}
+
+.calendarDay[data-range-start='true'],
+.calendarDay[data-range-end='true'] {
+  box-shadow: inset 0 -2px var(--agenda-accent);
+}
+
+.weekdaySelected {
+  border-color: var(--agenda-accent);
+  background: var(--agenda-selected);
+  color: var(--agenda-accent);
+  box-shadow: inset 0 0 0 1px var(--agenda-accent);
+}
+
+.previewList {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--agenda-border);
+  border-radius: 12px;
+  background: var(--agenda-card);
+}
+
+.previewRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 12px;
+  border-bottom: 1px solid var(--agenda-border);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.previewRow:last-child {
+  border-bottom: 0;
+}
+
+.previewRow > :is(span, small) {
+  color: var(--agenda-muted);
+}
+
+.calendarHead {
+  margin-bottom: 8px;
+}
+
+.calendarHead strong {
+  font-size: 16px;
+}
+
+.calendarGrid,
+.calendarWeekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 0;
+}
+
+.calendarWeekdays {
+  margin-bottom: 4px;
+  color: var(--agenda-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.calendarWeekdays > * {
+  padding: 6px 0;
+}
+
+.calendarDay {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 5px 1px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--agenda-text);
+  font-size: 14px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.outsideDay {
+  color: var(--agenda-muted);
+  opacity: .55;
+}
+
+.selectedDay {
+  border-color: var(--agenda-accent);
+  background: var(--agenda-selected);
+  color: var(--agenda-accent);
+  font-weight: 700;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 5px;
+}
+
+.dot,
+.completedDot {
+  display: inline-block;
+  flex: 0 0 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--agenda-accent);
+}
+
+.completedDot {
+  background: var(--agenda-success);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  color: var(--agenda-muted);
+  font-size: 12px;
+}
+
+.legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.historyToggle {
+  justify-content: flex-start;
+  width: fit-content;
+  padding-left: 0;
+  background: transparent;
+  color: var(--agenda-accent);
+  text-align: left;
+}
+
+.busy {
+  cursor: progress;
+}
+
+@media (hover: hover) {
+  .primaryButton:hover:not(:disabled) {
+  background: var(--ownset-action-gradient);
+  }
+
+  .secondaryButton:hover:not(:disabled),
+  .reviewButton:hover:not(:disabled),
+  .iconButton:hover:not(:disabled),
+  .balanceButton:hover:not(:disabled),
+  .weekday:hover:not(:disabled),
+  .calendarDay:hover:not(:disabled) {
+    border-color: #a9bdd7;
+    background: var(--agenda-selected);
+  }
+
+  .sessionRow:hover:not(:disabled) {
+    border-color: #a9bdd7;
+  }
+}
+
+@media (min-width: 600px) {
+  .fieldGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 800px) {
+  .scheduleGrid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr);
+    gap: 20px;
+  }
+
+  .subscriptionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .scheduleEditor .weekdayGrid {
+    grid-template-columns: repeat(4, minmax(44px, 1fr));
+  }
+
+  .scheduleEditor {
+    gap: 16px;
+  }
+
+  .startDateRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .startDateRow > p {
+    padding-bottom: 0;
+  }
+
+  .datePreviewField {
+    flex-basis: 150px;
+  }
+
+  .previewRow.datePreviewRow {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+
+  .pinnedActions > button {
+    flex: 1;
+  }
+
+  .root {
+    gap: 12px;
+  }
+
+  .heading,
+  .notice {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .headingActions,
+  .topLine,
+  .balanceButton {
+    width: 100%;
+  }
+
+  .headingActions > :is(.primaryButton, .secondaryButton) {
+    flex: 1 1 auto;
+  }
+
+  .sessionRow {
+    grid-template-columns: 52px minmax(0, 1fr) 16px;
+    gap: 6px 10px;
+  }
+
+  .dateBadge {
+    grid-row: span 2;
+  }
+
+  .sessionRow > .status {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    max-width: 100%;
+  }
+
+  .sessionRow > svg:last-child {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  .details,
+  .subscriptionCard,
+  .inlinePanel,
+  .overlayPanel {
+    gap: 14px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .formActions > :is(.primaryButton, .secondaryButton),
+  .subscriptionActions > :is(.primaryButton, .secondaryButton) {
+    flex: 1 1 140px;
+  }
+}
+
+@media (max-width: 379px) {
+  .previewRow.datePreviewRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .datePreviewField {
+    flex-basis: auto;
+  }
+
+  .sessionRow {
+    grid-template-columns: 48px minmax(0, 1fr) 16px;
+    gap: 8px 10px;
+    padding: 10px;
+  }
+
+  .dateBadge {
+    grid-row: span 2;
+    width: 48px;
+  }
+
+  .sessionRow > .status {
+    grid-column: 2;
+    justify-self: start;
+    max-width: 100%;
+  }
+
+  .sessionRow > svg:last-child {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  .counts {
+    gap: 6px;
+  }
+
+  .count {
+    font-size: 12px;
+  }
+
+  .count strong {
+    font-size: 26px;
+  }
+
+  .details,
+  .subscriptionCard,
+  .inlinePanel,
+  .overlayPanel {
+    padding: 12px;
+  }
+
+  .calendarGrid,
+  .calendarWeekdays {
+    gap: 1px;
+  }
+}
+
+/* Subscription overview and its always-open calendar share one compact rhythm. */
+.subscriptionOverview {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--agenda-border);
+  border-radius: 18px;
+  background: var(--agenda-card);
+}
+
+.subscriptionOverviewHead,
+.balanceFooter,
+.calendarTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.subscriptionOverviewHead h3,
+.calendarTitle h3 {
+  margin: 0;
+  color: var(--agenda-text);
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.subscriptionOverviewHead > .status {
+  flex-shrink: 0;
+}
+
+.balanceOverview {
+  display: grid;
+  grid-template-columns: minmax(140px, .8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+
+.remainingCount {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.remainingCount > span {
+  color: var(--agenda-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.remainingCount > strong {
+  color: var(--agenda-accent);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.balanceFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 0 24px;
+  border-left: 1px solid var(--agenda-border);
+}
+
+.balanceFacts > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.balanceFacts dt {
+  color: var(--agenda-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.balanceFacts dd {
+  margin: 0;
+  color: var(--agenda-text);
+  font-size: 24px;
+  font-weight: 650;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.balanceFooter {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.balanceExplanation {
+  flex: 1 1 220px;
+  min-width: 0;
+  color: var(--agenda-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.balanceExplanation > summary {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 12px 0;
+  color: var(--agenda-accent);
+  cursor: pointer;
+}
+
+.balanceExplanation p {
+  max-width: 58ch;
+  margin: 2px 0 0;
+}
+
+.balanceFooter .subscriptionActions {
+  margin-left: auto;
+  padding: 0;
+}
+
+.calendarWithDay {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.calendarPanel.inlinePanel,
+.dayPanel.inlinePanel {
+  gap: 16px;
+  min-width: 0;
+  padding: 20px;
+  border-color: var(--agenda-border);
+}
+
+.calendarTitle {
+  align-items: flex-start;
+}
+
+.calendarTitle > div {
+  min-width: 0;
+}
+
+.calendarTitle p {
+  margin: 4px 0 0;
+  color: var(--agenda-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.calendarTitle > button {
+  flex-shrink: 0;
+}
+
+.calendarPanel .calendarHead {
+  margin-bottom: 0;
+}
+
+.calendarPanel .calendarWeekdays {
+  margin-bottom: 0;
+}
+
+.calendarPanel .calendarDay {
+  min-height: 44px;
+}
+
+.calendarPanel .calendarDay[aria-current='date']:not(.selectedDay) b {
+  color: var(--agenda-accent);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.calendarPanel .dot:is([data-event-status='missed'], [data-event-status='moved'], [data-event-status='shifted']) {
+  background: var(--agenda-muted);
+}
+
+.calendarLegend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-top: 4px;
+  color: var(--agenda-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.calendarLegend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.legendMark {
+  display: inline-block;
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--agenda-accent);
+}
+
+.legendMark[data-kind='completed'] {
+  background: var(--agenda-success);
+}
+
+.legendMark[data-kind='other'] {
+  background: var(--agenda-muted);
+}
+
+.legendMark[data-kind='period'] {
+  flex-basis: 12px;
+  width: 12px;
+  height: 10px;
+  border: 1px solid var(--agenda-accent);
+  border-radius: 3px;
+  background: var(--agenda-selected);
+}
+
+.calendarTip {
+  margin: 0;
+  color: var(--agenda-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.dayPanel > div:first-child > small {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--agenda-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.dayPanel h3 {
+  margin: 0;
+  color: var(--agenda-text);
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.dayEntries {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+.dayEntry {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--agenda-border);
+}
+
+.dayEntry:first-child {
+  padding-top: 0;
+}
+
+.dayEntry:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.dayEntry > svg {
+  margin-top: 2px;
+  color: var(--agenda-accent);
+}
+
+.dayEntry > div {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dayEntry strong {
+  color: var(--agenda-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.dayEmpty {
+  margin: 0;
+  color: var(--agenda-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+@media (min-width: 900px) {
+  .calendarWithDay {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 599px) {
+  .subscriptionOverview,
+  .calendarPanel.inlinePanel,
+  .dayPanel.inlinePanel {
+    gap: 14px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .subscriptionOverviewHead {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .subscriptionOverviewHead h3 {
+    font-size: 16px;
+  }
+
+  .balanceOverview {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 16px;
+  }
+
+  .remainingCount > strong {
+    font-size: 40px;
+  }
+
+  .balanceFacts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding-left: 16px;
+  }
+
+  .balanceFacts > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .balanceFacts dd {
+    font-size: 18px;
+  }
+
+  .balanceFooter {
+    gap: 8px;
+    padding-top: 0;
+  }
+
+  .balanceExplanation {
+    flex-basis: 100%;
+  }
+
+  .balanceFooter .subscriptionActions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .balanceFooter .subscriptionActions > button {
+    min-width: 0;
+    padding-inline: 10px;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .balanceFooter .subscriptionActions > button:only-child {
+    grid-column: 1 / -1;
+  }
+
+  .calendarTitle {
+    gap: 8px;
+  }
+
+  .calendarTitle h3 {
+    font-size: 16px;
+  }
+
+  .calendarLegend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 379px) {
+  .subscriptionOverview,
+  .calendarPanel.inlinePanel,
+  .dayPanel.inlinePanel {
+    padding: 12px;
+  }
+
+  .balanceOverview {
+    gap: 12px;
+  }
+
+  .balanceFacts {
+    padding-left: 12px;
+  }
+
+  .balanceFacts dt {
+    font-size: 12px;
+  }
+
+  .calendarTitle {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root button {
+    transition: none;
+  }
+}

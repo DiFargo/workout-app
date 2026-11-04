@@ -1,4 +1,3 @@
-import { isTrainerV2Path } from "../../app/cssVariant.js";
 import { TrainerShell } from "../../components/trainer/TrainerWorkspace";
 import AdminWorkspace from "../../components/admin/AdminWorkspace";
 import { ChevronLeft } from "lucide-react";
@@ -61,6 +60,7 @@ export default function TrainerAdminWorkoutsRoute({
   adminSelectedExerciseId,
   adminSelectedTemplateId,
   adminTrainingTemplates,
+  trainerLibraryLoadState,
   auth,
   assignSavedProgramToClient,
   canManageTrainingTemplate,
@@ -231,6 +231,8 @@ export default function TrainerAdminWorkoutsRoute({
         adminSelectedClient={adminSelectedClient}
         adminSelectedTemplateId={adminSelectedTemplateId}
         adminTrainingTemplates={adminTrainingTemplates}
+        trainerLibraryLoadState={trainerLibraryLoadState}
+        loadAdminTrainingTemplates={loadAdminTrainingTemplates}
         assignSavedProgramToClient={assignSavedProgramToClient}
         canUseAdminFeatures={canUseAdminFeatures}
         getTrainerNextCreateClientState={getTrainerNextCreateClientState}
@@ -396,7 +398,7 @@ export default function TrainerAdminWorkoutsRoute({
     uploadMonthExerciseVideo
   } = createTrainerMonthProgramPersistenceHandlers({
     adminActiveProgramId,
-    adminExerciseEditSnapshotRef,
+    getAdminExerciseEditSnapshotRef: () => adminExerciseEditSnapshotRef,
     adminExerciseLibrary: monthAdminExerciseLibrary,
     adminOpenWorkoutId,
     adminSelectedExerciseId,
@@ -443,7 +445,7 @@ export default function TrainerAdminWorkoutsRoute({
     updateMonthExerciseName,
     updateMonthExerciseSet
   } = createTrainerMonthExerciseHandlers({
-    adminExerciseEditSnapshotRef,
+    getAdminExerciseEditSnapshotRef: () => adminExerciseEditSnapshotRef,
     adminExerciseSearch,
     adminExerciseLibrary: monthAdminExerciseLibrary,
     monthWorkouts,
@@ -484,7 +486,7 @@ export default function TrainerAdminWorkoutsRoute({
     deleteSelectedMonthExercise
   } = createTrainerMonthSelectedExerciseHandlers({
     adminActiveProgramId,
-    adminExerciseEditSnapshotRef,
+    getAdminExerciseEditSnapshotRef: () => adminExerciseEditSnapshotRef,
     adminSelectedExerciseId,
     adminSelectedTemplateId,
     db,
@@ -521,6 +523,8 @@ export default function TrainerAdminWorkoutsRoute({
       adminSelectedExerciseId={adminSelectedExerciseId}
       adminSelectedTemplateId={adminSelectedTemplateId}
       adminTrainingTemplates={adminTrainingTemplates}
+      trainerLibraryLoadState={trainerLibraryLoadState}
+      onRetryLibrary={loadAdminTrainingTemplates}
       canUseAdminFeatures={canUseAdminFeatures}
       cancelMonthExerciseEdit={cancelMonthExerciseEdit}
       confirmRemoveMonthWorkout={confirmRemoveMonthWorkout}
@@ -549,6 +553,7 @@ export default function TrainerAdminWorkoutsRoute({
       normalizedMonthProgram={normalizedMonthProgram}
       openAdminClientsWithFilter={openAdminClientsWithFilter}
       openAdminProgramsOverview={openAdminProgramsOverview}
+      openTrainerExerciseLibrary={openTrainerExerciseLibrary}
       openCopyMonthProgramBlock={openCopyMonthProgramBlock}
       openMonthExerciseEditor={openMonthExerciseEditor}
       openMonthWorkoutContext={openMonthWorkoutContext}
@@ -599,8 +604,8 @@ export default function TrainerAdminWorkoutsRoute({
       <div className="trainerNextPage trainerNextWorkoutPage trainerNextProgramsTab">
         <div className="trainerNextDesktopPageHead">
           <div>
-            <h1>{adminProgramLibraryTab === "editor" ? "Редактор программы" : "Программы тренировок"}</h1>
-            <p>Создание программ и назначение клиентам</p>
+            <h1>{adminProgramLibraryTab === "editor" ? "Редактор шаблона" : "Шаблоны программ"}</h1>
+            <p>Общая основа для персональных планов клиентов</p>
           </div>
         </div>
         <header className="trainerNextMobileHeader">
@@ -609,10 +614,10 @@ export default function TrainerAdminWorkoutsRoute({
               <ChevronLeft size={22} />
             </button>
           ) : <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />}
-          <div className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор программы" : isTrainerV2Path(window.location.pathname) ? "Программы" : "Библиотека программ"}</div>
+          <h1 className="trainerNextMobileTitle">{adminProgramLibraryTab === "editor" ? "Редактор шаблона" : "Шаблоны программ"}</h1>
           <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
         </header>
-        {adminProgramLibraryTab !== "editor" ? (
+        {isAdminTrainerMaterials && adminProgramLibraryTab !== "editor" ? (
           <div className="trainerNextPageTabs">
             <button
               type="button"
@@ -621,7 +626,7 @@ export default function TrainerAdminWorkoutsRoute({
               aria-pressed="true"
               onClick={openAdminProgramsOverview}
             >
-              Программы
+              Шаблоны
             </button>
             <button type="button" aria-pressed="false" onClick={openTrainerExerciseLibrary}>
               Библиотека упражнений

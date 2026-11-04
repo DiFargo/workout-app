@@ -27,6 +27,8 @@ export default function WorkoutRunRoute({ runtime }) {
     onboarding,
     fullscreenVideo
   } = useWorkoutRunViewModel(runtime);
+  const validationMessage = [runtime.exerciseValidationMessage, runtime.workoutDraftSaveWarning]
+    .filter(Boolean).join(" ");
 
   if (!workout) {
     return <WorkoutNotFoundPage onBackToMenu={closeMissingWorkout} />;
@@ -38,14 +40,14 @@ export default function WorkoutRunRoute({ runtime }) {
 
       <WorkoutRunStageView {...stageProps} />
 
-      {runtime.exerciseValidationMessage && (
+      {validationMessage && (
         <div
           className={styles.validationToast}
           data-css-module-scope="workout-run-validation-toast"
           role="alert"
         >
           <span aria-hidden="true">!</span>
-          <strong>{runtime.exerciseValidationMessage}</strong>
+          <strong>{validationMessage}</strong>
         </div>
       )}
 

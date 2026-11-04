@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, Check, ChevronLeft, ChevronRight, CircleAlert, ClipboardList, LoaderCircle, X } from "lucide-react";
+import { CalendarDays, Check, ChevronRight, CircleAlert, ClipboardList, LoaderCircle, X } from "lucide-react";
 
 import { getTrainerProgramAssignmentExercises } from "../../utils/trainerProgramAssignmentAdjustment";
 import { buildClientWorkoutsFromTemplate } from "../../utils/workoutPlanNormalization";
 import { sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
 import { canAssignTrainerProgram } from "../../utils/trainerProgramLifecycle.js";
 import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus.js";
+import { ADMIN_CALENDAR_DAYS } from "../../utils/adminClientCalendar.js";
+import { getTrainerSetupScheduleSlots, getTrainerSetupScheduleWorkouts } from "../../utils/trainerSetupSchedule.js";
+import { distributeAgendaWeekdays, getAgendaDateDraft, getAgendaWeekdayDefaults, isAgendaSlotEditable, validateAgendaDateDraft } from "../../utils/trainerScheduleAgenda.js";
+import { formatRussianCount } from "../../utils/russianCount.js";
 import styles from "./TrainerClientSetupFlowModal.module.css";
 
 const STEPS = ["program", "schedule", "nutrition", "notifications"];
@@ -26,14 +30,20 @@ const STEP_COPY = {
   },
   programAdjustment: {
     eyebrow: "ПЕРВИЧНАЯ НАСТРОЙКА · ШАГ 1",
-    title: "Настройте тренировку под клиента",
-    description: "При необходимости скорректируйте стартовые рабочие веса. Изменения применятся только к копии программы этого клиента.",
+    title: "Настройте веса для клиента",
+    description: "Это отдельная копия программы. Общий шаблон и история клиента не изменятся.",
     action: "Назначить и продолжить"
+  },
+  programProgress: {
+    eyebrow: "ПЕРВИЧНАЯ НАСТРОЙКА · ШАГ 1",
+    title: "Программа уже назначена",
+    description: "Программа и корректировки нагрузки уже сохранены. Осталось сохранить отметку завершения шага.",
+    action: "Сохранить отметку и продолжить"
   },
   schedule: {
     eyebrow: "ПЕРВИЧНАЯ НАСТРОЙКА · ШАГ 2",
     title: "Назначьте даты тренировок",
-    description: "Выберите даты всех тренировок программы. По ним автоматически сформируется абонемент клиента.",
+    description: "Выберите дни недели — даты заполнятся автоматически. Любую дату можно изменить ниже.",
     action: "Сохранить расписание"
   },
   nutrition: {
@@ -54,39 +64,6 @@ function getLocalDateKey(date = new Date()) {
   const value = date instanceof Date ? date : new Date(date);
   if (Number.isNaN(value.getTime())) return "";
   return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}`;
-}
-
-function getCalendarMonthDays(monthKey) {
-  const [year, month] = String(monthKey || getLocalDateKey().slice(0, 7)).split("-").map(Number);
-  const first = new Date(year, month - 1, 1);
-  const start = new Date(first);
-  start.setDate(first.getDate() - ((first.getDay() + 6) % 7));
-
-  return Array.from({ length: 42 }, (_, index) => {
-    const date = new Date(start);
-    date.setDate(start.getDate() + index);
-    return {
-      key: getLocalDateKey(date),
-      label: date.getDate(),
-      currentMonth: date.getMonth() === month - 1
-    };
-  });
-}
-
-function getSavedScheduleDates(client = {}) {
-  const calendar = client?.workoutCalendar || {};
-  const plannedDates = Array.isArray(calendar.plannedWorkouts)
-    ? calendar.plannedWorkouts.map((item) => item?.date)
-    : [];
-  const scheduledDates = Array.isArray(calendar.scheduledDates)
-    ? calendar.scheduledDates
-    : Array.isArray(calendar.monthlyTrainingDates)
-      ? calendar.monthlyTrainingDates
-      : [];
-
-  return [...new Set([...plannedDates, ...scheduledDates]
-    .map((date) => String(date || "").slice(0, 10))
-    .filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date)))].sort();
 }
 
 function formatScheduleDate(dateKey) {
@@ -148,25 +125,33 @@ function NumberField({ label, value, suffix, onChange, min = 0, disabled = false
   );
 }
 
-function formatPlannedWeight(exercise) {
+function formatPlannedWeight(exercise, addition = 0) {
   if (!exercise?.usesWeight) {
     return "Без дополнительного веса";
   }
   if (exercise.plannedMinWeight == null) return "Рабочий вес не указан";
   if (exercise.plannedMinWeight === exercise.plannedMaxWeight) {
-    return `В программе: ${exercise.plannedMinWeight} кг`;
+    return `${exercise.plannedMinWeight + addition} кг`;
   }
-  return `В программе: ${exercise.plannedMinWeight}–${exercise.plannedMaxWeight} кг`;
+  return `${exercise.plannedMinWeight + addition}–${exercise.plannedMaxWeight + addition} кг`;
 }
 
-export default function TrainerClientSetupFlowModal({
+export default function TrainerClientSetupFlowModal(props) {
+  const assignedWorkouts = getTrainerSetupScheduleWorkouts(props.workouts, props.client);
+  const scheduleIdentity = props.checklist?.currentStep === "schedule" ? assignedWorkouts.map(workout => workout.id).join(":") : "";
+  return <TrainerClientSetupFlowForm key={`${props.client?.id || ""}:${props.checklist?.currentStep || ""}:${scheduleIdentity}`} {...props} assignedWorkouts={assignedWorkouts} />;
+}
+
+function TrainerClientSetupFlowForm({
   client,
   clientName,
   checklist,
+  assignedWorkouts = [],
   programTemplates = [],
   selectedProgramId = "",
   nutritionGoals = {},
   nutritionPlanOptions = [],
+  pendingProgramProgress = false,
   onSelectProgram,
   onAssignProgram,
   onSaveWorkoutSchedule,
@@ -177,17 +162,25 @@ export default function TrainerClientSetupFlowModal({
   const currentStep = checklist?.currentStep;
   const currentIndex = Math.max(0, STEPS.indexOf(currentStep));
   const closeButtonRef = useRef(null);
+  const errorRef = useRef(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [closeWarningOpen, setCloseWarningOpen] = useState(false);
   const [programAdjustmentOpen, setProgramAdjustmentOpen] = useState(false);
   const [loadAdjustments, setLoadAdjustments] = useState({});
   const [viewStepIndex, setViewStepIndex] = useState(currentIndex);
-  const [scheduleDates, setScheduleDates] = useState(() => getSavedScheduleDates(client));
-  const [scheduleMonth, setScheduleMonth] = useState(() => getLocalDateKey().slice(0, 7));
-  const [assignedProgramKey, setAssignedProgramKey] = useState(() => String(
-    client?.assignedProgramAddedAt || client?.assignedProgramAt || ""
-  ).trim());
+  const scheduleSlots = getTrainerSetupScheduleSlots(assignedWorkouts, client?.workoutCalendar);
+  const todayKey = getLocalDateKey();
+  const [scheduleDraft, setScheduleDraft] = useState(() => {
+    const draft = getAgendaDateDraft(scheduleSlots);
+    const defaults = getAgendaWeekdayDefaults(scheduleSlots, todayKey, client?.workoutCalendar?.trainingDays || client?.trainingDays);
+    if (Object.values(draft).some(Boolean) || !defaults.days.length) return draft;
+    const result = distributeAgendaWeekdays(scheduleSlots, draft, defaults.days, defaults.startDate, todayKey);
+    return result.ok ? result.draft : draft;
+  });
+  const [scheduleDays, setScheduleDays] = useState(() => getAgendaWeekdayDefaults(scheduleSlots, todayKey, client?.workoutCalendar?.trainingDays || client?.trainingDays).days);
+  const [scheduleStart, setScheduleStart] = useState(() => getAgendaWeekdayDefaults(scheduleSlots, todayKey).startDate);
+  const [manualDateIds, setManualDateIds] = useState([]);
   const [nutrition, setNutrition] = useState(() => buildNutritionDraft(client, nutritionGoals));
   const [notifications, setNotifications] = useState(() => buildNotificationsDraft(client));
   const assignablePrograms = useMemo(() => programTemplates.filter(canAssignTrainerProgram), [programTemplates]);
@@ -215,15 +208,16 @@ export default function TrainerClientSetupFlowModal({
   );
   const activeStep = STEPS[viewStepIndex] || currentStep;
   const reviewingSavedStep = viewStepIndex < currentIndex;
-  const scheduleWorkoutCount = programWorkouts.length || Math.max(0, Number(client?.assignedWorkoutCount) || 0);
-  const scheduleDatesComplete = scheduleWorkoutCount > 0 && scheduleDates.length === scheduleWorkoutCount;
-  const scheduleDateSet = useMemo(() => new Set(scheduleDates), [scheduleDates]);
-  const scheduleMonthDays = useMemo(() => getCalendarMonthDays(scheduleMonth), [scheduleMonth]);
-  const todayKey = getLocalDateKey();
-  const viewStep = activeStep === "program" && programAdjustmentOpen && !reviewingSavedStep ? "programAdjustment" : activeStep;
+  const scheduleWorkoutCount = assignedWorkouts.length;
+  const scheduleDates = Object.values(scheduleDraft).filter(Boolean).sort();
+  const scheduleValidation = validateAgendaDateDraft(scheduleSlots, scheduleDraft, todayKey);
+  const editableScheduleSlots = scheduleSlots.filter(slot => isAgendaSlotEditable(slot, todayKey));
+  const pendingProgramStep = activeStep === "program" && pendingProgramProgress && !reviewingSavedStep;
+  const viewStep = pendingProgramStep ? "programProgress" : activeStep === "program" && programAdjustmentOpen && !reviewingSavedStep ? "programAdjustment" : activeStep;
   const current = STEP_COPY[viewStep];
   const pendingSetupItems = STEPS
     .slice(currentIndex)
+    .filter((step) => !pendingProgramProgress || step !== "program")
     .map((step) => PENDING_STEP_LABELS[step])
     .filter(Boolean);
 
@@ -259,7 +253,6 @@ export default function TrainerClientSetupFlowModal({
     };
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
-    window.setTimeout(() => closeButtonRef.current?.focus(), 0);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
@@ -267,31 +260,33 @@ export default function TrainerClientSetupFlowModal({
   }, [onClose, saving]);
 
   useEffect(() => {
-    setError("");
-    setProgramAdjustmentOpen(false);
-    setLoadAdjustments({});
-    setCloseWarningOpen(false);
-    setViewStepIndex(currentIndex);
-    if (currentStep === "schedule") {
-      setAssignedProgramKey((current) => current || String(
-        client?.assignedProgramAddedAt || client?.assignedProgramAt || ""
-      ).trim());
-    }
-  }, [client, currentIndex, currentStep]);
+    const timer = window.setTimeout(() => closeButtonRef.current?.focus(), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!error) return;
+    errorRef.current?.focus({ preventScroll: true });
+    errorRef.current?.scrollIntoView({ block: "nearest" });
+  }, [error]);
 
   if (!current) return null;
 
-  function shiftScheduleMonth(delta) {
-    const [year, month] = scheduleMonth.split("-").map(Number);
-    setScheduleMonth(getLocalDateKey(new Date(year, month - 1 + delta, 1)).slice(0, 7));
+  function updateScheduleDays(days, start = scheduleStart) {
+    setScheduleDays(days);
+    setScheduleStart(start);
+    setError("");
+    if (!days.length || !start) return;
+    const result = distributeAgendaWeekdays(scheduleSlots, scheduleDraft, days, start, todayKey);
+    if (!result.ok) { setError(result.message); return; }
+    setScheduleDraft(result.draft);
+    setManualDateIds([]);
   }
 
-  function toggleScheduleDate(dateKey) {
-    setScheduleDates((dates) => {
-      if (dates.includes(dateKey)) return dates.filter((date) => date !== dateKey);
-      if (dateKey < todayKey || dates.length >= scheduleWorkoutCount) return dates;
-      return [...dates, dateKey].sort();
-    });
+  function updateScheduleDate(id, date) {
+    setScheduleDraft(current => ({ ...current, [id]: date }));
+    setManualDateIds(current => [...new Set([...current, id])]);
+    setError("");
   }
 
   function goBack() {
@@ -316,33 +311,32 @@ export default function TrainerClientSetupFlowModal({
     try {
       let saved = false;
       if (currentStep === "program") {
-        if (!selectedProgram) {
+        if (!pendingProgramProgress && !selectedProgram) {
           setError("Выберите программу из личной библиотеки тренера.");
           return;
         }
-        if (!programAdjustmentOpen) {
+        if (!pendingProgramProgress && !programAdjustmentOpen) {
           setProgramAdjustmentOpen(true);
           return;
         }
         saved = await onAssignProgram?.({ loadAdjustments, skipConfirmation: true, throwOnError: true });
-        const assignmentKey = String(
-          saved?.assignment?.assignedAt || saved?.assignment?.assignmentKey || saved?.assignedAt || ""
-        ).trim();
-        if (saved !== false) {
-          setScheduleDates([]);
-          setScheduleMonth(getLocalDateKey().slice(0, 7));
-          if (assignmentKey) setAssignedProgramKey(assignmentKey);
-        }
       } else if (currentStep === "schedule") {
         if (!scheduleWorkoutCount) {
           setError("Сначала назначьте программу с тренировками.");
           return;
         }
-        if (!scheduleDatesComplete) {
-          setError(`Выберите ${scheduleWorkoutCount} дат тренировок — по одной для каждой тренировки программы.`);
+        if (editableScheduleSlots.length && !scheduleDays.length) {
+          setError("Выберите хотя бы один день недели. Затем при необходимости измените отдельные даты.");
           return;
         }
-        saved = await onSaveWorkoutSchedule?.(scheduleDates, { assignmentKey: assignedProgramKey });
+        if (!scheduleValidation.ok) {
+          setError(scheduleValidation.message);
+          return;
+        }
+        saved = await onSaveWorkoutSchedule?.({
+          workoutDates: scheduleValidation.workoutDates,
+          ...(scheduleDays.length ? { trainingDays: scheduleDays.map(day => ADMIN_CALENDAR_DAYS[day - 1].id) } : {})
+        }, assignedWorkouts, { throwOnError: true });
       } else if (currentStep === "nutrition") {
         saved = await onSaveNutritionPlan?.({
           ...nutrition,
@@ -368,7 +362,7 @@ export default function TrainerClientSetupFlowModal({
       <section className={styles.sheet} role="dialog" aria-modal="true" aria-labelledby="trainer-client-setup-flow-title">
         <header className={styles.header}>
           <div className={styles.headerCopy}>
-            <span className={styles.icon}><ClipboardList size={22} /></span>
+            <span className={styles.icon}><ClipboardList size={22} aria-hidden="true" /></span>
             <div>
               <p>{current.eyebrow}</p>
               <h2 id="trainer-client-setup-flow-title">{current.title}</h2>
@@ -392,7 +386,9 @@ export default function TrainerClientSetupFlowModal({
             </div>
           ) : null}
 
-          {activeStep === "program" && !programAdjustmentOpen && !reviewingSavedStep ? (
+          {pendingProgramStep ? <div className={styles.summary}><strong>{client?.assignedProgramName || selectedProgram?.name || "Персональная программа"}</strong><span>Повторного назначения не будет.</span></div> : null}
+
+          {activeStep === "program" && !pendingProgramProgress && !programAdjustmentOpen && !reviewingSavedStep ? (
             <div className={styles.fields}>
               <label className={styles.selectField}>
                 <span>Программа тренировок</span>
@@ -401,27 +397,29 @@ export default function TrainerClientSetupFlowModal({
                   {assignablePrograms.map((program) => <option key={program.id} value={program.id}>{program.name || "Без названия"}</option>)}
                 </select>
               </label>
-              {selectedProgram ? <div className={styles.summary}><strong>{selectedProgram.name || "Без названия"}</strong><span>{programWorkouts.length} тренировок · клиент получит отдельную копию</span></div> : <div className={styles.hint}>Можно выбрать только программу из личной библиотеки тренера.</div>}
+              {selectedProgram ? <div className={styles.summary}><strong>{selectedProgram.name || "Без названия"}</strong><span>{formatRussianCount(programWorkouts.length, ["тренировка", "тренировки", "тренировок"])} · клиент получит отдельную копию</span></div> : <div className={styles.hint}>Можно выбрать только программу из личной библиотеки тренера.</div>}
             </div>
           ) : null}
 
-          {activeStep === "program" && programAdjustmentOpen && !reviewingSavedStep ? (
+          {activeStep === "program" && !pendingProgramProgress && programAdjustmentOpen && !reviewingSavedStep ? (
             <div className={styles.fields}>
               <div className={styles.summary}>
                 <strong>{selectedProgram?.name || "Выбранная программа"}</strong>
-                <span>Оставьте «0», чтобы сохранить веса из программы. Укажите, на сколько увеличить вес для клиента.</span>
+                <span>{formatRussianCount(programWorkouts.length, ["тренировка", "тренировки", "тренировок"])} · {formatRussianCount(programExercises.length, ["упражнение", "упражнения", "упражнений"])}</span>
+                <span>Добавьте вес только там, где нужно. При «0» вес останется как в шаблоне.</span>
               </div>
               {programExercises.length ? (
                 <div className={styles.adjustments}>
                   {programExercises.map((exercise) => (
-                    <label className={styles.adjustment} key={exercise.key}>
-                      <span className={styles.adjustmentCopy}>
-                        <strong title={exercise.name}>{exercise.name}</strong>
-                        <small>{formatPlannedWeight(exercise)}</small>
-                      </span>
+                    <div className={styles.adjustment} key={exercise.key}>
+                      <div className={styles.adjustmentCopy}>
+                        <strong>{exercise.name}</strong>
+                        <small>{exercise.usesWeight && exercise.plannedMinWeight != null ? `В шаблоне: ${formatPlannedWeight(exercise)}` : formatPlannedWeight(exercise)}</small>
+                      </div>
                       {exercise.usesWeight && exercise.plannedMinWeight != null ? (
-                        <span className={styles.adjustmentInput}>
-                          <span className={styles.adjustmentInputLabel}>Прибавить</span>
+                        <>
+                        <label className={styles.adjustmentInput}>
+                          <span className={styles.adjustmentInputLabel}>Добавить к весу</span>
                           <span className={styles.adjustmentInputControl}>
                             <span aria-hidden="true">+</span>
                             <input
@@ -431,7 +429,8 @@ export default function TrainerClientSetupFlowModal({
                               step="0.5"
                               value={loadAdjustments[exercise.key] ?? ""}
                               placeholder="0"
-                              aria-label={`Прибавить к весу: ${exercise.name}`}
+                              aria-label={`Добавить к весу: ${exercise.name}`}
+                              disabled={saving}
                               onFocus={(event) => event.currentTarget.select()}
                               onChange={(event) => setLoadAdjustments((items) => ({
                                 ...items,
@@ -440,9 +439,14 @@ export default function TrainerClientSetupFlowModal({
                             />
                             <small>кг</small>
                           </span>
-                        </span>
+                        </label>
+                        <div className={styles.adjustmentResult}>
+                          <span>У клиента</span>
+                          <strong>{formatPlannedWeight(exercise, Number(loadAdjustments[exercise.key]) || 0)}</strong>
+                        </div>
+                        </>
                       ) : <em>{exercise.usesWeight ? "Без поправки" : "Без веса"}</em>}
-                    </label>
+                    </div>
                   ))}
                 </div>
               ) : <div className={styles.hint}>В этой программе нет упражнений с указанным весом. Программа будет назначена без дополнительных корректировок.</div>}
@@ -453,51 +457,44 @@ export default function TrainerClientSetupFlowModal({
             <div className={styles.fields}>
               <div className={styles.scheduleSummary}>
                 <div>
-                  <strong>{selectedProgram?.name || client?.assignedProgramName || "Назначенная программа"}</strong>
-                  <span>Выберите ровно {scheduleWorkoutCount} дат — тренировки получат этот порядок автоматически.</span>
+                  <strong>{client?.assignedProgramName || "Назначенная программа"}</strong>
+                  <span>{formatRussianCount(scheduleWorkoutCount, ["тренировка", "тренировки", "тренировок"])} · даты закреплены за каждым занятием</span>
                 </div>
-                <b className={scheduleDatesComplete ? styles.scheduleReady : ""}>{scheduleDates.length}/{scheduleWorkoutCount || 0}<small>выбрано</small></b>
+                <b className={scheduleValidation.ok ? styles.scheduleReady : ""}>{scheduleDates.length}/{scheduleWorkoutCount || 0}<small>с датой</small></b>
               </div>
 
-              <div className={styles.scheduleCalendar}>
-                <div className={styles.scheduleMonth}>
-                  <button type="button" onClick={() => shiftScheduleMonth(-1)} aria-label="Предыдущий месяц"><ChevronLeft size={18} /></button>
-                  <strong>{new Date(`${scheduleMonth}-01T12:00:00`).toLocaleDateString("ru-RU", { month: "long", year: "numeric" })}</strong>
-                  <button type="button" onClick={() => shiftScheduleMonth(1)} aria-label="Следующий месяц"><ChevronRight size={18} /></button>
+              {scheduleWorkoutCount ? <>
+                <fieldset className={styles.weekdaysField} disabled={saving || !editableScheduleSlots.length}>
+                  <legend>Дни недели</legend>
+                  <div className={styles.weekdayGrid}>{["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day, index) => (
+                    <label key={day} className={`${styles.weekday} ${scheduleDays.includes(index + 1) ? styles.weekdaySelected : ""}`}>
+                      <input type="checkbox" checked={scheduleDays.includes(index + 1)} onChange={event => updateScheduleDays(event.target.checked ? [...scheduleDays, index + 1].sort((a, b) => a - b) : scheduleDays.filter(value => value !== index + 1))} />
+                      <span>{day}</span>
+                    </label>
+                  ))}</div>
+                </fieldset>
+                <div className={styles.startDateRow}>
+                  <label className={styles.selectField}><span>Начиная с</span><input type="date" value={scheduleStart} min={todayKey} disabled={saving || !editableScheduleSlots.length} onChange={event => updateScheduleDays(scheduleDays, event.target.value)} /></label>
+                  <p>{manualDateIds.length ? "Смена дней недели или даты начала заполнит даты заново." : scheduleValidation.ok ? "Даты готовы. При необходимости поправьте отдельное занятие ниже." : scheduleDays.length ? "Проверьте даты всех занятий ниже." : "Выберите хотя бы один день недели для автозаполнения."}</p>
                 </div>
-                <div className={styles.scheduleWeekdays} aria-hidden="true">
-                  {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((day) => <span key={day}>{day}</span>)}
+                <div className={styles.datePreview}>
+                  <div className={styles.previewHeading}><h3>Даты занятий</h3><span>Можно изменить вручную</span></div>
+                  <div className={styles.dateList}>{scheduleSlots.map(slot => (
+                    <div className={styles.dateRow} key={slot.workoutId}>
+                      <div><strong>{slot.workoutName}</strong>{!isAgendaSlotEditable(slot, todayKey) ? <small>Только просмотр</small> : manualDateIds.includes(slot.workoutId) ? <small>Изменено вручную</small> : null}</div>
+                      <label><span className={styles.visuallyHidden}>Дата — {slot.workoutName}</span><input type="date" value={scheduleDraft[slot.workoutId] || ""} min={todayKey} disabled={saving || !isAgendaSlotEditable(slot, todayKey)} onChange={event => updateScheduleDate(slot.workoutId, event.target.value)} /></label>
+                    </div>
+                  ))}</div>
                 </div>
-                <div className={styles.scheduleGrid} aria-label="Календарь назначения тренировок">
-                  {scheduleMonthDays.map((day) => {
-                    const selected = scheduleDateSet.has(day.key);
-                    const unavailable = !selected && (day.key < todayKey || scheduleDates.length >= scheduleWorkoutCount);
-                    const order = scheduleDates.indexOf(day.key) + 1;
-                    return (
-                      <button
-                        type="button"
-                        key={day.key}
-                        className={`${!day.currentMonth ? styles.scheduleMuted : ""}${selected ? ` ${styles.scheduleSelected}` : ""}${day.key === todayKey ? ` ${styles.scheduleToday}` : ""}`}
-                        aria-pressed={selected}
-                        aria-label={`${day.key}${selected ? `, тренировка ${order}` : ""}`}
-                        disabled={unavailable || !scheduleWorkoutCount}
-                        onClick={() => toggleScheduleDate(day.key)}
-                      >
-                        <span>{day.label}</span>
-                        {selected ? <small>№{order}</small> : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              </> : <p className={styles.hint} role="status">Загружаем назначенные тренировки. Если список не появился, закройте мастер и откройте его снова — назначать программу повторно не нужно.</p>}
 
               <div className={styles.subscriptionPreview}>
-                <span><CalendarDays size={20} /></span>
+                <span><CalendarDays size={20} aria-hidden="true" /></span>
                 <div>
-                  <strong>Абонемент сформируется автоматически</strong>
+                  <strong>Расписание и абонемент — отдельно</strong>
                   {scheduleDates.length ? (
-                    <p>Период: {formatScheduleDate(scheduleDates[0])} — {formatScheduleDate(scheduleDates[scheduleDates.length - 1])} · куплено занятий: {scheduleDates.length}</p>
-                  ) : <p>Выберите даты в календаре — период и количество занятий подставятся сами.</p>}
+                    <p>Период занятий: {formatScheduleDate(scheduleDates[0])} — {formatScheduleDate(scheduleDates[scheduleDates.length - 1])}. Баланс абонемента не изменится.</p>
+                  ) : <p>Выберите даты тренировок. Это не изменит количество проданных и выполненных занятий.</p>}
                 </div>
               </div>
             </div>
@@ -553,11 +550,11 @@ export default function TrainerClientSetupFlowModal({
               <label className={styles.checkbox}><input type="checkbox" checked={notifications.measurementsEnabled} onChange={(event) => setNotifications((item) => ({ ...item, measurementsEnabled: event.target.checked }))} /><span>Напоминать о замерах</span></label>
             </div>
           ) : null}
-          {error ? <p className={styles.error} role="alert">{error}</p> : null}
+          {error ? <p ref={errorRef} className={styles.error} role="alert" tabIndex={-1}>{error}</p> : null}
         </div>
 
         <footer className={styles.footer}>
-          <button className={styles.later} type="button" onClick={goBack} disabled={saving || (!programAdjustmentOpen && viewStepIndex === 0)}>{programAdjustmentOpen ? "Назад к выбору" : "Назад"}</button>
+          <button className={styles.later} type="button" onClick={goBack} disabled={saving || pendingProgramStep || (!programAdjustmentOpen && viewStepIndex === 0)}>{programAdjustmentOpen && !pendingProgramStep ? "Назад к выбору" : "Назад"}</button>
           <button className={styles.primary} type="button" onClick={submitCurrentStep} disabled={saving}>
             {saving ? <LoaderCircle className={styles.spinner} size={18} /> : activeStep === "notifications" && !reviewingSavedStep ? <Check size={18} /> : <ChevronRight size={18} />}
             {saving ? "Сохраняю…" : reviewingSavedStep ? "Продолжить" : current.action}
@@ -569,11 +566,11 @@ export default function TrainerClientSetupFlowModal({
           <section className={styles.closeWarningCard} role="dialog" aria-modal="true" aria-labelledby="trainer-client-setup-close-title">
             <span className={styles.closeWarningIcon} aria-hidden="true"><CircleAlert size={25} /></span>
             <h3 id="trainer-client-setup-close-title">Закрыть первичную настройку?</h3>
-            <p>Несохранённые изменения на текущем шаге не сохранятся. Клиент пока не получит:</p>
+            <p>{pendingProgramProgress ? "Программа уже назначена. Остальные шаги настройки можно завершить позже:" : "Несохранённые изменения на текущем шаге не сохранятся. Клиент пока не получит:"}</p>
             <ul>
               {pendingSetupItems.map((item) => <li key={item}>{item}</li>)}
             </ul>
-            {programAdjustmentOpen ? <small>Выбранная программа и корректировки нагрузки на этом шаге тоже не сохранятся.</small> : null}
+            {programAdjustmentOpen && !pendingProgramProgress ? <small>Выбранная программа и корректировки нагрузки на этом шаге тоже не сохранятся.</small> : null}
             <div className={styles.closeWarningActions}>
               <button type="button" className={styles.closeWarningContinue} onClick={() => setCloseWarningOpen(false)}>Продолжить настройку</button>
               <button type="button" className={styles.closeWarningDismiss} onClick={onClose}>Закрыть мастер</button>

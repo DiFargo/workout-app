@@ -3,6 +3,31 @@
   min-width: 0;
 }
 
+.searchBlock { display: grid; min-width: 0; gap: 8px; }
+.searchBlock > label { color: var(--tn-muted, #636366); font-size: 13px; font-weight: 600; }
+.searchBlock .searchField { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 4px 0 14px; border: 1px solid var(--tn-line, rgba(60,60,67,.12)); border-radius: 12px; background: var(--tn-surface, #fff); color: var(--tn-muted, #636366); }
+.searchField > svg { flex: 0 0 auto; }
+.searchBlock .searchField input { width: 100%; min-width: 0; min-height: 46px; margin: 0; padding: 10px 0; border: 0; border-radius: 0; background: transparent; color: var(--tn-text, #1c1c1e); font: inherit; font-size: 16px; line-height: 1.4; outline: none; box-shadow: none; }
+.searchField input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.searchBlock .searchField input:focus, .searchBlock .searchField input:focus-visible { outline: 0 !important; box-shadow: none !important; }
+.searchField:focus-within { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }
+.searchBlock .searchField > button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 10px; color: var(--tn-muted, #636366); background: transparent; cursor: pointer; }
+.searchBlock .searchResult { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; margin: 0; color: var(--tn-muted, #636366); font-size: 12px; line-height: 1.5; }
+.searchHint { color: var(--tn-muted, #636366); font-size: 12px; line-height: 1.5; }
+.historyCoverage { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; justify-items: start; gap: 8px 12px; padding: 12px; border: 1px solid var(--tn-line, rgba(60,60,67,.12)); border-radius: 12px; background: var(--tn-surface, #fff); }
+.historyCoverage p { margin: 0; color: var(--tn-muted, #636366); font-size: 12px; line-height: 1.5; }
+.historyCoverage p[role="alert"] { grid-column: 1 / -1; color: var(--apple-danger, #b3261e); }
+.historyCoverage button { max-width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--tn-line, rgba(60,60,67,.12)); border-radius: 10px; background: var(--tn-surface-soft, #efeff4); color: var(--tn-text, #1c1c1e); font: inherit; font-size: 13px; line-height: 1.4; white-space: normal; cursor: pointer; }
+.historyCoverage button:disabled { opacity: .6; cursor: wait; }
+.historyCoverage button:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }
+@media (max-width: 600px) { .historyCoverage { grid-template-columns: 1fr; } }
+.searchEmpty { display: grid; justify-items: start; gap: 8px; padding: 20px 16px; border: 1px solid var(--tn-line, rgba(60,60,67,.12)); border-radius: 14px; background: var(--tn-surface, #fff); color: var(--tn-text, #1c1c1e); }
+.searchEmpty strong { font-size: 15px; line-height: 1.4; }
+.searchEmpty p { margin: 0; color: var(--tn-muted, #636366); font-size: 13px; line-height: 1.5; }
+.searchEmpty > button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--tn-line, rgba(60,60,67,.12)); border-radius: 10px; background: var(--tn-surface-soft, #efeff4); color: var(--tn-text, #1c1c1e); font: inherit; font-size: 13px; cursor: pointer; }
+.searchField > button:focus-visible, .searchEmpty > button:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }
+.searchField > button:active, .searchEmpty > button:active { filter: brightness(.94); }
+
 :global(.trainerNextRoot) :global(.trainerClientExerciseProgress) {
   display: grid;
   gap: 16px;
@@ -495,6 +520,30 @@
   box-shadow: 0 28px 72px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.24);
 }
 
+/* History is a drill-in inside the existing utility sheet, not a second modal. */
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryInline) {
+  width: 100%;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  box-shadow: none;
+}
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryBack) {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--trainer-v2-accent, #396ba6);
+  font: inherit;
+  cursor: pointer;
+}
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryInline .trainerExerciseProgressHistoryModalBody) { overflow: visible; }
+
 :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal > header) {
   display: flex;
   align-items: flex-start;
@@ -782,4 +831,10 @@
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressActions button) {min-height:44px!important;font-size:13px!important;padding:8px 12px!important;box-shadow:none!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressCardNote) {font-size:13px!important;line-height:1.5!important;}
 @media(max-width:450px){:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics > span) {padding:8px!important;} :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeader) {flex-wrap:wrap!important;}}
+
+@media (max-width: 699px) {
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryModal.trainerExerciseProgressHistoryInline) { min-width: 0; max-height: none; background: transparent; }
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryInline > header) { padding: 12px 0; }
+  :global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryInline .trainerExerciseProgressHistoryModalBody) { padding: 12px 0; }
+}
 

@@ -21,11 +21,11 @@
   display: grid;
   gap: 12px;
   overflow-y: auto;
-  border: 1px solid var(--color-profile-credential-dialog-border);
-  border-radius: 32px;
-  background: var(--background-profile-credential-dialog);
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: var(--color-surface);
   box-shadow: var(--shadow-profile-credential-dialog);
-  color: var(--color-profile-credential-dialog);
+  color: var(--color-text);
   scrollbar-width: none;
 }
 
@@ -33,33 +33,11 @@
   display: none;
 }
 
-.closeButton {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--color-profile-credential-close-border);
-  border-radius: 50%;
-  background: var(--background-profile-credential-close);
-  box-shadow: var(--shadow-profile-credential-close);
-  color: var(--color-profile-credential-close);
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-}
-
 .header {
   min-height: 44px;
 }
-
-.closeButton svg {
-  width: 22px;
-  height: 22px;
-}
+.confirmation { display: grid; gap: 12px; }
+.confirmation p { margin: 0; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
 
 .head {
   margin: 0;
@@ -89,115 +67,105 @@
   object-fit: cover;
 }
 
-.avatarFallback,
-.eyebrow {
-  color: var(--color-profile-credential-eyebrow);
-  font-size: 11px;
-  font-weight: 1000;
-  letter-spacing: 0.12em;
-}
-
-.heading {
-  margin: 4px 0;
-  color: var(--color-profile-credential-heading);
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1.05;
-  text-align: left;
+.avatarFallback {
+  color: var(--color-accent);
 }
 
 .intro {
   margin: 0;
-  color: var(--color-profile-credential-muted);
-  font-size: 13px;
-  font-weight: 850;
-  line-height: 1.25;
+  color: var(--color-text-muted);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .preview {
-  margin: 12px 0;
+  margin: 0;
   padding: 12px;
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr);
+  grid-template-columns: 44px minmax(0, 1fr);
   align-items: center;
   gap: 12px;
-  border: 1px solid var(--color-profile-credential-preview-border);
+  border: 1px solid var(--color-border);
   border-radius: 18px;
-  background: var(--background-profile-credential-preview);
+  background: var(--color-surface-muted);
 }
 
 .previewIcon {
-  width: 54px;
-  height: 54px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--color-profile-credential-preview-icon-border);
-  border-radius: 18px;
-  background: var(--background-profile-credential-preview-icon);
-  color: var(--color-profile-credential-preview-icon);
+  border-radius: 14px;
+  background: var(--color-surface);
+  color: var(--color-accent);
   font-size: 26px;
 }
 
 .preview strong {
   display: block;
-  color: var(--color-profile-credential-preview-heading);
-  font-size: 15px;
+  color: var(--color-text);
+  font-size: 16px;
 }
 
 .preview span {
   display: block;
   margin-top: 5px;
-  color: var(--color-profile-credential-muted);
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.35;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
 }
 
-.loginWidgetCard {
-  min-height: 78px;
-  margin: 12px 0;
-  padding: 14px;
-  display: grid;
-  place-items: center;
-  border: 1px dashed var(--color-profile-telegram-widget-border);
-  border-radius: 18px;
-  background: var(--background-profile-telegram-widget);
+.steps {
+  margin: 0;
+  padding-left: 24px;
+  color: var(--color-text);
+  font-size: 15px;
+  line-height: 1.5;
 }
 
-.loginWidget {
-  width: 100%;
-  display: grid;
-  place-items: center;
+.steps li + li {
+  margin-top: 6px;
 }
 
-.widgetLoading {
-  margin-top: 8px;
-  color: var(--color-profile-telegram-widget-loading);
-  font-size: 12px;
-  font-weight: 850;
+.linkHint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .primaryButton {
+  box-sizing: border-box;
   width: 100%;
-  min-height: 42px;
-  margin-bottom: 10px;
-  border: 1px solid var(--color-profile-credential-primary-border);
+  min-height: 48px;
+  padding: 10px 14px;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
   border-radius: 14px;
-  background: var(--background-profile-credential-primary);
-  box-shadow: var(--shadow-profile-credential-primary);
-  color: var(--color-profile-credential-primary);
-  font-size: 13px;
-  font-weight: 950;
+  background: var(--ownset-action-gradient);
+  color: var(--color-accent-contrast, #fff);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.primaryButton:disabled {
-  opacity: var(--opacity-profile-credential-primary-disabled);
+.primaryButton:disabled,
+.primaryButton[aria-disabled="true"],
+.secondaryButton:disabled,
+.textButton:disabled,
+.actionButton:disabled {
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
 .manageActions {
-  margin: 12px 0;
+  margin: 0;
   display: grid;
   grid-template-columns: 1fr 0.72fr;
   gap: 10px;
@@ -205,12 +173,12 @@
 
 .actionButton {
   min-height: 52px;
-  border: 1px solid var(--color-profile-telegram-action-border);
+  border: 1px solid var(--color-border);
   border-radius: 18px;
-  background: var(--background-profile-telegram-action);
-  color: var(--color-profile-telegram-action);
+  background: var(--color-surface-muted);
+  color: var(--color-accent);
   font-size: 15px;
-  font-weight: 950;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -222,40 +190,56 @@
 
 .status {
   min-height: 46px;
-  margin: 10px 0;
+  margin: 0;
   padding: 10px 12px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--color-profile-credential-status-border);
+  border: 1px solid var(--color-border);
   border-radius: 14px;
-  background: var(--background-profile-credential-status);
-  color: var(--color-profile-telegram-status);
-  font-size: 12px;
-  font-weight: 900;
-  line-height: 1.35;
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
   text-align: center;
 }
 
 .secondaryButton {
   width: 100%;
   min-height: 44px;
-  margin-top: 4px;
   padding: 0 13px;
-  border: 1px solid var(--color-profile-credential-secondary-border);
+  border: 1px solid var(--color-border);
   border-radius: 15px;
-  background: var(--background-profile-credential-secondary);
-  color: var(--color-profile-credential-secondary);
-  font-size: 13px;
-  font-weight: 950;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.closeButton:focus-visible,
+.textButton {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 14px;
+  cursor: pointer;
+}
+
 .primaryButton:focus-visible,
 .actionButton:focus-visible,
-.secondaryButton:focus-visible {
-  outline: 2px solid var(--color-profile-credential-focus);
+.secondaryButton:focus-visible,
+.textButton:focus-visible {
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+.primaryButton:not(:disabled):not([aria-disabled="true"]):active,
+.actionButton:not(:disabled):active,
+.secondaryButton:not(:disabled):active,
+.textButton:not(:disabled):active {
+  opacity: 0.8;
 }
 
 @media (max-width: 520px) {

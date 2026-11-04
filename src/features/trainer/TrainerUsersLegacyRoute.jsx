@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import TrainerAdminClientWorkspaceHeader from "./TrainerAdminClientWorkspaceHeader";
 import TrainerAdminCreateClientModal from "./TrainerAdminCreateClientModal";
 import TrainerAdminUsersClientGrid from "./TrainerAdminUsersClientGrid";
@@ -96,6 +97,7 @@ export default function TrainerUsersLegacyRoute({
   hasAdminWorkoutOnDate,
   lastWorkout,
   loadAdminClientOverview,
+  loadAdminTrainingTemplates,
   loadHistory,
   loadWorkoutsFromFirebase,
   nutritionMonthAverageCalories,
@@ -179,8 +181,20 @@ export default function TrainerUsersLegacyRoute({
   updateUserTrainerRole,
   uploadAdminProgressPhotos,
   usersList,
+  user,
   workoutProgress
 }) {
+  const requestedLibrary = useRef(null);
+  const needsLibrary = Boolean(adminClientPageOpen && selectedClient?.id && (adminUsersSelectedTab === "training" || adminProgramControlOpen));
+  useEffect(() => {
+    const key = user?.uid || "trainer-library";
+    if (!needsLibrary || typeof loadAdminTrainingTemplates !== "function" || requestedLibrary.current === key) return;
+    requestedLibrary.current = key;
+    Promise.resolve().then(() => loadAdminTrainingTemplates()).catch(error => {
+      requestedLibrary.current = null;
+      console.warn("Trainer library demand load failed:", error);
+    });
+  }, [needsLibrary, loadAdminTrainingTemplates, user?.uid]);
   return (
     <div className="adminUsersCrmPage">
       <main className={adminClientPageOpen ? "adminUsersCrmMain adminUsersCrmMainClientPage" : "adminUsersCrmMain"}>

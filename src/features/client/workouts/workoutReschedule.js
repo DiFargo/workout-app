@@ -1,6 +1,6 @@
 import { runTransaction } from "firebase/firestore";
 import { captureAuthSession } from "../../../utils/authSession.js";
-import { getWorkoutScheduleCalendarForWorkouts, mergeWorkoutCalendarScope, normalizeWorkoutCalendarSchedule, toWorkoutDateKey } from "../../../utils/workoutSchedule.js";
+import { clearWorkoutCalendarDateOrderPolicy, getWorkoutScheduleCalendarForWorkouts, mergeWorkoutCalendarScope, normalizeWorkoutCalendarSchedule, toWorkoutDateKey } from "../../../utils/workoutSchedule.js";
 
 export async function rescheduleClientWorkout({
   auth, db, doc, plan, workoutId, workoutIndex, dateKey,
@@ -22,7 +22,7 @@ export async function rescheduleClientWorkout({
       const updatedAt = new Date().toISOString();
       // A scoped UI calendar is not the complete server calendar.
       const currentCalendar = profile.data().workoutCalendar || {};
-      const scope = getWorkoutScheduleCalendarForWorkouts(currentCalendar, workouts);
+      const scope = clearWorkoutCalendarDateOrderPolicy(getWorkoutScheduleCalendarForWorkouts(currentCalendar, workouts), workouts);
       const matchesWorkout = item => {
         const id = String(item?.workoutId || "");
         return id ? id === String(target.id) : Number(item?.order) === targetIndex + 1 || Number(item?.index) === targetIndex;

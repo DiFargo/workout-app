@@ -1007,3 +1007,14 @@
 :global(:root[data-app-theme="warm-light"]) .top.top { flex-wrap: wrap; line-height: 1.4; }
 :global(:root[data-app-theme="warm-light"]) .result.result > div { min-width: 0; overflow-wrap: anywhere; }
 :global(:root[data-app-theme="warm-light"]) .incomplete.incomplete span { white-space: normal; overflow-wrap: anywhere; }
+
+:global(:root[data-app-theme="warm-light"]) .syncStatus.error {
+  color: var(--apple-red, #c43830);
+  background: var(--apple-red-tint, #fff0ee);
+}
+
+:global(:root[data-app-theme="warm-light"]) .savedCard[data-save-state="local"] .savedCheck {
+  color: var(--apple-secondary, #636366);
+  -webkit-text-fill-color: currentColor;
+  background: var(--apple-surface-muted, #efeff4);
+}

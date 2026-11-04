@@ -11,10 +11,11 @@ export function hasCurrentAdminAccess({ claims = {}, profile = {} } = {}) {
       : !Object.hasOwn(claims, "adminClaimVersion"));
 }
 
-export function resolveUserRole({ isAdminClaim, role }) {
+export function resolveUserRole({ isAdminClaim, role, accountAccessStatus, trainerAssignmentState }) {
   const normalizedRole = normalizeRole(role);
   if (normalizedRole === "admin") return isAdminClaim === true ? "admin" : "unresolved";
   if (normalizedRole === "trainer") return "trainer";
+  if (normalizedRole === "client" && (accountAccessStatus === "awaiting_trainer" || trainerAssignmentState === "unassigned")) return "pending-client";
   return "client";
 }
 

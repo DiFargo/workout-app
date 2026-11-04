@@ -8,6 +8,8 @@ export default function TrainerAdminWorkoutsNextRoute({
   adminSelectedTemplateId,
   adminSelectedClient,
   adminTrainingTemplates,
+  trainerLibraryLoadState,
+  loadAdminTrainingTemplates,
   assignSavedProgramToClient,
   canUseAdminFeatures,
   getTrainerNextCreateClientState,
@@ -79,6 +81,8 @@ export default function TrainerAdminWorkoutsNextRoute({
       selectedClient={activeWorkoutClient}
       workouts={activeWorkouts}
       exerciseLibrary={activeExerciseLibrary}
+      trainerLibraryLoadState={trainerLibraryLoadState}
+      onRetryLibrary={loadAdminTrainingTemplates}
       programTemplates={visibleProgramTemplates}
       selectedProgramId={adminSelectedTemplateId}
       onSelectProgram={setAdminSelectedTemplateId}
@@ -111,7 +115,7 @@ export default function TrainerAdminWorkoutsNextRoute({
       createClientState={getTrainerNextCreateClientState()}
       onNavigate={navigateTrainerNext}
       mode="workouts"
-      activeSection="workouts"
+      activeSection={isExerciseLibraryTab ? "library" : "workouts"}
     />
   );
 }

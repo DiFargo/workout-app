@@ -1,18 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { GraduationCap, UserRound, X } from "lucide-react";
+import { useModalBackNavigation } from "../../shared/hooks/useModalBackNavigation.js";
 import { getAdminUserName } from "./AdminUsersWorkspace";
+import { isAdminAssignableTrainer } from "../../utils/adminAssignableTrainer.js";
 import styles from "./AdminClientAssignmentModal.module.css";
 
 function getId(value) {
   return String(value?.id || value?.uid || "").trim();
-}
-
-function isAccessibleTrainer(user) {
-  const role = String(user?.role || "").trim().toLocaleLowerCase("ru");
-  const status = String(user?.accountStatus || user?.status || "").trim().toLocaleLowerCase("ru");
-  return ["trainer", "coach", "тренер", "коуч"].includes(role)
-    && !user?.accessDisabled
-    && !["disabled", "blocked", "suspended", "inactive", "revoked", "отозван"].includes(status);
 }
 
 function getInitialTrainerId(client, trainers) {
@@ -40,8 +34,10 @@ function AdminClientAssignmentSheet({
   status,
   trainers
 }) {
-  const validTrainers = (Array.isArray(trainers) ? trainers : []).filter(isAccessibleTrainer);
+  const validTrainers = (Array.isArray(trainers) ? trainers : []).filter(isAdminAssignableTrainer);
   const [trainerId, setTrainerId] = useState(() => getInitialTrainerId(client, validTrainers));
+  const [confirmUnassign, setConfirmUnassign] = useState(false);
+  const pending = useRef(false);
   const selectedTrainerId = validTrainers.some((trainer) => getId(trainer) === trainerId)
     ? trainerId
     : getInitialTrainerId(client, validTrainers);
@@ -50,7 +46,16 @@ function AdminClientAssignmentSheet({
   const canSubmit = Boolean(selectedTrainerId) && typeof onSubmit === "function" && !isSubmitting;
 
   const close = () => {
-    if (!isSubmitting) onClose?.();
+    if (isSubmitting || pending.current) return;
+    if (confirmUnassign) setConfirmUnassign(false);
+    else onClose?.();
+  };
+  useModalBackNavigation({ open: true, onBack: close });
+  const submit = async (nextTrainerId) => {
+    if (isSubmitting || pending.current || typeof onSubmit !== "function") return;
+    pending.current = true;
+    try { await onSubmit(nextTrainerId); }
+    finally { pending.current = false; }
   };
 
   return (
@@ -60,7 +65,7 @@ function AdminClientAssignmentSheet({
         aria-labelledby="admin-client-assignment-title"
         aria-modal="true"
         className={styles.sheet}
-        role="dialog"
+        role={confirmUnassign ? "alertdialog" : "dialog"}
         onKeyDown={(event) => { if (event.key === "Escape") close(); }}
         onMouseDown={(event) => event.stopPropagation()}
       >
@@ -68,16 +73,17 @@ function AdminClientAssignmentSheet({
           <span className={styles.icon} aria-hidden="true"><GraduationCap /></span>
           <div>
             <p>НАЗНАЧЕНИЕ КЛИЕНТА</p>
-            <h2 id="admin-client-assignment-title">{hasCurrentTrainer ? "Сменить тренера" : "Назначить тренера"}</h2>
+            <h2 id="admin-client-assignment-title">{confirmUnassign ? "Снять назначение?" : hasCurrentTrainer ? "Сменить тренера" : "Назначить тренера"}</h2>
           </div>
           <button type="button" onClick={close} aria-label="Закрыть" disabled={isSubmitting}><X /></button>
         </header>
 
         <p className={styles.description} id="admin-client-assignment-description">
-          Выберите активного тренера для клиента <strong>{clientName}</strong>. История, питание и замеры клиента сохранятся.
+          {confirmUnassign ? <>У клиента <strong>{clientName}</strong> закроется доступ к тренировкам, питанию и прогрессу до нового назначения тренера. История, питание и замеры сохранятся.<br /><code>ID: {getId(client)}</code></>
+            : <>Выберите тренера с доступом для клиента <strong>{clientName}</strong>. История, питание и замеры клиента сохранятся. Тренера с приглашением можно назначить до активации.</>}
         </p>
 
-        {validTrainers.length ? (
+        {!confirmUnassign && (validTrainers.length ? (
           <label className={styles.selectLabel}>
             <span>Тренер</span>
             <select value={selectedTrainerId} onChange={(event) => setTrainerId(event.target.value)} disabled={isSubmitting}>
@@ -89,19 +95,19 @@ function AdminClientAssignmentSheet({
           </label>
         ) : (
           <p className={styles.emptyState}><UserRound aria-hidden="true" />Нет активных тренеров. Сначала создайте или восстановите доступ тренеру.</p>
-        )}
+        ))}
 
         {status ? <p className={styles.status} role="alert">{status}</p> : null}
 
         <footer className={styles.footer}>
-          {hasCurrentTrainer && typeof onSubmit === "function" ? (
-            <button className={styles.unassignButton} type="button" onClick={() => onSubmit("")} disabled={isSubmitting}>
+          {hasCurrentTrainer && !confirmUnassign && typeof onSubmit === "function" ? (
+            <button className={styles.unassignButton} type="button" onClick={() => setConfirmUnassign(true)} disabled={isSubmitting}>
               Снять назначение
             </button>
           ) : null}
           <button className={styles.cancelButton} type="button" onClick={close} disabled={isSubmitting}>Отмена</button>
-          <button className={styles.submitButton} type="button" onClick={() => onSubmit(selectedTrainerId)} disabled={!canSubmit}>
-            {isSubmitting ? "Сохраняем…" : hasCurrentTrainer ? "Сменить тренера" : "Назначить"}
+          <button className={confirmUnassign ? styles.unassignButton : styles.submitButton} type="button" onClick={() => submit(confirmUnassign ? "" : selectedTrainerId)} disabled={confirmUnassign ? isSubmitting : !canSubmit}>
+            {isSubmitting ? "Сохраняем…" : confirmUnassign ? "Подтвердить снятие назначения" : hasCurrentTrainer ? "Сменить тренера" : "Назначить"}
           </button>
         </footer>
       </section>

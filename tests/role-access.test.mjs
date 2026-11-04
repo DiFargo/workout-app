@@ -47,6 +47,11 @@ test("unknown client email keeps client access", () => {
   );
 });
 
+test("an open client profile waiting for trainer assignment resolves to the restricted pending role", () => {
+  assert.equal(resolveUserRole({ isAdminClaim: false, role: "client", accountAccessStatus: "awaiting_trainer" }), "pending-client");
+  assert.equal(resolveUserRole({ isAdminClaim: false, role: "client", accountAccessStatus: "active" }), "client");
+});
+
 test("verified admin claim and current server role keep admin and trainer access", () => {
   assert.equal(
     resolveUserRole({

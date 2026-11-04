@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { formatIndividualWorkoutHistoryDate } from "../../../utils/workoutHistoryPresentation";
-import { Check, ChevronRight, ClipboardList, Dumbbell, Trophy, X } from "lucide-react";
+import { CalendarDays, Check, ChevronRight, ClipboardList, Clock3, Dumbbell, Trophy, X } from "lucide-react";
 import { ChevronDown as ChevronDownData, ChevronRight as ChevronRightData } from "lucide";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import styles from "./WorkoutListDialogs.module.css";
+import { formatRussianCount } from "../../../utils/russianCount.js";
+import { buildWorkoutHistoryAchievements } from "./workoutHistoryAchievements.js";
 
 function useDismissDialog(open, onClose) {
   useEffect(() => {
@@ -24,26 +26,17 @@ function formatPlanDate(dateKey) {
   return date.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
 }
 
-function getHistorySummary(historyItems = []) {
-  return historyItems.reduce((summary, item) => {
-    const exercises = Array.isArray(item?.exercises)
-      ? item.exercises
-      : Array.isArray(item?.workout?.exercises)
-        ? item.workout.exercises
-        : [];
-    exercises.forEach((exercise) => {
-      const sets = Array.isArray(exercise?.sets) ? exercise.sets : [];
-      summary.sets += sets.length;
-      sets.forEach((set) => {
-        const weight = Number(String(set?.weight ?? set?.actualWeight ?? "").replace(",", "."));
-        if (Number.isFinite(weight) && weight > summary.maxWeight) summary.maxWeight = weight;
-      });
-    });
-    summary.minutes += Number(item?.durationSeconds) > 0
-      ? Math.max(1, Math.round(Number(item.durationSeconds) / 60))
-      : 0;
-    return summary;
-  }, { minutes: 0, sets: 0, maxWeight: 0 });
+function formatHistoryMinutes(minutes) {
+  if (minutes > 0 && minutes < 1) return "<1 мин";
+  const total = Math.round(minutes);
+  const hours = Math.floor(total / 60), rest = total % 60;
+  return hours ? `${hours} ч${rest ? ` ${rest} мин` : ""}` : `${total} мин`;
+}
+
+function historyRecordDuration(value) {
+  if (typeof value !== "number" && (typeof value !== "string" || !/^\d+(?:\.\d+)?$/.test(value.trim()))) return "";
+  const seconds = Number(value);
+  return Number.isFinite(seconds) && seconds >= 0 ? formatHistoryMinutes(seconds / 60) : "";
 }
 
 function DialogCloseButton({ testId, label, onClose }) {
@@ -211,7 +204,7 @@ export function WorkoutPlanDialog({
               <span className={styles.planOrder}>{workout.completed ? <Check aria-hidden="true" /> : String(workout.index + 1).padStart(2, "0")}</span>
               <span className={styles.planCopy}>
                 <strong>{workout.name}</strong>
-                <small>{workout.exerciseCount} упражнений · {formatPlanDate(workout.date)}</small>
+                <small>{formatRussianCount(workout.exerciseCount, ["упражнение", "упражнения", "упражнений"])} · {formatPlanDate(workout.date)}</small>
               </span>
               {workout.completed
                 ? <em className={styles.planStatus}>Выполнена</em>
@@ -277,8 +270,8 @@ export function WorkoutProgramDialog({
                   aria-expanded={expanded}
                   onClick={() => setExpandedIndex(expanded ? -1 : workout.index)}
                 >
-                  <span className={styles.planOrder}>{workout.completed ? <Check aria-hidden="true" /> : String(workout.index + 1).padStart(2, "0")}</span>
-                  <span className={styles.planCopy}><strong>{workout.name}</strong><small>{formatPlanDate(workout.date)} · {workout.exerciseCount} упражнений</small></span>
+                  <span className={styles.planOrder}>{workout.completed ? <Check aria-hidden="true" /> : String(workout.programOrder ?? workout.index + 1).padStart(2, "0")}</span>
+                  <span className={styles.planCopy}><strong>{workout.name}</strong><small>{formatPlanDate(workout.date)} · {formatRussianCount(workout.exerciseCount, ["упражнение", "упражнения", "упражнений"])}</small></span>
                   <MorphingIcon
                     icon={expanded ? ChevronDownData : ChevronRightData}
                     data-icon-state={expanded ? "expanded" : "collapsed"}
@@ -307,11 +300,58 @@ export function IndividualWorkoutHistoryDialog({
   open,
   historyLoading,
   historyItems = [],
+  historyLoader,
+  historyOwnerKey = "",
   onClose
 }) {
+  const [visibleCount, setVisibleCount] = useState(12);
+  const [attempt, setAttempt] = useState(0);
+  const [historyState, setHistoryState] = useState({ status: "idle", ownerKey: historyOwnerKey, items: [], isCurrent: null });
+  const loaderRef = useRef(historyLoader);
+  useEffect(() => { loaderRef.current = historyLoader; }, [historyLoader]);
+  useEffect(() => {
+    let active = true;
+    const reset = { ownerKey: historyOwnerKey, items: [], isCurrent: null };
+    // This state is a request lifecycle, not a second copy of derived history.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVisibleCount(12);
+    if (!open) {
+      setHistoryState({ ...reset, status: "idle" });
+      return undefined;
+    }
+    const load = loaderRef.current;
+    if (typeof load !== "function") {
+      setHistoryState({ ...reset, status: "unavailable" });
+      return undefined;
+    }
+    setHistoryState({ ...reset, status: "loading" });
+    Promise.resolve().then(() => active ? load() : undefined).then(result => {
+      if (!active) return;
+      if (typeof result?.isCurrent !== "function" || result.isCurrent() !== true) {
+        setHistoryState({ ...reset, status: "stale" });
+        return;
+      }
+      if (!Array.isArray(result.items)) throw new Error("Incomplete workout history result");
+      setHistoryState({ ownerKey: historyOwnerKey, status: "ready", items: result.items, isCurrent: result.isCurrent });
+    }).catch(() => {
+      if (active) setHistoryState({ ...reset, status: "error" });
+    });
+    return () => { active = false; };
+  }, [open, attempt, historyOwnerKey]);
   useDismissDialog(open, onClose);
+
+  const ownerMatches = historyState.ownerKey === historyOwnerKey;
+  const allTimeReady = ownerMatches && historyState.status === "ready" && historyState.isCurrent?.() === true;
+  const stale = ownerMatches && (historyState.status === "stale" || historyState.status === "ready" && !allTimeReady);
+  const loading = typeof historyLoader === "function" && (!ownerMatches || ["idle", "loading"].includes(historyState.status));
+  const summary = useMemo(() => buildWorkoutHistoryAchievements(historyState.items), [historyState.items]);
+  const programSummary = useMemo(() => buildWorkoutHistoryAchievements(historyItems), [historyItems]);
+  const items = stale || !ownerMatches ? [] : allTimeReady ? summary.confirmedItems : historyLoading ? [] : programSummary.confirmedItems;
+  const retry = () => {
+    setHistoryState({ status: "loading", ownerKey: historyOwnerKey, items: [], isCurrent: null });
+    setAttempt(value => value + 1);
+  };
   if (!open) return null;
-  const summary = getHistorySummary(historyItems);
 
   return (
     <div
@@ -341,35 +381,53 @@ export function IndividualWorkoutHistoryDialog({
           actions={<DialogCloseButton testId="workout-history-dialog-close" label="Закрыть историю тренировок" onClose={onClose} />}
         />
 
-        <div className={styles.historyStats} data-testid="workout-history-dialog-stats">
-          <span><strong>{historyItems.length}</strong><small>тренировки</small></span>
-          <span><strong>{summary.minutes || "—"}</strong><small>минут</small></span>
-          <span><strong>{summary.maxWeight ? `${summary.maxWeight} кг` : "—"}</strong><small>макс. вес</small></span>
-        </div>
+        <div className={styles.historyBody} aria-busy={loading}>
+          {loading && <div className={styles.historyLoadNotice} role="status"><strong>Загружаем историю за всё время…</strong><span>Собираем подтверждённые тренировки из всех программ.</span></div>}
+          {!allTimeReady && !loading && <div className={styles.historyLoadNotice} role={stale || historyState.status === "error" ? "alert" : "status"}>
+            <strong>{stale ? "История недоступна для текущей сессии" : historyState.status === "error" ? "Не удалось загрузить полную историю" : "Полная история пока недоступна"}</strong>
+            <span>{stale ? "Обновите историю. Данные предыдущей сессии не показаны." : "Ниже — только текущая программа. Итоги за всё время пока не рассчитаны."}</span>
+            {typeof historyLoader === "function" && <button type="button" className={styles.historyRetry} onClick={retry}>Повторить загрузку</button>}
+          </div>}
 
-        <div className={styles.historyList} data-testid="workout-history-dialog-list">
-          {historyLoading && <p className={styles.historyMessage}>Загрузка истории...</p>}
-
-          {!historyLoading && historyItems.map((item) => (
-            <div
-              className={styles.historyItem}
-              data-testid="workout-history-dialog-item"
-              key={item.id || `${item.date}_${item.workout}`}
-            >
-              <span className={styles.historyIcon} aria-hidden="true"><Trophy /></span>
-              <div className={styles.historyContent}>
-                <strong className={styles.historyTitle}>{item.workout || "Тренировка"}</strong>
-                <small className={styles.historyMeta}>
-                  {formatIndividualWorkoutHistoryDate(item.date)}
-                  {item.durationSeconds ? ` · ${Math.max(1, Math.round(item.durationSeconds / 60))} мин` : ""}
-                </small>
-              </div>
+          {allTimeReady && <>
+            <section className={styles.historyHero} data-testid="workout-history-all-time" aria-label="Итоги за всё время">
+              <span className={styles.historyEyebrow}><Trophy size={16} aria-hidden="true" /> ЗА ВСЁ ВРЕМЯ</span>
+              <h2>Всего {formatRussianCount(summary.completedCount, ["тренировка", "тренировки", "тренировок"])}</h2>
+              <p>Все ваши программы{summary.firstDate ? ` · ${summary.undatedCount ? "первая известная дата — " : "с "}${formatIndividualWorkoutHistoryDate(summary.firstDate)}` : ""}</p>
+            </section>
+            <div className={styles.historyStats} data-testid="workout-history-dialog-stats">
+              <span><Clock3 size={17} aria-hidden="true" /><strong>{summary.durationRecordCount ? formatHistoryMinutes(summary.durationMinutesKnown) : "—"}</strong><small>время по записям</small></span>
+              <span><CalendarDays size={17} aria-hidden="true" /><strong>{summary.activeWeeks}</strong><small>активные недели</small></span>
             </div>
-          ))}
+            {summary.completedCount > 0 && summary.durationRecordCount < summary.completedCount && <p className={styles.historyDataNote}>{summary.durationRecordCount ? `Время указано у ${summary.durationRecordCount} из ${summary.completedCount} тренировок — итог неполный.` : "Время тренировок в истории не указано. По плану его не оцениваем."}</p>}
+            {summary.undatedCount > 0 && <p className={styles.historyDataNote}>У {summary.undatedCount} тренировок нет точной даты: они включены в общее число, но не в статистику недель и последних 30 дней.</p>}
+            <div className={styles.historyHighlights}>
+              <section><small>Достигнутый рубеж</small><strong>{summary.milestone ? formatRussianCount(summary.milestone, ["тренировка", "тренировки", "тренировок"]) : "Первая тренировка впереди"}</strong></section>
+              <section><small>За последние 30 дней</small><strong>{formatRussianCount(summary.recent30Count, ["тренировка", "тренировки", "тренировок"])}</strong></section>
+            </div>
+            {summary.bestWeek && <p className={styles.historyBestWeek}>Лучшая неделя — {formatRussianCount(summary.bestWeek.count, ["тренировка", "тренировки", "тренировок"])}<span>с {formatIndividualWorkoutHistoryDate(summary.bestWeek.start)}</span></p>}
+            {summary.pendingCount > 0 && <p className={styles.historyDataNote}>Записи на устройстве ({summary.pendingCount}) не входят в общие итоги до синхронизации.</p>}
+          </>}
 
-          {!historyLoading && historyItems.length === 0 && (
-            <p className={styles.historyMessage}>В этой программе завершённых тренировок пока нет.</p>
-          )}
+          {!stale && ownerMatches && !loading && <>
+            <p className={styles.historyProgramNote} data-testid="workout-history-program-count">{historyLoading ? "История текущей программы загружается…" : `В текущей программе: ${formatRussianCount(programSummary.completedCount, ["тренировка", "тренировки", "тренировок"])}.`}</p>
+            <h3 className={styles.historyListTitle}>{allTimeReady ? "Последние тренировки" : "Текущая программа"}</h3>
+            <div className={styles.historyList} data-testid="workout-history-dialog-list">
+              {!allTimeReady && historyLoading && <p className={styles.historyMessage}>Загрузка истории текущей программы…</p>}
+              {items.slice(0, visibleCount).map((item) => {
+                const duration = historyRecordDuration(item.durationSeconds);
+                return <div className={styles.historyItem} data-testid="workout-history-dialog-item" key={item.id || item.clientSaveId || `${item.date}_${item.workout}`}>
+                  <span className={styles.historyIcon} aria-hidden="true"><Dumbbell /></span>
+                  <div className={styles.historyContent}>
+                    <strong className={styles.historyTitle}>{item.workoutName || (typeof item.workout === "string" ? item.workout : item.workout?.name) || "Тренировка"}</strong>
+                    <small className={styles.historyMeta}>{formatIndividualWorkoutHistoryDate(item.completedAt || item.finishedAt || item.date)}{duration ? ` · ${duration}` : ""}</small>
+                  </div>
+                </div>;
+              })}
+              {items.length > visibleCount && <button type="button" className={styles.historyMore} onClick={() => setVisibleCount(count => count + 12)}>Показать ещё · осталось {items.length - visibleCount}</button>}
+              {items.length === 0 && (allTimeReady || !historyLoading) && <p className={styles.historyMessage}>{allTimeReady ? "Здесь появятся ваши завершённые тренировки. Каждая сохранённая тренировка будет учтена." : "В этой программе завершённых тренировок пока нет."}</p>}
+            </div>
+          </>}
         </div>
 
       </section>

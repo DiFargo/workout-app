@@ -1,4 +1,5 @@
 import {
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -15,7 +16,9 @@ import {
 } from "../../utils/clientUx";
 import { limitUserDisplayName } from "../../utils/userDisplayName.js";
 import { fetchAuthorizedWithTimeout, fetchWithAppCheck } from "../../utils/apiClient";
-import { resolveEmailForLogin } from "./loginResolution";
+import { authenticateWithLoginAlias, requestLoginAliasPasswordReset } from "./loginResolution";
+import { beginAuthProfilePreparation } from "./authProfilePreparation.js";
+import { captureAuthSession } from "../../utils/authSession.js";
 
 const googleProvider = new GoogleAuthProvider();
 const ACTIVE_INVITE_STATUSES = new Set(["active", "created"]);
@@ -59,7 +62,16 @@ async function getActiveInviteForUser(db, user) {
   if (!db || !email) return null;
 
   const inviteRef = doc(db, "clientInvites", getInviteIdForEmail(email));
-  const inviteSnapshot = await getDoc(inviteRef);
+  let inviteSnapshot;
+  try {
+    inviteSnapshot = await getDoc(inviteRef);
+  } catch (error) {
+    // A missing invite document is not readable under the private invite rules.
+    // For open registration treat that as "no invitation"; other Firebase
+    // failures still stop the authentication flow.
+    if (error?.code === "permission-denied") return null;
+    throw error;
+  }
   if (!inviteSnapshot.exists()) return null;
 
   const invite = inviteSnapshot.data() || {};
@@ -108,6 +120,29 @@ async function createInvitedUserProfile(db, user, invite) {
   await setDoc(userRef, profile, { merge: true });
 }
 
+function isAwaitingTrainerProfile(profile = {}) {
+  return String(profile.role || "").trim().toLowerCase() === "client" &&
+    (profile.accountAccessStatus === "awaiting_trainer" || profile.trainerAssignmentState === "unassigned");
+}
+
+async function createOpenUserProfile(db, user, authProvider = "password") {
+  if (!db || !user?.uid || !user?.email) throw makeAuthError("auth/profile-create-failed");
+
+  const email = String(user.email).trim();
+  const now = new Date().toISOString();
+  await setDoc(doc(db, "users", user.uid), {
+    email,
+    name: limitUserDisplayName(user.displayName || email.split("@")[0]),
+    role: "client",
+    active: true,
+    accountRegistrationType: "open",
+    accountAccessStatus: "awaiting_trainer",
+    authProvider,
+    createdAt: now,
+    updatedAt: now
+  });
+}
+
 async function updateExistingUserProfile(db, user, userSnapshot) {
   if (!db || !user?.uid || !userSnapshot?.exists?.()) return;
 
@@ -132,15 +167,17 @@ export function createAuthHandlers({
   setLoginSubmitting,
   setPasswordResetSending,
   setPage,
-  setSelectedUserId,
-  loadHistory,
-  loadWorkoutsFromFirebase
+  setSelectedUserId
 }) {
-  async function finishAuth(user, preferredAlias = "") {
+  async function finishAuth(user, preferredAlias = "", { allowOpenRegistration = false, authProvider = "password", isCurrent = () => true } = {}) {
     const userRef = doc(db, "users", user.uid);
-    const userSnapshot = await getDoc(userRef);
+    let userSnapshot = await getDoc(userRef);
+    if (!isCurrent()) return;
 
-    if (userSnapshot.exists()) {
+    if (userSnapshot.exists() && isAwaitingTrainerProfile(userSnapshot.data() || {})) {
+      // Pending accounts can authenticate and view the access status, but must
+      // not call member-only APIs or receive a login alias yet.
+    } else if (userSnapshot.exists()) {
       if (!hasActiveMembership(userSnapshot.data() || {})) {
         await signOut(auth).catch(() => {});
         throw makeAuthError("auth/user-disabled");
@@ -148,23 +185,34 @@ export function createAuthHandlers({
       await updateExistingUserProfile(db, user, userSnapshot);
     } else {
       const invite = await getActiveInviteForUser(db, user);
+      if (!isCurrent()) return;
 
-      if (!invite) {
+      if (!invite && allowOpenRegistration) {
+        await createOpenUserProfile(db, user, authProvider);
+        if (!isCurrent()) return;
+        userSnapshot = await getDoc(userRef);
+      } else if (!invite) {
         await signOut(auth).catch(() => {});
         throw makeAuthError("auth/invite-required");
+      } else {
+        await createInvitedUserProfile(db, user, invite.data);
+        if (!isCurrent()) return;
+        await setDoc(invite.ref, {
+          status: "accepted",
+          acceptedAt: new Date().toISOString(),
+          acceptedUid: user.uid,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
       }
-
-      await createInvitedUserProfile(db, user, invite.data);
-      await setDoc(invite.ref, {
-        status: "accepted",
-        acceptedAt: new Date().toISOString(),
-        acceptedUid: user.uid,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
     }
+    if (!isCurrent()) return;
 
-    await ensureLoginAlias(db, user, userSnapshot.data()?.loginLower || userSnapshot.data()?.accountProfile?.login || preferredAlias)
-      .catch((error) => console.warn("Alias sync deferred:", error.message));
+    const isAwaitingTrainer = isAwaitingTrainerProfile(userSnapshot.data() || {});
+    if (!isAwaitingTrainer) {
+      await ensureLoginAlias(db, user, userSnapshot.data()?.loginLower || userSnapshot.data()?.accountProfile?.login || preferredAlias)
+        .catch((error) => console.warn("Alias sync deferred:", error.message));
+    }
+    if (!isCurrent()) return;
 
     setPage(APP_PAGES.MAIN);
     setLoginError("");
@@ -172,8 +220,46 @@ export function createAuthHandlers({
     setLoginFieldErrors({});
     setSelectedUserId(null);
 
-    loadHistory();
-    loadWorkoutsFromFirebase(user.uid);
+    // The verified auth bootstrap owns member data. Starting those reads here
+    // races its role/session transition and duplicates the same plan/history.
+    return { isAwaitingTrainer };
+  }
+
+  async function handleEmailSignup(event, emailValue, passwordValue) {
+    event?.preventDefault?.();
+    if (loginSubmitting || passwordResetSending) return;
+
+    const email = String(emailValue || "").trim();
+    const cleanPassword = String(passwordValue || "");
+    setLoginError("");
+    setLoginNotice("");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setLoginError("Проверь формат email.");
+      return;
+    }
+    if (cleanPassword.length < 6) {
+      setLoginError("Пароль должен содержать минимум 6 символов.");
+      return;
+    }
+
+    setLoginSubmitting(true);
+    const completeProfilePreparation = beginAuthProfilePreparation(auth);
+    try {
+      const credential = await createUserWithEmailAndPassword(auth, email, cleanPassword);
+      await finishAuth(credential.user, "", { allowOpenRegistration: true, authProvider: "password" });
+      setLoginNotice("Аккаунт создан. Пока тренер не назначен, разделы приложения будут заблокированы.");
+    } catch (error) {
+      if (error?.code === "auth/email-already-in-use") {
+        setLoginError("Аккаунт с этой почтой уже есть. Войди или восстанови пароль.");
+      } else if (error?.code === "auth/weak-password") {
+        setLoginError("Пароль слишком простой. Используй не менее 6 символов.");
+      } else {
+        setLoginError(mapLoginAuthError(error));
+      }
+    } finally {
+      completeProfilePreparation();
+      setLoginSubmitting(false);
+    }
   }
 
   async function handleLogin(event) {
@@ -187,18 +273,17 @@ export function createAuthHandlers({
     if (!validation.valid) return;
 
     setLoginSubmitting(true);
+    const completeProfilePreparation = beginAuthProfilePreparation(auth);
     try {
-      const email = await resolveEmailForLogin(validation);
-      const result = await signInWithEmailAndPassword(
-        auth,
-        email,
-        validation.password
-      );
+      const result = validation.isEmail
+        ? await signInWithEmailAndPassword(auth, validation.email.toLowerCase(), validation.password)
+        : await signInWithCustomToken(auth, await authenticateWithLoginAlias(validation, validation.password));
 
-      await finishAuth(result.user, validation.loginAlias);
+      await finishAuth(result.user, validation.loginAlias, { allowOpenRegistration: true, authProvider: "password" });
     } catch (error) {
       setLoginError(mapLoginAuthError(error));
     } finally {
+      completeProfilePreparation();
       setLoginSubmitting(false);
     }
   }
@@ -214,8 +299,8 @@ export function createAuthHandlers({
 
     setPasswordResetSending(true);
     try {
-      const email = await resolveEmailForLogin(validation);
-      await sendPasswordResetEmail(auth, email);
+      if (validation.isEmail) await sendPasswordResetEmail(auth, validation.email.toLowerCase());
+      else await requestLoginAliasPasswordReset(validation);
       setLoginNotice("Если аккаунт существует, ссылка для смены пароля отправлена на почту.");
     } catch (error) {
       setLoginError(mapLoginAuthError(error));
@@ -232,12 +317,14 @@ export function createAuthHandlers({
     setLoginNotice("");
     setLoginFieldErrors({});
 
+    const completeProfilePreparation = beginAuthProfilePreparation(auth);
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      await finishAuth(result.user);
+      await finishAuth(result.user, "", { allowOpenRegistration: true, authProvider: "google.com" });
     } catch (error) {
       setLoginError(mapLoginAuthError(error));
     } finally {
+      completeProfilePreparation();
       setLoginSubmitting(false);
     }
   }
@@ -246,8 +333,11 @@ export function createAuthHandlers({
     if (loginSubmitting || passwordResetSending) return;
 
     const initData = String(window.Telegram?.WebApp?.initData || "").trim();
+    const telegramInviteToken = new URLSearchParams(window.location.search).get("telegramInvite") || "";
     if (!initData) {
-      setLoginError("Открой приложение из меню бота в Telegram, чтобы войти этим способом.");
+      setLoginError(telegramInviteToken
+        ? "Открой приглашение в Telegram и нажми Start, затем кнопку «Принять приглашение»."
+        : "Открой приложение из меню бота в Telegram, чтобы войти этим способом.");
       setLoginNotice("");
       return;
     }
@@ -257,13 +347,31 @@ export function createAuthHandlers({
     setLoginNotice("");
     setLoginFieldErrors({});
 
+    const completeProfilePreparation = beginAuthProfilePreparation(auth);
+    const startingSession = captureAuthSession(auth);
+    let completedSession;
+    const ownsLoginState = () => startingSession.isUnchanged() || completedSession?.isCurrent();
+    let telegramDeadline;
+    const telegramRequest = new AbortController();
     try {
-      const response = await fetchWithAppCheck("/api/telegram/miniapp-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ initData })
-      });
-      const data = await response.json().catch(() => ({}));
+      const request = (async () => {
+        const response = await fetchWithAppCheck("/api/telegram/miniapp-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ initData, ...(telegramInviteToken ? { telegramInviteToken } : {}) }),
+          signal: telegramRequest.signal
+        });
+        return { response, data: await response.json().catch(() => ({})) };
+      })();
+      const { response, data } = await Promise.race([request, new Promise((_, reject) => {
+        telegramDeadline = setTimeout(() => {
+          const timeout = new DOMException("Telegram login timed out", "AbortError");
+          telegramRequest.abort(timeout);
+          reject(timeout);
+        }, 16000);
+      })]);
+      clearTimeout(telegramDeadline);
+      if (!startingSession.isUnchanged()) return;
 
       if (!response.ok || !data.ok || !data.customToken) {
         const error = new Error(data.error || "telegram-login-failed");
@@ -272,11 +380,47 @@ export function createAuthHandlers({
       }
 
       const credential = await signInWithCustomToken(auth, data.customToken);
-      await finishAuth(credential.user);
+      if (auth.currentUser !== credential.user) return;
+      completedSession = captureAuthSession(auth);
+      const profileState = await finishAuth(credential.user, "", { isCurrent: completedSession.isCurrent });
+      if (!completedSession.isCurrent()) return;
+      if (profileState?.isAwaitingTrainer) {
+        setLoginNotice("Подтверждённое приглашение пока не найдено. Открой ссылку тренера в чате с ботом и нажми Start, затем проверь приглашение ещё раз.");
+      }
+      if (telegramInviteToken && !profileState?.isAwaitingTrainer) {
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.delete("telegramInvite");
+        window.history.replaceState({}, document.title, `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
+      }
     } catch (error) {
+      if (!ownsLoginState()) return;
       console.error("Telegram Mini App sign-in failed:", error?.code || "unknown");
-      const message = error?.code === "telegram-not-linked"
-        ? "Этот Telegram ещё не привязан к аккаунту. Войди по логину и привяжи Telegram в профиле."
+      const message = error?.name === "AbortError"
+        ? "Telegram не ответил вовремя. Проверь соединение и попробуй ещё раз."
+        : error?.code === "telegram-signature-invalid"
+          ? "Не удалось подтвердить данные Telegram. Полностью закрой приложение и заново открой его кнопкой в чате с ботом."
+        : error?.code === "telegram-not-linked"
+        ? "Не удалось создать аккаунт Telegram. Попробуй ещё раз или обратись к тренеру."
+        : error?.code === "auth/telegram-relink-required"
+          ? "Нужно подтвердить прежнюю привязку. Войди по логину или email и паролю, затем открой Кабинет → Telegram и подключи его заново через бота. Если данных для входа нет, обратись к тренеру."
+        : error?.code === "telegram-link-conflict"
+          ? "Этот Telegram уже используется в другом аккаунте. Обратись к администратору."
+        : error?.code === "telegram-invite-changed"
+          ? "Приглашение обновилось во время проверки. Нажми кнопку приглашения ещё раз."
+        : error?.code === "telegram-invite-invalid"
+          ? "Приглашение не найдено или уже удалено. Попроси тренера прислать новую ссылку."
+        : error?.code === "telegram-invite-username-mismatch"
+          ? "Приглашение предназначено для другого Telegram-ника. Открой его из нужного аккаунта."
+          : error?.code === "telegram-invite-expired"
+            ? "Срок действия приглашения истёк. Попроси тренера прислать новое."
+            : error?.code === "telegram-invite-account-mismatch"
+              ? "Этот Telegram уже связан с другим аккаунтом. Обратись к тренеру."
+              : error?.code === "telegram-invite-already-used"
+                ? "Это приглашение уже использовано. Открой приложение через Telegram или попроси новое приглашение."
+                : error?.code === "telegram-invite-not-started"
+                  ? "Сначала нажми Start в чате с ботом по ссылке приглашения."
+                  : error?.code === "telegram-invite-account-unavailable"
+                    ? "Аккаунт приглашения недоступен. Обратись к тренеру."
         : error?.code === "telegram-account-disabled"
           ? "Доступ к аккаунту отключён. Обратись к тренеру."
           : error?.code === "auth/invite-required"
@@ -284,11 +428,14 @@ export function createAuthHandlers({
             : "Не удалось войти через Telegram. Попробуй ещё раз или выбери другой способ входа.";
       setLoginError(message);
     } finally {
-      setLoginSubmitting(false);
+      clearTimeout(telegramDeadline);
+      completeProfilePreparation();
+      if (ownsLoginState()) setLoginSubmitting(false);
     }
   }
 
   return {
+    handleEmailSignup,
     handleGoogleAuth,
     handleLogin,
     handleLoginPasswordReset,

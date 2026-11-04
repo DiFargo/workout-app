@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Zmena — задачи на сегодня · макет</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #1c1c1e;
+      background: #e9edf1;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; min-height: 100vh; }
+    .stage { min-height: 100vh; display: grid; place-items: center; padding: 30px 18px; }
+    .preview { display: grid; justify-items: center; gap: 14px; }
+    .preview-title { margin: 0; color: #1c1c1e; font-size: 18px; font-weight: 650; letter-spacing: -.25px; }
+    .scenario-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 430px; }
+    .scenario-button { min-height: 40px; padding: 0 14px; border: 1px solid rgba(60,60,67,.15); border-radius: 999px; background: #fff; color: #636366; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease; }
+    .scenario-button[aria-pressed="true"] { border-color: #3c6faa; background: #3c6faa; color: #fff; }
+    .scenario-button:focus-visible { outline: 3px solid #1f4f88; outline-offset: 3px; }
+    .hint { margin: 0; color: #636366; font-size: 12px; text-align: center; }
+    .device { width: min(402px, calc(100vw - 32px)); height: min(874px, calc(100dvh - 150px)); min-height: 670px; padding: 7px; border: 1px solid rgba(20,30,40,.24); border-radius: 46px; background: #1c1c1e; box-shadow: 0 28px 70px rgba(20,35,50,.22), 0 3px 8px rgba(20,35,50,.13); }
+    .screen { position: relative; display: flex; width: 100%; height: 100%; min-height: 0; flex-direction: column; overflow: hidden; border-radius: 39px; background: #f2f2f7; }
+    .system-status { display: flex; min-height: 29px; align-items: center; justify-content: space-between; padding: 5px 22px 0; color: #1c1c1e; font-size: 12px; font-weight: 650; }
+    .system-icons { display: inline-flex; align-items: center; gap: 5px; }
+    .signal { width: 16px; height: 10px; border-right: 2px solid currentColor; border-left: 2px solid currentColor; opacity: .78; }
+    .wifi { width: 13px; height: 9px; border-top: 2px solid currentColor; border-radius: 50%; transform: rotate(-12deg); opacity: .78; }
+    .battery { width: 20px; height: 10px; border: 1.4px solid currentColor; border-radius: 3px; position: relative; }
+    .battery:before { position: absolute; top: 2px; right: -3px; width: 2px; height: 4px; border-radius: 0 2px 2px 0; background: currentColor; content: ""; }
+    .battery:after { position: absolute; inset: 2px 5px 2px 2px; border-radius: 1px; background: currentColor; content: ""; }
+    .telegram-bar { display: flex; min-height: 47px; align-items: center; gap: 16px; padding: 0 18px; border-bottom: 1px solid rgba(60,60,67,.1); background: rgba(255,255,255,.96); }
+    .telegram-close { color: #3c6faa; font-size: 25px; line-height: 1; }
+    .telegram-name { flex: 1; font-size: 16px; font-weight: 650; letter-spacing: .2px; }
+    .telegram-menu { color: #636366; font-size: 20px; letter-spacing: 2px; }
+    .app-scroll { min-height: 0; flex: 1; overflow: auto; padding: 19px 16px 22px; scrollbar-width: none; }
+    .app-scroll::-webkit-scrollbar { display: none; }
+    .welcome { padding: 0 2px 14px; }
+    .welcome h1 { margin: 0; font-size: 30px; font-weight: 740; line-height: 1.12; letter-spacing: -1px; }
+    .welcome p { margin: 7px 0 4px; color: #636366; font-size: 13px; line-height: 1.4; }
+    .welcome strong { font-size: 19px; font-weight: 650; letter-spacing: -.35px; }
+    .task-panel { padding: 14px; border-radius: 22px; background: linear-gradient(132deg, #e3f0eb 0%, #e5edf8 100%); }
+    .task-panel-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .task-kicker { display: inline-flex; align-items: center; gap: 7px; color: #3c6faa; font-size: 12px; font-weight: 700; letter-spacing: .25px; }
+    .task-kicker svg { width: 17px; height: 17px; }
+    .task-count { padding: 5px 9px; border: 1px solid rgba(60,111,170,.16); border-radius: 999px; background: rgba(255,255,255,.72); color: #3c6faa; font-size: 11px; font-weight: 650; white-space: nowrap; }
+    .task-panel h2 { margin: 13px 0 4px; font-size: 23px; line-height: 1.16; font-weight: 720; letter-spacing: -.75px; }
+    .task-intro { margin: 0 0 11px; color: #636366; font-size: 13px; line-height: 1.4; }
+    .task-list { display: grid; gap: 7px; }
+    .task-row { min-height: 66px; display: grid; grid-template-columns: 38px minmax(0,1fr) 34px; align-items: center; gap: 10px; padding: 8px 9px; border: 1px solid rgba(60,60,67,.07); border-radius: 15px; background: rgba(255,255,255,.92); }
+    .task-row.primary { border-color: rgba(60,111,170,.2); background: rgba(255,255,255,.98); box-shadow: 0 2px 6px rgba(44,82,120,.06); }
+    .task-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; background: #edf3f8; color: #3c6faa; }
+    .task-icon svg { width: 19px; height: 19px; }
+    .task-row[data-kind="weight"] .task-icon { background: #eaf4ee; color: #237a42; }
+    .task-row[data-kind="photos"] .task-icon { background: #f0eff8; color: #615e9b; }
+    .task-copy { min-width: 0; display: grid; gap: 2px; }
+    .task-copy strong { color: #1c1c1e; font-size: 14px; font-weight: 650; line-height: 1.25; }
+    .task-copy small { overflow: hidden; color: #636366; font-size: 11px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+    .task-open { display: grid; min-height: 34px; place-items: center; border-radius: 50%; color: #3c6faa; font-size: 24px; line-height: 1; }
+    .task-row.primary .task-open { background: #3c6faa; color: #fff; }
+    .task-footer { margin: 10px 2px 0; color: #636366; font-size: 11px; line-height: 1.4; }
+    .task-empty { min-height: 166px; display: grid; align-content: center; justify-items: center; gap: 8px; padding: 18px; text-align: center; }
+    .empty-check { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: #e7f3eb; color: #237a42; font-size: 22px; font-weight: 700; }
+    .task-empty strong { font-size: 17px; font-weight: 680; }
+    .task-empty span { max-width: 250px; color: #636366; font-size: 12px; line-height: 1.45; }
+    .section-title { margin: 17px 2px 8px; font-size: 17px; font-weight: 690; letter-spacing: -.35px; }
+    .metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
+    .metric { min-height: 83px; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 9px; border-radius: 16px; background: #fff; }
+    .metric span { color: #636366; font-size: 10px; }
+    .metric strong { font-size: 22px; line-height: 1; font-weight: 700; letter-spacing: -.45px; font-variant-numeric: tabular-nums; }
+    .metric small { color: #636366; font-size: 10px; }
+    .coach-title { margin: 15px 2px 7px; font-size: 16px; font-weight: 680; }
+    .coach-card { display: flex; min-height: 49px; align-items: center; gap: 10px; padding: 8px 11px; border-radius: 15px; background: #fff; }
+    .coach-avatar { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; background: #e8edf3; color: #3c6faa; font-size: 11px; font-weight: 700; }
+    .coach-card strong { font-size: 13px; font-weight: 620; }
+    .bottom-nav { display: grid; min-height: 63px; grid-template-columns: repeat(5,1fr); align-items: center; padding: 5px 8px max(6px, env(safe-area-inset-bottom)); border-top: 1px solid rgba(60,60,67,.1); background: rgba(255,255,255,.98); }
+    .nav-item { display: grid; justify-items: center; gap: 3px; color: #636366; font-size: 9px; font-weight: 550; }
+    .nav-item svg { width: 20px; height: 20px; stroke-width: 1.8; }
+    .nav-item.active { color: #3c6faa; font-weight: 650; }
+    @media (max-width: 520px) {
+      .stage { min-height: 100dvh; padding: 10px 0; }
+      .preview { width: 100%; gap: 8px; }
+      .preview-title, .hint { display: none; }
+      .scenario-controls { max-width: 100%; gap: 6px; padding: 0 8px; }
+      .scenario-button { min-height: 34px; padding-inline: 11px; font-size: 11px; }
+      .device { width: min(402px, calc(100vw - 12px)); height: calc(100dvh - 62px); min-height: 620px; padding: 4px; border-radius: 38px; }
+      .screen { border-radius: 33px; }
+      .app-scroll { padding: 15px 13px 18px; }
+      .welcome h1 { font-size: 28px; }
+      .task-panel { padding: 12px; border-radius: 20px; }
+      .task-panel h2 { font-size: 21px; }
+      .task-row { min-height: 62px; grid-template-columns: 34px minmax(0,1fr) 30px; gap: 8px; padding: 7px; }
+      .task-icon { width: 33px; height: 33px; }
+      .task-copy strong { font-size: 13px; }
+      .task-copy small { font-size: 10px; }
+      .task-open { min-height: 30px; font-size: 21px; }
+      .metric { min-height: 77px; padding: 9px 7px; }
+      .metric strong { font-size: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="preview" aria-label="Интерактивный макет главного экрана">
+      <h1 class="preview-title">Главная · динамические задачи</h1>
+      <div class="scenario-controls" role="group" aria-label="Сценарий макета">
+        <button class="scenario-button" type="button" data-scenario="busy" aria-pressed="true">Несколько задач</button>
+        <button class="scenario-button" type="button" data-scenario="recovery" aria-pressed="false">День отдыха</button>
+        <button class="scenario-button" type="button" data-scenario="done" aria-pressed="false">Всё выполнено</button>
+      </div>
+      <p class="hint">Переключите сценарий — карточка меняется вместе с задачами на день.</p>
+      <div class="device">
+        <div class="screen">
+          <div class="system-status" aria-hidden="true">
+            <span>09:41</span>
+            <span class="system-icons"><span>◉</span><span class="signal"></span><span class="wifi"></span><span class="battery"></span></span>
+          </div>
+          <div class="telegram-bar" aria-hidden="true">
+            <span class="telegram-close">×</span><span class="telegram-name">ZMENA</span><span>⌄</span><span class="telegram-menu">⋮</span>
+          </div>
+          <div class="app-scroll">
+            <header class="welcome">
+              <h1>Сегодня</h1>
+              <p>Пятница, 9 октября</p>
+              <strong>Доброе утро, Илья</strong>
+            </header>
+            <section class="task-panel" aria-labelledby="taskHeading" aria-live="polite">
+              <div class="task-panel-top">
+                <span class="task-kicker">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5M4 8l4-4m8 16 4-4M3 11l8-8m2 18 8-8"/></svg>
+                  ПЛАН НА СЕГОДНЯ
+                </span>
+                <span class="task-count" id="taskCount">3 задачи</span>
+              </div>
+              <h2 id="taskHeading">Что важно сегодня?</h2>
+              <p class="task-intro" id="taskIntro">Только то, что актуально для вашего плана и прогресса.</p>
+              <div class="task-list" id="taskList"></div>
+              <p class="task-footer" id="taskFooter">Список обновится, когда вы выполните задачу или изменится план.</p>
+            </section>
+            <h2 class="section-title">Ваши показатели</h2>
+            <div class="metrics">
+              <div class="metric"><span>Тренировки</span><strong>12</strong><small>завершено</small></div>
+              <div class="metric"><span>Питание</span><strong>1 840</strong><small>из 2 500 ккал</small></div>
+              <div class="metric"><span>Вес</span><strong>72,8</strong><small>без изменений</small></div>
+            </div>
+            <h2 class="coach-title">Тренер рядом</h2>
+            <div class="coach-card"><span class="coach-avatar">ТР</span><strong>Ваш тренер</strong></div>
+          </div>
+          <nav class="bottom-nav" aria-label="Основная навигация">
+            <span class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Сегодня</span></span>
+            <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m6.5 6.5 11 11M4 8l4-4m8 16 4-4M3 11l8-8m2 18 8-8"/></svg><span>Тренировки</span></span>
+            <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7m4-7v7M6 3v18M15 3v7m4-7v7m-2-7v18"/></svg><span>Питание</span></span>
+            <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19v-5m6 5V9m6 10V5m5 14V3"/></svg><span>Прогресс</span></span>
+            <span class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Кабинет</span></span>
+          </nav>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const icons = {
+      workout: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 6.5 11 11M4 8l4-4m8 16 4-4M3 11l8-8m2 18 8-8"/></svg>',
+      weight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v13h16V6z"/><path d="m12 8 2 3m-2-3-2 3M8 16h8"/></svg>',
+      photos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg>'
+    };
+    const scenarios = {
+      busy: {
+        count: '3 задачи',
+        title: 'Что важно сегодня?',
+        intro: 'Только то, что актуально для вашего плана и прогресса.',
+        footer: 'Список обновится, когда вы выполните задачу или изменится план.',
+        tasks: [
+          { kind: 'workout', title: 'Сегодня тренировка', note: 'Ноги и ягодицы · около 45 минут', action: 'Открыть', primary: true },
+          { kind: 'weight', title: 'Пора взвеситься', note: 'Последняя запись — 7 дней назад', action: 'Внести вес' },
+          { kind: 'photos', title: 'Обновить фото прогресса', note: 'Последняя съёмка — 14 дней назад', action: 'Добавить фото' }
+        ]
+      },
+      recovery: {
+        count: '2 задачи',
+        title: 'День восстановления',
+        intro: 'Тренировки сегодня нет — оставили только важные напоминания.',
+        footer: 'Следующая тренировка — завтра, по вашему расписанию.',
+        tasks: [
+          { kind: 'weight', title: 'Пора взвеситься', note: 'Последняя запись — 7 дней назад', action: 'Внести вес', primary: true },
+          { kind: 'photos', title: 'Обновить фото прогресса', note: 'Последняя съёмка — 14 дней назад', action: 'Добавить фото' }
+        ]
+      },
+      done: {
+        count: 'всё актуально',
+        title: 'На сегодня всё',
+        intro: 'Покажем здесь только то, что действительно требует внимания.',
+        footer: 'Новые задачи появятся, когда наступит тренировка или срок контроля.',
+        tasks: []
+      }
+    };
+    function renderScenario(name) {
+      const scenario = scenarios[name] || scenarios.busy;
+      document.getElementById('taskCount').textContent = scenario.count;
+      document.getElementById('taskHeading').textContent = scenario.title;
+      document.getElementById('taskIntro').textContent = scenario.intro;
+      document.getElementById('taskFooter').textContent = scenario.footer;
+      const list = document.getElementById('taskList');
+      if (!scenario.tasks.length) {
+        list.innerHTML = '<div class="task-empty"><span class="empty-check" aria-hidden="true">✓</span><strong>Пока всё по плану</strong><span>Можно спокойно заняться своими делами — здесь появится следующее важное действие.</span></div>';
+        return;
+      }
+      list.innerHTML = scenario.tasks.map(function (task) {
+        return '<article class="task-row' + (task.primary ? ' primary' : '') + '" data-kind="' + task.kind + '"><span class="task-icon">' + icons[task.kind] + '</span><span class="task-copy"><strong>' + task.title + '</strong><small>' + task.note + '</small></span><span class="task-open" aria-label="' + task.action + '">›</span></article>';
+      }).join('');
+    }
+    document.querySelectorAll('[data-scenario]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        document.querySelectorAll('[data-scenario]').forEach(function (option) {
+          option.setAttribute('aria-pressed', String(option === button));
+        });
+        renderScenario(button.dataset.scenario);
+      });
+    });
+    renderScenario('busy');
+  </script>
+</body>
+</html>

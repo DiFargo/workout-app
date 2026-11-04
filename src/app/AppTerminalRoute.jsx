@@ -1,5 +1,4 @@
 import { lazy, Suspense } from "react";
-import ProfileDashboardRoute from "../features/client/profile/ProfileDashboardRoute";
 import "./AppTerminalProfileInfo.module.css";
 import "./AppTerminalProfileWellness.module.css";
 import "./AppTerminalCabinetBase.module.css";
@@ -9,18 +8,23 @@ import {
   loadTrainerAdminWorkoutsRoute,
   loadTrainerDashboardRoute,
   loadTrainerUsersRoute,
+  loadProfileDashboardRoute,
   loadWorkoutRunRoute
 } from "./appTerminalRouteLoaders";
 import AccessDeniedScreen from "../components/common/AccessDeniedScreen";
 import RouteFallback from "./RouteFallback";
+import RouteContentReady from "./RouteContentReady.jsx";
 
 const TrainerAdminWorkoutsRoute = lazy(loadTrainerAdminWorkoutsRoute);
 const TrainerDashboardRoute = lazy(loadTrainerDashboardRoute);
 const TrainerUsersRoute = lazy(loadTrainerUsersRoute);
 const WorkoutRunRoute = lazy(loadWorkoutRunRoute);
+const ProfileDashboardRoute = lazy(loadProfileDashboardRoute);
 
-function renderLazyTerminalRoute(route) {
-  return <Suspense fallback={<RouteFallback />}>{route}</Suspense>;
+function renderLazyTerminalRoute(route, page, title, renderBottomBar, activeTab) {
+  return <Suspense fallback={<RouteFallback title={title} renderBottomBar={renderBottomBar} activeTab={activeTab} />}>
+    <RouteContentReady route={page}>{route}</RouteContentReady>
+  </Suspense>;
 }
 
 export default function AppTerminalRoute({ ctx }) {
@@ -44,32 +48,32 @@ export default function AppTerminalRoute({ ctx }) {
   }
 
   if (canUseTrainerFeatures && (page === APP_PAGES.PROFILE || page === APP_PAGES.MAIN)) {
-    return renderLazyTerminalRoute(<TrainerDashboardRoute {...ctx} page={APP_PAGES.ADMIN} />);
+    return renderLazyTerminalRoute(<TrainerDashboardRoute {...ctx} page={APP_PAGES.ADMIN} />, page, "Кабинет тренера");
   }
 
   if (page === APP_PAGES.PROFILE || page === APP_PAGES.MAIN) {
-    return (
+    return renderLazyTerminalRoute(
       <ProfileDashboardRoute
         {...ctx}
         loginContainerRef={ctx.telegramLoginContainerRef}
         onOpenClientTrainerTask={ctx.openClientTrainerTask}
-      />
+      />, page, page === APP_PAGES.MAIN ? "Сегодня" : ctx.profileActiveTab === "progress" ? "Прогресс" : "Кабинет", ctx.renderClientMainBottomBar, page === APP_PAGES.MAIN ? "main" : ctx.profileActiveTab === "progress" ? "progress" : "cabinet"
     );
   }
 
   if (page === APP_PAGES.ADMIN) {
-    return renderLazyTerminalRoute(<TrainerDashboardRoute {...ctx} />);
+    return renderLazyTerminalRoute(<TrainerDashboardRoute {...ctx} />, page, "Кабинет тренера");
   }
 
   if (page === APP_PAGES.ADMIN_USERS) {
-    return renderLazyTerminalRoute(<TrainerUsersRoute {...ctx} />);
+    return renderLazyTerminalRoute(<TrainerUsersRoute {...ctx} />, page, "Клиенты");
   }
 
   if (page === APP_PAGES.ADMIN_WORKOUTS) {
-    return renderLazyTerminalRoute(<TrainerAdminWorkoutsRoute {...ctx} />);
+    return renderLazyTerminalRoute(<TrainerAdminWorkoutsRoute {...ctx} />, page, "Шаблоны программ");
   }
 
   return renderLazyTerminalRoute(
-    <WorkoutRunRoute runtime={ctx} />
+    <WorkoutRunRoute runtime={ctx} />, page, "Тренировка"
   );
 }

@@ -60,7 +60,18 @@ export function buildWorkoutRunStageModel({
       ? exerciseAiWeightAdjustments[0]
       : "";
 
-  const currentWorkoutSets = workout.exercises.flatMap((item) =>
+  // Saving may replace the live plan with its server prescription, which has
+  // no runtime completion flags. The result belongs to this saved session,
+  // not to that refreshed plan (or an earlier run of the same workout).
+  const savedWorkoutResult = isWorkoutSaved && workoutFinishedAt
+    ? history.find((item) => (
+        item.workoutId === workout.id &&
+        new Date(item.finishedAt).getTime() === workoutFinishedAt &&
+        Array.isArray(item.exercises)
+      ))
+    : null;
+  const resultExercises = savedWorkoutResult?.exercises || workout.exercises;
+  const currentWorkoutSets = resultExercises.flatMap((item) =>
     item.sets.map((set) => {
       const completed = isWorkoutSetCompleted(set);
       const weight = Number(set.enteredWeight || (set.completed ? set.weight : "")) || 0;
@@ -120,10 +131,10 @@ export function buildWorkoutRunStageModel({
       ? Math.round(((totalVolumeDone - previousVolume) / previousVolume) * 100)
       : null;
 
-  const completedExercisesCount = workout.exercises.filter((item) =>
+  const completedExercisesCount = resultExercises.filter((item) =>
     item.sets?.some(isWorkoutSetCompleted)
   ).length;
-  const incompleteExerciseNames = workout.exercises
+  const incompleteExerciseNames = resultExercises
     .filter((item) => !item.sets?.some(isWorkoutSetCompleted))
     .map((item) => item.name)
     .filter(Boolean);

@@ -9,6 +9,7 @@ import {
 } from "../../domain/clientInsights";
 import { getTrainerActionErrorStatus } from "../../utils/trainerActionStatus";
 import { buildTrainerTaskDraft } from "../../utils/trainerActionCenter.js";
+import { captureAuthSession } from "../../utils/authSession.js";
 
 const STATUS_TASK_TITLE_REQUIRED = "\u041d\u0430\u043f\u0438\u0448\u0438 \u0437\u0430\u0434\u0430\u0447\u0443 \u0434\u043b\u044f \u043a\u043b\u0438\u0435\u043d\u0442\u0430.";
 const STATUS_TASK_CREATING = "\u0414\u043e\u0431\u0430\u0432\u043b\u044f\u044e \u0437\u0430\u0434\u0430\u0447\u0443...";
@@ -46,15 +47,17 @@ export function createClientTrainerTaskHandlers({
   setAdminNewTaskDueDate,
   recordTrainerEvent
 }) {
-  async function loadClientTrainerTasks(uid = auth.currentUser?.uid) {
+  async function loadClientTrainerTasks(uid = auth.currentUser?.uid, { throwOnError = false } = {}) {
+    const session = captureAuthSession(auth);
+    if (session.uid !== (uid || "") || !session.isUnchanged()) return;
     if (!uid) {
-      setClientTrainerTasks([]);
+      setClientTrainerTasks(current => session.isUnchanged() ? [] : current);
       return;
     }
 
     try {
       const snapshot = await getDocs(collection(db, "users", uid, "trainerTasks"));
-      if (auth.currentUser?.uid !== uid) return;
+      if (!session.isCurrent()) return;
       const tasks = snapshot.docs
         .map((taskDoc) => ({ id: taskDoc.id, ...taskDoc.data() }))
         .sort((a, b) => {
@@ -63,11 +66,13 @@ export function createClientTrainerTaskHandlers({
           return aCompleted - bCompleted ||
             String(a.dueDate || "9999-12-31").localeCompare(String(b.dueDate || "9999-12-31"));
         });
-      setClientTrainerTasks(tasks);
+      setClientTrainerTasks(current => session.isCurrent() ? tasks : current);
+      return tasks;
     } catch (error) {
-      if (auth.currentUser?.uid !== uid) return;
+      if (!session.isCurrent()) return;
       console.warn("Client trainer tasks load failed:", error);
-      setClientTrainerTasks([]);
+      if (throwOnError) throw error;
+      setClientTrainerTasks(current => session.isCurrent() ? [] : current);
     }
   }
 

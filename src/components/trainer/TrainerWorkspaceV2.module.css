@@ -210,6 +210,9 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot :is(.trainerNextMobileNav,.trainerNextClientMobileNav,.trainerNextDesktopDock)) {
   box-sizing: border-box; position: fixed !important; left: 50% !important; right: auto !important; bottom: var(--v2-inset) !important; transform: translateX(-50%) !important; width: var(--v2-width) !important; max-width: none !important; height: var(--v2-nav-height) !important; min-height: var(--v2-nav-height) !important; grid-template-columns: repeat(4,minmax(0,1fr)) !important; gap: 0 !important; margin: 0 !important; padding: 8px 7px max(12px,env(safe-area-inset-bottom,0px)) !important; border: 0 !important; border-top: 1px solid rgba(57, 82, 91,.12) !important; border-radius: 0 !important; background: #fff !important; box-shadow: none !important; backdrop-filter: none !important; z-index: 90;
 }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot :is(.trainerNextMobileNav,.trainerNextDesktopDock)) {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot :is(.trainerNextMobileNav,.trainerNextClientMobileNav,.trainerNextDesktopDock) > button) {
   position: relative; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 5px !important; width: 100% !important; min-width: 0 !important; max-width: none !important; min-height: 47px !important; height: 47px !important; padding: 3px 0 !important; border: 0 !important; border-radius: 10px !important; background: transparent !important; color: #617078 !important; font-size: 10px !important; line-height: 12px !important; box-shadow: none !important;
 }
@@ -381,6 +384,16 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerNextPageTabs button:is(.isActive,[aria-pressed="true"])) {background:#fff!important;color:#376b91!important;border-color:transparent!important;box-shadow:none!important}
 @media(max-width:420px) {
  :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilters) {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:699px) {
+ :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilters) {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;position:relative}
+ :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilters > .trainerClientSecondaryFilter) {display:none!important}
+ :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilterDisclosure) {display:block;min-width:0;position:relative}
+ :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilterDisclosure summary) {min-height:44px;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px;border-radius:12px;background:#edf1f3;color:#617078;font-size:12px;cursor:pointer;list-style:none;overflow-wrap:anywhere;box-sizing:border-box}
+ :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilterDisclosure summary::-webkit-details-marker) {display:none}
+ :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilterDisclosure > div) {position:absolute;right:0;top:calc(100% + 6px);z-index:40;display:grid;gap:6px;width:min(280px,calc(100vw - 40px));padding:8px;border:1px solid rgba(57,82,91,.12);border-radius:14px;background:#fff;box-shadow:0 8px 24px #1c282e20;box-sizing:border-box}
+ :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot .trainerClientFilterDisclosure > div button) {width:100%;text-align:left;min-height:44px}
 }
 
 /* Cards on phones and tablets; aligned columns on larger screens. */

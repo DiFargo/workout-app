@@ -28,8 +28,10 @@ function TrainerAccountSettingsModals({
   profileSettingsModalSection,
   telegramConnectOpen,
   telegramLinking,
-  telegramLoginContainerRef,
-  telegramLoginWidgetReady,
+  telegramBotLinkUrl,
+  startTelegramBotLink,
+  openProfileTelegramBotLink,
+  setTelegramLinkCode,
   telegramProfile,
   telegramStatus,
   applyProfileAvatarCrop,
@@ -133,14 +135,16 @@ function TrainerAccountSettingsModals({
       <ProfileTelegramModal
         open={telegramConnectOpen}
         telegramProfile={telegramProfile}
-        loginContainerRef={telegramLoginContainerRef}
-        loginWidgetReady={telegramLoginWidgetReady}
+        botLinkUrl={telegramBotLinkUrl}
+        onStartLink={startTelegramBotLink}
+        onOpenBotLink={openProfileTelegramBotLink}
         linking={telegramLinking}
         status={telegramStatus}
         onAvatarError={handleTelegramAvatarError}
         onClose={() => setTelegramConnectOpen(false)}
         onCheckLogin={checkTelegramLoginResult}
         onChangeTelegram={() => {
+          setTelegramLinkCode("");
           setTelegramProfile((current) => ({ ...current, connected: false }));
           setTelegramStatus("");
         }}
@@ -226,6 +230,7 @@ export default function TrainerDashboardWorkspaceRoute({
   loadUsers,
   loadAdminClientOverview,
   loadTrainerClientSummaries,
+  loadAdminTrainingTemplates,
   moveProfileAvatarCrop,
   saveTrainerSubscriptionNotificationSettings,
   saveTrainerClientWorkoutSchedule,
@@ -280,8 +285,10 @@ export default function TrainerDashboardWorkspaceRoute({
   telegramProfile,
   telegramConnectOpen,
   telegramLinking,
-  telegramLoginContainerRef,
-  telegramLoginWidgetReady,
+  telegramBotLinkUrl,
+  startTelegramBotLink,
+  openProfileTelegramBotLink,
+  setTelegramLinkCode,
   telegramStatus,
   trainerActionCenter,
   trainerClientSummariesLoading,
@@ -332,12 +339,15 @@ export default function TrainerDashboardWorkspaceRoute({
   return (
     <>
       <TrainerWorkspace
+      key={user?.uid || "anonymous"}
+      trainerUid={user?.uid || ""}
       appVersion={APP_VERSION}
       mode={trainerNextMode}
       activeSection={trainerNextActiveSection}
       onNavigate={navigateTrainerNext}
       onRefresh={refreshPage}
       onRetrySummary={(retryClientIds) => loadTrainerClientSummaries?.(usersList, { retryClientIds })}
+      onLoadProgramLibrary={loadAdminTrainingTemplates}
       trainerName={trainerName}
       trainerAvatar={telegramProfile.avatarUrl}
       clients={usersList}
@@ -418,7 +428,7 @@ export default function TrainerDashboardWorkspaceRoute({
       onArchiveProgramAssignment={(assignment) => archiveClientProgramAssignment(selectedClient?.id, assignment)}
       onRestoreProgramAssignment={(assignment) => restoreClientProgramAssignment(selectedClient?.id, assignment)}
       onDeleteProgramAssignment={(assignment) => deleteClientProgramAssignment(selectedClient?.id, assignment)}
-      onSaveWorkoutSchedule={(dates, assignmentWorkouts) => saveTrainerClientWorkoutSchedule(dates, selectedClient, assignmentWorkouts)}
+      onSaveWorkoutSchedule={(dates, assignmentWorkouts, options) => saveTrainerClientWorkoutSchedule(dates, selectedClient, assignmentWorkouts, options)}
       programStatus={adminClientStatus}
       onUpdateWorkout={trainerNextWorkspaceHandlers.onUpdateWorkout}
       onUpdateExercise={trainerNextWorkspaceHandlers.onUpdateExercise}
@@ -472,8 +482,10 @@ export default function TrainerDashboardWorkspaceRoute({
         profileSettingsModalSection={profileSettingsModalSection}
         telegramConnectOpen={telegramConnectOpen}
         telegramLinking={telegramLinking}
-        telegramLoginContainerRef={telegramLoginContainerRef}
-        telegramLoginWidgetReady={telegramLoginWidgetReady}
+        telegramBotLinkUrl={telegramBotLinkUrl}
+        startTelegramBotLink={startTelegramBotLink}
+        openProfileTelegramBotLink={openProfileTelegramBotLink}
+        setTelegramLinkCode={setTelegramLinkCode}
         telegramProfile={telegramProfile}
         telegramStatus={telegramStatus}
         applyProfileAvatarCrop={applyProfileAvatarCrop}

@@ -59,7 +59,7 @@
   z-index: 4;
   top: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 40px;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   min-height: 68px;
@@ -87,10 +87,37 @@
   min-width: 0;
 }
 
+.editorHeaderActions { display:flex; gap:8px; align-items:center; }
+.editorPurpose { grid-column:1/-1; margin:0; font-size:12px; line-height:1.45; color:var(--trainer-muted,#636366); }
+.templateSettingsSheet { box-sizing:border-box; width:min(460px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); margin:auto; padding:0; border:1px solid rgba(60,60,67,.12); border-radius:24px; background:#f2f2f7; color:#1c1c1e; overflow:auto; }
+.templateSettingsSheet::backdrop { background:#1c1c1e55; backdrop-filter:blur(5px); }
+.templateSettingsSheet > header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px; background:#fff; border-bottom:1px solid rgba(60,60,67,.12); }
+.templateSettingsSheet > header h2 { margin:0; font-size:18px; }
+.templateSettingsSheet > header button { width:44px; height:44px; border:0; border-radius:50%; background:#efeff4; color:#636366; }
+.templateSettingsBody { padding:16px; }
+.templateSettingsBody .editorTestFlag { padding:10px 0; }
+.templateSettingsBody p { font-size:13px; line-height:1.5; color:#636366; }
+.templateSettingsBody > button { min-height:44px; display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; font:inherit; font-size:14px; }
+.templateSettingsSheet > footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px; background:#fff; border-top:1px solid rgba(60,60,67,.12); }
+.templateSettingsSheet > footer span { font-size:12px; color:#636366; }
+.templateSettingsSheet > footer button { min-height:44px; padding:8px 16px; border:0; border-radius:12px; background:var(--ownset-action-gradient); color:#fff; font:inherit; }
+
 .editorProgramNameField {
   min-width: 0;
   display: grid;
   gap: 3px;
+}
+
+.editorProgramNameField > .editorTemplateLabel {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: var(--surface-secondary, #EFEFF4);
+  color: var(--trainer-text, #1C1C1E);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0;
 }
 
 .editorProgramNameField input {
@@ -213,7 +240,7 @@
 
 .editorModalSave {
   border: 1px solid var(--trainer-v2-accent, #806bb6);
-  background: linear-gradient(135deg, var(--trainer-v2-accent, #9a87ce), var(--trainer-v2-accent, #806bb6));
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / .22);
 }
@@ -404,3 +431,7 @@
 
 .editorTestFlag { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 20px; font-size: 14px; color: #617078; }
 .editorTestFlag input { width: 18px; height: 18px; accent-color: #396ba6; }
+
+:global(html[data-trainer-variant="v2"] body) .editorModalBody.editorModalBodyProgram {background:#f2f2f7!important}
+:global(html[data-trainer-variant="v2"] body) .editorModalFooter .editorModalSave {flex:0 1 240px!important}
+@media(max-width:760px) { :global(html[data-trainer-variant="v2"] body) .editorModalFooter .editorModalSave {width:100%!important;flex:1!important} }

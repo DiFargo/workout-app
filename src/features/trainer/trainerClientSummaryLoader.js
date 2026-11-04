@@ -1,5 +1,9 @@
 import { collection, doc, getDoc, getDocs, query, orderBy, limit, where } from "firebase/firestore";
 import { TRAINER_SUMMARY_BATCH_TIMEOUT_MS, TRAINER_SUMMARY_CACHE_MS, TRAINER_SUMMARY_LIMITS, TRAINER_SUMMARY_SOURCES, withSummaryDeadline, reconcileTrainerSummary } from "../../utils/trainerSummaryReadState.js";
+import { captureAuthSession } from "../../utils/authSession.js";
+import { runSessionResource } from "../../utils/sessionResource.js";
+import { scheduleTrainerSummaryRead, TRAINER_INITIAL_SUMMARY_PAGE_SIZE } from "./trainerSummaryReadScheduler.js";
+import { isNutritionDayStorageEnabled } from "../../utils/nutritionDayStorageConfig.js";
 
 const summaryCaches = new WeakMap();
 
@@ -51,20 +55,33 @@ function getTrainerClientScheduledDates(client = {}, workouts = []) {
 
 export function createTrainerClientSummaryLoader({
   db,
+  auth,
   trainerClientSummaryRequestRef,
   setTrainerClientSummaries,
   setTrainerClientSummariesLoading
 }) {
-  async function loadTrainerClientSummaries(clients = [], { retryClientIds } = {}) {
+  async function loadTrainerClientSummaries(clients = [], { retryClientIds, initialOnly = false } = {}) {
+    const dayStorage = isNutritionDayStorageEnabled();
+    const eligibleClients = Array.isArray(clients) ? clients.filter((client) => client?.id && (client.role || "client") === "client") : [];
+    const resourceKey = JSON.stringify(["trainer-summaries", dayStorage, initialOnly, retryClientIds || null,
+      eligibleClients.map(client => [client.id, client.updatedAt, client.assignedProgramUpdatedAt, client.workoutCalendar?.updatedAt])]);
+    return runSessionResource(auth, resourceKey, async ({ isCurrent: resourceIsCurrent }) => {
+    const session = captureAuthSession(auth);
+    if (!session.isCurrent()) return;
     const requestId = trainerClientSummaryRequestRef.current + 1;
     trainerClientSummaryRequestRef.current = requestId;
-    const safeClients = Array.isArray(clients) ? clients.filter((client) => client?.id) : [];
+    const safeClients = eligibleClients;
     const startedAt = Date.now();
-    const cache = summaryCaches.get(trainerClientSummaryRequestRef) || new Map();
-    summaryCaches.set(trainerClientSummaryRequestRef, cache);
+    const isCurrentRequest = () => resourceIsCurrent() && session.isCurrent() && trainerClientSummaryRequestRef.current === requestId;
+    const previousCache = summaryCaches.get(trainerClientSummaryRequestRef);
+    const canReuse = Boolean(previousCache?.session.isCurrent());
+    const cache = canReuse ? previousCache.cache : new Map();
+    summaryCaches.set(trainerClientSummaryRequestRef, { session, cache });
     const visibleIds = new Set(safeClients.map((client) => client.id));
     for (const id of cache.keys()) if (!visibleIds.has(id)) cache.delete(id);
-    const queuedClients = safeClients.filter((client) => !retryClientIds || retryClientIds.includes(client.id));
+    const requestedClients = safeClients.filter((client) => !retryClientIds || retryClientIds.includes(client.id));
+    const queuedClients = initialOnly ? requestedClients.slice(0, TRAINER_INITIAL_SUMMARY_PAGE_SIZE) : requestedClients;
+    const queuedIds = new Set(queuedClients.map(client => client.id));
     // A retry spends its deadline on clients that did not finish previously.
     queuedClients.sort((a, b) => Number(cache.get(a.id)?.summary?.trainerSummaryReady || false) - Number(cache.get(b.id)?.summary?.trainerSummaryReady || false));
     setTrainerClientSummariesLoading(true);
@@ -75,17 +92,28 @@ export function createTrainerClientSummaryLoader({
       return;
     }
 
-    setTrainerClientSummaries((previous) => Object.fromEntries(
+    const deferredSummary = (client, previousSummary) => {
+      const cached = cache.get(client.id);
+      const cacheKey = JSON.stringify([dayStorage, client.updatedAt, client.assignedProgramUpdatedAt, client.workoutCalendar?.updatedAt]);
+      if (cached?.summary && cached.cacheKey === cacheKey && TRAINER_SUMMARY_SOURCES.every(source => cached.sources?.[source]?.value && !cached.sources[source].error && cached.sources[source].at &&
+        Date.now() - cached.sources[source].at < TRAINER_SUMMARY_CACHE_MS)) return cached.summary;
+      const sources = Object.fromEntries(TRAINER_SUMMARY_SOURCES.map(source => [source, { state: "deferred" }]));
+      return { ...reconcileTrainerSummary(getTrainerClientFastSummary(client, previousSummary), previousSummary || {}, sources),
+        trainerSummaryState: "deferred", trainerSummaryReady: false, trainerSummarySettled: false };
+    };
+    setTrainerClientSummaries((previous) => !isCurrentRequest() ? previous : Object.fromEntries(
       safeClients.map((client) => {
-        if (retryClientIds && !retryClientIds.includes(client.id)) return [client.id, previous[client.id]];
+        const previousSummary = canReuse ? previous[client.id] : undefined;
+        if (!queuedIds.has(client.id)) return [client.id, deferredSummary(client, previousSummary)];
         const sources = Object.fromEntries(TRAINER_SUMMARY_SOURCES.map((source) => [source, { state: "loading" }]));
         return [client.id, {
-          ...reconcileTrainerSummary(getTrainerClientFastSummary(client, previous[client.id]), cache.get(client.id)?.summary || {}, sources),
+          ...reconcileTrainerSummary(getTrainerClientFastSummary(client, previousSummary), cache.get(client.id)?.summary || {}, sources),
           trainerSummaryReady: false, trainerSummarySettled: false, trainerSummaryState: "loading"
         }];
       })
     ));
-    const nextSummaries = Object.fromEntries(safeClients.map((client) => [client.id, cache.get(client.id)?.summary || getTrainerClientFastSummary(client)]));
+    const nextSummaries = Object.fromEntries(safeClients.map((client) => [client.id,
+      deferredSummary(client, cache.get(client.id)?.summary)]));
     let nextClientIndex = 0;
     const { weekStart, sevenDayStart, thirtyDayStart } = getTrainerSummaryPeriodBounds();
 
@@ -99,32 +127,45 @@ export function createTrainerClientSummaryLoader({
 
       const cached = cache.get(client.id);
       const previous = { ...cached, sources: { ...cached?.sources } };
-      const cacheKey = JSON.stringify([client.updatedAt, client.assignedProgramUpdatedAt, client.workoutCalendar?.updatedAt]);
+      const cacheKey = JSON.stringify([dayStorage, client.updatedAt, client.assignedProgramUpdatedAt, client.workoutCalendar?.updatedAt]);
       if (previous.summary?.trainerSummaryReady && previous.cacheKey === cacheKey && TRAINER_SUMMARY_SOURCES.every((source) => previous.sources[source]?.value && !previous.sources[source]?.error && Date.now() - previous.sources[source].at < TRAINER_SUMMARY_CACHE_MS)) return previous.summary;
       const sources = {};
       const version = client.assignedProgramUpdatedAt || client.assignedProgramAt;
       const readers = [
         () => getDocs(query(collection(db, "users", client.id, "history"), orderBy("date", "desc"), limit(TRAINER_SUMMARY_LIMITS.history))),
-        () => getDoc(doc(db, "users", client.id, "nutrition", "state")),
+        async () => {
+          if (!dayStorage) return getDoc(doc(db, "users", client.id, "nutrition", "state"));
+          // A full paginated API operation occupies one scheduler source slot
+          // until every page settles. Never fall back to frozen legacy state.
+          const result = await (await import("../../utils/nutritionDayClient.js")).readNutritionState(client.id, { mode: "full" });
+          if (!result?.state || result.state.__uid !== client.id || result.coverage?.complete !== true ||
+            result.coverage.nextCursor || !Array.isArray(result.coverage.missingDayKeys) || result.coverage.missingDayKeys.length) {
+            throw Object.assign(new Error("Питание клиента загружено не полностью."), { code: "nutrition/incomplete-read" });
+          }
+          return { exists: () => true, data: () => result.state };
+        },
         () => getDocs(query(collection(db, "users", client.id, "measurements"), orderBy("date", "desc"), limit(TRAINER_SUMMARY_LIMITS.measurements))),
         () => getDoc(doc(db, "users", client.id, "payments", "current")),
         () => getDocs(query(collection(db, "users", client.id, "workouts"), ...(version ? [where("assignedProgramUpdatedAt", "==", version)] : []), limit(TRAINER_SUMMARY_LIMITS.workouts))),
         () => getDocs(query(collection(db, "users", client.id, "trainerTasks"), limit(TRAINER_SUMMARY_LIMITS.tasks)))
       ];
       const results = await Promise.all(TRAINER_SUMMARY_SOURCES.map(async (source, index) => {
-        const saved = previous.sources[source];
+        const saved = source === "nutrition" && Boolean(previous.dayStorage) !== dayStorage ? null : previous.sources[source];
         if (saved?.value && !saved.error && previous.cacheKey === cacheKey && Date.now() - saved.at < TRAINER_SUMMARY_CACHE_MS) {
           sources[source] = { state: "fresh", updatedAt: saved.at };
           return { status: "fulfilled", value: saved.value };
         }
         try {
-          const value = await withSummaryDeadline(readers[index], Math.min(4000, TRAINER_SUMMARY_BATCH_TIMEOUT_MS - (Date.now() - startedAt)));
-          if (trainerClientSummaryRequestRef.current !== requestId) return { status: "rejected", reason: "superseded" };
+          const timeoutMs = Math.min(4000, TRAINER_SUMMARY_BATCH_TIMEOUT_MS - (Date.now() - startedAt));
+          const deadline = Date.now() + timeoutMs;
+          const value = await withSummaryDeadline(() => scheduleTrainerSummaryRead(auth, readers[index],
+            () => isCurrentRequest() && Date.now() < deadline), timeoutMs);
+          if (!isCurrentRequest()) return { status: "rejected", reason: "superseded" };
           previous.sources[source] = { value, at: Date.now() };
           sources[source] = { state: "fresh", updatedAt: Date.now() };
           return { status: "fulfilled", value };
         } catch (reason) {
-          if (trainerClientSummaryRequestRef.current !== requestId) return { status: "rejected", reason };
+          if (!isCurrentRequest()) return { status: "rejected", reason };
           previous.sources[source] = { ...saved, error: true };
           sources[source] = { state: saved?.value ? "stale" : "error", updatedAt: saved?.at || null, code: reason?.code || "read-failed" };
           return saved?.value ? { status: "fulfilled", value: saved.value } : { status: "rejected", reason };
@@ -154,7 +195,7 @@ export function createTrainerClientSummaryLoader({
       const clientWorkouts = getTrainerSettledCollectionItems(workoutsResult);
       const clientTasks = getTrainerSettledCollectionItems(tasksResult);
 
-      const nutritionState = getTrainerSettledDocumentData(nutritionResult, client?.nutritionState || null);
+      const nutritionState = getTrainerSettledDocumentData(nutritionResult, dayStorage ? null : client?.nutritionState || null);
       const nutritionSummary = getTrainerNutritionSummary(nutritionState);
       const assignedProgramUpdatedAt = client.assignedProgramUpdatedAt || client.assignedProgramAt || "";
       const { completedWorkoutCount, assignedWorkoutCount } = getTrainerAssignmentProgress(client, clientWorkouts, clientHistory);
@@ -221,14 +262,14 @@ export function createTrainerClientSummaryLoader({
         trainerSummaryReady: true
       };
       const resolved = reconcileTrainerSummary(computed, previous.summary || {}, sources);
-      if (trainerClientSummaryRequestRef.current === requestId) cache.set(client.id, { ...previous, summary: resolved, cacheKey });
+      if (isCurrentRequest()) cache.set(client.id, { ...previous, summary: resolved, cacheKey, dayStorage });
       return resolved;
     };
 
     const workers = Array.from(
       { length: Math.min(MAX_TRAINER_SUMMARY_CONCURRENCY, queuedClients.length) },
       async () => {
-        while (trainerClientSummaryRequestRef.current === requestId && nextClientIndex < queuedClients.length && Date.now() - startedAt < TRAINER_SUMMARY_BATCH_TIMEOUT_MS) {
+        while (isCurrentRequest() && nextClientIndex < queuedClients.length && Date.now() - startedAt < TRAINER_SUMMARY_BATCH_TIMEOUT_MS) {
           const client = queuedClients[nextClientIndex];
           nextClientIndex += 1;
 
@@ -239,9 +280,9 @@ export function createTrainerClientSummaryLoader({
             nextSummaries[client.id] = reconcileTrainerSummary(getTrainerClientFastSummary(client), cache.get(client.id)?.summary, Object.fromEntries(TRAINER_SUMMARY_SOURCES.map((source) => [source, { state: "error" }])));
           }
 
-          if (trainerClientSummaryRequestRef.current === requestId) {
+          if (isCurrentRequest()) {
             const resolvedSummary = nextSummaries[client.id];
-            setTrainerClientSummaries((previous) => ({
+            setTrainerClientSummaries((previous) => !isCurrentRequest() ? previous : ({
               ...previous,
               [client.id]: resolvedSummary
             }));
@@ -252,7 +293,7 @@ export function createTrainerClientSummaryLoader({
 
     await Promise.all(workers);
 
-    if (trainerClientSummaryRequestRef.current === requestId) {
+    if (isCurrentRequest()) {
       for (const client of queuedClients.slice(nextClientIndex)) {
         const previous = cache.get(client.id)?.summary || getTrainerClientFastSummary(client);
         nextSummaries[client.id] = reconcileTrainerSummary(previous, previous, Object.fromEntries(TRAINER_SUMMARY_SOURCES.map((source) => [source, { state: "stale", code: "summary/timeout" }])));
@@ -260,6 +301,7 @@ export function createTrainerClientSummaryLoader({
       setTrainerClientSummaries(nextSummaries);
       setTrainerClientSummariesLoading(false);
     }
+    });
   }
 
   return {

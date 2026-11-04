@@ -8,6 +8,7 @@ import styles from "./FoodProductPage.module.css";
 
 export default function FoodProductPage({
   selectedFood,
+  isEditing = false,
   editPageOpen,
   meals,
   mealId,
@@ -56,6 +57,7 @@ export default function FoodProductPage({
   onCancelEdit,
   onConfirmEdit,
   onBack,
+  onDelete,
   onAdd
 }) {
   return (
@@ -75,11 +77,13 @@ export default function FoodProductPage({
         onSelectMeal={onSelectMeal}
         topActions={!editPageOpen ? (
           <FoodProductTopActions
+            onDelete={onDelete}
             onClose={onBack}
           />
         ) : null}
       />
 
+      {isEditing && <p className={styles.editContext} role="status">Редактирование записи в дневнике</p>}
       <FoodPortionSelector
         selectedFood={selectedFood}
         amount={amount}
@@ -139,6 +143,7 @@ export default function FoodProductPage({
       />
 
       <FoodProductActionBar
+        isEditing={isEditing}
         hidden={editPageOpen}
         onBack={onBack}
         onAdd={onAdd}

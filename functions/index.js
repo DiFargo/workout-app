@@ -2,21 +2,54 @@ import { onRequest, onCall, HttpsError } from "firebase-functions/v2/https";
 import { fetchGeminiNutritionFoods } from "./geminiNutritionSearch.js";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { onDocumentCreated, onDocumentDeleted } from "firebase-functions/v2/firestore";
-import { defineBoolean, defineSecret, defineString } from "firebase-functions/params";
+import { onObjectFinalized } from "firebase-functions/v2/storage";
+import { defineBoolean, defineSecret, defineString, storageBucket } from "firebase-functions/params";
 import admin from "firebase-admin";
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
+import { isKnownProductionReference } from "./environmentReferences.js";
 import { resolveAssignedTrainerId } from "./trainerAssignment.js";
 import { requireRecentIdentityAuth, updateProfileEmail, updateProfileLogin } from "./profileIdentity.js";
 import { readClientExerciseMedia } from "./clientExerciseMedia.js";
+import { createProtectedExerciseVideoAccess } from "./protectedExerciseVideo.js";
+import { readClientLoadingSnapshot } from "./clientLoadingSnapshot.js";
+import { createNutritionDayStorage } from "./nutritionDayStorage.js";
+import { authenticateLoginAlias } from "./loginAliasAuth.js";
+import { protectPrivateProgressPhoto } from "./privateProgressPhotoProtection.js";
+import { adjustSubscriptionUsageForHistoryEventWithLedger } from "./subscriptionUsageLedger.js";
 import { manageTrainerExerciseCards } from "./trainerExerciseCards.js";
+import { deleteEmptyClientProgramAssignment as deleteEmptyProgramAssignment } from "./deleteEmptyClientProgramAssignment.js";
+import { hasAdminSecurityKeyProof } from "./adminSecurityKeyAccess.js";
+import { createAdminSecurityKeysHandler } from "./adminSecurityKeys.js";
 import { INVITE_PAGE_STYLES, formatInviteAccountLabel } from "./invitePageStyles.js";
 import { getActivePlanWorkouts, getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout, getPlannedWorkoutForReminder } from "./reminderSchedule.js";
 import { isTelegramRemindersEnabled } from "./telegramNotificationPreferences.js";
+import { getTelegramIdentityIds, isTelegramIdentityOwnedBy } from "./telegramIdentityCleanup.js";
+import { ensureTelegramAppMenu } from "./telegramAppEntry.js";
+import {
+  buildTelegramBotInviteStartUrl,
+  buildTelegramInviteAppUrl,
+  getTelegramClientInviteStartError,
+  normalizeTelegramUsername
+} from "./telegramClientInvite.js";
 import { buildClientReminderCalendarPatch } from "./clientReminderSettings.js";
 import { buildSubscriptionReminderLine, getDueSubscriptionNotifications, resolveSubscriptionNotificationSettings } from "./subscriptionReminders.js";
 import { extractVoiceMetricAmounts, resolveVoiceFoodMetricAmounts } from "./voiceFoodAmounts.js";
 import { getUnsafeVoiceFoodStems, isUnsafeVoiceFoodQuery } from "./voiceFoodSafety.js";
+import {
+  buildTelegramAppMessage,
+  buildProgressReminderMessage,
+  buildTelegramAppKeyboard,
+  buildTelegramHelpMessage,
+  buildTelegramLinkConfirmationMessage,
+  buildTelegramLinkErrorMessage,
+  buildTelegramInviteAcceptanceMessage,
+  buildTelegramInviteErrorMessage,
+  buildTelegramSettingsMessage,
+  buildTelegramWelcomeMessage,
+  buildWorkoutReminderMessage,
+  getTelegramQuickAction
+} from "./telegramReminderMessages.js";
 import { getBasicWorkoutCompositionIssues, orderBasicWorkoutExercises } from "./basicWorkoutPlanOrder.js";
 import {
   getBasicWorkoutAiCatalogueGuidance,
@@ -71,6 +104,10 @@ const INVITE_LOGIN_EMAIL_DOMAIN_PARAM = defineString("INVITE_LOGIN_EMAIL_DOMAIN"
 const TELEGRAM_WEBHOOK_URL_PARAM = defineString("TELEGRAM_WEBHOOK_URL", {
   default: "",
   label: "Telegram webhook URL"
+});
+const TELEGRAM_BOT_USERNAME_PARAM = defineString("TELEGRAM_BOT_USERNAME", {
+  default: "zmena_teleg_bot",
+  label: "Telegram bot username"
 });
 const MAX_AI_IMAGE_DATA_LENGTH = 8 * 1024 * 1024;
 const MAX_AI_PROGRAM_TEXT_LENGTH = 35000;
@@ -141,7 +178,7 @@ function rejectKnownProductionReference(value, parameterName) {
   const cleanValue = String(value || "").trim();
   if (!cleanValue || isProductionFunctionProject()) return cleanValue;
 
-  if (cleanValue.toLowerCase().includes(PRODUCTION_PROJECT_ID)) {
+  if (isKnownProductionReference(cleanValue, PRODUCTION_PROJECT_ID)) {
     throw createHttpError(500, `${parameterName} must not reference production outside production`);
   }
 
@@ -166,6 +203,10 @@ function getWorkoutAppUrl() {
   const projectId = getFunctionProjectId();
   if (!projectId) throw createHttpError(500, "Firebase project ID is unavailable");
   return "https://" + projectId + ".web.app/";
+}
+
+function getTelegramBotUsername() {
+  return normalizeTelegramUsername(getFunctionParamValue(TELEGRAM_BOT_USERNAME_PARAM)) || "zmena_teleg_bot";
 }
 
 function getFirebaseWebApiKey() {
@@ -294,7 +335,8 @@ function getTrainerAssignmentUpdate({ trainerId = "", trainerData = {}, actorUid
     trainerEmail,
     coachEmail: trainerEmail,
     trainerAssignmentUpdatedAt: now,
-    trainerAssignmentUpdatedByUid: String(actorUid || "").trim()
+    trainerAssignmentUpdatedByUid: String(actorUid || "").trim(),
+    accountAccessStatus: cleanTrainerId ? "active" : "awaiting_trainer"
   };
 }
 
@@ -403,6 +445,8 @@ function isActiveMemberData(userData = {}) {
   const role = String(userData.role || "").trim().toLowerCase();
 
   return ["client", "trainer", "admin"].includes(role) &&
+    userData.accountAccessStatus !== "awaiting_trainer" &&
+    !(role === "client" && userData.trainerAssignmentState === "unassigned") &&
     userData.active !== false &&
     userData.archived !== true &&
     userData.accessDisabled !== true &&
@@ -410,12 +454,31 @@ function isActiveMemberData(userData = {}) {
     userData.membershipStatus !== "suspended";
 }
 
-function hasCurrentAdminClaim(token = {}, userData = {}) {
+function hasCurrentAdminIdentity(token = {}, userData = {}) {
   return token.admin === true && userData.role === "admin" &&
     (Object.hasOwn(userData, "adminClaimVersion")
       ? typeof userData.adminClaimVersion === "string" &&
         token.adminClaimVersion === userData.adminClaimVersion
       : !Object.hasOwn(token, "adminClaimVersion"));
+}
+
+function hasCurrentAdminClaim(token = {}, userData = {}) {
+  return hasCurrentAdminIdentity(token, userData) && hasAdminSecurityKeyProof(token, userData);
+}
+
+// The only identity-only entry point is the WebAuthn challenge/verification API.
+// It cannot read client data or carry out administrative actions.
+async function getAdminIdentityContext(req) {
+  const authorization = String(req.headers.authorization || "");
+  const idToken = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+  if (!idToken) throw createHttpError(401, "Authentication required");
+  const token = await admin.auth().verifyIdToken(idToken, true);
+  const snapshot = await admin.firestore().collection("users").doc(token.uid).get();
+  const userData = snapshot.exists ? snapshot.data() || {} : {};
+  if (!isActiveMemberData(userData) || !hasCurrentAdminIdentity(token, userData)) {
+    throw createHttpError(403, "Admin identity required");
+  }
+  return { uid: token.uid, token, userData, role: "admin" };
 }
 
 async function getAuthenticatedContext(req, { requireMembership = false } = {}) {
@@ -513,10 +576,9 @@ async function enforceRateLimit(uid, action, { limit, windowMs }) {
 }
 
 function getPublicRequestIdentity(req) {
-  const forwardedFor = String(req.headers?.["x-forwarded-for"] || "")
-    .split(",")[0]
-    .trim();
-  const address = forwardedFor || String(req.ip || req.socket?.remoteAddress || "unknown");
+  // Forwarded prefixes are supplied by the caller. Rate limits use the actual
+  // transport peer; public credential exchange adds a separate principal cap.
+  const address = String(req.socket?.remoteAddress || req.connection?.remoteAddress || req.ip || "unknown");
   return `public:${crypto.createHash("sha256").update(address).digest("hex")}`;
 }
 
@@ -725,7 +787,7 @@ async function markTrainerInviteAcceptedForLink(linkSnapshot, linkData = {}) {
   await batch.commit();
 }
 
-async function sendTelegramMessage({ chatId, telegramUserId, username, text, token, replyMarkup = null }) {
+async function sendTelegramMessage({ chatId, telegramUserId, username, text, token, replyMarkup = null, parseMode = "" }) {
   const targetChatId = normalizeTelegramTarget({ chatId, telegramUserId, username });
 
   if (!targetChatId) {
@@ -739,6 +801,7 @@ async function sendTelegramMessage({ chatId, telegramUserId, username, text, tok
       chat_id: targetChatId,
       text,
       disable_web_page_preview: true,
+      ...(parseMode ? { parse_mode: parseMode } : {}),
       ...(replyMarkup ? { reply_markup: replyMarkup } : {})
     })
   });
@@ -843,15 +906,81 @@ async function saveTelegramAvatar(uid, userId, token) {
   }
 }
 
-async function publishTelegramProfile(uid, patch, uploadedAvatar = null) {
+async function publishTelegramProfile(uid, patch, uploadedAvatar = null, {
+  claimIdentity = false, linkCode = "", requireCanonical = false,
+  expectedTelegramId = "", expectedLinkedAt = ""
+} = {}) {
   const db = admin.firestore();
   const userRef = db.collection("users").doc(uid);
   const deletionRef = db.collection("accountDeletions").doc(uid);
+  const telegramId = String(patch.telegramUserId || patch.telegram?.telegramUserId || "");
   try {
+    if (claimIdentity) {
+      if (!/^\d{1,16}$/.test(telegramId)) throw createHttpError(400, "Invalid Telegram identity");
+      const existing = await findTelegramLinkedAccounts(telegramId);
+      if (existing.some(account => account.uid !== uid)) {
+        throw createHttpError(409, "Telegram account is already linked");
+      }
+    }
     const published = await db.runTransaction(async transaction => {
       const [profile, deletion] = await Promise.all([transaction.get(userRef), transaction.get(deletionRef)]);
       if (!profile.exists || !isActiveMemberData(profile.data() || {}) ||
         ["pending", "completed"].includes(deletion.data()?.status)) return false;
+      const current = profile.data() || {};
+      if (expectedTelegramId) {
+        const currentTelegram = current.telegram || {};
+        const identity = await transaction.get(db.collection("telegramIdentities").doc(expectedTelegramId));
+        if (currentTelegram.connected !== true ||
+          String(currentTelegram.telegramUserId || current.telegramUserId || "") !== expectedTelegramId ||
+          JSON.stringify(currentTelegram.linkedAt || current.telegramLinkedAt || "") !== expectedLinkedAt ||
+          !isTelegramIdentityOwnedBy(identity.data(), uid)) return false;
+      }
+      let codeRef, codeOwnerRef;
+      if (linkCode) {
+        const hash = crypto.createHash("sha256").update(linkCode).digest("hex");
+        codeRef = db.collection("telegramLinkCodes").doc(hash);
+        codeOwnerRef = db.collection("telegramLinkCodes").doc(`owner_${uid}`);
+        const [codeSnapshot, ownerSnapshot] = await Promise.all([
+          transaction.get(codeRef), transaction.get(codeOwnerRef)
+        ]);
+        const codeData = codeSnapshot.data() || {};
+        if (!codeSnapshot.exists || codeData.status !== "active" || codeData.uid !== uid ||
+          ownerSnapshot.data()?.activeCodeHash !== hash ||
+          !(Date.parse(String(codeData.expiresAt || "")) > Date.now()) ||
+          (codeData.expectedTelegramId && codeData.expectedTelegramId !== telegramId) ||
+          (codeData.expectedTelegramUsername && codeData.expectedTelegramUsername !== normalizeTelegramUsername(patch.telegram?.username))) return false;
+        if (codeData.adminRecovery) {
+          const issuer = await transaction.get(db.collection("users").doc(codeData.createdByUid));
+          const issuerData = issuer.data() || {};
+          if (current.role !== "client" || !issuer.exists || issuerData.role !== "admin" ||
+            !isActiveMemberData(issuerData) ||
+            String(issuerData.adminClaimVersion || "") !== String(codeData.adminClaimVersion || "")) return false;
+        }
+      }
+      if (claimIdentity) {
+        const identityRef = db.collection("telegramIdentities").doc(telegramId);
+        const identity = await transaction.get(identityRef);
+        const ownerUid = String(identity.data()?.uid || "");
+        if (requireCanonical && ownerUid !== uid) return false;
+        if (ownerUid && ownerUid !== uid) {
+          const previousDeletion = await transaction.get(db.collection("accountDeletions").doc(ownerUid));
+          if (previousDeletion.data()?.status !== "completed") {
+            throw createHttpError(409, "Telegram account is already linked");
+          }
+        }
+        const oldRefs = getTelegramIdentityIds(current).filter(id => id !== telegramId)
+          .map(id => db.collection("telegramIdentities").doc(id));
+        const oldIdentities = await Promise.all(oldRefs.map(ref => transaction.get(ref)));
+        oldIdentities.forEach((snapshot, index) => {
+          if (isTelegramIdentityOwnedBy(snapshot.data(), uid)) transaction.delete(oldRefs[index]);
+        });
+        transaction.set(identityRef, { uid, telegramUserId: telegramId,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+      }
+      if (codeRef) {
+        transaction.set(codeRef, { status: "used", usedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+        transaction.delete(codeOwnerRef);
+      }
       transaction.set(userRef, patch, { merge: true });
       return true;
     });
@@ -928,6 +1057,120 @@ async function findTelegramLinkedAccounts(telegramUserId) {
   return [...matches.values()];
 }
 
+async function startTelegramClientInvite(token, message) {
+  const telegramUserId = String(message?.from?.id || "").trim();
+  const telegramUsername = String(message?.from?.username || "");
+  const chatId = String(message?.chat?.id || "").trim();
+  const db = admin.firestore();
+  const inviteRef = db.collection("inviteLinks").doc(token);
+  const initialSnapshot = await inviteRef.get();
+  if (!initialSnapshot.exists) return { error: "telegram-invite-invalid", targetUsername: "" };
+
+  const initialInvite = initialSnapshot.data() || {};
+  const linkedAccounts = await findTelegramLinkedAccounts(telegramUserId);
+  if (linkedAccounts.some(account => account.uid !== String(initialInvite.uid || ""))) {
+    return { error: "telegram-invite-account-mismatch", targetUsername: initialInvite.telegramUsername || "" };
+  }
+
+  let invite = initialInvite;
+  let errorCode = "";
+  await db.runTransaction(async transaction => {
+    const snapshot = await transaction.get(inviteRef);
+    invite = snapshot.exists ? snapshot.data() || {} : null;
+    errorCode = getTelegramClientInviteStartError(invite, { telegramUserId, telegramUsername });
+    if (errorCode) return;
+
+    if (invite.existingOpenAccount === true) {
+      const clientRef = db.collection("users").doc(String(invite.uid || ""));
+      const trainerRef = db.collection("users").doc(String(invite.trainerId || ""));
+      const [clientSnapshot, trainerSnapshot] = await Promise.all([
+        transaction.get(clientRef), transaction.get(trainerRef)
+      ]);
+      const clientData = clientSnapshot.exists ? clientSnapshot.data() || {} : {};
+      const trainerData = trainerSnapshot.exists ? trainerSnapshot.data() || {} : {};
+      const normalizedTelegramId = String(telegramUserId || "").trim();
+      const alreadyAssigned = clientData.accountRegistrationType === "open" &&
+        clientData.accountAccessStatus === "active" &&
+        clientData.trainerAssignmentState === "assigned" &&
+        isClientAssignedToTrainer(clientData, String(invite.trainerId || ""));
+      const stillPending = clientData.role === "client" &&
+        clientData.accountRegistrationType === "open" &&
+        clientData.accountAccessStatus === "awaiting_trainer" &&
+        String(clientData.telegramUserId || "") === normalizedTelegramId;
+
+      if (!clientSnapshot.exists || !trainerSnapshot.exists ||
+          getUserRole(trainerData) !== "trainer" || !isActiveMemberData(trainerData) ||
+          (!stillPending && !alreadyAssigned)) {
+        errorCode = String(clientData.telegramUserId || "") !== normalizedTelegramId
+          ? "telegram-invite-account-mismatch"
+          : "telegram-invite-account-unavailable";
+        return;
+      }
+
+      if (stillPending) {
+        const now = new Date().toISOString();
+        const assignmentUpdate = getTrainerAssignmentUpdate({
+          trainerId: invite.trainerId,
+          trainerData,
+          actorUid: invite.trainerId,
+          now,
+          accountRegistrationType: "open"
+        });
+        const updatedClientData = {
+          ...clientData,
+          ...assignmentUpdate,
+          createdByUid: invite.trainerId,
+          createdByEmail: normalizeAccountEmail(trainerData.email || trainerData.accountProfile?.email),
+          updatedAt: now
+        };
+        transaction.set(clientRef, {
+          ...assignmentUpdate,
+          createdByUid: invite.trainerId,
+          createdByEmail: normalizeAccountEmail(trainerData.email || trainerData.accountProfile?.email),
+          updatedAt: now
+        }, { merge: true });
+        transaction.set(
+          db.collection("users").doc(String(invite.trainerId)).collection("trainerClients").doc(String(invite.uid)),
+          getTrainerClientMirrorPayload({
+            clientId: String(invite.uid),
+            clientData: updatedClientData,
+            trainerId: String(invite.trainerId),
+            trainerData,
+            now
+          }),
+          { merge: true }
+        );
+      }
+    }
+
+    transaction.set(inviteRef, {
+      status: "started",
+      telegramUserId,
+      telegramUsername: normalizeTelegramUsername(telegramUsername) || "",
+      telegramChatId: chatId,
+      startedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    // The persistent Mini App button has no invite query parameter. Keep only
+    // the latest explicitly started invitation for this verified Telegram ID;
+    // the login codebase revalidates the full invite before using this hint.
+    transaction.set(db.collection("telegramPendingClientInvites").doc(telegramUserId), {
+      token,
+      uid: String(invite.uid),
+      trainerId: String(invite.trainerId),
+      telegramUsername: normalizeTelegramUsername(telegramUsername) || "",
+      expiresAt: invite.expiresAt,
+      startedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+  });
+
+  return {
+    error: errorCode,
+    targetUsername: invite?.telegramUsername || "",
+    invite: errorCode ? null : invite
+  };
+}
+
 
 
 async function assertAdmin(request) {
@@ -940,6 +1183,11 @@ async function assertAdmin(request) {
     throw new HttpsError("permission-denied", "Only admin can perform this action.");
   }
 }
+
+export const adminSecurityKeys = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30 },
+  createAdminSecurityKeysHandler({ admin, getAdminIdentityContext, enforceRateLimit, verifyAppCheckRequest })
+);
 
 export const clientExerciseMedia = onRequest(
   { region: "europe-west1", memory: "256MiB", timeoutSeconds: 15 },
@@ -955,6 +1203,88 @@ export const clientExerciseMedia = onRequest(
   }
 );
 
+export const exerciseVideoAccess = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, cors: true },
+  async (req, res) => {
+    res.set("Cache-Control", "private, no-store");
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "method-not-allowed" });
+    try {
+      const context = await requireActiveMember(req);
+      await enforceRateLimit(context.uid, "exercise-video-access", { limit: 120, windowMs: 60000 });
+      return json(res, 200, await createProtectedExerciseVideoAccess({
+        storage: admin.storage(), context, source: req.body?.source, previewTime: req.body?.previewTime,
+        posterOnly: req.body?.posterOnly === true,
+        bucketName: getStorageBucketName()
+      }));
+    } catch (error) {
+      const status = getHttpErrorStatus(error);
+      return json(res, status, { ok: false, error: error.code || "video-access-unavailable",
+        message: status >= 500 ? "Не удалось открыть защищённое видео. Повторите позже." : error.message });
+    }
+  }
+);
+
+export const clientLoadingSnapshot = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30 },
+  async (req, res) => {
+    res.set("Cache-Control", "private, no-store");
+    if (req.method !== "POST") return json(res, 405, { error: "method-not-allowed" });
+    try {
+      const context = await requireActiveMember(req);
+      await enforceRateLimit(context.uid, "client-loading-snapshot", { limit: 60, windowMs: 60000 });
+      return json(res, 200, await readClientLoadingSnapshot({ db: admin.firestore(), context, kind: req.body?.kind || "workouts" }));
+    } catch (error) {
+      const status = getHttpErrorStatus(error);
+      return json(res, status, { code: error.code || "loading/snapshot-unavailable",
+        message: status >= 500 ? "Не удалось подтвердить данные. Повторите загрузку." : error.message });
+    }
+  }
+);
+
+export const nutritionStorage = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 60 },
+  async (req, res) => {
+    res.set("Cache-Control", "private, no-store");
+    if (req.method !== "POST") return json(res, 405, { error: "method-not-allowed" });
+    if (req.rawBody?.length > 2 * 1024 * 1024) return json(res, 413, { error: "nutrition/request-too-large" });
+    try {
+      const context = await requireActiveMember(req);
+      await enforceRateLimit(context.uid, "nutrition-storage", { limit: 90, windowMs: 60000 });
+      const db = admin.firestore();
+      const service = createNutritionDayStorage({ db,
+        authorize: async ({ uid, action }) => {
+          await getManagedClient(context, uid);
+          if (context.token.admin === true) return "admin";
+          return action === "read" ? "read" : action === "commit" ? "plan" : false;
+        },
+        validateTransactionAccess: async ({ tx, actorUid, uid, permission }) => {
+          const actor = await tx.get(db.doc(`users/${actorUid}`));
+          const target = actorUid === uid ? actor : await tx.get(db.doc(`users/${uid}`));
+          const actorData = actor.data() || {}, targetData = target.data() || {};
+          if (!actor.exists || !target.exists || !isActiveMemberData(actorData)) {
+            throw createHttpError(403, "Active membership required");
+          }
+          if (actorUid !== uid && !(permission === "admin"
+            ? hasCurrentAdminClaim(context.token, actorData)
+            : getUserRole(actorData) === "trainer" && isAssignedTrainerData(targetData, actorUid))) {
+            throw createHttpError(403, "Client access changed");
+          }
+          return true;
+        },
+        canCutover: async () => {
+          const config = await db.doc("serverConfig/nutritionDayStorage").get();
+          return config.exists && config.data()?.writerFenceVersion === 2 && config.data()?.cutoverEnabled === true;
+        }
+      });
+      return json(res, 200, await service.handle(context.uid, req.body || {}));
+    } catch (error) {
+      const status = getHttpErrorStatus(error);
+      return json(res, status, { error: error.code || "nutrition/storage-unavailable",
+        message: status >= 500 ? "Не удалось синхронизировать питание. Локальная копия сохранена." : error.message });
+    }
+  }
+);
+
 export const trainerExerciseCards = onRequest(
   { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30 },
   async (req, res) => {
@@ -963,10 +1293,29 @@ export const trainerExerciseCards = onRequest(
     try {
       const context = await requireActiveMember(req);
       await enforceRateLimit(context.uid, "exercise-cards", { limit: 120, windowMs: 60000 });
-      return json(res, 200, await manageTrainerExerciseCards({ db: admin.firestore(), context, body: req.body || {} }));
+      return json(res, 200, await manageTrainerExerciseCards({ db: admin.firestore(), context, body: req.body || {}, bucketName: getStorageBucketName() }));
     } catch (error) {
       const status = getHttpErrorStatus(error);
       return json(res, status, { error: status >= 500 ? "Не удалось сохранить карточку упражнения. Попробуйте ещё раз." : error.message });
+    }
+  }
+);
+
+export const deleteEmptyClientProgramAssignment = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 60 },
+  async (req, res) => {
+    res.set("Cache-Control", "private, no-store");
+    if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
+    try {
+      const context = await requireActiveMember(req);
+      await enforceRateLimit(context.uid, "empty-program-delete", { limit: 20, windowMs: 60000 });
+      return json(res, 200, await deleteEmptyProgramAssignment({ db: admin.firestore(), context, body: req.body || {} }));
+    } catch (error) {
+      const status = getHttpErrorStatus(error);
+      return json(res, status, {
+        error: error.code || "program/delete-unavailable",
+        message: status >= 500 ? "Не удалось удалить программу. Она сохранена — попробуйте ещё раз." : error.message
+      });
     }
   }
 );
@@ -1118,25 +1467,20 @@ export const resolveLoginAlias = onRequest(
     try {
       await verifyAppCheckRequest(req);
       await enforceRateLimit(getPublicRequestIdentity(req), "resolve-login-alias", {
-        limit: 30,
+        limit: 200,
         windowMs: 10 * 60 * 1000
       });
-
       const login = normalizeLoginAlias(req.body?.login);
-      if (!isValidLoginAlias(login)) {
-        return json(res, 404, { ok: false, error: "auth/login-not-found" });
-      }
-
-      const snapshot = await admin.firestore().collection("loginAliases").doc(login).get();
-      const email = normalizeAccountEmail(snapshot.data()?.email);
-      if (!snapshot.exists || !email) {
-        return json(res, 404, { ok: false, error: "auth/login-not-found" });
-      }
-
-      return json(res, 200, { ok: true, email });
+      const principal = crypto.createHash("sha256").update(login).digest("hex");
+      await enforceRateLimit(`alias:${principal}`, "credential-exchange", { limit: 10, windowMs: 10 * 60 * 1000 });
+      await enforceRateLimit("public-alias-global", "credential-exchange", { limit: 1000, windowMs: 10 * 60 * 1000 });
+      const result = await authenticateLoginAlias({ body: req.body, db: admin.firestore(),
+        auth: admin.auth(), apiKey: getFirebaseWebApiKey() });
+      return json(res, result.status, result.body);
     } catch (error) {
-      console.error("resolveLoginAlias error:", error);
       const status = getHttpErrorStatus(error);
+      // Never log credential-bearing request/provider objects or alias emails.
+      console.error("resolveLoginAlias failed", { status });
       return json(res, status, {
         ok: false,
         error: status === 429 ? "auth/too-many-requests" : "auth/network-request-failed"
@@ -1160,12 +1504,89 @@ export const trainerCreateInvite = onRequest(
         windowMs: 10 * 60 * 1000
       });
 
-      const login = normalizeLoginAlias(req.body?.login);
+      const telegramUsername = normalizeTelegramUsername(req.body?.telegramUsername);
+      if (telegramUsername === null) return json(res, 400, { error: "Invalid Telegram username" });
+      const db = admin.firestore();
+      if (telegramUsername) {
+        const registeredProfiles = await db.collection("users")
+          .where("telegramUsername", "==", telegramUsername)
+          .limit(3)
+          .get();
+        if (!registeredProfiles.empty) {
+          if (registeredProfiles.size !== 1) return json(res, 409, { error: "auth/telegram-account-ambiguous" });
+          const registered = registeredProfiles.docs[0];
+          const registeredData = registered.data() || {};
+          if (registeredData.accountRegistrationType !== "open" ||
+              registeredData.accountAccessStatus !== "awaiting_trainer" ||
+              registeredData.role !== "client") {
+            return json(res, 409, { error: "auth/telegram-account-already-registered" });
+          }
+
+          const activationToken = crypto.randomBytes(18).toString("base64url");
+          const inviteId = `tg-${registered.id}-${crypto.randomBytes(5).toString("hex")}`;
+          const appUrl = getWorkoutAppUrl();
+          const botStartUrl = buildTelegramBotInviteStartUrl(getTelegramBotUsername(), activationToken);
+          const shareUrl = buildTelegramInviteAppUrl(appUrl, activationToken);
+          const now = new Date().toISOString();
+          const trainerEmail = normalizeAccountEmail(context.token?.email || context.userData?.email);
+          const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+          const inviteBatch = db.batch();
+          inviteBatch.set(db.collection("clientInvites").doc(inviteId), {
+            inviteId,
+            authUid: registered.id,
+            status: "active",
+            trainerId: context.uid,
+            trainerEmail,
+            createdByUid: context.uid,
+            createdByEmail: trainerEmail,
+            telegramUsername,
+            createdAt: now,
+            updatedAt: now
+          });
+          inviteBatch.set(db.collection("inviteLinks").doc(activationToken), {
+            activationUrl: "",
+            inviteId,
+            uid: registered.id,
+            inviteKind: "client",
+            role: "client",
+            trainerId: context.uid,
+            telegramUsername,
+            existingOpenAccount: true,
+            status: "active",
+            createdAt: now,
+            expiresAt
+          });
+          await inviteBatch.commit();
+          return json(res, 200, {
+            // An invitation is not consent to share a pending user's profile.
+            // Return only the identity needed to present this invitation.
+            client: { id: registered.id, name: telegramUsername, role: "client", accountAccessStatus: "awaiting_trainer" },
+            login: "",
+            existingAccount: true,
+            telegramUsername,
+            botStartUrl,
+            inviteUrl: "",
+            activationUrl: "",
+            shareUrl
+          });
+        }
+      }
+      let login = normalizeLoginAlias(req.body?.login);
+      if (!login && telegramUsername) {
+        const usernameBase = telegramUsername.replace(/[^a-z0-9._-]/g, "").slice(0, 20) || "client";
+        for (let attempt = 0; attempt < 5; attempt += 1) {
+          const candidate = `tg_${usernameBase}_${crypto.randomBytes(3).toString("hex")}`;
+          const candidateSnapshot = await admin.firestore().collection("loginAliases").doc(candidate).get();
+          if (!candidateSnapshot.exists) {
+            login = candidate;
+            break;
+          }
+        }
+      }
       if (!isValidLoginAlias(login)) return json(res, 400, { error: "Invalid login" });
 
       const email = getInternalInviteEmail(login);
-      const name = String(req.body?.name || "").trim() || login || "Клиент";
-      const db = admin.firestore();
+      const name = String(req.body?.name || "").trim() || telegramUsername || login || "Клиент";
       const existingLogin = await db.collection("loginAliases").doc(login).get();
       if (existingLogin.exists) return json(res, 409, { error: "auth/login-already-in-use" });
 
@@ -1206,15 +1627,24 @@ export const trainerCreateInvite = onRequest(
       });
       batch.set(db.collection("clientInvites").doc(email), {
         email, emailIsInternal: true, login, name, status: "active", authUid: createdUser.uid, trainerId: context.uid,
+        telegramUsername,
         trainerEmail, createdByUid: context.uid, createdByEmail: trainerEmail,
         createdAt: now, updatedAt: now, inviteUrl, activationToken
       });
       batch.set(db.collection("inviteLinks").doc(activationToken), {
-        activationUrl, email, login, inviteId: email, createdAt: now, expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString()
+        activationUrl, email, login, inviteId: email, uid: createdUser.uid, inviteKind: "client", role: "client",
+        trainerId: context.uid, telegramUsername, status: "active", createdAt: now,
+        expiresAt: new Date(Date.now() + (telegramUsername ? 7 : 1) * 24 * 60 * 60 * 1000).toISOString()
       });
       batch.set(db.collection("loginAliases").doc(login), { email, uid: createdUser.uid, createdAt: now, updatedAt: now });
       await batch.commit();
-      return json(res, 200, { client: { id: createdUser.uid, ...clientPayload }, login, inviteUrl, activationUrl, shareUrl });
+      const botStartUrl = telegramUsername
+        ? buildTelegramBotInviteStartUrl(getTelegramBotUsername(), activationToken)
+        : "";
+      return json(res, 200, {
+        client: { id: createdUser.uid, ...clientPayload }, login, inviteUrl, activationUrl, shareUrl,
+        telegramUsername, botStartUrl
+      });
     } catch (error) {
       console.error("trainerCreateInvite error:", error);
       return json(res, getHttpErrorStatus(error), { error: error?.code || error?.message || "Unable to create invite" });
@@ -1450,7 +1880,7 @@ export const telegramLoginVerify = onRequest(
         telegramUserId: telegramProfile.telegramUserId,
         telegramNotificationsEnabled: true,
         telegramLinkedAt: admin.firestore.FieldValue.serverTimestamp()
-      }, uploadedAvatar);
+      }, uploadedAvatar, { claimIdentity: true });
 
       return json(res, 200, { ok: true, telegram: telegramProfile });
     } catch (error) {
@@ -1500,9 +1930,13 @@ export const telegramRefreshAvatar = onRequest(
       };
 
       await publishTelegramProfile(uid, {
-        telegram: nextTelegram,
+        // Never republish an identity captured before asynchronous media I/O.
+        telegram: { avatarUrl, avatarUpdatedAt: nextTelegram.avatarUpdatedAt },
         telegramAvatarUrl: avatarUrl
-      }, uploadedAvatar);
+      }, uploadedAvatar, {
+        expectedTelegramId: String(telegramUserId),
+        expectedLinkedAt: JSON.stringify(savedTelegram.linkedAt || userData.telegramLinkedAt || "")
+      });
 
       return json(res, 200, {
         ok: true,
@@ -1551,14 +1985,55 @@ export const telegramCreateLinkCode = onRequest(
       });
 
       const code = crypto.randomBytes(18).toString("base64url");
+      const codeHash = crypto.createHash("sha256").update(code).digest("hex");
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-      await admin.firestore().collection("users").doc(context.uid).set({
-        telegramLinkCode: code,
-        telegramLinkCodeCreatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        telegramLinkCodeExpiresAt: expiresAt
-      }, { merge: true });
+      const adminRecovery = Boolean(String(req.body?.targetUid || "").trim());
+      if (adminRecovery) assertAdminContext(context);
+      const uid = adminRecovery ? normalizeAdminUserId(req.body.targetUid, "targetUid") : context.uid;
+      const expectedTelegramUsername = normalizeTelegramUsername(req.body?.expectedTelegramUsername);
+      const expectedTelegramId = String(req.body?.expectedTelegramId || "").trim();
+      if (expectedTelegramUsername === null || (expectedTelegramId && !/^\d{1,16}$/.test(expectedTelegramId)) ||
+        (adminRecovery && !expectedTelegramUsername && !expectedTelegramId)) {
+        return json(res, 400, { ok: false, error: "A verified Telegram username or numeric ID is required" });
+      }
+      const db = admin.firestore();
+      await db.runTransaction(async transaction => {
+        const userRef = db.collection("users").doc(uid);
+        const ownerRef = db.collection("telegramLinkCodes").doc(`owner_${uid}`);
+        const [profile, deletion, previous] = await Promise.all([
+          transaction.get(userRef), transaction.get(db.collection("accountDeletions").doc(uid)), transaction.get(ownerRef)
+        ]);
+        if (!profile.exists) throw createHttpError(404, "Client not found");
+        if (!isActiveMemberData(profile.data() || {}) || ["pending", "completed"].includes(deletion.data()?.status) ||
+          (adminRecovery && profile.data().role !== "client")) {
+          throw createHttpError(403, "An active client account is required");
+        }
+        const previousHash = String(previous.data()?.activeCodeHash || "");
+        if (/^[a-f0-9]{64}$/.test(previousHash)) {
+          transaction.set(db.collection("telegramLinkCodes").doc(previousHash), { status: "revoked" }, { merge: true });
+        }
+        const timestamp = admin.firestore.FieldValue.serverTimestamp();
+        transaction.set(db.collection("telegramLinkCodes").doc(codeHash), {
+          uid, createdByUid: context.uid, adminRecovery, status: "active", createdAt: timestamp, expiresAt,
+          expectedTelegramUsername: expectedTelegramUsername || "", expectedTelegramId,
+          ...(adminRecovery ? { adminClaimVersion: String(context.userData.adminClaimVersion || "") } : {})
+        });
+        transaction.set(ownerRef, { uid, activeCodeHash: codeHash, updatedAt: timestamp });
+        // Old profile codes were visible to assigned trainers. They are never
+        // redeemed now; remove them when a fresh private credential is issued.
+        transaction.set(userRef, {
+          telegramLinkCode: admin.firestore.FieldValue.delete(),
+          telegramLinkCodeCreatedAt: admin.firestore.FieldValue.delete(),
+          telegramLinkCodeExpiresAt: admin.firestore.FieldValue.delete()
+        }, { merge: true });
+        if (adminRecovery) setAdminAuditEvent(transaction, db, context, {
+          action: "user.telegram.recovery-issued", targetUid: uid,
+          details: { expectedTelegramUsername: expectedTelegramUsername || "", expectedTelegramId }, now: new Date().toISOString()
+        });
+      });
 
-      return json(res, 200, { ok: true, code, expiresAt });
+      return json(res, 200, { ok: true, code, expiresAt,
+        botStartUrl: `https://t.me/${getTelegramBotUsername()}?start=${code}` });
     } catch (error) {
       console.error("telegramCreateLinkCode error:", error);
       return json(res, getHttpErrorStatus(error), { ok: false, error: error.message });
@@ -1592,24 +2067,28 @@ export const telegramUpdateNotifications = onRequest(
             data: context.userData,
             ref: admin.firestore().collection("users").doc(context.uid)
           };
-      const currentTelegram = target.data.telegram && typeof target.data.telegram === "object"
-        ? target.data.telegram
-        : {};
-      const nextTelegram = {
-        ...currentTelegram,
-        ...(typeof enabled === "boolean" ? { notificationsEnabled: enabled } : {})
-      };
-      const workoutCalendar = hasReminderSettings
-        ? buildClientReminderCalendarPatch(req.body.reminderSettings, target.data.workoutCalendar || {})
-        : null;
-      await target.ref.set({
-        ...(typeof enabled === "boolean" ? {
-          telegram: { notificationsEnabled: enabled },
-          telegramNotificationsEnabled: enabled
-        } : {}),
-        ...(workoutCalendar ? { workoutCalendar } : {}),
-        telegramNotificationsUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
+      const { nextTelegram, workoutCalendar } = await admin.firestore().runTransaction(async transaction => {
+        const actorRef = admin.firestore().collection("users").doc(context.uid);
+        const [actor, freshTarget] = await Promise.all([transaction.get(actorRef), transaction.get(target.ref)]);
+        const actorData = actor.data() || {}, targetData = freshTarget.data() || {};
+        if (!actor.exists || !freshTarget.exists || !isActiveMemberData(actorData) ||
+          (target.id !== context.uid && !hasCurrentAdminClaim(context.token, actorData) &&
+            !(actorData.role === "trainer" && isAssignedTrainerData(targetData, context.uid)))) {
+          throw createHttpError(403, "Client assignment changed; refresh and retry");
+        }
+        const nextTelegram = { ...(targetData.telegram || {}),
+          ...(typeof enabled === "boolean" ? { notificationsEnabled: enabled } : {}) };
+        const workoutCalendar = hasReminderSettings
+          ? buildClientReminderCalendarPatch(req.body.reminderSettings, targetData.workoutCalendar || {}) : null;
+        transaction.set(target.ref, {
+          ...(typeof enabled === "boolean" ? {
+            telegram: { notificationsEnabled: enabled }, telegramNotificationsEnabled: enabled
+          } : {}),
+          ...(workoutCalendar ? { workoutCalendar } : {}),
+          telegramNotificationsUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        return { nextTelegram, workoutCalendar };
+      });
 
       return json(res, 200, {
         ok: true,
@@ -1643,20 +2122,36 @@ export const telegramDisconnect = onRequest(
         disconnectedAt: admin.firestore.FieldValue.serverTimestamp()
       };
 
-      await userRef.update({
-        telegram: disconnectedTelegram,
-        telegramConnected: false,
-        telegramUsername: "",
-        telegramDisplayName: "",
-        telegramAvatarUrl: "",
-        telegramUserId: admin.firestore.FieldValue.delete(),
-        telegramChatId: admin.firestore.FieldValue.delete(),
-        telegramLinkedAt: admin.firestore.FieldValue.delete(),
-        telegramLinkCode: admin.firestore.FieldValue.delete(),
-        telegramLinkCodeCreatedAt: admin.firestore.FieldValue.delete(),
-        telegramLinkCodeExpiresAt: admin.firestore.FieldValue.delete(),
-        telegramNotificationsEnabled: false,
-        telegramDisconnectedAt: admin.firestore.FieldValue.serverTimestamp()
+      await admin.firestore().runTransaction(async transaction => {
+        const profile = await transaction.get(userRef);
+        if (!profile.exists || !isActiveMemberData(profile.data() || {})) {
+          throw createHttpError(403, "Active membership required");
+        }
+        const identityRefs = getTelegramIdentityIds(profile.data() || {})
+          .map(id => admin.firestore().collection("telegramIdentities").doc(id));
+        const identities = await Promise.all(identityRefs.map(ref => transaction.get(ref)));
+        identities.forEach((snapshot, index) => {
+          if (isTelegramIdentityOwnedBy(snapshot.data(), context.uid)) transaction.delete(identityRefs[index]);
+        });
+        transaction.delete(admin.firestore().collection("telegramLinkCodes").doc(`owner_${context.uid}`));
+        const disconnectPatch = {
+          telegram: disconnectedTelegram,
+          telegramConnected: false,
+          telegramUsername: "",
+          telegramDisplayName: "",
+          telegramAvatarUrl: "",
+          telegramUserId: admin.firestore.FieldValue.delete(),
+          telegramChatId: admin.firestore.FieldValue.delete(),
+          telegramLinkedAt: admin.firestore.FieldValue.delete(),
+          telegramLinkCode: admin.firestore.FieldValue.delete(),
+          telegramLinkCodeCreatedAt: admin.firestore.FieldValue.delete(),
+          telegramLinkCodeExpiresAt: admin.firestore.FieldValue.delete(),
+          telegramNotificationsEnabled: false,
+          telegramDisconnectedAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        // A leaf merge leaves chatId/userId behind. Replacing this entire map
+        // makes an explicit disconnect final without touching other profile data.
+        transaction.set(userRef, disconnectPatch, { mergeFields: Object.keys(disconnectPatch) });
       });
 
       return json(res, 200, {
@@ -1696,6 +2191,14 @@ export const telegramSendMessage = onRequest(
 
       const client = await getManagedClient(context, clientId);
       const telegram = client.data.telegram || {};
+      const telegramId = String(telegram.telegramUserId || client.data.telegramUserId || "");
+      if (telegram.connected !== true || !/^\d{1,16}$/.test(telegramId)) {
+        throw createHttpError(409, "Client Telegram is not connected");
+      }
+      const identity = await admin.firestore().collection("telegramIdentities").doc(telegramId).get();
+      if (!isTelegramIdentityOwnedBy(identity.data(), client.id)) {
+        throw createHttpError(409, "Client Telegram connection must be confirmed again");
+      }
       const token = TELEGRAM_BOT_TOKEN.value();
 
       const result = await sendTelegramMessage({
@@ -1777,27 +2280,6 @@ async function getNextWorkoutForUser(userId, { calendar = {}, event = null, user
   return lastIndex === -1 ? workouts[0] : workouts[(lastIndex + 1) % workouts.length];
 }
 
-function buildWorkoutReminderMessage({ workout, workoutTime, eventText, offsetHours = 24, test = false }) {
-  const workoutName = workout?.name || "тренировка";
-  const exerciseCount = Array.isArray(workout?.exercises) ? workout.exercises.length : 0;
-  const exercisesLine = exerciseCount ? `В плане: ${exerciseCount} упражнений.` : "План тренировки уже в приложении.";
-  const timingLine = offsetHours === 24
-    ? `Завтра (${eventText}) у тебя тренировка в ${workoutTime}.`
-    : offsetHours === 1
-      ? `Через час начинается тренировка «${workoutName}».`
-      : `Через ${offsetHours} ${offsetHours === 3 ? "часа" : "часов"} начнётся тренировка «${workoutName}».`;
-
-  return [
-    test ? "🧪 Тестовое напоминание о тренировке" : "🏋️‍♂️ Напоминание о тренировке",
-    "",
-    timingLine,
-    `Тренировка: ${workoutName}`,
-    exercisesLine,
-    "",
-    "Подготовь форму, воду, сон и нормальный приём еды заранее 💪"
-  ].join("\n");
-}
-
 function getResourceDateKey(value) {
   if (!value) return "";
   if (typeof value?.toDate === "function") return getMinskDateKey(value.toDate());
@@ -1805,20 +2287,6 @@ function getResourceDateKey(value) {
 
   const timestamp = Date.parse(value);
   return Number.isFinite(timestamp) ? getMinskDateKey(new Date(timestamp)) : "";
-}
-
-function getProgressReminderMessage(reminder = {}) {
-  const isPhoto = reminder.type === "photo";
-  return [
-    isPhoto ? "📸 Пора обновить фото прогресса" : "📏 Пора сделать замеры",
-    "",
-    "Прошло примерно две недели с прошлого контроля.",
-    isPhoto
-      ? "Сделай фото в тех же ракурсах и при похожем освещении."
-      : "Обнови вес и основные замеры тела.",
-    "",
-    "Так тренер точнее увидит динамику и сможет скорректировать план."
-  ].join("\n");
 }
 
 async function getLatestClientResourceDateKey(userRef, collectionName) {
@@ -1838,6 +2306,29 @@ async function getLatestClientResourceDateKey(userRef, collectionName) {
   }
 }
 
+async function getLatestClientMeasurementDateKeys(userRef) {
+  try {
+    const snapshot = await userRef.collection("measurements").get();
+    return snapshot.docs.reduce((latest, resourceDoc) => {
+      const data = resourceDoc.data() || {};
+      const dateKey = getResourceDateKey(data.date || data.createdAt || data.savedAt);
+      if (!dateKey) return latest;
+
+      const isWeightCheckIn = data.measurementType === "weight_checkin";
+      const keys = isWeightCheckIn
+        ? ["weightDateKey"]
+        : ["measurementDateKey", ...(Number(data.weight) > 0 ? ["weightDateKey"] : [])];
+      keys.forEach(key => {
+        if (!latest[key] || dateKey > latest[key]) latest[key] = dateKey;
+      });
+      return latest;
+    }, { weightDateKey: "", measurementDateKey: "" });
+  } catch (error) {
+    console.warn("Failed to read latest measurement dates", error);
+    return { weightDateKey: "", measurementDateKey: "" };
+  }
+}
+
 async function sendProgressReminderForUser(userDoc, user, reminder) {
   if (!isTelegramRemindersEnabled(user)) return { skipped: true };
   const telegram = user.telegram || {};
@@ -1849,7 +2340,7 @@ async function sendProgressReminderForUser(userDoc, user, reminder) {
     throw new Error("Telegram is not connected");
   }
 
-  const text = getProgressReminderMessage(reminder);
+  const text = buildProgressReminderMessage(reminder);
   const token = TELEGRAM_BOT_TOKEN.value();
 
   const result = await sendTelegramMessage({
@@ -1857,11 +2348,12 @@ async function sendProgressReminderForUser(userDoc, user, reminder) {
     telegramUserId,
     username,
     text,
-    token
+    token,
+    parseMode: "HTML"
   });
 
   await userDoc.ref.collection("telegramMessages").doc(`progress_${reminder.type}_reminder_${reminder.dueDateKey}`).set({
-    type: reminder.type === "photo" ? "progress_photo_reminder" : "measurement_reminder",
+    type: reminder.type === "photo" ? "progress_photo_reminder" : reminder.type === "weight" ? "weight_reminder" : "measurement_reminder",
     text,
     progressReminderType: reminder.type,
     reminderDateKey: reminder.dueDateKey,
@@ -1917,7 +2409,8 @@ async function sendWorkoutReminderForClient(clientId, { test = false, event = nu
     telegramUserId,
     username,
     text,
-    token
+    token,
+    parseMode: "HTML"
   });
 
   const docId = test ? `test_reminder_${Date.now()}` : `workout_reminder_${nextEvent.key}_${offsetHours}h`;
@@ -1997,19 +2490,22 @@ export const telegramDailyWorkoutReminders = onSchedule(
       const progressSettings = calendar.progressReminderSettings || {};
       const hasProgressReminders =
         progressSettings.photoEnabled === true ||
+        progressSettings.weightEnabled === true ||
         progressSettings.measurementsEnabled === true ||
         calendar.progressPhotoReminderEnabled === true ||
+        calendar.weightReminderEnabled === true ||
         calendar.measurementsReminderEnabled === true;
 
       if (!hasProgressReminders) return;
 
-      const [photoDateKey, measurementDateKey] = await Promise.all([
+      const [photoDateKey, measurementDateKeys] = await Promise.all([
         getLatestClientResourceDateKey(userDoc.ref, "progressPhotos"),
-        getLatestClientResourceDateKey(userDoc.ref, "measurements")
+        getLatestClientMeasurementDateKeys(userDoc.ref)
       ]);
       const dueProgressReminders = getDueProgressReminderTypes(calendar, {
         photoDateKey,
-        measurementDateKey
+        weightDateKey: measurementDateKeys.weightDateKey,
+        measurementDateKey: measurementDateKeys.measurementDateKey
       }, now);
 
       await Promise.all(dueProgressReminders.map(async (reminder) => {
@@ -2056,7 +2552,7 @@ function buildSubscriptionTelegramMessage(client, reminder) {
     `Клиент: ${client.name || client.displayName || client.email || "Клиент"}`,
     `Абонемент: ${subscription.purchasedSessions || subscription.totalSessions || 0} тренировок`,
     `Осталось: ${reminder.remainingSessions || 0} тренировок`,
-    `Действует до: ${subscription.endDate || "не указано"}`,
+    ...(subscription.periodMode === "sessions" ? [] : [`Действует до: ${subscription.endDate || "не указано"}`]),
     `Последняя тренировка: ${getResourceDateKey(lastWorkout) || "не указана"}`
   ].join("\n");
 }
@@ -2164,55 +2660,35 @@ export const telegramDailySubscriptionReminders = onSchedule(
 );
 
 async function adjustSubscriptionUsageForHistoryEvent(event, delta) {
-  const uid = event.params.uid;
-  const historyRef = event.data?.ref;
-  const history = event.data?.data() || {};
-  const userRef = admin.firestore().collection("users").doc(uid);
-
-  await admin.firestore().runTransaction(async (transaction) => {
-    const userSnap = await transaction.get(userRef);
-    if (!userSnap.exists) return;
-    const user = userSnap.data() || {};
-    const subscription = user.subscription || null;
-    if (!subscription) return;
-    const cycleId = String(subscription.cycleId || subscription.lastRenewedAt || subscription.startDate || "legacy");
-
-    if (delta > 0) {
-      const workoutDate = getResourceDateKey(history.date || history.finishedAt || history.createdAt);
-      const startDate = getResourceDateKey(subscription.startDate);
-      if (startDate && workoutDate && workoutDate < startDate) return;
-      if (history.subscriptionCycleId === cycleId) return;
-    } else if (history.subscriptionCycleId !== cycleId) {
-      return;
-    }
-
-    const purchasedSessions = Math.max(0, Number(subscription.purchasedSessions || subscription.totalSessions) || 0);
-    const currentUsed = Math.max(0, Number(subscription.usedSessions) || 0);
-    const usedSessions = Math.max(0, currentUsed + delta);
-    transaction.set(userRef, {
-      subscription: {
-        ...subscription,
-        cycleId,
-        purchasedSessions,
-        usedSessions,
-        remainingSessions: Math.max(0, purchasedSessions - usedSessions),
-        updatedAt: admin.firestore.FieldValue.serverTimestamp()
-      }
-    }, { merge: true });
-    if (delta > 0 && historyRef) {
-      transaction.set(historyRef, { subscriptionCycleId: cycleId }, { merge: true });
-    }
+  const db = admin.firestore();
+  const accountingConfigRef = db.collection("serverConfig").doc("subscriptionAccounting");
+  const config = (await accountingConfigRef.get()).data();
+  // An absent/unready migration is retried, never replaced with a moving clock.
+  if (config?.schemaVersion !== 1 || config.baselineReady !== true || !config.cutoverTimestamp || config.paused !== false) {
+    throw new Error("Subscription accounting baseline is not ready");
+  }
+  return adjustSubscriptionUsageForHistoryEventWithLedger({
+    db, FieldValue: admin.firestore.FieldValue, getResourceDateKey, event, delta,
+    cutoverTimestamp: config.cutoverTimestamp,
+    baselineCycleId: config.baselineCycleIds?.[event.params.uid], accountingConfigRef
   });
 }
 
 export const subscriptionUsageOnWorkoutCreated = onDocumentCreated(
-  { document: "users/{uid}/history/{historyId}", region: "europe-west1" },
+  { document: "users/{uid}/history/{historyId}", region: "europe-west1", retry: true },
   async (event) => adjustSubscriptionUsageForHistoryEvent(event, 1)
 );
 
 export const subscriptionUsageOnWorkoutDeleted = onDocumentDeleted(
-  { document: "users/{uid}/history/{historyId}", region: "europe-west1" },
+  { document: "users/{uid}/history/{historyId}", region: "europe-west1", retry: true },
   async (event) => adjustSubscriptionUsageForHistoryEvent(event, -1)
+);
+
+// Both verified environment buckets are US-EAST1. Finalize only: metadata
+// updates below must not recursively invoke this handler.
+export const privateProgressPhotoFinalized = onObjectFinalized(
+  { bucket: storageBucket, region: "us-east1", retry: true },
+  event => protectPrivateProgressPhoto({ storage: admin.storage(), event, bucketName: getStorageBucketName() })
 );
 
 export const telegramSetWebhook = onRequest(
@@ -2233,6 +2709,21 @@ export const telegramSetWebhook = onRequest(
       });
       const token = TELEGRAM_BOT_TOKEN.value();
       const webhookSecret = crypto.createHash("sha256").update(token).digest("hex");
+      const botInfoResponse = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+      const botInfo = await botInfoResponse.json();
+      const actualUsername = normalizeTelegramUsername(botInfo?.result?.username || "");
+      const expectedUsername = getTelegramBotUsername();
+      if (!botInfoResponse.ok || !botInfo?.ok || !actualUsername) {
+        return json(res, 502, { ok: false, error: "Unable to verify Telegram bot token" });
+      }
+      if (actualUsername !== expectedUsername) {
+        return json(res, 409, {
+          ok: false,
+          error: "Telegram bot token does not match configured bot",
+          expectedUsername,
+          actualUsername
+        });
+      }
 
       const response = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
         method: "POST",
@@ -2244,6 +2735,9 @@ export const telegramSetWebhook = onRequest(
       });
 
       const data = await response.json();
+      if (response.ok && data?.ok === true) {
+        await ensureTelegramAppMenu({ token, url: getWorkoutAppUrl() });
+      }
       return json(res, response.ok ? 200 : 500, data);
     } catch (error) {
       console.error("telegramSetWebhook error:", error);
@@ -2275,20 +2769,44 @@ export const telegramWebhook = onRequest(
       const text = String(message?.text || "").trim();
       const chatId = String(message?.chat?.id || "").trim();
       const startMatch = text.match(/^\/start(?:@\w+)?\s+([A-Za-z0-9_-]{20,})$/i);
+      const isPrivateChat = Boolean(fromId && chatId && message?.chat?.type === "private" && chatId === fromId);
+      const isStartCommand = /^\/start(?:@\w+)?(?:\s|$)/i.test(text);
 
-      if (fromId && chatId && startMatch && message?.chat?.type === "private" && chatId === fromId) {
+      if (isPrivateChat && startMatch && /^invite_/i.test(startMatch[1])) {
+        const inviteToken = startMatch[1].slice("invite_".length);
+        const result = /^[A-Za-z0-9_-]{20,60}$/.test(inviteToken)
+          ? await startTelegramClientInvite(inviteToken, message)
+          : { error: "telegram-invite-invalid", targetUsername: "" };
+        const appUrl = result.error
+          ? getWorkoutAppUrl()
+          : buildTelegramInviteAppUrl(getWorkoutAppUrl(), inviteToken);
+        await sendTelegramMessage({
+          chatId,
+          text: result.error
+            ? buildTelegramInviteErrorMessage(result.error, result.targetUsername)
+            : buildTelegramInviteAcceptanceMessage(message?.from?.first_name),
+          token,
+          parseMode: "HTML",
+          replyMarkup: result.error ? null : buildTelegramAppKeyboard(appUrl, "Принять приглашение")
+        }).catch(error => console.warn("Telegram client invite reply failed:", error?.code || error?.message || "unknown"));
+        return json(res, 200, { ok: true });
+      }
+
+      if (isPrivateChat && startMatch) {
         const code = startMatch[1];
-        const pendingLinks = await admin.firestore()
-          .collection("users")
-          .where("telegramLinkCode", "==", code)
-          .limit(2)
-          .get();
-        const linkedUser = pendingLinks.size === 1 ? pendingLinks.docs[0] : null;
+        const db = admin.firestore();
+        const hash = crypto.createHash("sha256").update(code).digest("hex");
+        const codeSnapshot = await db.collection("telegramLinkCodes").doc(hash).get();
+        const codeData = codeSnapshot.data() || {};
+        const codeUid = String(codeData.uid || "");
+        const linkedUser = codeSnapshot.exists && codeData.status === "active" &&
+          codeUid && codeUid.length <= 128 && !codeUid.includes("/")
+          ? await db.collection("users").doc(codeUid).get() : null;
         const linkedUserData = linkedUser?.data() || {};
-        const expiresAt = Date.parse(String(linkedUserData.telegramLinkCodeExpiresAt || ""));
+        const expiresAt = Date.parse(String(codeData.expiresAt || ""));
 
         if (
-          linkedUser &&
+          linkedUser?.exists &&
           isActiveMemberData(linkedUserData) &&
           Number.isFinite(expiresAt) &&
           expiresAt > Date.now()
@@ -2312,7 +2830,8 @@ export const telegramWebhook = onRequest(
             loginProvider: "telegram_bot_link"
           };
 
-          await linkedUser.ref.set({
+          try {
+            await publishTelegramProfile(linkedUser.id, {
             telegram: telegramProfile,
             telegramConnected: true,
             telegramChatId: chatId,
@@ -2324,37 +2843,140 @@ export const telegramWebhook = onRequest(
             telegramLinkCode: admin.firestore.FieldValue.delete(),
             telegramLinkCodeCreatedAt: admin.firestore.FieldValue.delete(),
             telegramLinkCodeExpiresAt: admin.firestore.FieldValue.delete()
-          }, { merge: true });
+            }, null, { claimIdentity: true, linkCode: code });
+          } catch {
+            await sendTelegramMessage({ chatId, text: buildTelegramLinkErrorMessage(), token,
+              parseMode: "HTML" })
+              .catch(error => console.warn("Telegram rejected-link reply failed:", error?.code || "unknown"));
+            return json(res, 200, { ok: true });
+          }
 
           await sendTelegramMessage({
             chatId,
-            text: "Telegram успешно привязан к вашему аккаунту Workout.",
-            token
+            text: buildTelegramLinkConfirmationMessage(),
+            token,
+            parseMode: "HTML"
           }).catch((error) => console.warn("Telegram link confirmation failed:", error));
+        } else {
+          await sendTelegramMessage({
+            chatId,
+            text: buildTelegramLinkErrorMessage(),
+            token,
+            parseMode: "HTML"
+          }).catch((error) => console.warn("Telegram link error message failed:", error));
         }
 
         return json(res, 200, { ok: true });
       }
 
-      if (startMatch) return json(res, 200, { ok: true });
+      if (isStartCommand && isPrivateChat) {
+        const linkedAccounts = await findTelegramLinkedAccounts(fromId);
+        const linkedAccount = linkedAccounts.length === 1 ? linkedAccounts[0] : null;
+        const linkedData = linkedAccount?.data || {};
+        const existingTelegram = linkedData.telegram && typeof linkedData.telegram === "object"
+          ? linkedData.telegram
+          : {};
+        const existingChatId = String(existingTelegram.chatId || linkedData.telegramChatId || "").trim();
+        const identity = await admin.firestore().collection("telegramIdentities").doc(fromId).get();
+        const canConnectExistingAccount = Boolean(
+          linkedAccount &&
+          String(identity.data()?.uid || "") === linkedAccount.uid &&
+          isActiveMemberData(linkedData) &&
+          (!existingChatId || existingChatId === chatId)
+        );
 
-      if (fromId && text && message?.chat?.type === "private" && chatId === fromId) {
+        if (canConnectExistingAccount) {
+          const telegramProfile = {
+            ...existingTelegram,
+            connected: true,
+            chatId,
+            telegramUserId: fromId,
+            username: String(message?.from?.username || existingTelegram.username || ""),
+            displayName: [message?.from?.first_name, message?.from?.last_name]
+              .filter(Boolean)
+              .join(" ") || String(existingTelegram.displayName || message?.from?.username || ""),
+            firstName: String(message?.from?.first_name || existingTelegram.firstName || ""),
+            lastName: String(message?.from?.last_name || existingTelegram.lastName || ""),
+            notificationsEnabled: existingTelegram.notificationsEnabled !== false,
+            linkedAt: admin.firestore.FieldValue.serverTimestamp(),
+            loginProvider: existingTelegram.loginProvider || "telegram_bot_start"
+          };
+
+          await publishTelegramProfile(linkedAccount.uid, {
+            telegram: telegramProfile,
+            telegramConnected: true,
+            telegramChatId: chatId,
+            telegramUserId: fromId,
+            telegramUsername: telegramProfile.username,
+            telegramDisplayName: telegramProfile.displayName,
+            telegramNotificationsEnabled: telegramProfile.notificationsEnabled,
+            telegramLinkedAt: admin.firestore.FieldValue.serverTimestamp()
+          }, null, { claimIdentity: true, requireCanonical: true });
+        }
+
+        await sendTelegramMessage({
+          chatId,
+          text: canConnectExistingAccount
+            ? buildTelegramLinkConfirmationMessage()
+            : buildTelegramWelcomeMessage(message?.from?.first_name),
+          token,
+          parseMode: "HTML"
+        }).catch((error) => console.warn("Telegram welcome message failed:", error));
+        return json(res, 200, { ok: true });
+      }
+
+      if (isStartCommand) return json(res, 200, { ok: true });
+
+      const quickAction = isPrivateChat ? getTelegramQuickAction(text) : "";
+      const quickReply = {
+        app: buildTelegramAppMessage,
+        help: buildTelegramHelpMessage,
+        settings: buildTelegramSettingsMessage
+      }[quickAction];
+
+      if (quickReply) {
+        await sendTelegramMessage({
+          chatId,
+          text: quickReply(),
+          token,
+          parseMode: "HTML"
+        }).catch((error) => console.warn("Telegram quick reply failed:", error));
+        return json(res, 200, { ok: true });
+      }
+
+      if (isPrivateChat && text) {
         const matches = await admin.firestore()
           .collection("users")
           .where("telegram.telegramUserId", "==", fromId)
-          .limit(1)
+          .limit(2)
           .get();
 
-        const linkedData = matches.empty ? {} : matches.docs[0].data() || {};
-        if (!matches.empty && isActiveMemberData(linkedData) &&
+        const identity = await admin.firestore().collection("telegramIdentities").doc(fromId).get();
+        const linked = matches.docs.find(document => document.id === String(identity.data()?.uid || ""));
+        const linkedData = linked?.data() || {};
+        if (linked && isActiveMemberData(linkedData) &&
           String(linkedData.telegram?.chatId || "").trim() === chatId) {
-          await matches.docs[0].ref.collection("telegramMessages").add({
-            type: "incoming",
-            direction: "in",
-            text: text.slice(0, 3500),
-            telegramMessageId: message.message_id || null,
-            sentAt: admin.firestore.FieldValue.serverTimestamp(),
-            status: "received"
+          const db = admin.firestore();
+          const messageRef = linked.ref.collection("telegramMessages").doc();
+          await db.runTransaction(async transaction => {
+            const [profile, deletion, canonical] = await Promise.all([
+              transaction.get(linked.ref),
+              transaction.get(db.collection("accountDeletions").doc(linked.id)),
+              transaction.get(db.collection("telegramIdentities").doc(fromId))
+            ]);
+            const current = profile.data() || {};
+            if (!profile.exists || !isActiveMemberData(current) ||
+              ["pending", "completed"].includes(deletion.data()?.status) ||
+              String(canonical.data()?.uid || "") !== linked.id ||
+              String(current.telegram?.chatId || "") !== chatId) return;
+            transaction.set(messageRef, {
+              type: "incoming",
+              direction: "in",
+              text: text.slice(0, 3500),
+              telegramMessageId: message.message_id || null,
+              sentAt: admin.firestore.FieldValue.serverTimestamp(),
+              status: "received"
+            });
           });
         }
       }
@@ -3371,9 +3993,8 @@ export const aiBasicWorkoutPlan = onRequest(
     if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed", apiVersion });
 
     try {
-      // A basic plan is available to every signed-in client. Keep Firebase Auth,
-      // App Check, and rate limiting here; a paid membership is not required.
-      const context = await requireAuthenticatedUser(req);
+      // Authentication is not admission: paid provider calls require membership.
+      const context = await requireActiveMember(req);
       const profile = normalizeBasicWorkoutAiProfile(req.body?.profile || {});
       if (req.body?.provider === "gemini") {
         return await respondWithHybridBasicWorkout({ res, profile, context, apiVersion });
@@ -4101,7 +4722,8 @@ export const adminAssignClient = onRequest(
           trainerId,
           trainerData,
           actorUid: context.uid,
-          now
+          now,
+          accountRegistrationType: clientData.accountRegistrationType
         });
         transaction.set(clientRef, {
           ...assignmentUpdate,
@@ -4213,6 +4835,7 @@ export const adminUpdateUserRole = onRequest(
             role: "trainer",
             trainerRoleUpdatedAt: now,
             ...getTrainerAssignmentUpdate({ actorUid: context.uid, now }),
+            ...(userData.accountRegistrationType === "open" ? { accountAccessStatus: "active" } : {}),
             updatedAt: now
           }, { merge: true });
           if (previousTrainerId) {
@@ -4268,7 +4891,8 @@ export const adminUpdateUserRole = onRequest(
               trainerId: reassignClientsToUid,
               trainerData: destinationTrainerData,
               actorUid: context.uid,
-              now
+              now,
+              accountRegistrationType: clientData.accountRegistrationType
             }),
             updatedAt: now
           }, { merge: true });
@@ -4289,7 +4913,7 @@ export const adminUpdateUserRole = onRequest(
         transaction.set(userRef, {
           role: "client",
           trainerRoleUpdatedAt: now,
-          ...getTrainerAssignmentUpdate({ actorUid: context.uid, now }),
+          ...getTrainerAssignmentUpdate({ actorUid: context.uid, now, accountRegistrationType: userData.accountRegistrationType }),
           updatedAt: now
         }, { merge: true });
         const auditId = setAdminAuditEvent(transaction, db, context, {
@@ -4402,12 +5026,16 @@ export const adminSetUserAccess = onRequest(
               membershipStatus: "suspended",
               accountStatus: "suspended",
               trainerInviteStatus: role === "trainer" ? "suspended" : userData.trainerInviteStatus || "",
-              accessBeforeSuspend: {
-                active: userData.active !== false,
-                membershipStatus: String(userData.membershipStatus || "active"),
-                accountStatus: String(userData.accountStatus || "active"),
-                trainerInviteStatus: String(userData.trainerInviteStatus || "")
-              },
+              // An HTTP retry must not replace the original state with the
+              // already-suspended state, otherwise restore leaves active=false.
+              accessBeforeSuspend: userData.accessDisabled === true &&
+                userData.membershipStatus === "suspended" && userData.accessBeforeSuspend
+                ? userData.accessBeforeSuspend : {
+                  active: userData.active !== false,
+                  membershipStatus: String(userData.membershipStatus || "active"),
+                  accountStatus: String(userData.accountStatus || "active"),
+                  trainerInviteStatus: String(userData.trainerInviteStatus || "")
+                },
               accessSuspendedAt: now,
               accessUpdatedAt: now,
               accessUpdatedByUid: context.uid,
@@ -4674,10 +5302,16 @@ export const deleteUser = onRequest(
       const deletionRef = db.collection("accountDeletions").doc(uid);
       const [userSnapshot, deletionSnapshot] = await Promise.all([userRef.get(), deletionRef.get()]);
       const deletionData = deletionSnapshot.exists ? deletionSnapshot.data() || {} : {};
-      if (deletionData.status === "completed") {
+      let authUser = null;
+      try {
+        authUser = await admin.auth().getUser(uid);
+      } catch (error) {
+        if (error?.code !== "auth/user-not-found") throw error;
+      }
+      if (deletionData.status === "completed" && !userSnapshot.exists && !authUser) {
         return json(res, 200, { ok: true, uid, cleanupCount: 0, alreadyDeleted: true });
       }
-      if (!userSnapshot.exists && deletionData.status !== "pending") {
+      if (!userSnapshot.exists && !authUser && deletionData.status !== "pending") {
         return json(res, 404, { ok: false, error: "Client not found" });
       }
 
@@ -4686,18 +5320,25 @@ export const deleteUser = onRequest(
         return json(res, 409, { ok: false, error: "Only client accounts can be deleted here" });
       }
 
-      let authUser = null;
-      try {
-        authUser = await admin.auth().getUser(uid);
-      } catch (error) {
-        if (error?.code !== "auth/user-not-found") throw error;
-      }
-
       const cleanupRefs = new Map();
       const addCleanupRef = (ref) => {
         if (ref?.path && ref.path !== userRef.path) cleanupRefs.set(ref.path, ref);
       };
-      for (const path of deletionData.cleanupPaths || []) addCleanupRef(db.doc(path));
+      const ownedByDeletedUser = data => String(data?.uid || data?.authUid || "") === uid;
+      // A retry journal from an older release is not ownership evidence. Do not
+      // replay a foreign alias/invitation accidentally captured by that release.
+      for (const path of deletionData.cleanupPaths || []) {
+        if (typeof path !== "string") continue;
+        const parts = path.split("/");
+        if (parts.length === 4 && parts[0] === "users" && parts[2] === "trainerClients" && parts[3] === uid) {
+          addCleanupRef(db.doc(path));
+        } else if (parts.length === 2 && ["loginAliases", "clientInvites", "inviteLinks", "telegramLinkCodes", "telegramIdentities"].includes(parts[0])) {
+          const saved = await db.doc(path).get();
+          if (saved.exists && (parts[0] === "telegramIdentities" ? isTelegramIdentityOwnedBy(saved.data(), uid) : ownedByDeletedUser(saved.data()))) addCleanupRef(saved.ref);
+        }
+      }
+      const telegramIdentityRefs = getTelegramIdentityIds(userData)
+        .map((telegramUserId) => db.collection("telegramIdentities").doc(telegramUserId));
       const emails = new Set([
         userData.email,
         authUser?.email
@@ -4713,17 +5354,35 @@ export const deleteUser = onRequest(
         userData.createdByUid
       ].map((value) => String(value || "").trim()).filter(Boolean));
 
-      const [loginAliasesSnapshot, clientInvitesSnapshot, ...inviteLinkSnapshots] = await Promise.all([
+      const [loginAliasesSnapshot, clientInvitesSnapshot, linkCodesSnapshot, ...remainingSnapshots] = await Promise.all([
         db.collection("loginAliases").where("uid", "==", uid).get(),
         db.collection("clientInvites").where("authUid", "==", uid).get(),
+        db.collection("telegramLinkCodes").where("uid", "==", uid).get(),
+        ...telegramIdentityRefs.map((ref) => ref.get()),
         ...[...emails].map((email) => db.collection("inviteLinks").where("email", "==", email).get())
       ]);
 
+      const identitySnapshots = remainingSnapshots.slice(0, telegramIdentityRefs.length);
+      const inviteLinkSnapshots = remainingSnapshots.slice(telegramIdentityRefs.length);
+      identitySnapshots.forEach((snapshot) => {
+        if (snapshot.exists && isTelegramIdentityOwnedBy(snapshot.data(), uid)) addCleanupRef(snapshot.ref);
+      });
       loginAliasesSnapshot.forEach((item) => addCleanupRef(item.ref));
       clientInvitesSnapshot.forEach((item) => addCleanupRef(item.ref));
-      inviteLinkSnapshots.forEach((snapshot) => snapshot.forEach((item) => addCleanupRef(item.ref)));
-      logins.forEach((login) => addCleanupRef(db.collection("loginAliases").doc(login)));
-      emails.forEach((email) => addCleanupRef(db.collection("clientInvites").doc(email)));
+      linkCodesSnapshot.forEach((item) => addCleanupRef(item.ref));
+      inviteLinkSnapshots.forEach(snapshot => snapshot.forEach(item => {
+        if (ownedByDeletedUser(item.data())) addCleanupRef(item.ref);
+      }));
+      // Trainer-written email/login fields are not proof of invitation ownership.
+      const legacyCandidates = await Promise.all([
+        ...[...logins].map(login => db.collection("loginAliases").doc(login).get()),
+        ...[...emails].map(email => db.collection("clientInvites").doc(email).get())
+      ]);
+      legacyCandidates.forEach(snapshot => {
+        if (snapshot.exists && ownedByDeletedUser(snapshot.data())) addCleanupRef(snapshot.ref);
+      });
+      const ownedLinks = await db.collection("inviteLinks").where("uid", "==", uid).get();
+      ownedLinks.forEach(item => addCleanupRef(item.ref));
       trainerIds.forEach((trainerId) => addCleanupRef(
         db.collection("users").doc(trainerId).collection("trainerClients").doc(uid)
       ));
@@ -4748,6 +5407,10 @@ export const deleteUser = onRequest(
             if (error?.code !== "auth/user-not-found") throw error;
           }
         }
+        // Catch an issuance that committed between the initial cleanup query
+        // and access disablement. No later issuance can pass its profile check.
+        const lastCodes = await db.collection("telegramLinkCodes").where("uid", "==", uid).get();
+        lastCodes.forEach(item => addCleanupRef(item.ref));
         const bucket = admin.storage().bucket(getStorageBucketName());
         for (const prefix of [`users/${uid}/`, `progress-photos/${uid}/`, `feedback/${uid}/`, `telegram-avatars/${uid}/`]) {
           await bucket.deleteFiles({ prefix, force: true, ignoreNotFound: true, versions: true });

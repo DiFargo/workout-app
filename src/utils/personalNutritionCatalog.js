@@ -21,7 +21,7 @@ export function searchPersonalNutritionCatalog(query, {signal} = {}) {
   return new Promise((resolve,reject) => {
     const id = ++serial;
     const finish = (fn,value) => {clearTimeout(timer);pending.delete(id);signal?.removeEventListener("abort",abort);fn(value);};
-    const abort = () => finish(reject,new DOMException("Aborted", "AbortError"));
+    const abort = () => {worker?.postMessage({cancel:id});finish(reject,new DOMException("Aborted", "AbortError"));};
     const timer = setTimeout(()=>finish(reject,new Error("Не удалось загрузить каталог за 12 секунд")),12000);
     pending.set(id,{resolve:value=>finish(resolve,value),reject:error=>finish(reject,error)});
     signal?.addEventListener("abort",abort,{once:true});

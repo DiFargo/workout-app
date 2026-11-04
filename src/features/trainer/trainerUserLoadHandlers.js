@@ -2,6 +2,8 @@ import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase
 
 import { getTrainerClientMirrorPayload } from "../../utils/trainerClientMirror";
 import { buildTrainerUserLists, isCurrentTrainerClient } from "../../utils/trainerUserLists";
+import { captureAuthSession } from "../../utils/authSession.js";
+import { runSessionResource } from "../../utils/sessionResource.js";
 import {
   mapWithConcurrency,
   MAX_TRAINER_LINKED_PROFILE_CONCURRENCY
@@ -13,11 +15,11 @@ import {
 function isPermissionDeniedError(error) {
   return error?.code === "permission-denied" || String(error?.message || "").includes("Missing or insufficient permissions");
 }
+const userRequests = new WeakMap();
 
 export async function loadTrainerUsersWithDeps({
   db,
   auth,
-  user,
   adminEmail,
   adminSelectedClient,
   canUseAdminFeatures,
@@ -30,10 +32,16 @@ export async function loadTrainerUsersWithDeps({
   setTrainerClientSummariesLoading,
   setUsersList
 }) {
-  if (!canUseTrainerFeatures()) return;
+  return runSessionResource(auth, `trainer-users:${canUseAdminFeatures() ? "admin" : "trainer"}`, async ({ isCurrent: resourceIsCurrent }) => {
+  const session = captureAuthSession(auth);
+  if (!session.isCurrent() || !canUseTrainerFeatures()) return;
+  const request = { session };
+  userRequests.set(setUsersList, request);
+  const isCurrentRequest = () => resourceIsCurrent() && session.isCurrent() && userRequests.get(setUsersList) === request;
   setTrainerClientSummariesLoading(true);
 
   const applyUsers = (items = []) => {
+    if (!isCurrentRequest()) return null;
     const { users, clients } = buildTrainerUserLists(items, {
       isAdmin: canUseAdminFeatures(),
       adminEmail
@@ -57,18 +65,18 @@ export async function loadTrainerUsersWithDeps({
 
       snapshot.forEach((userDoc) => {
         users.push({
-          id: userDoc.id,
-          ...userDoc.data()
+          ...userDoc.data(),
+          id: userDoc.id
         });
       });
 
       const clients = applyUsers(users);
-      void loadTrainerClientSummaries(clients);
+      if (clients && isCurrentRequest()) void loadTrainerClientSummaries(clients, { initialOnly: true });
       return;
     }
 
-    const trainerUid = auth.currentUser?.uid || user?.uid || "";
-    const trainerEmail = String(auth.currentUser?.email || user?.email || "").toLowerCase();
+    const trainerUid = session.uid;
+    const trainerEmail = String(auth.currentUser?.email || "").toLowerCase();
     const users = [];
 
     const trainerQueries = [
@@ -87,12 +95,13 @@ export async function loadTrainerUsersWithDeps({
       Promise.allSettled(trainerQueries.map((trainerQuery) => getDocs(trainerQuery))),
       Promise.allSettled(trainerUid ? [getDocs(collection(db, "users", trainerUid, "trainerClients"))] : [])
     ]);
+    if (!isCurrentRequest()) return;
     queryResults.forEach((result) => {
       if (result.status !== "fulfilled") return;
       result.value.forEach((userDoc) => {
         users.push({
-          id: userDoc.id,
-          ...userDoc.data()
+          ...userDoc.data(),
+          id: userDoc.id
         });
       });
     });
@@ -115,6 +124,7 @@ export async function loadTrainerUsersWithDeps({
         linkedClientDocs,
         MAX_TRAINER_LINKED_PROFILE_CONCURRENCY,
         async (linkedClient) => {
+        if (!isCurrentRequest()) return null;
         const clientId = linkedClient.clientId || linkedClient.uid || linkedClient.id;
         if (!clientId) return null;
         if (loadedProfiles.has(clientId)) return loadedProfiles.get(clientId);
@@ -122,7 +132,7 @@ export async function loadTrainerUsersWithDeps({
         try {
           const clientDoc = await getDoc(doc(db, "users", clientId));
           if (clientDoc.exists()) {
-            return { id: clientDoc.id, ...clientDoc.data() };
+            return { ...clientDoc.data(), id: clientDoc.id };
           }
         } catch (profileReadError) {
           if (!isPermissionDeniedError(profileReadError)) {
@@ -157,12 +167,14 @@ export async function loadTrainerUsersWithDeps({
       trainerEmail
     }));
     const clients = applyUsers(currentTrainerClients);
-    void loadTrainerClientSummaries(clients);
+    if (clients && isCurrentRequest()) void loadTrainerClientSummaries(clients, { initialOnly: true });
   } catch (err) {
     console.error("Ошибка загрузки пользователей:", err);
+    if (!isCurrentRequest()) return;
     setAdminClientStatus("Не получилось загрузить клиентов. Проверь права Firestore для роли тренера.");
     setTrainerClientSummariesLoading(false);
   }
+  });
 }
 
 export async function mirrorClientForTrainerWithDeps({

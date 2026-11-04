@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useModalBackNavigation } from "../../shared/hooks/useModalBackNavigation.js";
 import {
   ArrowLeft,
   BadgeCheck,
@@ -92,7 +93,11 @@ function normalizeClient(client, index) {
  * Callbacks are optional so the parent keeps all Firebase mutations and confirms
  * any sensitive action itself.
  */
-export default function AdminTrainerProfile({
+export default function AdminTrainerProfile(props) {
+  return <AdminTrainerProfileContent key={getText(props.trainer?.id, props.trainer?.uid) || "trainer"} {...props} />;
+}
+
+function AdminTrainerProfileContent({
   trainer = {},
   clients = EMPTY_LIST,
   counts = {},
@@ -123,22 +128,24 @@ export default function AdminTrainerProfile({
   const trainerEmail = getText(trainerRecord.email, trainerRecord.login, trainerRecord.emailAddress);
   const trainerAvatar = getText(trainerRecord.avatarUrl, trainerRecord.photoURL, trainerRecord.photoUrl);
   const trainerStatus = getText(trainerRecord.accountStatus, trainerRecord.status).toLocaleLowerCase("ru");
-  const isSuspended = Boolean(trainerRecord.accessDisabled) || ["suspended", "blocked", "disabled", "inactive", "приостановлен", "заблокирован"].includes(trainerStatus);
-  const isPendingInvite = ["invited", "pending", "created", "ожидает", "приглашён"].includes(trainerStatus);
-  const isRevokedInvite = ["revoked", "cancelled", "canceled", "отозван"].includes(trainerStatus);
-  const statusLabel = isSuspended
-    ? "Доступ приостановлен"
-    : isRevokedInvite
-      ? "Приглашение отозвано"
-      : isPendingInvite
-        ? "Ожидает активации"
-        : "Активен";
+  const membershipStatus = getText(trainerRecord.membershipStatus).toLowerCase();
+  const inviteStatus = getText(trainerRecord.trainerInviteStatus, trainerStatus).toLowerCase();
+  const isRevokedInvite = membershipStatus === "revoked" || [trainerStatus, inviteStatus].some(status => ["revoked", "cancelled", "canceled", "отозван"].includes(status));
+  const isSuspended = Boolean(trainerRecord.accessDisabled || trainerRecord.disabled) || membershipStatus === "suspended" || ["suspended", "blocked", "disabled", "приостановлен", "заблокирован"].includes(trainerStatus);
+  const isInactive = trainerRecord.active === false || trainerRecord.archived === true || ["inactive", "archived"].includes(trainerStatus);
+  const isPendingInvite = ["invited", "pending", "created", "ожидает", "приглашён"].includes(inviteStatus) || (inviteStatus === "active" && trainerStatus === "invited");
+  const isExpiredInvite = inviteStatus === "expired";
+  const isMissingInvite = inviteStatus === "missing";
+  const canManageInvite = !isRevokedInvite && !isSuspended && !isInactive && (isPendingInvite || isExpiredInvite || isMissingInvite);
+  const statusLabel = isRevokedInvite ? "Приглашение отозвано" : isSuspended ? "Доступ приостановлен" : isInactive ? "Неактивен"
+    : isExpiredInvite ? "Срок приглашения истёк" : isMissingInvite ? "Приглашение не найдено" : isPendingInvite ? "Ожидает активации" : "Активен";
   const safeClients = Array.isArray(clients) ? clients.map(normalizeClient) : EMPTY_LIST;
   const assignedClientsCount = getCount(countRecord.assignedClients, safeClients.length);
   const programsKnown = countRecord.programsKnown !== false;
   const libraryKnown = countRecord.libraryKnown !== false;
   const programsCount = getCount(countRecord.programs);
   const libraryCount = getCount(countRecord.libraryExercises);
+  const libraryCountLabel = getText(countRecord.libraryExercisesLabel);
   const unreadMessages = getCount(countRecord.unreadMessages, trainerRecord.unreadMessagesCount);
   const joinedLabel = getText(trainerRecord.joinedLabel, trainerRecord.createdLabel, trainerRecord.joinedAtLabel);
   const assignmentsKnown = countRecord.assignmentsKnown !== false;
@@ -154,8 +161,25 @@ export default function AdminTrainerProfile({
   const [selectedReplacementId, setSelectedReplacementId] = useState("");
   const [invitePending, setInvitePending] = useState(false);
   const [inviteMessage, setInviteMessage] = useState("");
+  const [inviteError, setInviteError] = useState(false);
+  const [inviteShareUrl, setInviteShareUrl] = useState("");
+  const [inviteCopyPending, setInviteCopyPending] = useState(false);
+  const [revokeDialogOpen, setRevokeDialogOpen] = useState(false);
+  const [showAllClients, setShowAllClients] = useState(false);
+  const pendingAction = useRef(false);
+  const clientsSection = useRef(null);
   const hasAssignedClients = assignmentsKnown && assignedClientsCount > 0;
   const safeReplacementTrainers = Array.isArray(replacementTrainers) ? replacementTrainers : EMPTY_LIST;
+  const anyPending = roleChangePending || accessChangePending || reassignPending || invitePending;
+  const usableInviteShareUrl = canManageInvite && !isExpiredInvite && !isMissingInvite ? inviteShareUrl : "";
+  const accountIdentity = `${trainerName}${trainerEmail ? ` · ${trainerEmail}` : ""} · ID: ${getText(trainerRecord.id, trainerRecord.uid) || "не указан"}`;
+  useModalBackNavigation({ open: roleDialogOpen || accessDialogOpen || reassignDialogOpen || revokeDialogOpen, onBack: () => {
+    if (pendingAction.current) return;
+    if (revokeDialogOpen) setRevokeDialogOpen(false);
+    else if (reassignDialogOpen) closeReassignDialog();
+    else if (accessDialogOpen) closeAccessDialog();
+    else closeRoleDialog();
+  } });
 
   const requestRoleChange = () => {
     setRoleChangeError("");
@@ -169,20 +193,23 @@ export default function AdminTrainerProfile({
   };
 
   const confirmRoleChange = async () => {
-    if (roleChangePending || hasAssignedClients || !assignmentsKnown || typeof onChangeRole !== "function") {
+    if (pendingAction.current || roleChangePending || hasAssignedClients || !assignmentsKnown || typeof onChangeRole !== "function") {
       return;
     }
 
+    pendingAction.current = true;
     setRoleChangePending(true);
     setRoleChangeError("");
 
     try {
-      await onChangeRole();
+      const result = await onChangeRole();
+      if (result === false) return;
       setRoleDialogOpen(false);
     } catch (error) {
       console.error("Admin trainer role downgrade error:", error);
       setRoleChangeError("Не удалось изменить роль. Проверьте подключение и попробуйте ещё раз.");
     } finally {
+      pendingAction.current = false;
       setRoleChangePending(false);
     }
   };
@@ -199,13 +226,15 @@ export default function AdminTrainerProfile({
   };
 
   const confirmAccessChange = async () => {
-    if (accessChangePending || typeof onToggleAccess !== "function") return;
+    if (pendingAction.current || accessChangePending || isRevokedInvite || (!isSuspended && (!assignmentsKnown || hasAssignedClients)) || typeof onToggleAccess !== "function") return;
 
+    pendingAction.current = true;
     setAccessChangePending(true);
     setAccessChangeError("");
 
     try {
-      await onToggleAccess({ action: isSuspended ? "restore" : "suspend" });
+      const result = await onToggleAccess({ action: isSuspended ? "restore" : "suspend" });
+      if (result === false) return;
       setAccessDialogOpen(false);
     } catch (error) {
       console.error("Admin trainer access change error:", error);
@@ -215,6 +244,7 @@ export default function AdminTrainerProfile({
           : "Не удалось изменить доступ. Проверьте подключение и попробуйте ещё раз."
       );
     } finally {
+      pendingAction.current = false;
       setAccessChangePending(false);
     }
   };
@@ -233,13 +263,15 @@ export default function AdminTrainerProfile({
   };
 
   const confirmReassignClients = async () => {
-    if (reassignPending || !selectedReplacementId || typeof onReassignClients !== "function") return;
+    if (pendingAction.current || reassignPending || !selectedReplacementId || typeof onReassignClients !== "function") return;
 
+    pendingAction.current = true;
     setReassignPending(true);
     setReassignError("");
 
     try {
-      await onReassignClients(selectedReplacementId);
+      const result = await onReassignClients(selectedReplacementId);
+      if (result === false) return;
       setReassignDialogOpen(false);
     } catch (error) {
       console.error("Admin trainer client reassignment error:", error);
@@ -247,48 +279,75 @@ export default function AdminTrainerProfile({
         ? `Переназначены: ${error.reassignedCount}. Осталось: ${error.remainingCount || 0}. Повторите действие для оставшихся клиентов.`
         : "Не удалось переназначить клиентов. Проверьте подключение и попробуйте ещё раз.");
     } finally {
+      pendingAction.current = false;
       setReassignPending(false);
     }
   };
 
   const confirmDemoteWithReassignment = async () => {
-    if (reassignPending || !selectedReplacementId || typeof onDemoteWithReassignment !== "function") return;
+    if (pendingAction.current || reassignPending || !selectedReplacementId || typeof onDemoteWithReassignment !== "function") return;
 
+    pendingAction.current = true;
     setReassignPending(true);
     setReassignError("");
 
     try {
-      await onDemoteWithReassignment(selectedReplacementId);
+      const result = await onDemoteWithReassignment(selectedReplacementId);
+      if (result === false) return;
       setReassignDialogOpen(false);
       setRoleDialogOpen(false);
     } catch (error) {
       console.error("Admin trainer reassignment and demotion error:", error);
       setReassignError("\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u0435\u0440\u0435\u0434\u0430\u0442\u044c \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432 \u0438 \u0441\u043d\u044f\u0442\u044c \u0440\u043e\u043b\u044c. \u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.");
     } finally {
+      pendingAction.current = false;
       setReassignPending(false);
     }
   };
 
   const runInviteAction = async (action) => {
     const callback = action === "resend" ? onResendInvite : onRevokeInvite;
-    if (invitePending || typeof callback !== "function") return;
+    if (pendingAction.current || invitePending || !canManageInvite || (action === "revoke" && (hasAssignedClients || !assignmentsKnown)) || typeof callback !== "function") return;
 
+    pendingAction.current = true;
     setInvitePending(true);
     setInviteMessage("");
+    setInviteError(false);
 
     try {
       const result = await callback();
+      if (result === false) return;
       const shareUrl = String(result?.invite?.shareUrl || result?.shareUrl || "").trim();
+      setInviteShareUrl(action === "resend" ? shareUrl : "");
       setInviteMessage(
         action === "resend"
-          ? (shareUrl ? "Новое приглашение подготовлено. Ссылка скопирована в буфер обмена." : "Приглашение отправлено повторно.")
+          ? (shareUrl ? "Новое приглашение подготовлено. Передайте ссылку тренеру." : "Запрос обработан, но ссылка не получена. Обновите страницу и проверьте статус приглашения.")
           : "Приглашение отозвано. Активировать аккаунт по старой ссылке больше нельзя."
       );
+      if (action === "revoke") setRevokeDialogOpen(false);
     } catch (error) {
       console.error("Admin trainer invite action error:", error);
+      setInviteError(true);
       setInviteMessage(action === "resend" ? "Не удалось отправить приглашение повторно." : "Не удалось отозвать приглашение.");
     } finally {
+      pendingAction.current = false;
       setInvitePending(false);
+    }
+  };
+
+  const copyInviteLink = async () => {
+    if (!inviteShareUrl || inviteCopyPending) return;
+    setInviteCopyPending(true);
+    try {
+      if (typeof navigator === "undefined" || typeof navigator.clipboard?.writeText !== "function") throw new Error("clipboard_unavailable");
+      await navigator.clipboard.writeText(inviteShareUrl);
+      setInviteError(false);
+      setInviteMessage("Ссылка скопирована в буфер обмена.");
+    } catch {
+      setInviteError(false);
+      setInviteMessage("Не удалось скопировать автоматически. Выделите и скопируйте ссылку вручную.");
+    } finally {
+      setInviteCopyPending(false);
     }
   };
 
@@ -334,7 +393,7 @@ export default function AdminTrainerProfile({
             </div>
             {trainerEmail ? <p className={styles.email}><Mail aria-hidden="true" />{trainerEmail}</p> : null}
             <div className={styles.statusLine}>
-              <span className={`${styles.statusBadge}${isSuspended ? ` ${styles.statusSuspended}` : isPendingInvite || isRevokedInvite ? ` ${styles.statusPending}` : ""}`}>
+              <span className={`${styles.statusBadge}${isSuspended || isRevokedInvite ? ` ${styles.statusSuspended}` : isPendingInvite || isExpiredInvite || isMissingInvite || isInactive ? ` ${styles.statusPending}` : ""}`}>
                 <span aria-hidden="true" />{statusLabel}
               </span>
               {joinedLabel ? <span className={styles.joinedLabel}>{joinedLabel}</span> : null}
@@ -343,41 +402,43 @@ export default function AdminTrainerProfile({
         </div>
 
         <div className={styles.profileQuickActions}>
-          {typeof onOpenClients === "function" ? (
-            <button className={styles.primaryAction} type="button" onClick={onOpenClients}>
+          <button className={styles.primaryAction} type="button" onClick={() => { setShowAllClients(true); clientsSection.current?.scrollIntoView({ block: "start" }); }}>
               <UsersRound aria-hidden="true" />
               <span>Клиенты тренера</span>
-            </button>
-          ) : null}
-          {typeof onOpenAccount === "function" ? (
-            <button className={styles.secondaryAction} type="button" onClick={onOpenAccount}>
-              <SlidersHorizontal aria-hidden="true" />
-              <span>Настроить доступ</span>
-            </button>
-          ) : null}
+          </button>
+          {typeof onOpenPrograms === "function" ? <button className={styles.secondaryAction} type="button" onClick={onOpenPrograms}><BookOpen aria-hidden="true" /><span>Программы</span></button> : null}
+          {typeof onOpenLibrary === "function" ? <button className={styles.secondaryAction} type="button" onClick={onOpenLibrary}><LibraryBig aria-hidden="true" /><span>Библиотека</span></button> : null}
         </div>
       </section>
 
-      {isPendingInvite || isRevokedInvite ? (
+      {canManageInvite || isRevokedInvite ? (
         <section className={styles.inviteCard} aria-live="polite">
           <span className={styles.inviteIcon} aria-hidden="true"><Mail /></span>
           <div>
             <p className={styles.eyebrow}>Приглашение тренера</p>
-            <strong>{isRevokedInvite ? "Приглашение не активно" : "Ожидаем активацию аккаунта"}</strong>
-            <p>{isRevokedInvite ? "Повторная отправка создаст новую ссылку для активации." : "Можно отправить новую ссылку или отозвать приглашение до активации."}</p>
-            {inviteMessage ? <small className={styles.inviteMessage} role="status">{inviteMessage}</small> : null}
+            <strong>{isRevokedInvite ? "Приглашение отозвано" : isExpiredInvite ? "Срок ссылки истёк" : isMissingInvite ? "Действующая ссылка не найдена" : "Ожидаем активацию аккаунта"}</strong>
+            <p>{isRevokedInvite ? "Старая ссылка больше не действует. Повторная отправка и восстановление доступа для отозванного аккаунта недоступны." : "Новая ссылка заменит предыдущую. Передайте её тренеру вручную — приложение не отправляет её автоматически."}</p>
+            {inviteMessage && (inviteError || (!isExpiredInvite && !isMissingInvite)) ? <small className={styles.inviteMessage} role={inviteError ? "alert" : "status"}>{inviteMessage}</small> : null}
+            {usableInviteShareUrl ? <label>
+              <span>Ссылка активации</span>
+              <input aria-label="Ссылка активации для ручного копирования" readOnly value={usableInviteShareUrl} onFocus={(event) => event.target.select()} />
+            </label> : null}
           </div>
           <div className={styles.inviteActions}>
-            {typeof onResendInvite === "function" ? (
-              <button className={styles.compactAction} type="button" onClick={() => runInviteAction("resend")} disabled={invitePending}>
+            {usableInviteShareUrl ? <button className={styles.compactAction} type="button" onClick={copyInviteLink} disabled={inviteCopyPending || invitePending}>
+              {inviteCopyPending ? "Копируем…" : "Скопировать ссылку"}
+            </button> : null}
+            {canManageInvite && typeof onResendInvite === "function" ? (
+              <button className={styles.compactAction} type="button" onClick={() => runInviteAction("resend")} disabled={anyPending || inviteCopyPending}>
                 {invitePending ? "Отправляем…" : "Отправить повторно"}
               </button>
             ) : null}
-            {isPendingInvite && typeof onRevokeInvite === "function" ? (
-              <button className={`${styles.compactAction} ${styles.warningAction}`} type="button" onClick={() => runInviteAction("revoke")} disabled={invitePending}>
+            {canManageInvite && typeof onRevokeInvite === "function" ? (
+              <button className={`${styles.compactAction} ${styles.warningAction}`} type="button" onClick={() => setRevokeDialogOpen(true)} disabled={anyPending || inviteCopyPending || hasAssignedClients || !assignmentsKnown}>
                 Отозвать
               </button>
             ) : null}
+            {canManageInvite && (hasAssignedClients || !assignmentsKnown) ? <small className={styles.inviteMessage}>{hasAssignedClients ? "До отзыва переназначьте клиентов другому тренеру." : "Отзыв недоступен, пока назначения клиентов не проверены."}</small> : null}
           </div>
         </section>
       ) : null}
@@ -385,11 +446,11 @@ export default function AdminTrainerProfile({
       <section className={styles.metricsGrid} aria-label="Краткая статистика тренера">
         <MetricCard icon={<UsersRound aria-hidden="true" />} value={assignmentsKnown ? assignedClientsCount : null} label="назначенных клиентов" accent="lavender" />
         <MetricCard icon={<ClipboardList aria-hidden="true" />} value={programsKnown ? programsCount : null} label="личных программ" accent="lavender" />
-        <MetricCard icon={<LibraryBig aria-hidden="true" />} value={libraryKnown ? libraryCount : null} label="упражнений в библиотеке" accent="lavender" />
+        <MetricCard icon={<LibraryBig aria-hidden="true" />} value={libraryKnown ? libraryCount : null} label={libraryCountLabel || "упражнений в библиотеке"} accent="lavender" />
       </section>
 
       <section className={styles.workGrid} aria-label="Управление тренером">
-        <article className={`${styles.managementCard} ${styles.clientsCard}`}>
+        <article className={`${styles.managementCard} ${styles.clientsCard}`} ref={clientsSection}>
           <div className={styles.cardHeader}>
             <span className={styles.cardIcon} aria-hidden="true"><UsersRound /></span>
             <div>
@@ -403,7 +464,7 @@ export default function AdminTrainerProfile({
             <p className={styles.emptyClients}>Не удалось загрузить назначения. Смена роли недоступна, пока данные не будут проверены.</p>
           ) : safeClients.length ? (
             <ul className={styles.clientList}>
-              {safeClients.slice(0, 3).map((client) => (
+              {safeClients.slice(0, showAllClients ? safeClients.length : 3).map((client) => (
                 <li key={client.id}>
                   <span className={styles.clientAvatar} aria-hidden="true">
                     {client.avatarUrl ? <img src={client.avatarUrl} alt="" /> : client.initials}
@@ -419,9 +480,12 @@ export default function AdminTrainerProfile({
             <p className={styles.emptyClients}>К тренеру пока не назначены клиенты.</p>
           )}
 
+          {safeClients.length > 3 ? <button className={styles.cardLink} type="button" onClick={() => setShowAllClients(current => !current)}>
+            <span>{showAllClients ? "Показать первых трёх" : `Показать всех: ${safeClients.length}`}</span><ChevronRight aria-hidden="true" />
+          </button> : null}
           {typeof onOpenClients === "function" ? (
             <button className={styles.cardLink} type="button" onClick={onOpenClients}>
-              <span>{safeClients.length > 3 ? "Все клиенты" : "Управлять клиентами"}</span>
+              <span>Каталог клиентов</span>
               <ChevronRight aria-hidden="true" />
             </button>
           ) : null}
@@ -440,22 +504,12 @@ export default function AdminTrainerProfile({
           </p>
           <div className={styles.materialStats}>
             <span><ClipboardList aria-hidden="true" /><b>{programsKnown ? programsCount : "—"}</b> программ</span>
-            <span><LibraryBig aria-hidden="true" /><b>{libraryKnown ? libraryCount : "—"}</b> упражнений</span>
-          </div>
-          <div className={styles.cardActions}>
-            {typeof onOpenPrograms === "function" ? (
-              <button className={styles.compactAction} type="button" onClick={onOpenPrograms}>
-                <BookOpen aria-hidden="true" />Программы
-              </button>
-            ) : null}
-            {typeof onOpenLibrary === "function" ? (
-              <button className={styles.compactAction} type="button" onClick={onOpenLibrary}>
-                <LibraryBig aria-hidden="true" />Библиотека
-              </button>
-            ) : null}
+            <span><LibraryBig aria-hidden="true" /><b>{libraryKnown ? libraryCount : "—"}</b> {libraryCountLabel || "упражнений"}</span>
           </div>
         </article>
-
+      </section>
+      <details className={styles.advanced} data-testid="admin-trainer-advanced">
+        <summary><ShieldCheck aria-hidden="true" /><span><strong>Управление доступом</strong><small>Роль, приостановка и передача клиентов</small></span><ChevronRight aria-hidden="true" /></summary>
         <article className={`${styles.managementCard} ${styles.accessCard}`}>
           <div className={styles.cardHeader}>
             <span className={styles.cardIcon} aria-hidden="true"><ShieldCheck /></span>
@@ -471,29 +525,45 @@ export default function AdminTrainerProfile({
             </div>
             <div>
               <span>Статус</span>
-              <strong className={isSuspended ? styles.dangerText : isPendingInvite || isRevokedInvite ? styles.pendingText : styles.successText}>{statusLabel}</strong>
+              <strong className={isSuspended || isRevokedInvite ? styles.dangerText : isPendingInvite || isExpiredInvite || isMissingInvite || isInactive ? styles.pendingText : styles.successText}>{statusLabel}</strong>
             </div>
           </div>
           <p className={styles.accessHint}>Изменение роли и доступа влияет на все рабочие разделы этого пользователя.</p>
           <div className={styles.cardActions}>
             {typeof onChangeRole === "function" ? (
-              <button className={styles.compactAction} type="button" onClick={requestRoleChange}>
+              <button className={styles.compactAction} type="button" onClick={requestRoleChange} disabled={anyPending}>
                 <KeyRound aria-hidden="true" />Изменить роль
               </button>
             ) : null}
-            {typeof onToggleAccess === "function" ? (
-              <button className={`${styles.compactAction} ${isSuspended ? styles.restoreAction : styles.warningAction}`} type="button" onClick={requestAccessChange}>
+            {!isRevokedInvite && typeof onToggleAccess === "function" ? (
+              <button className={`${styles.compactAction} ${isSuspended ? styles.restoreAction : styles.warningAction}`} type="button" onClick={requestAccessChange} disabled={anyPending}>
                 <BadgeCheck aria-hidden="true" />{isSuspended ? "Вернуть доступ" : "Приостановить"}
               </button>
             ) : null}
             {hasAssignedClients && typeof onReassignClients === "function" ? (
-              <button className={`${styles.compactAction} ${styles.reassignAction}`} type="button" onClick={openReassignDialog}>
+              <button className={`${styles.compactAction} ${styles.reassignAction}`} type="button" onClick={openReassignDialog} disabled={anyPending}>
                 <UsersRound aria-hidden="true" />Переназначить клиентов
               </button>
             ) : null}
+            {typeof onOpenAccount === "function" ? <button className={styles.compactAction} type="button" onClick={onOpenAccount} disabled={anyPending}><SlidersHorizontal aria-hidden="true" />Настроить доступ</button> : null}
           </div>
         </article>
-      </section>
+      </details>
+
+      {revokeDialogOpen ? <div className={styles.roleDialogOverlay} data-modal-backdrop="true" role="presentation" onMouseDown={() => { if (!pendingAction.current) setRevokeDialogOpen(false); }}>
+        <section className={styles.roleDialog} role="alertdialog" aria-modal="true" aria-labelledby="admin-trainer-revoke-title" aria-describedby="admin-trainer-revoke-description"
+          onMouseDown={event => event.stopPropagation()} onKeyDown={event => { if (event.key === "Escape" && !pendingAction.current) setRevokeDialogOpen(false); }}>
+          <button className={styles.roleDialogClose} type="button" aria-label="Закрыть" disabled={invitePending} onClick={() => { if (!pendingAction.current) setRevokeDialogOpen(false); }}><X aria-hidden="true" /></button>
+          <h2 id="admin-trainer-revoke-title">Отозвать приглашение?</h2>
+          <p className={styles.accountIdentity}>{accountIdentity}</p>
+          <p id="admin-trainer-revoke-description">Ссылка перестанет действовать, доступ к аккаунту будет закрыт. Данные сохранятся. Повторная отправка и восстановление отозванного аккаунта недоступны.</p>
+          {inviteError && inviteMessage ? <p className={styles.roleDialogError} role="alert">{inviteMessage}</p> : null}
+          <div className={styles.roleDialogActions}>
+            <button className={styles.roleDialogCancel} type="button" disabled={invitePending} onClick={() => setRevokeDialogOpen(false)}>Отмена</button>
+            <button className={styles.roleDialogConfirm} type="button" disabled={invitePending || hasAssignedClients || !assignmentsKnown} onClick={() => runInviteAction("revoke")}>{invitePending ? "Отзываем…" : "Отозвать приглашение"}</button>
+          </div>
+        </section>
+      </div> : null}
 
       {roleDialogOpen ? (
         <div className={styles.roleDialogOverlay} data-modal-backdrop="true" role="presentation" onMouseDown={closeRoleDialog}>
@@ -512,6 +582,7 @@ export default function AdminTrainerProfile({
             <span className={styles.roleDialogIcon} aria-hidden="true"><KeyRound /></span>
             <p className={styles.eyebrow}>Изменение доступа</p>
             <h2 id="admin-trainer-role-dialog-title">Снять роль тренера?</h2>
+            <p className={styles.accountIdentity}>{accountIdentity}</p>
             {hasAssignedClients ? (
               <p id="admin-trainer-role-dialog-description">
                 Сначала переназначьте {formatCount(assignedClientsCount, ["клиента", "клиентов", "клиентов"])} другому тренеру. Доступ и данные не будут изменены.
@@ -557,17 +628,19 @@ export default function AdminTrainerProfile({
             <span className={styles.roleDialogIcon} aria-hidden="true"><ShieldCheck /></span>
             <p className={styles.eyebrow}>Управление доступом</p>
             <h2 id="admin-trainer-access-dialog-title">{isSuspended ? "Вернуть доступ тренеру?" : "Приостановить доступ тренера?"}</h2>
+            <p className={styles.accountIdentity}>{accountIdentity}</p>
             <p id="admin-trainer-access-dialog-description">
               {isSuspended
                 ? "Тренер снова сможет работать со своими клиентами, программами и библиотекой."
                 : hasAssignedClients
                   ? "У тренера есть назначенные клиенты. Сначала переназначьте их активному тренеру, затем подтвердите приостановку доступа."
+                  : !assignmentsKnown ? "Назначения клиентов ещё не проверены. Приостановка недоступна до загрузки данных."
                   : "Тренер потеряет доступ к рабочему кабинету. Данные и материалы останутся в системе."}
             </p>
             {accessChangeError ? <p className={styles.roleDialogError} role="alert">{accessChangeError}</p> : null}
             <div className={styles.roleDialogActions}>
               <button className={styles.roleDialogCancel} type="button" onClick={closeAccessDialog} disabled={accessChangePending}>Отмена</button>
-              <button className={styles.roleDialogConfirm} type="button" onClick={confirmAccessChange} disabled={accessChangePending || (!isSuspended && hasAssignedClients)}>
+              <button className={styles.roleDialogConfirm} type="button" onClick={confirmAccessChange} disabled={accessChangePending || (!isSuspended && (hasAssignedClients || !assignmentsKnown))}>
                 {accessChangePending ? "Сохраняем…" : isSuspended ? "Вернуть доступ" : "Приостановить доступ"}
               </button>
             </div>
@@ -597,6 +670,7 @@ export default function AdminTrainerProfile({
             <span className={styles.roleDialogIcon} aria-hidden="true"><UsersRound /></span>
             <p className={styles.eyebrow}>Назначения клиентов</p>
             <h2 id="admin-trainer-reassign-dialog-title">Переназначить клиентов</h2>
+            <p className={styles.accountIdentity}>{accountIdentity}</p>
             <p id="admin-trainer-reassign-dialog-description">
               Все {formatCount(assignedClientsCount, ["клиент", "клиента", "клиентов"])} будут переданы выбранному активному тренеру. История и планы клиентов сохранятся.
             </p>
@@ -615,6 +689,7 @@ export default function AdminTrainerProfile({
               <p className={styles.roleDialogError}>Нет другого активного тренера, которому можно передать клиентов.</p>
             )}
             {reassignError ? <p className={styles.roleDialogError} role="alert">{reassignError}</p> : null}
+            {typeof onDemoteWithReassignment === "function" ? <p className={styles.operationNote}>«Передать и снять роль» также закроет тренерские разделы этого аккаунта. Программы и история клиентов сохранятся.</p> : null}
             <div className={styles.roleDialogActions}>
               <button className={styles.roleDialogCancel} type="button" onClick={closeReassignDialog} disabled={reassignPending}>Отмена</button>
               <button className={styles.roleDialogConfirm} type="button" onClick={confirmReassignClients} disabled={reassignPending || !selectedReplacementId}>

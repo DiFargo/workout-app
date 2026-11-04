@@ -9,6 +9,26 @@
   color: var(--color-workout-run-stage-card-text);
 }
 
+.historyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--apple-action, #3f73b8);
+  font: inherit;
+  font-size: .8125rem;
+  cursor: pointer;
+}
+.historyButton:active { background: var(--apple-surface-muted, #efeff4); }
+.historyButton:focus-visible { outline: 2px solid var(--apple-action, #3f73b8); outline-offset: 1px; }
+
 :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
   box-sizing: border-box;
   width: 100%;
@@ -188,7 +208,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .exerciseCard.exerciseCard > [data-testid="workout-rest-timer"] {
-  margin-top: 9px;
+  margin-top: 6px;
   flex: 0 0 50px;
 }
 
@@ -476,11 +496,11 @@
   padding: 0; margin: 0; gap: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none;
   overflow: visible; transform: none; will-change: auto; animation: none;
 }
-.planSection.planSection { height: auto; margin: clamp(8px, calc(var(--workout-stage-usable-height, 640px) * .025), 16px) 0 0; }
-.planHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 4px 10px; }
+.planSection.planSection { height: auto; margin: 8px 0 0; }
+.planHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 4px 6px; }
 .planHeading h2 { margin: 0; color: #617078; font-size: .8125rem; font-weight: 500; line-height: 1.4; letter-spacing: .35px; text-transform: uppercase; }
 .planHeading > span { font-size: .8125rem; color: #617078; font-variant-numeric: tabular-nums; flex-shrink: 0; }
-.planCard.planCard { height: auto; min-height: 0; overflow: visible; border: 0; border-radius: 20px; background: #fff; box-shadow: none; }
+.planCard.planCard { height: auto; min-height: 0; overflow: visible; border: 0; border-radius: 22px; background: #fff; box-shadow: none; }
 
 /* Fit preparation to the measured space between the header and bottom dock.
    Normal flow preserves the final scroll inset in WebKit for enlarged text. */
@@ -514,11 +534,24 @@
 
 :global(:root[data-app-theme="warm-light"]) .exerciseDeck.exerciseDeck {
   --workout-scroll-gap: 10px;
-  --workout-exercise-tool-gap: clamp(6px, calc(var(--workout-stage-usable-height, 500px) * .016), 8px);
+  --workout-inline-gutter: 16px;
+  --workout-exercise-tool-gap: clamp(4px, calc(var(--workout-stage-usable-height, 500px) * .01), 6px);
   --workout-exercise-tool-height: 48px;
   --workout-support-padding: 4px 16px;
-  --workout-set-row-height: clamp(56px, calc(var(--workout-stage-usable-height, 522px) * .115), 64px);
+  --workout-set-row-height: clamp(52px, calc(var(--workout-stage-usable-height, 522px) * .085), 56px);
   --workout-set-value-size: clamp(1.1875rem, calc(var(--workout-stage-usable-height, 490px) * .045), 1.375rem);
-  --workout-set-label-padding: 6px 16px 2px;
+  --workout-set-label-padding: 4px 16px 0;
   display: block;
+  /* Keep the real scrollport above the fixed dock, not just its content.
+     Focus and native scrollIntoView can then reveal enlarged controls. */
+  flex: 1 1 0%;
+  height: 0;
+  margin-bottom: var(--workout-dock-height, 110px);
+  padding-bottom: var(--workout-scroll-gap, 10px);
+  scroll-padding-block: 8px;
+}
+:global(:root[data-app-theme="warm-light"]) .planSection.planSection { margin-top: 5px; }
+@media(max-height:700px) {
+  :global(:root[data-app-theme="warm-light"]) .planSection.planSection { margin-top: 3px; }
+  :global(:root[data-app-theme="warm-light"]) .planHeading { margin-bottom: 3px; }
 }

@@ -1,25 +1,35 @@
 import { createHash, randomUUID } from "node:crypto";
 import { exerciseCardLegacyKey, exerciseCardMetadata, exerciseCardPresentationIdentity } from "./exerciseCards.js";
 import { isValidExerciseVideoCrop } from "./exerciseVideoCrop.js";
+import { isValidExerciseVideoPosterTime, normalizeExerciseVideoPosterTime } from "./exerciseVideoPoster.js";
+import { resolveProtectedExerciseVideoSource } from "./protectedExerciseVideo.js";
 
 const fail = (status, message) => { throw Object.assign(new Error(message), { status }); };
 const identifier = (value) => typeof value === "string" && value.length > 0 && value.length <= 128 && !value.includes("/");
-const fields = new Set(["name", "video", "technique", "muscleGroup", "videoPoster", "videoThumbnail", "videoCrop"]);
-function validateMetadata(patch = {}) {
+const fields = new Set(["name", "video", "technique", "muscleGroup", "videoPoster", "videoThumbnail", "videoCrop", "videoPosterTime"]);
+function validateMetadata(patch = {}, bucketName) {
   if (!patch || typeof patch !== "object" || Array.isArray(patch) || Object.keys(patch).some((key) => !fields.has(key))) {
     fail(400, "В карточке можно менять только название, видео, технику и группу мышц. Нагрузка настраивается в программе.");
   }
   for (const [key, value] of Object.entries(patch)) {
+    if (key === "videoPosterTime") {
+      if (!isValidExerciseVideoPosterTime(value)) fail(400, "Проверьте кадр превью: время от 0 до 86400 секунд.");
+      continue;
+    }
     if (key === "videoCrop") {
       if (!isValidExerciseVideoCrop(value)) fail(400, "Проверьте область кадра: положение от 0 до 1, масштаб от 1 до 3.");
       continue;
     }
     const limit = key === "technique" ? 12000 : key === "name" ? 200 : 4000;
     if (typeof value !== "string" || value.length > limit) fail(400, "Проверьте длину полей карточки упражнения.");
-    if (["video", "videoPoster", "videoThumbnail"].includes(key) && value && !/^https:\/\//i.test(value) && !/^\/(?!\/)/.test(value)) fail(400, "Укажите безопасный адрес видео или изображения.");
+    if (key === "video" && /^gs:\/\//i.test(value)) {
+      try { resolveProtectedExerciseVideoSource(value, bucketName); }
+      catch { fail(400, "Укажите видео из разрешённого хранилища приложения."); }
+    } else if (["video", "videoPoster", "videoThumbnail"].includes(key) && value && !/^https:\/\//i.test(value) && !/^\/(?!\/)/.test(value)) fail(400, "Укажите безопасный адрес видео или изображения.");
   }
   if (Object.hasOwn(patch, "name") && !patch.name.trim()) fail(400, "Укажите название упражнения.");
-  return Object.fromEntries(Object.entries(patch).map(([key, value]) => [key, key === "videoCrop" ? value : value.trim()]));
+  return Object.fromEntries(Object.entries(patch).map(([key, value]) => [key,
+    key === "videoPosterTime" ? normalizeExerciseVideoPosterTime(value) : key === "videoCrop" ? value : value.trim()]));
 }
 
 function allExercises(value) {
@@ -30,7 +40,7 @@ function allExercises(value) {
 
 // Server-only collection. Clients receive metadata only for their current
 // trainer through clientExerciseMedia; trainers cannot choose another owner.
-export async function manageTrainerExerciseCards({ db, context, body = {}, now = () => new Date().toISOString() }) {
+export async function manageTrainerExerciseCards({ db, context, body = {}, now = () => new Date().toISOString(), bucketName }) {
   if (!context?.uid) fail(401, "Войдите в аккаунт.");
   const admin = context.token?.admin === true;
   if (!admin && context.role !== "trainer") fail(403, "Библиотека доступна только тренеру.");
@@ -42,7 +52,7 @@ export async function manageTrainerExerciseCards({ db, context, body = {}, now =
     return { cards: snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })) };
   }
   if (!["save", "create", "delete", "restore"].includes(action)) fail(400, "Неизвестное действие.");
-  const patch = ["save", "create"].includes(action) ? validateMetadata(body.patch) : {};
+  const patch = ["save", "create"].includes(action) ? validateMetadata(body.patch, bucketName) : {};
   if (action === "create" && !patch.name) fail(400, "Укажите название упражнения.");
   let legacyRef = null;
   if (!body.cardId && action !== "create") {
@@ -92,6 +102,7 @@ export async function manageTrainerExerciseCards({ db, context, body = {}, now =
     card.videoUpdatedAt = Object.hasOwn(patch, "video") && patch.video !== base.video
       ? timestamp : base.videoUpdatedAt || source?.videoUpdatedAt || base.updatedAt || base.createdAt || timestamp;
     if (!card.video || (Object.hasOwn(patch, "video") && patch.video !== base.video && !Object.hasOwn(patch, "videoCrop"))) card.videoCrop = null;
+    if (!card.video || (Object.hasOwn(patch, "video") && patch.video !== base.video && !Object.hasOwn(patch, "videoPosterTime"))) card.videoPosterTime = null;
     transaction.set(ref, card);
     return { card };
   });

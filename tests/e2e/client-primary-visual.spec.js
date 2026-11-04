@@ -143,8 +143,9 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
 async function expectMainDashboardContent(page) {
   await expect(page.getByTestId("profile-summary-dashboard")).toBeVisible();
   await expect(page.getByTestId("profile-summary-greeting")).toContainText("Илья");
-  await expect(page.getByTestId("profile-summary-hero-title")).toHaveText("Ноги и ягодицы");
-  await expect(page.getByTestId("profile-summary-primary")).toHaveText("Открыть тренировку");
+  await expect(page.getByTestId("profile-summary-task-title")).toHaveText("Что важно сегодня?");
+  await expect(page.locator('[data-task-id="workout"]')).toContainText("Сегодня тренировка");
+  await expect(page.locator('[data-task-id="workout"]')).toContainText("Ноги и ягодицы");
   await expect(page.getByTestId("profile-main-last-workout")).toHaveCount(0);
   await expect(page.getByTestId("profile-summary-workout-log")).toContainText("12");
   await expect(page.getByTestId("profile-summary-nutrition")).toContainText("1 840");
@@ -195,13 +196,16 @@ async function expectMainMeasurementSnapshotLayout(page) {
 }
 
 test("progress weight chart keeps every data state inside its adaptive card", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-06-22T12:00:00Z"));
   for (const state of ["trend", "single", "empty"]) {
     await gotoClient(page, `/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=${state}`);
     await page.getByTestId("client-nav-progress").click();
     await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
     const card = page.getByTestId("profile-progress-weight-card");
     await expect(card).toBeVisible();
-    await expect(card.getByText("Текущий вес", { exact: true })).toBeVisible();
+    await expect(card.getByText("Последний вес", { exact: true })).toBeVisible();
+    await expect(card.getByTestId("profile-progress-weight-point-label")).toHaveCount(state === "empty" ? 0 : 1);
+    if (state === "trend") await page.getByRole("tab", { name: "6 месяцев", exact: true }).click();
     await expect(card.getByTestId("profile-progress-weight-point-label")).toHaveCount(state === "trend" ? 2 : state === "single" ? 1 : 0);
     if (state === "empty") {
       await expect(card.getByText("Добавьте первый вес, чтобы увидеть реальную динамику.")).toBeVisible();
@@ -222,19 +226,38 @@ test("progress weight chart keeps every data state inside its adaptive card", as
 
     await expectNoHorizontalOverflow(page);
   }
+  await page.clock.setFixedTime(new Date("2026-10-19T12:00:00Z"));
+  await gotoClient(page, "/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=trend");
+  await page.getByTestId("client-nav-progress").click();
+  const staleCard = page.getByTestId("profile-progress-weight-card");
+  await expect(staleCard.getByTestId("profile-progress-period-range")).toContainText("Последние 30 дней");
+  await expect(staleCard).toContainText("За выбранный период свежих замеров веса нет.");
+  await expect(staleCard).toContainText("Последний вес: 22.06.2026");
+  await expect(staleCard.getByRole("img")).toHaveCount(0);
+  await expect(staleCard.getByTestId("profile-progress-weight-point-label")).toHaveCount(0);
+  await expectNoHorizontalOverflow(page);
 });
 
 test("weight reminder opens a focused weight-only modal and saves it", async ({ page }) => {
   await gotoClient(page, "/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=single&clientWeightCheckInDue=1");
 
-  await expect(page.getByTestId("profile-weight-checkin-reminder")).toBeVisible();
-  await page.getByTestId("profile-weight-checkin-action").click();
+  await expect(page.getByTestId("profile-summary-task-weight")).toBeVisible();
+  await page.getByTestId("profile-summary-task-weight").click();
   const dialog = page.getByTestId("profile-quick-weight-dialog");
 
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute("data-modal-surface", "true");
   await expect(dialog.locator("input")).toHaveCount(1);
   await expect(page.getByTestId("profile-quick-weight-input")).toHaveValue("");
+  const input = page.getByTestId("profile-quick-weight-input");
+  await page.getByTestId("profile-quick-weight-close").focus();
+  await page.keyboard.press("Tab");
+  await expect(input).toBeFocused();
+  await expect(input).toHaveCSS("outline-style", "none");
+  await expect(input).toHaveCSS("border-top-width", "0px");
+  await expect(input.locator("xpath=..")).toHaveCSS("outline-style", "solid");
+  await page.keyboard.press("Tab");
+  await expect(page.getByTestId("profile-quick-weight-submit")).toBeFocused();
   await expectTapTargets(page, [
     '[data-testid="profile-quick-weight-close"]',
     '[data-testid="profile-quick-weight-submit"]'
@@ -327,7 +350,7 @@ async function expectClientCardTextReadable(page, mode) {
     const clippedTexts = [
       '[data-testid="profile-summary-dashboard"] strong',
       '[data-testid="profile-summary-greeting"]',
-      '[data-testid="profile-summary-hero-title"]'
+      '[data-testid="profile-summary-task-title"]'
     ].flatMap((selector) => (
       [...document.querySelectorAll(selector)].map((node) => ({
         selector,
@@ -825,11 +848,12 @@ test("client primary visual audit covers main dashboard and cabinet", async ({ p
   await gotoClient(page, "/?clientHarness=1&clientCabinetModal=telegram&clientTelegramState=disconnected");
   await clickClientCabinetNav(page);
   await expect(page.getByTestId("profile-telegram-dialog")).toBeVisible();
-  await expect(page.getByTestId("profile-telegram-widget-card")).toBeVisible();
-  await expect(page.getByTestId("profile-telegram-widget-loading")).toBeVisible();
+  await expect(page.getByTestId("profile-telegram-start")).toBeVisible();
+  await expect(page.getByTestId("profile-telegram-dialog").locator("iframe, script[src*='telegram-widget']")).toHaveCount(0);
   await expect(page.getByTestId("profile-telegram-check")).toBeEnabled();
   await expectTapTargets(page, [
     '[data-testid="profile-telegram-close"]',
+    '[data-testid="profile-telegram-start"]',
     '[data-testid="profile-telegram-check"]',
     '[data-testid="profile-telegram-dismiss"]'
   ]);
@@ -880,6 +904,7 @@ test("client cabinet opens separate account connections and notification setting
 });
 
 test("client measurement summary and fullscreen wizard stay adaptive", async ({ page }, testInfo) => {
+  await page.clock.setFixedTime(new Date("2026-06-22T12:00:00Z"));
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   const isCompactMobile = testInfo.project.name === "mobile-chromium";
 
@@ -891,6 +916,8 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   await expect(page.getByTestId("profile-measurement-panel")).toBeVisible();
   await expect(page.getByTestId("profile-progress-weight-card")).toBeVisible();
   await expect(page.getByTestId("profile-progress-weight-delta")).toContainText("−1,3 кг");
+  await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveCount(1);
+  await page.getByRole("tab", { name: "6 месяцев", exact: true }).click();
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveCount(2);
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["90,1", "88,8"]);
   await expect(page.getByTestId("profile-progress-achievement")).toContainText("Первая тренировка впереди");
@@ -919,7 +946,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   await expect(page.getByTestId("measurement-wizard-page")).toBeVisible();
   await expect(page.getByTestId("measurement-wizard-intro")).toBeVisible();
   await expectTapTargets(page, [
-    '[data-testid="measurement-wizard-page"] button[aria-label="Закрыть без сохранения"]',
+    '[data-testid="measurement-wizard-page"] button[aria-label="Закрыть замеры"]',
     '[data-testid="measurement-wizard-navigation"] button'
   ]);
   const headerFit = await page.getByTestId("measurement-wizard-header").evaluate((header) => {
@@ -958,6 +985,14 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   await expect(page.getByTestId("measurement-wizard-measurement").locator("input[data-css-module-control]")).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-measurement-wizard-step.png");
+  const draftInput = page.getByTestId("measurement-wizard-measurement").locator("input[data-css-module-control]");
+  await draftInput.fill("85.5");
+  await page.getByRole("button", { name: "Закрыть замеры", exact: true }).click();
+  const discardDialog = page.getByRole("alertdialog", { name: "Выйти без сохранения?" });
+  await expect(discardDialog).toBeVisible();
+  await discardDialog.getByRole("button", { name: "Продолжить замер", exact: true }).click();
+  await expect(discardDialog).toBeHidden();
+  await expect(draftInput).toHaveValue("85.5");
 
   await gotoClient(page, "/?clientHarness=1&clientHarnessPage=measurementWizard&clientMeasurementStep=review");
   await expect(page.getByTestId("measurement-wizard-review")).toBeVisible();

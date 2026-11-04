@@ -1,9 +1,25 @@
 import { doc, runTransaction } from "firebase/firestore";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { mergeNutritionStates } from "./nutritionStateMerge";
 import { mergeDeletionTimes, mergeMyFoods } from "./nutritionSyncModel.js";
+import { assertNutritionDocumentBudget } from "./nutritionDocumentBudget.js";
+import { beginNutritionSaveFeedback, finishNutritionSaveFeedback, sameNutritionState } from "./nutritionSyncRevision.js";
+import { isNutritionDayStorageEnabled } from "./nutritionDayStorageConfig.js";
 
 export async function saveNutritionStateWithMerge(uid, localNutritionState = {}) {
+  const ticket = beginNutritionSaveFeedback(auth, uid, localNutritionState);
+  try {
+    const result = await persistNutritionStateWithMerge(uid, localNutritionState);
+    finishNutritionSaveFeedback(auth, ticket);
+    return result;
+  } catch (error) {
+    finishNutritionSaveFeedback(auth, ticket, error);
+    throw error;
+  }
+}
+
+async function persistNutritionStateWithMerge(uid, localNutritionState) {
+  if (isNutritionDayStorageEnabled()) return (await import("./nutritionDayClient.js")).saveNutritionDaySnapshot(uid, localNutritionState);
   const nutritionRef = doc(db, "users", uid, "nutrition", "state");
   const personalRef = doc(db, "users", uid, "nutrition", "myFoods");
 
@@ -21,10 +37,13 @@ export async function saveNutritionStateWithMerge(uid, localNutritionState = {})
 
     const state = { ...mergedNutrition };
     delete state.myFoods;
-    transaction.set(nutritionRef, state);
-    if (localNutritionState.myFoods || localNutritionState.deletedMyFoods) transaction.set(personalRef, {
-      ...personal, myFoods, deletedMyFoods: deleted, ownerUid: uid, updatedAt: mergedNutrition.updatedAt
-    });
+    assertNutritionDocumentBudget(state);
+    assertNutritionDocumentBudget({ ...personal, myFoods, deletedMyFoods: deleted, ownerUid: uid, updatedAt: mergedNutrition.updatedAt });
+    if (!sameNutritionState(cloudNutrition, state)) transaction.set(nutritionRef, state);
+    const nextPersonal = { ...personal, myFoods, deletedMyFoods: deleted, ownerUid: uid, updatedAt: mergedNutrition.updatedAt };
+    if ((localNutritionState.myFoods || localNutritionState.deletedMyFoods) && !sameNutritionState(personal, nextPersonal)) {
+      transaction.set(personalRef, nextPersonal);
+    }
     return mergedNutrition;
   });
 }

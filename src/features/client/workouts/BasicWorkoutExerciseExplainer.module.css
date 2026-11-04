@@ -365,11 +365,93 @@
 
 /* One capsule for the three exercise tools. */
 .explainer.explainer { gap: var(--workout-exercise-tool-gap, 12px); grid-template-rows: auto auto; }
-.content.content { width: min(100%, calc(var(--workout-media-max-height, 10000px) * 4 / 3)); margin-inline: auto; padding: 0; border: 0; background: transparent; aspect-ratio: 4 / 3; height: auto; }
-:global(:root[data-app-theme="warm-light"]) .content.content :global([data-testid="workout-exercise-video-frame"]) { height: 100%; min-height: 0; max-height: none; aspect-ratio: 4 / 3; margin: 0; }
+.content.content { width: min(100%, var(--workout-media-max-height, 10000px)); margin-inline: auto; padding: 0; border: 0; background: transparent; aspect-ratio: 1; height: auto; }
+:global(:root[data-app-theme="warm-light"]) .content.content :global([data-testid="workout-exercise-video-frame"]) { height: 100%; min-height: 0; max-height: none; aspect-ratio: 1; margin: 0; }
 .tabs.tabs { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; padding: 3px; border: 1px solid white; border-radius: 99px; background: white; box-shadow: 0 1px 3px #1c282e0a,0 5px 16px #1c282e05; overflow: visible; }
 .tab.tab { position: relative; min-height: var(--workout-exercise-tool-height, 48px); height: auto; padding: 8px 5px; border: 0; border-radius: 99px; background: transparent; color: #376b91; box-shadow: none; gap: 6px; font-size: 0.8125rem; font-weight: 500; line-height: 1.35; white-space: normal; overflow-wrap: anywhere; flex-wrap: wrap; }
 .tab.tab + .tab:before { content: ""; position: absolute; left: 0; top: 13px; bottom: 13px; width: 1px; background: rgba(57, 82, 91,.12); }
 .tab.tab svg { width: 19px; height: 19px; stroke-width: 1.75; }
 .tab.tab:disabled { opacity: .45; }
 @media(max-width:350px) { .tab.tab { font-size: 0.75rem; gap: 4px; }.tab.tab svg { width: 17px; height: 17px; } }
+@media(max-height:700px) { :global(:root[data-app-theme="warm-light"]) .tabs.tabs { padding: 0; } }
+
+.tabs.compactTabs {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.compactTabs .compactTab {
+  min-height: 44px;
+  padding: 8px;
+  border-radius: 12px;
+  color: var(--apple-secondary, #636366);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  flex-wrap: nowrap;
+  gap: 7px;
+}
+
+.compactTabs .compactTab + .compactTab::before { content: none; }
+.compactTabs .compactTab svg { color: var(--apple-action, #3c6faa); flex: 0 0 auto; }
+.compactTabs .activeTab { background: #e9eff8; color: var(--apple-action, #3c6faa); }
+.compactTabs .moreButton { width: 44px; height: 44px; min-width: 44px; padding: 0; }
+.compactTabs .moreButton svg { width: 22px; height: 22px; }
+.compactTabs .compactTab[aria-expanded="true"] { background: var(--apple-surface-muted, #efeff4); }
+
+.actionsMenu {
+  position: fixed;
+  z-index: 16000;
+  box-sizing: border-box;
+  width: 272px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - 24px);
+  padding: 6px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
+  border-radius: 16px;
+  background: var(--apple-surface, #fff);
+  color: var(--apple-text, #1c1c1e);
+  box-shadow: 0 8px 28px rgba(28, 28, 30, .16);
+  visibility: hidden;
+  outline: none;
+}
+
+.actionsMenu[data-positioned="true"] { visibility: visible; }
+
+.menuAction {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: .875rem;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.menuAction svg { width: 19px; height: 19px; flex: 0 0 auto; color: var(--apple-action, #3c6faa); }
+.menuAction:disabled { opacity: .5; cursor: not-allowed; }
+.menuAction:focus-visible { outline: 2px solid var(--apple-action, #3c6faa); outline-offset: -2px; }
+.unavailableReason { margin: 0; padding: 4px 10px 10px; color: var(--apple-secondary, #636366); font-size: .8125rem; line-height: 1.4; overflow-wrap: anywhere; }
+
+@media (hover: hover) and (pointer: fine) {
+  .compactTabs .compactTab:hover, .menuAction:hover:not(:disabled) { background: var(--apple-surface-muted, #efeff4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .compactTabs .compactTab { transition: none; }
+  .compactTabs .compactTab:active { transform: none; }
+}

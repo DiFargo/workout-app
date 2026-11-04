@@ -104,6 +104,21 @@ export function formatBasicProgramWorkouts(workouts) {
     .join("\n");
 }
 
+// Existing prescriptions must never pass through the name-only quick-entry parser.
+export function formatBasicProgramWorkoutsForEditing(workouts) {
+  return JSON.stringify(list(workouts), null, 2);
+}
+
+export function parseBasicProgramWorkoutsForEditing(sourceText) {
+  const workouts = JSON.parse(sourceText);
+  if (!Array.isArray(workouts) || workouts.some((workout) => (
+    !workout || typeof workout !== "object" || Array.isArray(workout)
+    || !Array.isArray(workout.exercises)
+    || workout.exercises.some((exercise) => !exercise || (typeof exercise !== "object" && typeof exercise !== "string"))
+  ))) throw new Error("invalid_workout_structure");
+  return workouts;
+}
+
 export function getAdminBasicProgramStatus(value) {
   return VALID_STATUSES.has(value) ? value : ADMIN_BASIC_PROGRAM_STATUSES.DRAFT;
 }

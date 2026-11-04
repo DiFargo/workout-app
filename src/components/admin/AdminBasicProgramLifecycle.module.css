@@ -450,6 +450,8 @@
 .historyOverview small { color: #376b91; font-size: 12px; font-weight: 800; }
 .loadingHistory { margin: 20px 0; }
 .emptyHistory { margin: 18px 0 0; color: #617078; font-size: 14px; }
+.historyError { margin-top: 18px; flex-wrap: wrap; }
+.historyError p { margin: 0; flex: 1 1 220px; }
 .historyList { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
 .historyList li { display: grid; grid-template-columns: 42px minmax(0,1fr) auto; gap: 10px; align-items: start; padding: 12px; border: 1px solid #edf1f3; border-radius: 13px; }
 .historyVersion { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 10px; background: #edf1f3; color: #376b91; font-size: 12px; font-weight: 800; }
@@ -512,3 +514,4 @@
 @media (prefers-reduced-motion: reduce) {
   .spinner { animation: none; }
 }
+.editorSheet summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; }

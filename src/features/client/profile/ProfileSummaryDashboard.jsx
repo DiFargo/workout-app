@@ -1,6 +1,14 @@
-import { ArrowRight, Bell, Dumbbell } from "lucide-react";
-import RecoveryHeartIcon from "./RecoveryHeartIcon";
+import { ArrowRight, Bell, Camera, CheckCircle2, ChevronRight, Dumbbell, Ruler, Scale } from "lucide-react";
 import styles from "./ProfileSummaryDashboard.module.css";
+import { buildProfileDashboardTasks } from "./profileDashboardTasks.js";
+import { getDashboardWeightPresentation } from "./profileDashboardPresentation.js";
+
+const DASHBOARD_TASK_ICONS = {
+  workout: Dumbbell,
+  weight: Scale,
+  measurements: Ruler,
+  photos: Camera
+};
 
 function formatRussianCount(count, forms) {
   const lastTwoDigits = count % 100;
@@ -31,84 +39,6 @@ function getTrainerNotificationLabel(messageCount, taskCount, fallbackCount, isB
     : "";
 }
 
-function getHeroCopy({
-  workoutState,
-  scheduleStatus,
-  workoutTitle,
-  workoutDate,
-  workoutActionLabel
-}) {
-  if (workoutState === "complete") {
-    return {
-      status: "Выполнено",
-      symbol: "heart",
-      title: "Тренировка завершена",
-      description: "План на сегодня выполнен — время восстановиться",
-      planLabel: "Сегодня",
-      planValue: "Тренировка выполнена",
-      buttonLabel: workoutActionLabel || "Тренировки"
-    };
-  }
-
-  if (workoutState !== "ready") {
-    return {
-      status: "Нужен план",
-      symbol: "dumbbell",
-      title: workoutTitle || "Следующая тренировка",
-      description: workoutDate || "Откройте раздел тренировок, чтобы продолжить",
-      planLabel: "Сегодня",
-      planValue: "Выберите следующий шаг",
-      buttonLabel: workoutActionLabel || "Тренировки"
-    };
-  }
-
-  if (scheduleStatus === "today") {
-    return {
-      status: "Тренировка сегодня",
-      symbol: "dumbbell",
-      title: workoutTitle || "Тренировка по плану",
-      description: "Тренировка по вашему плану",
-      planLabel: "Сегодня",
-      planValue: "Тренировка по плану",
-      buttonLabel: "Открыть тренировку"
-    };
-  }
-
-  if (scheduleStatus === "upcoming") {
-    return {
-      status: "День отдыха",
-      symbol: "heart",
-      title: "Отдых и восстановление",
-      description: `Следующая: ${workoutTitle || "тренировка"} · ${workoutDate || "дата уточняется"}`,
-      planLabel: "Сегодня",
-      planValue: "Восстановление и лёгкая активность",
-      buttonLabel: "Открыть план"
-    };
-  }
-
-  if (scheduleStatus === "missed") {
-    return {
-      status: "Нужен перенос",
-      symbol: "dumbbell",
-      title: "Пропущенная тренировка",
-      description: `${workoutTitle || "Тренировка"} была запланирована на ${workoutDate || "прошедшую дату"}`,
-      planLabel: "Сегодня",
-      planValue: "Перенесите тренировку",
-      buttonLabel: workoutActionLabel || "Тренировки"
-    };
-  }
-
-  return {
-    status: "Свободный день",
-    symbol: "heart",
-    title: "Сегодня без тренировки",
-    description: "Дата следующей тренировки пока не назначена",
-    planLabel: "Сегодня",
-    planValue: "Отдых без нагрузки",
-    buttonLabel: "Открыть план"
-  };
-}
-
 export default function ProfileSummaryDashboard({
   isBasicPlan = false,
   greetingName,
@@ -117,6 +47,8 @@ export default function ProfileSummaryDashboard({
   workoutTitle,
   workoutDate,
   workoutState = "ready",
+  workoutLoadState = "ready",
+  onRetryWorkoutLoad,
   isWorkoutToday = false,
   workoutScheduleStatus,
   workoutActionLabel,
@@ -126,12 +58,26 @@ export default function ProfileSummaryDashboard({
   calorieGoal,
   latestWeight,
   weightChange,
+  weightComparisonAvailable = false,
+  weightDateText = "",
+  weightDataAvailable = true,
+  nutritionReady = true,
+  nutritionError = false,
+  dataLoadState = {},
+  onRetryDataLoad,
+  weightCheckIn,
+  measurementsCheckIn,
+  progressPhotoCheckIn,
+  showProgressPhotoTask = true,
   trainerNotificationCount,
   trainerNotifications,
   onOpenWorkout,
   onOpenTrainer,
   onOpenNutrition,
-  onOpenProgress
+  onOpenProgress,
+  onOpenWeight,
+  onOpenMeasurements,
+  onOpenProgressPhotos
 }) {
   const firstName = String(greetingName || "").trim().split(/\s+/)[0] || "спортсмен";
   const summaryGreeting = greeting || `Доброе утро, ${firstName}`;
@@ -140,12 +86,21 @@ export default function ProfileSummaryDashboard({
     day: "numeric",
     month: "long"
   }).format(new Date()).replace(/^./, (letter) => letter.toLocaleUpperCase("ru-RU"));
-  const workoutCount = Math.max(0, Number(exerciseCount) || 0);
   const loggedWorkoutCount = Math.max(0, Number(totalWorkouts) || 0);
   const consumedCalories = Math.max(0, Math.round(Number(caloriesConsumed) || 0));
   const targetCalories = Math.max(0, Math.round(Number(calorieGoal) || 0));
-  const weight = Number(latestWeight);
-  const delta = Number(weightChange);
+  const workoutReady = workoutLoadState === "ready";
+  const weightPresentation = getDashboardWeightPresentation({ weight: latestWeight, change: weightChange,
+    comparisonAvailable: weightComparisonAvailable, dateText: weightDateText,
+    loadState: dataLoadState.measurementOverview?.status || "ready", hasLoadedData: weightDataAvailable });
+  const taskResources = ["measurementOverview", "photos", "tasks"];
+  const taskDataUnknown = !workoutReady || taskResources.some(name => dataLoadState[name] &&
+    dataLoadState[name].status !== "ready" && !dataLoadState[name].hasValue);
+  const visibleResources = [...taskResources, "nutritionDay"];
+  const dataLoadFailed = visibleResources.some(name => dataLoadState[name]?.status === "error") || nutritionError;
+  const nutritionFailed = nutritionError || dataLoadState.nutritionDay?.status === "error";
+  const dataLoading = visibleResources.some(name => dataLoadState[name]?.status === "loading");
+  const trainerTasksReady = !dataLoadState.tasks || dataLoadState.tasks.status === "ready" || dataLoadState.tasks.hasValue;
   const activeTrainerNotifications = Array.isArray(trainerNotifications)
     ? trainerNotifications.filter((notification) => notification?.status !== "completed" && !notification?.completedAt)
     : [];
@@ -154,16 +109,27 @@ export default function ProfileSummaryDashboard({
   const notificationCount = activeTrainerNotifications.length || Math.max(0, Number(trainerNotificationCount) || 0);
   const trainerNotificationLabel = getTrainerNotificationLabel(trainerMessageCount, trainerTaskCount, notificationCount, isBasicPlan);
   const scheduleStatus = workoutScheduleStatus || (isWorkoutToday ? "today" : "unscheduled");
-  const heroCopy = getHeroCopy({
+  const dashboardTasks = buildProfileDashboardTasks({
     workoutState,
-    scheduleStatus,
+    workoutMode: isBasicPlan ? "basic" : "individual",
+    workoutScheduleStatus: scheduleStatus,
     workoutTitle,
     workoutDate,
-    workoutActionLabel
-  });
+    workoutExerciseCount: exerciseCount,
+    workoutActionLabel,
+    weightCheckIn,
+    measurementsCheckIn,
+    progressPhotoCheckIn,
+    includeProgressPhoto: showProgressPhotoTask && progressPhotoCheckIn?.enabled === true
+  }).filter(task => workoutReady || task.kind !== "workout");
+  const taskActions = {
+    workout: onOpenWorkout,
+    weight: onOpenWeight,
+    measurements: onOpenMeasurements,
+    photos: onOpenProgressPhotos
+  };
   const latestMessage = activeTrainerNotifications.find((notification) => notification?.notificationType === "message");
   const messagePreview = String(latestMessage?.message || latestMessage?.text || latestMessage?.description || "").trim();
-  const HeroDayIcon = heroCopy.symbol === "heart" ? RecoveryHeartIcon : Dumbbell;
 
   return (
     <div className={styles.root} data-testid="profile-summary-dashboard">
@@ -171,39 +137,76 @@ export default function ProfileSummaryDashboard({
         <p>{summaryDateLabel}</p>
         <h2 data-testid="profile-summary-greeting">{summaryGreeting}</h2>
       </section>
-      <section className={styles.hero}>
+      <section className={styles.hero} data-testid="profile-summary-task-card" aria-labelledby="profileSummaryTaskHeading">
         <div className={styles.heroTop}>
-          <span><Dumbbell aria-hidden="true" />{scheduleStatus === "today" ? "Сегодня по плану" : heroCopy.status}</span>
-          <span className={styles.heroStatus} data-testid="profile-summary-hero-status">{isBasicPlan ? "Базовый план" : "Ваш план"}</span>
-          <span className={styles.heroDayArt} aria-hidden="true">
-            <HeroDayIcon
-              data-testid="profile-summary-day-illustration"
-              data-day-symbol={heroCopy.symbol}
-              aria-hidden="true"
-              size={28}
-              strokeWidth={1.5}
-            />
+          <span><Dumbbell aria-hidden="true" />План на сегодня</span>
+          <span className={styles.taskCount} role="status" aria-live="polite" aria-atomic="true" data-testid="profile-summary-task-count">
+            {taskDataUnknown && !dashboardTasks.length ? dataLoadFailed ? "Не все данные" : "Уточняем задачи" : formatRussianCount(dashboardTasks.length, ["задача", "задачи", "задач"])}
           </span>
         </div>
-        <h2 data-testid="profile-summary-hero-title">{heroCopy.title}</h2>
-        <p>{heroCopy.description}</p>
-        {workoutCount > 0 && scheduleStatus === "today" ? <div className={styles.heroMeta}><span><Dumbbell aria-hidden="true" />{formatRussianCount(workoutCount, ["упражнение", "упражнения", "упражнений"])}</span></div> : null}
-        <div className={styles.heroBottom}><button type="button" data-testid="profile-summary-primary" onClick={onOpenWorkout}>{heroCopy.buttonLabel} <ArrowRight aria-hidden="true" /></button></div>
+        <h2 id="profileSummaryTaskHeading" data-testid="profile-summary-task-title">Что важно сегодня?</h2>
+        <p>{!workoutReady ? "Задачи по тренировкам появятся после загрузки плана." : dashboardTasks.length
+          ? "Только то, что актуально для вашего плана и прогресса."
+          : taskDataUnknown ? dataLoadFailed ? "Не удалось проверить все задачи. Повторите загрузку." : "Проверяем актуальные задачи. Это займёт немного времени."
+            : "На сегодня нет актуальных задач."}</p>
+        {!workoutReady && <div className={styles.workoutLoadState} role="status" data-testid="profile-summary-workout-loading"><strong>{workoutLoadState === "error" ? "Не удалось загрузить план" : "Загружаем план тренировок…"}</strong>{workoutLoadState === "error" && onRetryWorkoutLoad && <button type="button" onClick={onRetryWorkoutLoad}>Повторить загрузку</button>}</div>}
+        {dashboardTasks.length ? (
+          <div className={styles.taskList}>
+            {dashboardTasks.map((task, index) => {
+              const TaskIcon = DASHBOARD_TASK_ICONS[task.kind];
+              const isPrimaryWorkout = task.kind === "workout" && index === 0;
+              return (
+                <button
+                  key={task.id}
+                  type="button"
+                  className={`${styles.taskRow}${isPrimaryWorkout ? ` ${styles.primaryTask}` : ""}`}
+                  data-testid={isPrimaryWorkout
+                    ? "profile-summary-primary"
+                    : task.id === "workout"
+                      ? "profile-summary-task-workout"
+                      : `profile-summary-task-${task.id}`}
+                  data-task-id={task.id}
+                  data-primary-action={isPrimaryWorkout ? "true" : undefined}
+                  aria-label={`${task.title}. ${task.note} ${task.actionLabel}`}
+                  onClick={taskActions[task.kind]}
+                >
+                  <span className={styles.taskIcon} aria-hidden="true"><TaskIcon size={18} strokeWidth={2} /></span>
+                  <span className={styles.taskCopy}>
+                    <strong>{task.title}</strong>
+                    <small>{task.note}</small>
+                  </span>
+                  <span className={styles.taskArrow} aria-hidden="true">
+                    {isPrimaryWorkout ? <ArrowRight size={17} strokeWidth={2.4} /> : <ChevronRight size={17} strokeWidth={2} />}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        ) : workoutReady && !taskDataUnknown ? (
+          <div className={styles.emptyTasks} data-testid="profile-summary-task-empty">
+            <CheckCircle2 aria-hidden="true" size={20} />
+            <span>Нет актуальных задач</span>
+          </div>
+        ) : null}
+        {(dataLoadFailed || dataLoading) && <div className={styles.dataLoadNotice} role="status" data-testid="profile-summary-data-status">
+          <span>{dataLoadFailed ? "Не все данные удалось обновить. Доступные записи сохранены." : "Обновляем данные…"}</span>
+          {dataLoadFailed && onRetryDataLoad && <button type="button" onClick={() => onRetryDataLoad(visibleResources.filter(name => dataLoadState[name]?.status === "error"))}>Повторить загрузку</button>}
+        </div>}
       </section>
 
       <div className={styles.sectionHead}><h3>Ваши показатели</h3></div>
       <div className={styles.metrics}>
-        <button type="button" data-testid="profile-summary-workout-log" onClick={onOpenWorkout}><span>Тренировки</span><strong>{loggedWorkoutCount}</strong><small>завершено</small></button>
-        <button type="button" data-testid="profile-summary-nutrition" onClick={onOpenNutrition}><span>Питание</span><strong>{consumedCalories.toLocaleString("ru-RU")}</strong><small>{targetCalories ? `из ${targetCalories.toLocaleString("ru-RU")} ккал` : "цель не задана"}</small></button>
-        <button type="button" onClick={onOpenProgress}><span>Вес</span><strong>{Number.isFinite(weight) && weight > 0 ? weight.toLocaleString("ru-RU", { maximumFractionDigits: 1 }) : "—"}</strong><small>{Number.isFinite(delta) && delta !== 0 ? `${delta > 0 ? "+" : ""}${delta.toLocaleString("ru-RU", { maximumFractionDigits: 1 })} кг` : "без изменений"}</small></button>
+        <button type="button" data-testid="profile-summary-workout-log" disabled={!workoutReady} onClick={onOpenWorkout}><span>Тренировки</span><strong>{workoutReady ? loggedWorkoutCount : workoutLoadState === "error" ? "—" : "…"}</strong><small>{workoutReady ? "завершено" : workoutLoadState === "error" ? "план не загружен" : "план загружается"}</small></button>
+        <button type="button" data-testid="profile-summary-nutrition" onClick={onOpenNutrition}><span>Питание</span><strong>{nutritionReady ? consumedCalories.toLocaleString("ru-RU") : nutritionFailed ? "—" : "…"}</strong><small>{!nutritionReady ? nutritionFailed ? "Не удалось загрузить" : "Загружаем дневник…" : targetCalories ? `из ${targetCalories.toLocaleString("ru-RU")} ккал` : "цель не задана"}</small></button>
+        <button type="button" data-testid="profile-summary-weight" onClick={onOpenProgress}><span>Вес</span><strong>{weightPresentation.value}</strong><small>{weightPresentation.note}</small></button>
       </div>
 
       <div className={styles.sectionHead}><h3>{isBasicPlan ? "Сообщения и напоминания" : "Тренер рядом"}</h3></div>
       <button type="button" className={styles.coach} data-testid="profile-summary-notifications-button" onClick={onOpenTrainer}>
         <span className={styles.avatar} aria-hidden="true">{isBasicPlan ? <Bell size={24} /> : "ТР"}</span>
-        <span className={styles.coachCopy}><strong>{isBasicPlan ? "Уведомления" : "Ваш тренер"}</strong><small data-testid="profile-summary-trainer-status">{trainerNotificationLabel || "Новых сообщений нет"}</small></span>
-        {notificationCount > 0 && <span className={styles.notificationBadge} data-testid="profile-summary-trainer-badge" aria-label={`${notificationCount} новых уведомлений`} />}
-        {messagePreview && <span className={styles.messagePreview}>{messagePreview}</span>}
+        <span className={styles.coachCopy}><strong>{isBasicPlan ? "Уведомления" : "Ваш тренер"}</strong><small data-testid="profile-summary-trainer-status">{trainerTasksReady ? trainerNotificationLabel || "Новых сообщений нет" : dataLoadState.tasks?.status === "error" ? "Не удалось загрузить сообщения" : "Загружаем сообщения…"}</small></span>
+        {trainerTasksReady && notificationCount > 0 && <span className={styles.notificationBadge} data-testid="profile-summary-trainer-badge" aria-label={`${notificationCount} новых уведомлений`} />}
+        {trainerTasksReady && messagePreview && <span className={styles.messagePreview}>{messagePreview}</span>}
       </button>
     </div>
   );

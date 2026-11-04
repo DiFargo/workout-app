@@ -30,8 +30,10 @@ async function expectNoHorizontalOverflow(page) {
 }
 
 async function attachScreenshot(page, testInfo, name) {
+  const path = testInfo.outputPath(name);
+  await page.screenshot({ path, fullPage: true });
   await testInfo.attach(name, {
-    body: await page.screenshot({ fullPage: true }),
+    path,
     contentType: "image/png"
   });
 }
@@ -140,11 +142,12 @@ async function clientTabControl(page, name) {
 
   const utilityLabels = {
     "Сообщения": /^Сообщения Переписка с клиентом$/,
-    "Уведомления": "🔔 Настроить уведомления"
+    "Уведомления": /^Напоминания/
   };
   if (name === "Сообщения") await openClientTab(page, "Сводка");
   if (name === "Уведомления") await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
-  const utilityAction = page.getByRole("button", { name: utilityLabels[name], exact: true });
+  const utilityRoot = name === "Уведомления" ? page.getByRole("dialog", { name: "Управление клиентом", exact: true }) : page;
+  const utilityAction = utilityRoot.getByRole("button", { name: utilityLabels[name], exact: true });
   return { button: utilityAction, utility: true };
 }
 
@@ -295,7 +298,11 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
   await expect(page.locator(".trainerNotificationCalendarGrid")).toBeVisible();
   await expect(page.locator(".trainerNotificationLegend")).toBeVisible();
   await expect(page.locator(".trainerReminderPeriod button[aria-pressed='true']")).toHaveCount(2);
-  await expect(page.locator(".trainerNotificationCalendarGrid button[aria-pressed='true']")).not.toHaveCount(0);
+  const notificationDates = page.locator(".trainerNotificationCalendarGrid button[data-date]");
+  expect(await notificationDates.count()).toBeGreaterThanOrEqual(28);
+  expect(await notificationDates.evaluateAll(buttons => buttons.every(button => button.disabled))).toBe(true);
+  await expect(notificationDates.filter({ hasText: "№1" })).toHaveAttribute("aria-label", "2026-06-15: фактическое выполнение");
+  await expect(page.locator('.trainerNotificationCalendarGrid button[data-date="2026-06-18"]')).toHaveAttribute("aria-label", "2026-06-18: плановая тренировка");
   await expectTapTargets(page, [
     ".trainerReminderPeriod button",
     ".trainerNotificationOffsets label",
@@ -418,20 +425,25 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
 
   await page.locator(".trainerNextPageTabs button").first().click();
   await expect(page.getByRole("searchbox", { name: "Найти программу" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Добавить" })).toBeVisible();
+  const templatePurpose = page.getByRole("complementary", { name: "Шаблон — не план клиента" });
+  await expect(templatePurpose).toBeVisible();
+  await expect(templatePurpose).toContainText("При назначении клиент получит отдельную копию.");
+  await expect(templatePurpose).toContainText("Настройте её персонально в плане клиента.");
+  expect(await templatePurpose.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+  await expect(page.getByRole("button", { name: "Создать шаблон", exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-program-library-v2.png");
 
-  await page.getByRole("button", { name: "Добавить" }).click();
-  const createProgramChoice = page.getByRole("dialog", { name: "Выберите формат программы", exact: true });
+  await page.getByRole("button", { name: "Создать шаблон", exact: true }).click();
+  const createProgramChoice = page.getByRole("dialog", { name: "Создать общий шаблон", exact: true });
   await expect(createProgramChoice).toBeVisible();
-  await expect(createProgramChoice.getByRole("heading", { name: "Выберите формат программы", exact: true })).toBeVisible();
+  await expect(createProgramChoice.getByRole("heading", { name: "Создать общий шаблон", exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-program-create-sheet-v2.png");
   await createProgramChoice.getByRole("button", { name: "Закрыть" }).click();
 
   await page.getByRole("button", { name: /Редактировать/ }).click();
-  const programEditor = page.getByRole("dialog", { name: "РЕДАКТОР ПРОГРАММЫ", exact: true });
+  const programEditor = page.getByRole("dialog", { name: "Общий шаблон", exact: true });
   await expect(programEditor).toBeVisible();
   await expect(programEditor.getByRole("textbox").first()).toHaveValue("tren+");
   const dayPicker = programEditor.getByRole("combobox", { name: "День программы", exact: true });

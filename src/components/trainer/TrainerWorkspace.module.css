@@ -3840,10 +3840,11 @@
 
 :global(.trainerConfirmClose) {
   position: absolute;
+  z-index: 3;
   top: 18px;
   right: 18px;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   padding: 0;
@@ -3938,6 +3939,27 @@
   border: 1px solid var(--tn-purple-border);
   border-radius: 7px;
   background: var(--ownset-soft-gradient);
+}
+
+.workspaceRoot :global(.trainerNextTelegramInviteAction) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 42px;
+  margin-top: 8px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--ownset-action-gradient);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 760;
+  text-decoration: none;
+}
+
+.workspaceRoot :global(.trainerNextTelegramInviteAction:focus-visible) {
+  outline: 3px solid rgb(63 115 184 / .28);
+  outline-offset: 2px;
 }
 
 .workspaceRoot :global(.trainerNextCredentials strong),
@@ -4291,7 +4313,7 @@
     bottom: max(8px, env(safe-area-inset-bottom));
     height: 78px;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 4px;
     padding: 7px;
     border: 1px solid var(--tn-line);
@@ -5598,7 +5620,7 @@
 
 .workspaceRoot :global(.trainerNextProgramsTab .programCreateChoiceSheet > .programAiImportActions > button:last-child) {
   border-color: transparent;
-  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  background: var(--ownset-action-gradient);
   color: #fff;
   box-shadow: 0 14px 28px rgb(var(--trainer-v2-shadow-rgb, 76 68 201) / 0.18);
 }
@@ -22767,7 +22789,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .exerciseEditBar button.save),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthExerciseEditorNav button.save) {
   border-color: transparent;
-  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  background: var(--ownset-action-gradient);
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
   box-shadow: 0 12px 26px rgb(var(--trainer-v2-shadow-rgb, 76 68 201) / 0.22);
@@ -23277,7 +23299,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .monthProgramBottomSave button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .monthProgramPremium .programEditorBottomBarSave) {
   border-color: transparent;
-  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  background: var(--ownset-action-gradient);
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
   box-shadow: 0 12px 26px rgb(var(--trainer-v2-shadow-rgb, 76 68 201) / 0.2);
@@ -23379,7 +23401,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminAssignProgramActions button:last-child),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientRecommendationsRender button:last-child) {
   border-color: transparent;
-  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  background: var(--ownset-action-gradient);
   color: #ffffff;
 }
 
@@ -23440,7 +23462,7 @@
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminClientTelegramActionsRender button),
 .workspaceRoot :global(html:root[data-app-theme="warm-light"] body #root .adminTelegramSendButton) {
   border-color: transparent;
-  background: linear-gradient(135deg, var(--trainer-v2-accent, #806bb6), var(--trainer-v2-accent, #8f7ac8));
+  background: var(--ownset-action-gradient);
   color: #ffffff;
 }
 
@@ -23473,6 +23495,11 @@
 
 
 /* end of trainer workspace styles */
+
+.assignmentRecovery {display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;margin:12px 0;border:1px solid rgba(60,60,67,.12);border-radius:14px;background:var(--trainer-v2-surface,#fff);color:var(--trainer-v2-text,#1c1c1e)}
+.assignmentRecovery p {flex:1 1 260px;margin:0;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.assignmentRecovery button {min-height:44px;padding:8px 14px;border:1px solid rgba(60,60,67,.12);border-radius:10px;background:var(--trainer-v2-canvas,#f2f2f7);color:var(--trainer-v2-accent,#3f73b8);font:inherit;font-size:14px;cursor:pointer}
+.assignmentRecovery button:disabled {opacity:.5;cursor:default}
 
 .workspaceRoot :global(.adminUsersCrmPage .adminUsersFilterPills button),
 .workspaceRoot :global(.adminUsersCrmPage .adminClientTabsCrm button) {

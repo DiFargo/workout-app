@@ -77,6 +77,16 @@ Choose the smallest meaningful verification that covers the risk. Do not add tes
 
 Once the appropriate checks pass, do not repeat broader checks unless a failure, a later change, or a remaining risk justifies them.
 
+## Audit Reporting Language
+
+All user-facing audit results must be written in Russian, including report
+headings, findings, severity explanations, tables, recommendations, and action
+plans. This applies to code, visual, UX, accessibility, security, and release
+audits, including findings produced by subagents. Preserve original code
+identifiers, file paths, tool/skill names, and exact diagnostic messages where
+needed, and explain their meaning in Russian. Use another report language only
+when the user explicitly requests it.
+
 ## UI Design System
 
 ### General Style
@@ -84,7 +94,8 @@ Once the appropriate checks pass, do not repeat broader checks unless a failure,
 The calm, neutral iOS interface is the primary and current product design.
 
 - Mobile first, fullscreen iOS-like UX.
-- Main palette (approved «Свой ритм» mockup, based on calm-blue): canvas `#F2F2F7`, cards `#FFFFFF`, secondary surface `#EFEFF4`, borders `rgba(60,60,67,.12)`, text `#1C1C1E`, secondary text `#636366`, primary action `#3F73B8`, text/chart accent `#3C6FAA`, success `#237A42`.
+- Main palette: canvas `#F2F2F7`, cards `#FFFFFF`, secondary surface `#EFEFF4`, borders `rgba(60,60,67,.12)`, text `#1C1C1E`, secondary text `#636366`, text/chart accent `#3C6FAA`, success `#237A42`.
+- Primary filled actions use the approved green-to-blue `--ownset-action-gradient`: `linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)`, reaffirmed by the user on 2026-10-30. Preserve this gradient in client, trainer, admin, authentication and modal primary actions, including pressed/loading states. Do not replace it with solid blue. Keep secondary actions neutral and semantic error/success colours unchanged; colour/stroke/focus tokens must remain colours, not gradients.
 - Current reference: `docs/client-five-main-screens-signature.html`. Keep its compact grouping; never replace real actions or data with mockup examples. Main page headers have no decorative rhythm mark, per the user's latest refinement; preserve functional header actions.
 - Keep accents restrained. Use the primary accent only for the screen's main action or current state; use semantic colours only for a meaningful status.
 - Do not restore the former bright-purple, heavy dark-card or saturated legacy colour systems.

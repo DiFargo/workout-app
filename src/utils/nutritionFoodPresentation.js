@@ -10,7 +10,7 @@ export function getSearchHistoryName(food) {
 }
 
 export function getNutritionFoodSearchText(food) {
-  return [food?.name, food?.brand, food?.note, food?.description]
+  return [food?.name, food?.brand, food?.note, food?.description, ...(food?.aliases || [])]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();

@@ -46,6 +46,7 @@ export function useTrainerProgramDraft({ open, client, workouts, completedWorkou
     auth: {},
     setAdminExerciseVideoUploadingId: setUploadingId,
     setAdminClientStatus: onStatus,
+    completedWorkoutIds: draft?.completedWorkoutIds || completedWorkoutIds,
     draftOnly: true
   });
   return {

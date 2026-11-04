@@ -11,13 +11,13 @@ service cloud.firestore {
     }
 
     function hasActiveMembershipData(data) {
-      return data.keys().hasAll(["role"]) &&
-        data.role in ["client", "trainer", "admin"] &&
-        (!data.keys().hasAll(["active"]) || data.active != false) &&
-        (!data.keys().hasAll(["archived"]) || data.archived != true) &&
-        (!data.keys().hasAll(["accessDisabled"]) || data.accessDisabled != true) &&
-        (!data.keys().hasAll(["membershipStatus"]) ||
-          !(data.membershipStatus in ["revoked", "suspended"]));
+      let role = data.get("role", "");
+      return role in ["client", "trainer", "admin"] &&
+        data.get("accountAccessStatus", "") != "awaiting_trainer" &&
+        !(role == "client" && data.get("trainerAssignmentState", "") == "unassigned") &&
+        data.get("active", true) != false && data.get("archived", false) != true &&
+        data.get("accessDisabled", false) != true &&
+        !(data.get("membershipStatus", "") in ["revoked", "suspended"]);
     }
 
     function isActiveMember() {
@@ -33,13 +33,33 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isActiveMember() &&
+      return signedIn() && "admin" in request.auth.token && request.auth.token.admin == true &&
+        isActiveMember() &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin" &&
         hasCurrentAdminClaimVersion(
           get(/databases/$(database)/documents/users/$(request.auth.uid)).data
-        ) &&
-        "admin" in request.auth.token &&
-        request.auth.token.admin == true;
+        ) && hasCurrentAdminSecurityKeyProof(
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data
+        );
+    }
+
+    // Enrollment is server-owned. Unenrolled administrators retain their
+    // existing access; enrolled administrators must prove this bounded session.
+    function hasCurrentAdminSecurityKeyProof(data) {
+      let required = data.get("adminSecurityKeyRequired", false);
+      let version = data.get("adminSecurityKeyVersion", "");
+      let roleVersion = request.auth.token.get("adminSecurityKeyRoleVersion", "");
+      let until = request.auth.token.get("adminSecurityKeyUntil", 0);
+      return required == false || (required == true &&
+        version is string && version.size() > 0 && version.size() <= 256 &&
+        request.auth.token.get("adminSecurityKeyVersion", "") == version &&
+        roleVersion is string && roleVersion == data.get("adminClaimVersion", "legacy") &&
+        until is int && until > request.time.toMillis() &&
+        until <= request.time.toMillis() + 8 * 60 * 60 * 1000);
+    }
+
+    function adminSecurityKeyFields() {
+      return ["adminSecurityKeyRequired", "adminSecurityKeyVersion", "adminSecurityKeyUpdatedAt"];
     }
 
     function hasCurrentAdminClaimVersion(data) {
@@ -59,6 +79,21 @@ service cloud.firestore {
       return isOwner(uid) || isAdmin();
     }
 
+    // Used only during an explicit accounting cutover; normal operation has
+    // no maintenance document or paused:false. Existing workout drafts remain local.
+    function accountingWritesAvailable() {
+      return !exists(/databases/$(database)/documents/serverConfig/subscriptionAccounting) ||
+        get(/databases/$(database)/documents/serverConfig/subscriptionAccounting).data.get("paused", false) != true;
+    }
+
+    function nutritionSdkWriteAvailable(uid, docId) {
+      let manifestPath = /databases/$(database)/documents/users/$(uid)/nutrition/manifest;
+      return docId != "manifest" && (docId != "state" ||
+        !exists(manifestPath) ||
+        (get(manifestPath).data.get("sourceOfTruth", "legacy") == "legacy" &&
+          get(manifestPath).data.get("writerEpoch", 0) == 0));
+    }
+
     function protectedUserFields() {
       return [
         "loginLower",
@@ -66,6 +101,8 @@ service cloud.firestore {
         "profileIdentityOperation",
         "isTest",
         "role",
+        "accountRegistrationType",
+        "accountAccessStatus",
         "trainerId",
         "assignedTrainerId",
         "coachId",
@@ -82,6 +119,9 @@ service cloud.firestore {
         "assignedWorkoutCount",
         "adminClaimUpdatedAt",
         "adminClaimVersion",
+        "adminSecurityKeyRequired",
+        "adminSecurityKeyVersion",
+        "adminSecurityKeyUpdatedAt",
         "trainerRoleUpdatedAt",
         "subscription",
         "telegram",
@@ -497,34 +537,79 @@ service cloud.firestore {
         isTrainerClientSetupChecklistUpdateFields();
     }
 
-    function isTrainerNutritionPlanUpdateFields() {
+    function isValidAiNutritionWeek(data) {
+      let week = data.week;
+      let calories = data.calories;
+      let protein = data.protein;
+      let fat = data.fat;
+      let carbs = data.carbs;
+      return data is map &&
+        data.keys().hasAll(["week", "calories", "protein", "fat", "carbs"]) &&
+        week is int && week >= 1 && week <= 4 &&
+        calories is number && calories > 0 && calories <= 20000 &&
+        protein is number && protein >= 0 && protein <= 3000 &&
+        fat is number && fat >= 0 && fat <= 3000 &&
+        carbs is number && carbs >= 0 && carbs <= 5000;
+    }
+
+    function isValidAiNutritionPlan(data) {
+      let id = data.id;
+      let weeks = data.weeks;
+      return data is map &&
+        data.keys().hasOnly([
+          "id", "version", "createdAt", "calorieAnchor", "personalMaintenance",
+          "personalBmr", "activityLabel", "profile", "goalLabel", "start", "weeks",
+          "baseline", "frequentFoods", "workoutsCount", "weightTrend", "warnings", "comment"
+        ]) &&
+        id is string && id.size() > 0 && id.size() <= 120 &&
+        data.version == 1 && data.createdAt is string &&
+        data.profile is map && isValidAiNutritionWeek(data.start) &&
+        weeks is list && weeks.size() == 4 &&
+        isValidAiNutritionWeek(weeks[0]) && isValidAiNutritionWeek(weeks[1]) &&
+        isValidAiNutritionWeek(weeks[2]) && isValidAiNutritionWeek(weeks[3]);
+    }
+
+    function isTrainerAiNutritionPlanUpdate(changedKeys) {
+      return !changedKeys.hasAny(["aiNutritionPlan"]) ||
+        isValidAiNutritionPlan(request.resource.data.aiNutritionPlan);
+    }
+
+    function isTrainerNutritionPlanUpdateFields(changedKeys) {
       return
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        changedKeys.hasOnly([
           "nutritionGoals",
           "nutritionPlan",
           "nutritionPlanUpdatedAt",
+          "aiNutritionPlan",
           "updatedAt"
-        ]);
+        ]) && isTrainerAiNutritionPlanUpdate(changedKeys);
     }
 
     function isTrainerNutritionPlanUpdate() {
       return isTrainer() &&
         hasResolvedAssignedTrainer(resource.data) &&
-        isTrainerNutritionPlanUpdateFields();
+        isTrainerNutritionPlanUpdateFields(request.resource.data.diff(resource.data).affectedKeys());
     }
 
     function isTrainerClientUpdate() {
+      let changedKeys = request.resource.data.diff(resource.data).affectedKeys();
       return isTrainer() &&
         hasResolvedAssignedTrainer(resource.data) &&
         (
+          // AI plans are sizeable maps. Route this disjoint field set before
+          // unrelated program/calendar alternatives and reuse its diff once.
+          changedKeys.hasAny(["aiNutritionPlan"])
+          ? isTrainerNutritionPlanUpdateFields(changedKeys)
+          : (
           isTrainerFinalProgramArchiveFields() ||
           isTrainerProgramAssignmentFields() ||
           isTrainerProgramAssignmentRestoreFields() ||
           isTrainerActiveProgramPlanSaveFields() ||
-          isTrainerNutritionPlanUpdateFields() ||
+          isTrainerNutritionPlanUpdateFields(changedKeys) ||
           isTrainerClientScheduleUpdateFields() ||
           isTrainerClientArchiveUpdateFields() ||
           isTrainerClientSetupChecklistUpdate()
+          )
         );
     }
 
@@ -532,22 +617,25 @@ service cloud.firestore {
       return [
         "goals",
         "nutritionPlan",
+        "aiNutritionPlan",
         "updatedAt"
       ];
     }
 
     function isTrainerNutritionStatePlanCreate(uid, docId) {
       return docId == "state" &&
-        isTrainer() &&
         isAssignedTrainer(uid) &&
-        request.resource.data.keys().hasOnly(trainerNutritionStateFields());
+        request.resource.data.keys().hasOnly(trainerNutritionStateFields()) &&
+        (!request.resource.data.keys().hasAny(["aiNutritionPlan"]) ||
+          isValidAiNutritionPlan(request.resource.data.aiNutritionPlan));
     }
 
     function isTrainerNutritionStatePlanUpdate(uid, docId) {
+      let changedKeys = request.resource.data.diff(resource.data).affectedKeys();
       return docId == "state" &&
-        isTrainer() &&
         isAssignedTrainer(uid) &&
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(trainerNutritionStateFields());
+        changedKeys.hasOnly(trainerNutritionStateFields()) &&
+        isTrainerAiNutritionPlanUpdate(changedKeys);
     }
 
     function isTrainerOutgoingMessage(uid) {
@@ -633,8 +721,17 @@ service cloud.firestore {
         request.resource.data.trainerReadByUid == request.auth.uid;
     }
 
-    function isTrainerCreatingAssignedClient() {
+    function isTrainerCreatingAssignedClient(uid) {
       return isTrainer() &&
+        !uid.matches("^telegram_.*") &&
+        // Authentication, Telegram identity and lifecycle metadata are issued
+        // only by trusted invitation endpoints, never by a trainer SDK write.
+        request.resource.data.keys().hasOnly([
+          "email", "name", "role", "active", "createdAt", "updatedAt",
+          "createdBy", "createdByEmail", "createdByUid", "trainerId",
+          "assignedTrainerId", "coachId", "trainerEmail", "assignedTrainerEmail",
+          "coachEmail", "assignedProgramId", "assignedProgramName"
+        ]) &&
         request.resource.data.role == "client" &&
         request.resource.data.createdByUid == request.auth.uid &&
         isAssignedTrainerData(request.resource.data);
@@ -734,6 +831,40 @@ service cloud.firestore {
         request.resource.data.trainerEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail &&
         request.resource.data.assignedTrainerEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail &&
         request.resource.data.coachEmail == get(/databases/$(database)/documents/clientInvites/$(request.auth.token.email)).data.trainerEmail;
+    }
+
+    function isOpenRegistrationOwnerCreate(uid) {
+      return isAuthenticatedOwner(uid) &&
+        request.resource.data.keys().hasOnly([
+          "email", "name", "role", "active", "createdAt", "updatedAt",
+          "authProvider", "accountRegistrationType", "accountAccessStatus"
+        ]) &&
+        request.resource.data.keys().hasAll([
+          "email", "name", "role", "active", "createdAt", "updatedAt",
+          "authProvider", "accountRegistrationType", "accountAccessStatus"
+        ]) &&
+        request.resource.data.email == request.auth.token.email &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() <= 80 &&
+        request.resource.data.role == "client" &&
+        request.resource.data.active == true &&
+        request.resource.data.accountRegistrationType == "open" &&
+        request.resource.data.accountAccessStatus == "awaiting_trainer" &&
+        request.resource.data.authProvider in ["password", "google.com"] &&
+        request.auth.token.firebase.sign_in_provider in ["password", "google.com"] &&
+        request.resource.data.createdAt is string &&
+        request.resource.data.updatedAt is string;
+    }
+
+    function isPendingClientOwner(uid, data) {
+      return isAuthenticatedOwner(uid) &&
+        data.role == "client" &&
+        (data.get("accountAccessStatus", "") == "awaiting_trainer" || data.get("trainerAssignmentState", "") == "unassigned") &&
+        (!data.keys().hasAll(["active"]) || data.active != false) &&
+        (!data.keys().hasAll(["archived"]) || data.archived != true) &&
+        (!data.keys().hasAll(["accessDisabled"]) || data.accessDisabled != true) &&
+        (!data.keys().hasAll(["membershipStatus"]) ||
+          !(data.membershipStatus in ["revoked", "suspended"]));
     }
 
     function isTrainerOwnedProgramWorkoutCreate(uid) {
@@ -836,14 +967,29 @@ service cloud.firestore {
         ]);
     }
 
-    function isTrainerProgramWorkoutArchiveFields() {
+    function isValidProgramArchiveCalendarBackup(uid) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      let backup = request.resource.data.get("assignedProgramArchivedCalendarEntries", []);
+      let calendar = get(/databases/$(database)/documents/users/$(uid)).data.get("workoutCalendar", {});
+      let entries = calendar is map ? calendar.get("plannedWorkouts", []) : [];
+      // This field is a backup, not a new calendar writer. New contents must
+      // come verbatim from this client's calendar before the atomic archive.
+      return !changed.hasAny(["assignedProgramArchivedCalendarEntries"]) || (
+        backup is list && backup.size() <= 400 &&
+        (backup.size() == 0 || (entries is list && backup.hasOnly(entries)))
+      );
+    }
+
+    function isTrainerProgramWorkoutArchiveFields(uid) {
       return resource.data.assignedBy == request.auth.uid &&
         request.resource.data.assignedProgramLifecycleStatus == "archived" &&
         request.resource.data.assignedProgramVisibility == "trainer_archived" &&
+        isValidProgramArchiveCalendarBackup(uid) &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly([
           "assignedProgramLifecycleStatus",
           "assignedProgramVisibility",
-          "assignedProgramArchivedAt"
+          "assignedProgramArchivedAt",
+          "assignedProgramArchivedCalendarEntries"
         ]);
     }
 
@@ -887,11 +1033,38 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Link codes are credentials. Even an assigned trainer must not read them;
+    // only authenticated server issuance/redemption may inspect these records.
+    match /telegramLinkCodes/{codeId} {
+      allow read, write: if false;
+    }
+
+    // Credential public keys and one-use ceremonies are available only to
+    // the trusted authentication service, never to browser SDKs (even admins).
+    match /adminSecurityKeys/{uid}/{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    match /adminSecurityKeyChallenges/{challengeId}/{allPaths=**} {
+      allow read, write: if false;
+    }
+
     match /users/{uid} {
-      allow create: if isAdmin() || isInvitedOwnerCreate(uid) || isTrainerCreatingAssignedClient();
-      allow read: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
-      allow update: if isAdmin() || isSafeOwnerUpdate(uid) || isLegacyClientActivation(uid) || isTrainerClientUpdate();
-      allow delete: if isAdmin();
+      allow create: if !request.resource.data.keys().hasAny(adminSecurityKeyFields()) &&
+        (isAdmin() || isInvitedOwnerCreate(uid) || isOpenRegistrationOwnerCreate(uid) || isTrainerCreatingAssignedClient(uid));
+      // A signed-in user may check that their own bootstrap profile is absent
+      // before creating a restricted open-registration profile. This grants
+      // no access to another UID or to any member subcollection.
+      allow get: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data) ||
+        isPendingClientOwner(uid, resource.data) ||
+        (isAuthenticatedOwner(uid) && !exists(/databases/$(database)/documents/users/$(uid)));
+      allow list: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
+      allow update: if !request.resource.data.diff(resource.data).affectedKeys().hasAny(adminSecurityKeyFields()) &&
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(["subscription"]) || accountingWritesAvailable()) &&
+        (isAdmin() || isSafeOwnerUpdate(uid) || isLegacyClientActivation(uid) || isTrainerClientUpdate());
+      // Prevent a browser administrator from bypassing enrollment by deleting
+      // and recreating a protected profile. Server account deletion still works.
+      allow delete: if isAdmin() && !resource.data.keys().hasAny(adminSecurityKeyFields());
 
       match /workouts/{workoutId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
@@ -904,7 +1077,7 @@ service cloud.firestore {
       allow update: if isOwnerOrAdmin(uid) || (
         isTrainerManagingClientWorkouts(uid) && (
           isTrainerArchivedProgramWorkoutRestoreFields() ||
-          isTrainerProgramWorkoutArchiveFields() ||
+          isTrainerProgramWorkoutArchiveFields(uid) ||
           isTrainerUnfinishedProgramWorkoutUpdateFields()
         )
       );
@@ -913,7 +1086,12 @@ service cloud.firestore {
 
       match /history/{historyId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
-        allow write: if isOwnerOrAdmin(uid);
+        // Accounting markers are issued by server triggers, never the owner SDK.
+        allow create: if isOwnerOrAdmin(uid) && accountingWritesAvailable() &&
+          !request.resource.data.keys().hasAny(["subscriptionCycleId", "subscriptionUsageLedgerId", "subscriptionAccountedAt"]);
+        allow update: if isOwnerOrAdmin(uid) && accountingWritesAvailable() &&
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(["subscriptionCycleId", "subscriptionUsageLedgerId", "subscriptionAccountedAt"]);
+        allow delete: if isOwnerOrAdmin(uid) && accountingWritesAvailable();
       }
 
       match /historyTombstones/{historyId} {
@@ -922,14 +1100,19 @@ service cloud.firestore {
 
       match /nutrition/{docId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
-        allow create: if isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanCreate(uid, docId);
-        allow update: if isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanUpdate(uid, docId);
-        allow delete: if isOwnerOrAdmin(uid);
+        // A trusted API is the only writer of manifest/generations/receipts.
+        // Once the writer epoch advances, an old tab may keep a local outbox
+        // but must never successfully write into the frozen legacy document.
+        allow create: if nutritionSdkWriteAvailable(uid, docId) &&
+          (isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanCreate(uid, docId));
+        allow update: if nutritionSdkWriteAvailable(uid, docId) &&
+          (isOwnerOrAdmin(uid) || isTrainerNutritionStatePlanUpdate(uid, docId));
+        allow delete: if nutritionSdkWriteAvailable(uid, docId) && isOwnerOrAdmin(uid);
       }
 
       match /nutrition/{docId}/{subPath=**} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
-        allow write: if isOwnerOrAdmin(uid);
+        allow write: if nutritionSdkWriteAvailable(uid, docId) && isOwnerOrAdmin(uid);
       }
 
       match /measurements/{measurementId} {
@@ -976,7 +1159,10 @@ service cloud.firestore {
       }
 
       match /{collectionId}/{subPath=**} {
-        allow read, write: if isAdmin();
+        allow read: if isAdmin();
+        // History has a stricter accounting/maintenance contract above. A
+        // recursive admin fallback must not silently OR around that contract.
+        allow write: if !(collectionId in ["history", "nutrition", "nutritionGenerations", "nutritionMutationReceipts"]) && isAdmin();
       }
 
       match /feedback/{feedbackId} {
@@ -991,18 +1177,23 @@ service cloud.firestore {
     match /trainerNotes/{noteId} {
       allow read: if isAdmin() || (
         isTrainer() &&
-        noteId.matches("^" + request.auth.uid + "_.*$")
+        resource.data.ownerUid == request.auth.uid &&
+        isAssignedTrainer(resource.data.clientId)
       );
       allow create: if isAdmin() || (
         isTrainer() &&
         request.resource.data.ownerUid == request.auth.uid &&
         isAssignedTrainer(request.resource.data.clientId)
       );
-      allow update, delete: if isAdmin() || (
+      allow update: if isAdmin() || (
         isTrainer() &&
         resource.data.ownerUid == request.auth.uid &&
         request.resource.data.ownerUid == request.auth.uid &&
         request.resource.data.clientId == resource.data.clientId &&
+        isAssignedTrainer(resource.data.clientId)
+      );
+      allow delete: if isAdmin() || (
+        isTrainer() && resource.data.ownerUid == request.auth.uid &&
         isAssignedTrainer(resource.data.clientId)
       );
     }

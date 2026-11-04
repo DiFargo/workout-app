@@ -1,0 +1,40 @@
+.root {
+  --action-text: var(--ownset-text-primary, #1c1c1e);
+  --action-muted: var(--ownset-text-secondary, #636366);
+  --action-line: var(--ownset-border, rgba(60, 60, 67, .12));
+  --action-accent: var(--ownset-accent, #3c6faa);
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  color: var(--action-text);
+}
+.root, .root * { box-sizing: border-box; }
+.group { overflow: hidden; border: 1px solid var(--action-line); border-radius: 16px; background: #fff; }
+.row { width: 100%; min-height: 74px; display: grid; grid-template-columns: 36px minmax(0, 1fr) 18px; align-items: center; gap: 10px; padding: 12px; border: 0; background: #fff; color: var(--action-text); font: inherit; text-align: left; cursor: pointer; touch-action: manipulation; }
+.group > .row + .row { border-top: 1px solid var(--action-line); }
+.row:hover:not(:disabled) { background: var(--ownset-surface-secondary, #efeff4); }
+.row:active:not(:disabled) { background: var(--ownset-soft-gradient, #efeff4); }
+.row:disabled { opacity: .55; cursor: progress; }
+.icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; color: var(--action-accent); background: var(--ownset-surface-secondary, #efeff4); }
+.copy, .more summary > span { min-width: 0; display: grid; gap: 3px; }
+.copy strong, .more strong { font-size: 15px; line-height: 1.3; font-weight: 650; overflow-wrap: anywhere; }
+.copy small, .more small { font-size: 12px; line-height: 1.4; color: var(--action-muted); overflow-wrap: anywhere; }
+.chevron { color: var(--action-muted); }
+.more { min-width: 0; border: 1px solid var(--action-line); border-radius: 16px; background: #fff; }
+.more summary { display: grid; grid-template-columns: 36px minmax(0, 1fr) 18px; align-items: center; gap: 10px; min-height: 68px; padding: 12px; list-style: none; cursor: pointer; touch-action: manipulation; }
+.more summary::-webkit-details-marker { display: none; }
+.more summary > svg:first-child { justify-self: center; color: var(--action-muted); }
+.disclosureIcon { color: var(--action-muted); }
+.more[open] .disclosureIcon { transform: rotate(180deg); }
+.more .group { border: 0; border-top: 1px solid var(--action-line); border-radius: 0 0 16px 16px; }
+.archive { overflow: hidden; border: 1px solid var(--action-line); border-radius: 16px; }
+.archive .icon { background: var(--ownset-surface-secondary, #efeff4); color: var(--action-muted); }
+.danger { color: #b33a47; }
+.danger .icon { color: #b33a47; background: #fff1f3; }
+.feedback { margin: 0; padding: 11px 12px; border-radius: 12px; color: var(--action-text); background: var(--ownset-surface-secondary, #efeff4); font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.error { color: #b33a47; background: #fff1f3; }
+.root :is(button, summary):focus-visible { outline: 3px solid var(--action-accent); outline-offset: -3px; }
+@media (max-width: 359px) {
+  .row, .more summary { gap: 8px; padding: 11px 10px; }
+  .copy strong, .more strong { font-size: 14px; }
+}

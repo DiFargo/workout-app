@@ -27,6 +27,7 @@ function flattenMonthProgramWorkouts(program) {
 export function createTrainerMonthProgramPersistenceHandlers({
   adminActiveProgramId,
   adminExerciseEditSnapshotRef,
+  getAdminExerciseEditSnapshotRef = () => adminExerciseEditSnapshotRef,
   adminExerciseLibrary,
   adminOpenWorkoutId,
   adminSelectedExerciseId,
@@ -187,7 +188,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
     }
   }
 
-  async function uploadMonthExerciseVideo(blockId, weekId, workoutId, exerciseId, file) {
+  async function uploadMonthExerciseVideo(blockId, weekId, workoutId, exerciseId, file, { isCurrent = () => true } = {}) {
     if (!file) return;
 
     setAdminExerciseVideoUploadingId(exerciseId);
@@ -204,10 +205,13 @@ export function createTrainerMonthProgramPersistenceHandlers({
         file
       );
       const url = uploadedVideo.url;
+      if (!isCurrent()) return false;
 
-      const programWithVideo = normalizeMonthProgram({
-        ...monthProgram,
-        blocks: monthProgram.blocks.map((block) => block.id !== blockId ? block : {
+      // Upload only stages the URL. Apply it to the latest draft so edits made
+      // while the file uploads are preserved, and never touch another program.
+      setMonthProgram((current) => !isCurrent() || current.id !== monthProgram.id ? current : normalizeMonthProgram({
+        ...current,
+        blocks: current.blocks.map((block) => block.id !== blockId ? block : {
           ...block,
           weeks: block.weeks.map((week) => week.id !== weekId ? week : {
             ...week,
@@ -215,19 +219,15 @@ export function createTrainerMonthProgramPersistenceHandlers({
               ...workout,
               exercises: (workout.exercises || []).map((exercise) =>
                 exercise.id === exerciseId
-                  ? { ...exercise, video: url, videoAutoFilledFrom: "" }
+                  ? { ...exercise, video: url, videoAutoFilledFrom: "", videoPosterTime: null }
                   : exercise
               )
             })
           })
         })
-      });
-
-      setMonthProgram(programWithVideo);
-      const saved = await saveMonthProgramToLibrary(programWithVideo);
-      if (saved) {
-        showAppError("savedLocal", "Видео загружено и сохранено в программе.");
-      }
+      }));
+      showAppError("savedLocal", "Видео добавлено в черновик. Сохраните программу, чтобы применить его.");
+      return url;
     } catch (error) {
       console.error("Month exercise video upload error:", error);
       showAppError("firebase", "Не получилось загрузить видео.");
@@ -297,7 +297,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
       setAdminOpenWorkoutId("");
       setAdminSelectedExerciseId("");
       setAdminExerciseSearch("");
-      adminExerciseEditSnapshotRef.current = null;
+      getAdminExerciseEditSnapshotRef().current = null;
       setAdminOpenProgramBlocks({});
       setAdminOpenProgramWeeks({});
       setAdminActiveProgramId(nextProgram.id);
@@ -347,7 +347,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
       setAdminOpenWorkoutId("");
       setAdminSelectedExerciseId("");
       setAdminExerciseSearch("");
-      adminExerciseEditSnapshotRef.current = null;
+      getAdminExerciseEditSnapshotRef().current = null;
       setAdminOpenProgramBlocks({});
       setAdminOpenProgramWeeks({});
       setAdminActiveProgramId(nextProgram.id);
@@ -378,7 +378,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
     const nextProgram = normalizeMonthProgram({
       id: `month_${Date.now()}`,
       name: formatMeta ? `Новая программа: ${formatMeta.label}` : "Новая программа на месяц",
-      description: formatMeta?.draftDescription || "",
+      description: formatMeta ? `Метка формата: ${formatMeta.label}. Дни и упражнения заполняются тренером.` : "",
       trainingFormat: formatMeta?.id || "",
       ownerUid: owner.uid,
       ownerRole: owner.role,
@@ -513,7 +513,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
     setAdminOpenWorkoutId("");
     setAdminSelectedExerciseId("");
     setAdminExerciseSearch("");
-    adminExerciseEditSnapshotRef.current = null;
+    getAdminExerciseEditSnapshotRef().current = null;
     setAdminOpenProgramBlocks({});
     setAdminOpenProgramWeeks({});
     setAdminProgramGroups([nextProgram]);
@@ -569,7 +569,7 @@ export function createTrainerMonthProgramPersistenceHandlers({
       if (!refreshedOpenWorkout || (adminSelectedExerciseId && !selectedExerciseExists)) {
         setAdminSelectedExerciseId("");
         setAdminExerciseSearch("");
-        adminExerciseEditSnapshotRef.current = null;
+        getAdminExerciseEditSnapshotRef().current = null;
       }
       window.requestAnimationFrame(() => {
         window.scrollTo(scrollPosition.x, scrollPosition.y);

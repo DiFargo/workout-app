@@ -1,0 +1,2482 @@
+{
+  "schemaVersion": 1,
+  "baseline": {
+    "count": 10000,
+    "rowsSha256": "ea15a100be3a7121b30b37bb7d11161351775be5009befc174318cdf6b11e65a",
+    "runtimeFileSha256": "c8693233e94b65e1bde08c254540d740aac4cdac96c37a84e665925b991fda76"
+  },
+  "records": [
+    {
+      "id": "manufacturer-678cea7d100451e2a2ef",
+      "name": "Сыр творожный «Воздушный» сливочный 60%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 216,
+        "protein": 6,
+        "fat": 20,
+        "carbs": 3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-6bf470fdac89108e1a7b",
+      "name": "Сыр творожный «Воздушный» с авокадо 60%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 222.9,
+        "protein": 6,
+        "fat": 20.5,
+        "carbs": 3.6
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-83d4ea4df26cbabc3754",
+      "name": "Сыр творожный «Воздушный» с паприкой 60%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 224,
+        "protein": 6,
+        "fat": 20,
+        "carbs": 5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-decfdc5662afdcb81ddf",
+      "name": "Сыр творожный «Воздушный» со вкусом «Оливковое масло» 60%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 216,
+        "protein": 3,
+        "fat": 20,
+        "carbs": 5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-43f1dcc6400891344e6b",
+      "name": "Сыр творожный «Воздушный» со вкусом «Лосось» 60%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 224,
+        "protein": 6,
+        "fat": 20,
+        "carbs": 5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-f580dea24e3ae0c5adee",
+      "name": "Сыр творожный «Воздушный» со вкусом «Креветка» 60%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 224,
+        "protein": 6,
+        "fat": 20,
+        "carbs": 5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-8e8838cf9afa4c5684c8",
+      "name": "Сыр творожный «Легкий» 35%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 154.8,
+        "protein": 8,
+        "fat": 12,
+        "carbs": 3.7
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-d9391a04fb117601a6ed",
+      "name": "Сыр творожный со вкусом «Трюфель» 60%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 234,
+        "protein": 6,
+        "fat": 22,
+        "carbs": 3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr-tvorozhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-e392e818e716757b6de9",
+      "name": "Сыр полутвердый «Сливочный» 50%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 355.5,
+        "protein": 22.5,
+        "fat": 29.5,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-47543971a94756d8d288",
+      "name": "Сыр полутвердый «Маасдам» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 336.5,
+        "protein": 25.4,
+        "fat": 26.1,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-a8770928001de009150d",
+      "name": "Сыр полутвердый «Чеддер» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 316,
+        "protein": 25,
+        "fat": 24.6,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-a00c88892291e5a3f55b",
+      "name": "Сыр полутвердый «Тильзитер» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 334.8,
+        "protein": 26.1,
+        "fat": 25.6,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-c885962c4397e2d6a69c",
+      "name": "Сыр полутвердый «Голландский» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 332,
+        "protein": 26.3,
+        "fat": 25.2,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-364562078cd21eafabc9",
+      "name": "Сыр полутвердый «Швейцарский» 40%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 307.6,
+        "protein": 23.8,
+        "fat": 21.6,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-ca14d642b6c8748dcf94",
+      "name": "Сыр полутвердый «Топленое молоко» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 316,
+        "protein": 25,
+        "fat": 24,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-9c40c26d679eb0e65965",
+      "name": "Сыр полутвердый «Сметанковый» 50%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 344,
+        "protein": 23,
+        "fat": 28,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-d2a6017a3266b05070ef",
+      "name": "Сыр полутвердый «Великокняжеский» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 316,
+        "protein": 23,
+        "fat": 25,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-5d9ef50c9f489c1c7f18",
+      "name": "Сыр полутвердый «Мраморный» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 326.8,
+        "protein": 26,
+        "fat": 25.2,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-16dc5fe6d3523de9c207",
+      "name": "Йогурт густой «Лесная ягода» 2%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 83.5,
+        "protein": 2.9,
+        "fat": 2,
+        "carbs": 13.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-600926282c35a9ccc1c7",
+      "name": "Йогурт густой «Клубника» 2%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 83.5,
+        "protein": 2.9,
+        "fat": 2,
+        "carbs": 13.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-96229f974e95cf8ce2f7",
+      "name": "Йогурт густой двухслойный «Киви-крыжовник» 2%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 92,
+        "protein": 3,
+        "fat": 2,
+        "carbs": 15.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-5343895590d0842ea6f8",
+      "name": "Йогурт густой двухслойный «Ананас-кокос» 2%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 92,
+        "protein": 3,
+        "fat": 2,
+        "carbs": 15.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-gustoy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-0e934cca718630a6d0df",
+      "name": "Йогурт питьевой натуральный 2%",
+      "brand": "TEOS",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 53.2,
+        "protein": 5.8,
+        "fat": 2,
+        "carbs": 3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-9d107d1d9830827683da",
+      "name": "Йогурт питьевой «Черника» 1,8%",
+      "brand": "TEOS",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 73.4,
+        "protein": 5.2,
+        "fat": 1.8,
+        "carbs": 8.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-221b8e1091dca3ce4e6f",
+      "name": "Йогурт питьевой «Вишня-гранат» 1,8%",
+      "brand": "TEOS",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 73.4,
+        "protein": 5.2,
+        "fat": 1.8,
+        "carbs": 8.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-ed9089710cc478104141",
+      "name": "Йогурт питьевой «Киви-яблоко» 1,8%",
+      "brand": "TEOS",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 73.4,
+        "protein": 5.2,
+        "fat": 1.8,
+        "carbs": 8.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-pitevoy-teos-active/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-2f8ba15a30885f49d80e",
+      "name": "Йогурт густой с топпером «Клубника и конфеты из молочного шоколада»",
+      "brand": "СуперКид",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 109.1,
+        "protein": 3.4,
+        "fat": 3.5,
+        "carbs": 16
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-s-topperom/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-5ec25622bb69c7d91acc",
+      "name": "Йогурт густой с топпером «Ваниль и конфеты из молочного шоколада»",
+      "brand": "СуперКид",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 109.1,
+        "protein": 3.4,
+        "fat": 3.5,
+        "carbs": 16
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-s-topperom/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-cdf04967ef440d33d599",
+      "name": "Йогурт густой с топпером «Пломбир и маршмеллоу»",
+      "brand": "СуперКид",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 86.4,
+        "protein": 3.3,
+        "fat": 2,
+        "carbs": 13.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/yogurt-s-topperom/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Показатели карточки рассчитаны производителем на 100 г.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-f8c7643f439979015745",
+      "name": "Ветчина «Банзай» вареная из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 170,
+        "protein": 18,
+        "fat": 10,
+        "carbs": 3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-banzay-varenaya-iz-myasa-tsyplyat-broylerov/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-3ef45d63b5642e0bbe7a",
+      "name": "Колбаса «Советская» вареная из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 153,
+        "protein": 11.5,
+        "fat": 11.3,
+        "carbs": 1.2
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasnoe-izdelie-varenoe-iz-myasa-tsyplyat-broylerov-vysshego-sorta-kolbasa-sovetskaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-082e88e97e9f6572e9da",
+      "name": "Колбаса «Аппетитная со свининой» вареная",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 170,
+        "protein": 10,
+        "fat": 14,
+        "carbs": 1.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasnoe-izdelie-varenaya-iz-myasa-ts-b-appetitnaya-so-svininoy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-09f511feed04029df8a8",
+      "name": "Колбаса «Любимая» вареная из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 162,
+        "protein": 8.6,
+        "fat": 14,
+        "carbs": 0.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasnoe-izdelie-varenaya-iz-myasa-ts-b-lyubimaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-ba98ef5f05b723a8828a",
+      "name": "Колбаса «Переменка» вареная из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 229,
+        "protein": 10.5,
+        "fat": 20.3,
+        "carbs": 1.1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/varenye-kolbasy/kolbasa-varenaya-iz-myasa-ptitsy-peremenka/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-efaaf7a5c54d4cd223c7",
+      "name": "Рулет «Столичный» копчено-вареный из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 153,
+        "protein": 17,
+        "fat": 8.8,
+        "carbs": 1.4
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/rulety/rulet-kopcheno-varenyy-iz-myasa-ts-b-stolichnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-58fcf5abd86f0a132d7c",
+      "name": "Рулет «Фирменный от Ганны» копчено-вареный",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 260,
+        "protein": 17,
+        "fat": 20,
+        "carbs": 2
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/rulety/rulet-kopcheno-varenyy-firmennyy-ot-ganny/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-e1f45ac8886c2b9a46ca",
+      "name": "Рулет «Руляда святочная» копчено-вареный",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 174.1,
+        "protein": 19.7,
+        "fat": 9.7,
+        "carbs": 2
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/rulety/rulet-kopcheno-varenyy-rulyada-svyatochnaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-1816285da11bc03a03c1",
+      "name": "Ветчина «Европейская» вареная рубленая",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 155,
+        "protein": 16,
+        "fat": 9.3,
+        "carbs": 1.4
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-evropeyskaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-f97254a5cc02b9a5f1f8",
+      "name": "Ветчина «Балерон» вареная рубленая",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 130,
+        "protein": 16,
+        "fat": 7,
+        "carbs": 1.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-baleron-appetitnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-08fb76b8feaef2e56010",
+      "name": "Ветчина «Нежность» вареная рубленая",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 80,
+        "protein": 13,
+        "fat": 2,
+        "carbs": 2
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-nezhnost/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-ffe43f72c421773fcf0d",
+      "name": "Ветчина «Бутербродная» вареная рубленая",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 80,
+        "protein": 12,
+        "fat": 1.5,
+        "carbs": 5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vetchiny/vetchina-varenaya-rublenaya-buterbrodnaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-cde5fa60dcbbcf0beaa8",
+      "name": "Колбаса «Домашняя с дымком» варено-копченая",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 230,
+        "protein": 16,
+        "fat": 18,
+        "carbs": 1.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vareno-kopchenye-kolbasy/izdelie-kolbasnoe-vareno-kopchenoe-iz-myasa-tsyplyat-broylerov-kolbasa-vysshego-sorta-domashnyaya-s-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-5e9fda0e6d4dc3a10875",
+      "name": "Колбаски «Ганночкины салями» варено-копченые",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 350,
+        "protein": 15,
+        "fat": 32,
+        "carbs": 0.3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vareno-kopchenye-kolbasy/kolbasnoe-izdelie-varenoe-kopchenye-iz-myasa-tsyplyat-broylerov-kolbaski-vysshego-sorta-gannochkiny-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-3d8e0dc4df90259cfb15",
+      "name": "Колбаса «Купеческая» варено-копченая",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 293,
+        "protein": 12,
+        "fat": 29,
+        "carbs": 2.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/vareno-kopchenye-kolbasy/kolbasa-kupecheskaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-47f70fa52ba420e234b9",
+      "name": "Сосиски «Банзай с сыром» из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 226,
+        "protein": 13,
+        "fat": 19,
+        "carbs": 1.3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/sosiski/kolbasnoe-izdelie-iz-myasa-tsyplyat-broylerov-sosiski-banzay-s-syrom-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-dfc8af68bf012015db33",
+      "name": "Чипсы сыровяленые из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 420,
+        "protein": 87,
+        "fat": 7,
+        "carbs": 1.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/syrovyalenye-kolbasy/produkt-syrovyalenyy-chipsy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-2e9ecaccfd6473fad0f1",
+      "name": "Паштет «Риет с томатами» вареный охлажденный",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 280,
+        "protein": 11,
+        "fat": 26,
+        "carbs": 1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/pashtety-i-saltisony/kulinarnoe-izdelie-iz-myasa-tsyplyat-broylerov-pashtet-riet-s-tomatami-varenyy-okhlazhdennyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-622b06b069126abbfe11",
+      "name": "Джерки классические сыровяленые из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 300,
+        "protein": 62,
+        "fat": 5,
+        "carbs": 1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/syrovyalenye-kolbasy/produkt-syrovyalenyy-dzherki-klassicheskie/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-387c146aba647f82ef3b",
+      "name": "Фарш «Для котлет» из мяса цыплят-бройлеров",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 195,
+        "protein": 12,
+        "fat": 15,
+        "carbs": 1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/farsh/polufabrikat-iz-myasa-tsyplyat-broylerov-rublennyy-beskostnyy-farsh-dlya-kotlet-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-def9e99b0f124fe06ec3",
+      "name": "Фарш «Фирменный от Ганны»",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 163,
+        "protein": 14.5,
+        "fat": 11.3,
+        "carbs": 0.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/farsh/farsh-firmennyy-ot-ganny/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-99393f82a5b2839589a6",
+      "name": "Фарш мясной «Нежный»",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 244.2,
+        "protein": 10.2,
+        "fat": 22.6,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/farsh/farsh-myasnoy-nezhnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-dfe57f94d206cc94a751",
+      "name": "Грудка цыпленка-бройлера «Аппетитная» копчено-вареная",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 120,
+        "protein": 21,
+        "fat": 4,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-grudka-ts-b-appetitnaya-kopcheno-varenaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-ea7eedf9d8643c04e834",
+      "name": "Окорочок цыпленка-бройлера «Аппетитный» копчено-вареный",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 222.8,
+        "protein": 21.2,
+        "fat": 15.4,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-okorochok-ts-b-appetitnyy-kopcheno-varenyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-2e5144016686cfd4f83a",
+      "name": "Бедро цыпленка-бройлера «Аппетитное» копчено-вареное",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 219.6,
+        "protein": 20.7,
+        "fat": 15.2,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-bedro-ts-b-appetitnoe-kopcheno-varenoe/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-674f5784693ac1862e46",
+      "name": "Крыло «Фантазия» фаршированное копчено-запеченное",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 255.5,
+        "protein": 18.2,
+        "fat": 20.3,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/gotovaya-produktsiya/kopchenosti/produkt-iz-myasa-ts-b-krylo-fantaziya-produkt-farshirovannyy-kopcheno-zapechennyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-fc74d112f794d130b3fc",
+      "name": "Коктейль молочный «Шоколад» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 63.2,
+        "protein": 2.3,
+        "fat": 2,
+        "carbs": 9
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП, шоколад, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-68381ef9b310ba26d142",
+      "name": "Коктейль молочный «Пломбир» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 63.2,
+        "protein": 2.3,
+        "fat": 2,
+        "carbs": 9
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП, пломбир, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-54ceb23581ac30727a5e",
+      "name": "Коктейль молочный «Соленая карамель» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 64.8,
+        "protein": 2.3,
+        "fat": 2,
+        "carbs": 9.4
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП, соленая карамель, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-83022b2a473f07d87c7e",
+      "name": "Коктейль молочный «Малина» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 63.2,
+        "protein": 2.3,
+        "fat": 2,
+        "carbs": 9
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП, малина, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-e6b29a17032cc2ddc595",
+      "name": "Коктейль молочный «ШЕЙК Клубника» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 68.8,
+        "protein": 2.9,
+        "fat": 2,
+        "carbs": 9.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП ШЕЙК, клубника, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-b3f83d1f069f8bac81ea",
+      "name": "Коктейль молочный «ШЕЙК Тоффи» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 68.8,
+        "protein": 2.9,
+        "fat": 2,
+        "carbs": 9.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП ШЕЙК, тоффи, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-ce654b1e9d0d047d5661",
+      "name": "Коктейль молочный «ШЕЙК Кокос» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 68.8,
+        "protein": 2.9,
+        "fat": 2,
+        "carbs": 9.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП ШЕЙК, кокос, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-31f439bee69c89a916f3",
+      "name": "Коктейль молочный «ШЕЙК Банан» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 68.8,
+        "protein": 2.9,
+        "fat": 2,
+        "carbs": 9.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП ШЕЙК, банан, 450 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-afba071d6a1bca715f51",
+      "name": "Коктейль молочный CAFE «Капучино» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 60,
+        "protein": 2.7,
+        "fat": 2,
+        "carbs": 7.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП CAFE, капучино, 330 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-2ac513d961d9eba6339e",
+      "name": "Коктейль молочный CAFE «Арахисовый раф» 2%",
+      "brand": "ТОП",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 63.2,
+        "protein": 2.7,
+        "fat": 2,
+        "carbs": 8.6
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «ТОП CAFE, арахисовый раф, 330 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-574bde1eb2d8e66ada24",
+      "name": "Коктейль молочный PRO высокобелковый «Ваниль»",
+      "brand": "TEOS",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 56.55,
+        "protein": 9,
+        "fat": 0.15,
+        "carbs": 4.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «TEOS PRO, ваниль, 330 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-50ed52136bdd4c677dfd",
+      "name": "Коктейль молочный PRO высокобелковый «Клубника»",
+      "brand": "TEOS",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 56.55,
+        "protein": 9,
+        "fat": 0.15,
+        "carbs": 4.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «TEOS PRO, клубника, 330 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-6258b17c99f71b414e96",
+      "name": "Коктейль молочный PRO высокобелковый «Молочный шоколад»",
+      "brand": "TEOS",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 56.55,
+        "protein": 9,
+        "fat": 0.15,
+        "carbs": 4.8
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/kokteyl-molochnyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «TEOS PRO, молочный шоколад, 330 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-bf6a8dd2e1d2fcf2a81e",
+      "name": "Паста творожная «Груша-банан» 3,5%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 111.5,
+        "protein": 7,
+        "fat": 3.5,
+        "carbs": 13
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Паста творожная Савушкин, груша-банан, 120 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-5c0cc04afd85f6c0cf60",
+      "name": "Паста творожная «Вишня» 3,5%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 111.5,
+        "protein": 7,
+        "fat": 3.5,
+        "carbs": 13
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Паста творожная Савушкин, вишня, 120 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-4ee2bafe7007aaa71739",
+      "name": "Паста творожная «Черника» 3,5%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 111.5,
+        "protein": 7,
+        "fat": 3.5,
+        "carbs": 13
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Паста творожная Савушкин, черника, 120 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-71336edacf6f233e5159",
+      "name": "Паста творожная «Кокос-миндаль» 3,5%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 111.5,
+        "protein": 7,
+        "fat": 3.5,
+        "carbs": 13
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/tvorozhnaya-pasta/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Паста творожная Савушкин, кокос-миндаль, 120 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-ad3faa5a25bdfb6bedb2",
+      "name": "Сырок творожный глазированный «Кактус»",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 361.1,
+        "protein": 9,
+        "fat": 23.5,
+        "carbs": 28.4
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сырок творожный глазированный Савушкин, кактус, 40 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-616a93c13319f15bfcac",
+      "name": "Сырок творожный глазированный «Ваниль»",
+      "brand": "Творобушки",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 358.9,
+        "protein": 9.5,
+        "fat": 22.9,
+        "carbs": 28.7
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сырок творожный глазированный Творобушки, ваниль, 40 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-604b7e5096744f9042f6",
+      "name": "Сырок творожный глазированный «Клубника»",
+      "brand": "Творобушки",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 358.9,
+        "protein": 9.5,
+        "fat": 22.9,
+        "carbs": 28.7
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сырок творожный глазированный Творобушки, клубника, 40 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-a684e86b2d456cab50bf",
+      "name": "Сырок творожный глазированный «Манго»",
+      "brand": "Творобушки",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 358.9,
+        "protein": 9.5,
+        "fat": 22.9,
+        "carbs": 28.7
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syrok-glazirovannyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сырок творожный глазированный Творобушки, манго, 40 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-e8a096f8514b1b22b8b6",
+      "name": "Сыр рассольный «Брынза» 45%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 261.5,
+        "protein": 19.7,
+        "fat": 20.3,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/brynza/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сыр рассольный Брынза, 200 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-40c91d452508d87fc88f",
+      "name": "Сыр мягкий «Брынза Нежная» 45%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 187.6,
+        "protein": 11.5,
+        "fat": 14.8,
+        "carbs": 2.1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/brynza/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сыр мягкий Брынза Нежная, 250 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-76a1b4fe23b68350b5a2",
+      "name": "Сыр мягкий «Моцарелла» 45%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 234,
+        "protein": 18,
+        "fat": 18,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/motsarella-shar/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сыр мягкий Моцарелла, шар, 100 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-2006c27989d0e33c3102",
+      "name": "Сыр полутвердый «Моцарелла для пиццы» 40%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 286,
+        "protein": 23,
+        "fat": 21.6,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/motsarella-dlya-pitstsy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сыр полутвердый Моцарелла для пиццы, 200 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-e22318c31349cfe56b82",
+      "name": "Сыр полутвердый «Сулугуни» 40%",
+      "brand": "SVEŽA",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 286,
+        "protein": 23,
+        "fat": 21.6,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/suluguni/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сыр полутвердый Сулугуни, 200 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-14510d02f864391a4df7",
+      "name": "Сыр полутвердый «Монастырский» 45%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 324.3,
+        "protein": 25.5,
+        "fat": 24.7,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/syr/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сыр полутвердый Брест-Литовск Монастырский, 200 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-2ebd74cca8a35c42db37",
+      "name": "Молоко ультрапастеризованное 3,1%",
+      "brand": "Савушкин",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 58.7,
+        "protein": 3,
+        "fat": 3.1,
+        "carbs": 4.7
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/moloko/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Молоко Савушкин ультрапастеризованное 3,1%, 1 л»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-202edeb235e7538c3516",
+      "name": "Масло сливочное «Классическое» 72,5%",
+      "brand": "Брест-Литовск",
+      "manufacturer": "ОАО «Савушкин продукт»",
+      "manufacturerCountry": "BY",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 660.9,
+        "protein": 0.8,
+        "fat": 72.5,
+        "carbs": 1.3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ru.savushkin.com/products/maslo-slivochnoe/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Карточка «Сливочное масло Брест-Литовск Классическое, 180 г»: показатели на 100 г продукта.",
+        "manufacturerEvidenceUrl": "https://ru.savushkin.com/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-4d03869c874db363ffe8",
+      "name": "Крыло цыпленка-бройлера",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 207.7,
+        "protein": 22,
+        "fat": 13.3,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/razdelka-tsyplenka-broylera/krylo-tsyplenka-broylera/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-0b1a33130a05d9a1705c",
+      "name": "Тушка цыпленка-бройлера, охлажденная",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 210.3,
+        "protein": 18.6,
+        "fat": 15.1,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/whole-broiler-chicken/tushka-tsyplenka-broylera-okhlazhdennaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-a17d1f74c6590cf9f9d3",
+      "name": "Наггетсы в панировке из мяса цыплят-бройлеров (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 230,
+        "protein": 19,
+        "fat": 15,
+        "carbs": 6.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-formovannyy-iz-myasa-tsyplyat-broylerov-naggetsy-v-panirovke/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-dfa794c75778a937100d",
+      "name": "Котлетки «Банзай» в панировке (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 150,
+        "protein": 20,
+        "fat": 5.5,
+        "carbs": 5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-formovannyy-iz-myasa-tsyplyat-broylerov-kotletki-banzay-v-panirovke-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-f2cadd1709f8a13f3a39",
+      "name": "Наггетсы «Банзай» (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 140,
+        "protein": 20,
+        "fat": 6,
+        "carbs": 0.1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-iz-myasa-tsyplenka-broylera-formovannyy-naggetsy-banzay/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-6b88d30dd26e9eba46b8",
+      "name": "Котлета для бургера (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 220,
+        "protein": 18,
+        "fat": 16,
+        "carbs": 0.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-formovannyy-iz-myasa-tsyplyat-broylerov-kotleta-dlya-burgera/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-141bdc99f720bd201140",
+      "name": "Шницель из филе (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 160,
+        "protein": 21,
+        "fat": 5.5,
+        "carbs": 6
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/shnitsel-iz-file-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-28e5a302be4c040ea6a2",
+      "name": "Колбаски «Банзай» (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 170,
+        "protein": 15,
+        "fat": 12,
+        "carbs": 0.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-kolbaski-banzay/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-152c0dec1a36906308ec",
+      "name": "Бедро «Премиум» цыпленка-бройлера (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 225,
+        "protein": 16,
+        "fat": 17,
+        "carbs": 0
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-kuskovoy-myasokostnyy-iz-myasa-tsyplenka-broylera-bedro-premium/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-f0ab3af1a893125744fa",
+      "name": "Крокеты по-французски с творожным сыром и грибами (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 207,
+        "protein": 15,
+        "fat": 13,
+        "carbs": 7.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/krokety-po-frantsuzski-s-tvorozhnym-syrom-i-gribami-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-629a94cf1ef6aa253602",
+      "name": "Колбаски сырые «Вкусные»",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 269,
+        "protein": 10,
+        "fat": 25,
+        "carbs": 1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/kolbaski-syrye-vkusnye/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-579c4bdac904e4b40b72",
+      "name": "Колбаски домашние (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 279,
+        "protein": 16,
+        "fat": 23,
+        "carbs": 2.7
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/kolbaski-domashnie/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-34ec89489b038af31238",
+      "name": "Цыплята-гриль «По-домашнему» (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 193,
+        "protein": 16.2,
+        "fat": 14,
+        "carbs": 0.4
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/tsyplyata-gril-po-domashnemu/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-cba282907bf46d9bb759",
+      "name": "Котлета из филе (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 115,
+        "protein": 19,
+        "fat": 3,
+        "carbs": 3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-tsyplyat-broylerov-formovannyy-kotleta-iz-file-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-43bf99120a3617f9cd92",
+      "name": "Котлета по-итальянски с творожным сыром и шпинатом (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 180,
+        "protein": 17,
+        "fat": 9.5,
+        "carbs": 6.5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/kotleta-po-italyanski-s-tvorozhnym-syrom-i-shpinatom-/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-94ee2664de0b0f29fa0d",
+      "name": "Котлета «Папараць-кветка по-белорусски» панированная (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 248,
+        "protein": 16,
+        "fat": 17,
+        "carbs": 7.3
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-farshirovannyy-kotleta-paparats-kvetka-po-belorusski-panirovannyy/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-4d9fbab3c818a9928e33",
+      "name": "Каштанчики панированные из мяса птицы (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 230,
+        "protein": 11,
+        "fat": 19,
+        "carbs": 5
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-ptitsy-panirovannyy-kashtanchiki/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-7f1c40e3a60e5114d2c8",
+      "name": "Биточки из филе панированные (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 197.2,
+        "protein": 13.9,
+        "fat": 14.8,
+        "carbs": 2.1
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-ptitsy-panirovannyy-bitochki-iz-file/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    },
+    {
+      "id": "manufacturer-fd78dc6efc6d6e45733d",
+      "name": "Котлета «Смачная» панированная (полуфабрикат)",
+      "brand": "Ганна",
+      "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+      "manufacturerCountry": "BY",
+      "category": "Блюда и полуфабрикаты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 277.4,
+        "protein": 9.4,
+        "fat": 24.6,
+        "carbs": 4.6
+      },
+      "barcodes": [],
+      "aliases": [],
+      "source": {
+        "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-ptitsy-panirovannyy-kotleta-smachnaya/",
+        "checkedAt": "2026-10-29",
+        "basisText": "Пищевая ценность на 100 г",
+        "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+      },
+      "sourceType": "manufacturer"
+    }
+  ]
+}

@@ -145,3 +145,36 @@ test("progress reminders can use separate photo and measurement intervals", () =
   assert.deepEqual(due.map((item) => item.type), ["photo"]);
   assert.equal(due[0].intervalDays, 7);
 });
+
+test("weight reminders follow their independent enabled flag and interval", () => {
+  const due = getDueProgressReminderTypes(
+    {
+      progressReminderSettings: {
+        weightEnabled: true,
+        weightIntervalDays: 7,
+        reminderTime: "10:00",
+        updatedAt: "2026-06-01T09:00:00.000Z"
+      }
+    },
+    { weightDateKey: "2026-06-08" },
+    new Date("2026-06-15T10:01:00+03:00")
+  );
+
+  assert.deepEqual(due.map((item) => item.type), ["weight"]);
+  assert.equal(due[0].intervalDays, 7);
+  assert.equal(due[0].dueDateKey, "2026-06-15");
+
+  const disabled = getDueProgressReminderTypes(
+    { progressReminderSettings: { weightEnabled: false, weightIntervalDays: 7, reminderTime: "10:00", updatedAt: "2026-06-01" } },
+    { weightDateKey: "2026-06-08" },
+    new Date("2026-06-15T10:01:00+03:00")
+  );
+  assert.deepEqual(disabled, []);
+
+  const defaultWeekly = getDueProgressReminderTypes(
+    { progressReminderSettings: { weightEnabled: true, reminderTime: "10:00", updatedAt: "2026-06-01" } },
+    { weightDateKey: "2026-06-08" },
+    new Date("2026-06-15T10:01:00+03:00")
+  );
+  assert.equal(defaultWeekly[0]?.intervalDays, 7);
+});

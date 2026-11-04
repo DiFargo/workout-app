@@ -1,0 +1,58 @@
+.calendar > .header.header {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  align-items: flex-start !important;
+}
+
+.calendar > .header.header > div:first-child {
+  display: block !important;
+  flex: 1 1 220px !important;
+  min-width: 0 !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+.calendar > .header.header > strong {
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+}
+
+@media (max-width: 480px) {
+  .calendar > .header.header > div:first-child {
+    flex-basis: 100% !important;
+  }
+}
+
+.calendar :global(.trainerWorkoutScheduleGrid) {
+  column-gap: 6px !important;
+}
+
+/* Mark each date softly; never connect separate tiles into outlined rows. */
+.calendar :global(.trainerWorkoutScheduleGrid > button[data-subscription-range="true"]) {
+  opacity: 1 !important;
+  box-shadow: inset 0 -2px 0 rgba(63, 115, 184, .4) !important;
+}
+
+.calendar :global(.trainerWorkoutScheduleGrid > button[data-subscription-range="true"]:not(.selected):not(.completed):not(.completedOffDate):not(.completed_off_date):not(.missed):not(.shifted):not(.pastWorkout):not(.pastCompleted)) {
+  background: #eaf1fb !important;
+  border-color: #cdddf0 !important;
+  color: #3c6faa !important;
+}
+
+.calendar .boundary > b {
+  font-weight: 800 !important;
+}
+
+.calendar .period {
+  display: block;
+  margin: 12px 0;
+  color: #636366;
+  font-size: 12px;
+  line-height: 1.5;
+}

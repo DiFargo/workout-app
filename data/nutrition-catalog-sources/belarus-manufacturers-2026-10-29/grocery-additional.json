@@ -1,0 +1,442 @@
+[
+  {
+    "name": "Крыло цыпленка-бройлера",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 207.7,
+      "protein": 22,
+      "fat": 13.3,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/razdelka-tsyplenka-broylera/krylo-tsyplenka-broylera/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Тушка цыпленка-бройлера, охлажденная",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 210.3,
+      "protein": 18.6,
+      "fat": 15.1,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/whole-broiler-chicken/tushka-tsyplenka-broylera-okhlazhdennaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Наггетсы в панировке из мяса цыплят-бройлеров (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 230,
+      "protein": 19,
+      "fat": 15,
+      "carbs": 6.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-formovannyy-iz-myasa-tsyplyat-broylerov-naggetsy-v-panirovke/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Котлетки «Банзай» в панировке (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 150,
+      "protein": 20,
+      "fat": 5.5,
+      "carbs": 5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-formovannyy-iz-myasa-tsyplyat-broylerov-kotletki-banzay-v-panirovke-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Наггетсы «Банзай» (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 140,
+      "protein": 20,
+      "fat": 6,
+      "carbs": 0.1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-iz-myasa-tsyplenka-broylera-formovannyy-naggetsy-banzay/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Котлета для бургера (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 220,
+      "protein": 18,
+      "fat": 16,
+      "carbs": 0.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-rublenyy-formovannyy-iz-myasa-tsyplyat-broylerov-kotleta-dlya-burgera/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Шницель из филе (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 160,
+      "protein": 21,
+      "fat": 5.5,
+      "carbs": 6
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/shnitsel-iz-file-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаски «Банзай» (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 170,
+      "protein": 15,
+      "fat": 12,
+      "carbs": 0.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-kolbaski-banzay/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Бедро «Премиум» цыпленка-бройлера (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 225,
+      "protein": 16,
+      "fat": 17,
+      "carbs": 0
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/polufabrikat-kuskovoy-myasokostnyy-iz-myasa-tsyplenka-broylera-bedro-premium/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Крокеты по-французски с творожным сыром и грибами (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 207,
+      "protein": 15,
+      "fat": 13,
+      "carbs": 7.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/krokety-po-frantsuzski-s-tvorozhnym-syrom-i-gribami-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаски сырые «Вкусные»",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 269,
+      "protein": 10,
+      "fat": 25,
+      "carbs": 1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/kolbaski-syrye-vkusnye/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Колбаски домашние (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 279,
+      "protein": 16,
+      "fat": 23,
+      "carbs": 2.7
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/kolbaski-domashnie/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Цыплята-гриль «По-домашнему» (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Мясо и птица",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 193,
+      "protein": 16.2,
+      "fat": 14,
+      "carbs": 0.4
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/polufabrikaty-bystrogo-prigotovleniya/tsyplyata-gril-po-domashnemu/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Котлета из филе (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 115,
+      "protein": 19,
+      "fat": 3,
+      "carbs": 3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-tsyplyat-broylerov-formovannyy-kotleta-iz-file-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Котлета по-итальянски с творожным сыром и шпинатом (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 180,
+      "protein": 17,
+      "fat": 9.5,
+      "carbs": 6.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/kotleta-po-italyanski-s-tvorozhnym-syrom-i-shpinatom-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Котлета по-итальянски с творожным сыром и томатами (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 170,
+      "protein": 16,
+      "fat": 9,
+      "carbs": 6.5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/kotleta-po-italyanski-s-tvorozhnym-syrom-i-tomatami-/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Котлета «Папараць-кветка по-белорусски» панированная (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 248,
+      "protein": 16,
+      "fat": 17,
+      "carbs": 7.3
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-farshirovannyy-kotleta-paparats-kvetka-po-belorusski-panirovannyy/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Каштанчики панированные из мяса птицы (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 230,
+      "protein": 11,
+      "fat": 19,
+      "carbs": 5
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-ptitsy-panirovannyy-kashtanchiki/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Биточки из филе панированные (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 197.2,
+      "protein": 13.9,
+      "fat": 14.8,
+      "carbs": 2.1
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-ptitsy-panirovannyy-bitochki-iz-file/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  },
+  {
+    "name": "Котлета «Смачная» панированная (полуфабрикат)",
+    "brand": "Ганна",
+    "manufacturer": "ОАО «Витебская бройлерная птицефабрика»",
+    "manufacturerCountry": "BY",
+    "category": "Блюда и полуфабрикаты",
+    "nutrition": {
+      "basis": "100g",
+      "kcal": 277.4,
+      "protein": 9.4,
+      "fat": 24.6,
+      "carbs": 4.6
+    },
+    "barcodes": [],
+    "aliases": [],
+    "source": {
+      "url": "https://ganna.by/products/syraya-produktsiya/polufabrikaty/kotlety/polufabrikat-rublenyy-iz-myasa-ptitsy-panirovannyy-kotleta-smachnaya/",
+      "checkedAt": "2026-10-29",
+      "basisText": "Пищевая ценность на 100 г",
+      "manufacturerEvidenceUrl": "https://ganna.by/contacts/"
+    }
+  }
+]

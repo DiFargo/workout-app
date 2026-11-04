@@ -13,6 +13,10 @@ export function normalize(value) {
   return String(value ?? '').normalize('NFKC').toLowerCase().replaceAll('ё', 'е')
     .replace(/(\d),(\d)/g, '$1.$2').replace(/[^\p{L}\p{N}.%]+/gu, ' ').trim().replace(/\s+/g, ' ');
 }
+export const searchBrandGroups = [...brandGroups, ['свежа', 'sveza', 'svezha', 'свеза'], ['ганна', 'ganna']];
+export function normalizeSearch(value) {
+  return normalize(value).replaceAll('ž', 'z').replace(/(\d)\s+%/g, '$1%').replace(/(\d+)\.0+%/g, '$1%');
+}
 export function canonicalBrand(value) {
   const n = normalize(value);
   return brandGroups.find(g => g.includes(n))?.[0] ?? n;
@@ -73,17 +77,23 @@ export function portionNutrition(row, amount) {
   if (row.nutrition.basis === 'unknown' || row.nutritionConflict || !Number.isFinite(amount) || amount <= 0) return null;
   return Object.fromEntries(['kcal','protein','fat','carbs'].map(k => [k, Math.round(row.nutrition[k] * amount) / 100]));
 }
+const stateEquivalents = [
+  ['сырой','сырое','сырая','сырые'],
+  ['вареный','вареное','вареная','вареные','отварной','отварная','отварное','отварные'],
+  ['готовый','готовая','готовое','готовые'], ['сухой','сухая','сухие','сухое'],
+];
+const constraintTokens = new Set(stateEquivalents.flat());
 const equivalents = [
-  ...brandGroups, ['курица','куриная','куриный','куриного','цыпленка','цыпленок'],
+  ...searchBrandGroups, ['курица','куриная','куриный','куриного','цыпленка','цыпленок'],
   ['грудка','грудки','грудку'], ['гречка','гречневая','гречневые','гречневая'],
   ['овсянка','овсяные','овсяная','геркулес'], ['творог','творога','творожный'],
-  ['сырой','сырое','сырая','сырые'], ['вареный','вареное','отварной','отварная','отварное'],
-  ['готовый','готовая','готовое','готовые'], ['арахис','арахисовая','арахисовый'],
+  ['каша','каши','кашу'],
+  ...stateEquivalents, ['арахис','арахисовая','арахисовый'],
 ];
 function expandTokens(text) {
-  let n = normalize(text);
+  let n = normalizeSearch(text);
   for (const g of equivalents) if (g.some(s => (` ${n} `).includes(` ${s} `))) n += ` ${g.join(' ')}`;
-  return [...new Set(n.split(' ').filter(Boolean))];
+  return [...new Set(n.split(' ').filter(Boolean).map(token => /^\d+(?:\.\d+)?%?$/.test(token) ? `${Number.parseFloat(token)}${token.endsWith('%')?'%':''}` : token))];
 }
 function keyboard(text) {
   const en = 'qwertyuiop[]asdfghjkl;\'zxcvbnm,.';
@@ -110,22 +120,36 @@ export function createSearch(rows) {
       }
     }
     for(const code of r.barcodes)barcodeIndex.set(code,i);
-    return {tokens, text:normalize(`${r.name} ${r.brand}`)};
+    return {tokens, text:normalizeSearch(`${r.name} ${r.brand}`)};
   });
-  const vocabulary=[...index.keys()],cache=new Map();
+  // A deletion index narrows one-edit candidates without scanning every word
+  // for every keystroke. Verify candidates with the same typo predicate.
+  const typoIndex=new Map(),cache=new Map(),tokenCache=new Map();
+  const signatures=word=>[word,...Array.from(word,(_,i)=>word.slice(0,i)+word.slice(i+1))];
+  for(const word of index.keys()) if(word.length>=4) for(const key of signatures(word)) {
+    if(!typoIndex.has(key))typoIndex.set(key,new Set());typoIndex.get(key).add(word);
+  }
   return (query='', {category='',market='',source='',limit=40,offset=0}={}) => {
-    const raw=normalize(query).slice(0,128), q=raw.split(' ').filter(Boolean);
+    const raw=normalizeSearch(query).slice(0,128), q=raw.split(' ').filter(Boolean);
     const passes = r => (!category||r.category===category)&&(!market||r.market===market)&&(!source||r.sourceType===source);
     if (/^\d{8,14}$/.test(raw)) {const r=rows[barcodeIndex.get(raw)]; return {total:r&&passes(r)?1:0,items:r&&passes(r)?[r]:[],corrected:false};}
     const scoreMatches=(tokens, fuzzy=false)=>{
       let candidates=null;
       for(const token of tokens) {
-        const ids=new Set();
+        const key=`${fuzzy}:${token}`;
+        let ids=tokenCache.get(key);
+        if(!ids) {
+        ids=new Set();
         const alternatives=expandTokens(token);
         for(const a of alternatives) {
           const matches=prefixes.get(a.slice(0,8))??[];
           for(const i of matches) if(a.length<=8||docs[i].tokens.some(t=>t.startsWith(a)))ids.add(i);
-          if(fuzzy&&a.length>=5) for(const t of vocabulary) if(oneTypo(a,t))for(const i of index.get(t))ids.add(i);
+          if(fuzzy&&a.length>=5&&!constraintTokens.has(token)&&!constraintTokens.has(a)&&!/[\d%]/.test(a)) {
+            const words=new Set(signatures(a).flatMap(key=>[...(typoIndex.get(key)??[])]));
+            for(const t of words) if(oneTypo(a,t))for(const i of index.get(t))ids.add(i);
+          }
+        }
+        if(tokenCache.size>=300)tokenCache.delete(tokenCache.keys().next().value);tokenCache.set(key,ids);
         }
         candidates=candidates===null?ids:new Set([...candidates].filter(i=>ids.has(i)));
         if(!candidates.size)break;
@@ -134,10 +158,12 @@ export function createSearch(rows) {
     };
     const cacheKey=JSON.stringify([raw,category,market,source]);
     if(cache.has(cacheKey)){const {candidates,corrected}=cache.get(cacheKey);return {total:candidates.length,items:candidates.slice(offset,offset+limit).map(i=>rows[i]),corrected};}
-    let candidates=scoreMatches(q),corrected=false;
-    if(!candidates.length && raw) {const k=normalize(keyboard(query)).split(' ');candidates=scoreMatches(k);corrected=!!candidates.length;}
+    let candidates=scoreMatches(q),corrected=false,effectiveRaw=raw,effectiveTokens=q;
+    const keyboardRaw=normalizeSearch(keyboard(query)).slice(0,128),keyboardTokens=keyboardRaw.split(' ').filter(Boolean);
+    if(!candidates.length && raw && keyboardRaw!==raw) {candidates=scoreMatches(keyboardTokens);corrected=!!candidates.length;if(corrected){effectiveRaw=keyboardRaw;effectiveTokens=keyboardTokens;}}
     if(!candidates.length && raw) {candidates=scoreMatches(q,true);corrected=!!candidates.length;}
-    const score=i=>(raw&&docs[i].text.startsWith(raw)?150:0)+(raw&&docs[i].text.includes(raw)?80:0)+q.filter(t=>docs[i].tokens.includes(t)).length*30+(rows[i].market==='BY'?25:0)+(rows[i].sourceType==='openfoodfacts'?4:0)-rows[i].name.length/100;
+    if(!candidates.length && raw && keyboardRaw!==raw) {candidates=scoreMatches(keyboardTokens,true);corrected=!!candidates.length;if(corrected){effectiveRaw=keyboardRaw;effectiveTokens=keyboardTokens;}}
+    const score=i=>(effectiveRaw&&docs[i].text.startsWith(effectiveRaw)?150:0)+(effectiveRaw&&docs[i].text.includes(effectiveRaw)?80:0)+effectiveTokens.filter(t=>docs[i].tokens.includes(t)).length*30+(rows[i].market==='BY'?25:0)+(rows[i].sourceType==='openfoodfacts'?4:0)-rows[i].name.length/100;
     const scores=new Map(candidates.map(i=>[i,score(i)]));
     candidates.sort((a,b)=>scores.get(b)-scores.get(a)||rows[a].id.localeCompare(rows[b].id));
     if(cache.size>=150)cache.delete(cache.keys().next().value);cache.set(cacheKey,{candidates,corrected});

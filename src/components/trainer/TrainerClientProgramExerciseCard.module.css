@@ -1,0 +1,110 @@
+.root,
+.sheet {
+  --client-card-canvas: #f2f2f7;
+  --client-card-surface: #ffffff;
+  --client-card-secondary: #efeff4;
+  --client-card-line: rgba(60, 60, 67, 0.12);
+  --client-card-text: #1c1c1e;
+  --client-card-muted: #636366;
+  --client-card-accent: #3f73b8;
+  --client-card-danger: #b63d46;
+  color: var(--client-card-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.root.root {
+  display: block;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--client-card-line);
+  border-radius: 16px;
+  background: var(--client-card-surface);
+  overflow: visible;
+  box-shadow: none;
+}
+
+.root.open { border-color: rgba(63, 115, 184, 0.3); }
+.root .header { display: grid; grid-template-columns: 24px 44px minmax(0, 1fr) 44px; align-items: center; gap: 10px; min-width: 0; padding: 12px 14px; }
+.root .number { color: var(--client-card-muted); font-size: 13px; font-variant-numeric: tabular-nums; text-align: center; }
+.root .preview { --trainer-library-preview-size: 44px; display: grid; place-items: center; width: 44px; height: 44px; min-width: 0; }
+.root .toggle,
+.root .menuButton { display: flex; align-items: center; min-height: 44px; margin: 0; padding: 0; border: 0; border-radius: 10px; background: transparent; box-shadow: none; color: var(--client-card-text); font: inherit; cursor: pointer; touch-action: manipulation; }
+.root .toggle { justify-content: space-between; gap: 8px; min-width: 0; width: 100%; text-align: left; }
+.root .toggle > span { display: grid; gap: 4px; min-width: 0; }
+.root .toggle strong { display: block; color: var(--client-card-text); font-size: 15px; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.root .toggle small { display: flex; align-items: center; gap: 4px; color: var(--client-card-muted); font-size: 12px; font-weight: 400; line-height: 1.4; overflow-wrap: anywhere; }
+.root .toggle > svg { flex-shrink: 0; color: var(--client-card-muted); }
+.root .menuButton { justify-content: center; width: 44px; min-width: 44px; height: 44px; color: var(--client-card-muted); }
+.root .summary { margin: -1px 16px 13px 102px; color: var(--client-card-muted); font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.root .panel { min-width: 0; padding: 14px; border-top: 1px solid var(--client-card-line); }
+.root .panel[hidden] { display: none !important; }
+.root .planLabel { margin: 0 0 10px; color: var(--client-card-muted); font-size: 12px; font-weight: 500; line-height: 1.4; }
+.root.root .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 10px; width: 100%; max-width: 680px; min-width: 0; }
+.root.root .fields label { gap: 6px; }
+.root.root .fields label > span { color: var(--client-card-muted); font-size: 12px; line-height: 1.35; }
+.root.root .fields input,
+.root.root .fields button { min-height: 44px !important; border: 1px solid var(--client-card-line); border-radius: 10px; background: var(--client-card-canvas); color: var(--client-card-text); font-size: 16px !important; font-weight: 400; line-height: 1.3; text-align: left; padding-inline: 12px !important; box-shadow: none; }
+.root.root .fields input:disabled { color: var(--client-card-muted); opacity: 0.75; }
+.root.root .fields > button { grid-column: 1 / -1; width: auto !important; justify-self: start; padding-inline: 0 !important; border: 0; background: transparent; color: var(--client-card-accent); font-size: 13px !important; text-align: left; }
+.root .panelFooter { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2px 16px; margin-top: 10px; }
+.root .panelFooter p { min-width: 0; margin: 0; color: var(--client-card-muted); font-size: 12px; line-height: 1.45; }
+.root .panelFooter button { display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; min-height: 44px; max-width: 100%; min-width: 0; margin: 0; padding: 8px 0; border: 0; border-radius: 8px; background: transparent; color: var(--client-card-accent); box-shadow: none; font: inherit; font-size: 13px; line-height: 1.35; text-align: left; cursor: pointer; }
+.root .panelFooter button svg { flex-shrink: 0; }
+.root .history { margin: 0 14px; border-top: 1px solid var(--client-card-line); }
+.root .history[hidden] { display: none !important; }
+.root .history > summary { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; padding: 8px 0; color: var(--client-card-muted); font-size: 12px; line-height: 1.4; list-style: none; cursor: pointer; }
+.root .history > summary::-webkit-details-marker { display: none; }
+.root .history > summary > span { flex: 1; min-width: 0; }
+.root .history > summary > svg { flex-shrink: 0; }
+.root .history[open] > summary > svg:last-child { transform: rotate(180deg); }
+.root .historyBody { display: grid; gap: 6px; padding: 0 0 12px; }
+.root .historyBody > p { margin: 0; color: var(--client-card-text); font-size: 13px; font-weight: 400; line-height: 1.45; overflow-wrap: anywhere; }
+.root .historyBody > p + p,
+.root .historyBody > small { color: var(--client-card-muted); font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+
+.sheet.sheet { position: fixed; inset: 0; width: min(460px, calc(100vw - 32px)); max-width: none; max-height: calc(100dvh - 32px); min-width: 0; margin: auto; padding: 0; overflow: hidden; border: 1px solid var(--client-card-line); border-radius: 24px; background: var(--client-card-canvas); box-shadow: 0 24px 80px rgba(28, 28, 30, 0.22); }
+.sheet.sheet[open] { display: flex; flex-direction: column; }
+.sheet::backdrop { background: rgba(28, 28, 30, 0.36); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+.sheet * { box-sizing: border-box; }
+.sheet.sheet > header { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding: 14px 18px; border-bottom: 1px solid var(--client-card-line); background: var(--client-card-surface); }
+.sheet.sheet > header h2 { margin: 0; color: var(--client-card-text); font-size: 18px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.sheet.sheet > header button { display: grid; place-items: center; width: 44px; min-width: 44px; height: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 50%; background: var(--client-card-secondary); color: var(--client-card-muted); box-shadow: none; cursor: pointer; }
+.sheet .sheetBody { display: grid; gap: 8px; min-height: 0; min-width: 0; padding: 16px 18px; overflow-y: auto; overscroll-behavior: contain; }
+.sheetBody > p { margin: 0 0 4px; color: var(--client-card-muted); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.sheet .sheetBody > button { display: flex; align-items: center; justify-content: flex-start; gap: 10px; width: 100%; min-width: 0; min-height: 48px; margin: 0; padding: 12px; border: 1px solid var(--client-card-line); border-radius: 12px; background: var(--client-card-surface); color: var(--client-card-text); font: inherit; font-size: 14px; line-height: 1.35; text-align: left; box-shadow: none; cursor: pointer; touch-action: manipulation; }
+.sheet .sheetBody > button svg { flex-shrink: 0; }
+.sheet .sheetBody > button.danger { margin-top: 6px; border-color: transparent; color: var(--client-card-danger); background: transparent; }
+.sheet.sheet > footer { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 14px; margin: 0; padding: 14px 18px max(14px, env(safe-area-inset-bottom)); border-top: 1px solid var(--client-card-line); background: var(--client-card-surface); }
+.sheet.sheet > footer > span { min-width: 0; max-width: 250px; color: var(--client-card-muted); font-size: 12px; line-height: 1.4; }
+.sheet.sheet > footer > button { flex: 0 0 auto; min-width: 92px; min-height: 44px; margin: 0; padding: 10px 18px; border: 0; border-radius: 12px; background: var(--ownset-action-gradient); color: #ffffff; font: inherit; font-size: 14px; font-weight: 600; box-shadow: none; cursor: pointer; }
+.sheet button:disabled { opacity: 0.4; cursor: default; }
+.root :is(button, input, summary):focus-visible,
+.sheet button:focus-visible { outline: 2px solid var(--client-card-accent); outline-offset: 2px; }
+.root button:active:not(:disabled),
+.sheet button:active:not(:disabled) { opacity: 0.72; }
+
+@media (min-width: 680px) {
+  .root.root .fields { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .sheet.sheet { inset: auto 8px 8px; width: calc(100vw - 16px); max-height: calc(100dvh - max(16px, env(safe-area-inset-top))); margin: 0; border-radius: 24px; }
+}
+
+@media (max-width: 359px) {
+  .root .header { grid-template-columns: 20px minmax(0, 1fr) 44px; gap: 7px; padding: 11px 10px; }
+  .root .preview { display: none; }
+  .root .toggle strong { font-size: 14px; }
+  .root .summary { margin-left: 37px; margin-right: 10px; font-size: 12px; }
+  .root .panel { padding-inline: 10px; }
+  .root .history { margin-inline: 10px; }
+  .sheet.sheet > header,
+  .sheet .sheetBody,
+  .sheet.sheet > footer { padding-inline: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root *, .sheet * { transition: none !important; }
+}

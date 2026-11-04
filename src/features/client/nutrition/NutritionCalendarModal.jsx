@@ -13,7 +13,11 @@ export default function NutritionCalendarModal({
   onClose,
   onShiftMonth,
   onSelectDate,
-  onSelectToday
+  onSelectToday,
+  historyReady = true,
+  historyLoading = false,
+  historyError,
+  onLoadHistory
 }) {
   const swipeGestureRef = useRef(null);
   const suppressDayClickRef = useRef(false);
@@ -202,8 +206,13 @@ export default function NutritionCalendarModal({
             ))}
           </div>
 
-          <div className={styles.grid} data-testid="nutrition-calendar-grid">
-            {days.map((day) => (
+          {!historyReady && <div className={styles.loadState} role={historyError ? "alert" : "status"}>
+            <p>{historyError ? "Не удалось загрузить записи календаря." : "Загружаем записи календаря…"}</p>
+            {historyError && <button type="button" disabled={historyLoading}
+              onClick={() => Promise.resolve().then(() => onLoadHistory?.()).catch(() => {})}>Повторить загрузку</button>}
+          </div>}
+          <div className={styles.grid} data-testid="nutrition-calendar-grid" aria-busy={!historyReady}>
+            {(historyReady ? days : []).map((day) => (
               <button
                 type="button"
                 key={day.key}

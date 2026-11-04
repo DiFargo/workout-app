@@ -2,8 +2,8 @@ const OFFSETS = [24, 12, 3, 1];
 export const PROGRESS_REMINDER_PERIODS = [7, 14, 30];
 export const WORKOUT_REMINDER_OFFSETS = OFFSETS;
 
-function period(value) {
-  return PROGRESS_REMINDER_PERIODS.includes(Number(value)) ? Number(value) : 14;
+function period(value, fallback = 14) {
+  return PROGRESS_REMINDER_PERIODS.includes(Number(value)) ? Number(value) : fallback;
 }
 
 export function getClientReminderSettings(calendar = {}) {
@@ -15,8 +15,10 @@ export function getClientReminderSettings(calendar = {}) {
     workoutEnabled: calendar.reminderEnabled !== false,
     offsets: offsets.length ? offsets : [24],
     photoEnabled: progress.photoEnabled === true || calendar.progressPhotoReminderEnabled === true,
+    weightEnabled: progress.weightEnabled === true || calendar.weightReminderEnabled === true,
     measurementsEnabled: progress.measurementsEnabled === true || calendar.measurementsReminderEnabled === true,
     photoIntervalDays: period(progress.photoIntervalDays || calendar.progressPhotoReminderIntervalDays || progress.intervalDays || calendar.progressReminderIntervalDays),
+    weightIntervalDays: period(progress.weightIntervalDays || calendar.weightReminderIntervalDays || progress.intervalDays || calendar.progressReminderIntervalDays, 7),
     measurementsIntervalDays: period(progress.measurementsIntervalDays || calendar.measurementsReminderIntervalDays || progress.intervalDays || calendar.progressReminderIntervalDays),
     reminderTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(time) ? time : "10:00"
   };

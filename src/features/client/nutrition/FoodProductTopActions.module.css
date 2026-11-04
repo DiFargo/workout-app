@@ -19,10 +19,12 @@
 :global(:root[data-app-theme="warm-light"]) .root {
   position: static;
   z-index: 20;
-  width: 44px;
+  width: auto;
   height: 44px;
   display: grid;
-  grid-template-columns: 44px;
+  grid-auto-flow: column;
+  grid-auto-columns: 44px;
+  gap: 8px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .action {

@@ -22,6 +22,10 @@ function BadgeStatusIcon({ type }) {
 }
 
 export default function NutritionPlanDetails({
+  nutritionHistoryReady = true,
+  nutritionHistoryLoading = false,
+  nutritionHistoryError,
+  onLoadNutritionHistory,
   isExpanded,
   isCaloriesOverGoal,
   goalText,
@@ -46,11 +50,15 @@ export default function NutritionPlanDetails({
   }
 
   const percentOf = (value, goal) => Number(goal) > 0 ? Math.round((Number(value) || 0) / Number(goal) * 100) : null;
-  const actualCaloriePercent = percentOf(caloriesConsumed, effectiveGoals.calories) ?? caloriePercent;
-  const actualProteinPercent = percentOf(nutritionTotals.protein, effectiveGoals.protein) ?? proteinPercent;
-  const actualFatPercent = percentOf(nutritionTotals.fat, effectiveGoals.fat) ?? fatPercent;
-  const actualCarbsPercent = percentOf(nutritionTotals.carbs, effectiveGoals.carbs) ?? carbsPercent;
-  const caloriesOver = Math.max(0, Math.round(caloriesConsumed - effectiveGoals.calories));
+  const actualCaloriePercent = nutritionHistoryReady ? percentOf(caloriesConsumed, effectiveGoals.calories) ?? caloriePercent : null;
+  const actualProteinPercent = nutritionHistoryReady ? percentOf(nutritionTotals.protein, effectiveGoals.protein) ?? proteinPercent : null;
+  const actualFatPercent = nutritionHistoryReady ? percentOf(nutritionTotals.fat, effectiveGoals.fat) ?? fatPercent : null;
+  const actualCarbsPercent = nutritionHistoryReady ? percentOf(nutritionTotals.carbs, effectiveGoals.carbs) ?? carbsPercent : null;
+  const caloriesOver = nutritionHistoryReady ? Math.max(0, Math.round(caloriesConsumed - effectiveGoals.calories)) : 0;
+  async function retryHistory() {
+    try { await onLoadNutritionHistory?.(); }
+    catch (error) { console.warn("Nutrition analysis history load failed:", error); }
+  }
 
   return (
     <div
@@ -66,7 +74,7 @@ export default function NutritionPlanDetails({
         aria-label="Анализ питания"
         data-testid="nutrition-plan-details"
         data-css-module-scope="nutrition-plan-details"
-        data-state={isCaloriesOverGoal ? "over-limit" : "within-limit"}
+        data-state={!nutritionHistoryReady ? "history-pending" : isCaloriesOverGoal ? "over-limit" : "within-limit"}
       >
         <div className={styles.header} data-nutrition-plan-part="header">
           <div className={styles.titleBox} data-nutrition-plan-part="title">
@@ -84,6 +92,20 @@ export default function NutritionPlanDetails({
           </button>
         </div>
 
+        {!nutritionHistoryReady ? (
+          <div className={styles.historyPending} aria-busy={nutritionHistoryLoading} data-testid="nutrition-history-pending">
+            <p role={nutritionHistoryError ? "alert" : "status"}>
+              {nutritionHistoryLoading ? "Загружаем историю питания…" : nutritionHistoryError
+                ? "Не удалось загрузить историю питания. Повторите попытку."
+                : "Анализ появится после загрузки истории"}
+            </p>
+            {typeof onLoadNutritionHistory === "function" && (
+              <button type="button" className={styles.historyRetry} disabled={nutritionHistoryLoading} onClick={retryHistory}>
+                {nutritionHistoryLoading ? "Загрузка…" : nutritionHistoryError ? "Повторить загрузку" : "Загрузить историю"}
+              </button>
+            )}
+          </div>
+        ) : <>
         <div
           className={`${styles.dayPill} ${isTrainingDay ? styles.dayPillActive : ""}`}
           data-nutrition-plan-part="day-pill"
@@ -170,6 +192,7 @@ export default function NutritionPlanDetails({
             <CalendarDays className={styles.badgeIcon} data-nutrition-plan-part="badge-icon" aria-hidden="true" />Неделя {currentWeek}/4
           </span>
         </div>
+        </>}
       </section>
 
       <button

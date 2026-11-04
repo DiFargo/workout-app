@@ -53,7 +53,7 @@ test('library removes blank duplicates across movements and never restores them 
   await expect(renamed).toHaveCount(1);
   await renamed.click();
   await expect(editor.getByLabel('Техника выполнения')).toHaveValue('Сохраняйте устойчивое положение корпуса.');
-  await editor.getByRole('button', { name: 'Удалить', exact: true }).click();
+  await editor.getByRole('button', { name: 'Удалить из библиотеки', exact: true }).click();
   await page.getByRole('dialog', { name: 'Удалить упражнение', exact: true }).getByRole('button', { name: 'Удалить', exact: true }).click();
   await expect(renamed).toHaveCount(0);
   await expect(entry(originalName)).toHaveCount(0);
@@ -141,7 +141,7 @@ test('new library cards save independently, validate name, and can be hidden and
   await expect(editor).toBeHidden();
   const card = library.getByRole('button', { name: 'Редактировать упражнение Отдельная карточка', exact: true });
   await card.click();
-  await editor.getByRole('button', { name: 'Удалить', exact: true }).click();
+  await editor.getByRole('button', { name: 'Удалить из библиотеки', exact: true }).click();
   await page.getByRole('dialog', { name: 'Удалить упражнение', exact: true }).getByRole('button', { name: 'Удалить', exact: true }).click();
   await expect(card).toBeHidden();
   await library.getByRole('button', { name: /^Удалённые/ }).click();
@@ -178,7 +178,7 @@ async function exerciseCropScenario({ page }, info) {
   expect(await position()).not.toBe(keyboardPosition);
   await dialog.locator('summary').click();
   const rect = await preview.boundingBox();
-  expect(rect.width / rect.height).toBeCloseTo(4 / 3, 2);
+  expect(rect.width / rect.height).toBeCloseTo(1, 2);
   await page.mouse.move(rect.x + rect.width / 2, rect.y + rect.height / 2);
   await page.mouse.down(); await page.mouse.move(rect.x + rect.width / 2 - 35, rect.y + rect.height / 2 - 15, { steps: 5 }); await page.mouse.up();
   const selectedPosition = await position();
@@ -186,7 +186,7 @@ async function exerciseCropScenario({ page }, info) {
   await dialog.getByRole('button', { name: 'Без обрезки', exact: true }).click();
   await expect(preview.locator('video')).toHaveCSS('object-fit', 'contain');
   await expect(preview.locator('video')).toHaveCSS('transform', 'none');
-  await dialog.getByRole('button', { name: 'Кадр 4:3', exact: true }).click();
+  await dialog.getByRole('button', { name: 'Квадрат 1:1', exact: true }).click();
   await expect(preview.locator('video')).toHaveCSS('object-fit', 'cover');
   expect(await position()).toBe(selectedPosition);
   await dialog.getByRole('button', { name: 'Воспроизвести предпросмотр' }).click();
@@ -196,7 +196,7 @@ async function exerciseCropScenario({ page }, info) {
   expect(db.writes).toHaveLength(0);
   await dialog.getByRole('button', { name: 'Применить', exact: true }).click();
   await expect(dialog).toBeHidden();
-  await expect(crop).toContainText('Выбран кадр 4:3');
+  await expect(crop).toContainText('Выбран квадратный кадр 1:1');
   expect(db.writes).toHaveLength(0);
   await editor.getByRole('button', { name: 'Сохранить', exact: true }).click();
   await expect(editor).toBeHidden();
@@ -323,7 +323,7 @@ test('iPhone WebKit editor preserves the selected frame and cancels unsaved chan
   } finally { await browser.close(); }
 });
 
-test('WebKit keeps 4:3 framing and lets the trainer close an unavailable video preview', async ({ baseURL }, info) => {
+test('WebKit keeps square framing and lets the trainer close an unavailable video preview', async ({ baseURL }, info) => {
   test.setTimeout(90_000);
   test.skip(info.project.name !== 'desktop-chromium', 'Run the WebKit layout check once.');
   const browser = await webkit.launch();
@@ -334,7 +334,7 @@ test('WebKit keeps 4:3 framing and lets the trainer close an unavailable video p
     const frame = page.getByTestId('workout-exercise-video-frame');
     await expect(frame).toBeVisible({ timeout: 40_000 });
     const box = await frame.boundingBox();
-    expect(box.width / box.height).toBeCloseTo(4 / 3, 2);
+    expect(box.width / box.height).toBeCloseTo(1, 2);
     await expect(frame.locator('video')).toHaveCSS('object-fit', 'cover');
     await expect(frame.locator('video')).toHaveCSS('object-position', '20% 80%');
     const { library, editor, db, assertNoErrors } = await setup(page);

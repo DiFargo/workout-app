@@ -15,7 +15,7 @@ async function saved(page) {
   await expect(page.getByTestId("profile-settings-dialog").getByRole("status")).toHaveText("Настройки сохранены");
 }
 
-test("independent workout, photo, measurement preferences persist and test delivery is explicit", async ({ page }, info) => {
+test("independent workout, photo, weight and measurement preferences persist", async ({ page }, info) => {
   const dialog = await open(page);
   await page.screenshot({ path: info.outputPath("notifications-iphone17pro.png") });
   const offsets = dialog.getByRole("group", { name: "Когда напоминать о тренировке" });
@@ -27,27 +27,36 @@ test("independent workout, photo, measurement preferences persist and test deliv
   await saved(page);
   await dialog.getByRole("group", { name: "Период фото прогресса" }).getByRole("button", { name: "7 дней", exact: true }).click();
   await saved(page);
+  await dialog.getByRole("switch", { name: "Взвешивание", exact: true }).click();
+  await saved(page);
+  const weightPeriod = dialog.getByRole("group", { name: "Период напоминания о взвешивании" });
+  await expect(weightPeriod.getByRole("button", { name: "7 дней", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await weightPeriod.getByRole("button", { name: "30 дней", exact: true }).click();
+  await saved(page);
+  await saved(page);
   await dialog.getByRole("switch", { name: "Замеры тела", exact: true }).click();
   await saved(page);
   await dialog.getByRole("group", { name: "Период замеров тела" }).getByRole("button", { name: "30 дней" }).click();
   await saved(page);
-  const time = dialog.getByLabel("Время для фото и замеров");
+  const time = dialog.getByLabel("Время для фото, веса и замеров");
   await time.fill("18:35");
   await time.blur();
   await saved(page);
   await dialog.getByRole("switch", { name: "Тренировки", exact: true }).click();
   await saved(page);
   await expect(dialog.getByRole("switch", { name: "Фото прогресса", exact: true })).toHaveAttribute("aria-checked", "true");
+  await expect(dialog.getByRole("switch", { name: "Взвешивание", exact: true })).toHaveAttribute("aria-checked", "true");
   await expect(dialog.getByRole("switch", { name: "Замеры тела", exact: true })).toHaveAttribute("aria-checked", "true");
   const result = JSON.parse(await page.getByTestId("profile-sheets-result").textContent());
   expect(result.scheduledDates).toEqual(["2026-09-18"]);
   expect(result.workoutTime).toBe("18:00");
   expect(result.reminderEnabled).toBe(false);
-  expect(result.progressReminderSettings).toMatchObject({ photoEnabled: true, measurementsEnabled: true, photoIntervalDays: 7, measurementsIntervalDays: 30, reminderTime: "18:35" });
+  expect(result.progressReminderSettings).toMatchObject({ photoEnabled: true, weightEnabled: true, measurementsEnabled: true,
+    photoIntervalDays: 7, weightIntervalDays: 30, measurementsIntervalDays: 30, reminderTime: "18:35" });
   await page.getByTestId("profile-settings-close").click();
   await page.getByRole("button", { name: "Открыть настройки" }).click();
   await expect(dialog.getByRole("switch", { name: "Тренировки", exact: true })).toHaveAttribute("aria-checked", "false");
-  await expect(dialog.getByLabel("Время для фото и замеров")).toHaveValue("18:35");
+  await expect(dialog.getByLabel("Время для фото, веса и замеров")).toHaveValue("18:35");
   await dialog.getByRole("button", { name: "Отправить тестовое напоминание" }).click();
   await expect(dialog.getByRole("status")).toHaveText("Тестовое напоминание отправлено в Telegram");
   await expect(page.getByTestId("profile-sheets-result")).toHaveText('{"testSent":true}');
@@ -75,7 +84,7 @@ test("clicking a reminder switch while time blur saves preserves both preference
   const dialog = await open(page);
   await dialog.getByRole("switch", { name: "Фото прогресса", exact: true }).click();
   await saved(page);
-  const time = dialog.getByLabel("Время для фото и замеров");
+  const time = dialog.getByLabel("Время для фото, веса и замеров");
   await time.fill("18:35");
   await time.focus();
   const workouts = dialog.getByRole("switch", { name: "Тренировки", exact: true });
@@ -87,7 +96,7 @@ test("clicking a reminder switch while time blur saves preserves both preference
   await page.getByTestId("profile-settings-close").click();
   await page.getByRole("button", { name: "Открыть настройки" }).click();
   await expect(workouts).toHaveAttribute("aria-checked", "false");
-  await expect(dialog.getByLabel("Время для фото и замеров")).toHaveValue("18:35");
+  await expect(dialog.getByLabel("Время для фото, веса и замеров")).toHaveValue("18:35");
 });
 
 test("queued offset clicks retain every change while time saves", async ({ page }) => {
@@ -96,7 +105,7 @@ test("queued offset clicks retain every change while time saves", async ({ page 
   await saved(page);
   await page.clock.install();
   await page.clock.pauseAt(new Date());
-  const time = dialog.getByLabel("Время для фото и замеров");
+  const time = dialog.getByLabel("Время для фото, веса и замеров");
   await time.fill("18:35");
   await time.focus();
   const offsets = dialog.getByRole("group", { name: "Когда напоминать о тренировке" });
@@ -112,7 +121,7 @@ test("queued offset clicks retain every change while time saves", async ({ page 
   await page.getByRole("button", { name: "Открыть настройки" }).click();
   await expect(offsets.getByRole("button", { name: "1 ч", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(offsets.getByRole("button", { name: "24 ч", exact: true })).toHaveAttribute("aria-pressed", "false");
-  await expect(dialog.getByLabel("Время для фото и замеров")).toHaveValue("18:35");
+  await expect(dialog.getByLabel("Время для фото, веса и замеров")).toHaveValue("18:35");
 });
 
 test("expanded settings scroll inside the sheet and all controls remain reachable", async ({ page }, info) => {

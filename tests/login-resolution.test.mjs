@@ -4,7 +4,9 @@ import test from "node:test";
 
 import {
   getLoginResolutionEndpoint,
-  resolveEmailForLogin
+  resolveEmailForLogin,
+  authenticateWithLoginAlias,
+  requestLoginAliasPasswordReset
 } from "../src/features/auth/loginResolution.js";
 
 test("email login does not call the alias endpoint", async () => {
@@ -24,27 +26,27 @@ test("email login does not call the alias endpoint", async () => {
   assert.equal(requestCount, 0);
 });
 
-test("login alias is resolved through the server endpoint", async () => {
+test("login alias exchanges credentials for only a custom token through the server endpoint", async () => {
   const requests = [];
-  const email = await resolveEmailForLogin({
+  const token = await authenticateWithLoginAlias({
     isEmail: false,
     email: "",
     loginAlias: "alfa"
-  }, {
+  }, "test-password", {
     hostname: "tren-85720.web.app",
     fetchImpl: async (url, options) => {
       requests.push({ url, options });
       return {
         ok: true,
         status: 200,
-        json: async () => ({ ok: true, email: "ALFA@Example.com" })
+        json: async () => ({ ok: true, customToken: "custom-token" })
       };
     }
   });
 
-  assert.equal(email, "alfa@example.com");
+  assert.equal(token, "custom-token");
   assert.equal(requests[0].url, "/api/auth/resolve-login");
-  assert.deepEqual(JSON.parse(requests[0].options.body), { login: "alfa" });
+  assert.deepEqual(JSON.parse(requests[0].options.body), { login: "alfa", password: "test-password" });
 });
 
 test("local preview uses the same-origin API path", () => {
@@ -56,11 +58,11 @@ test("local preview uses the same-origin API path", () => {
 
 test("rate-limited alias lookup maps to an actionable auth error", async () => {
   await assert.rejects(
-    resolveEmailForLogin({
+    authenticateWithLoginAlias({
       isEmail: false,
       email: "",
       loginAlias: "alfa"
-    }, {
+    }, "test-password", {
       fetchImpl: async () => ({
         ok: false,
         status: 429,
@@ -69,6 +71,18 @@ test("rate-limited alias lookup maps to an actionable auth error", async () => {
     }),
     (error) => error?.code === "auth/too-many-requests"
   );
+});
+
+test("legacy email resolution cannot disclose an alias email and reset sends only an alias action", async () => {
+  await assert.rejects(resolveEmailForLogin({ isEmail: false, loginAlias: "alfa" }), { code: "auth/invalid-credential" });
+  const requests = [];
+  await requestLoginAliasPasswordReset({ loginAlias: "alfa" }, { fetchImpl: async (url, options) => {
+    requests.push(JSON.parse(options.body)); return { ok: true, status: 200, json: async () => ({ ok: true }) };
+  } });
+  assert.deepEqual(requests, [{ login: "alfa", action: "reset-password" }]);
+  await assert.rejects(authenticateWithLoginAlias({ loginAlias: "alfa" }, "test-password", {
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({ ok: true, email: "private@example.test" }) })
+  }), { code: "auth/invalid-credential" });
 });
 
 test("auth client no longer reads loginAliases directly", () => {

@@ -89,3 +89,26 @@ test("rescheduling into an occupied day automatically shifts following workouts"
   );
   assert.deepEqual(savedPayload.workoutCalendar.scheduledDates, ["2026-09-03", "2026-09-05", "2026-09-07"]);
 });
+
+test("explicit reschedule clears only own reorder pins and retains chronological cascade and foreign slots", async () => {
+  const ownWorkouts = ["a", "b", "c"].map(id => ({ id, assignedProgramUpdatedAt: "current", assignedProgramAddedAt: "own" }));
+  const ownSlots = ["2026-11-10", "2026-11-14", "2026-11-12"].map((date, index) => ({
+    workoutId: ownWorkouts[index].id, date, status: "planned", assignedProgramUpdatedAt: "current",
+    assignedProgramAddedAt: "own", dateOrderPolicy: "workout_identity"
+  }));
+  const foreign = { workoutId: "other", date: "2026-12-01", assignedProgramUpdatedAt: "old", assignedProgramAddedAt: "foreign", dateOrderPolicy: "workout_identity", status: "completed" };
+  const calendar = { planRevision: 4, plannedWorkouts: [...ownSlots, foreign], scheduledDates: [...ownSlots.map(slot => slot.date), foreign.date] };
+  const original = structuredClone(calendar);
+  const result = await rescheduleClientWorkout({
+    auth: { currentUser: { uid: "synthetic-client" } }, db: {}, doc: () => "own-profile", plan: { workouts: ownWorkouts }, workoutId: "a", dateKey: "2026-11-14",
+    run: transactionFor(calendar), setWorkoutCalendar: () => {}, setScheduledDates: () => {}, setDraftDates: () => {}, persistCalendar: () => {}, showError: () => {}
+  });
+  assert.equal(result, true);
+  const saved = transactionFor.saved.workoutCalendar;
+  const own = saved.plannedWorkouts.filter(slot => slot.assignedProgramAddedAt === "own");
+  assert.deepEqual(own.map(slot => slot.date), ["2026-11-14", "2026-11-16", "2026-11-18"]);
+  assert.equal(own.some(slot => Object.hasOwn(slot, "dateOrderPolicy")), false);
+  assert.deepEqual(saved.plannedWorkouts.find(slot => slot.workoutId === "other"), foreign);
+  assert.equal(saved.planRevision, 5);
+  assert.deepEqual(calendar, original);
+});

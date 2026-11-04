@@ -127,6 +127,7 @@ export function createTrainerNavigationActions({
         openAdminBaseLibrary("programs");
         return;
       }
+      setTrainerNextSection("workouts");
       setTrainerProgramManagerOpen(true);
       setPage(APP_PAGES.ADMIN_WORKOUTS);
     },
@@ -135,6 +136,7 @@ export function createTrainerNavigationActions({
         openAdminBaseLibrary("exercises");
         return;
       }
+      setTrainerNextSection("library");
       setTrainerProgramManagerOpen(false);
       setTrainerWorkoutTab("library");
       setPage(APP_PAGES.ADMIN_WORKOUTS);

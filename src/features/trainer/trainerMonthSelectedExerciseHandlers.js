@@ -4,6 +4,7 @@ import { refreshTemplateExerciseCards } from "../../utils/trainerExerciseCards.j
 export function createTrainerMonthSelectedExerciseHandlers({
   adminActiveProgramId,
   adminExerciseEditSnapshotRef,
+  getAdminExerciseEditSnapshotRef = () => adminExerciseEditSnapshotRef,
   adminSelectedExerciseId,
   adminSelectedTemplateId,
   db,
@@ -35,7 +36,7 @@ export function createTrainerMonthSelectedExerciseHandlers({
       openMonthWorkoutContext.workout.id,
       exercise.id
     );
-    adminExerciseEditSnapshotRef.current = null;
+    getAdminExerciseEditSnapshotRef().current = null;
     setAdminSelectedExerciseId("");
   }
 

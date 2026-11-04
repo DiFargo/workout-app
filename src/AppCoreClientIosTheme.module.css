@@ -27,7 +27,7 @@
     --color-accent-strong: #315f91;
     --color-accent-contrast: #ffffff;
     --color-danger: #c43830;
-    --gradient-primary: #396ba6;
+    --gradient-primary: var(--ownset-action-gradient);
     --focus-ring: 0 0 0 3px rgba(47, 125, 104, 0.22);
     --shadow-card: none;
 
@@ -204,7 +204,7 @@
     --color-food-edit-page-action-muted: #617078;
     --color-food-edit-page-confirm-border: transparent;
     --color-food-edit-page-confirm: #ffffff;
-    --gradient-food-edit-page-confirm: #396ba6;
+    --gradient-food-edit-page-confirm: var(--ownset-action-gradient);
     --filter-food-edit-page-overlay: none;
     --shadow-food-edit-page-sheet: 0 18px 48px rgba(27, 35, 31, 0.16);
     --shadow-food-edit-page-close: none;
@@ -291,7 +291,7 @@
     --color-workout-history-meta: #617078;
     --color-workout-history-indicator: #617078;
     --color-workout-history-scrollbar: rgba(116, 121, 127, 0.35);
-    --background-workout-history-primary: #396ba6;
+    --background-workout-history-primary: var(--ownset-action-gradient);
     --color-workout-history-primary: #ffffff;
     --background-workout-history-exercise: #f5f7f8;
     --color-workout-history-detail-muted: #617078;
@@ -373,7 +373,7 @@
     --color-basic-quiz-stat-label: #617078;
     --color-basic-quiz-start: #ffffff;
     --color-basic-quiz-nav-icon-wide: #617078;
-    --gradient-basic-quiz-start: #396ba6;
+    --gradient-basic-quiz-start: var(--ownset-action-gradient);
     --shadow-basic-quiz-action: none;
     --shadow-basic-quiz-surface: none;
     --shadow-basic-quiz-field: none;
@@ -409,13 +409,13 @@
     --color-workout-readiness-mobile-back-border: rgba(57, 82, 91, 0.12);
     --background-workout-readiness-mobile-back: #edf1f3;
     --color-workout-readiness-mobile-back: #1c282e;
-    --background-workout-readiness-primary: #396ba6;
+    --background-workout-readiness-primary: var(--ownset-action-gradient);
     --shadow-workout-readiness-mobile-primary: none;
     --color-workout-readiness-primary: #ffffff;
 
     --background-workout-dialog-icon: #edf1f3;
     --color-workout-dialog-icon: #396ba6;
-    --background-workout-dialog-primary: #396ba6;
+    --background-workout-dialog-primary: var(--ownset-action-gradient);
     --shadow-workout-dialog-primary: none;
     --background-post-workout-badge: #edf1f3;
     --color-post-workout-badge: #396ba6;
@@ -456,7 +456,7 @@
     --shadow-workout-set-wheel-option-active: inset 0 0 0 1px rgba(57, 82, 91, 0.12);
     --color-workout-set-wheel-option-active: #396ba6;
     --shadow-workout-set-wheel-focus: 0 0 0 3px rgba(98, 117, 136, 0.18);
-    --gradient-workout-set-done: #396ba6;
+    --gradient-workout-set-done: var(--ownset-action-gradient);
     --gradient-workout-video-fallback: linear-gradient(160deg, #30363a 0%, #1c282e 72%);
 
     /* Profile sheets, credentials and settings. */
@@ -551,7 +551,7 @@
     --background-profile-credential-preview-icon: #edf1f3;
     --color-profile-credential-primary: #ffffff;
     --color-profile-credential-primary-border: transparent;
-    --background-profile-credential-primary: linear-gradient(135deg, #396ba6, #315f91);
+    --background-profile-credential-primary: var(--ownset-action-gradient);
     --color-profile-credential-secondary: #315f91;
     --color-profile-credential-secondary-border: rgba(57, 82, 91, 0.12);
     --background-profile-credential-secondary: #edf1f3;
@@ -618,7 +618,7 @@
     --color-profile-avatar-crop-mask-border: #ffffff;
     --background-profile-avatar-crop-viewport: #1c282e;
     --color-profile-avatar-crop-primary: #ffffff;
-    --background-profile-avatar-crop-primary: linear-gradient(135deg, #396ba6, #315f91);
+    --background-profile-avatar-crop-primary: var(--ownset-action-gradient);
     --color-profile-avatar-crop-secondary: #315f91;
     --color-profile-avatar-crop-secondary-border: rgba(57, 82, 91, 0.12);
     --background-profile-avatar-crop-secondary: #edf1f3;
@@ -932,8 +932,8 @@
     --color-workout-set-list-surface: #ffffff;
     --color-workout-set-row-surface: transparent;
     --color-workout-set-row-border: transparent;
-    --color-workout-set-row-completed-border: transparent;
-    --gradient-workout-set-row-completed: transparent;
+    --color-workout-set-row-completed-border: #c8d9ed;
+    --gradient-workout-set-row-completed: #eef4fb;
     --color-workout-set-divider: rgba(57, 82, 91, 0.12);
     --color-workout-set-number-surface: #edf1f3;
     --color-workout-set-number-text: #396ba6;
@@ -942,10 +942,10 @@
     --color-workout-set-edit: #396ba6;
     --color-workout-set-edit-border: transparent;
     --color-workout-set-edit-surface: transparent;
-    --color-workout-set-complete: #a8d2c2;
-    --color-workout-set-complete-border: #cde6da;
-    --color-workout-set-complete-surface: #ffffff;
-    --gradient-workout-set-complete-active: #396ba6;
+    --color-workout-set-complete: #617078;
+    --color-workout-set-complete-border: transparent;
+    --color-workout-set-complete-surface: #edf1f3;
+    --gradient-workout-set-complete-active: var(--ownset-action-gradient);
     --color-workout-set-complete-active: #ffffff;
     --shadow-workout-set-row: none;
     --shadow-workout-set-row-completed: none;

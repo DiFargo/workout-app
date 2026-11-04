@@ -18,6 +18,10 @@ const {
   createCustomNutritionDish,
   createCustomNutritionFood,
   deletingNutritionFoodId,
+  deleteSelectedNutritionFood,
+  canDeleteSelectedNutritionFood,
+  nutritionDeleteConfirmOpen,
+  setNutritionDeleteConfirmOpen,
   dishIngredientExternalFoods,
   dishIngredientFallbackSuggestions,
   dishIngredientLoading,
@@ -49,6 +53,11 @@ const {
   nutritionCalendarOpen,
   nutritionCreateChoiceOpen,
   nutritionCurrentStreak,
+  nutritionHistoryReady = true,
+  nutritionHistoryLoading = false,
+  nutritionHistoryError,
+  onLoadNutritionHistory,
+  nutritionSyncRecoveryProps,
   nutritionDateKey,
   nutritionEditNote,
   nutritionEditPageOpen,
@@ -101,6 +110,7 @@ const {
   resetNutritionPhotoAiSearch,
   resetNutritionPhotoAiState,
   restoreNutritionFood,
+  removeNutritionFood,
   retryNutritionPhotoFromNotFound,
   roundMacro,
   saveNutritionPreferredUnit,
@@ -187,14 +197,22 @@ const {
     nutritionMeals,
     expandedNutritionMeals,
     nutritionWeekDates,
-    nutritionCurrentStreak
+    nutritionCurrentStreak,
+    nutritionHistoryReady
   });
 
   return (
     <NutritionPageView
+      syncRecoveryProps={nutritionSyncRecoveryProps}
       pickerOpen={nutritionPickerOpen}
       calendarOpen={nutritionCalendarOpen}
       activeMeal={activeNutritionMeal}
+      deleteConfirmProps={{
+        open: nutritionDeleteConfirmOpen,
+        foodName: selectedNutritionFood?.name,
+        onCancel: () => setNutritionDeleteConfirmOpen(false),
+        onConfirm: () => deleteSelectedNutritionFood(true)
+      }}
       renderBottomBar={renderTrainerMainBottomBar}
       headerProps={{
         nutritionDateTitle,
@@ -207,6 +225,10 @@ const {
         onSelectDate: selectNutritionDate
       }}
       calendarProps={{
+        historyReady: nutritionHistoryReady,
+        historyLoading: nutritionHistoryLoading,
+        historyError: nutritionHistoryError,
+        onLoadHistory: onLoadNutritionHistory,
         monthLabel: nutritionCalendarMonthLabel,
         days: nutritionCalendarDays,
         onClose: () => setNutritionCalendarOpen(false),
@@ -251,6 +273,9 @@ const {
         onVoiceDone: finishNutritionVoiceResult || (() => {})
       }}
       diaryProps={{
+        undoDeleteItem: nutritionUndoDelete,
+        onUndoDelete: restoreNutritionFood,
+        onRemoveFood: removeNutritionFood,
         nutritionZoukExpanded,
         nutritionZoukFoodsCount,
         nutritionMeals,
@@ -280,6 +305,9 @@ const {
         onSwipeCancel: handleNutritionFoodSwipeCancel
       }}
       mealModalProps={{
+        undoDeleteItem: nutritionUndoDelete,
+        onUndoDelete: restoreNutritionFood,
+        onRemoveFood: removeNutritionFood,
         activeMeal: activeNutritionMeal,
         foods: activeNutritionMealFoods,
         stats: activeNutritionMealStats,
@@ -302,6 +330,10 @@ const {
         onSwipeCancel: handleNutritionFoodSwipeCancel
       }}
       planDetailsProps={{
+        nutritionHistoryReady,
+        nutritionHistoryLoading,
+        nutritionHistoryError,
+        onLoadNutritionHistory,
         isExpanded: isAiNutritionPlanExpanded,
         isCaloriesOverGoal,
         goalText: aiNutritionGoalText,
@@ -351,8 +383,11 @@ const {
           }
         },
         product: {
+          onDelete: canDeleteSelectedNutritionFood?.() &&
+            (!editingNutritionItemId || String(editingNutritionItemId).startsWith("my:"))
+            ? () => deleteSelectedNutritionFood(false) : undefined,
           selectedFood: selectedNutritionFood,
-          isEditing: Boolean(editingNutritionItemId),
+          isEditing: Boolean(editingNutritionItemId && !String(editingNutritionItemId).startsWith("my:")),
           editPageOpen: nutritionEditPageOpen,
           meals: nutritionMeals,
           mealId: nutritionMeal,

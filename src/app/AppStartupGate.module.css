@@ -1,4 +1,164 @@
-:global {
+/* Access gates are local module classes used directly by AppStartupGate. */
+.pendingAccessGate {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px)) 16px max(24px, env(safe-area-inset-bottom), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px));
+  background: #f2f2f7;
+  color: #1c1c1e;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+.pendingAccessCard {
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  padding: 28px 22px 22px;
+  border: 1px solid rgba(60, 60, 67, .12);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(28, 28, 30, .08);
+}
+
+.pendingAccessCard > img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+}
+
+.pendingAccessEyebrow {
+  display: block;
+  color: #3c6faa;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-align: center;
+}
+
+.pendingAccessCard h1 {
+  margin: 9px 0 10px;
+  font-size: clamp(23px, 6vw, 28px);
+  line-height: 1.12;
+  letter-spacing: -.03em;
+  text-align: center;
+}
+
+.pendingAccessDescription,
+.pendingAccessHint {
+  margin: 0;
+  color: #636366;
+  font-size: 15px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.pendingAccessFeatures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 16px 0;
+}
+
+.pendingAccessFeatures > div {
+  position: relative;
+  min-width: 0;
+  min-height: 70px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 3px;
+  border: 1px solid rgba(60, 60, 67, .08);
+  border-radius: 15px;
+  background: #f2f2f7;
+  color: #636366;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.pendingAccessFeatures > div > svg:first-child {
+  color: #3c6faa;
+}
+
+.pendingAccessFeatures > div > svg:last-child {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 11px;
+  height: 11px;
+  color: #8e8e93;
+}
+
+.pendingAccessActions {
+  display: grid;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.pendingAccessActions button,
+.pendingAccessActions a {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 15px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 720;
+  cursor: pointer;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.4;
+  touch-action: manipulation;
+}
+
+.pendingAccessPrimary {
+  background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%));
+  color: #fff;
+}
+
+.pendingAccessSecondary {
+  background: transparent;
+  color: #636366;
+}
+
+.pendingAccessActions button:focus-visible,
+.pendingAccessActions a:focus-visible {
+  outline: 3px solid rgba(60, 111, 170, .38);
+  outline-offset: 2px;
+}
+
+.pendingAccessActions button:disabled,
+.pendingAccessActions a[aria-disabled="true"] { opacity: .5; cursor: default; }
+.pendingAccessError,
+.pendingAccessNotice { margin: 16px 0; padding: 12px; border-radius: 12px; font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+.pendingAccessError { color: #b23c45; background: #fff1f2; border: 1px solid #f1d5d9; }
+.pendingAccessNotice { color: #1c1c1e; background: #efeff4; }
+
+.pendingAccessHelp {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f2f2f7;
+}
+
+.pendingAccessHelp h2 { margin: 0 0 8px; font-size: 16px; font-weight: 650; }
+.pendingAccessHelp p { margin: 8px 0 0; color: #636366; font-size: 13px; line-height: 1.45; }
+.pendingAccessHelp a { color: #3c6faa; text-decoration: underline; text-underline-offset: 2px; }
+.pendingAccessIdentity { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 8px 10px; border-radius: 12px; background: #fff; }
+.pendingAccessIdentity > span { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.pendingAccessIdentity small { color: #636366; font-size: 11px; }
+.pendingAccessIdentity code { color: #1c1c1e; font-size: 14px; overflow-wrap: anywhere; user-select: text; }
+.pendingAccessIdentity button { flex: 0 0 44px; width: 44px; min-height: 44px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 12px; background: #efeff4; color: #3c6faa; cursor: pointer; }
+.pendingAccessIdentity button:focus-visible { outline: 3px solid #3c6faa; outline-offset: 2px; }
+
 /* A signed-in account must never fall back to the client UI before its
    server-side role has been verified. */
 .roleAccessGate {
@@ -61,11 +221,12 @@
 
 .roleAccessGateCard button.primary {
   border-color: #2f7d68;
-  background: #2f7d68;
+  background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%));
   color: #fff;
 }
 
 /* Profile body metrics and first setup core surfaces. */
+:global {
 .profileBodyMetricsCard {
   width: 100%;
   margin: 14px 0 16px;

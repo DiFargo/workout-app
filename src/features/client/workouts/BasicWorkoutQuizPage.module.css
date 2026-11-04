@@ -1655,17 +1655,52 @@
   50% { transform: scale(1.06); opacity: 0.72; }
 }
 
+.page.accessPage.page,
+:global(:root[data-app-theme="warm-light"]) .page.accessPage.page {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 0;
+  padding: 0 16px calc(86px + env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
+}
+
+.page.accessPage .topBar.topBar {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.accessPage > nav {
+  margin-bottom: 0;
+}
+
+.accessPage .accessGate {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-padding: 16px;
+}
+
+.accessPage .accessCard {
+  align-self: start;
+}
+
+.accessField input,
+.accessButton {
+  scroll-margin-block: 16px;
+}
+
 .accessGate {
-  min-height: calc(100dvh - 178px);
+  min-height: 0;
   display: grid;
-  align-content: center;
-  padding: 28px 0;
+  align-content: start;
+  padding: 12px 0 20px;
 }
 
 .accessCard {
   display: grid;
-  gap: 12px;
-  padding: 24px 20px;
+  gap: 10px;
+  padding: 18px 16px;
   color: var(--apple-text, #1c282e);
   background: #ffffff;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
@@ -1674,13 +1709,13 @@
 }
 
 .accessIcon {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
   color: var(--apple-blue-pressed, #315f91);
   background: #e8f3ed;
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
 .accessIcon svg {
@@ -1696,7 +1731,7 @@
 .accessCard h2 {
   margin: 0;
   color: var(--apple-text, #1c282e);
-  font-size: 25px;
+  font-size: 23px;
   font-weight: 780;
   letter-spacing: -0.6px;
   line-height: 1.12;
@@ -1780,7 +1815,7 @@
   color: #ffffff;
   font-size: 16px;
   font-weight: 750;
-  background: var(--apple-blue-pressed, #315f91);
+  background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 16px;
   box-shadow: 0 8px 16px rgba(40, 110, 91, 0.22);
@@ -1865,7 +1900,7 @@
 .page.wizardPage .wizardProgress { margin: 0; padding: 10px 2px 0; gap: 9px; color: var(--apple-blue,#376b91); }
 .page.wizardPage .wizardProgress>span { font-size: 12px; font-weight: 550; }
 .page.wizardPage .progressTrack { height: 3px; }
-.page.wizardPage .questionBody { display: block; padding: 26px 0 12px; scrollbar-width: none; }
+.page.wizardPage .questionBody { display: block; padding: 12px 0; scrollbar-width: none; }
 .page.wizardPage .questionBody>.eyebrow { display: none; }
 .page.wizardPage .questionBody>h2, .page.reviewPage .reviewHeading>h2 {
   font-size: 27px; font-weight: 670; line-height: 1.13; letter-spacing: -.85px; margin: 0; text-wrap: balance;
@@ -1875,8 +1910,8 @@
 .page.wizardPage .wizardActions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; border: 0; padding: 10px 0 12px; margin: 0; }
 .page.wizardPage .nextButton { min-height: 52px; border-radius: 18px; font-size: 16px; font-weight: 650; }
 .todayLink { background: transparent; border: 0; min-height: 44px; padding: 6px; color: var(--apple-blue,#376b91); font: inherit; font-size: 12px; cursor: pointer; }
-.page.wizardPage .optionGrid { margin-top: 20px; gap: 8px; }
-.page.wizardPage .optionButton { min-height: 63px; padding: 12px 44px 12px 14px; border-radius: 16px; }
+.page.wizardPage .optionGrid { margin-top: 16px; gap: 8px; grid-template-columns:1fr; }
+.page.wizardPage .optionButton { min-height: 60px; padding: 10px 44px 10px 14px; border-radius: 16px; }
 .page.wizardPage .optionButton strong { font-size: 15px; font-weight: 600; }
 .page.wizardPage .optionButton small { font-size: 12px; line-height: 1.4; }
 .page.wizardPage .detailsField { margin-top: 16px; }

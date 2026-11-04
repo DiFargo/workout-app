@@ -101,7 +101,8 @@
 .header p { text-transform: none; letter-spacing: 0; color: #617078; font-size: 12px; }
 .icon { color: #617078; background: #edf1f3; }
 .header button { width: 44px; height: 44px; }
-.selectLabel select { font-size: 16px; }
+.selectLabel select { box-sizing: border-box; min-width: 0; max-width: 100%; font-size: 16px; }
+.description code { overflow-wrap: anywhere; }
 .footer button { min-height: 44px; font-weight: 600; }
 @media (max-width: 360px) {
   .icon { display: none; }

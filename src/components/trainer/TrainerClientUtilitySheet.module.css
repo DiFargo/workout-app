@@ -24,6 +24,41 @@
   box-shadow: 0 24px 64px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.2);
 }
 
+.agenda {
+  width: min(1040px, 100%);
+}
+
+.programHistory {
+  width: min(1040px, 100%);
+}
+
+.workoutHistory {
+  width: min(880px, 100%);
+}
+
+.messages { width: min(840px, 100%); }
+.sheet.clientActions { width: min(520px, 100%); }
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet.clientActions {
+  width: min(520px, calc(100vw - 24px)) !important;
+}
+.sheet.messages .headerAction > button { background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); color: #fff; }
+
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet.messages {
+  width: min(840px, 100%) !important;
+}
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet.messages .headerAction button {
+  background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)) !important;
+  color: #fff !important;
+}
+
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet.workoutHistory {
+  width: min(880px, 100%) !important;
+}
+
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet.programHistory {
+  width: min(1040px, 100%) !important;
+}
+
 .header {
   flex: none;
   display: flex;
@@ -156,6 +191,10 @@
   font-size: 14px;
   font-weight: 750;
   cursor: pointer;
+}
+
+.footer:has([data-trainer-schedule-actions='true']) > .defaultClose {
+  display: none;
 }
 
 .content :global(.trainerClientNotifications) {
@@ -1231,4 +1270,9 @@
 @media(max-width:600px){
 :global(html[data-trainer-variant="v2"] body) .sheet.sheet .header {position:relative!important;padding-right:60px!important;}
 :global(html[data-trainer-variant="v2"] body) .sheet.sheet .close {position:absolute!important;right:10px!important;top:10px!important;}
+}
+
+/* The agenda needs a list and details side by side; other utility sheets keep their width. */
+:global(html[data-trainer-variant="v2"] body) .sheet.sheet.agenda {
+  width: min(1040px, 100%) !important;
 }

@@ -187,6 +187,7 @@ test("client primary chrome keeps shared alignment and draft progress inside its
 });
 
 test("client harness smoke: main, workouts, nutrition and cabinet stay usable", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-06-22T12:00:00Z"));
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await openClientHarness(page, "/?clientHarness=1");
 
@@ -293,6 +294,8 @@ test("workout header stays focused on the destination", async ({ page }) => {
 
 test("workout and nutrition week calendars share geometry and typography", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  // Keep today's workout and the second scheduled workout in the same week.
+  await page.clock.setFixedTime(new Date("2026-10-12T12:00:00Z"));
   await page.setViewportSize({ width: 390, height: 844 });
   await openClientHarness(page, "/?clientHarness=1&clientWorkoutOverviewState=today");
 
@@ -358,24 +361,28 @@ test("trainer card distinguishes messages, tasks and combined notifications", as
   }
 });
 
-test("dashboard hero reflects today's workout state", async ({ page }) => {
+test("dashboard tasks show only actions relevant to the workout day", async ({ page }) => {
   const cases = [
-    ["today", "Сегодня по плану", "Ноги и ягодицы", "Тренировка по вашему плану", "Открыть тренировку", "dumbbell"],
-    ["recovery", "День отдыха", "Отдых и восстановление", "Следующая: Тренировка 3 · 2 сентября", "Открыть план", "heart"],
-    ["missed", "Нужен перенос", "Пропущенная тренировка", "Тренировка 2 была запланирована на 31 августа", "Тренировки", "dumbbell"],
-    ["unscheduled", "Свободный день", "Сегодня без тренировки", "Дата следующей тренировки пока не назначена", "Открыть план", "heart"],
-    // The eyebrow identifies the scheduled day; completion is shown by the title.
-    ["complete", "Сегодня по плану", "Тренировка завершена", "План на сегодня выполнен — время восстановиться", "Тренировки", "heart"],
+    ["today", "Сегодня тренировка", "Ноги и ягодицы", true],
+    ["recovery", "", "", false],
+    ["missed", "Перенесите тренировку", "31 августа", true],
+    ["unscheduled", "Продолжите тренировочный план", "не запланировано", true],
+    ["complete", "", "", false],
+    ["empty", "Создайте первый план", "стартовую программу", true],
   ];
 
-  for (const [state, status, title, description, action, symbol] of cases) {
+  for (const [state, title, note, hasWorkoutTask] of cases) {
     await openClientHarness(page, `/?clientHarness=1&clientDashboardWorkoutState=${state}`);
-    const hero = page.locator("section").filter({ has: page.getByTestId("profile-summary-hero-title") });
-    await expect(hero.getByText(status, { exact: true })).toBeVisible();
-    await expect(page.getByTestId("profile-summary-hero-title")).toHaveText(title);
-    await expect(hero.locator(":scope > p")).toHaveText(description);
-    await expect(page.getByTestId("profile-summary-primary")).toHaveText(action);
-    await expect(page.getByTestId("profile-summary-day-illustration")).toHaveAttribute("data-day-symbol", symbol);
+    const summary = page.getByTestId("profile-summary-dashboard");
+    await expect(page.getByTestId("profile-summary-task-card")).toBeVisible();
+    await expect(page.getByTestId("profile-summary-task-title")).toHaveText("Что важно сегодня?");
+    const workoutTask = page.locator('[data-task-id="workout"]');
+    await expect(workoutTask).toHaveCount(hasWorkoutTask ? 1 : 0);
+    if (hasWorkoutTask) {
+      await expect(workoutTask).toContainText(title);
+      await expect(workoutTask).toContainText(note);
+    }
+    await expect(summary.getByTestId("profile-summary-task-count")).toBeVisible();
     await expectNoHorizontalOverflow(page);
   }
 });
@@ -510,6 +517,8 @@ test("workout overview uses schedule data and opens plan and history", async ({ 
 
 test("workout today card switches between planned, recovery, and unscheduled states", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  // Recovery is scheduled tomorrow; on Sunday its week excludes today's cell.
+  await page.clock.setFixedTime(new Date("2026-10-12T12:00:00Z"));
 
   await openClientHarness(page, "/?clientHarness=1&clientWorkoutOverviewState=today");
   await clickClientNav(page, "client-nav-workouts");
@@ -623,6 +632,7 @@ test("primary client tabs keep a shared adaptive width and an on-screen dock", a
 });
 
 test("progress uses real measurement deltas and opens body control modal", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-06-22T12:00:00Z"));
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await openClientHarness(page, "/?clientHarness=1");
   await clickClientNav(page, "client-nav-progress");
@@ -631,6 +641,9 @@ test("progress uses real measurement deltas and opens body control modal", async
   await expect(page.getByText("12 замеров")).toHaveCount(0);
   await expect(page.getByTestId("profile-progress-weight-delta")).toContainText("−1,3 кг");
   await expect(page.getByTestId("profile-progress-weight-card")).toContainText("88,8");
+  // May 22 is outside the last 30 days; the wider range retains both saved values.
+  await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["88,8"]);
+  await page.getByRole("tab", { name: "6 месяцев", exact: true }).click();
   await expect(page.getByRole("img", { name: "Динамика веса: от 90,1 до 88,8 килограмма" })).toBeVisible();
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["90,1", "88,8"]);
   await expect(page.getByTestId("profile-progress-achievement")).toContainText("12 тренировок завершено");

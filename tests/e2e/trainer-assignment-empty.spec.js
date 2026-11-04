@@ -33,7 +33,8 @@ for (const width of [320, 393, 1366, 1920]) {
     const modal = page.getByRole('dialog', { name: 'Корректировка под клиента', exact: true });
     await expect(modal).toBeVisible();
     const blank = modal.locator('article').filter({ hasText: 'Разгибание рук на верхнем блоке' });
-    await expect(blank).toContainText('Рабочий вес не указан');
+    await expect(blank).toContainText('План новой программы · рабочий вес не указан');
+    await expect(blank).toContainText('Для поправки сначала укажите рабочие веса в программе.');
     await expect(blank.locator('input')).toHaveCount(0);
     await expect(modal.getByLabel('Поправка веса для упражнения Жим ногами', { exact: true })).toBeVisible();
     await expect(modal.locator('article').filter({ hasText: 'Скручивания' })).toContainText('Коррекция веса не нужна');

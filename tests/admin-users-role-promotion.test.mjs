@@ -17,14 +17,17 @@ const handlerSource = await readFile(
 
 test("admin user directory exposes the trainer promotion action only for client accounts", () => {
   assert.match(workspaceSource, /role === "client" && typeof onPromoteToTrainer === "function"/);
-  assert.match(workspaceSource, /Назначить тренером/);
+  assert.match(workspaceSource, /Изменить роль на «Тренер»/);
+  assert.match(workspaceSource, /<summary>Управление ролью<\/summary>/);
   assert.match(workspaceSource, /onPromoteToTrainer=\{onPromoteToTrainer \? promoteToTrainer : undefined\}/);
 });
 
 test("admin promotion is confirmed before the server-side role operation is called", () => {
   assert.match(routeSource, /const promoteClientToTrainer = async \(client\) =>/);
-  assert.match(routeSource, /title: "Назначить тренером\?"/);
-  assert.match(routeSource, /confirmText: "Назначить тренером"/);
+  assert.match(routeSource, /title: "Изменить роль на «Тренер»\?"/);
+  assert.match(routeSource, /confirmText: "Изменить роль на «Тренер»"/);
+  assert.match(routeSource, /ID: \$\{targetId\}/);
+  assert.ok(routeSource.indexOf("await showAppConfirm(") < routeSource.indexOf("await updateAdminUserRole("));
   assert.match(routeSource, /await updateAdminUserRole\(\{ uid: targetId, role: "trainer" \}\)/);
   assert.match(routeSource, /onPromoteToTrainer=\{promoteClientToTrainer\}/);
 });

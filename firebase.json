@@ -86,6 +86,29 @@
     ],
     "rewrites": [
       {
+        "source": "/api/admin/security-key",
+        "function": { "functionId": "adminSecurityKeys", "region": "europe-west1" }
+      },
+      {
+        "source": "/api/trainer-program-assignment-delete",
+        "function": { "functionId": "deleteEmptyClientProgramAssignment", "region": "europe-west1" }
+      },
+      {
+        "source": "/api/client-loading-snapshot",
+        "function": { "functionId": "clientLoadingSnapshot", "region": "europe-west1" }
+      },
+      {
+        "source": "/api/nutrition/storage",
+        "function": { "functionId": "nutritionStorage", "region": "europe-west1" }
+      },
+      {
+        "source": "/api/exercise-video-access",
+        "function": {
+          "functionId": "exerciseVideoAccess",
+          "region": "europe-west1"
+        }
+      },
+      {
         "source": "/api/trainer-exercise-cards",
         "function": {
           "functionId": "trainerExerciseCards",
@@ -180,6 +203,13 @@
         "source": "/api/telegram/miniapp-login",
         "function": {
           "functionId": "telegramMiniAppLogin",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/api/telegram/set-webhook",
+        "function": {
+          "functionId": "telegramSetWebhook",
           "region": "europe-west1"
         }
       },

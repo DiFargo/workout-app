@@ -199,6 +199,7 @@ export default function FoodSearchPage({
           />
         ) : (
           <FoodSearchResults
+            onClearSearch={onSearchReset}
             search={search}
             searchTab={searchTab}
             photoAnalyzing={photoAnalyzing}

@@ -52,15 +52,16 @@ test("startup does not restart when App Check or a service worker becomes ready"
   assert.doesNotMatch(worker, /self\.skipWaiting\(\)/);
 });
 
-test("service worker has bounded runtime, nutrition and video caches", async () => {
+test("service worker bounds non-sensitive caches and never persists exercise media", async () => {
   const source = await readFile(sourceUrl("public/sw.js"), "utf8");
 
   assert.match(source, /RUNTIME_CACHE_MAX_ENTRIES = 32/);
   assert.match(source, /NUTRITION_CATALOG_CACHE_MAX_ENTRIES = 8/);
-  assert.match(source, /WORKOUT_VIDEO_CACHE_MAX_ENTRIES = 4/);
-  assert.match(source, /MAX_CACHEABLE_VIDEO_BYTES = 20 \* 1024 \* 1024/);
   assert.match(source, /function enforceCacheEntryLimit/);
   assert.match(source, /url\.pathname\.startsWith\("\/nutrition-catalog\/"\)/);
-  assert.match(source, /slice\(0, WORKOUT_VIDEO_CACHE_MAX_ENTRIES\)/);
+  assert.match(source, /request\.destination === "video"/);
+  assert.match(source, /url\.searchParams\.has\("X-Goog-Signature"\)/);
+  assert.match(source, /"workout-videos-"/); // Remove old cached copies on activation.
+  assert.doesNotMatch(source, /caches\.open\(WORKOUT_VIDEO_CACHE\)|PREFETCH_WORKOUT_VIDEOS/);
   assert.doesNotMatch(source, /response\.status === 200 \|\| response\.type === "opaque"/);
 });

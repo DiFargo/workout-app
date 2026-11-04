@@ -298,3 +298,16 @@
     gap: 6px;
   }
 }
+.privacyLink {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--apple-surface, #fff);
+  color: var(--apple-blue, #3c6faa);
+  font-size: 14px;
+  line-height: 1.4;
+  text-underline-offset: 3px;
+}
+.privacyLink:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }

@@ -1,17 +1,21 @@
 export function toPersonalNutritionFood(row) {
   const n = row.nutrition;
+  const isManufacturer = row.sourceType === "manufacturer";
+  const isReference = row.sourceType === "reference";
+  const source = isReference ? "USDA FoodData Central" : isManufacturer ? "Производитель" : row.sourceType === "gemini" ? "Список Gemini" : "Open Food Facts";
   return {
     id: `personal-${row.id}`, name: row.name, brand: row.brand, aliases: row.aliases,
     barcode: row.barcodes[0] || "", category: row.category,
     calories: n.kcal, protein: n.protein, fat: n.fat, carbs: n.carbs,
-    portion: n.basis === "unknown" ? "Уточните единицу КБЖУ" : "100 г",
+    portion: n.basis === "unknown" ? "Уточните единицу КБЖУ" : n.basis === "100ml" ? "100 мл" : "100 г",
     portionAmount: n.basis === "unknown" ? 0 : 100,
     nutritionBasisPending: n.basis === "unknown",
-    sourceType: row.sourceType === "gemini" ? "gemini_catalog" : "openfoodfacts_catalog",
-    source: row.sourceType === "gemini" ? "Список Gemini" : "Open Food Facts",
+    sourceType: isReference ? "basic_reference" : isManufacturer ? "manufacturer_catalog" : row.sourceType === "gemini" ? "gemini_catalog" : "openfoodfacts_catalog",
+    searchFallback: row.searchFallback === true,
+    source,
     requiresReview: true,
-    note: row.nutritionConflict ? "У источников различаются КБЖУ. Показаны значения основной записи." : "",
-    sources: row.sourceUrl ? [{title:"Open Food Facts",url:row.sourceUrl}] : [],
+    note: isReference ? "Базовый продукт без бренда. Справочные КБЖУ; для упакованного продукта точнее данные с его этикетки." : row.nutritionConflict ? "У источников различаются КБЖУ. Показаны значения основной записи." : "",
+    sources: row.sourceUrl ? [{title:isManufacturer ? row.sourceTitle || source : source,url:row.sourceUrl}] : [],
   };
 }
 

@@ -21,8 +21,11 @@ export async function uploadStorageFile(path, file, metadata) {
 
   await uploadBytes(storageRef, file, metadata);
 
+  const protectedVideo = /^(?:exercise-videos|template-exercise-videos)\//.test(path) ||
+    /^basic-exercise-assets\/[^/]+\/videos\//.test(path);
+  const privateProgressPhoto = /^progress-photos\/[^/]+\/[^/]+\/[^/]+$/.test(path);
   return {
     path: storageRef.fullPath,
-    url: await getDownloadURL(storageRef)
+    url: protectedVideo || privateProgressPhoto ? `gs://${storageRef.bucket}/${storageRef.fullPath}` : await getDownloadURL(storageRef)
   };
 }

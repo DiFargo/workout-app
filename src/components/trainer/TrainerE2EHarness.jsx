@@ -1,11 +1,14 @@
-import { isTrainerV2Path } from "../../app/cssVariant.js";
 import { setTrainerLibraryVariantDeleted, buildTrainerExerciseLibraryItems } from "../../utils/trainerExerciseLibrary.js";
 import { createTrainerPlanEditorHandlers } from "../../features/trainer/trainerPlanEditorHandlers.js";
+import { getTrainerExerciseSelectionPatch } from "../../features/trainer/trainerWorkoutEditHelpers.js";
 import { useRef, useState } from "react";
 import TrainerWorkspace, { TrainerShell } from "./TrainerWorkspace";
 import * as appConfig from "../../constants/appConfig";
 import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/trainerSubscriptionNotificationSettings";
 import { exerciseCardLegacyKey } from "../../../functions/exerciseCards.js";
+import { resolveAgendaScheduleInput } from "../../utils/trainerScheduleAgenda.js";
+import { renewClientSubscription } from "../../utils/clientSubscription.js";
+import TrainerAdminCreateClientModal from "../../features/trainer/TrainerAdminCreateClientModal.jsx";
 
 const duplicateAuditMovements = [
   { id: "seated", name: "Отведение рук с гантелями сидя в наклоне", video: "/e2e-media/seated.mp4" },
@@ -14,6 +17,13 @@ const duplicateAuditMovements = [
 ];
 
 function TrainerE2EHarness({ ProgramManagerView }) {
+  const clientActionsAudit = new URLSearchParams(window.location.search).get("clientActionsAudit");
+  const [clientActionStatus, setClientActionStatus] = useState("");
+  const clientActionAttempts = useRef(0);
+  const progressSearchAudit = new URLSearchParams(window.location.search).has("progressSearchAudit");
+  const [earlierProgressLoaded, setEarlierProgressLoaded] = useState(false);
+  const programVideoAudit = new URLSearchParams(window.location.search).get("programVideoAudit") === "1";
+  const programAuditVideo = programVideoAudit ? "/e2e-media/program-video-audit.mp4" : "";
   const cardAudit = new URLSearchParams(window.location.search).has("cardAudit");
   const duplicateAudit = new URLSearchParams(window.location.search).has("libraryDuplicateAudit");
   const [exerciseCards, setExerciseCards] = useState(() => duplicateAudit ? duplicateAuditMovements.map(exercise => ({
@@ -23,9 +33,39 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   const sparsePreview = new URLSearchParams(window.location.search).has("sparsePreview");
   const assignmentPreview = new URLSearchParams(window.location.search).has("assignmentPreview");
   const draftAudit = new URLSearchParams(window.location.search).has("draftAudit");
+  const constructorCardsAudit = new URLSearchParams(window.location.search).has("constructorCardsAudit");
+  const familiarAudit = new URLSearchParams(window.location.search).get("clientFamiliarAudit");
+  const [familiarRetried, setFamiliarRetried] = useState(false);
+  const primaryScreensAudit = new URLSearchParams(window.location.search).has("primaryScreensAudit");
+  const libraryLoadAudit = new URLSearchParams(window.location.search).get("libraryLoadAudit");
+  const [libraryRetryComplete, setLibraryRetryComplete] = useState(false);
+  const libraryLoadPhase = libraryRetryComplete ? "ready" : libraryLoadAudit;
+  const libraryFixtureHasData = !libraryLoadPhase || ["ready", "refresh", "refresh-error"].includes(libraryLoadPhase);
+  const fixtureLibraryState = libraryLoadPhase ? {
+    templates: ["error", "refresh-error"].includes(libraryLoadPhase) ? "error" : ["loading", "refresh"].includes(libraryLoadPhase) ? "loading" : "ready",
+    cards: ["error", "refresh-error", "cards-error"].includes(libraryLoadPhase) ? "error" : ["loading", "refresh"].includes(libraryLoadPhase) ? "loading" : "ready",
+    templatesKnown: libraryFixtureHasData,
+    cardsKnown: libraryFixtureHasData
+  } : undefined;
+  const retryFixtureLibrary = () => setLibraryRetryComplete(true);
   const assignmentScheduleAudit = new URLSearchParams(window.location.search).has("assignmentScheduleAudit");
+  const orderRecoveryAudit = new URLSearchParams(window.location.search).has("orderRecoveryAudit");
   const draftSaveAttempts = useRef(0);
+  const assignmentAttempts = useRef(0);
+  const setupProgressAttempts = useRef(0);
+  const notificationSaveAttempts = useRef(0);
+  const scheduleSaveAttempts = useRef(0);
   const [summaryRetried, setSummaryRetried] = useState(false);
+  const [createClientOpen, setCreateClientOpen] = useState(false);
+  const inviteFlow = new URLSearchParams(window.location.search).has("inviteFlow");
+  const legacyInvite = new URLSearchParams(window.location.search).has("legacyInvite");
+  const inviteCreateAttempts = useRef(0);
+  const [inviteAttemptCount, setInviteAttemptCount] = useState(0);
+  const [inviteName, setInviteName] = useState("");
+  const [inviteLogin, setInviteLogin] = useState("");
+  const [inviteCredentials, setInviteCredentials] = useState(null);
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [inviteStatus, setInviteStatus] = useState("");
   const [yesterday] = useState(() => new Date(Date.now() - 86400000).toISOString().slice(0, 10));
   const APP_VERSION = appConfig?.APP_VERSION || "v0";
   const includeProgramAssignmentHistory = new URLSearchParams(window.location.search).get("programAssignments") === "1";
@@ -36,6 +76,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   const [activeWorkoutTab, setActiveWorkoutTab] = useState("plan");
   const [selectedProgramId, setSelectedProgramId] = useState("program_tren_plus");
   const [programManagerOpen, setProgramManagerOpen] = useState(false);
+  const programManagerBaselineRef = useRef(null);
   const [programLibraryTab, setProgramLibraryTab] = useState("overview");
   const [programCreateChoiceOpen, setProgramCreateChoiceOpen] = useState(false);
   const [programWorkoutId, setProgramWorkoutId] = useState("e2e_day_1");
@@ -101,10 +142,21 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         ...["2026-08-26", "2026-08-29", "2026-09-01", "2026-09-07"].map((date, index) => ({ workoutId: `old-${index}`, order: index + 1, date, status: "planned" })),
         ...Array.from({ length: 8 }, (_, index) => ({ workoutId: `new-${index}`, order: index + 1, date: `2026-09-${12 + index}`, status: "planned", assignedProgramAddedAt: "2026-09-10T06:31:00.000Z" }))
       ] }
+    } : {}),
+    ...(orderRecoveryAudit ? {
+      assignedProgramId: "program-order-recovery", assignedProgramName: "Проверка порядка",
+      assignedProgramAddedAt: "2026-10-17T10:00:00.000Z", assignedProgramUpdatedAt: "2026-10-17T10:00:00.000Z", assignedWorkoutCount: 4,
+      workoutCalendar: { plannedWorkouts: Array.from({ length: 4 }, (_, index) => ({
+        workoutId: `order-recovery-${index + 1}`, order: index + 1, index,
+        assignedProgramAddedAt: "2026-10-17T10:00:00.000Z", status: index < 3 ? "completed" : "planned", date: `2026-10-${20 + index}`
+      })) }
     } : {})
   });
   const layoutPreview = new URLSearchParams(window.location.search).get("layoutPreview") === "1";
-  const clients = layoutPreview ? [selectedClient, ...[
+  const clients = primaryScreensAudit ? [selectedClient,
+    { ...selectedClient, id: "primary_new", name: "Новый клиент", assignedProgramId: "", assignedProgramName: "", assignedWorkoutCount: 0, trainerSetupChecklist: {} },
+    { ...selectedClient, id: "primary_long", name: "Александра Константинопольская" }
+  ] : layoutPreview ? [selectedClient, ...[
     "Анна Константинопольская", "Михаил", "Александра Иванова", "Дмитрий", "Екатерина"
   ].map((name, index) => ({ ...selectedClient, id: `layout_client_${index}`, name }))] : [selectedClient];
   const history = [
@@ -119,7 +171,11 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
         { name: "Жим ногами", sets: [{ reps: 12, weight: 90 }, { reps: 12, weight: 90 }] },
-        { name: "Тяга нижнего блока", sets: [{ reps: 12, weight: 35 }] }
+        { name: "Тяга нижнего блока", sets: [{ reps: 12, weight: 35 }] },
+        ...(progressSearchAudit ? [
+          { name: "Сгибание ног в тренажёре", sets: [{ reps: 12, weight: 30 }] },
+          { name: "Жим лёжа со штангой", sets: [{ reps: 12, weight: 30 }] }
+        ] : [])
       ]
     },
     {
@@ -132,9 +188,18 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramId: "program_tren_plus",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
-        { name: "Жим ногами", sets: [{ reps: 12, weight: 70 }, { reps: 12, weight: 70 }] }
+        { name: "Жим ногами", sets: [{ reps: 12, weight: 70 }, { reps: 12, weight: 70 }] },
+        ...(progressSearchAudit ? [
+          { name: "Сгибание ног в тренажёре", sets: [{ reps: 12, weight: 30 }] },
+          { name: "Жим лёжа со штангой", sets: [{ reps: 12, weight: 35 }] }
+        ] : [])
       ]
     },
+    ...(progressSearchAudit && earlierProgressLoaded ? [
+      ["2026-05-05", 50], ["2026-05-19", 60], ["2026-06-01", 65], ["2026-06-10", 85]
+    ].map(([date, weight], index) => ({ id: `progress-earlier-${index}`, date: `${date}T18:00:00.000Z`,
+      workoutName: "Ранняя тестовая тренировка", exercises: [{ name: "жим ногами", sets: [{ reps: 12, weight }, { reps: 12, weight }] }]
+    })) : []),
     ...(new URLSearchParams(window.location.search).get("completedHistoryVersionMismatch") === "1" ? [{
       id: "history_completed_id_mismatch",
       workoutId: "e2e_day_3",
@@ -212,7 +277,12 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     { id: "library-side-b", name: "Разведения гантелей в стороны", video: "/e2e-media/side-b.mp4" },
     { id: "library-custom", name: "Авторское упражнение" }
   ].map((exercise) => ({ ...exercise, sets: [{ reps: "12", weight: "20" }], requiresWeight: true })) : [];
-  const [workouts, setWorkouts] = useState(assignmentScheduleAudit ? Array.from({ length: 8 }, (_, index) => ({
+  const [workouts, setWorkouts] = useState(orderRecoveryAudit ? [3, 0, 1, 2].map(index => ({
+    id: `order-recovery-${index + 1}`, name: `Тренировка ${index + 1}`, order: index === 3 ? 4 : 33 + index, sortOrder: index === 3 ? 4 : 33 + index,
+    status: index < 3 ? "completed" : "planned", assignedProgramId: "program-order-recovery", assignedProgramName: "Проверка порядка",
+    assignedProgramAddedAt: "2026-10-17T10:00:00.000Z", assignedProgramUpdatedAt: "2026-10-17T10:00:00.000Z",
+    exercises: [{ id: `order-exercise-${index}`, name: "Жим ногами", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "50" }] }]
+  })) : assignmentScheduleAudit ? Array.from({ length: 8 }, (_, index) => ({
     id: `new-${index}`, name: `Тренировка ${index + 1}`, status: "planned",
     assignedProgramId: "program_tren_plus", assignedProgramName: "tren+",
     assignedProgramAddedAt: "2026-09-10T06:31:00.000Z", assignedProgramUpdatedAt: "2026-09-10T06:31:00.000Z",
@@ -228,8 +298,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramAddedAt: "2026-06-10T10:00:00.000Z",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
-        { id: "e1", name: "Жим ногами", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "90" }, { reps: "12", weight: "90" }] },
-        { id: "e2", name: "Тяга нижнего блока", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "35" }] }
+        { id: "e1", name: "Жим ногами", video: programAuditVideo, requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "90" }, { reps: "12", weight: "90" }] },
+        { id: "e2", name: "Тяга нижнего блока", video: programAuditVideo, requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "35" }] }
       ]
     },
     {
@@ -241,7 +311,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramAddedAt: "2026-06-10T10:00:00.000Z",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
-        { id: "e3", name: new URLSearchParams(window.location.search).has("mixedSets") ? "Жим лёжа с гантелями на наклонной скамье с медленным опусканием и паузой" : "Жим лёжа с гантелями", video: "", requiresWeight: true, rest: "90 сек", sets: new URLSearchParams(window.location.search).has("mixedSets") ? [{ reps: "12", weight: "20" }, { reps: "10", weight: "25" }, { reps: "8", weight: "30" }] : [{ reps: "12", weight: "20" }] }
+        { id: "e3", name: new URLSearchParams(window.location.search).has("mixedSets") ? "Жим лёжа с гантелями на наклонной скамье с медленным опусканием и паузой" : "Жим лёжа с гантелями", video: programAuditVideo, requiresWeight: true, rest: "90 сек", sets: new URLSearchParams(window.location.search).has("mixedSets") ? [{ reps: "12", weight: "20" }, { reps: "10", weight: "25" }, { reps: "8", weight: "30" }] : [{ reps: "12", weight: "20" }] }
       ]
     },
     {
@@ -254,7 +324,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramAddedAt: "2026-06-10T10:00:00.000Z",
       assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
       exercises: [
-        { name: "Жим ногами", video: "", requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "70" }, { reps: "12", weight: "70" }] }
+        { name: "Жим ногами", video: programAuditVideo, requiresWeight: true, rest: "90 сек", sets: [{ reps: "12", weight: "70" }, { reps: "12", weight: "70" }] }
       ]
     },
     ...(includeProgramAssignmentHistory ? [{
@@ -271,7 +341,14 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       ]
     }] : [])
   ]);
-  const archivedWorkouts = [
+  const [archivedWorkouts, setArchivedWorkouts] = useState([
+    ...(new URLSearchParams(window.location.search).get("emptyHistoricalProgram") === "1" ? [{
+      id: "e2e_old_empty", name: "Тренировка 1", status: "planned",
+      assignedProgramId: "old_empty", assignedProgramName: "Старая пустая программа",
+      assignedProgramAddedAt: "2026-04-01T10:00:00.000Z", assignedProgramUpdatedAt: "2026-04-01T10:00:00.000Z",
+      assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active",
+      exercises: [{ id: "old_empty_ex", name: "Приседания", sets: [{ reps: "12", weight: "40" }] }]
+    }] : []),
     {
       id: "e2e_archived_day_1",
       name: "Тренировка 1",
@@ -310,7 +387,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       assignedProgramUpdatedAt: "basic:client-plan",
       exercises: [{ id: "basic_e1", name: "Приседания", rest: "90 сек", sets: [{ reps: "10", weight: "40" }] }]
     }] : [])
-  ];
+  ]);
   const clientSummaries = {
     client_e2e: {
       assignedProgramId: "program_tren_plus",
@@ -330,6 +407,20 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   if (layoutPreview) {
     clients.slice(1).forEach(client => { clientSummaries[client.id] = { ...clientSummaries.client_e2e }; });
   }
+  if (primaryScreensAudit) {
+    const today = new Date().toISOString();
+    clientSummaries.client_e2e.lastNutritionAt = today;
+    clientSummaries.client_e2e.recentEvents = [{ id: "primary_event", type: "nutrition", date: today }];
+    clientSummaries.primary_new = { assignedProgramId: "", assignedWorkoutCount: 0, weeklyProgressScore: null, nutritionDays7: null, sources: {} };
+    clientSummaries.primary_long = { ...clientSummaries.client_e2e, weeklyProgressScore: 0 };
+  }
+  const primaryActionCenter = primaryScreensAudit ? {
+    items: clients.map(client => ({ client, clientId: client.id, clientName: client.name, summary: clientSummaries[client.id] })),
+    priorityItems: [
+      { client: clients[1], clientId: clients[1].id, summary: clientSummaries.primary_new, status: { id: "noProgram" } },
+      { client: clients[2], clientId: clients[2].id, summary: clientSummaries.primary_long, attention: { type: "subscription", reason: "Осталась 1 тренировка. Проверьте дальнейший план и согласуйте с клиентом продление абонемента." } }
+    ]
+  } : null;
   const programTemplates = assignmentPreview ? [
     { id: "program_tren_plus", name: "Черновик программы", lifecycleStatus: "draft" },
     { id: "program_archived", name: "Архивная программа", lifecycleStatus: "archived" },
@@ -419,6 +510,14 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   }
 
   function navigate(nextSection) {
+    if (nextSection === "library") {
+      setProgramManagerOpen(false);
+      setActiveWorkoutTab("library");
+      setMode("workouts");
+      setActiveSection("library");
+      return;
+    }
+    setProgramManagerOpen(false);
     if (nextSection === "more") {
       setMode("cabinet");
       setActiveSection("more");
@@ -426,6 +525,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     }
     if (nextSection === "workouts") {
       setActiveWorkoutTab("plan");
+      programManagerBaselineRef.current = structuredClone(workouts);
+      setProgramManagerOpen(Boolean(ProgramManagerView));
     }
     setMode(nextSection);
     setActiveSection(nextSection);
@@ -447,17 +548,13 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         <div className="trainerNextPage trainerNextWorkoutPage trainerNextProgramsTab">
           <div className="trainerNextDesktopPageHead">
             <div>
-              <h1>{programLibraryTab === "editor" ? "Редактор программы" : "Программы тренировок"}</h1>
-              <p>Создание программ и назначение клиентам</p>
+               <h1>{programLibraryTab === "editor" ? "Редактор шаблона" : "Шаблоны программ"}</h1>
+                <p>Общая основа для персональных планов клиентов</p>
             </div>
           </div>
           <header className="trainerNextMobileHeader">
-            <div className="trainerNextMobileTitle">{programLibraryTab === "editor" ? "Редактор программы" : isTrainerV2Path(window.location.pathname) ? "Программы" : "Библиотека программ"}</div>
+              <h1 className="trainerNextMobileTitle">{programLibraryTab === "editor" ? "Редактор шаблона" : "Шаблоны программ"}</h1>
           </header>
-          {programLibraryTab !== "editor" ? <div className="trainerNextPageTabs">
-            <button type="button" className="active" aria-pressed="true">Программы</button>
-            <button type="button">Библиотека упражнений</button>
-          </div> : null}
           <ProgramManagerView
             APP_PAGES={{ ADMIN: "admin" }}
             adminExerciseLibrary={workouts.flatMap((workout) => workout.exercises)}
@@ -468,7 +565,9 @@ function TrainerE2EHarness({ ProgramManagerView }) {
             adminProgramLibraryTab={programLibraryTab}
             adminSelectedExerciseId=""
             adminSelectedTemplateId={selectedProgramId}
-            adminTrainingTemplates={programTemplates}
+            adminTrainingTemplates={libraryFixtureHasData ? programTemplates : []}
+            trainerLibraryLoadState={fixtureLibraryState}
+            onRetryLibrary={retryFixtureLibrary}
             canUseAdminFeatures={() => false}
             createNewMonthProgramDraft={() => setProgramLibraryTab("editor")}
             deleteSelectedProgramFromLibrary={() => {}}
@@ -482,8 +581,10 @@ function TrainerE2EHarness({ ProgramManagerView }) {
             isTrainerNextWorkspace={() => true}
             loadAdminTrainingTemplates={() => {}}
             monthGroups={monthGroups}
-            normalizedMonthProgram={{ id: selectedProgramId, name: "tren+" }}
+            normalizedMonthProgram={{ id: selectedProgramId, ownerUid: "fixture-trainer", name: "tren+", months: monthGroups }}
+            refreshCurrentMonthProgram={() => { if (programManagerBaselineRef.current) setWorkouts(structuredClone(programManagerBaselineRef.current)); return true; }}
             openAdminProgramsOverview={() => setProgramLibraryTab("overview")}
+            openTrainerExerciseLibrary={() => navigate("library")}
             openProgramFromLibrary={() => setProgramLibraryTab("editor")}
             setAdminExerciseSearch={() => {}}
             setAdminOpenWorkoutId={setProgramWorkoutId}
@@ -494,16 +595,25 @@ function TrainerE2EHarness({ ProgramManagerView }) {
             setPage={() => {}}
             setTrainerProgramManagerOpen={setProgramManagerOpen}
             updateMonthProgramName={() => {}}
-            saveMonthProgramToLibrary={() => {}}
-            addMonthWorkout={() => {}}
-            updateMonthWorkout={() => {}}
+            saveMonthProgramToLibrary={() => { programManagerBaselineRef.current = structuredClone(workouts); return true; }}
+            addMonthWorkout={() => { if (constructorCardsAudit) setWorkouts(current => [...current, { id: `cards-day-${Date.now()}`, name: `Тренировка ${current.length + 1}`, exercises: [] }]); }}
+            updateMonthWorkout={(_block, _week, workoutId, patch) => { if (constructorCardsAudit) setWorkouts(current => current.map(workout => workout.id === workoutId ? { ...workout, ...patch } : workout)); }}
             confirmRemoveMonthWorkout={() => {}}
-            duplicateMonthWorkout={() => {}}
-            addMonthExercise={() => {}}
-            updateMonthExercise={() => {}}
+            duplicateMonthWorkout={(_block, _week, workoutId) => { if (constructorCardsAudit) setWorkouts(current => {
+              const source = current.find(workout => workout.id === workoutId);
+              if (!source) return current;
+              return [...current, { ...structuredClone(source), id: `cards-copy-${Date.now()}`, name: `${source.name} — копия` }];
+            }); }}
+            addMonthExercise={(_block, _week, workoutId, source) => source ? addHarnessExercise(workoutId, getTrainerExerciseSelectionPatch(source)) : false}
+            updateMonthExercise={(_block, _week, workoutId, exerciseId, patch) => setWorkouts(current => current.map(workout => workout.id === workoutId
+              ? { ...workout, exercises: workout.exercises.map(exercise => exercise.id === exerciseId ? { ...exercise, ...patch } : exercise) } : workout))}
             updateMonthExerciseName={() => {}}
-            removeMonthExercise={() => {}}
-            duplicateMonthExercise={() => {}}
+            removeMonthExercise={(_block, _week, workoutId, exerciseId) => { if (constructorCardsAudit) setWorkouts(current => current.map(workout => workout.id === workoutId ? { ...workout, exercises: workout.exercises.filter(exercise => exercise.id !== exerciseId) } : workout)); }}
+            duplicateMonthExercise={(_block, _week, workoutId, exerciseId) => { if (constructorCardsAudit) setWorkouts(current => current.map(workout => {
+              if (workout.id !== workoutId) return workout;
+              const source = workout.exercises.find(exercise => exercise.id === exerciseId);
+              return source ? { ...workout, exercises: [...workout.exercises, { ...structuredClone(source), id: `cards-exercise-copy-${Date.now()}` }] } : workout;
+            })); }}
             moveMonthExercise={() => {}}
             updateMonthExerciseSet={() => {}}
             addMonthExerciseSet={() => {}}
@@ -527,8 +637,44 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       return result;
     }
   });
+  function openHarnessInvite() {
+    setInviteName("");
+    setInviteLogin("");
+    setInviteCredentials(null);
+    setInviteStatus("");
+    inviteCreateAttempts.current = 0;
+    setInviteAttemptCount(0);
+    setCreateClientOpen(true);
+  }
+
+  async function createHarnessInvite(event, username) {
+    event?.preventDefault?.();
+    if (!inviteFlow) return false;
+    inviteCreateAttempts.current += 1;
+    setInviteAttemptCount(inviteCreateAttempts.current);
+    setInviteLoading(true);
+    setInviteStatus("");
+    await new Promise(done => window.setTimeout(done, 150));
+    setInviteLoading(false);
+    if (new URLSearchParams(window.location.search).has("inviteFailure") && inviteCreateAttempts.current === 1) {
+      setInviteStatus("Не удалось создать приглашение. Повтори попытку.");
+      return false;
+    }
+    const credentials = {
+      name: inviteName,
+      login: new URLSearchParams(window.location.search).has("existingInvite") ? "" : inviteLogin || "fixture.fit",
+      existingAccount: new URLSearchParams(window.location.search).has("existingInvite"),
+      telegramUsername: username.replace(/^@/, "").toLowerCase(),
+      botStartUrl: "https://t.me/zmena_teleg_bot?start=invite_fixture",
+      shareUrl: "https://example.invalid/fixture-invite"
+    };
+    setInviteCredentials(credentials);
+    return credentials;
+  }
+
   return (
     <>
+    {inviteFlow ? <output id="trainer-e2e-meta" hidden data-invite-create-attempts={inviteAttemptCount} /> : null}
     {cardAudit ? <output hidden data-testid="card-prescription-snapshot">{JSON.stringify(cardTemplate)}</output> : null}
     {duplicateAudit ? <output hidden data-testid="card-library-snapshot">{JSON.stringify(exerciseCards)}</output> : null}
     <TrainerWorkspace
@@ -536,14 +682,16 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       mode={mode}
       activeSection={mode === "client" ? "clients" : activeSection}
       onNavigate={navigate}
-      onRefresh={() => {}}
+      onRefresh={() => { if (familiarAudit) setFamiliarRetried(true); }}
       trainerName="Beta"
       clients={clients}
       summariesLoading={new URLSearchParams(window.location.search).get("syncPreview") === "1"}
       onRetrySummary={() => setSummaryRetried(true)}
       clientSummaries={new URLSearchParams(window.location.search).has("partialSummary") && !summaryRetried ? { ...clientSummaries, client_e2e: { ...clientSummaries.client_e2e, trainerSummaryState: "partial", trainerSummaryReady: false, failedSources: ["history", "measurements"], sources: { history: { state: "error" }, measurements: { state: "error" } }, workouts7: null, lastWorkoutAt: null, completedWorkoutCount: null, nutritionDays7: null } } : clientSummaries}
-      counts={{ active: 1, attention: 0 }}
-      selectedClient={selectedClient}
+      actionCenter={primaryActionCenter}
+      counts={{ active: 1, attention: primaryScreensAudit ? 2 : 0 }}
+      selectedClient={progressSearchAudit ? { ...selectedClient, trainerHistoryHasMore: !earlierProgressLoaded } : familiarAudit === "error" ? { ...selectedClient, trainerNutritionLoadError: !familiarRetried } : selectedClient}
+      onLoadMoreHistory={progressSearchAudit ? async () => { setEarlierProgressLoaded(true); return true; } : undefined}
       selectedProfile={{
         goalLabel: "Рекомпозиция",
         goal: "recomp",
@@ -571,27 +719,27 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         setMode("clients");
         setActiveSection("clients");
       }}
-      onCreateClient={() => {}}
+      onCreateClient={openHarnessInvite}
       onCreateTask={() => {}}
       createClientState={{
-        open: false,
-        name: "",
-        login: "",
+        open: createClientOpen && !legacyInvite,
+        name: inviteName,
+        login: inviteLogin,
         password: "",
-        status: "",
-        credentials: null,
-        loading: false,
-        onClose: () => {},
-        onSubmit: () => {},
-        onNameChange: () => {},
-        onLoginChange: () => {},
+        status: inviteStatus,
+        credentials: inviteCredentials,
+        loading: inviteLoading,
+        onClose: () => setCreateClientOpen(false),
+        onSubmit: createHarnessInvite,
+        onNameChange: setInviteName,
+        onLoginChange: setInviteLogin,
         onPasswordChange: () => {},
         onGeneratePassword: () => {}
       }}
-      measurements={sparsePreview ? [{id:"one", date:yesterday, weight:66, values:{weight:66}}] : measurements}
+      measurements={familiarAudit ? [{id:"quick-weight", date:"2026-06-17", measurementType:"weight_checkin", weight:88.6, values:{weight:88.6}}, ...measurements] : sparsePreview ? [{id:"one", date:yesterday, weight:66, values:{weight:66}}] : measurements}
       history={sparsePreview ? [] : history}
       exerciseProgressReviews={exerciseProgressReviews}
-      nutritionDays={sparsePreview ? [{date:yesterday, totals:{calories:605,protein:65,fat:15,carbs:56}}] : nutritionDays}
+      nutritionDays={familiarAudit === "empty" ? [] : sparsePreview ? [{date:yesterday, totals:{calories:605,protein:65,fat:15,carbs:56}}] : nutritionDays}
       nutritionGoals={{ calories: 2300, protein: 180, fat: 70, carbs: 235 }}
       nutritionPlanOptions={nutritionPlanOptions}
       photos={sparsePreview ? [] : new URLSearchParams(window.location.search).has("photoCompare") ? [{ id: "p2", date: "2026-06-16", frontUrl: "" }, { id: "p1", date: "2026-06-01", frontUrl: "" }] : [{ id: "p1", date: "2026-06-01", frontUrl: "" }]}
@@ -611,11 +759,17 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         setTrainerSubscriptionNotificationSettings(next);
         return Promise.resolve(next);
       }}
-      onSaveNotifications={(settings = {}) => {
+      onSaveNotifications={async (settings = {}) => {
+        notificationSaveAttempts.current += 1;
+        document.documentElement.dataset.notificationSaveAttempts = String(notificationSaveAttempts.current);
+        if (new URLSearchParams(window.location.search).has("notificationSaveFailure") && notificationSaveAttempts.current === 1) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          return false;
+        }
         setSelectedClient((current) => settings.subscriptionOnly
           ? {
               ...current,
-              subscription: { ...(current.subscription || {}), ...(settings.subscription || {}) }
+              subscription: settings.renewSubscription ? renewClientSubscription(current.subscription || {}, settings.subscription || {}) : { ...(current.subscription || {}), ...(settings.subscription || {}) }
             }
           : {
               ...current,
@@ -628,13 +782,12 @@ function TrainerE2EHarness({ ProgramManagerView }) {
             });
         return true;
       }}
-      onSaveClientSetupProgress={(step, _client, checklist) => ({
-        ...checklist,
-        completedSteps: {
-          ...(checklist?.completedSteps || {}),
-          [step]: true
-        }
-      })}
+      onSaveClientSetupProgress={(step, _client, checklist) => {
+        setupProgressAttempts.current += 1;
+        document.documentElement.dataset.setupProgressAttempts = String(setupProgressAttempts.current);
+        if (new URLSearchParams(window.location.search).has("setupProgressFailure") && setupProgressAttempts.current === 1) return false;
+        return { ...checklist, completedSteps: { ...(checklist?.completedSteps || {}), [step]: true } };
+      }}
       onTestNotification={() => true}
       onConnectTelegram={() => {}}
       onOpenTelegramChat={() => {}}
@@ -653,6 +806,17 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }}
       telegramMessages={telegramMessages}
       onClientAction={(action, _client, payload) => {
+        if (clientActionsAudit && ["mark_test", "mark_real", "archive", "restore", "export_excel", "export_pdf", "delete"].includes(action)) {
+          clientActionAttempts.current += 1;
+          document.documentElement.dataset.clientActionAttempts = String(clientActionAttempts.current);
+          if (clientActionsAudit === "cancel") return false;
+          return new Promise(resolve => setTimeout(() => {
+            if (clientActionsAudit === "failure") {
+              setClientActionStatus("Не удалось выполнить действие клиента. Проверьте подключение и повторите попытку.");
+              resolve(false);
+            } else resolve(true);
+          }, 900));
+        }
         if (action === "resolve_client_messages") {
           setExerciseProgressReviews((current) => [{
             id: `message_resolution_${Date.now()}`,
@@ -688,12 +852,16 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }}
       workouts={sparsePreview ? [] : workouts}
       archivedWorkouts={sparsePreview ? [] : archivedWorkouts}
-      exerciseLibrary={cardAudit ? buildTrainerExerciseLibraryItems({}, [cardTemplate], { cards: exerciseCards, includeDeleted: true }) : workouts.flatMap((workout) => workout.exercises.map((exercise) => ({ ...exercise, librarySource: { type: "plan", workoutId: workout.id } })))}
+      exerciseLibrary={libraryFixtureHasData ? cardAudit ? buildTrainerExerciseLibraryItems({}, [cardTemplate], { cards: exerciseCards, includeDeleted: true }) : workouts.flatMap((workout) => workout.exercises.map((exercise) => ({ ...exercise, librarySource: { type: "plan", workoutId: workout.id } }))) : []}
+      trainerLibraryLoadState={fixtureLibraryState}
+      onRetryLibrary={retryFixtureLibrary}
       programTemplates={programTemplates}
       selectedProgramId={selectedProgramId}
       onSelectProgram={setSelectedProgramId}
       onAssignProgram={() => {
         if (assignmentPreview) throw Object.assign(new Error("template-changed"), { assignmentMessage: "Сначала подготовьте программу к назначению." });
+        assignmentAttempts.current += 1;
+        document.documentElement.dataset.assignmentAttempts = String(assignmentAttempts.current);
         const assignedAt = new Date().toISOString();
         const template = programTemplates.find((item) => item.id === selectedProgramId) || programTemplates[0];
         const assignmentWorkouts = [1, 2, 3].map((day) => ({
@@ -722,7 +890,14 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       onArchiveProgramAssignment={(assignment) => {
         setWorkouts((current) => current.map((workout) => workout.assignedProgramAddedAt === assignment.assignedAt && workout.assignedProgramId === assignment.programId
           ? { ...workout, assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "trainer_archived" } : workout));
+        setArchivedWorkouts((current) => current.map((workout) => workout.assignedProgramAddedAt === assignment.assignedAt && workout.assignedProgramId === assignment.programId
+          ? { ...workout, assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "trainer_archived" } : workout));
         if (assignment.status === "current") setSelectedClient((current) => ({ ...current, assignedProgramId: "", assignedProgramName: "", assignedWorkoutCount: 0, assignedProgramLifecycleStatus: "archived" }));
+        return true;
+      }}
+      onRestoreProgramAssignment={(assignment) => {
+        setWorkouts((current) => current.map((workout) => workout.assignedProgramAddedAt === assignment.assignedAt && workout.assignedProgramId === assignment.programId
+          ? { ...workout, assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active", assignedProgramArchivedAt: "" } : workout));
         return true;
       }}
       onDeleteProgramAssignment={(assignment) => {
@@ -730,46 +905,58 @@ function TrainerE2EHarness({ ProgramManagerView }) {
           workout.assignedProgramAddedAt !== assignment.assignedAt ||
           workout.assignedProgramId !== assignment.programId
         )));
+        setArchivedWorkouts((current) => current.filter((workout) => (
+          workout.assignedProgramAddedAt !== assignment.assignedAt || workout.assignedProgramId !== assignment.programId
+        )));
         return true;
       }}
       onOpenProgramManager={() => setProgramManagerOpen(true)}
       activeWorkoutTab={activeWorkoutTab}
       onWorkoutTabChange={setActiveWorkoutTab}
-      onSaveWorkoutSchedule={(dates, assignmentWorkouts = []) => {
+      onSaveWorkoutSchedule={(input, assignmentWorkouts = []) => {
+        scheduleSaveAttempts.current += 1;
+        if (new URLSearchParams(window.location.search).has("scheduleSaveFailure") && scheduleSaveAttempts.current === 1) return false;
+        const keyed = !Array.isArray(input) ? resolveAgendaScheduleInput(input, assignmentWorkouts, selectedClient.workoutCalendar?.plannedWorkouts || []) : null;
+        if (keyed && !keyed.ok) return false;
+        const dates = keyed ? keyed.cleanDates : input;
+        const scheduleWorkouts = keyed ? keyed.workouts : assignmentWorkouts;
         const assignmentWorkoutIds = new Set(assignmentWorkouts.map((workout) => workout.id));
         setSelectedClient((current) => ({
           ...current,
           workoutCalendar: {
             ...(current.workoutCalendar || {}),
+            ...(input.trainingDays ? { trainingDays: [...input.trainingDays] } : {}),
             scheduledDates: [...new Set([...(current.workoutCalendar?.scheduledDates || []), ...dates])].sort(),
             monthlyTrainingDates: [...new Set([...(current.workoutCalendar?.monthlyTrainingDates || []), ...dates])].sort(),
             plannedWorkouts: [
               ...(current.workoutCalendar?.plannedWorkouts || []).filter((item) => !assignmentWorkoutIds.has(item.workoutId)),
-              ...assignmentWorkouts.map((workout, index) => ({
+              ...(keyed ? keyed.plannedWorkouts : scheduleWorkouts.map((workout, index) => ({
                 workoutId: workout.id,
                 order: index + 1,
                 date: dates[index],
                 status: "planned",
                 assignedProgramAddedAt: workout.assignedProgramAddedAt,
                 assignedProgramUpdatedAt: workout.assignedProgramUpdatedAt
-              }))
+              })))
             ],
             updatedAt: new Date().toISOString()
           }
         }));
         setWorkouts((current) => current.map((workout) => {
-          const index = assignmentWorkouts.findIndex((item) => item.id === workout.id);
+          const index = scheduleWorkouts.findIndex((item) => item.id === workout.id);
+          const preserved = keyed?.plannedWorkouts[index];
           return index >= 0 ? {
             ...workout,
             scheduledDate: dates[index],
             plannedDate: dates[index],
             scheduleOrder: index + 1,
-            status: "planned"
+            status: preserved?.status || "planned",
+            movedToDate: preserved?.movedToDate || workout.movedToDate || ""
           } : workout;
         }));
         return true;
       }}
-      programStatus=""
+      programStatus={clientActionStatus}
       onUpdateWorkout={(workoutId, patch) => {
         if (!workoutId || !patch || typeof patch !== "object") return false;
         setWorkouts((current) => current.map((workout) => workout.id === workoutId
@@ -823,6 +1010,17 @@ function TrainerE2EHarness({ ProgramManagerView }) {
       }}
       onLogout={() => {}}
     />
+    {legacyInvite && createClientOpen ? <TrainerAdminCreateClientModal
+      adminCreateUserLoading={inviteLoading}
+      adminCreateUserStatus={inviteStatus}
+      adminCreatedCredentials={inviteCredentials}
+      adminNewUserEmail={inviteLogin}
+      adminNewUserName={inviteName}
+      createUserFromAdminPanel={createHarnessInvite}
+      setAdminCreateClientModalOpen={setCreateClientOpen}
+      setAdminNewUserEmail={setInviteLogin}
+      setAdminNewUserName={setInviteName}
+    /> : null}
     </>
   );
 }

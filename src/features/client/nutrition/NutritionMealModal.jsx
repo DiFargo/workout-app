@@ -1,5 +1,7 @@
-import { ChevronRight, Plus } from "lucide-react";
+import { ChevronRight, Plus, Trash2 } from "lucide-react";
 import styles from "./NutritionMealModal.module.css";
+import { formatRussianCount } from "../../../utils/russianCount.js";
+import NutritionUndoDeleteToast from "./NutritionUndoDeleteToast";
 
 export default function NutritionMealModal({
   activeMeal,
@@ -12,6 +14,9 @@ export default function NutritionMealModal({
   onClose,
   onAddFood,
   onEditFood,
+  onRemoveFood,
+  undoDeleteItem,
+  onUndoDelete,
   onSwipeStart,
   onSwipeMove,
   onSwipeEnd,
@@ -45,7 +50,7 @@ export default function NutritionMealModal({
         <header className={styles.header} data-nutrition-meal-part="header">
           <span className={styles.icon} aria-hidden="true" data-nutrition-meal-part="icon">{activeMeal.icon}</span>
           <div className={styles.headerInfo}>
-            <small className={styles.headerEyebrow}>{foods.length} продуктов</small>
+            <small className={styles.headerEyebrow}>{formatRussianCount(foods.length, ["продукт", "продукта", "продуктов"])}</small>
             <h2 className={styles.title}>{activeMeal.name}</h2>
             <strong className={styles.headerTotal}>{Math.round(stats.calories)} ккал</strong>
           </div>
@@ -61,9 +66,10 @@ export default function NutritionMealModal({
         </header>
 
         <div className={styles.list} data-nutrition-meal-part="list">
+          <NutritionUndoDeleteToast inline open={Boolean(undoDeleteItem)} onRestore={onUndoDelete} />
           {foods.map((item) => (
             <div
-              className={`${styles.swipeShell} ${deletingFoodId === item.id ? styles.deleting : ""}`}
+              className={`${styles.swipeShell} ${onRemoveFood ? styles.withRemove : ""} ${deletingFoodId === item.id ? styles.deleting : ""}`}
               key={item.id}
               data-nutrition-meal-row={item.id}
               data-state={deletingFoodId === item.id ? "deleting" : "idle"}
@@ -117,6 +123,7 @@ export default function NutritionMealModal({
 
                 <div className={styles.arrow} data-nutrition-meal-part="arrow" aria-hidden="true"><ChevronRight /></div>
               </div>
+              {onRemoveFood && <button type="button" className={styles.removeButton} aria-label={`Удалить запись: ${item.name}`} disabled={deletingFoodId === item.id} onClick={() => onRemoveFood(item.id)}><Trash2 aria-hidden="true" /></button>}
             </div>
           ))}
         </div>

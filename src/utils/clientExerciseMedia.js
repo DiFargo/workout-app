@@ -1,5 +1,6 @@
 import { fetchAuthorizedWithTimeout } from "./apiClient.js";
 import { applyExerciseCard, isExerciseCardWorkoutMutable } from "../../functions/exerciseCards.js";
+import { normalizeExerciseVideoPosterTime } from "../../functions/exerciseVideoPoster.js";
 
 export async function loadClientExerciseMedia(clientId, request = fetchAuthorizedWithTimeout) {
   try {
@@ -24,10 +25,15 @@ export function withClientExerciseMedia(workout, media = []) {
     const updated = match?.alternativeCards?.length && Array.isArray(exercise.trainerAlternatives) ? { ...exercise,
       trainerAlternatives: exercise.trainerAlternatives.map((alternative) => applyExerciseCard(alternative,
         match.alternativeCards.find((item) => item.id === (alternative.libraryExerciseId || alternative.id))?.card)) } : exercise;
+    // A newly selected legacy library item has an explicit clip (or an
+    // intentional lack of one). Reused IDs in another programme are not
+    // authority to replace it. Only an actual linked card can stay live.
+    if (exercise.librarySelectionVersion === 1 && !exercise.exerciseCardId) return updated;
     if (match?.card) return applyExerciseCard(updated, match.card);
     const ownVideo = exercise.video || exercise.videoUrl || exercise.videoURL;
     if (ownVideo && !exercise.videoAutoFilledFrom) return updated;
     if (!match?.video) return updated;
-    return { ...updated, video: match.video, videoAutoFilledFrom: match.sourceName || exercise.name };
+    return { ...updated, video: match.video, videoPosterTime: normalizeExerciseVideoPosterTime(match.videoPosterTime),
+      videoAutoFilledFrom: match.sourceName || exercise.name };
   }) };
 }

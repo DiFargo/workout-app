@@ -14,7 +14,7 @@ async function answer(page, label) {
   await card.getByRole("button", { name: "Далее", exact: true }).click();
 }
 
-test("slider questions start selected and deliberate answers survive back navigation", async ({ page }, testInfo) => {
+test("compact questions start selected and deliberate answers survive back navigation", async ({ page }, testInfo) => {
   await openQuiz(page);
   const card = page.getByTestId("basic-quiz-card");
   await expect(card.getByRole("button", { name: "Хорошая форма", exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -54,12 +54,12 @@ test("slider questions start selected and deliberate answers survive back naviga
   await expect(page.getByTestId("workout-render-overview")).toBeVisible();
 });
 
-test("unchanged visible defaults reach review without touching sliders", async ({ page }, testInfo) => {
+test("unchanged visible defaults reach review with direct answer buttons", async ({ page }, testInfo) => {
   await openQuiz(page, { width: 402, height: 874 });
   const card = page.getByTestId("basic-quiz-card");
   const labels = ["Хорошая форма", "Я новичок", "В тренажёрном зале", "1 тренировка", "Около 30 минут"];
   for (const [index, label] of labels.entries()) {
-    await expect(card.getByRole("slider")).toHaveAttribute("aria-valuetext", label);
+    await expect(card.getByRole("group").first()).toBeVisible();
     await expect(card.getByRole("button", { name: label, exact: true })).toHaveAttribute("aria-pressed", "true");
     await expect(card.getByText("Выбери один вариант, чтобы продолжить.")).toHaveCount(0);
     const next = card.getByRole("button", { name: "Далее", exact: true });

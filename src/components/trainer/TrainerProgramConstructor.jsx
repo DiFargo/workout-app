@@ -1,6 +1,10 @@
+import ProtectedExerciseVideo from "../media/ProtectedExerciseVideo.jsx";
 import TrainerEditorSheet from "./TrainerEditorSheet";
 import TrainerExerciseQuickFields from "./TrainerExerciseQuickFields";
-import { useEffect, useMemo, useRef, useState } from "react";
+import TrainerProgramExerciseAccordion from "./TrainerProgramExerciseAccordion.jsx";
+import TrainerExerciseLibraryPicker from "./TrainerExerciseLibraryPicker";
+import TrainerExerciseLibrarySearch from "./TrainerExerciseLibrarySearch";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CalendarDays,
   ChevronDown,
@@ -28,10 +32,11 @@ import {
   MAX_TRAINER_EXERCISE_ALTERNATIVES
 } from "../../utils/trainerExerciseAlternatives";
 import { sanitizeExerciseSetPatch, sanitizeExerciseWeightInput } from "../../utils/exerciseWeightInput";
-import { getTrainerExercisePresentationIdentity } from "../../features/trainer/trainerWorkoutEditHelpers";
+import { getTrainerExerciseSelectionPatch } from "../../features/trainer/trainerWorkoutEditHelpers";
 
 import { isTrainerV2Path } from "../../app/cssVariant";
 import { getTrainerLibraryMuscle, TRAINER_LIBRARY_MUSCLES } from "../../utils/trainerLibraryMuscleGroups";
+import { getTrainerProgramExerciseMove } from "../../utils/trainerProgramExerciseOrder.js";
 
 function ConstructorSheet({ styles, title, onClose, children }) {
   return <TrainerEditorSheet title={title} onClose={onClose} className={styles.appleSheet} bodyClassName={styles.appleSheetBody}>{children}</TrainerEditorSheet>;
@@ -67,6 +72,11 @@ function createGeneratedExerciseId() {
   return `exercise_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 }
 
+function countLabel(value, one, few, many) {
+  const tail = value % 100;
+  return `${value} ${tail >= 11 && tail <= 14 ? many : value % 10 === 1 ? one : value % 10 >= 2 && value % 10 <= 4 ? few : many}`;
+}
+
 export default function TrainerProgramConstructor({
   styles,
   program,
@@ -82,39 +92,39 @@ export default function TrainerProgramConstructor({
   onDeleteWorkout,
   onDuplicateWorkout,
   onAddExercise,
+  onOpenExerciseLibrary,
   onUpdateExercise,
-  onUpdateExerciseName,
   onDeleteExercise,
   onDuplicateExercise,
   onMoveExercise,
   onUpdateExerciseSet,
   onAddExerciseSet,
   onRemoveExerciseSet,
-  onUploadExerciseVideo,
-  exerciseVideoUploadingId,
   showProgramActions = true,
   embeddedInModal = false
 }) {
   const apple = isTrainerV2Path(window.location.pathname);
   const pendingDayIds = useRef(null);
-  const pendingExerciseIds = useRef(null);
   const [libraryOpen, setLibraryOpen] = useState(false);
-  const [libraryQuery, setLibraryQuery] = useState("");
-  const [libraryMuscle, setLibraryMuscle] = useState("");
   const [orderOpen, setOrderOpen] = useState(false);
-  const [libraryAdded, setLibraryAdded] = useState("");
   const [activeTab, setActiveTab] = useState("exercises");
   const [selectedExerciseId, setSelectedExerciseId] = useState("");
   const [expandedExerciseId, setExpandedExerciseId] = useState("");
-  const [exerciseSearchId, setExerciseSearchId] = useState("");
+  const [openExerciseCard, setOpenExerciseCard] = useState(null);
+  const [libraryReplacementId, setLibraryReplacementId] = useState("");
+  const [daySettingsOpen, setDaySettingsOpen] = useState(false);
   const [expandedGroupBlockId, setExpandedGroupBlockId] = useState("");
-  const [groupExerciseSearch, setGroupExerciseSearch] = useState({});
-  const [groupExerciseSearchKey, setGroupExerciseSearchKey] = useState("");
   const [dayMenuId, setDayMenuId] = useState("");
   const dayMenuRef = useRef(null);
   const [isSpecialBlockMenuOpen, setIsSpecialBlockMenuOpen] = useState(false);
   const [isDayEditorOpen, setIsDayEditorOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const openExerciseLibrary = typeof onOpenExerciseLibrary === "function" ? (query) => {
+    setLibraryOpen(false);
+    setExpandedExerciseId("");
+    setExpandedGroupBlockId("");
+    onOpenExerciseLibrary(query);
+  } : undefined;
 
   useEffect(() => {
     if (!dayMenuId) return undefined;
@@ -161,7 +171,7 @@ export default function TrainerProgramConstructor({
   const activeDayIndex = Math.max(0, workoutContexts.findIndex((context) => context.workout.id === activeWorkout?.id));
   const previousDayContext = workoutContexts[activeDayIndex - 1] || null;
   const nextDayContext = workoutContexts[activeDayIndex + 1] || null;
-  const exercises = activeWorkout?.exercises || [];
+  const exercises = useMemo(() => activeWorkout?.exercises || [], [activeWorkout?.exercises]);
   const taskBlocks = activeWorkout?.taskBlocks || [];
   const advancedTaskBlocks = taskBlocks.filter((block) => block.type !== WORKOUT_BLOCK_TYPES.EXERCISE);
   const groupedExerciseIds = new Set(taskBlocks
@@ -189,36 +199,32 @@ export default function TrainerProgramConstructor({
     }
   });
   const effectiveSelectedExerciseId = selectedExerciseId || exercises[0]?.id || "";
+  const openExerciseCardId = openExerciseCard?.workoutId === activeWorkout?.id
+    ? openExerciseCard.exerciseId
+    : orderedExerciseItems.find(item => item.type === "exercise")?.exercise.id || "";
   const totalSets = exercises.reduce((sum, exercise) => sum + Math.max(1, exercise.sets?.length || 0), 0);
   const estimatedMinutes = Math.max(25, Math.round(totalSets * 2.6));
   const duration = activeWorkout?.duration || (totalSets ? `${estimatedMinutes}–${estimatedMinutes + 10} мин` : "—");
   const muscleFocus = String(activeWorkout?.muscleFocus || activeWorkout?.muscles || "");
 
-  function selectWorkout(context) {
+  const selectWorkout = useCallback((context) => {
     setSelectedExerciseId("");
     setExpandedExerciseId("");
-    setExerciseSearchId("");
+    setDaySettingsOpen(false);
+    setLibraryReplacementId("");
     setExpandedGroupBlockId("");
-    setGroupExerciseSearch({});
-    setGroupExerciseSearchKey("");
     setDayMenuId("");
     setIsSpecialBlockMenuOpen(false);
     setActiveTab("exercises");
     onSelectWorkout(context.workout.id);
     setIsDayEditorOpen(!apple);
-  }
+  }, [apple, onSelectWorkout]);
 
   useEffect(() => {
     if (!pendingDayIds.current) return;
     const added = workoutContexts.find(({ workout }) => !pendingDayIds.current.includes(workout.id));
     if (added) { pendingDayIds.current = null; selectWorkout(added); }
-  }, [workoutContexts]);
-  useEffect(() => {
-    if (!pendingExerciseIds.current) return;
-    const added = exercises.find((exercise) => !pendingExerciseIds.current.includes(exercise.id));
-    if (added) { pendingExerciseIds.current = null; setExpandedExerciseId(added.id); }
-  }, [exercises]);
-
+  }, [selectWorkout, workoutContexts]);
   function addDay() {
     const target = activeContext || workoutContexts.at(-1) || emptyDayTarget;
     if (target) { if (apple) pendingDayIds.current = workoutContexts.map(({ workout }) => workout.id); onAddWorkout(target.cycle.id, target.week.id); }
@@ -234,44 +240,16 @@ export default function TrainerProgramConstructor({
     onUpdateExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exerciseId, patch);
   }
 
-  function getLibraryMatches(exercise) {
-    const query = String(exercise?.name || "").trim().toLocaleLowerCase("ru");
-    if (!query) return [];
-
-    return exerciseLibrary
-      .filter((item) => item?.id !== exercise.id && String(item?.name || "").trim().toLocaleLowerCase("ru").includes(query))
-      .slice(0, 6);
+  function moveProgramExercise(exerciseId, direction) {
+    if (!activeContext) return;
+    if (!apple) return onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeWorkout.id, exerciseId, direction);
+    const patch = getTrainerProgramExerciseMove(activeWorkout, exerciseId, direction);
+    if (patch) updateActiveWorkout(patch);
   }
 
   function selectLibraryExercise(exercise, libraryExercise) {
     if (!activeContext || !libraryExercise?.name) return;
-    const libraryVideo = getExerciseVideo(libraryExercise);
-    const libraryUsesWeight = libraryExercise.requiresWeight ?? libraryExercise.usesWeight;
-    const patch = {
-      ...getTrainerExercisePresentationIdentity(libraryExercise),
-      name: libraryExercise.name,
-      ...(libraryExercise.muscleGroup ? { muscleGroup: libraryExercise.muscleGroup } : {}),
-      ...(typeof libraryUsesWeight === "boolean" ? { requiresWeight: libraryUsesWeight } : {})
-    };
-
-    if (libraryVideo) {
-      patch.video = libraryVideo;
-      patch.videoAutoFilledFrom = libraryExercise.name;
-    } else if (exercise.videoAutoFilledFrom) {
-      patch.video = "";
-      patch.videoAutoFilledFrom = "";
-    }
-
-    onUpdateExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, patch);
-    setExerciseSearchId("");
-  }
-
-  function createNamedExercise(exercise) {
-    if (!activeContext) return;
-    const name = String(exercise?.name || "").trim();
-    if (!name) return;
-    onUpdateExerciseName(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise, name);
-    setExerciseSearchId("");
+    updateExercise(exercise.id, getTrainerExerciseSelectionPatch(libraryExercise, exercise));
   }
 
   function getAvailableTrainerAlternatives(exercise) {
@@ -284,7 +262,7 @@ export default function TrainerProgramConstructor({
     return exerciseLibrary.filter((item) => {
       const itemId = String(item?.id || "");
       const itemName = String(item?.name || "").trim().toLocaleLowerCase("ru");
-      return itemName && itemName !== primaryName && !selected.has(itemId);
+      return itemName && !item.libraryDeletedAt && itemName !== primaryName && !selected.has(itemId);
     });
   }
 
@@ -321,37 +299,11 @@ export default function TrainerProgramConstructor({
       .filter(Boolean);
   }
 
-  function getGroupExerciseSearchKey(blockId, slotIndex) {
-    return `${blockId}:${slotIndex}`;
-  }
-
-  function getLibraryMatchesForGroup(query) {
-    const normalizedQuery = String(query || "").trim().toLocaleLowerCase("ru");
-    if (!normalizedQuery) return exerciseLibrary.slice(0, 8);
-
-    return exerciseLibrary
-      .filter((exercise) => String(exercise?.name || "").toLocaleLowerCase("ru").includes(normalizedQuery))
-      .slice(0, 8);
-  }
-
   function createGroupExerciseFromLibrary(libraryExercise, currentExercise = null) {
-    const libraryVideo = getExerciseVideo(libraryExercise);
-    const libraryUsesWeight = libraryExercise.requiresWeight ?? libraryExercise.usesWeight;
-
     return {
       ...(currentExercise || {}),
       id: createGeneratedExerciseId(),
-      ...getTrainerExercisePresentationIdentity(libraryExercise),
-      name: libraryExercise.name || "Упражнение",
-      muscleGroup: libraryExercise.muscleGroup || "",
-      image: libraryExercise.image || libraryExercise.thumbnail || "",
-      thumbnail: libraryExercise.thumbnail || libraryExercise.image || "",
-      video: libraryVideo,
-      videoAutoFilledFrom: libraryVideo ? libraryExercise.name : "",
-      ...(typeof libraryUsesWeight === "boolean" ? {
-        requiresWeight: libraryUsesWeight,
-        usesWeight: libraryUsesWeight
-      } : {}),
+      ...getTrainerExerciseSelectionPatch(libraryExercise, currentExercise),
       sets: currentExercise?.sets?.length
         ? currentExercise.sets.map((set) => ({ ...set }))
         : [{ reps: 8, weight: "" }]
@@ -376,11 +328,6 @@ export default function TrainerProgramConstructor({
         ? { ...item, exerciseIds: nextIds.filter(Boolean).slice(0, getGroupExerciseLimit(block)) }
         : item)
     });
-    setGroupExerciseSearchKey("");
-    setGroupExerciseSearch((current) => ({
-      ...current,
-      [getGroupExerciseSearchKey(block.id, slotIndex)]: nextExercise.name
-    }));
   }
 
   function removeGroupExercise(block, slotIndex) {
@@ -482,8 +429,9 @@ export default function TrainerProgramConstructor({
   function requestDeleteExercise(exercise) {
     if (apple) setExpandedExerciseId("");
     setConfirmDelete({
-      title: "Удалить упражнение?",
-      text: `«${exercise.name || "Упражнение"}» будет удалено из этого дня.`,
+      title: "Удалить из тренировки?",
+      text: `«${exercise.name || "Упражнение"}» будет удалено только из этой тренировки. В библиотеке упражнение сохранится.`,
+      confirmLabel: "Удалить из тренировки",
       action: () => {
         onDeleteExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id);
         setConfirmDelete(null);
@@ -545,55 +493,14 @@ export default function TrainerProgramConstructor({
               <div className={styles.groupExerciseSlots}>
                 {Array.from({ length: groupExerciseLimit }, (_, slotIndex) => {
                   const selectedExercise = blockExercises[slotIndex] || null;
-                  const searchKey = getGroupExerciseSearchKey(block.id, slotIndex);
-                  const searchOpen = groupExerciseSearchKey === searchKey;
-                  const query = searchOpen
-                    ? groupExerciseSearch[searchKey] ?? selectedExercise?.name ?? ""
-                    : selectedExercise?.name || "";
-                  const matches = getLibraryMatchesForGroup(query);
-
                   return (
                     <div className={styles.groupExerciseSlot} key={`${block.id}-exercise-slot-${slotIndex}`}>
                       <b>{`A${slotIndex + 1}`}</b>
-                      <div className={styles.groupExerciseSearch} onBlur={(event) => {
-                        if (!event.currentTarget.contains(event.relatedTarget)) setGroupExerciseSearchKey("");
-                      }}>
-                        <input
-                          value={query}
-                          placeholder="Найти упражнение"
-                          onFocus={() => {
-                            setGroupExerciseSearchKey(searchKey);
-                            setGroupExerciseSearch((current) => ({ ...current, [searchKey]: selectedExercise?.name || "" }));
-                          }}
-                          onChange={(event) => {
-                            setGroupExerciseSearchKey(searchKey);
-                            setGroupExerciseSearch((current) => ({ ...current, [searchKey]: event.target.value }));
-                          }}
-                          autoComplete="off"
-                          role="combobox"
-                          aria-autocomplete="list"
-                          aria-expanded={searchOpen}
-                          aria-label={`Упражнение ${slotIndex + 1} в ${groupLabel.toLowerCase()}`}
-                        />
-                        {searchOpen ? (
-                          <div className={styles.exerciseSearchDropdown} role="listbox">
-                            {matches.map((libraryExercise) => (
-                              <button
-                                type="button"
-                                role="option"
-                                aria-selected={false}
-                                key={libraryExercise.id || libraryExercise.name}
-                                onMouseDown={(event) => event.preventDefault()}
-                                onClick={() => selectGroupLibraryExercise(block, slotIndex, libraryExercise)}
-                              >
-                                <strong>{libraryExercise.name}</strong>
-                                <small>{getExerciseVideo(libraryExercise) ? "С видео" : "Без видео"}</small>
-                              </button>
-                            ))}
-                            {!matches.length ? <span className={styles.groupSearchEmpty}>Упражнений с таким названием нет в библиотеке.</span> : null}
-                          </div>
-                        ) : null}
-                      </div>
+                      <TrainerExerciseLibrarySearch key={`${block.id}:${slotIndex}:${selectedExercise?.id || "empty"}`}
+                        exercise={selectedExercise} items={exerciseLibrary}
+                        label={`Упражнение ${slotIndex + 1} в ${groupLabel.toLowerCase()}`}
+                        onSelect={(source) => selectGroupLibraryExercise(block, slotIndex, source)}
+                        onOpenLibrary={openExerciseLibrary} />
                       {selectedExercise ? <button type="button" onClick={() => removeGroupExercise(block, slotIndex)} aria-label={`Убрать ${selectedExercise.name}`}><Trash2 size={14} /></button> : null}
                     </div>
                   );
@@ -645,7 +552,7 @@ export default function TrainerProgramConstructor({
   }
 
   return (
-    <section data-trainer-constructor="true" className={`${styles.constructor}${apple ? ` ${styles.appleConstructor}` : ""}${embeddedInModal ? ` ${styles.embeddedInModal}` : ""}`}>
+    <section data-trainer-constructor="true" data-program-layout={apple ? "cards" : undefined} className={`${styles.constructor}${apple ? ` ${styles.appleConstructor}` : ""}${embeddedInModal ? ` ${styles.embeddedInModal}` : ""}`}>
       <header data-constructor-surface="true" className={styles.programBar}>
         <div data-constructor-primary="true" className={styles.programIcon}><CalendarDays size={25} /></div>
         <label className={styles.programName}>
@@ -726,9 +633,9 @@ export default function TrainerProgramConstructor({
                   <header className={styles.dayHeader}>
                 <label>
                   <input value={getCompactWorkoutName(activeWorkout, activeDayIndex)} onChange={(event) => updateActiveWorkout({ name: event.target.value })} aria-label="Название тренировки" />
-                  <span>{apple ? `День ${activeDayIndex + 1} из ${workoutContexts.length} · ${exercises.length} упр. · ${totalSets} подходов${muscleFocus ? ` · ${muscleFocus}` : ""}` : muscleFocus}</span>
+                  <span>{apple ? `${countLabel(exercises.length, "упражнение", "упражнения", "упражнений")} · ${countLabel(totalSets, "подход", "подхода", "подходов")}${muscleFocus ? ` · ${muscleFocus}` : ""}` : muscleFocus}</span>
                 </label>
-                {apple ? <button className={styles.appleCopyDay} type="button" onClick={() => onDuplicateWorkout(activeContext.cycle.id, activeContext.week.id, activeWorkout.id)}><Copy size={18} /><span>Копия дня</span></button> : null}
+                {apple ? <button className={styles.appleCopyDay} type="button" onClick={() => setDaySettingsOpen(true)} aria-label="Настройки дня"><Settings2 size={18} aria-hidden="true" /><span>Настройки дня</span></button> : null}
                 <div className={styles.dayStats}>
                   <span><Dumbbell size={18} /><b>{exercises.length}</b><small>упражнений</small></span>
                   <span><Layers3 size={18} /><b>{totalSets}</b><small>подходов</small></span>
@@ -736,7 +643,7 @@ export default function TrainerProgramConstructor({
                 </div>
               </header>
 
-                  <nav className={styles.editorTabs} aria-label="Разделы тренировочного дня">
+                  <nav className={styles.editorTabs} aria-label="Разделы тренировочного дня" hidden={apple}>
                 <button className={activeTab === "exercises" ? styles.active : ""} type="button" onClick={() => setActiveTab("exercises")}><Dumbbell size={17} />Упражнения</button>
                 <button className={activeTab === "notes" ? styles.active : ""} type="button" onClick={() => setActiveTab("notes")}><StickyNote size={17} />Заметки</button>
                 <button className={activeTab === "settings" ? styles.active : ""} type="button" onClick={() => setActiveTab("settings")}><Settings2 size={17} />Параметры дня</button>
@@ -795,11 +702,29 @@ export default function TrainerProgramConstructor({
                       const usesWeight = exercise.requiresWeight ?? exercise.usesWeight ?? true;
                       const alternativeCount = getTrainerExerciseAlternatives(exercise).length;
                       return (
-                        <article className={`${styles.exerciseCard}${selected ? ` ${styles.selectedExercise}` : ""}`} key={exercise.id || index} onClick={() => setSelectedExerciseId(exercise.id)}>
-                          <div className={styles.exerciseRow}>
+                        <Fragment key={`${activeWorkout.id}:${exercise.id || index}`}>
+                          {apple ? <TrainerProgramExerciseAccordion
+                            exercise={exercise} index={index}
+                            muscle={TRAINER_LIBRARY_MUSCLES.find(([id]) => id === getTrainerLibraryMuscle(exercise))?.[1] || "Без группы"}
+                            expanded={openExerciseCardId === exercise.id}
+                            onToggle={() => setOpenExerciseCard({ workoutId: activeWorkout.id, exerciseId: openExerciseCardId === exercise.id ? "" : exercise.id })}
+                            onChange={patch => updateExercise(exercise.id, patch)}
+                            onOpenDetails={() => setExpandedExerciseId(exercise.id)}
+                            onChooseExercise={() => { setLibraryReplacementId(exercise.id); setLibraryOpen(true); }}
+                            onDuplicate={() => onDuplicateExercise?.(activeContext.cycle.id, activeContext.week.id, activeWorkout.id, exercise.id)}
+                            onDelete={() => requestDeleteExercise(exercise)}
+                            onMoveUp={() => moveProgramExercise(exercise.id, -1)}
+                            onMoveDown={() => moveProgramExercise(exercise.id, 1)}
+                            canMoveUp={Boolean(getTrainerProgramExerciseMove(activeWorkout, exercise.id, -1))} canMoveDown={Boolean(getTrainerProgramExerciseMove(activeWorkout, exercise.id, 1))}
+                            availableAlternatives={getAvailableTrainerAlternatives(exercise)}
+                            onAddAlternative={id => addTrainerAlternative(exercise, id)}
+                            onRemoveAlternative={id => removeTrainerAlternative(exercise, id)}
+                          /> : null}
+                          {!apple || expanded ? <article className={!apple ? `${styles.exerciseCard}${selected ? ` ${styles.selectedExercise}` : ""}` : undefined} onClick={() => setSelectedExerciseId(exercise.id)}>
+                          {!apple ? <div className={styles.exerciseRow}>
                             <span className={styles.exerciseOrder}><b>{index + 1}</b></span>
                             <span className={styles.exerciseMedia}>
-                              {exercise.image || exercise.thumbnail ? <img src={exercise.image || exercise.thumbnail} alt="" /> : video ? <video src={video} muted preload="metadata" /> : <Dumbbell size={22} />}
+                              {exercise.image || exercise.thumbnail ? <img src={exercise.image || exercise.thumbnail} alt="" /> : video ? <ProtectedExerciseVideo src={video} previewTime={exercise.videoPosterTime} muted preload="metadata" /> : <Dumbbell size={22} />}
                             </span>
                             <button className={styles.exerciseName} type="button" onClick={(event) => { event.stopPropagation(); setExpandedExerciseId(expanded ? "" : exercise.id); }}>
                               <strong>{exercise.name || "Упражнение"}</strong>
@@ -810,64 +735,22 @@ export default function TrainerProgramConstructor({
                               <button className={apple ? styles.appleHidden : undefined} type="button" onClick={(event) => { event.stopPropagation(); onDuplicateExercise?.(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id); }} aria-label="Дублировать упражнение"><Copy size={15} /></button>
                               <button type="button" onClick={(event) => { event.stopPropagation(); setExpandedExerciseId(expanded ? "" : exercise.id); }} aria-label="Дополнительные параметры">{apple ? <ChevronRight size={18} /> : <MoreVertical size={16} />}</button>
                             </div>
-                          </div>
+                          </div> : null}
                           {expanded ? (
                             <ExerciseEditorContainer apple={apple} styles={styles} onClose={() => setExpandedExerciseId("")}>
                             <div className={styles.expandedEditor}>
                               {apple ? <button type="button" onClick={() => onDuplicateExercise?.(activeContext.cycle.id, activeContext.week.id, activeWorkout.id, exercise.id)}><Copy size={16} /> Создать копию упражнения</button> : null}
-                              <div className={styles.exerciseNameSearch} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setExerciseSearchId(""); }}>
-                                <span>Название</span>
-                                <input
-                                  value={exercise.name || ""}
-                                  onFocus={() => setExerciseSearchId(exercise.id)}
-                                  onChange={(event) => {
-                                    setExerciseSearchId(exercise.id);
-                                    onUpdateExerciseName(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise, event.target.value);
-                                  }}
-                                  autoComplete="off"
-                                  role="combobox"
-                                  aria-autocomplete="list"
-                                  aria-expanded={exerciseSearchId === exercise.id && Boolean(String(exercise.name || "").trim())}
-                                  aria-controls={`exercise-library-options-${exercise.id}`}
-                                />
-                                {exerciseSearchId === exercise.id && String(exercise.name || "").trim() ? (() => {
-                                  const matches = getLibraryMatches(exercise);
-                                  return (
-                                    <div className={styles.exerciseSearchDropdown} id={`exercise-library-options-${exercise.id}`} role="listbox">
-                                      {matches.map((item) => (
-                                        <button
-                                          type="button"
-                                          role="option"
-                                          aria-selected="false"
-                                          key={`${item.id || item.name}-${item.name}`}
-                                          onMouseDown={(event) => event.preventDefault()}
-                                          onClick={(event) => {
-                                            event.stopPropagation();
-                                            selectLibraryExercise(exercise, item);
-                                          }}
-                                        >
-                                          <strong>{item.name}</strong>
-                                          <small>{getExerciseVideo(item) ? "С видео" : "Без видео"}</small>
-                                        </button>
-                                      ))}
-                                      {!matches.length ? (
-                                        <button className={styles.createExerciseOption} type="button" onClick={() => createNamedExercise(exercise)}>
-                                          <Plus size={15} />Создать новое упражнение
-                                        </button>
-                                      ) : null}
-                                    </div>
-                                  );
-                                })() : null}
-                              </div>
+                              <TrainerExerciseLibrarySearch key={exercise.id} exercise={exercise} items={exerciseLibrary}
+                                onSelect={(source) => selectLibraryExercise(exercise, source)}
+                                onOpenLibrary={openExerciseLibrary} />
                               <label><span>Фокус / группа мышц</span><input value={exercise.muscleGroup || ""} onChange={(event) => updateExercise(exercise.id, { muscleGroup: event.target.value })} placeholder="Например, грудные" /></label>
-                              {apple && video ? <section className={styles.appleVideoPreview} aria-label="Видео упражнения">
-                                <strong>Текущее видео</strong>
-                                <video key={video} src={video} poster={exercise.image || exercise.thumbnail || undefined} controls playsInline preload="metadata" aria-label={`Видео: ${exercise.name || "упражнение"}`} />
+                              {apple ? <section className={styles.appleVideoPreview} aria-label="Видео упражнения">
+                                {video ? <><strong>Текущее видео</strong><ProtectedExerciseVideo key={video} src={video} previewTime={exercise.videoPosterTime} poster={exercise.image || exercise.thumbnail || undefined} controls playsInline preload="metadata" aria-label={`Видео: ${exercise.name || "упражнение"}`} data-testid="trainer-program-exercise-video" /></> : null}
+                                <small>Видео можно изменить в библиотеке упражнений.</small>
                               </section> : null}
-                              <label className={styles.videoUpload}><span>{exerciseVideoUploadingId === exercise.id ? "Загрузка…" : video ? "Заменить видео" : "Добавить видео"}</span><input type="file" accept="video/*" disabled={exerciseVideoUploadingId === exercise.id} onChange={(event) => onUploadExerciseVideo(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, event.target.files?.[0])} /></label>
                               <span className={styles.moveButtons}>
-                                <button type="button" disabled={exerciseIndex === 0} onClick={() => onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, -1)}><ChevronUp size={15} />Выше</button>
-                                <button type="button" disabled={exerciseIndex === exercises.length - 1} onClick={() => onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id, exercise.id, 1)}><ChevronDown size={15} />Ниже</button>
+                                <button type="button" disabled={apple ? !getTrainerProgramExerciseMove(activeWorkout, exercise.id, -1) : exerciseIndex === 0} onClick={() => moveProgramExercise(exercise.id, -1)}><ChevronUp size={15} />Выше</button>
+                                <button type="button" disabled={apple ? !getTrainerProgramExerciseMove(activeWorkout, exercise.id, 1) : exerciseIndex === exercises.length - 1} onClick={() => moveProgramExercise(exercise.id, 1)}><ChevronDown size={15} />Ниже</button>
                               </span>
                               <details open={!apple || undefined} className={styles.appleAlternatives}><summary>Альтернативы для клиента</summary><section className={styles.alternativeEditor}>
                                 <header>
@@ -931,18 +814,19 @@ export default function TrainerProgramConstructor({
                                 </footer>
                               </section>
                               <button className={styles.deleteExerciseButton} type="button" onClick={() => requestDeleteExercise(exercise)}>
-                                <Trash2 size={16} />Удалить упражнение
+                                <Trash2 size={16} />Удалить из тренировки
                               </button>
                             </div>
                             </ExerciseEditorContainer>
                           ) : null}
-                        </article>
+                          </article> : null}
+                        </Fragment>
                       );
                     })}
                     {!orderedExerciseItems.length ? <div className={styles.emptyExercises}><Dumbbell size={28} /><strong>Добавьте первое упражнение</strong><span>Параметры подходов, повторений и отдыха появятся здесь.</span></div> : null}
                   </div>
                   <div className={styles.exerciseAddRow}>
-                    <button className={styles.addExerciseButton} type="button" onClick={() => apple ? (setLibraryOpen(true), setLibraryAdded("")) : onAddExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id)}><Plus size={20} />Добавить упражнение</button>
+                    <button className={styles.addExerciseButton} type="button" onClick={() => { setLibraryReplacementId(""); setLibraryOpen(true); }}><Plus size={20} />{apple ? "Добавить из библиотеки" : "Добавить упражнение"}</button>
                     <div className={styles.specialBlockMenu}>
                       <button
                         type="button"
@@ -951,7 +835,7 @@ export default function TrainerProgramConstructor({
                         onClick={() => setIsSpecialBlockMenuOpen((current) => !current)}
                       ><Plus size={17} />Добавить формат</button>
                       {isSpecialBlockMenuOpen ? <div role="menu" aria-label="Тип специального блока">
-                        <button type="button" onClick={() => { setIsSpecialBlockMenuOpen(false); onAddExercise(activeContext.cycle.id, activeContext.week.id, activeContext.workout.id); }}>Обычный сет</button>
+                        <button type="button" onClick={() => { setIsSpecialBlockMenuOpen(false); setLibraryOpen(true); }}>Обычный сет</button>
                         <button type="button" onClick={() => addExerciseGroup("superset")}>Суперсет · 2 упражнения</button>
                         <button type="button" onClick={() => addExerciseGroup("triset")}>Трисет · 3 упражнения</button>
                       </div> : null}
@@ -986,12 +870,32 @@ export default function TrainerProgramConstructor({
 
       {isDayEditorOpen && !embeddedInModal ? <div className={styles.dayEditorBackdrop} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={() => setIsDayEditorOpen(false)} /> : null}
 
-      {apple && libraryOpen && activeContext ? <ConstructorSheet styles={styles} title="Добавить упражнение" onClose={() => setLibraryOpen(false)}>
-        <label className={styles.appleLibrarySearch}>Название упражнения<input value={libraryQuery} onChange={(event) => setLibraryQuery(event.target.value)} placeholder="Найти упражнение" /></label>
-        <label className={styles.appleLibrarySearch}>Группа мышц<select value={libraryMuscle} onChange={(event) => setLibraryMuscle(event.target.value)}><option value="">Все группы</option>{TRAINER_LIBRARY_MUSCLES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
-        <div className={styles.appleLibraryResults}>{exerciseLibrary.filter((item) => String(item.name || "").toLocaleLowerCase("ru").includes(libraryQuery.toLocaleLowerCase("ru")) && (!libraryMuscle || getTrainerLibraryMuscle(item) === libraryMuscle)).map((item, index) => <div key={item.id || index}><span><strong>{item.name}</strong><small>{TRAINER_LIBRARY_MUSCLES.find(([id]) => id === getTrainerLibraryMuscle(item))?.[1]}{getExerciseVideo(item) ? " · С видео" : ""}</small></span><button type="button" aria-label={`Добавить ${item.name}`} onClick={() => { onAddExercise(activeContext.cycle.id, activeContext.week.id, activeWorkout.id, item); setLibraryAdded(`Добавлено: ${item.name}`); }}><Plus size={20} /></button></div>)}</div>
-        <p role="status">{libraryAdded}</p>
-        <button type="button" onClick={() => { pendingExerciseIds.current = exercises.map((exercise) => exercise.id); onAddExercise(activeContext.cycle.id, activeContext.week.id, activeWorkout.id); setLibraryOpen(false); }}>＋ Создать новое упражнение</button>
+      <TrainerExerciseLibraryPicker open={libraryOpen && Boolean(activeContext)} items={exerciseLibrary}
+        title={libraryReplacementId ? "Выбрать упражнение" : "Добавить упражнение"}
+        onClose={() => { setLibraryOpen(false); setLibraryReplacementId(""); }} onOpenLibrary={openExerciseLibrary}
+        onSelect={(item) => {
+          if (!activeContext) return false;
+          const replacing = libraryReplacementId && exercises.find(exercise => exercise.id === libraryReplacementId);
+          if (replacing) {
+            selectLibraryExercise(replacing, item);
+            setLibraryOpen(false);
+            setLibraryReplacementId("");
+            return true;
+          }
+          return onAddExercise(activeContext.cycle.id, activeContext.week.id, activeWorkout.id, item);
+        }} />
+      {apple && daySettingsOpen && activeContext ? <ConstructorSheet styles={styles} title="Настройки дня" onClose={() => setDaySettingsOpen(false)}>
+        <div className={styles.tabPanel}>
+          <label><span>Название дня</span><input value={getCompactWorkoutName(activeWorkout, activeDayIndex)} onChange={event => updateActiveWorkout({ name: event.target.value })} /></label>
+          <label><span>Заметки к тренировке</span><textarea value={activeWorkout.notes || ""} onChange={event => updateActiveWorkout({ notes: event.target.value })} placeholder="Важные детали для этого дня" /></label>
+          <div className={styles.settingsGrid}>
+            <label><span>Цель тренировки</span><select value={activeWorkout.goal || "hypertrophy"} onChange={event => updateActiveWorkout({ goal: event.target.value })}><option value="hypertrophy">Гипертрофия</option><option value="strength">Сила</option><option value="endurance">Выносливость</option><option value="technique">Техника</option></select></label>
+            <label><span>Фокус мышц</span><input value={activeWorkout.muscleFocus || ""} onChange={event => updateActiveWorkout({ muscleFocus: event.target.value })} /></label>
+            <label><span>Длительность</span><input value={activeWorkout.duration || ""} onChange={event => updateActiveWorkout({ duration: event.target.value })} /></label>
+          </div>
+          <button className={styles.appleCopyDay} type="button" onClick={() => { onDuplicateWorkout(activeContext.cycle.id, activeContext.week.id, activeWorkout.id); setDaySettingsOpen(false); }}><Copy size={18} aria-hidden="true" />Создать копию дня</button>
+          <button className={styles.deleteExerciseButton} type="button" onClick={() => { setDaySettingsOpen(false); onDeleteWorkout(activeContext.cycle.id, activeContext.week.id, activeWorkout.id); }}><Trash2 size={16} aria-hidden="true" />Удалить день</button>
+        </div>
       </ConstructorSheet> : null}
       {apple && orderOpen && activeContext ? <ConstructorSheet styles={styles} title="Порядок упражнений" onClose={() => setOrderOpen(false)}>
         {exercises.map((exercise, index) => <div className={styles.appleOrderRow} key={exercise.id}><span>{index + 1}. {exercise.name}</span><button type="button" disabled={!index} aria-label={`Выше: ${exercise.name}`} onClick={() => onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeWorkout.id, exercise.id, -1)}><ChevronUp size={18} /></button><button type="button" disabled={index === exercises.length - 1} aria-label={`Ниже: ${exercise.name}`} onClick={() => onMoveExercise(activeContext.cycle.id, activeContext.week.id, activeWorkout.id, exercise.id, 1)}><ChevronDown size={18} /></button></div>)}
@@ -1000,7 +904,7 @@ export default function TrainerProgramConstructor({
         <div className={styles.modalBackdrop} data-trainer-modal-backdrop="true" role="presentation" onMouseDown={() => setConfirmDelete(null)}>
           <section className={styles.confirmModal} role="dialog" aria-modal="true" data-modal-surface="true" data-trainer-modal-surface="true" data-trainer-modal-frame="true" aria-labelledby="trainer-program-confirm-title" onMouseDown={(event) => event.stopPropagation()}>
             <h2 id="trainer-program-confirm-title">{confirmDelete.title}</h2><p>{confirmDelete.text}</p>
-            <div><button type="button" onClick={() => setConfirmDelete(null)}>Отмена</button><button className={styles.deleteButton} type="button" onClick={confirmDelete.action}>Удалить</button></div>
+            <div><button type="button" onClick={() => setConfirmDelete(null)}>Отмена</button><button className={styles.deleteButton} type="button" onClick={confirmDelete.action}>{confirmDelete.confirmLabel || "Удалить"}</button></div>
           </section>
         </div>
       ) : null}

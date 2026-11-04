@@ -12,6 +12,29 @@
   text-align: center;
 }
 
+.exercisePickerTrigger {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.exercisePickerTrigger:active { opacity: .65; }
+.exercisePickerTrigger:focus-visible { outline: 2px solid var(--apple-action, #3f73b8); outline-offset: 2px; }
+:global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitleInFlow .exercisePickerTrigger .stageTitleProgress svg { display: block; }
+
 :global(:root[data-app-theme="warm-light"]) .topHeader.topHeader {
   width: min(402px, 100vw);
   max-width: 402px;
@@ -477,6 +500,7 @@
 
 .fullscreenClose {
   position: absolute;
+  z-index: 3;
   top: 20px;
   right: 20px;
   padding: 0;
@@ -487,10 +511,52 @@
   cursor: pointer;
 }
 
+.fullscreenVideoFrame {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  max-height: calc(100dvh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #000000;
+}
+
 .fullscreenVideo {
   width: 100%;
-  max-width: 900px;
+  max-width: 720px;
+  max-height: calc(100dvh - 64px);
   border-radius: 12px;
+  object-fit: contain;
+}
+
+.fullscreenVideoWatermark {
+  position: absolute;
+  top: 12%;
+  left: 8%;
+  z-index: 2;
+  max-width: 84%;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: clamp(10px, 2.6vw, 14px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  animation: fullscreenWatermarkDrift 22s ease-in-out infinite alternate;
+}
+
+@keyframes fullscreenWatermarkDrift {
+  0% { transform: translate(0, 0) rotate(-8deg); }
+  30% { transform: translate(58px, 22px) rotate(-3deg); }
+  65% { transform: translate(24px, 48px) rotate(5deg); }
+  100% { transform: translate(-6px, 17px) rotate(-4deg); }
 }
 
 @media (max-height: 720px) {
@@ -602,6 +668,10 @@
   background: #000000;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .fullscreenVideoWatermark { animation: none; }
+}
+
 @media (min-width: 700px) {
   :global(:root[data-app-theme="warm-light"]) .topHeader.topHeader,
   :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle {
@@ -708,3 +778,14 @@
   :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleText.exerciseTitle { font-size: 1.5rem; }
   :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle { padding-inline: 16px; }
 }
+
+:global(:root[data-app-theme="warm-light"]) .previousExercise {
+  position: absolute; left: 16px; top: max(8px, env(safe-area-inset-top, 0px));
+  display: grid; place-items: center; width: 48px; min-width: 48px; height: 48px;
+  padding: 0; border: 0; border-radius: 14px; cursor: pointer;
+  pointer-events: auto;
+  color: var(--apple-action, #3f73b8); background: var(--apple-surface, #fff);
+}
+.previousExercise svg { width: 22px; height: 22px; }
+.previousExercise:active { opacity: .7; }
+.previousExercise:focus-visible { outline: 3px solid var(--apple-action, #3f73b8); outline-offset: 2px; }

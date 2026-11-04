@@ -1,6 +1,7 @@
 import {
   EmailAuthProvider,
   GoogleAuthProvider,
+  getIdTokenResult,
   reauthenticateWithCredential,
   reauthenticateWithPopup,
   sendPasswordResetEmail,
@@ -8,7 +9,10 @@ import {
   updateProfile
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
+import { fetchAuthorizedWithTimeout, getAppCheckApiHeaders } from "../../../utils/apiClient";
+import { captureAuthSession } from "../../../utils/authSession.js";
+import { isRecentCustomEmailSession } from "./profileEmailAuth.js";
+import { getAccountRecoveryEmail } from "./profileAccountEmail.js";
 import { getDefaultLoginAlias } from "../../../utils/clientUx";
 import { uploadStorageFile } from "../../../utils/firebaseStorage";
 import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
@@ -52,6 +56,8 @@ export function createProfileAccountHandlers({
   setProfileAvatarCropSize,
   setProfileAvatarCropOpen
 }) {
+  const accountEmailSession = captureAuthSession(auth);
+  let confirmedEmailChange = null;
   function refreshPage() {
     window.location.reload();
   }
@@ -266,25 +272,36 @@ export function createProfileAccountHandlers({
     }
   }
 
-  async function reauthenticateForEmailChange(currentUser, currentPassword = "") {
-    const providerIds = currentUser.providerData.map((provider) => provider.providerId);
+  async function reauthenticateForEmailChange(currentUser, currentPassword, awaitCurrent, onCustomSession) {
+    const tokenResult = await awaitCurrent(getIdTokenResult(currentUser));
+    if (tokenResult.claims?.sub !== currentUser.uid) {
+      throw Object.assign(new Error("Auth identity changed"), { code: "auth/session-changed" });
+    }
+    if (tokenResult.signInProvider === "custom") {
+      onCustomSession();
+      if (!isRecentCustomEmailSession(tokenResult)) {
+        throw Object.assign(new Error("Recent Telegram login required"), { code: "auth/telegram-requires-recent-login" });
+      }
+      return currentUser;
+    }
+    const providerIds = (currentUser.providerData || []).map((provider) => provider.providerId);
     const hasPasswordProvider = providerIds.includes("password");
     const hasGoogleProvider = providerIds.includes("google.com");
     const email = currentUser.email || profileAccount.email || "";
 
     if (hasPasswordProvider && currentPassword) {
-      const credentialResult = await reauthenticateWithCredential(
+      const credentialResult = await awaitCurrent(reauthenticateWithCredential(
         currentUser,
         EmailAuthProvider.credential(email, currentPassword)
-      );
-      await credentialResult.user.reload();
-      return auth.currentUser || credentialResult.user || currentUser;
+      ));
+      await awaitCurrent(credentialResult.user.reload());
+      return currentUser;
     }
 
     if (hasGoogleProvider) {
-      const credentialResult = await reauthenticateWithPopup(currentUser, googleReauthProvider);
-      await credentialResult.user.reload();
-      return auth.currentUser || credentialResult.user || currentUser;
+      const credentialResult = await awaitCurrent(reauthenticateWithPopup(currentUser, googleReauthProvider));
+      await awaitCurrent(credentialResult.user.reload());
+      return currentUser;
     }
 
     if (hasPasswordProvider) {
@@ -299,8 +316,13 @@ export function createProfileAccountHandlers({
   }
 
   async function requestProfileEmailChange(nextEmailValue = "", options = {}) {
+    if (!accountEmailSession.isCurrent()) return false;
     const currentUser = auth.currentUser;
     if (!currentUser || profileAccountSaving) return false;
+    const session = captureAuthSession(auth);
+    const update = (setter, value) => {
+      if (session.isCurrent()) setter(current => session.isCurrent() ? value : current);
+    };
 
     const currentEmail = String(currentUser.email || profileAccount.email || "").trim().toLowerCase();
     const nextEmail = String(nextEmailValue || "").trim().toLowerCase();
@@ -314,30 +336,49 @@ export function createProfileAccountHandlers({
       return false;
     }
 
-    setProfileAccountSaving(true);
-    setProfileAccountStatus("");
+    update(setProfileAccountSaving, true);
+    update(setProfileAccountStatus, "");
+    const controller = new AbortController();
+    let rejectDeadline;
+    const deadline = new Promise((_, reject) => { rejectDeadline = reject; });
+    const timer = setTimeout(() => {
+      controller.abort();
+      rejectDeadline(new DOMException("Timeout", "AbortError"));
+    }, 16000);
+    const assertCurrent = () => {
+      if (!session.isCurrent()) throw Object.assign(new Error("Auth session changed"), { code: "auth/session-changed" });
+      if (controller.signal.aborted) throw new DOMException("Timeout", "AbortError");
+    };
+    const awaitCurrent = async promise => {
+      const value = await Promise.race([promise, deadline]);
+      assertCurrent();
+      return value;
+    };
+    let customConfirmation = false;
 
     try {
-      const verifiedUser = await reauthenticateForEmailChange(currentUser, options.currentPassword || "");
-      await verifiedUser.getIdToken(true);
-      const response = await fetchAuthorizedWithTimeout(getProfileUpdateEmailEndpoint(), {
+      const verifiedUser = await awaitCurrent(reauthenticateForEmailChange(currentUser, options.currentPassword || "", awaitCurrent, () => { customConfirmation = true; }));
+      const idToken = await awaitCurrent(verifiedUser.getIdToken(true));
+      const headers = await awaitCurrent(getAppCheckApiHeaders({
+        "Content-Type": "application/json", Authorization: `Bearer ${idToken}`
+      }));
+      assertCurrent();
+      const response = await awaitCurrent(fetch(getProfileUpdateEmailEndpoint(), {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers,
+        signal: controller.signal,
         body: JSON.stringify({ email: nextEmail })
-      }, 16000);
-      const data = await response.json().catch(() => ({}));
+      }));
+      const data = await awaitCurrent(response.json().catch(() => ({})));
       if (!response.ok || data?.ok === false) {
         const error = new Error(data?.message || data?.error || "Profile email update failed");
         error.code = data?.error || `http/${response.status}`;
         throw error;
       }
 
-      // Do not reload the Firebase user or force a token refresh here. The Admin
-      // SDK has already changed the email and the current token remains valid
-      // until Firebase refreshes it normally. Forcing that refresh can turn a
-      // successful email update into a visible sign-out in the active app.
+      // Auth may revoke the old ID token when Admin SDK changes the email.
+      // Preserve the successful result without a post-write token refresh;
+      // the email sheet explicitly hands the user off to a new login.
       const email = String(data.email || nextEmail).trim().toLowerCase();
       const updatedAt = new Date().toISOString();
       const displayName = limitUserDisplayName(
@@ -350,18 +391,22 @@ export function createProfileAccountHandlers({
         email,
         updatedAt
       };
-      setProfileAccount(accountProfile);
-      setProfileAccountDraft({
+      update(setProfileAccount, accountProfile);
+      confirmedEmailChange = { session, email };
+      update(setProfileAccountDraft, {
         displayName,
         email,
         login: accountProfile.login || profileAccount.login || ""
       });
-      setProfileAccountStatus(`Почта изменена на ${email}. Вы остаётесь в аккаунте.`);
+      update(setProfileAccountStatus, `Почта ${email} сохранена. Для безопасности требуется повторный вход. Адрес ещё не подтверждён; пароль не создаётся автоматически.`);
       return true;
     } catch (error) {
+      if (!session.isCurrent()) return false;
       console.error("Profile email change request failed:", error);
-      setProfileAccountStatus(
-        error?.code === "auth/current-password-required"
+      update(setProfileAccountStatus,
+        error?.code === "auth/telegram-requires-recent-login" || (customConfirmation && error?.code === "auth/requires-recent-login")
+          ? "Для добавления почты нужен недавний вход через Telegram. Выйди из аккаунта, затем открой приложение через бота и войди в тот же аккаунт, затем повтори."
+          : error?.code === "auth/current-password-required"
           ? "Укажи текущий пароль, чтобы подтвердить смену почты."
           : error?.code === "auth/wrong-password" || error?.code === "auth/invalid-credential"
             ? "Текущий пароль указан неверно."
@@ -386,7 +431,8 @@ export function createProfileAccountHandlers({
       );
       return false;
     } finally {
-      setProfileAccountSaving(false);
+      clearTimeout(timer);
+      update(setProfileAccountSaving, false);
     }
   }
 
@@ -444,18 +490,29 @@ export function createProfileAccountHandlers({
   }
 
   async function sendProfilePasswordReset() {
-    const email = profileAccountDraft.email.trim() || auth.currentUser?.email || "";
+    if (!accountEmailSession.isCurrent()) return false;
+    const session = captureAuthSession(auth);
+    if (!session.uid) return false;
+    const email = getAccountRecoveryEmail(confirmedEmailChange?.session.isCurrent()
+      ? confirmedEmailChange.email
+      : profileAccount.email || profileAccountDraft.email || auth.currentUser?.email || "");
     if (!email) {
-      setProfileAccountStatus("Сначала укажи почту аккаунта.");
-      return;
+      setProfileAccountStatus("Сначала добавь личную почту аккаунта.");
+      return false;
     }
 
     try {
       await sendPasswordResetEmail(auth, email);
-      setProfileAccountStatus(`Ссылка для смены пароля отправлена на ${email}.`);
+      if (!session.isCurrent()) return false;
+      setProfileAccountStatus(current => session.isCurrent()
+        ? `Ссылка для установки или смены пароля отправлена на ${email}. Заверши действие по ссылке, чтобы использовать пароль.`
+        : current);
+      return true;
     } catch (error) {
+      if (!session.isCurrent()) return false;
       console.error("Password reset failed:", error);
-      setProfileAccountStatus("Не получилось отправить ссылку для смены пароля.");
+      setProfileAccountStatus(current => session.isCurrent() ? "Не получилось отправить ссылку для установки или смены пароля." : current);
+      return false;
     }
   }
 

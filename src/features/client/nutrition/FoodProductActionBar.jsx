@@ -3,6 +3,7 @@ import styles from "./FoodProductActionBar.module.css";
 
 export default function FoodProductActionBar({
   hidden,
+  isEditing = false,
   onBack,
   onAdd
 }) {
@@ -44,7 +45,7 @@ export default function FoodProductActionBar({
         onClick={onAdd}
       >
         <span aria-hidden="true" data-css-module-text="food-product-action"><Check /></span>
-        <strong data-css-module-text="food-product-action">Добавить</strong>
+        <strong data-css-module-text="food-product-action">{isEditing ? "Сохранить изменения" : "Добавить"}</strong>
       </button>
     </nav>
   );

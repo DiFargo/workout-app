@@ -11,13 +11,17 @@ function dateKey(value) {
 export function normalizeSubscription(subscription = {}) {
   const purchasedSessions = Math.max(0, Number(subscription.purchasedSessions ?? subscription.totalSessions) || 0);
   const usedSessions = Math.max(0, Number(subscription.usedSessions) || 0);
+  const hasSessionCounters = subscription.purchasedSessions !== undefined ||
+    subscription.totalSessions !== undefined || subscription.usedSessions !== undefined;
   return {
     ...subscription,
     cycleId: String(subscription.cycleId || subscription.lastRenewedAt || subscription.startDate || "legacy").replace(/[^a-zA-Z0-9_-]/g, "_"),
     endDate: dateKey(subscription.endDate),
     purchasedSessions,
     usedSessions,
-    remainingSessions: Math.max(0, Number.isFinite(Number(subscription.remainingSessions)) ? Number(subscription.remainingSessions) : purchasedSessions - usedSessions)
+    remainingSessions: Math.max(0, subscription.periodMode === "sessions" && hasSessionCounters
+      ? purchasedSessions - usedSessions
+      : Number.isFinite(Number(subscription.remainingSessions)) ? Number(subscription.remainingSessions) : purchasedSessions - usedSessions)
   };
 }
 
@@ -25,7 +29,7 @@ export function getDueSubscriptionNotifications(subscription = {}, settings = {}
   const value = normalizeSubscription(subscription);
   if (subscription.frozen === true) return [];
   const today = new Date(`${dateKey(now)}T00:00:00Z`);
-  const end = value.endDate ? new Date(`${value.endDate}T00:00:00Z`) : null;
+  const end = value.periodMode !== "sessions" && value.endDate ? new Date(`${value.endDate}T00:00:00Z`) : null;
   const daysRemaining = end ? Math.ceil((end - today) / DAY_MS) : null;
   const dateThresholds = [...new Set([...(Array.isArray(settings.dayThresholds) ? settings.dayThresholds : [7, 3, 0]), Number(settings.warningDays)])].filter(Number.isFinite);
   const sessionThresholds = [...new Set([...(Array.isArray(settings.sessionThresholds) ? settings.sessionThresholds : [3, 1, 0]), Number(settings.warningSessions)])].filter(Number.isFinite);

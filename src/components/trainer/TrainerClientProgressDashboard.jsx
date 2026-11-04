@@ -38,14 +38,12 @@ function getTrendTone(value, neutral = false) {
   return value > 0 ? "positive" : "negative";
 }
 
-function MiniLineChart({ points, title, baseline = null }) {
+function MiniLineChart({ points, title, baseline = null, unit = "%" }) {
+  const [selectedPoint, setSelectedPoint] = useState(null);
   if (!points.length) {
     return <div className={styles.emptyChart}>Недостаточно данных за период</div>;
   }
 
-  if (points.length === 1 && isTrainerV2Path(window.location.pathname)) {
-    return <div className={styles.emptyChart}>Одна запись за период · {formatChartDate(points[0].date)}. После следующей записи появится динамика.</div>;
-  }
   const values = points.map((point) => point.value);
   const scaleValues = Number.isFinite(baseline) ? [...values, baseline] : values;
   let min = Math.min(...scaleValues);
@@ -72,7 +70,14 @@ function MiniLineChart({ points, title, baseline = null }) {
         ) : null}
         {points.length > 1 ? <polyline points={polyline} className={styles.line} /> : null}
         {points.map((point, index) => (
-          <circle key={`${point.date?.toISOString?.() || point.date}-${index}`} cx={getX(point, index)} cy={getY(point.value)} r="3.5" className={styles.dot} />
+          <g key={`${point.date?.toISOString?.() || point.date}-${index}`}>
+            <circle cx={getX(point, index)} cy={getY(point.value)} r="14" fill="transparent" role="button" tabIndex={0}
+              aria-label={`${formatChartDate(point.date)}: ${formatNumber(point.value)} ${unit}`}
+              onClick={() => setSelectedPoint(index)} onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedPoint(index); }
+              }} />
+            <circle cx={getX(point, index)} cy={getY(point.value)} r="3.5" className={styles.dot} pointerEvents="none" />
+          </g>
         ))}
       </svg>
     );
@@ -86,6 +91,15 @@ function MiniLineChart({ points, title, baseline = null }) {
         <span>{formatChartDate(points[0].date)}</span>
         {points.length > 1 ? <span>{formatChartDate(points.at(-1).date)}</span> : null}
       </div>
+      <p className={styles.chartReadout} role="status">{selectedPoint !== null && points[selectedPoint]
+        ? `${formatChartDate(points[selectedPoint].date)}: ${formatNumber(points[selectedPoint].value)} ${unit}`
+        : `Диапазон: ${formatNumber(Math.min(...values))}–${formatNumber(Math.max(...values))} ${unit}. Нажмите точку для точного значения.`}</p>
+      <details className={styles.chartData}>
+        <summary>Даты и точные значения</summary>
+        <table><caption>{title}</caption><thead><tr><th scope="col">Дата</th><th scope="col">Значение, {unit}</th></tr></thead>
+          <tbody>{points.map((point, index) => <tr key={index}><td>{new Date(point.date).toLocaleDateString("ru-RU")}</td><td>{formatNumber(point.value)}</td></tr>)}</tbody>
+        </table>
+      </details>
     </div>
   );
 }
@@ -110,6 +124,9 @@ function ProgressSignal({ card, active, onSelect }) {
 }
 
 export default function TrainerClientProgressDashboard({
+  historyCoverage = "complete",
+  nutritionLoadError = false,
+  onLoadMoreHistory,
   measurements = [],
   history = [],
   nutritionDays = [],
@@ -121,6 +138,8 @@ export default function TrainerClientProgressDashboard({
     nutritionDays
   }), [history, measurements, nutritionDays]);
   const [manualPeriod, setManualPeriod] = useState("");
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState("");
   const [selectedMetric, setSelectedMetric] = useState("weight");
   const period = manualPeriod || (autoPeriod === "1w" ? "1m" : autoPeriod);
   const selectedPeriod = PERIODS.find((item) => item.id === period) || PERIODS[0];
@@ -185,12 +204,12 @@ export default function TrainerClientProgressDashboard({
       title: "Питание",
       icon: Utensils,
       value: Number.isFinite(dashboard.nutrition.current) ? `${formatNumber(dashboard.nutrition.current, 0)}%` : "—",
-      meta: dashboard.nutrition.trackedDays ? `${dashboard.nutrition.trackedDays} из ${dashboard.nutrition.periodDays} завершённых дней` : "Нет цели или записей",
+      meta: nutritionLoadError ? "Не удалось загрузить дневник" : dashboard.nutrition.trackedDays ? `${dashboard.nutrition.trackedDays} из ${dashboard.nutrition.periodDays} завершённых дней` : "Нет цели или записей",
       tone: nutritionCoverageLow ? "neutral" : nutritionTone,
       points: dashboard.nutrition.points,
       chartLabel: "Соблюдение питания",
       chartTitle: "Соблюдение плана питания клиентом",
-      chartValue: Number.isFinite(dashboard.nutrition.current) ? `${formatNumber(dashboard.nutrition.current, 0)}%` : "Нет данных",
+      chartValue: nutritionLoadError ? "Не загружено" : Number.isFinite(dashboard.nutrition.current) ? `${formatNumber(dashboard.nutrition.current, 0)}%` : "Нет данных",
       chartBaseline: 85
     }
   ];
@@ -221,13 +240,23 @@ export default function TrainerClientProgressDashboard({
           ))}
         </div>
       </header>
+      {historyCoverage !== "complete" ? <div className={styles.coverage} role="status">
+        <p>{historyCoverage === "error" ? "История тренировок не загрузилась. Аналитика силы неполна — обновите карточку клиента." : "Загружена часть истории тренировок. Аналитика силы может охватывать не весь выбранный период."}</p>
+        {historyCoverage === "partial" && onLoadMoreHistory ? <button type="button" disabled={historyLoading} onClick={async () => {
+          setHistoryLoading(true); setHistoryError("");
+          try { if (!await onLoadMoreHistory()) setHistoryError("Не удалось загрузить следующую страницу. Повторите попытку."); }
+          catch { setHistoryError("Не удалось загрузить следующую страницу. Повторите попытку."); }
+          finally { setHistoryLoading(false); }
+        }}>{historyLoading ? "Загрузка…" : "Загрузить следующую страницу истории"}</button> : null}
+        {historyError ? <p role="alert">{historyError}</p> : null}
+      </div> : null}
       <div className={styles.resultLayout}>
         <article className={`${styles.chartPanel} ${styles[activeCard.id]}`}>
           <div className={styles.chartPanelHead}>
             <div><span>{activeCard.chartLabel}</span><strong>{activeCard.chartValue}</strong></div>
             <small>{selectedPeriod.label}</small>
           </div>
-          <MiniLineChart points={activeCard.points} title={activeCard.chartTitle} baseline={activeCard.chartBaseline} />
+          {activeCard.id === "nutrition" && nutritionLoadError ? <p className={styles.emptyChart} role="alert">Не удалось прочитать дневник питания. Обновите карточку клиента — отсутствие данных не означает отсутствие записей.</p> : <MiniLineChart key={`${activeCard.id}:${period}`} points={activeCard.points} title={activeCard.chartTitle} baseline={activeCard.chartBaseline} unit={activeCard.id === "weight" ? "кг" : "%"} />}
         </article>
         <div className={styles.signals} aria-label="Показатели для графика">
           {cards.map((card) => (

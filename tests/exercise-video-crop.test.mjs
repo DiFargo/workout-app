@@ -24,8 +24,10 @@ test("framing accepts only finite bounded numeric metadata, while old exercises 
 });
 
 test("panning follows the finger and never exposes an empty edge for portrait or landscape video", () => {
-  for (const [videoWidth, videoHeight] of [[1920, 1080], [1080, 1920], [1200, 900]]) {
-    const size = { width: 400, height: 300, videoWidth, videoHeight };
+  const sizes = [[1920, 1080], [1080, 1920], [1200, 900]]
+    .flatMap(([videoWidth, videoHeight]) => [300, 400].map(height => ({ width: 400, height, videoWidth, videoHeight })));
+  for (const size of sizes) {
+    const { videoWidth, videoHeight } = size;
     const right = panExerciseVideoCrop(crop, size, 20, 0);
     assert.ok(right.x < crop.x);
     assert.equal(right.y, crop.y);

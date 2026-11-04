@@ -82,7 +82,7 @@ export function buildNutritionSearchResults({
     if (query.length >= 2 && fatSecretFoods.length > 0) {
       // The worker already ranks spelling variants, brands and barcode matches.
       // Family caps would hide distinct branded products from this catalogue.
-      if (fatSecretFoods.some(food => ["gemini_catalog", "openfoodfacts_catalog"].includes(food.sourceType))) {
+      if (fatSecretFoods.some(food => ["gemini_catalog", "openfoodfacts_catalog", "manufacturer_catalog", "basic_reference"].includes(food.sourceType))) {
         const seen = new Set();
         return [...personalMatches, ...fatSecretFoods.map(normalizeNutritionFood)].filter(food => {
           if (seen.has(food.id)) return false;

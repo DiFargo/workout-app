@@ -43,7 +43,7 @@ test("failed time save rolls back UI while retry retains all queued offset chang
     await page.setContent('<main id="root"></main>');
     await page.addScriptTag({ content: generated.output[0].code });
     await page.evaluate(() => window.ReminderProbe.mount());
-    const time = page.getByLabel("Время для фото и замеров");
+    const time = page.getByLabel("Время для фото, веса и замеров");
     const offsets = page.getByRole("group", { name: "Когда напоминать о тренировке" });
     await time.fill("18:35");
     await time.blur();

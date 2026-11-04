@@ -34,6 +34,9 @@ test("native client theme leaves trainer client, workout and nutrition navigatio
   for (const name of ["Тренировки", "Питание", "Фото и замеры", "Сводка"]) {
     await nav.getByRole("button", { name, exact: true }).click();
     if (name === "Питание") {
+      await expect(page.getByRole("dialog", { name: "Изменить план", exact: true })).toHaveCount(0);
+      await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
+      await page.getByRole("button", { name: "Создать план питания", exact: true }).click();
       await expect(page.getByRole("dialog", { name: "Изменить план", exact: true })).toBeVisible();
       await page.getByRole("button", { name: "Закрыть редактор плана", exact: true }).click();
     }

@@ -1,0 +1,131 @@
+.root.root {
+  --workout-history-card: #fff;
+  --workout-history-secondary: #efeff4;
+  --workout-history-text: #1c1c1e;
+  --workout-history-muted: #636366;
+  --workout-history-line: rgba(60, 60, 67, .12);
+  --workout-history-accent: #3c6faa;
+  --workout-history-warning: #8c590f;
+  --workout-history-success: #237a42;
+  min-width: 0;
+  color: var(--workout-history-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.root *, .root *::before, .root *::after { box-sizing: border-box; }
+.root [hidden] { display: none !important; }
+.root .toolbar { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 16px; }
+.root .search { display: grid; flex: 1; min-width: 0; gap: 7px; font-size: 13px; line-height: 1.4; color: var(--workout-history-muted); }
+.root .searchField { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 48px; padding: 0 12px; border: 1px solid var(--workout-history-line); border-radius: 12px; background: var(--workout-history-card); }
+.root .searchField > svg { flex: 0 0 18px; color: var(--workout-history-muted); }
+.root .searchField input { flex: 1; width: 100%; min-width: 0; height: 46px; margin: 0; padding: 8px 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; font: inherit; font-size: 16px; color: var(--workout-history-text); }
+.root .searchField input::placeholder { color: var(--workout-history-muted); opacity: 1; }
+.root .searchField:focus-within { outline: 2px solid var(--workout-history-accent); outline-offset: 2px; }
+.root .searchField input:focus-visible { outline: 0; }
+.root .clearSearch { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; width: 44px; min-height: 44px; margin: 0 -10px 0 0; padding: 10px; border: 0; border-radius: 10px; background: transparent; color: var(--workout-history-muted); box-shadow: none; cursor: pointer; }
+.root .count { flex: 0 0 auto; margin: 0 0 14px; font-size: 13px; line-height: 1.5; color: var(--workout-history-muted); }
+.root .count > span { display: block; font-size: 12px; }
+.root .notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; margin: 0 0 16px; border: 1px solid var(--workout-history-line); border-radius: 14px; background: var(--workout-history-card); font-size: 13px; line-height: 1.5; }
+.root .notice > div, .root .notice > span { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.root .notice strong { display: block; font-size: 14px; font-weight: 600; }
+.root .notice p { margin: 3px 0 0; color: var(--workout-history-muted); }
+.root .notice button { flex: 0 0 auto; width: auto; }
+.root .list { margin: 0; padding: 0; list-style: none; border: 1px solid var(--workout-history-line); border-radius: 20px; background: var(--workout-history-card); overflow: hidden; }
+.root .item { min-width: 0; margin: 0; padding: 0; border-bottom: 1px solid var(--workout-history-line); }
+.root .item:last-child { border-bottom: 0; }
+.root .row { display: flex; align-items: center; gap: 14px; width: 100%; min-width: 0; min-height: 88px; margin: 0; padding: 15px 16px; border: 0; border-radius: 0; background: var(--workout-history-card); color: var(--workout-history-text); box-shadow: none; text-align: left; cursor: pointer; touch-action: manipulation; }
+.root .row[aria-expanded="true"] { background: #f7f8fb; }
+.root .row:focus-visible { position: relative; z-index: 1; outline-offset: -3px; }
+.root .dateTile { display: flex; align-items: center; justify-content: center; flex-direction: column; flex: 0 0 44px; width: 44px; min-height: 52px; gap: 1px; border-radius: 12px; background: var(--workout-history-secondary); text-align: center; }
+.root .dateTile strong { font-size: 20px; font-weight: 650; line-height: 1.2; }
+.root .dateTile small { font-size: 12px; line-height: 1.3; color: var(--workout-history-muted); }
+.root .rowCopy { display: block; flex: 1; min-width: 0; }
+.root .rowCopy > strong { display: block; margin: 0; color: var(--workout-history-text); font-size: 16px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.root .rowCopy > small { display: block; margin-top: 4px; color: var(--workout-history-muted); font-size: 13px; font-weight: 400; line-height: 1.5; overflow-wrap: anywhere; }
+.root .rowState { display: block; margin-top: 4px; color: var(--workout-history-muted); font-size: 12px; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
+.root .chevron { flex: 0 0 20px; color: var(--workout-history-muted); }
+.root .details { min-width: 0; padding: 16px; border-top: 1px solid var(--workout-history-line); background: #f7f8fb; }
+.root .detailHeader { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 14px; }
+.root .detailHeader h3 { min-width: 0; margin: 0; font-size: 16px; line-height: 1.4; font-weight: 650; overflow-wrap: anywhere; }
+.root .detailHeader > div { min-width: 0; }
+.root .detailHeader p { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: var(--workout-history-muted); }
+.root .badge { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 5px 8px; border-radius: 8px; background: var(--workout-history-secondary); color: var(--workout-history-muted); font-size: 12px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.root .warning { color: var(--workout-history-warning); }
+.root .badge.warning { background: #fff3df; }
+.root .success { color: var(--workout-history-success); }
+.root .badge.success { background: #edf7ef; }
+.root .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 0 0 16px; padding: 14px 0; border: 1px solid var(--workout-history-line); border-radius: 14px; background: var(--workout-history-card); }
+.root .stat { min-width: 0; padding: 0 14px; border-right: 1px solid var(--workout-history-line); }
+.root .stat:last-child { border-right: 0; }
+.root .stat > span, .root .stat > small { display: block; font-size: 12px; line-height: 1.5; color: var(--workout-history-muted); overflow-wrap: anywhere; }
+.root .stat > strong { display: block; margin: 4px 0; font-size: 21px; font-weight: 650; line-height: 1.3; overflow-wrap: anywhere; }
+.root .feedback { display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: start; gap: 10px; margin: 0 0 16px; padding: 14px; border: 1px solid var(--workout-history-line); border-radius: 14px; background: var(--workout-history-card); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.root .feedback > svg { margin-top: 2px; color: var(--workout-history-muted); }
+.root .rowState svg { vertical-align: -2px; margin-right: 4px; }
+.root .exercise p > span { display: inline-block; min-width: 42px; margin-right: 8px; color: var(--workout-history-muted); }
+.root .exercise blockquote { margin: 5px 0 0; font-size: 13px; line-height: 1.5; color: var(--workout-history-muted); }
+.root .feedback strong { font-size: 14px; line-height: 1.5; font-weight: 600; }
+.root .feedback p, .root .feedback blockquote { margin: 0; padding: 0; font-size: 14px; line-height: 1.55; color: var(--workout-history-text); white-space: pre-wrap; overflow-wrap: anywhere; }
+.root .feedback small { color: var(--workout-history-muted); font-size: 12px; }
+.root .note { margin: 10px 0 14px; color: var(--workout-history-muted); font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
+.root .note:last-child { margin-bottom: 0; }
+.root .comparison > summary::after { display: none !important; }
+.root .comparison[open] > summary > svg { transform: rotate(180deg); }
+.root .comparison { min-width: 0; margin: 0 0 14px; border: 1px solid var(--workout-history-line); border-radius: 14px; background: var(--workout-history-card); }
+.root .comparison > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 12px 14px; border-radius: inherit; color: var(--workout-history-accent); font-size: 14px; font-weight: 600; line-height: 1.5; list-style: none; cursor: pointer; touch-action: manipulation; }
+.root .comparison > summary::-webkit-details-marker { display: none; }
+.root .comparison > summary::after { display: block; flex: 0 0 8px; width: 8px; height: 8px; margin-right: 3px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); content: ""; }
+.root .comparison[open] > summary::after { transform: rotate(225deg); }
+.root .exerciseComparison { margin: 0; padding: 0 14px; list-style: none; border-top: 1px solid var(--workout-history-line); }
+.root .exercise { min-width: 0; margin: 0; padding: 13px 0; border-bottom: 1px solid var(--workout-history-line); font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
+.root .exercise:last-child { border-bottom: 0; }
+.root .exercise > strong { display: block; margin-bottom: 5px; color: var(--workout-history-text); font-size: 14px; font-weight: 600; line-height: 1.5; }
+.root .exercise p { margin: 3px 0; color: var(--workout-history-muted); font-size: 13px; line-height: 1.55; }
+.root .setList { margin: 6px 0 0; padding-left: 20px; color: var(--workout-history-muted); font-size: 13px; line-height: 1.65; }
+.root .setList li { padding-left: 3px; overflow-wrap: anywhere; }
+.root .primaryButton, .root .secondaryButton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; min-height: 44px; margin: 0; padding: 11px 14px; border: 1px solid transparent; border-radius: 12px; box-shadow: none; font: inherit; font-size: 14px; font-weight: 600; line-height: 1.45; text-align: center; white-space: normal; overflow-wrap: anywhere; touch-action: manipulation; cursor: pointer; }
+.root.root .primaryButton { color: #fff; background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); }
+.root .secondaryButton { color: var(--workout-history-accent); background: var(--workout-history-secondary); }
+.root .pagination { display: grid; justify-items: center; gap: 10px; margin-top: 16px; }
+.root .pagination p { margin: 0; font-size: 13px; line-height: 1.5; text-align: center; color: var(--workout-history-muted); overflow-wrap: anywhere; }
+.root .pagination [role="alert"] { color: #b23c45; }
+.root .empty { display: grid; gap: 8px; padding: 24px 18px; border: 1px solid var(--workout-history-line); border-radius: 18px; background: var(--workout-history-card); color: var(--workout-history-muted); font-size: 14px; line-height: 1.55; overflow-wrap: anywhere; }
+.root .empty strong, .root .empty h3 { margin: 0; color: var(--workout-history-text); font-size: 16px; font-weight: 600; line-height: 1.4; }
+.root .empty p { margin: 0; font-size: 14px; line-height: 1.55; }
+.root button:active { filter: brightness(.95); }
+.root button:disabled { opacity: .5; cursor: default; }
+.root button:focus-visible, .root summary:focus-visible { outline: 2px solid var(--workout-history-accent); outline-offset: 2px; }
+
+@media (max-width: 600px) {
+  .root .toolbar { flex-wrap: wrap; align-items: center; gap: 8px; }
+  .root .search { flex-basis: 100%; }
+  .root .count { margin: 0 2px; }
+  .root .notice { align-items: flex-start; flex-wrap: wrap; gap: 8px; padding: 12px; }
+  .root .notice > div, .root .notice > span { flex-basis: 100%; }
+  .root .notice button { margin-left: auto; }
+  .root .row { gap: 12px; padding: 14px 12px; }
+  .root .details { padding: 14px 12px; }
+  .root .stat { padding: 0 10px; }
+  .root .stat > strong { font-size: 19px; }
+  .root .primaryButton { width: 100%; }
+}
+
+@media (max-width: 380px) {
+  .root .row { gap: 10px; padding: 13px 10px; }
+  .root .dateTile { flex-basis: 40px; width: 40px; min-height: 48px; }
+  .root .dateTile strong { font-size: 18px; }
+  .root .rowCopy > strong { font-size: 15px; }
+  .root .rowCopy > small { font-size: 12px; }
+  .root .details { padding: 12px 10px; }
+  .root .stats { grid-template-columns: minmax(0, 1fr); padding: 0 12px; }
+  .root .stat { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 10px; padding: 10px 0; border-right: 0; border-bottom: 1px solid var(--workout-history-line); }
+  .root .stat:last-child { border-bottom: 0; }
+  .root .stat > strong { margin: 0; font-size: 18px; }
+  .root .stat > small { grid-column: 1 / -1; }
+  .root .chevron { flex-basis: 18px; width: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root *, .root *::before, .root *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

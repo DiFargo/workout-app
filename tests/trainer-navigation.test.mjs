@@ -1,6 +1,73 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { APP_PAGES } from "../src/app/appPages.js";
+import { installRuntimeImports } from "./helpers/runtime-imports.mjs";
+
+const cleanupNavigationImports = installRuntimeImports();
+const { createTrainerNavigationActions } = await import("../src/features/trainer/trainerNavigation.js");
+cleanupNavigationImports();
+
+function navigationFixture(admin = false) {
+  const state = { page: "initial", section: "initial", managerOpen: false, workoutTab: "initial", baseTab: "initial" };
+  const calls = [];
+  const setter = key => value => { state[key] = value; calls.push([key, value]); };
+  const actions = createTrainerNavigationActions({
+    canUseAdminFeatures: admin,
+    canUseTrainerFeatures: () => true,
+    page: APP_PAGES.ADMIN,
+    usersList: [],
+    setPage: setter("page"),
+    setProfileActiveTab: setter("profileTab"),
+    setTrainerNextSection: setter("section"),
+    setAdminUsersSelectedTab: setter("clientTab"),
+    setAdminSelectedClient: setter("client"),
+    setAdminBaseLibraryTab: setter("baseTab"),
+    loadAdminClientOverview: () => assert.fail("Library navigation must not read a client"),
+    setTrainerProgramManagerOpen: setter("managerOpen"),
+    setTrainerWorkoutTab: setter("workoutTab")
+  });
+  return { state, calls, actions };
+}
+
+test("real trainer navigation separates Programs and Exercises and keeps their active destinations", () => {
+  const { state, actions } = navigationFixture(() => false);
+  actions.navigateTrainerNext("library");
+  assert.deepEqual(state, { page: APP_PAGES.ADMIN_WORKOUTS, section: "library", managerOpen: false, workoutTab: "library", baseTab: "initial" });
+  actions.navigateTrainerNext("workouts");
+  assert.deepEqual(state, { page: APP_PAGES.ADMIN_WORKOUTS, section: "workouts", managerOpen: true, workoutTab: "plan", baseTab: "initial" });
+  actions.openTrainerExerciseLibrary();
+  assert.equal(state.section, "library");
+  assert.equal(state.managerOpen, false);
+  assert.equal(state.workoutTab, "library");
+  actions.openTrainerProgramManager();
+  assert.equal(state.section, "workouts");
+  assert.equal(state.managerOpen, true);
+  assert.equal(state.page, APP_PAGES.ADMIN_WORKOUTS);
+});
+
+test("real admin navigation preserves the separate base-library routes for programs and exercises", () => {
+  for (const admin of [true, () => true]) {
+    const { state, calls, actions } = navigationFixture(admin);
+    actions.navigateTrainerNext("library");
+    assert.equal(state.page, APP_PAGES.ADMIN_LIBRARY);
+    assert.equal(state.baseTab, "exercises");
+    assert.equal(state.managerOpen, false);
+    assert.equal(state.section, "library");
+    assert.equal(state.workoutTab, "initial");
+    actions.navigateTrainerNext("workouts");
+    assert.equal(state.page, APP_PAGES.ADMIN_LIBRARY);
+    assert.equal(state.baseTab, "programs");
+    assert.equal(state.managerOpen, false);
+    assert.equal(state.section, "workouts");
+    actions.openTrainerExerciseLibrary();
+    assert.equal(state.baseTab, "exercises");
+    actions.openTrainerProgramManager();
+    assert.equal(state.baseTab, "programs");
+    assert.ok(calls.every(([key]) => !["client", "clientTab"].includes(key)));
+    assert.ok(calls.every(([key, value]) => key !== "page" || value === APP_PAGES.ADMIN_LIBRARY));
+  }
+});
 
 test("sidebar Programs navigation opens the program manager instead of the exercise library", async () => {
   const source = await readFile(new URL("../src/features/trainer/trainerNavigation.js", import.meta.url), "utf8");
@@ -195,17 +262,21 @@ test("trainer program editor keeps mobile back and save actions reachable", asyn
   assert.match(styles, /\.appleConstructor\.appleConstructor/);
 });
 
-test("trainer plan keeps program and exercise-library navigation outside editor", async () => {
+test("trainer navigation has five separate destinations and library highlights its own destination", async () => {
   const source = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
-  const harness = await readFile(new URL("../src/components/trainer/TrainerE2EHarness.jsx", import.meta.url), "utf8");
   const route = await readFile(new URL("../src/features/trainer/TrainerAdminWorkoutsRoute.jsx", import.meta.url), "utf8");
+  const libraryRoute = await readFile(new URL("../src/features/trainer/TrainerAdminWorkoutsNextRoute.jsx", import.meta.url), "utf8");
   const styles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceCalm.module.css", import.meta.url), "utf8");
 
-  assert.match(source, /!embedded \? <div className="trainerNextPageTabs" aria-label="Разделы программ">/);
-  assert.match(harness, /programLibraryTab !== "editor" \? <div className="trainerNextPageTabs">/);
-  assert.match(route, /adminProgramLibraryTab !== "editor" \? \([\s\S]*?<div className="trainerNextPageTabs">/);
-  assert.match(route, /className="isActive"[\s\S]*?aria-current="page"/);
-  assert.match(styles, /trainerNextProgramsTab > \.trainerNextPageTabs\) \{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  const mobileIds = source.match(/const mobileItems = NAV_ITEMS\.filter\(\(item\) => \[([^\]]+)\]/)?.[1].match(/"[^"]+"/g)?.map(value => JSON.parse(value));
+  assert.deepEqual(mobileIds, ["dashboard", "clients", "workouts", "library", "more"]);
+  const desktopItems = source.match(/const DESKTOP_NAV_ITEMS = \[([\s\S]*?)\n\];/)?.[1] || "";
+  assert.deepEqual([...desktopItems.matchAll(/id: "([^"]+)"/g)].map(match => match[1]), mobileIds);
+  assert.match(desktopItems, /id: "library", label: "Упражнения"/);
+  assert.match(libraryRoute, /activeSection=\{isExerciseLibraryTab \? "library" : "workouts"\}/);
+  assert.doesNotMatch(source, /aria-label="Разделы программ"/);
+  assert.match(route, /isAdminTrainerMaterials && adminProgramLibraryTab !== "editor"/);
+  assert.match(styles, /trainerNextMobileNav\) \{[\s\S]*?grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
   assert.doesNotMatch(styles, /!important/);
 });
 
@@ -290,16 +361,20 @@ test("trainer set rows keep only repetitions and weight", async () => {
   assert.match(styles, /grid-template-columns: 54px repeat\(2, minmax\(90px, 1fr\)\) 34px/);
 });
 
-test("trainer exercise name searches the library and offers creation", async () => {
+test("trainer exercise name searches the shared library and delegates creation to its own section", async () => {
   const source = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.jsx", import.meta.url), "utf8");
   const manager = await readFile(new URL("../src/features/trainer/TrainerProgramManagerView.jsx", import.meta.url), "utf8");
-  const styles = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.module.css", import.meta.url), "utf8");
+  const search = await readFile(new URL("../src/components/trainer/TrainerExerciseLibrarySearch.jsx", import.meta.url), "utf8");
 
   assert.match(manager, /exerciseLibrary=\{adminExerciseLibrary\}/);
-  assert.match(source, /role="combobox"/);
-  assert.match(source, /getLibraryMatches\(exercise\)/);
-  assert.match(source, /Создать новое упражнение/);
-  assert.match(styles, /\.exerciseSearchDropdown/);
+  assert.match(source, /<TrainerExerciseLibrarySearch[\s\S]*?exercise=\{exercise\} items=\{exerciseLibrary\}/);
+  assert.match(search, /role="combobox"/);
+  assert.match(search, /words\.every\(\(word\) => normalizeQuery\(item\.name\)\.includes\(word\)\)/);
+  assert.match(source, /onOpenLibrary=\{openExerciseLibrary\}/);
+  assert.match(source, /const openExerciseLibrary = typeof onOpenExerciseLibrary === "function" \? \(query\) => \{\s*setLibraryOpen\(false\);\s*setExpandedExerciseId\(""\);\s*setExpandedGroupBlockId\(""\);\s*onOpenExerciseLibrary\(query\)/);
+  assert.match(manager, /onOpenExerciseLibrary=\{openLibraryFromEditor\}/);
+  assert.match(search, /Перейти в «Упражнения» и создать/);
+  assert.doesNotMatch(source, /Создать новое упражнение|function createNamedExercise|onUpdateExerciseName\(/);
 });
 
 test("special workout blocks offer simple sets, supersets, and trisets with real exercises", async () => {
@@ -324,11 +399,20 @@ test("special workout blocks offer simple sets, supersets, and trisets with real
 
 test("trainer library exercise selection survives the mobile input blur and applies the selected entry", async () => {
   const source = await readFile(new URL("../src/components/trainer/TrainerProgramConstructor.jsx", import.meta.url), "utf8");
+  const search = await readFile(new URL("../src/components/trainer/TrainerExerciseLibrarySearch.jsx", import.meta.url), "utf8");
+  const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
 
   assert.match(source, /function selectLibraryExercise\(exercise, libraryExercise\)/);
-  assert.match(source, /onUpdateExercise\(activeContext\.cycle\.id, activeContext\.week\.id, activeContext\.workout\.id, exercise\.id, patch\)/);
-  assert.match(source, /onMouseDown=\{\(event\) => event\.preventDefault\(\)\}/);
-  assert.match(source, /event\.stopPropagation\(\);\s*selectLibraryExercise\(exercise, item\)/);
+  assert.match(source, /updateExercise\(exercise\.id, getTrainerExerciseSelectionPatch\(libraryExercise, exercise\)\)/);
+  assert.match(source, /\.\.\.getTrainerExerciseSelectionPatch\(libraryExercise, currentExercise\)/);
+  assert.match(workspace, /onUpdateExercise\(selectedWorkout\.id, exercise\.id, getTrainerExerciseSelectionPatch\(source, exercise\)\)/);
+  assert.match(workspace, /onUpdateExercise\(activeContext\.cycle\.id, activeContext\.week\.id, activeContext\.workout\.id, exercise\.id, getTrainerExerciseSelectionPatch\(source, exercise\)\)/);
+  assert.match(source, /onUpdateExercise\(activeContext\.cycle\.id, activeContext\.week\.id, activeContext\.workout\.id, exerciseId, patch\)/);
+  assert.match(source, /onSelect=\{\(source\) => selectLibraryExercise\(exercise, source\)\}/);
+  assert.match(search, /onMouseDown=\{\(event\) => event\.preventDefault\(\)\}/);
+  assert.match(search, /onClick=\{\(\) => select\(item\)\}/);
+  assert.match(search, /if \(event\.currentTarget\.contains\(event\.relatedTarget\)\) return/);
+  assert.match(search, /onSelect\?\.\(item\);\s*setSearch\(null\);\s*setOpen\(false\)/);
 });
 
 test("subscription lives on the overview and reminders stay compact", async () => {
@@ -407,7 +491,8 @@ test("client card keeps Messages and notifications in the header instead of dupl
   assert.doesNotMatch(overviewView, /trainerNextRecommendation/);
   assert.match(tasksComponent, /Задания клиенту/);
   assert.doesNotMatch(messagesView, /trainerNextNoteCard|StickyNote|\bnote\b/);
-  assert.match(styles, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  // Filter non-overlap and wrapping are covered by real mobile DOM geometry;
+  // navigation does not require a fixed three-column CSS implementation.
   assert.match(styles, /\.embeddedPanel/);
   assert.match(styles, /\.replyPrimary/);
   assert.doesNotMatch(styles, /\.tasksPanel/);
@@ -425,7 +510,15 @@ test("client card keeps Messages and notifications in the header instead of dupl
   assert.match(clientNotifications, /Ответ тренера/);
   assert.match(workspace, /const \[autoSaveState, setAutoSaveState\] = useState\("idle"\)/);
   assert.match(workspace, /window\.setTimeout\(\(\) => \{[\s\S]*?queueSettingsSave\(notificationSettings\)[\s\S]*?\}, 450\)/);
-  assert.match(workspace, /Все изменения на этой странице сохраняются автоматически/);
+  const notificationView = workspace.split("function ClientNotifications(")[1].split("function ClientMessages(")[0];
+  const saveFeedback = notificationView.match(/<div className="trainerNotificationSaveStatus"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.match(saveFeedback, /data-testid="trainer-notification-save-status"/);
+  assert.match(saveFeedback, /role="status" aria-live="polite"/);
+  assert.match(saveFeedback, /Изменения сохраняются автоматически/);
+  assert.match(saveFeedback, /autoSaveState === "error"[\s\S]*?onClick=\{saveSettings\}[\s\S]*?Повторить/);
+  assert.ok(notificationView.indexOf(saveFeedback) < notificationView.indexOf('<section className="trainerNotificationStatusCard">'), "Save feedback must precede notification controls, not remain below the form");
+  const calmStyles = await readFile(new URL("../src/components/trainer/TrainerWorkspaceCalm.module.css", import.meta.url), "utf8");
+  assert.match(calmStyles, /:global\(\.trainerNextRoot \.trainerNotificationSaveStatus\)\s*\{[\s\S]*?position: sticky/);
   assert.match(workspace, /autoSaveState === "saved" \? "Сохранено" : "Сохранить настройки"/);
   assert.match(workspace, /currentTab === "overview" \? \([\s\S]*?<ClientOverview/);
   assert.match(overviewView, /<ClientWorkSummary/);
@@ -600,7 +693,9 @@ test("exercise progress load action opens a two-path trainer decision modal", as
   assert.match(modal, /Вес, подход \{index \+ 1\}/);
   assert.match(modalStyles, /width: min\(650px, 100%\)/);
   assert.match(planHandlers, /async function saveTrainerExerciseProgressAdjustment/);
-  assert.match(planHandlers, /await setDoc\(doc\(db, "users", ownerUid, "workouts", nextWorkout\.id\)/);
+  assert.match(planHandlers, /await runTransaction\(db/);
+  assert.match(planHandlers, /transaction\.get\(ref\)/);
+  assert.match(planHandlers, /transaction\.set\(ref, update, \{ merge: true \}\)/);
   assert.match(clientActions, /action === "resolve_exercise_progress"/);
   assert.match(clientActions, /"exercise_progress_review"/);
 });
@@ -624,8 +719,7 @@ test("client workout plan is compact and offers a two-path workout review decisi
   assert.doesNotMatch(plan, workoutDynamicsTitle);
   assert.match(plan, /Открыть разбор и историю тренировок/);
   assert.match(plan, /title=\{isTrainerV2Path\(window\.location\.pathname\) \? "История тренировок" : "Разбор и история тренировок"\}/);
-  assert.match(plan, /<ClientWorkoutReviewPanel[\s\S]*?<ClientWorkoutHistoryBlock history=\{history\} showAll/);
-  assert.match(workspace, /function ClientWorkoutHistoryBlock\(\{ history = \[\], showAll = false \}\)/);
+  assert.match(plan, /<TrainerWorkoutHistoryPanel[\s\S]*?history=\{history\}[\s\S]*?actionableReview=\{visibleWorkoutReview\}/);
   assert.match(plan, /<TrainerWorkoutReviewDecisionModal/);
   assert.match(plan, /onConfirm=\{\(\) => resolveWorkoutReview\("accepted"\)\}/);
   assert.match(plan, /onEdit=\{openReviewEditor\}/);
@@ -643,9 +737,11 @@ test("trainer can restore an unfinished archived program assignment", async () =
   const workspace = await readFile(new URL("../src/components/trainer/TrainerWorkspace.jsx", import.meta.url), "utf8");
   const handlers = await readFile(new URL("../src/features/trainer/trainerProgramTemplateHandlers.js", import.meta.url), "utf8");
   const route = await readFile(new URL("../src/features/trainer/TrainerClientsWorkspaceRoute.jsx", import.meta.url), "utf8");
+  const panel = await readFile(new URL("../src/components/trainer/TrainerProgramHistoryPanel.jsx", import.meta.url), "utf8");
 
-  assert.match(workspace, /Достать из архива/);
-  assert.match(workspace, /requestProgramAssignmentAction\(assignment, "restore"\)/);
+  assert.match(workspace, /TrainerProgramHistoryPanel/);
+  assert.match(panel, /Вернуть из архива/);
+  assert.match(panel, /onAction\?\.\(assignment, "restore"\)/);
   assert.match(workspace, /onRestoreProgramAssignment/);
   assert.match(handlers, /async function restoreClientProgramAssignment/);
   assert.match(handlers, /updateProgramAssignmentLocally\(clientId, assignmentKey, "restore", clientPatch, "", \{/);

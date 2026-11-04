@@ -1,3 +1,4 @@
+import ProtectedExerciseVideo from "../media/ProtectedExerciseVideo.jsx";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   collection,
@@ -9,6 +10,7 @@ import {
 import {
   ArrowLeft,
   BookOpen,
+  ChevronDown,
   Dumbbell,
   ImageIcon,
   LoaderCircle,
@@ -21,10 +23,13 @@ import {
   Video,
   X
 } from "lucide-react";
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
+import { captureAuthSession } from "../../utils/authSession.js";
 import { uploadStorageFile } from "../../utils/firebaseStorage";
 import { getBasicWorkoutMannequinIllustrationSource } from "../../utils/basicWorkoutMannequinIllustration";
+import { normalizeExerciseVideoPosterTime } from "../../../functions/exerciseVideoPoster.js";
 import AdminBasicProgramLifecycle from "./AdminBasicProgramLifecycle";
+import { matchesAdminCatalogSearch } from "./adminCatalogSearch.js";
 import styles from "./AdminBaseLibrary.module.css";
 
 const EMPTY_LIST = [];
@@ -262,6 +267,8 @@ function createExerciseRow(exercise, index, overridesById) {
     note,
     imageUrl,
     videoUrl,
+    videoPosterTime: videoUrl && overrideVideoUrl === videoUrl
+      ? normalizeExerciseVideoPosterTime(override.videoPosterTime) : null,
     overrideImageUrl,
     overrideVideoUrl,
     imageDisabled,
@@ -295,31 +302,47 @@ export default function AdminBaseLibrary({
   const [search, setSearch] = useState("");
   const [exerciseOverrides, setExerciseOverrides] = useState({});
   const [overridesStatus, setOverridesStatus] = useState("");
+  const [overridesLoadState, setOverridesLoadState] = useState("loading");
+  const [overridesRetry, setOverridesRetry] = useState(0);
+  const [muscleFilter, setMuscleFilter] = useState("");
+  const [contentFilter, setContentFilter] = useState("all");
   const [editingExercise, setEditingExercise] = useState(null);
   const [previewingProgram, setPreviewingProgram] = useState(null);
   const [savingExercise, setSavingExercise] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const pendingSave = useRef(false);
+  const mounted = useRef(true);
   const panelId = useId();
   const safeProgramTemplates = Array.isArray(programTemplates) ? programTemplates : EMPTY_LIST;
   const safeExercises = Array.isArray(exercises) ? exercises : EMPTY_LIST;
   const searchQuery = search.trim().toLocaleLowerCase("ru");
 
   useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+
+  useEffect(() => {
+    if (activeTab !== "exercises") return undefined;
     let active = true;
+    const session = captureAuthSession(auth);
 
     async function loadOverrides() {
       try {
         const snapshot = await getDocs(collection(db, "basicExerciseOverrides"));
-        if (!active) return;
+        if (!active || !session.isCurrent()) return;
 
         const nextOverrides = {};
         snapshot.forEach((item) => {
           nextOverrides[item.id] = item.data();
         });
         setExerciseOverrides(nextOverrides);
+        setOverridesLoadState("ready");
+        setOverridesStatus("");
       } catch {
-        if (!active) return;
+        if (!active || !session.isCurrent()) return;
         setOverridesStatus("Не удалось загрузить сохранённые изменения. Показана базовая версия каталога.");
+        setOverridesLoadState("error");
       }
     }
 
@@ -328,7 +351,7 @@ export default function AdminBaseLibrary({
     return () => {
       active = false;
     };
-  }, []);
+  }, [activeTab, overridesRetry]);
 
   const programRows = useMemo(
     () => safeProgramTemplates.map(createProgramRow),
@@ -339,13 +362,20 @@ export default function AdminBaseLibrary({
     [safeExercises, exerciseOverrides]
   );
   const filteredProgramRows = useMemo(
-    () => programRows.filter((program) => !searchQuery || program.searchText.includes(searchQuery)),
+    () => programRows.filter((program) => matchesAdminCatalogSearch(program.searchText, searchQuery)),
     [programRows, searchQuery]
   );
   const filteredExerciseRows = useMemo(
-    () => exerciseRows.filter((exercise) => !searchQuery || exercise.searchText.includes(searchQuery)),
-    [exerciseRows, searchQuery]
+    () => exerciseRows.filter((exercise) => matchesAdminCatalogSearch(exercise.searchText, searchQuery)
+      && (!muscleFilter || exercise.muscles === muscleFilter)
+      && (contentFilter !== "no-video" || !exercise.videoUrl)
+      && (contentFilter !== "no-technique" || !exercise.note)),
+    [exerciseRows, searchQuery, muscleFilter, contentFilter]
   );
+  const muscleOptions = useMemo(() => [...new Set(exerciseRows.map(row => row.muscles).filter(Boolean))]
+    .sort((left, right) => left.localeCompare(right, "ru")), [exerciseRows]);
+  const hasFilters = Boolean(searchQuery || muscleFilter || contentFilter !== "all");
+  const resetFilters = () => { setSearch(""); setMuscleFilter(""); setContentFilter("all"); };
 
   const isProgramsTab = activeTab === "programs";
   const sourceCount = isProgramsTab ? programRows.length : exerciseRows.length;
@@ -356,11 +386,16 @@ export default function AdminBaseLibrary({
   const exercisesPanelId = `${panelId}-exercises-panel`;
 
   const openExerciseEditor = (exercise) => {
+    if (overridesLoadState !== "ready") return;
     setSaveError("");
     setEditingExercise(exercise);
   };
 
   const saveExercise = async (draft) => {
+    if (pendingSave.current || overridesLoadState !== "ready") return;
+    const session = captureAuthSession(auth);
+    if (!session.isCurrent()) return;
+    const isCurrent = () => mounted.current && session.isCurrent();
     const nextName = String(draft.name || "").trim();
     const nextEquipment = String(draft.equipment || "").trim();
     const nextNote = String(draft.note || "").trim();
@@ -382,6 +417,7 @@ export default function AdminBaseLibrary({
       return;
     }
 
+    pendingSave.current = true;
     setSavingExercise(true);
     setSaveError("");
 
@@ -401,6 +437,7 @@ export default function AdminBaseLibrary({
       }
 
       if (videoFile) {
+        if (!isCurrent()) return;
         const videoUpload = await uploadStorageFile(
           `basic-exercise-assets/${assetFolder}/videos/${timestamp}-${createSafeAssetName(videoFile.name, "video")}`,
           videoFile,
@@ -409,6 +446,8 @@ export default function AdminBaseLibrary({
         videoUrl = videoUpload.url;
       }
 
+      const videoChanged = videoFile || !videoUrl || draft.videoDisabled
+        || videoUrl !== String(exerciseOverrides[draft.id]?.videoUrl || "").trim();
       const update = {
         name: nextName,
         equipment: nextEquipment,
@@ -418,10 +457,12 @@ export default function AdminBaseLibrary({
         imageDisabled: draft.imageDisabled === true,
         videoDisabled: draft.videoDisabled === true,
         // Framing is specific to the imported clip; do not reuse it on a new one.
-        ...(videoFile || !videoUrl || draft.videoDisabled ? { videoCrop: null } : {}),
+        ...(videoChanged ? { videoCrop: null, videoPosterTime: null } : {}),
         updatedAt: serverTimestamp()
       };
+      if (!isCurrent()) return;
       await setDoc(doc(db, "basicExerciseOverrides", draft.id), update, { merge: true });
+      if (!isCurrent()) return;
       setExerciseOverrides((current) => ({
         ...current,
         [draft.id]: {
@@ -431,6 +472,7 @@ export default function AdminBaseLibrary({
           note: nextNote,
           imageUrl,
           videoUrl,
+          ...(videoChanged ? { videoCrop: null, videoPosterTime: null } : {}),
           imageDisabled: draft.imageDisabled === true,
           videoDisabled: draft.videoDisabled === true
         }
@@ -438,9 +480,10 @@ export default function AdminBaseLibrary({
       setEditingExercise(null);
       setOverridesStatus("Изменения сохранены в общем каталоге.");
     } catch {
-      setSaveError("Не удалось сохранить изменения. Проверьте подключение и права администратора.");
+      if (isCurrent()) setSaveError("Не удалось сохранить изменения. Проверьте подключение и права администратора.");
     } finally {
-      setSavingExercise(false);
+      pendingSave.current = false;
+      if (isCurrent()) setSavingExercise(false);
     }
   };
 
@@ -513,6 +556,7 @@ export default function AdminBaseLibrary({
 
         {!isProgramsTab ? (
           <>
+            <p className={styles.catalogHelp}>Общие карточки приложения. Личные библиотеки тренеров и история клиентов здесь не редактируются.</p>
             <label className={styles.searchField}>
               <Search aria-hidden="true" />
               <span className={styles.srOnly}>Поиск в каталоге</span>
@@ -523,17 +567,21 @@ export default function AdminBaseLibrary({
                 type="search"
               />
             </label>
+            <div className={styles.catalogFilters}>
+              <label>Группа мышц<select value={muscleFilter} onChange={event => setMuscleFilter(event.target.value)}><option value="">Все группы</option>{muscleOptions.map(group => <option key={group} value={group}>{group}</option>)}</select></label>
+              <label>Содержимое<select value={contentFilter} onChange={event => setContentFilter(event.target.value)}><option value="all">Все карточки</option><option value="no-video">Без видео</option><option value="no-technique">Без описания техники</option></select></label>
+            </div>
 
             <div className={styles.resultsHeading}>
               <div>
                 <h2>Базовые упражнения</h2>
                 <p>
-                  {searchQuery
+                  {hasFilters
                     ? `Найдено ${visibleCount} из ${sourceCount}`
                     : `${sourceCount} ${pluralize(sourceCount, ["элемент", "элемента", "элементов"])} в каталоге`}
                 </p>
               </div>
-              <span className={styles.readOnlyBadge}>Общий каталог</span>
+              {hasFilters ? <button className={styles.resetFilters} type="button" onClick={resetFilters}>Сбросить</button> : null}
             </div>
           </>
         ) : null}
@@ -548,15 +596,17 @@ export default function AdminBaseLibrary({
         >
           {isProgramsTab ? (
             <AdminBasicProgramLifecycle fallbackPrograms={safeProgramTemplates} embedded={embedded} />
-          ) : filteredExerciseRows.length ? (
+          ) : <>
+              {overridesLoadState === "loading" ? <p className={styles.catalogueStatus} role="status"><LoaderCircle size={18} aria-hidden="true" />Загружаем изменения каталога… Редактирование скоро станет доступно.</p> : null}
+              {overridesStatus ? <div className={styles.catalogueStatus} role={overridesLoadState === "error" ? "alert" : "status"}>{overridesStatus}{overridesLoadState === "error" ? <button type="button" onClick={() => { setOverridesLoadState("loading"); setOverridesStatus(""); setOverridesRetry(value => value + 1); }}>Повторить загрузку</button> : null}</div> : null}
+              {filteredExerciseRows.length ? (
             <>
-              {overridesStatus ? <p className={styles.catalogueStatus} role="status">{overridesStatus}</p> : null}
               <div className={styles.exerciseGrid}>
                 {filteredExerciseRows.map((exercise) => (
                   <article className={styles.exerciseCard} key={exercise.id}>
                     <span className={styles.exerciseImage} aria-hidden="true">
                       <Dumbbell className={styles.exerciseImageFallback} />
-                      {exercise.imageSource ? <img src={exercise.imageSource} alt="" /> : null}
+                      {exercise.imageSource ? <img src={exercise.imageSource} alt="" loading="lazy" decoding="async" /> : null}
                     </span>
                     <div className={styles.exerciseCopy}>
                       <h3>{exercise.title}</h3>
@@ -572,7 +622,8 @@ export default function AdminBaseLibrary({
                       ) : (
                         <p className={styles.exerciseFallback}>Характеристики упражнения не указаны.</p>
                       )}
-                      <button className={styles.editExerciseButton} type="button" onClick={() => openExerciseEditor(exercise)}>
+                      <p className={styles.contentSummary}>{exercise.videoUrl ? "Видео есть" : "Без видео"} · {exercise.note ? "Техника описана" : "Без описания техники"}</p>
+                      <button className={styles.editExerciseButton} type="button" disabled={overridesLoadState !== "ready"} onClick={() => openExerciseEditor(exercise)}>
                         <Pencil aria-hidden="true" />
                         Редактировать
                       </button>
@@ -584,12 +635,12 @@ export default function AdminBaseLibrary({
           ) : (
             <EmptyState
               icon={<Dumbbell aria-hidden="true" />}
-              title={searchQuery ? "Упражнения не найдены" : "Базовые упражнения пока не добавлены"}
-              text={searchQuery
-                ? "Проверьте написание или очистите поле поиска."
+              title={hasFilters ? "Упражнения не найдены" : "Базовые упражнения пока не добавлены"}
+              text={hasFilters
+                ? "Измените запрос или сбросьте фильтры."
                 : "Когда упражнения появятся в общей библиотеке, они будут показаны здесь."}
             />
-          )}
+          )}</>}
         </div>
       </section>
       {editingExercise ? (
@@ -751,9 +802,15 @@ function ExerciseEditSheet({ exercise, saving, saveError, onClose, onSave }) {
     }
   };
 
+  const imageStatus = draft.imageDisabled ? "Скрыто" : draft.imageFile ? "Новый файл выбран"
+    : draft.imageUrl && exercise.hasCustomImage ? "Добавлено администратором" : "Исходная иллюстрация";
+  const videoStatus = draft.videoDisabled ? "Скрыто" : draft.videoFile ? "Новый файл выбран"
+    : draft.videoUrl && exercise.hasCustomVideo ? "Добавлено администратором" : exercise.baseVideoUrl ? "Исходное видео" : "Не добавлено";
+  const editorError = [mediaError, saveError].filter(Boolean).join(" ");
+
   return (
     <div
-      className={styles.editOverlay} data-modal-backdrop="true"
+      className={`${styles.editOverlay} ${styles.exerciseEditorOverlay}`} data-modal-backdrop="true"
       role="presentation"
       onMouseDown={(event) => {
         if (!saving && event.target === event.currentTarget) onClose();
@@ -767,7 +824,7 @@ function ExerciseEditSheet({ exercise, saving, saveError, onClose, onSave }) {
         aria-labelledby="admin-exercise-edit-title"
         aria-describedby="admin-exercise-edit-hint"
       >
-        <header className={styles.editHeader}>
+        <header className={styles.editHeader} data-testid="admin-exercise-editor-header">
           <div>
             <p>Общий каталог</p>
             <h2 id="admin-exercise-edit-title">Редактировать упражнение</h2>
@@ -776,32 +833,45 @@ function ExerciseEditSheet({ exercise, saving, saveError, onClose, onSave }) {
             <X aria-hidden="true" />
           </button>
         </header>
-        <p id="admin-exercise-edit-hint" className={styles.editHint}>Карточка обновится в общем каталоге и материалах базовой тренировки. Уже сохранённые подходы, история и структура назначенных тренировок не изменятся.</p>
+        <div className={styles.editorBody} data-testid="admin-exercise-editor-body">
+        <p id="admin-exercise-edit-hint" className={styles.editHint}>Обновляется общая карточка. История и выданные планы не меняются.</p>
+        <section className={styles.editorGroup} aria-labelledby="admin-exercise-main-title">
+          <h3 id="admin-exercise-main-title">Основное</h3>
+          <div className={styles.mainFields}>
         <label className={styles.editField}>
           <span>Название</span>
-          <input value={draft.name} onChange={updateDraft("name")} maxLength="120" autoFocus />
+          <input value={draft.name} onChange={updateDraft("name")} maxLength="120" disabled={saving} />
         </label>
         <label className={styles.editField}>
           <span>Инвентарь</span>
-          <input value={draft.equipment} onChange={updateDraft("equipment")} maxLength="120" />
+          <input value={draft.equipment} onChange={updateDraft("equipment")} maxLength="120" disabled={saving} />
         </label>
+          </div>
+        </section>
+        <section className={styles.editorGroup} aria-labelledby="admin-exercise-technique-title">
+          <h3 id="admin-exercise-technique-title">Техника</h3>
         <label className={styles.editField}>
           <span>Подсказка по технике</span>
-          <textarea value={draft.note} onChange={updateDraft("note")} maxLength="600" rows="4" />
+          <textarea value={draft.note} onChange={updateDraft("note")} maxLength="600" rows="3" disabled={saving} />
         </label>
+        </section>
+        <section className={styles.editorGroup} aria-labelledby="admin-exercise-media-title">
+          <h3 id="admin-exercise-media-title">Медиа</h3>
         <div className={styles.mediaFields}>
-          <section className={styles.mediaField} aria-labelledby="admin-exercise-image-label">
-            <div className={styles.mediaFieldHeading}>
+          <details className={styles.mediaField}>
+            <summary className={styles.mediaFieldHeading}>
               <ImageIcon aria-hidden="true" />
-              <span id="admin-exercise-image-label">Изображение упражнения</span>
-            </div>
+              <span><strong>Изображение</strong><small>{imageStatus}</small></span>
+              <ChevronDown className={styles.mediaChevron} aria-hidden="true" />
+            </summary>
+            <div className={styles.mediaDetails}>
             <div className={styles.mediaPreview}>
               {!draft.imageDisabled && imagePreviewUrl ? <img src={imagePreviewUrl} alt="Предпросмотр изображения упражнения" /> : <Dumbbell aria-hidden="true" />}
             </div>
             <label className={styles.mediaUploadButton}>
               <Upload aria-hidden="true" />
               {draft.imageFile ? "Выбрать другое" : "Заменить изображение"}
-              <input type="file" accept="image/jpeg,image/png,image/webp" onChange={selectMedia("image")} disabled={saving} />
+              <input type="file" aria-label="Выбрать изображение упражнения" accept="image/jpeg,image/png,image/webp" onChange={selectMedia("image")} disabled={saving} />
             </label>
             <div className={styles.mediaActions}>
               <button
@@ -816,29 +886,25 @@ function ExerciseEditSheet({ exercise, saving, saveError, onClose, onSave }) {
                 Убрать
               </button>
             </div>
-            <p className={styles.mediaState}>
-              {draft.imageDisabled
-                ? "Изображение будет скрыто в общем каталоге."
-                : draft.imageFile
-                  ? "Новое изображение выбрано и будет загружено при сохранении."
-                  : exercise.hasCustomImage
-                    ? "Используется изображение, добавленное администратором."
-                    : "Используется исходная иллюстрация упражнения."}
-            </p>
-            <p>JPG, PNG или WebP · до 10 МБ</p>
-          </section>
-          <section className={styles.mediaField} aria-labelledby="admin-exercise-video-label">
-            <div className={styles.mediaFieldHeading}>
-              <Video aria-hidden="true" />
-              <span id="admin-exercise-video-label">Видео упражнения</span>
+            <p className={styles.mediaFormat}>JPG, PNG, WebP · до 10 МБ</p>
             </div>
+          </details>
+          <details className={styles.mediaField}>
+            <summary className={styles.mediaFieldHeading}>
+              <Video aria-hidden="true" />
+              <span><strong>Видео</strong><small>{videoStatus}</small></span>
+              <ChevronDown className={styles.mediaChevron} aria-hidden="true" />
+            </summary>
+            <div className={styles.mediaDetails}>
             <div className={styles.mediaPreview}>
-              {!draft.videoDisabled && videoPreviewUrl ? <video src={videoPreviewUrl} controls preload="metadata" /> : <Video aria-hidden="true" />}
+              {!draft.videoDisabled && videoPreviewUrl ? <ProtectedExerciseVideo src={videoPreviewUrl}
+                previewTime={!draft.videoFile && videoPreviewUrl === exercise.videoUrl && draft.videoUrl === exercise.videoUrl
+                  ? exercise.videoPosterTime : null} controls preload="metadata" /> : <Video aria-hidden="true" />}
             </div>
             <label className={styles.mediaUploadButton}>
               <Upload aria-hidden="true" />
               {draft.videoFile ? "Выбрать другое" : "Заменить видео"}
-              <input type="file" accept="video/mp4,video/webm,video/quicktime" onChange={selectMedia("video")} disabled={saving} />
+              <input type="file" aria-label="Выбрать видео упражнения" accept="video/mp4,video/webm,video/quicktime" onChange={selectMedia("video")} disabled={saving} />
             </label>
             <div className={styles.mediaActions}>
               <button
@@ -853,22 +919,14 @@ function ExerciseEditSheet({ exercise, saving, saveError, onClose, onSave }) {
                 Убрать
               </button>
             </div>
-            <p className={styles.mediaState}>
-              {draft.videoDisabled
-                ? "Видео будет скрыто в общем каталоге."
-                : draft.videoFile
-                  ? "Новое видео выбрано и будет загружено при сохранении."
-                  : exercise.hasCustomVideo
-                    ? "Используется видео, добавленное администратором."
-                    : exercise.baseVideoUrl
-                      ? "Используется исходное видео упражнения."
-                      : "Видео пока не добавлено."}
-            </p>
-            <p>MP4, WebM или MOV · до 250 МБ</p>
-          </section>
+            <p className={styles.mediaFormat}>MP4, WebM, MOV · до 250 МБ</p>
+            </div>
+          </details>
         </div>
-        {mediaError ? <p className={styles.editError} role="alert">{mediaError}</p> : null}
-        {saveError ? <p className={styles.editError} role="alert">{saveError}</p> : null}
+        </section>
+        </div>
+        <footer className={styles.editorFooter} data-testid="admin-exercise-editor-footer">
+        {editorError ? <p className={styles.editError} role="alert">{editorError}</p> : null}
         <div className={styles.editActions}>
           <button type="button" className={styles.cancelEditButton} onClick={onClose} disabled={saving}>Отмена</button>
           <button type="button" className={styles.saveEditButton} onClick={() => onSave(draft)} disabled={saving}>
@@ -876,6 +934,7 @@ function ExerciseEditSheet({ exercise, saving, saveError, onClose, onSave }) {
             {saving ? "Сохраняем…" : "Сохранить"}
           </button>
         </div>
+        </footer>
       </section>
     </div>
   );

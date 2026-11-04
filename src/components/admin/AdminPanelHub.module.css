@@ -210,6 +210,76 @@
 
 .accessNote svg { flex: 0 0 auto; width: 18px; height: 18px; color: #376b91; }
 
+.telegramSetup {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px solid #edf1f3;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(28, 28, 30, 0.045);
+}
+
+.systemSection { margin-top: 20px; border: 1px solid rgba(60, 60, 67, .12); border-radius: 20px; background: #fff; overflow: hidden; }
+.systemSection > summary { min-height: 72px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 14px; cursor: pointer; list-style: none; }
+.systemSection > summary::-webkit-details-marker { display: none; }
+.systemSection > summary span { display: inline-flex; align-items: center; gap: 10px; color: #1C1C1E; font-size: 15px; }
+.systemSection > summary small { color: #636366; font-size: 12px; }
+.systemSection > summary::after { content: "+"; color: #636366; font-size: 22px; }
+.systemSection[open] > summary::after { content: "−"; }
+.systemSection > summary:focus-visible { outline: 3px solid #a9c4e3; outline-offset: -3px; }
+.systemSection .telegramSetup { margin: 0; border: 0; border-top: 1px solid rgba(60,60,67,.12); border-radius: 0; box-shadow: none; }
+
+.telegramSetupIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #edf1f3;
+  color: #376b91;
+}
+
+.telegramSetup h2,
+.telegramSetup p { margin: 0; }
+.telegramSetup h2 { color: #1c282e; font-size: 15px; font-weight: 780; }
+.telegramSetup p,
+.telegramSetup small { display: block; margin-top: 4px; color: #617078; font-size: 12px; line-height: 1.4; }
+
+.telegramSetup button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--ownset-action-gradient);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.telegramSetup button:disabled { cursor: wait; opacity: .65; }
+.telegramDiagnostics, .telegramMaintenance { margin-top: 12px; }
+.telegramDiagnostics summary, .telegramMaintenance summary { min-height: 44px; padding: 12px 0; color: #3C6FAA; font-size: 13px; cursor: pointer; }
+.telegramDiagnostics dl { margin: 0; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.telegramDiagnostics dt { color: #636366; }
+.telegramDiagnostics dd { margin: 0 0 8px; color: #1C1C1E; }
+.telegramMaintenance > button { min-height: 44px; margin-top: 12px; background: #EFEFF4; color: #3C6FAA; }
+.telegramSetup summary:focus-visible, .telegramSetup button:focus-visible { outline: 2px solid #3F73B8; outline-offset: 2px; }
+.confirmOverlay { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: max(16px, var(--admin-safe-top, 0px)) max(16px, var(--admin-safe-right, 0px)) max(16px, var(--admin-safe-bottom, 0px)) max(16px, var(--admin-safe-left, 0px)); background: rgba(28, 28, 30,.32); }
+.confirmSheet { width: min(100%, 480px); max-height: calc(var(--app-viewport-height, 100dvh) - var(--admin-safe-top, 0px) - var(--admin-safe-bottom, 0px) - 32px); overflow-y: auto; padding: 20px; border-radius: 22px; background: #fff; color: #1C1C1E; overflow-wrap: anywhere; }
+.confirmSheet header { display: flex; align-items: flex-start; gap: 12px; justify-content: space-between; }
+.confirmSheet header h2 { font-size: 20px; line-height: 1.3; }
+.confirmSheet header button { flex-shrink: 0; width: 44px; padding: 0; display: grid; place-items: center; background: #EFEFF4; color: #1C1C1E; }
+.confirmSheet p { margin-top: 16px; color: #636366; font-size: 14px; line-height: 1.5; }
+.confirmSheet footer { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.confirmSheet footer button { flex: 1 1 150px; min-height: 44px; }
+.confirmSheet footer button:first-child { background: #EFEFF4; color: #3C6FAA; }
+
 .deniedCard {
   max-width: 480px;
   margin: 90px auto 0;
@@ -235,6 +305,8 @@
   .accessBadge { padding-inline: 9px; }
   .hero { padding: 20px; border-radius: 24px; }
   .sectionGrid { grid-template-columns: 1fr; }
+  .telegramSetup { grid-template-columns: 42px minmax(0, 1fr); }
+  .telegramSetup button { grid-column: 1 / -1; width: 100%; }
   .sectionCard { min-height: 104px; padding: 15px; flex-direction: row; align-items: center; gap: 12px; }
   .cardCopy { padding-right: 28px; }
   .cardChevron { top: 50%; right: 15px; bottom: auto; transform: translateY(-50%); }

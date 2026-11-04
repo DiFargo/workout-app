@@ -6,6 +6,7 @@ import { deletionFixture, http } from "./security-remediation.test.mjs";
 function avatarFixture(t, { delayed = false, failCleanup = false } = {}) {
   const f = deletionFixture();
   f.docs.get("users/client").telegram = { telegramUserId: "123", connected: true };
+  f.docs.set("telegramIdentities/123", { uid: "client", telegramUserId: "123" });
   let release, signal;
   const gate = new Promise(resolve => { release = resolve; });
   const started = new Promise(resolve => { signal = resolve; });

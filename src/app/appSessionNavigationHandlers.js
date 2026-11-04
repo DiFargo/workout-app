@@ -1,11 +1,14 @@
 import { signOut } from "firebase/auth";
+import { captureAuthSession } from "../utils/authSession.js";
 
-export function performAppLogout({
+export async function performAppLogout({
   auth,
   APP_PAGES,
   defaultNutritionState,
   createEmptyAiNutritionProfileDraft,
   createEmptyTelegramProfile,
+  setAppLoading,
+  onLogoutError,
   setProfileSettingsModalOpen,
   setProfileSettingsModalSection,
   setProfileAvatarCropOpen,
@@ -55,7 +58,32 @@ export function performAppLogout({
   setWorkoutHistorySyncState,
   setFirstSetupCompletedInSession
 }) {
-  signOut(auth);
+  const signingOutUser = auth.currentUser;
+  if (!signingOutUser) return true;
+  const signingOutSession = captureAuthSession(auth);
+  // Do not expose an intermediate login form before the signed-out bootstrap
+  // finishes; that form would be remounted and lose newly entered credentials.
+  setAppLoading(true);
+  let signedOutWithoutBootstrap = false;
+  try {
+    await signOut(auth);
+  } catch {
+    if (auth.currentUser === signingOutUser) {
+      if (!signingOutSession.isCurrent()) return false;
+      setAppLoading(false);
+      setProfileAccountStatus("Не удалось завершить выход. Попробуй ещё раз.");
+      try { onLogoutError?.("Не удалось завершить выход. Аккаунт остаётся открыт. Попробуй выйти ещё раз."); }
+      catch { /* A failed notification must not clear or replace the signed-in account. */ }
+      return false;
+    }
+    if (auth.currentUser) return false;
+    // Persistence can reject after Firebase clears currentUser but before it
+    // notifies auth listeners. Clear this account locally without awaiting a
+    // bootstrap notification that may never arrive.
+    signedOutWithoutBootstrap = true;
+  }
+  // A later login owns its bootstrap state; an old logout must not clear it.
+  if (auth.currentUser) return false;
 
   setProfileSettingsModalOpen(false);
   setProfileSettingsModalSection("settings");
@@ -83,7 +111,9 @@ export function performAppLogout({
   setSelectedUserId(null);
   setLogin("");
   setPassword("");
-  setLoginError("");
+  setLoginError(signedOutWithoutBootstrap
+    ? "Не удалось полностью очистить сохранённый вход. Войди заново; если ошибка повторится, закрой и открой приложение."
+    : "");
   setHistory([]);
   setNutrition(defaultNutritionState);
   setRecentNutritionFoods([]);
@@ -109,6 +139,8 @@ export function performAppLogout({
   setPostWorkoutFeedback(null);
   setPostWorkoutFeedbackOpen(false);
   setFirstSetupCompletedInSession(false);
+  if (signedOutWithoutBootstrap) setAppLoading(false);
+  return true;
 }
 
 export function resetClientToMain({

@@ -36,7 +36,7 @@ test("compact exercise heading stays centered above the video with a single exit
     expect(progressBox.y).toBeGreaterThanOrEqual(titleBox.y + titleBox.height);
     expect(videoBox.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height);
     // The media container owns the ratio; this inner frame can compute to auto.
-    expect(videoBox.width).toBeCloseTo(videoBox.height * 4 / 3, 0);
+    expect(videoBox.width).toBeCloseTo(videoBox.height, 0);
     expect(exitBox.width).toBeGreaterThanOrEqual(44);
     expect(exitBox.height).toBeGreaterThanOrEqual(44);
     expect(titleBox.x + titleBox.width).toBeLessThan(exitBox.x);

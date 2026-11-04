@@ -1,0 +1,3569 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "basic-usda-173944",
+      "name": "Банан, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 89,
+        "protein": 1.09,
+        "fat": 0.33,
+        "carbs": 22.8
+      },
+      "aliases": [
+        "банан",
+        "бананы",
+        "Bananas, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173944/nutrients",
+        "title": "Bananas, raw",
+        "sourceId": "173944"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171688",
+      "name": "Яблоко с кожурой, свежее",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 52,
+        "protein": 0.26,
+        "fat": 0.17,
+        "carbs": 13.8
+      },
+      "aliases": [
+        "яблоко",
+        "яблоки",
+        "Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171688/nutrients",
+        "title": "Apples, raw, with skin (Includes foods for USDA's Food Distribution Program)",
+        "sourceId": "171688"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169097",
+      "name": "Апельсин, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 47,
+        "protein": 0.94,
+        "fat": 0.12,
+        "carbs": 11.8
+      },
+      "aliases": [
+        "апельсин",
+        "апельсины",
+        "Oranges, raw, all commercial varieties"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169097/nutrients",
+        "title": "Oranges, raw, all commercial varieties",
+        "sourceId": "169097"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169105",
+      "name": "Мандарин, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 53,
+        "protein": 0.81,
+        "fat": 0.31,
+        "carbs": 13.3
+      },
+      "aliases": [
+        "мандарин",
+        "мандарины",
+        "Tangerines, (mandarin oranges), raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169105/nutrients",
+        "title": "Tangerines, (mandarin oranges), raw",
+        "sourceId": "169105"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169118",
+      "name": "Груша, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 57,
+        "protein": 0.36,
+        "fat": 0.14,
+        "carbs": 15.2
+      },
+      "aliases": [
+        "груша",
+        "груши",
+        "Pears, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169118/nutrients",
+        "title": "Pears, raw",
+        "sourceId": "169118"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169928",
+      "name": "Персик жёлтый, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 39,
+        "protein": 0.91,
+        "fat": 0.25,
+        "carbs": 9.54
+      },
+      "aliases": [
+        "персик",
+        "персики",
+        "Peaches, yellow, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169928/nutrients",
+        "title": "Peaches, yellow, raw",
+        "sourceId": "169928"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169914",
+      "name": "Нектарин, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 44,
+        "protein": 1.06,
+        "fat": 0.32,
+        "carbs": 10.6
+      },
+      "aliases": [
+        "нектарин",
+        "нектарины",
+        "Nectarines, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169914/nutrients",
+        "title": "Nectarines, raw",
+        "sourceId": "169914"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169949",
+      "name": "Слива, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 46,
+        "protein": 0.7,
+        "fat": 0.28,
+        "carbs": 11.4
+      },
+      "aliases": [
+        "слива",
+        "сливы",
+        "Plums, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169949/nutrients",
+        "title": "Plums, raw",
+        "sourceId": "169949"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171697",
+      "name": "Абрикос, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 48,
+        "protein": 1.4,
+        "fat": 0.39,
+        "carbs": 11.1
+      },
+      "aliases": [
+        "абрикос",
+        "абрикосы",
+        "Apricots, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171697/nutrients",
+        "title": "Apricots, raw",
+        "sourceId": "171697"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-174683",
+      "name": "Виноград красный или зелёный, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 69,
+        "protein": 0.72,
+        "fat": 0.16,
+        "carbs": 18.1
+      },
+      "aliases": [
+        "виноград",
+        "Grapes, red or green (European type, such as Thompson seedless), raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/174683/nutrients",
+        "title": "Grapes, red or green (European type, such as Thompson seedless), raw",
+        "sourceId": "174683"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-168153",
+      "name": "Киви зелёный, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 61,
+        "protein": 1.14,
+        "fat": 0.52,
+        "carbs": 14.7
+      },
+      "aliases": [
+        "киви",
+        "Kiwifruit, green, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168153/nutrients",
+        "title": "Kiwifruit, green, raw",
+        "sourceId": "168153"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169124",
+      "name": "Ананас, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 50,
+        "protein": 0.54,
+        "fat": 0.12,
+        "carbs": 13.1
+      },
+      "aliases": [
+        "ананас",
+        "Pineapple, raw, all varieties"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169124/nutrients",
+        "title": "Pineapple, raw, all varieties",
+        "sourceId": "169124"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169910",
+      "name": "Манго, свежее",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 60,
+        "protein": 0.82,
+        "fat": 0.38,
+        "carbs": 15
+      },
+      "aliases": [
+        "манго",
+        "Mangos, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169910/nutrients",
+        "title": "Mangos, raw",
+        "sourceId": "169910"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171705",
+      "name": "Авокадо, свежее",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 160,
+        "protein": 2,
+        "fat": 14.7,
+        "carbs": 8.53
+      },
+      "aliases": [
+        "авокадо",
+        "Avocados, raw, all commercial varieties"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171705/nutrients",
+        "title": "Avocados, raw, all commercial varieties",
+        "sourceId": "171705"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-174673",
+      "name": "Грейпфрут розовый или красный, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 42,
+        "protein": 0.77,
+        "fat": 0.14,
+        "carbs": 10.7
+      },
+      "aliases": [
+        "грейпфрут",
+        "Grapefruit, raw, pink and red, all areas"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/174673/nutrients",
+        "title": "Grapefruit, raw, pink and red, all areas",
+        "sourceId": "174673"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-167746",
+      "name": "Лимон без кожуры, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 29,
+        "protein": 1.1,
+        "fat": 0.3,
+        "carbs": 9.32
+      },
+      "aliases": [
+        "лимон",
+        "мякоть лимона",
+        "Lemons, raw, without peel"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/167746/nutrients",
+        "title": "Lemons, raw, without peel",
+        "sourceId": "167746"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-167765",
+      "name": "Арбуз, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 30,
+        "protein": 0.61,
+        "fat": 0.15,
+        "carbs": 7.55
+      },
+      "aliases": [
+        "арбуз",
+        "Watermelon, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/167765/nutrients",
+        "title": "Watermelon, raw",
+        "sourceId": "167765"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169911",
+      "name": "Дыня медовая, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 36,
+        "protein": 0.54,
+        "fat": 0.14,
+        "carbs": 9.09
+      },
+      "aliases": [
+        "дыня",
+        "медовая дыня",
+        "Melons, honeydew, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169911/nutrients",
+        "title": "Melons, honeydew, raw",
+        "sourceId": "169911"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-167762",
+      "name": "Клубника, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 32,
+        "protein": 0.67,
+        "fat": 0.3,
+        "carbs": 7.68
+      },
+      "aliases": [
+        "клубника",
+        "Strawberries, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/167762/nutrients",
+        "title": "Strawberries, raw",
+        "sourceId": "167762"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-167755",
+      "name": "Малина, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 52,
+        "protein": 1.2,
+        "fat": 0.65,
+        "carbs": 11.9
+      },
+      "aliases": [
+        "малина",
+        "Raspberries, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/167755/nutrients",
+        "title": "Raspberries, raw",
+        "sourceId": "167755"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171711",
+      "name": "Голубика, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 57,
+        "protein": 0.74,
+        "fat": 0.33,
+        "carbs": 14.5
+      },
+      "aliases": [
+        "голубика",
+        "Blueberries, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171711/nutrients",
+        "title": "Blueberries, raw",
+        "sourceId": "171711"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-173946",
+      "name": "Ежевика, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 43,
+        "protein": 1.39,
+        "fat": 0.49,
+        "carbs": 9.61
+      },
+      "aliases": [
+        "ежевика",
+        "Blackberries, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173946/nutrients",
+        "title": "Blackberries, raw",
+        "sourceId": "173946"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-173954",
+      "name": "Вишня кислая, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 50,
+        "protein": 1,
+        "fat": 0.3,
+        "carbs": 12.2
+      },
+      "aliases": [
+        "вишня",
+        "Cherries, sour, red, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173954/nutrients",
+        "title": "Cherries, sour, red, raw",
+        "sourceId": "173954"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171719",
+      "name": "Черешня, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 63,
+        "protein": 1.06,
+        "fat": 0.2,
+        "carbs": 16
+      },
+      "aliases": [
+        "черешня",
+        "Cherries, sweet, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171719/nutrients",
+        "title": "Cherries, sweet, raw",
+        "sourceId": "171719"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-173963",
+      "name": "Смородина чёрная, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 63,
+        "protein": 1.4,
+        "fat": 0.41,
+        "carbs": 15.4
+      },
+      "aliases": [
+        "чёрная смородина",
+        "Currants, european black, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173963/nutrients",
+        "title": "Currants, european black, raw",
+        "sourceId": "173963"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-173964",
+      "name": "Смородина красная или белая, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 56,
+        "protein": 1.4,
+        "fat": 0.2,
+        "carbs": 13.8
+      },
+      "aliases": [
+        "красная смородина",
+        "белая смородина",
+        "Currants, red and white, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173964/nutrients",
+        "title": "Currants, red and white, raw",
+        "sourceId": "173964"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171722",
+      "name": "Клюква, свежая",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 46,
+        "protein": 0.46,
+        "fat": 0.13,
+        "carbs": 12
+      },
+      "aliases": [
+        "клюква",
+        "Cranberries, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171722/nutrients",
+        "title": "Cranberries, raw",
+        "sourceId": "171722"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-173030",
+      "name": "Крыжовник, свежий",
+      "brand": "",
+      "category": "Фрукты и ягоды",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 44,
+        "protein": 0.88,
+        "fat": 0.58,
+        "carbs": 10.2
+      },
+      "aliases": [
+        "крыжовник",
+        "Gooseberries, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173030/nutrients",
+        "title": "Gooseberries, raw",
+        "sourceId": "173030"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170457",
+      "name": "Помидор красный, свежий",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 18,
+        "protein": 0.88,
+        "fat": 0.2,
+        "carbs": 3.89
+      },
+      "aliases": [
+        "помидор",
+        "помидоры",
+        "томат",
+        "Tomatoes, red, ripe, raw, year round average"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170457/nutrients",
+        "title": "Tomatoes, red, ripe, raw, year round average",
+        "sourceId": "170457"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-168409",
+      "name": "Огурец с кожурой, свежий",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 15,
+        "protein": 0.65,
+        "fat": 0.11,
+        "carbs": 3.63
+      },
+      "aliases": [
+        "огурец",
+        "огурцы",
+        "Cucumber, with peel, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168409/nutrients",
+        "title": "Cucumber, with peel, raw",
+        "sourceId": "168409"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170393",
+      "name": "Морковь, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 41,
+        "protein": 0.93,
+        "fat": 0.24,
+        "carbs": 9.58
+      },
+      "aliases": [
+        "морковь",
+        "Carrots, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170393/nutrients",
+        "title": "Carrots, raw",
+        "sourceId": "170393"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170000",
+      "name": "Лук репчатый, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 40,
+        "protein": 1.1,
+        "fat": 0.1,
+        "carbs": 9.34
+      },
+      "aliases": [
+        "лук репчатый",
+        "репчатый лук",
+        "Onions, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170000/nutrients",
+        "title": "Onions, raw",
+        "sourceId": "170000"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169975",
+      "name": "Капуста белокочанная, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 25,
+        "protein": 1.28,
+        "fat": 0.1,
+        "carbs": 5.8
+      },
+      "aliases": [
+        "белокочанная капуста",
+        "Cabbage, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169975/nutrients",
+        "title": "Cabbage, raw",
+        "sourceId": "169975"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169977",
+      "name": "Капуста краснокочанная, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 31,
+        "protein": 1.43,
+        "fat": 0.16,
+        "carbs": 7.37
+      },
+      "aliases": [
+        "краснокочанная капуста",
+        "Cabbage, red, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169977/nutrients",
+        "title": "Cabbage, red, raw",
+        "sourceId": "169977"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170379",
+      "name": "Брокколи, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 34,
+        "protein": 2.82,
+        "fat": 0.37,
+        "carbs": 6.64
+      },
+      "aliases": [
+        "брокколи свежая",
+        "Broccoli, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170379/nutrients",
+        "title": "Broccoli, raw",
+        "sourceId": "170379"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169986",
+      "name": "Капуста цветная, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 25,
+        "protein": 1.92,
+        "fat": 0.28,
+        "carbs": 4.97
+      },
+      "aliases": [
+        "цветная капуста свежая",
+        "Cauliflower, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169986/nutrients",
+        "title": "Cauliflower, raw",
+        "sourceId": "169986"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169145",
+      "name": "Свёкла, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 43,
+        "protein": 1.61,
+        "fat": 0.17,
+        "carbs": 9.56
+      },
+      "aliases": [
+        "свёкла",
+        "свекла",
+        "Beets, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169145/nutrients",
+        "title": "Beets, raw",
+        "sourceId": "169145"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170026",
+      "name": "Картофель с кожурой, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 77,
+        "protein": 2.05,
+        "fat": 0.09,
+        "carbs": 17.5
+      },
+      "aliases": [
+        "картофель сырой",
+        "картошка сырая",
+        "Potatoes, flesh and skin, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170026/nutrients",
+        "title": "Potatoes, flesh and skin, raw",
+        "sourceId": "170026"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169291",
+      "name": "Кабачок цукини с кожурой, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 17,
+        "protein": 1.21,
+        "fat": 0.32,
+        "carbs": 3.11
+      },
+      "aliases": [
+        "кабачок",
+        "цукини",
+        "Squash, summer, zucchini, includes skin, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169291/nutrients",
+        "title": "Squash, summer, zucchini, includes skin, raw",
+        "sourceId": "169291"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169228",
+      "name": "Баклажан, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 25,
+        "protein": 0.98,
+        "fat": 0.18,
+        "carbs": 5.88
+      },
+      "aliases": [
+        "баклажан",
+        "Eggplant, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169228/nutrients",
+        "title": "Eggplant, raw",
+        "sourceId": "169228"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170108",
+      "name": "Перец сладкий красный, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 26,
+        "protein": 0.99,
+        "fat": 0.3,
+        "carbs": 6.03
+      },
+      "aliases": [
+        "перец болгарский красный",
+        "Peppers, sweet, red, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170108/nutrients",
+        "title": "Peppers, sweet, red, raw",
+        "sourceId": "170108"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-173430",
+      "name": "Масло сливочное без соли",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 717,
+        "protein": 0.85,
+        "fat": 81.1,
+        "carbs": 0.06
+      },
+      "aliases": [
+        "сливочное масло несолёное",
+        "Butter, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173430/nutrients",
+        "title": "Butter, without salt",
+        "sourceId": "173430"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-168448",
+      "name": "Тыква, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 26,
+        "protein": 1,
+        "fat": 0.1,
+        "carbs": 6.5
+      },
+      "aliases": [
+        "тыква",
+        "Pumpkin, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168448/nutrients",
+        "title": "Pumpkin, raw",
+        "sourceId": "168448"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169276",
+      "name": "Редис, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 16,
+        "protein": 0.68,
+        "fat": 0.1,
+        "carbs": 3.4
+      },
+      "aliases": [
+        "редис",
+        "редиска",
+        "Radishes, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169276/nutrients",
+        "title": "Radishes, raw",
+        "sourceId": "169276"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169230",
+      "name": "Чеснок, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 149,
+        "protein": 6.36,
+        "fat": 0.5,
+        "carbs": 33.1
+      },
+      "aliases": [
+        "чеснок",
+        "Garlic, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169230/nutrients",
+        "title": "Garlic, raw",
+        "sourceId": "169230"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-168462",
+      "name": "Шпинат, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 23,
+        "protein": 2.86,
+        "fat": 0.39,
+        "carbs": 3.63
+      },
+      "aliases": [
+        "шпинат свежий",
+        "Spinach, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168462/nutrients",
+        "title": "Spinach, raw",
+        "sourceId": "168462"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169247",
+      "name": "Салат ромэн, свежий",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 17,
+        "protein": 1.23,
+        "fat": 0.3,
+        "carbs": 3.29
+      },
+      "aliases": [
+        "салат романо",
+        "ромэн",
+        "Lettuce, cos or romaine, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169247/nutrients",
+        "title": "Lettuce, cos or romaine, raw",
+        "sourceId": "169247"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169988",
+      "name": "Сельдерей черешковый, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 14,
+        "protein": 0.69,
+        "fat": 0.17,
+        "carbs": 2.97
+      },
+      "aliases": [
+        "стебель сельдерея",
+        "черешковый сельдерей",
+        "Celery, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169988/nutrients",
+        "title": "Celery, raw",
+        "sourceId": "169988"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169251",
+      "name": "Шампиньоны белые, сырые",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 22,
+        "protein": 3.09,
+        "fat": 0.34,
+        "carbs": 3.26
+      },
+      "aliases": [
+        "шампиньоны свежие",
+        "Mushrooms, white, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169251/nutrients",
+        "title": "Mushrooms, white, raw",
+        "sourceId": "169251"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170419",
+      "name": "Горошек зелёный, сырой",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 81,
+        "protein": 5.42,
+        "fat": 0.4,
+        "carbs": 14.4
+      },
+      "aliases": [
+        "зелёный горошек свежий",
+        "Peas, green, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170419/nutrients",
+        "title": "Peas, green, raw",
+        "sourceId": "170419"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169961",
+      "name": "Фасоль стручковая зелёная, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 31,
+        "protein": 1.83,
+        "fat": 0.22,
+        "carbs": 6.97
+      },
+      "aliases": [
+        "стручковая фасоль",
+        "Beans, snap, green, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169961/nutrients",
+        "title": "Beans, snap, green, raw",
+        "sourceId": "169961"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169998",
+      "name": "Кукуруза сладкая жёлтая, сырая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 86,
+        "protein": 3.27,
+        "fat": 1.35,
+        "carbs": 18.7
+      },
+      "aliases": [
+        "кукуруза свежая",
+        "Corn, sweet, yellow, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169998/nutrients",
+        "title": "Corn, sweet, yellow, raw",
+        "sourceId": "169998"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170416",
+      "name": "Петрушка, свежая",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 36,
+        "protein": 2.97,
+        "fat": 0.79,
+        "carbs": 6.33
+      },
+      "aliases": [
+        "петрушка",
+        "Parsley, fresh"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170416/nutrients",
+        "title": "Parsley, fresh",
+        "sourceId": "170416"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-172233",
+      "name": "Укроп, свежий",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 43,
+        "protein": 3.46,
+        "fat": 1.12,
+        "carbs": 7.02
+      },
+      "aliases": [
+        "укроп",
+        "Dill weed, fresh"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172233/nutrients",
+        "title": "Dill weed, fresh",
+        "sourceId": "172233"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170440",
+      "name": "Картофель, отварной без кожуры и соли",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 86,
+        "protein": 1.71,
+        "fat": 0.1,
+        "carbs": 20
+      },
+      "aliases": [
+        "картофель варёный",
+        "картошка варёная",
+        "Potatoes, boiled, cooked without skin, flesh, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170440/nutrients",
+        "title": "Potatoes, boiled, cooked without skin, flesh, without salt",
+        "sourceId": "170440"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-170394",
+      "name": "Морковь, отварная без соли",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 35,
+        "protein": 0.76,
+        "fat": 0.18,
+        "carbs": 8.22
+      },
+      "aliases": [
+        "морковь варёная",
+        "Carrots, cooked, boiled, drained, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170394/nutrients",
+        "title": "Carrots, cooked, boiled, drained, without salt",
+        "sourceId": "170394"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169146",
+      "name": "Свёкла, отварная",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 44,
+        "protein": 1.68,
+        "fat": 0.18,
+        "carbs": 9.96
+      },
+      "aliases": [
+        "свёкла варёная",
+        "свекла вареная",
+        "Beets, cooked, boiled, drained"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169146/nutrients",
+        "title": "Beets, cooked, boiled, drained",
+        "sourceId": "169146"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169967",
+      "name": "Брокколи, отварная без соли",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 35,
+        "protein": 2.38,
+        "fat": 0.41,
+        "carbs": 7.18
+      },
+      "aliases": [
+        "брокколи варёная",
+        "Broccoli, cooked, boiled, drained, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169967/nutrients",
+        "title": "Broccoli, cooked, boiled, drained, without salt",
+        "sourceId": "169967"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-170397",
+      "name": "Капуста цветная, отварная без соли",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 23,
+        "protein": 1.84,
+        "fat": 0.45,
+        "carbs": 4.11
+      },
+      "aliases": [
+        "цветная капуста варёная",
+        "Cauliflower, cooked, boiled, drained, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170397/nutrients",
+        "title": "Cauliflower, cooked, boiled, drained, without salt",
+        "sourceId": "170397"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169252",
+      "name": "Шампиньоны белые, отварные без соли",
+      "brand": "",
+      "category": "Овощи, грибы и зелень",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 28,
+        "protein": 2.17,
+        "fat": 0.47,
+        "carbs": 5.29
+      },
+      "aliases": [
+        "шампиньоны варёные",
+        "Mushrooms, white, cooked, boiled, drained, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169252/nutrients",
+        "title": "Mushrooms, white, cooked, boiled, drained, without salt",
+        "sourceId": "169252"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-170685",
+      "name": "Гречневая крупа обжаренная, сухая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 346,
+        "protein": 11.7,
+        "fat": 2.71,
+        "carbs": 75
+      },
+      "aliases": [
+        "гречка сухая",
+        "гречневая крупа сухая",
+        "гречка сырая",
+        "гречневая крупа сырая",
+        "Buckwheat groats, roasted, dry"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170685/nutrients",
+        "title": "Buckwheat groats, roasted, dry",
+        "sourceId": "170685"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-170686",
+      "name": "Гречневая каша из обжаренной крупы, готовая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 92,
+        "protein": 3.38,
+        "fat": 0.62,
+        "carbs": 19.9
+      },
+      "aliases": [
+        "гречка готовая",
+        "гречневая каша",
+        "гречка варёная",
+        "гречка отварная",
+        "гречневая крупа варёная",
+        "Buckwheat groats, roasted, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170686/nutrients",
+        "title": "Buckwheat groats, roasted, cooked",
+        "sourceId": "170686"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169756",
+      "name": "Рис белый длиннозёрный, сухой",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 365,
+        "protein": 7.13,
+        "fat": 0.66,
+        "carbs": 80
+      },
+      "aliases": [
+        "рис белый сухой",
+        "рис сырой",
+        "рис белый сырой",
+        "Rice, white, long-grain, regular, raw, unenriched"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169756/nutrients",
+        "title": "Rice, white, long-grain, regular, raw, unenriched",
+        "sourceId": "169756"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-169757",
+      "name": "Рис белый длиннозёрный, отварной без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 130,
+        "protein": 2.69,
+        "fat": 0.28,
+        "carbs": 28.2
+      },
+      "aliases": [
+        "рис белый варёный",
+        "рис готовый",
+        "рис отварной",
+        "рис белый отварной",
+        "Rice, white, long-grain, regular, unenriched, cooked without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169757/nutrients",
+        "title": "Rice, white, long-grain, regular, unenriched, cooked without salt",
+        "sourceId": "169757"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169703",
+      "name": "Рис бурый длиннозёрный, сухой",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 367,
+        "protein": 7.54,
+        "fat": 3.2,
+        "carbs": 76.2
+      },
+      "aliases": [
+        "рис бурый сухой",
+        "рис коричневый сухой",
+        "рис бурый сырой",
+        "рис коричневый сырой",
+        "Rice, brown, long-grain, raw (Includes foods for USDA's Food Distribution Program)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169703/nutrients",
+        "title": "Rice, brown, long-grain, raw (Includes foods for USDA's Food Distribution Program)",
+        "sourceId": "169703"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-169704",
+      "name": "Рис бурый длиннозёрный, готовый",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 123,
+        "protein": 2.74,
+        "fat": 0.97,
+        "carbs": 25.6
+      },
+      "aliases": [
+        "рис бурый варёный",
+        "рис коричневый готовый",
+        "рис бурый отварной",
+        "рис коричневый варёный",
+        "рис коричневый отварной",
+        "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169704/nutrients",
+        "title": "Rice, brown, long-grain, cooked (Includes foods for USDA's Food Distribution Program)",
+        "sourceId": "169704"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169758",
+      "name": "Рис белый пропаренный длиннозёрный, сухой",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 374,
+        "protein": 7.51,
+        "fat": 1.03,
+        "carbs": 80.9
+      },
+      "aliases": [
+        "рис пропаренный сухой",
+        "рис пропаренный сырой",
+        "Rice, white, long-grain, parboiled, unenriched, dry"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169758/nutrients",
+        "title": "Rice, white, long-grain, parboiled, unenriched, dry",
+        "sourceId": "169758"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-169759",
+      "name": "Рис белый пропаренный длиннозёрный, готовый",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 123,
+        "protein": 2.91,
+        "fat": 0.37,
+        "carbs": 26
+      },
+      "aliases": [
+        "рис пропаренный готовый",
+        "рис пропаренный варёный",
+        "рис пропаренный отварной",
+        "Rice, white, long-grain, parboiled, unenriched, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169759/nutrients",
+        "title": "Rice, white, long-grain, parboiled, unenriched, cooked",
+        "sourceId": "169759"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-173904",
+      "name": "Овсяные хлопья без обогащения, сухие",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 379,
+        "protein": 13.2,
+        "fat": 6.52,
+        "carbs": 67.7
+      },
+      "aliases": [
+        "овсянка сухая",
+        "овсяные хлопья сухие",
+        "овсянка сырая",
+        "овсяные хлопья сырые",
+        "Cereals, oats, regular and quick, not fortified, dry"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173904/nutrients",
+        "title": "Cereals, oats, regular and quick, not fortified, dry",
+        "sourceId": "173904"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-173905",
+      "name": "Овсяная каша на воде, без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 71,
+        "protein": 2.54,
+        "fat": 1.52,
+        "carbs": 12
+      },
+      "aliases": [
+        "овсянка на воде",
+        "овсяная каша готовая",
+        "овсянка варёная",
+        "овсянка отварная",
+        "Cereals, oats, regular and quick, unenriched, cooked with water (includes boiling and microwaving), without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173905/nutrients",
+        "title": "Cereals, oats, regular and quick, unenriched, cooked with water (includes boiling and microwaving), without salt",
+        "sourceId": "173905"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169702",
+      "name": "Пшено, сухое",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 378,
+        "protein": 11,
+        "fat": 4.22,
+        "carbs": 72.8
+      },
+      "aliases": [
+        "пшённая крупа сухая",
+        "пшено сырое",
+        "пшённая крупа сырая",
+        "Millet, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169702/nutrients",
+        "title": "Millet, raw",
+        "sourceId": "169702"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-168871",
+      "name": "Каша пшённая, готовая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 119,
+        "protein": 3.51,
+        "fat": 1,
+        "carbs": 23.7
+      },
+      "aliases": [
+        "пшено готовое",
+        "пшённая каша",
+        "пшено варёное",
+        "пшено отварное",
+        "Millet, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168871/nutrients",
+        "title": "Millet, cooked",
+        "sourceId": "168871"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-170284",
+      "name": "Крупа перловая, сухая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 352,
+        "protein": 9.91,
+        "fat": 1.16,
+        "carbs": 77.7
+      },
+      "aliases": [
+        "перловка сухая",
+        "перловая крупа",
+        "перловка сырая",
+        "перловая крупа сырая",
+        "Barley, pearled, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170284/nutrients",
+        "title": "Barley, pearled, raw",
+        "sourceId": "170284"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-170285",
+      "name": "Каша перловая, готовая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 123,
+        "protein": 2.26,
+        "fat": 0.44,
+        "carbs": 28.2
+      },
+      "aliases": [
+        "перловка готовая",
+        "перловая каша",
+        "перловка варёная",
+        "перловка отварная",
+        "Barley, pearled, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170285/nutrients",
+        "title": "Barley, pearled, cooked",
+        "sourceId": "170285"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-170688",
+      "name": "Булгур, сухой",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 342,
+        "protein": 12.3,
+        "fat": 1.33,
+        "carbs": 75.9
+      },
+      "aliases": [
+        "крупа булгур сухая",
+        "булгур сырой",
+        "Bulgur, dry"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170688/nutrients",
+        "title": "Bulgur, dry",
+        "sourceId": "170688"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-170287",
+      "name": "Булгур, готовый",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 83,
+        "protein": 3.08,
+        "fat": 0.24,
+        "carbs": 18.6
+      },
+      "aliases": [
+        "булгур варёный",
+        "каша из булгура",
+        "булгур отварной",
+        "Bulgur, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170287/nutrients",
+        "title": "Bulgur, cooked",
+        "sourceId": "170287"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169699",
+      "name": "Кускус, сухой",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 376,
+        "protein": 12.8,
+        "fat": 0.64,
+        "carbs": 77.4
+      },
+      "aliases": [
+        "кус-кус сухой",
+        "кускус сырой",
+        "кус-кус сырой",
+        "Couscous, dry"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169699/nutrients",
+        "title": "Couscous, dry",
+        "sourceId": "169699"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-169700",
+      "name": "Кускус, готовый",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 112,
+        "protein": 3.79,
+        "fat": 0.16,
+        "carbs": 23.2
+      },
+      "aliases": [
+        "кус-кус готовый",
+        "кускус варёный",
+        "кускус отварной",
+        "Couscous, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169700/nutrients",
+        "title": "Couscous, cooked",
+        "sourceId": "169700"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-168874",
+      "name": "Киноа, сухая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 368,
+        "protein": 14.1,
+        "fat": 6.07,
+        "carbs": 64.2
+      },
+      "aliases": [
+        "крупа киноа сухая",
+        "киноа сырая",
+        "Quinoa, uncooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168874/nutrients",
+        "title": "Quinoa, uncooked",
+        "sourceId": "168874"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-168917",
+      "name": "Киноа, готовая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 120,
+        "protein": 4.4,
+        "fat": 1.92,
+        "carbs": 21.3
+      },
+      "aliases": [
+        "киноа варёная",
+        "киноа отварная",
+        "Quinoa, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168917/nutrients",
+        "title": "Quinoa, cooked",
+        "sourceId": "168917"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-168927",
+      "name": "Макароны пшеничные, сухие",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 371,
+        "protein": 13,
+        "fat": 1.51,
+        "carbs": 74.7
+      },
+      "aliases": [
+        "макароны сухие",
+        "паста сухая",
+        "макароны сырые",
+        "паста сырая",
+        "Pasta, dry, unenriched"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168927/nutrients",
+        "title": "Pasta, dry, unenriched",
+        "sourceId": "168927"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-168928",
+      "name": "Макароны пшеничные, отварные без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 158,
+        "protein": 5.8,
+        "fat": 0.93,
+        "carbs": 30.9
+      },
+      "aliases": [
+        "макароны варёные",
+        "паста готовая",
+        "макароны отварные",
+        "паста варёная",
+        "паста отварная",
+        "Pasta, cooked, unenriched, without added salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168928/nutrients",
+        "title": "Pasta, cooked, unenriched, without added salt",
+        "sourceId": "168928"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-169738",
+      "name": "Макароны цельнозерновые пшеничные, сухие",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 352,
+        "protein": 13.9,
+        "fat": 2.93,
+        "carbs": 73.4
+      },
+      "aliases": [
+        "цельнозерновая паста сухая",
+        "цельнозерновые макароны сырые",
+        "цельнозерновая паста сырая",
+        "Pasta, whole-wheat, dry (Includes foods for USDA's Food Distribution Program)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169738/nutrients",
+        "title": "Pasta, whole-wheat, dry (Includes foods for USDA's Food Distribution Program)",
+        "sourceId": "169738"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-168910",
+      "name": "Макароны цельнозерновые пшеничные, готовые",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 149,
+        "protein": 5.99,
+        "fat": 1.71,
+        "carbs": 30.1
+      },
+      "aliases": [
+        "цельнозерновые макароны готовые",
+        "цельнозерновые макароны варёные",
+        "цельнозерновые макароны отварные",
+        "цельнозерновая паста варёная",
+        "Pasta, whole-wheat, cooked (Includes foods for USDA's Food Distribution Program)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168910/nutrients",
+        "title": "Pasta, whole-wheat, cooked (Includes foods for USDA's Food Distribution Program)",
+        "sourceId": "168910"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-168933",
+      "name": "Семолина (манная крупа), сухая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 360,
+        "protein": 12.7,
+        "fat": 1.05,
+        "carbs": 72.8
+      },
+      "aliases": [
+        "семолина сухая",
+        "манная крупа сухая",
+        "семолина сырая",
+        "манная крупа сырая",
+        "Semolina, unenriched"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168933/nutrients",
+        "title": "Semolina, unenriched",
+        "sourceId": "168933"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-172420",
+      "name": "Чечевица, сухая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 352,
+        "protein": 24.6,
+        "fat": 1.06,
+        "carbs": 63.4
+      },
+      "aliases": [
+        "чечевица сырая",
+        "Lentils, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172420/nutrients",
+        "title": "Lentils, raw",
+        "sourceId": "172420"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-172421",
+      "name": "Чечевица, отварная без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 116,
+        "protein": 9.02,
+        "fat": 0.38,
+        "carbs": 20.1
+      },
+      "aliases": [
+        "чечевица варёная",
+        "чечевица отварная",
+        "Lentils, mature seeds, cooked, boiled, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172421/nutrients",
+        "title": "Lentils, mature seeds, cooked, boiled, without salt",
+        "sourceId": "172421"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-173756",
+      "name": "Нут, сухой",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 378,
+        "protein": 20.5,
+        "fat": 6.04,
+        "carbs": 63
+      },
+      "aliases": [
+        "нут сырой",
+        "турецкий горох сухой",
+        "Chickpeas (garbanzo beans, bengal gram), mature seeds, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173756/nutrients",
+        "title": "Chickpeas (garbanzo beans, bengal gram), mature seeds, raw",
+        "sourceId": "173756"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-173757",
+      "name": "Нут, отварной без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 164,
+        "protein": 8.86,
+        "fat": 2.59,
+        "carbs": 27.4
+      },
+      "aliases": [
+        "нут варёный",
+        "нут отварной",
+        "Chickpeas (garbanzo beans, bengal gram), mature seeds, cooked, boiled, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173757/nutrients",
+        "title": "Chickpeas (garbanzo beans, bengal gram), mature seeds, cooked, boiled, without salt",
+        "sourceId": "173757"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-175202",
+      "name": "Фасоль белая, сухая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 333,
+        "protein": 23.4,
+        "fat": 0.85,
+        "carbs": 60.3
+      },
+      "aliases": [
+        "белая фасоль сухая",
+        "белая фасоль сырая",
+        "Beans, white, mature seeds, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175202/nutrients",
+        "title": "Beans, white, mature seeds, raw",
+        "sourceId": "175202"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-175203",
+      "name": "Фасоль белая, отварная без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 139,
+        "protein": 9.73,
+        "fat": 0.35,
+        "carbs": 25.1
+      },
+      "aliases": [
+        "белая фасоль варёная",
+        "белая фасоль отварная",
+        "Beans, white, mature seeds, cooked, boiled, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175203/nutrients",
+        "title": "Beans, white, mature seeds, cooked, boiled, without salt",
+        "sourceId": "175203"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-173744",
+      "name": "Фасоль красная кидни, сухая",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 337,
+        "protein": 22.5,
+        "fat": 1.06,
+        "carbs": 61.3
+      },
+      "aliases": [
+        "красная фасоль сухая",
+        "кидни сухая",
+        "красная фасоль сырая",
+        "кидни сырая",
+        "Beans, kidney, red, mature seeds, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173744/nutrients",
+        "title": "Beans, kidney, red, mature seeds, raw",
+        "sourceId": "173744"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-175194",
+      "name": "Фасоль красная кидни, отварная без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 127,
+        "protein": 8.67,
+        "fat": 0.5,
+        "carbs": 22.8
+      },
+      "aliases": [
+        "красная фасоль варёная",
+        "кидни готовая",
+        "красная фасоль отварная",
+        "кидни варёная",
+        "кидни отварная",
+        "Beans, kidney, red, mature seeds, cooked, boiled, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175194/nutrients",
+        "title": "Beans, kidney, red, mature seeds, cooked, boiled, without salt",
+        "sourceId": "175194"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-172428",
+      "name": "Горох зелёный колотый, сухой",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 364,
+        "protein": 23.1,
+        "fat": 3.89,
+        "carbs": 61.6
+      },
+      "aliases": [
+        "горох колотый сухой",
+        "горох колотый сырой",
+        "Peas, green, split, mature seeds, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172428/nutrients",
+        "title": "Peas, green, split, mature seeds, raw",
+        "sourceId": "172428"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-172429",
+      "name": "Горох колотый, отварной без соли",
+      "brand": "",
+      "category": "Крупы, макароны и бакалея",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 118,
+        "protein": 8.34,
+        "fat": 0.39,
+        "carbs": 21.1
+      },
+      "aliases": [
+        "горох варёный",
+        "гороховая каша",
+        "горох отварной",
+        "горох колотый варёный",
+        "Peas, split, mature seeds, cooked, boiled, without salt"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172429/nutrients",
+        "title": "Peas, split, mature seeds, cooked, boiled, without salt",
+        "sourceId": "172429"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-170567",
+      "name": "Миндаль",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 579,
+        "protein": 21.2,
+        "fat": 49.9,
+        "carbs": 21.6
+      },
+      "aliases": [
+        "миндаль орех",
+        "Nuts, almonds"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170567/nutrients",
+        "title": "Nuts, almonds",
+        "sourceId": "170567"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-170187",
+      "name": "Орех грецкий",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 654,
+        "protein": 15.2,
+        "fat": 65.2,
+        "carbs": 13.7
+      },
+      "aliases": [
+        "грецкие орехи",
+        "грецкий орех",
+        "Nuts, walnuts, english"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170187/nutrients",
+        "title": "Nuts, walnuts, english",
+        "sourceId": "170187"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-170162",
+      "name": "Кешью, сырой",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 553,
+        "protein": 18.2,
+        "fat": 43.8,
+        "carbs": 30.2
+      },
+      "aliases": [
+        "кешью",
+        "Nuts, cashew nuts, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170162/nutrients",
+        "title": "Nuts, cashew nuts, raw",
+        "sourceId": "170162"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-170581",
+      "name": "Фундук",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 628,
+        "protein": 15,
+        "fat": 60.8,
+        "carbs": 16.7
+      },
+      "aliases": [
+        "лесной орех",
+        "фундук орех",
+        "Nuts, hazelnuts or filberts"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170581/nutrients",
+        "title": "Nuts, hazelnuts or filberts",
+        "sourceId": "170581"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-170184",
+      "name": "Фисташки, сырые",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 560,
+        "protein": 20.2,
+        "fat": 45.3,
+        "carbs": 27.2
+      },
+      "aliases": [
+        "фисташки",
+        "Nuts, pistachio nuts, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170184/nutrients",
+        "title": "Nuts, pistachio nuts, raw",
+        "sourceId": "170184"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-172430",
+      "name": "Арахис, сырой",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 567,
+        "protein": 25.8,
+        "fat": 49.2,
+        "carbs": 16.1
+      },
+      "aliases": [
+        "арахис",
+        "Peanuts, all types, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172430/nutrients",
+        "title": "Peanuts, all types, raw",
+        "sourceId": "172430"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-169414",
+      "name": "Семена льна",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 534,
+        "protein": 18.3,
+        "fat": 42.2,
+        "carbs": 28.9
+      },
+      "aliases": [
+        "льняное семя",
+        "лён семена",
+        "Seeds, flaxseed"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/169414/nutrients",
+        "title": "Seeds, flaxseed",
+        "sourceId": "169414"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-170554",
+      "name": "Семена чиа, сушёные",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 486,
+        "protein": 16.5,
+        "fat": 30.7,
+        "carbs": 42.1
+      },
+      "aliases": [
+        "чиа семена",
+        "Seeds, chia seeds, dried"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170554/nutrients",
+        "title": "Seeds, chia seeds, dried",
+        "sourceId": "170554"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-170556",
+      "name": "Семена тыквы, очищенные сушёные",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 559,
+        "protein": 30.2,
+        "fat": 49,
+        "carbs": 10.7
+      },
+      "aliases": [
+        "тыквенные семечки очищенные",
+        "Seeds, pumpkin and squash seed kernels, dried"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170556/nutrients",
+        "title": "Seeds, pumpkin and squash seed kernels, dried",
+        "sourceId": "170556"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-170562",
+      "name": "Семена подсолнечника, очищенные сушёные",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 584,
+        "protein": 20.8,
+        "fat": 51.5,
+        "carbs": 20
+      },
+      "aliases": [
+        "семечки подсолнечника очищенные",
+        "Seeds, sunflower seed kernels, dried"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170562/nutrients",
+        "title": "Seeds, sunflower seed kernels, dried",
+        "sourceId": "170562"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-170150",
+      "name": "Кунжут цельный, сушёный",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 573,
+        "protein": 17.7,
+        "fat": 49.7,
+        "carbs": 23.4
+      },
+      "aliases": [
+        "семена кунжута",
+        "Seeds, sesame seeds, whole, dried"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170150/nutrients",
+        "title": "Seeds, sesame seeds, whole, dried",
+        "sourceId": "170150"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-173941",
+      "name": "Курага, сушёная с сульфитами",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 241,
+        "protein": 3.39,
+        "fat": 0.51,
+        "carbs": 62.6
+      },
+      "aliases": [
+        "абрикос сушёный",
+        "курага",
+        "Apricots, dried, sulfured, uncooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173941/nutrients",
+        "title": "Apricots, dried, sulfured, uncooked",
+        "sourceId": "173941"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-168162",
+      "name": "Чернослив, сушёный",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 240,
+        "protein": 2.18,
+        "fat": 0.38,
+        "carbs": 63.9
+      },
+      "aliases": [
+        "чернослив",
+        "Plums, dried (prunes), uncooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168162/nutrients",
+        "title": "Plums, dried (prunes), uncooked",
+        "sourceId": "168162"
+      },
+      "state": "dry"
+    },
+    {
+      "id": "basic-usda-171726",
+      "name": "Финики сорта Деглет Нур",
+      "brand": "",
+      "category": "Орехи, семена и сухофрукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 282,
+        "protein": 2.45,
+        "fat": 0.39,
+        "carbs": 75
+      },
+      "aliases": [
+        "финики",
+        "Dates, deglet noor"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171726/nutrients",
+        "title": "Dates, deglet noor",
+        "sourceId": "171726"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-171077",
+      "name": "Куриная грудка без кожи и костей, сырая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 120,
+        "protein": 22.5,
+        "fat": 2.62,
+        "carbs": 0
+      },
+      "aliases": [
+        "куриное филе сырое",
+        "грудка куриная сырая",
+        "Chicken, broiler or fryers, breast, skinless, boneless, meat only, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171077/nutrients",
+        "title": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, raw",
+        "sourceId": "171077"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171477",
+      "name": "Куриная грудка без кожи, запечённая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 165,
+        "protein": 31,
+        "fat": 3.57,
+        "carbs": 0
+      },
+      "aliases": [
+        "куриное филе запечённое",
+        "куриная грудка готовая",
+        "Chicken, broilers or fryers, breast, meat only, cooked, roasted"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171477/nutrients",
+        "title": "Chicken, broilers or fryers, breast, meat only, cooked, roasted",
+        "sourceId": "171477"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-173627",
+      "name": "Мякоть куриного бедра без кожи, сырая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 121,
+        "protein": 19.7,
+        "fat": 4.12,
+        "carbs": 0
+      },
+      "aliases": [
+        "куриное бедро без кожи сырое",
+        "Chicken, broilers or fryers, dark meat, thigh, meat only, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173627/nutrients",
+        "title": "Chicken, broilers or fryers, dark meat, thigh, meat only, raw",
+        "sourceId": "173627"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-172388",
+      "name": "Мякоть куриного бедра без кожи, запечённая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 179,
+        "protein": 24.8,
+        "fat": 8.15,
+        "carbs": 0
+      },
+      "aliases": [
+        "куриное бедро без кожи готовое",
+        "Chicken, broilers or fryers, thigh, meat only, cooked, roasted"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172388/nutrients",
+        "title": "Chicken, broilers or fryers, thigh, meat only, cooked, roasted",
+        "sourceId": "172388"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-171098",
+      "name": "Грудка индейки без кожи, сырая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 114,
+        "protein": 23.7,
+        "fat": 1.48,
+        "carbs": 0.14
+      },
+      "aliases": [
+        "филе индейки сырое",
+        "Turkey, whole, breast, meat only, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171098/nutrients",
+        "title": "Turkey, whole, breast, meat only, raw",
+        "sourceId": "171098"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171496",
+      "name": "Грудка индейки без кожи, запечённая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 147,
+        "protein": 30.1,
+        "fat": 2.08,
+        "carbs": 0
+      },
+      "aliases": [
+        "филе индейки готовое",
+        "Turkey, whole, breast, meat only, cooked, roasted"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171496/nutrients",
+        "title": "Turkey, whole, breast, meat only, cooked, roasted",
+        "sourceId": "171496"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-168312",
+      "name": "Свиная вырезка с отделяемым жиром, сырая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 120,
+        "protein": 20.6,
+        "fat": 3.53,
+        "carbs": 0
+      },
+      "aliases": [
+        "свиная вырезка сырая",
+        "Pork, fresh, loin, tenderloin, separable lean and fat, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/168312/nutrients",
+        "title": "Pork, fresh, loin, tenderloin, separable lean and fat, raw",
+        "sourceId": "168312"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-167905",
+      "name": "Свиная вырезка с отделяемым жиром, запечённая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 147,
+        "protein": 26,
+        "fat": 3.96,
+        "carbs": 0
+      },
+      "aliases": [
+        "свиная вырезка готовая",
+        "Pork, fresh, loin, tenderloin, separable lean and fat, cooked, roasted"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/167905/nutrients",
+        "title": "Pork, fresh, loin, tenderloin, separable lean and fat, cooked, roasted",
+        "sourceId": "167905"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-174030",
+      "name": "Фарш говяжий 90/10, сырой",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 176,
+        "protein": 20,
+        "fat": 10,
+        "carbs": 0
+      },
+      "aliases": [
+        "говяжий фарш 10% жира сырой",
+        "Beef, ground, 90% lean meat / 10% fat, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/174030/nutrients",
+        "title": "Beef, ground, 90% lean meat / 10% fat, raw",
+        "sourceId": "174030"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171794",
+      "name": "Фарш говяжий 90/10, обжаренный крошкой",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 230,
+        "protein": 28.4,
+        "fat": 12,
+        "carbs": 0
+      },
+      "aliases": [
+        "говяжий фарш готовый 90/10",
+        "Beef, ground, 90% lean meat / 10% fat, crumbles, cooked, pan-browned"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171794/nutrients",
+        "title": "Beef, ground, 90% lean meat / 10% fat, crumbles, cooked, pan-browned",
+        "sourceId": "171794"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-171060",
+      "name": "Печень куриная, сырая",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 119,
+        "protein": 16.9,
+        "fat": 4.83,
+        "carbs": 0.73
+      },
+      "aliases": [
+        "куриная печень сырая",
+        "Chicken, liver, all classes, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171060/nutrients",
+        "title": "Chicken, liver, all classes, raw",
+        "sourceId": "171060"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171061",
+      "name": "Печень куриная, отварная",
+      "brand": "",
+      "category": "Мясо и птица",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 167,
+        "protein": 24.5,
+        "fat": 6.51,
+        "carbs": 0.87
+      },
+      "aliases": [
+        "куриная печень варёная",
+        "Chicken, liver, all classes, cooked, simmered"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171061/nutrients",
+        "title": "Chicken, liver, all classes, cooked, simmered",
+        "sourceId": "171061"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-175167",
+      "name": "Лосось атлантический фермерский, сырой",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 208,
+        "protein": 20.4,
+        "fat": 13.4,
+        "carbs": 0
+      },
+      "aliases": [
+        "сёмга сырая",
+        "лосось фермерский сырой",
+        "Fish, salmon, Atlantic, farmed, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175167/nutrients",
+        "title": "Fish, salmon, Atlantic, farmed, raw",
+        "sourceId": "175167"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-175168",
+      "name": "Лосось атлантический фермерский, готовый сухим нагревом",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 206,
+        "protein": 22.1,
+        "fat": 12.4,
+        "carbs": 0
+      },
+      "aliases": [
+        "сёмга готовая",
+        "лосось фермерский готовый",
+        "Fish, salmon, Atlantic, farmed, cooked, dry heat"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175168/nutrients",
+        "title": "Fish, salmon, Atlantic, farmed, cooked, dry heat",
+        "sourceId": "175168"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-171955",
+      "name": "Треска атлантическая, сырая",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 82,
+        "protein": 17.8,
+        "fat": 0.67,
+        "carbs": 0
+      },
+      "aliases": [
+        "треска сырая",
+        "Fish, cod, Atlantic, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171955/nutrients",
+        "title": "Fish, cod, Atlantic, raw",
+        "sourceId": "171955"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-171956",
+      "name": "Треска атлантическая, готовая сухим нагревом",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 105,
+        "protein": 22.8,
+        "fat": 0.86,
+        "carbs": 0
+      },
+      "aliases": [
+        "треска готовая",
+        "Fish, cod, Atlantic, cooked, dry heat"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171956/nutrients",
+        "title": "Fish, cod, Atlantic, cooked, dry heat",
+        "sourceId": "171956"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-175119",
+      "name": "Скумбрия атлантическая, сырая",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 205,
+        "protein": 18.6,
+        "fat": 13.9,
+        "carbs": 0
+      },
+      "aliases": [
+        "скумбрия сырая",
+        "Fish, mackerel, Atlantic, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175119/nutrients",
+        "title": "Fish, mackerel, Atlantic, raw",
+        "sourceId": "175119"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-175120",
+      "name": "Скумбрия атлантическая, готовая сухим нагревом",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 262,
+        "protein": 23.8,
+        "fat": 17.8,
+        "carbs": 0
+      },
+      "aliases": [
+        "скумбрия готовая",
+        "Fish, mackerel, Atlantic, cooked, dry heat"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175120/nutrients",
+        "title": "Fish, mackerel, Atlantic, cooked, dry heat",
+        "sourceId": "175120"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-171986",
+      "name": "Тунец светлый в воде, без соли, жидкость слита",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 116,
+        "protein": 25.5,
+        "fat": 0.82,
+        "carbs": 0
+      },
+      "aliases": [
+        "тунец консервированный в воде без соли",
+        "Fish, tuna, light, canned in water, without salt, drained solids"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171986/nutrients",
+        "title": "Fish, tuna, light, canned in water, without salt, drained solids",
+        "sourceId": "171986"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-174227",
+      "name": "Тунец светлый в масле, без соли, жидкость слита",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 198,
+        "protein": 29.1,
+        "fat": 8.21,
+        "carbs": 0
+      },
+      "aliases": [
+        "тунец консервированный в масле без соли",
+        "Fish, tuna, light, canned in oil, without salt, drained solids"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/174227/nutrients",
+        "title": "Fish, tuna, light, canned in oil, without salt, drained solids",
+        "sourceId": "174227"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-175179",
+      "name": "Креветки, сырые",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 85,
+        "protein": 20.1,
+        "fat": 0.51,
+        "carbs": 0
+      },
+      "aliases": [
+        "креветки неготовые",
+        "Crustaceans, shrimp, raw"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175179/nutrients",
+        "title": "Crustaceans, shrimp, raw",
+        "sourceId": "175179"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-175180",
+      "name": "Креветки, приготовленные",
+      "brand": "",
+      "category": "Рыба и морепродукты",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 99,
+        "protein": 24,
+        "fat": 0.28,
+        "carbs": 0.2
+      },
+      "aliases": [
+        "креветки готовые",
+        "Crustaceans, shrimp, cooked"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/175180/nutrients",
+        "title": "Crustaceans, shrimp, cooked",
+        "sourceId": "175180"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-171287",
+      "name": "Яйцо куриное целое, сырое",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 143,
+        "protein": 12.6,
+        "fat": 9.51,
+        "carbs": 0.72
+      },
+      "aliases": [
+        "яйцо куриное сырое",
+        "Egg, whole, raw, fresh"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171287/nutrients",
+        "title": "Egg, whole, raw, fresh",
+        "sourceId": "171287"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-173424",
+      "name": "Яйцо куриное, варёное вкрутую",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 155,
+        "protein": 12.6,
+        "fat": 10.6,
+        "carbs": 1.12
+      },
+      "aliases": [
+        "яйцо варёное",
+        "яйца вкрутую",
+        "Egg, whole, cooked, hard-boiled"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173424/nutrients",
+        "title": "Egg, whole, cooked, hard-boiled",
+        "sourceId": "173424"
+      },
+      "state": "cooked"
+    },
+    {
+      "id": "basic-usda-172183",
+      "name": "Белок куриного яйца, сырой",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 52,
+        "protein": 10.9,
+        "fat": 0.17,
+        "carbs": 0.73
+      },
+      "aliases": [
+        "яичный белок сырой",
+        "Egg, white, raw, fresh"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172183/nutrients",
+        "title": "Egg, white, raw, fresh",
+        "sourceId": "172183"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-172184",
+      "name": "Желток куриного яйца, сырой",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 322,
+        "protein": 15.9,
+        "fat": 26.5,
+        "carbs": 3.59
+      },
+      "aliases": [
+        "яичный желток сырой",
+        "Egg, yolk, raw, fresh"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172184/nutrients",
+        "title": "Egg, yolk, raw, fresh",
+        "sourceId": "172184"
+      },
+      "state": "raw"
+    },
+    {
+      "id": "basic-usda-172217",
+      "name": "Молоко цельное 3,25%, без обогащения витаминами A и D",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 61,
+        "protein": 3.15,
+        "fat": 3.27,
+        "carbs": 4.78
+      },
+      "aliases": [
+        "молоко 3.25%",
+        "Milk, whole, 3.25% milkfat, without added vitamin A and vitamin D"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172217/nutrients",
+        "title": "Milk, whole, 3.25% milkfat, without added vitamin A and vitamin D",
+        "sourceId": "172217"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-172205",
+      "name": "Молоко 2%, без обогащения витаминами A и D",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 50,
+        "protein": 3.3,
+        "fat": 1.98,
+        "carbs": 4.8
+      },
+      "aliases": [
+        "молоко 2%",
+        "Milk, reduced fat, fluid, 2% milkfat, without added vitamin A and vitamin D"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172205/nutrients",
+        "title": "Milk, reduced fat, fluid, 2% milkfat, without added vitamin A and vitamin D",
+        "sourceId": "172205"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-173441",
+      "name": "Молоко 1%, без обогащения витаминами A и D",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 42,
+        "protein": 3.37,
+        "fat": 0.97,
+        "carbs": 4.99
+      },
+      "aliases": [
+        "молоко 1%",
+        "Milk, fluid, 1% fat, without added vitamin A and vitamin D"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173441/nutrients",
+        "title": "Milk, fluid, 1% fat, without added vitamin A and vitamin D",
+        "sourceId": "173441"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-173432",
+      "name": "Молоко обезжиренное, без обогащения витаминами A и D",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 35,
+        "protein": 3.37,
+        "fat": 0.18,
+        "carbs": 4.86
+      },
+      "aliases": [
+        "молоко обезжиренное",
+        "Milk, nonfat, fluid, without added vitamin A and vitamin D (fat free or skim)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173432/nutrients",
+        "title": "Milk, nonfat, fluid, without added vitamin A and vitamin D (fat free or skim)",
+        "sourceId": "173432"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-171284",
+      "name": "Йогурт натуральный цельномолочный",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 61,
+        "protein": 3.47,
+        "fat": 3.25,
+        "carbs": 4.66
+      },
+      "aliases": [
+        "йогурт натуральный",
+        "Yogurt, plain, whole milk"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171284/nutrients",
+        "title": "Yogurt, plain, whole milk",
+        "sourceId": "171284"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-170894",
+      "name": "Йогурт греческий натуральный обезжиренный",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 59,
+        "protein": 10.2,
+        "fat": 0.39,
+        "carbs": 3.6
+      },
+      "aliases": [
+        "йогурт греческий обезжиренный",
+        "Yogurt, Greek, plain, nonfat (Includes foods for USDA's Food Distribution Program)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/170894/nutrients",
+        "title": "Yogurt, Greek, plain, nonfat (Includes foods for USDA's Food Distribution Program)",
+        "sourceId": "170894"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-171241",
+      "name": "Сыр гауда",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 356,
+        "protein": 24.9,
+        "fat": 27.4,
+        "carbs": 2.22
+      },
+      "aliases": [
+        "гауда",
+        "Cheese, gouda"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171241/nutrients",
+        "title": "Cheese, gouda",
+        "sourceId": "171241"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-173420",
+      "name": "Сыр фета",
+      "brand": "",
+      "category": "Молочные продукты и сыры",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 265,
+        "protein": 14.2,
+        "fat": 21.5,
+        "carbs": 3.88
+      },
+      "aliases": [
+        "фета",
+        "Cheese, feta"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/173420/nutrients",
+        "title": "Cheese, feta",
+        "sourceId": "173420"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-171413",
+      "name": "Масло оливковое",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 884,
+        "protein": 0,
+        "fat": 100,
+        "carbs": 0
+      },
+      "aliases": [
+        "оливковое масло",
+        "Oil, olive, salad or cooking"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171413/nutrients",
+        "title": "Oil, olive, salad or cooking",
+        "sourceId": "171413"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-171017",
+      "name": "Масло подсолнечное (линолевое менее 60%)",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 884,
+        "protein": 0,
+        "fat": 100,
+        "carbs": 0
+      },
+      "aliases": [
+        "подсолнечное масло",
+        "Oil, sunflower, linoleic (less than 60%)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/171017/nutrients",
+        "title": "Oil, sunflower, linoleic (less than 60%)",
+        "sourceId": "171017"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-172336",
+      "name": "Масло рапсовое (канола)",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 884,
+        "protein": 0,
+        "fat": 100,
+        "carbs": 0
+      },
+      "aliases": [
+        "рапсовое масло",
+        "канола",
+        "Oil, canola"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172336/nutrients",
+        "title": "Oil, canola",
+        "sourceId": "172336"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-167702",
+      "name": "Масло льняное холодного отжима",
+      "brand": "",
+      "category": "Яйца и масла",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 884,
+        "protein": 0.11,
+        "fat": 100,
+        "carbs": 0
+      },
+      "aliases": [
+        "льняное масло",
+        "Oil, flaxseed, cold pressed"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/167702/nutrients",
+        "title": "Oil, flaxseed, cold pressed",
+        "sourceId": "167702"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-174924",
+      "name": "Хлеб белый промышленного приготовления",
+      "brand": "",
+      "category": "Хлеб и выпечка",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 266,
+        "protein": 8.85,
+        "fat": 3.33,
+        "carbs": 49.4
+      },
+      "aliases": [
+        "хлеб белый",
+        "Bread, white, commercially prepared (includes soft bread crumbs)"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/174924/nutrients",
+        "title": "Bread, white, commercially prepared (includes soft bread crumbs)",
+        "sourceId": "174924"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-172688",
+      "name": "Хлеб цельнозерновой пшеничный",
+      "brand": "",
+      "category": "Хлеб и выпечка",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 252,
+        "protein": 12.4,
+        "fat": 3.5,
+        "carbs": 42.7
+      },
+      "aliases": [
+        "хлеб цельнозерновой",
+        "хлеб из цельной пшеницы",
+        "Bread, whole-wheat, commercially prepared"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172688/nutrients",
+        "title": "Bread, whole-wheat, commercially prepared",
+        "sourceId": "172688"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "basic-usda-172684",
+      "name": "Хлеб ржаной",
+      "brand": "",
+      "category": "Хлеб и выпечка",
+      "nutrition": {
+        "basis": "100g",
+        "kcal": 259,
+        "protein": 8.5,
+        "fat": 3.3,
+        "carbs": 48.3
+      },
+      "aliases": [
+        "ржаной хлеб",
+        "Bread, rye"
+      ],
+      "source": {
+        "url": "https://fdc.nal.usda.gov/fdc-app.html#/food-details/172684/nutrients",
+        "title": "Bread, rye",
+        "sourceId": "172684"
+      },
+      "state": "ready"
+    }
+  ]
+}

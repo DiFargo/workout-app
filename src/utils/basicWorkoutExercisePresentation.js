@@ -1,6 +1,7 @@
 import { getBasicWorkoutExerciseGroup } from "./basicWorkoutAlternatives.js";
 import { BASIC_WORKOUT_EXERCISE_LIBRARY } from "../data/basicWorkoutExerciseLibrary.js";
 import { normalizeExerciseVideoCrop } from "../../functions/exerciseVideoCrop.js";
+import { normalizeExerciseVideoPosterTime } from "../../functions/exerciseVideoPoster.js";
 
 function normalizeExerciseName(name = "") {
   return String(name || "")
@@ -90,6 +91,7 @@ export function normalizeBasicWorkoutExerciseOverrides(overrides = {}) {
       imageUrl: getText(record.imageUrl),
       videoUrl: getText(record.videoUrl),
       videoCrop: normalizeExerciseVideoCrop(record.videoCrop),
+      videoPosterTime: normalizeExerciseVideoPosterTime(record.videoPosterTime),
       imageDisabled: record.imageDisabled === true,
       videoDisabled: record.videoDisabled === true,
       // This helper is intentionally idempotent: the client hook caches an
@@ -101,7 +103,8 @@ export function normalizeBasicWorkoutExerciseOverrides(overrides = {}) {
       hasNote: typeof record.hasNote === "boolean" ? record.hasNote : hasOwn(record, "note"),
       hasImageUrl: typeof record.hasImageUrl === "boolean" ? record.hasImageUrl : hasOwn(record, "imageUrl"),
       hasVideoUrl: typeof record.hasVideoUrl === "boolean" ? record.hasVideoUrl : hasOwn(record, "videoUrl"),
-      hasVideoCrop: typeof record.hasVideoCrop === "boolean" ? record.hasVideoCrop : hasOwn(record, "videoCrop")
+      hasVideoCrop: typeof record.hasVideoCrop === "boolean" ? record.hasVideoCrop : hasOwn(record, "videoCrop"),
+      hasVideoPosterTime: typeof record.hasVideoPosterTime === "boolean" ? record.hasVideoPosterTime : hasOwn(record, "videoPosterTime")
     };
 
     return normalized;
@@ -124,6 +127,14 @@ export function applyBasicWorkoutExerciseOverride(exercise = {}, overrides = {})
   const originalNote = getText(originalExercise.note);
   const imageUrl = override.imageDisabled ? "" : override.imageUrl;
   const videoUrl = override.videoDisabled ? "" : override.videoUrl;
+  const originalVideo = getText(originalExercise.video);
+  const renderedVideo = override.videoDisabled ? "" : videoUrl || originalVideo;
+  // A selected moment is meaningful only for the clip it was selected from.
+  // Poster-only updates without a source must not affect a plan's own video.
+  const videoPosterTime = !renderedVideo ? null
+    : videoUrl && override.hasVideoPosterTime ? override.videoPosterTime
+      : (videoUrl && videoUrl !== originalVideo) || (override.hasVideoPosterTime && override.videoPosterTime === null) ? null
+        : normalizeExerciseVideoPosterTime(originalExercise.videoPosterTime);
 
   return {
     ...originalExercise,
@@ -142,6 +153,7 @@ export function applyBasicWorkoutExerciseOverride(exercise = {}, overrides = {})
     // A removed video intentionally clears only the rendered source. The
     // original plan object remains untouched for history and sync purposes.
     video: override.videoDisabled ? "" : videoUrl || originalExercise.video,
+    videoPosterTime,
     // A crop belongs to its video, not to the prescribed load or the old clip.
     ...(override.hasVideoCrop || override.videoDisabled || videoUrl ? {
       videoCrop: override.videoDisabled ? null : override.hasVideoCrop ? override.videoCrop : null

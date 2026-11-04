@@ -1,3 +1,29 @@
+function copyWorkoutWithNewIds(workout, suffix) {
+  const copiedExerciseIds = (workout.exercises || []).map((_, index) => `exercise_${suffix}_${index}`);
+  const exerciseIds = new Map((workout.exercises || []).map((exercise, index) => [exercise.id, copiedExerciseIds[index]]));
+  const blockIds = new Map((workout.taskBlocks || []).map((block, index) => [block.id, `task_block_${suffix}_${index}`]));
+  const copyBlock = (block) => ({
+    ...block,
+    id: blockIds.get(block.id) || block.id,
+    exerciseIds: (block.exerciseIds || []).map((id) => exerciseIds.get(id)).filter(Boolean)
+  });
+  return {
+    ...workout,
+    id: `workout_${suffix}`,
+    ...(Array.isArray(workout.taskBlocks) ? { taskBlocks: workout.taskBlocks.map(copyBlock) } : {}),
+    exercises: (workout.exercises || []).map((exercise, index) => ({
+      ...exercise,
+      id: copiedExerciseIds[index],
+      ...(exercise.taskBlockId ? { taskBlockId: blockIds.get(exercise.taskBlockId) || exercise.taskBlockId } : {}),
+      ...(exercise.taskBlockConfig ? { taskBlockConfig: copyBlock(exercise.taskBlockConfig) } : {}),
+      sets: (exercise.sets || []).map((set, setIndex) => ({
+        ...set,
+        ...(set?.id ? { id: `set_${suffix}_${index}_${setIndex}` } : {})
+      }))
+    }))
+  };
+}
+
 export function createTrainerMonthProgramStructureHandlers({
   adminActiveDayId,
   adminOpenWorkoutId,
@@ -148,18 +174,9 @@ export function createTrainerMonthProgramStructureHandlers({
         weeks: (sourceBlock.weeks || []).map((week, weekIndex) => ({
           ...week,
           id: `week_${stamp}_${weekIndex}`,
-          workouts: (week.workouts || []).map((workout, workoutIndex) => ({
-            ...workout,
-            id: `workout_${stamp}_${weekIndex}_${workoutIndex}`,
-            exercises: (workout.exercises || []).map((exercise, exerciseIndex) => ({
-              ...exercise,
-              id: `exercise_${stamp}_${weekIndex}_${workoutIndex}_${exerciseIndex}`,
-              sets: (exercise.sets || []).map((set, setIndex) => ({
-                ...set,
-                ...(set?.id ? { id: `set_${stamp}_${weekIndex}_${workoutIndex}_${exerciseIndex}_${setIndex}` } : {})
-              }))
-            }))
-          }))
+          workouts: (week.workouts || []).map((workout, workoutIndex) =>
+            copyWorkoutWithNewIds(workout, `${stamp}_${weekIndex}_${workoutIndex}`)
+          )
         }))
       };
       const nextBlocks = [...program.blocks];
@@ -326,17 +343,8 @@ export function createTrainerMonthProgramStructureHandlers({
     if (!sourceWorkout) return;
     const stamp = Date.now();
     const duplicatedWorkout = {
-      ...sourceWorkout,
-      id: `workout_${stamp}`,
+      ...copyWorkoutWithNewIds(sourceWorkout, stamp),
       name: `${sourceWorkout.name || "Тренировка"} — копия`,
-      exercises: (sourceWorkout.exercises || []).map((exercise, exerciseIndex) => ({
-        ...exercise,
-        id: `exercise_${stamp}_${exerciseIndex}`,
-        sets: (exercise.sets || []).map((set, setIndex) => ({
-          ...set,
-          ...(set?.id ? { id: `set_${stamp}_${exerciseIndex}_${setIndex}` } : {})
-        }))
-      }))
     };
 
     setMonthProgram((program) => ({

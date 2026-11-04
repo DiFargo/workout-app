@@ -4,6 +4,11 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { normalize, canonicalBrand, identity, categorize, validGtin, nutritionProblems } from './lib/belarusPersonalCatalog.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const currentManifest=path.join(root,'src/data/nutrition-catalog/personalCatalogManifest.json');
+const currentCounts=fs.existsSync(currentManifest)?JSON.parse(fs.readFileSync(currentManifest,'utf8')):{};
+if(Math.max(currentCounts.count||0,currentCounts.storedCount||0)>10000) {
+  throw new Error('Catalogue already expanded: use append-belarus-manufacturer-catalog.mjs; rebuilding the old 10,000-card baseline would discard published products');
+}
 const out=path.join(root,'output/belarus-products-10000');
 fs.mkdirSync(out,{recursive:true});
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));

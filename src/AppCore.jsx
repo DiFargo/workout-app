@@ -40,22 +40,27 @@ import { createNutritionDishIngredientHandlers } from "./features/client/nutriti
 import { createNutritionFoodCommitHandlers } from "./features/client/nutrition/nutritionFoodCommitHandlers";
 import { createNutritionFoodEntryHandlers } from "./features/client/nutrition/nutritionFoodEntryHandlers";
 import { createNutritionMyFoodsHandlers } from "./features/client/nutrition/nutritionMyFoodsHandlers";
-import { createNutritionPhotoAiHandlers } from "./features/client/nutrition/nutritionPhotoAiHandlers";
+import { createNutritionPhotoAiHandlers, createNutritionPhotoAiResetHandler } from "./features/client/nutrition/nutritionPhotoAiHandlers";
 import { useNutritionVoiceRuntime } from "./features/client/nutrition/useNutritionVoiceRuntime";
 import { createNutritionProductEditorHandlers } from "./features/client/nutrition/nutritionProductEditorHandlers";
 import { createNutritionSelectedFoodDeleteHandlers } from "./features/client/nutrition/nutritionSelectedFoodDeleteHandlers";
 import { createNutritionCloudLoader } from "./features/client/nutrition/nutritionCloudLoader";
 import { useNutritionSearchEffects } from "./features/client/nutrition/useNutritionSearchEffects";
-import { useNutritionRuntimeEffects } from "./features/client/nutrition/useNutritionRuntimeEffects";
+import { useClientDataRuntime } from "./app/useClientDataRuntime.js";
+import { readClientLoadingSnapshot } from "./utils/clientLoadingSnapshot.js";
+import { configureNutritionDayStorage } from "./utils/nutritionDayStorageConfig.js";
+import { useNutritionLoadingState } from "./features/client/nutrition/useNutritionLoadingState.js";
 import { useNutritionDayRolloverEffect } from "./features/client/nutrition/useNutritionDayRolloverEffect";
 import { useNutritionPageScrollEffect } from "./features/client/nutrition/useNutritionPageScrollEffect";
 import { createProfileAccountHandlers } from "./features/client/profile/profileAccountHandlers";
 import { createProfileProgressHandlers } from "./features/client/profile/profileProgressHandlers";
 import { createProfileTelegramHandlers } from "./features/client/profile/profileTelegramHandlers";
+import { buildTelegramBotLinkUrl, openTelegramBotLink } from "./utils/telegramBotLink.js";
 import { useProfileTelegramEffects } from "./features/client/profile/useProfileTelegramEffects";
 import { useProfileUiEffects } from "./features/client/profile/useProfileUiEffects";
 import { showAppConfirm, showAppError } from "./utils/appFeedback";
 import { createPerformanceCheckHandlers } from "./utils/performanceChecks";
+import { createInitialWorkoutHandlers } from "./app/initialWorkoutHandlers.js";
 import {
   getFoodIcon
 } from "./utils/nutritionFoodPresentation";
@@ -122,11 +127,12 @@ import {
   getWorkoutAssignmentVersion,
   isWorkoutCompletedWithSet
 } from "./utils/workoutCompletion";
-import { buildWorkoutPageDerivedState } from "./utils/workoutPageDerivedState";
+import { useWorkoutPageDerivedState } from "./app/useWorkoutPageDerivedState.js";
 import {
   getLastExerciseText
 } from "./utils/workoutHistoryPresentation";
 import { buildTrainerExerciseLibraryItems } from "./utils/trainerExerciseLibrary";
+import { EMPTY_TRAINER_LIBRARY_ITEMS, getCurrentTrainerLibraryLoadState } from "./utils/trainerLibraryLoadState.js";
 import {
   formatTrainerSummaryDate,
   getTrainerSummaryDayStart,
@@ -200,8 +206,8 @@ import { saveCompletedWorkoutToFirebase } from "./features/client/workouts/worko
 import { createTrainerClientCalendarHandlers } from "./features/trainer/trainerClientCalendarHandlers";
 import { normalizeTrainerSubscriptionNotificationSettings } from "./utils/trainerSubscriptionNotificationSettings";
 import { createTrainerClientHistoryHandlers } from "./features/trainer/trainerClientHistoryHandlers";
-import { createTrainerClientOverviewLoader } from "./features/trainer/trainerClientOverviewLoader";
-import { createTrainerClientSummaryLoader } from "./features/trainer/trainerClientSummaryLoader";
+import { createTrainerClientOverviewLoader, createTrainerClientSummaryLoader,
+  createTrainerProgramTemplateHandlers } from "./app/trainerAsyncHandlers.js";
 import { createTrainerCreateClientHandlers } from "./features/trainer/trainerCreateClientHandlers";
 import { createClientTrainerTaskHandlers } from "./features/trainer/clientTrainerTaskHandlers";
 import { createTrainerClientControlHandlers } from "./features/trainer/trainerClientControlHandlers";
@@ -210,7 +216,6 @@ import { createTrainerNavigationActions } from "./features/trainer/trainerNaviga
 import { createTrainerNutritionInsightHandlers } from "./features/trainer/trainerNutritionInsightHandlers";
 import { createTrainerNutritionPlanHandlers } from "./features/trainer/trainerNutritionPlanHandlers";
 import { createTrainerPlanEditorHandlers } from "./features/trainer/trainerPlanEditorHandlers";
-import { createTrainerProgramTemplateHandlers } from "./features/trainer/trainerProgramTemplateHandlers";
 import { createTrainerMonthProgramSwipeHandlers } from "./features/trainer/trainerMonthProgramSwipeHandlers";
 import { useTrainerAutoLoadEffect } from "./features/trainer/useTrainerAutoLoadEffect";
 import { useTrainerTelegramThreadEffects } from "./features/trainer/useTrainerTelegramThreadEffects";
@@ -264,6 +269,7 @@ import { useAuthBootstrapEffect } from "./app/useAuthBootstrapEffect";
 const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
 
 const NutritionRoute = lazy(loadNutritionRoute);
+const AdminSecurityKeyBoundary = lazy(() => import("./components/admin/AdminSecurityKeyBoundary.jsx"));
 
 const {
   ADMIN_EMAIL,
@@ -289,6 +295,10 @@ const {
   WORKOUT_PLAN_BACKUP_STORAGE_KEY
 } = appConfig || {};
 
+// Development/E2E fixtures keep their isolated legacy SDK adapter. Both hosted
+// artifacts use the versioned API, whose server config owns the schema cutover.
+configureNutritionDayStorage({ enabled: import.meta.env.PROD });
+
 export default function App() {
   return <AppBootstrap RuntimeComponent={AppRuntime} />;
 }
@@ -299,6 +309,8 @@ function AppRuntime() {
   const [isAdminClaim, setIsAdminClaim] = useState(false);
   const [currentUserRole, setCurrentUserRole] = useState("resolving");
   const [appLoading, setAppLoading] = useState(true);
+  const [initialWorkoutLoadState, setInitialWorkoutLoadState] = useState("idle");
+  const workoutRetryRef = useRef(null);
   const [appTheme, setAppTheme] = useState(() => {
     try {
       return normalizeAppTheme(localStorage.getItem(APP_THEME_STORAGE_KEY));
@@ -342,15 +354,8 @@ function AppRuntime() {
   const measurementReplayInProgressRef = useRef(false);
 
   useFirebaseSyncStatus({
-    onOffline: () => {
-      showAppError("offline");
-    },
-    onOnline: () => {
-      showAppError("savedLocal", "?????????? ?????????????.");
-      replayFailedHistorySaves(auth.currentUser?.uid);
-      replayFailedNutritionSync(auth.currentUser?.uid);
-      replayFailedMeasurementSaves(auth.currentUser?.uid);
-    }
+    onOffline: () => showAppError("offline"),
+    onOnline: () => retryPendingSync()
   });
 
   const [plan, setPlan] = useState({ workouts: [] });
@@ -388,6 +393,9 @@ function AppRuntime() {
   const [workoutStartedAt, setWorkoutStartedAt] = useState(null);
   const [workoutFinishedAt, setWorkoutFinishedAt] = useState(null);
   const [workoutDraftRestorePrompt, setWorkoutDraftRestorePrompt] = useState(null);
+  const workoutOpenContextRef = useRef({ request: 0 });
+  workoutOpenContextRef.current.plan = plan;
+  workoutOpenContextRef.current.page = page;
   const [workoutReadinessOpen, setWorkoutReadinessOpen] = useState(false);
   const [workoutReadiness, setWorkoutReadiness] = useState(null);
   const [workoutReadinessPending, setWorkoutReadinessPending] = useState(null);
@@ -423,17 +431,6 @@ function AppRuntime() {
   useEffect(() => {
     partialExerciseWarningKeysRef.current.clear();
   }, [selectedWorkoutId, workoutStartedAt]);
-
-  function showInlineVideoControlsTemporarily() {
-    if (inlineVideoControlsTimerRef.current) {
-      window.clearTimeout(inlineVideoControlsTimerRef.current);
-    }
-    setInlineVideoControlsVisible(true);
-    inlineVideoControlsTimerRef.current = window.setTimeout(() => {
-      setInlineVideoControlsVisible(false);
-      inlineVideoControlsTimerRef.current = null;
-    }, INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS);
-  }
 
   const timerTickRef = useRef(timerTick);
   const touchStartY = useRef(null);
@@ -522,8 +519,12 @@ function AppRuntime() {
   });
   const [adminClientTab, setAdminClientTab] = useState("overview");
   const [adminTrainerNote, setAdminTrainerNote] = useState("");
-  const [adminTrainingTemplates, setAdminTrainingTemplates] = useState([]);
-  const [trainerExerciseCards, setTrainerExerciseCards] = useState([]);
+  const [adminTrainingTemplatesSnapshot, setAdminTrainingTemplates] = useState([]);
+  const [trainerExerciseCardsSnapshot, setTrainerExerciseCards] = useState([]);
+  const [trainerLibraryLoadRecord, setTrainerLibraryLoadState] = useState(null);
+  const trainerLibraryLoadState = getCurrentTrainerLibraryLoadState(trainerLibraryLoadRecord);
+  const adminTrainingTemplates = trainerLibraryLoadState.templatesKnown ? adminTrainingTemplatesSnapshot : EMPTY_TRAINER_LIBRARY_ITEMS;
+  const trainerExerciseCards = trainerLibraryLoadState.cardsKnown ? trainerExerciseCardsSnapshot : EMPTY_TRAINER_LIBRARY_ITEMS;
   const trainerExerciseLibraryItems = useMemo(
     () => buildTrainerExerciseLibraryItems({}, adminTrainingTemplates, { cards: trainerExerciseCards }),
     [adminTrainingTemplates, trainerExerciseCards]
@@ -653,6 +654,7 @@ function AppRuntime() {
   const [profileMeasurementSaving, setProfileMeasurementSaving] = useState(false);
   const [profileMeasurementStatus, setProfileMeasurementStatus] = useState("");
   const [profileMeasurements, setProfileMeasurements] = useState([]);
+  const [profileMeasurementSnapshot, setProfileMeasurementSnapshot] = useState(null);
   const [clientProgressPhotos, setClientProgressPhotos] = useState([]);
   const [profileProgressPhotosModalOpen, setProfileProgressPhotosModalOpen] = useState(false);
   const [profileProgressPhotoCompareIds, setProfileProgressPhotoCompareIds] = useState(["", ""]);
@@ -701,7 +703,20 @@ function AppRuntime() {
   const [telegramProfile, setTelegramProfile] = useState(createEmptyTelegramProfile);
   const [telegramDraft, setTelegramDraft] = useState(createEmptyTelegramProfile);
   const [telegramConnectOpen, setTelegramConnectOpen] = useState(false);
-  const [, setTelegramLinkCode] = useState("");
+  const [telegramLink, setTelegramLink] = useState(null);
+  const telegramLinkCode = telegramLink?.uid && telegramLink.uid === user?.uid ? telegramLink.code : "";
+  const setTelegramLinkCode = (value) => {
+    const uid = auth.currentUser?.uid || "";
+    setTelegramLink((current) => {
+      if (auth.currentUser?.uid !== uid) return current;
+      const previousCode = current?.uid === uid ? current.code : "";
+      const code = typeof value === "function" ? value(previousCode) : value;
+      return uid && code ? { uid, code } : null;
+    });
+  };
+  const telegramBotLinkRequestRef = useRef(null);
+  const telegramBotLinkUrl = buildTelegramBotLinkUrl(TELEGRAM_BOT_USERNAME, telegramLinkCode);
+  const openProfileTelegramBotLink = (event) => openTelegramBotLink(event, telegramBotLinkUrl);
   const [telegramLinking, setTelegramLinking] = useState(false);
   const telegramLoginContainerRef = useRef(null);
   const telegramAvatarRefreshRef = useRef(false);
@@ -773,6 +788,10 @@ function AppRuntime() {
   const [barcodeScannerOpen, setBarcodeScannerOpen] = useState(false);
   const [, setBarcodeScannerError] = useState("");
   const [nutritionCloudReady, setNutritionCloudReady] = useState(false);
+  const { coverage: nutritionCoverage, historyReady: nutritionHistoryReady,
+    isDayReady: isNutritionDayReady, onCoverageChange: onNutritionCoverageChange } = useNutritionLoadingState({
+    user, nutrition, cloudReady: nutritionCloudReady
+  });
   const barcodeVideoRef = useRef(null);
   const nutritionPhotoInputRef = useRef(null);
   const nutritionPhotoLastFileRef = useRef(null);
@@ -811,14 +830,8 @@ function AppRuntime() {
   const {
     loadNutritionFromFirebase
   } = createNutritionCloudLoader({
-    auth,
-    db,
-    NUTRITION_STORAGE_KEY,
-    startPerformanceCheck,
-    endPerformanceCheck,
-    showAppError,
-    setNutrition,
-    setNutritionCloudReady
+    auth, db, NUTRITION_STORAGE_KEY, startPerformanceCheck, endPerformanceCheck,
+    showAppError, setNutrition, setNutritionCloudReady, onNutritionCoverageChange
   });
 
   const {
@@ -858,12 +871,14 @@ function AppRuntime() {
     db,
     endPerformanceCheck,
     historyReplayInProgressRef,
-    loadHistory,
-    normalizeExercise,
+    readClientLoadingSnapshot,
+    loadHistory, normalizeExercise,
+    onOwnPlanLoadState: setInitialWorkoutLoadState,
     nutritionReplayInProgressRef,
     plan,
     selectedUserId,
     workoutModePreference,
+    workoutStarted,
     setAdminClientStatus,
     setAdminSelectedClient,
     setNutrition,
@@ -877,6 +892,11 @@ function AppRuntime() {
     sortWorkoutDays,
     startPerformanceCheck
   }));
+
+  const { retryInitialWorkouts, retryWorkoutSync, retryPendingSync } = createInitialWorkoutHandlers(() => ({
+    auth, currentUserRole, workoutRetryRef, setInitialWorkoutLoadState,
+    loadWorkoutsFromFirebase, replayFailedHistorySaves, loadHistory,
+    replayFailedNutritionSync, replayFailedMeasurementSaves, showAppError }));
 
   useClientAssignedWorkoutRefresh({
     db,
@@ -901,7 +921,6 @@ function AppRuntime() {
     },
     userId: user?.uid
   });
-
 
   const {
     deleteClientEverywhereFromAdminPanel,
@@ -977,44 +996,39 @@ function AppRuntime() {
 
   const {
     loadProfileMeasurements,
+    loadProfileMeasurementSnapshot,
     loadClientProgressPhotos,
     replayFailedMeasurementSaves,
     selectClientProgressPhoto,
     saveClientProgressPhotos,
     saveProfileMeasurement
   } = createProfileProgressHandlers({
-    APP_PAGES,
-    MEASUREMENTS_STORAGE_KEY,
-    auth,
-    db,
-    aiNutritionProfile,
-    aiNutritionProfileDraft,
-    measurementReplayInProgressRef,
-    profileMeasurements,
-    profileMeasurementDraft,
-    profileMeasurementReturnTab,
-    profileProgressPhotoFiles,
-    recordTrainerEvent,
-    showAppError,
-    setAiNutritionProfile,
-    setAiNutritionProfileDraft,
-    setClientProgressPhotos,
-    setPage,
-    setProfileActiveTab,
-    setProfileMeasurementDraft,
-    setProfileMeasurementOpen,
-    setProfileMeasurementSaving,
-    setProfileMeasurements,
-    setProfileMeasurementStatus,
-    setProfileMeasurementWizardStep,
-    setProfileProgressPhotoFiles,
-    setProfileProgressPhotoPreviews,
-    setProfileProgressPhotosModalOpen,
-    setProfileProgressPhotoStatus,
-    setProfileProgressPhotoUploading
+    APP_PAGES, MEASUREMENTS_STORAGE_KEY, auth, db, readClientLoadingSnapshot,
+    aiNutritionProfile, aiNutritionProfileDraft, measurementReplayInProgressRef,
+    profileMeasurements, profileMeasurementDraft, profileMeasurementReturnTab,
+    profileProgressPhotoFiles, recordTrainerEvent, showAppError,
+    setAiNutritionProfile, setAiNutritionProfileDraft, setClientProgressPhotos,
+    setPage, setProfileActiveTab, setProfileMeasurementDraft, setProfileMeasurementOpen,
+    setProfileMeasurementSaving, setProfileMeasurements, setProfileMeasurementSnapshot,
+    setProfileMeasurementStatus, setProfileMeasurementWizardStep,
+    setProfileProgressPhotoFiles, setProfileProgressPhotoPreviews,
+    setProfileProgressPhotosModalOpen, setProfileProgressPhotoStatus, setProfileProgressPhotoUploading
   });
 
-  useAuthBootstrapEffect(() => ({
+  const nutritionPhotoAiResetContext = {
+    auth,
+    nutritionPhotoInputRef,
+    nutritionPhotoLastFileRef,
+    setNutritionPhotoAiCandidates,
+    setNutritionPhotoAiConfidence,
+    setNutritionPhotoAiResult,
+    setNutritionPhotoAnalyzing,
+    setNutritionPhotoName,
+    setNutritionPhotoNotFoundOpen,
+    setNutritionPhotoPreview
+  };
+  const resetNutritionPhotoAiState = createNutritionPhotoAiResetHandler(nutritionPhotoAiResetContext);
+  useAuthBootstrapEffect(() => ({ workoutRetryRef,
     AI_NUTRITION_PLAN_STORAGE_KEY,
     AI_NUTRITION_PROFILE_STORAGE_KEY,
     APP_PAGES,
@@ -1028,6 +1042,10 @@ function AppRuntime() {
     WORKOUT_MODE_STORAGE_KEY,
     auth,
     workoutSaveInFlightRef,
+    resetNutritionPhotoAiState: () => resetNutritionPhotoAiState(),
+    nutritionUndoTimerRef,
+    setNutritionUndoDelete,
+    setNutritionDeleteConfirmOpen,
     setIsSaving,
     setIsWorkoutSaved,
     setShowWorkoutSavedCard,
@@ -1072,7 +1090,7 @@ function AppRuntime() {
     setAiNutritionProfile,
     setAiNutritionProfileDraft,
     setAiNutritionSavedPlan,
-    setAppLoading,
+    setAppLoading, setInitialWorkoutLoadState,
     setAppTheme,
     setAppThemeCloudReady,
     setClientProgressPhotos,
@@ -1095,6 +1113,7 @@ function AppRuntime() {
     setProfileAccountDraft,
     setProfileAccountStatus,
     setProfileMeasurements,
+    setProfileMeasurementSnapshot,
     setProfileWorkoutCalendarData,
     setProfileWorkoutCalendarDraftDates,
     setProfileWorkoutCalendarEditing,
@@ -1104,6 +1123,10 @@ function AppRuntime() {
     setShowFirstSetupOnboarding,
     setTelegramConnectOpen,
     setTelegramDraft,
+    setTelegramLink,
+    setTelegramLinking,
+    telegramBotLinkRequestRef,
+    setLoginSubmitting,
     setTelegramProfile,
     setTelegramStatus,
     setUser,
@@ -1142,6 +1165,13 @@ function AppRuntime() {
     setAppThemeCloudReady,
     setPage,
     setSelectedUserId,
+    setCurrentUserRole,
+    onMemberAccessRevoked: () => { setBarcodeScannerOpen(false); resetNutritionPhotoAiState(); setFullscreenVideo(null); },
+    onMemberAssignmentChanged: () => {
+      if (currentUserRole === "client" && !workoutStarted) {
+        void loadWorkoutsFromFirebase(auth.currentUser?.uid, { force: true, preserveBasicPlanOnEmpty: true });
+      }
+    },
     setShowFirstSetupOnboarding
   });
 
@@ -1187,23 +1217,24 @@ function AppRuntime() {
     setNutritionFallbackSuggestions
   });
 
-  useNutritionRuntimeEffects({
-    auth,
-    barcodeScannerOpen,
+  const clientDataLoad = useClientDataRuntime({
+    auth, user, appLoading, currentUserRole, page, profileActiveTab,
+    barcodeScannerOpen, barcodeVideoRef, nutrition, nutritionCloudReady,
     barcodeSearchEnabled: BARCODE_SEARCH_ENABLED,
-    barcodeVideoRef,
-    nutrition,
-    nutritionCloudReady,
+    nutritionDateKey: selectedNutritionDateKey,
+    nutritionRevision: nutritionCoverage?.revision,
+    nutritionHistoryOpen: isAiNutritionPlanExpanded || nutritionCalendarOpen,
     nutritionStorageKey: NUTRITION_STORAGE_KEY,
     nutritionBackupStorageKey: NUTRITION_BACKUP_STORAGE_KEY,
-    nutritionUndoTimerRef,
-    user,
+    nutritionUndoTimerRef, todayNutritionKey, setNutrition,
+    measurementsOpen: profileMeasurementsModalOpen,
+    photosOpen: profileProgressPhotosModalOpen,
+    loadHistory, loadProfileMeasurements, loadProfileMeasurementSnapshot, loadClientProgressPhotos,
+    loadClientTrainerTasks: (...args) => loadClientTrainerTasks(...args),
+    loadNutritionFromFirebase: (...args) => loadNutritionFromFirebase(...args),
     addNutritionFoodFromPicker: (...args) => addNutritionFoodFromPicker(...args),
     findFoodByBarcode: (...args) => findFoodByBarcode(...args),
-    showAppError,
-    setBarcodeScannerError,
-    setBarcodeScannerOpen,
-    setNutritionBarcode
+    showAppError, setBarcodeScannerError, setBarcodeScannerOpen, setNutritionBarcode
   });
 
   useTrainerAutoLoadEffect({
@@ -1229,17 +1260,7 @@ function AppRuntime() {
     workoutVideoCacheKey,
     workoutDurationText,
     lastExerciseResults
-  } = useMemo(
-    () => buildWorkoutPageDerivedState({
-      plan,
-      selectedWorkoutId,
-      history,
-      workoutStartedAt,
-      workoutFinishedAt,
-      timerTick
-    }),
-    [plan, selectedWorkoutId, history, workoutStartedAt, workoutFinishedAt, timerTick]
-  );
+  } = useWorkoutPageDerivedState({ plan, selectedWorkoutId, history, workoutStartedAt, workoutFinishedAt, timerTick });
 
   const {
     getCompletedWorkoutSet,
@@ -1253,10 +1274,11 @@ function AppRuntime() {
     isWorkoutCompletedWithSet
   });
 
-  useWorkoutRuntimeEffects({
+  const { workoutDraftSaveWarning, showInlineVideoControlsTemporarily } = useWorkoutRuntimeEffects({
     auth,
     currentExerciseIndex,
     inlineVideoControlsTimerRef,
+    inlineVideoControlsHideDelay: INLINE_VIDEO_CONTROLS_HIDE_DELAY_MS,
     isWorkoutSaved,
     plan,
     postWorkoutFeedback,
@@ -1271,6 +1293,7 @@ function AppRuntime() {
     warmupTimerRunning,
     warmupTimerSeconds,
     workout,
+    workoutClientComment,
     workoutFinishedAt,
     workoutReadiness,
     workoutStarted,
@@ -1292,27 +1315,15 @@ function AppRuntime() {
   });
 
   const {
+    handleEmailSignup,
     handleGoogleAuth,
     handleLogin,
     handleLoginPasswordReset,
     handleTelegramMiniAppAuth
   } = createAuthHandlers({
-    APP_PAGES,
-    auth,
-    db,
-    login,
-    password,
-    loginSubmitting,
-    passwordResetSending,
-    setLoginFieldErrors,
-    setLoginError,
-    setLoginNotice,
-    setLoginSubmitting,
-    setPasswordResetSending,
-    setPage,
-    setSelectedUserId,
-    loadHistory,
-    loadWorkoutsFromFirebase
+    APP_PAGES, auth, db, login, password, loginSubmitting, passwordResetSending,
+    setLoginFieldErrors, setLoginError, setLoginNotice, setLoginSubmitting,
+    setPasswordResetSending, setPage, setSelectedUserId
   });
 
   const nutritionDateKey = selectedNutritionDateKey;
@@ -1600,17 +1611,15 @@ function AppRuntime() {
 
   const {
     resetNutritionPhotoAiSearch,
-    resetNutritionPhotoAiState,
     selectNutritionPhotoAiCandidate,
     handleNutritionPhotoAiSearch,
     retryNutritionPhotoFromNotFound,
     addNutritionProductManuallyFromPhoto
   } = createNutritionPhotoAiHandlers({
+    ...nutritionPhotoAiResetContext,
     fatSecretFoods,
     nutrition,
     nutritionFoodDatabase,
-    nutritionPhotoInputRef,
-    nutritionPhotoLastFileRef,
     addNutritionFoodFromPicker,
     createCustomNutritionFood,
     endPerformanceCheck,
@@ -1627,13 +1636,6 @@ function AppRuntime() {
     setNutritionEditOriginalNote,
     setNutritionEditPageOpen,
     setNutritionMealMenuOpen,
-    setNutritionPhotoAiCandidates,
-    setNutritionPhotoAiConfidence,
-    setNutritionPhotoAiResult,
-    setNutritionPhotoAnalyzing,
-    setNutritionPhotoName,
-    setNutritionPhotoNotFoundOpen,
-    setNutritionPhotoPreview,
     setNutritionSearch,
     setNutritionSearchTab,
     setSelectedNutritionFood,
@@ -1714,7 +1716,8 @@ function AppRuntime() {
     requestLeaveWorkout,
     handleAppBackNavigation
   } = createAppSessionNavigationHandlers({
-    auth,
+    auth, onLogoutError: message => showAppError("logout", message),
+    setAppLoading,
     APP_PAGES,
     defaultNutritionState,
     createEmptyAiNutritionProfileDraft,
@@ -1884,6 +1887,7 @@ function AppRuntime() {
   const {
     loadTrainerClientSummaries
   } = createTrainerClientSummaryLoader({
+    auth,
     db,
     trainerClientSummaryRequestRef,
     setTrainerClientSummaries,
@@ -1914,8 +1918,10 @@ function AppRuntime() {
     renameClientProgramAssignment,
     copyCurrentProgramToClient
   } = createTrainerProgramTemplateHandlers({
+    isClientSelectionCurrent: (clientId) => workoutLoadContextRef.current.selectedUserId === clientId,
     trainerExerciseCards,
     setTrainerExerciseCards,
+    setTrainerLibraryLoadState,
     db,
     auth,
     user,
@@ -1955,6 +1961,7 @@ function AppRuntime() {
   }
 
   function openAdminClientsWithFilter(filter = "all") {
+    if (["unassigned-clients", "pending-invites", "suspended-trainers"].includes(filter)) setAdminUsersSearch("");
     setAdminClientFilter(filter);
     setAdminClientPageOpen(false);
     setPage(APP_PAGES.ADMIN_USERS);
@@ -2262,6 +2269,8 @@ function AppRuntime() {
     aiNutritionProfile,
     aiNutritionProfileDraft,
     workoutDraftRestorePrompt,
+    workoutOpenContextRef,
+    onDraftReadError: () => showAppError("load", "Не удалось проверить сохранённую тренировку на устройстве. Попробуй открыть её ещё раз. Черновик не удалён."),
     loadHistory,
     loadWorkoutsFromFirebase,
     setPlan,
@@ -2376,7 +2385,7 @@ function AppRuntime() {
     refreshTelegramAvatar,
     handleTelegramAvatarError,
     checkTelegramLoginResult,
-    refreshTelegramConnection,
+    startTelegramBotLink,
     disconnectTelegram,
     toggleTelegramNotifications
   } = createProfileTelegramHandlers({
@@ -2386,6 +2395,7 @@ function AppRuntime() {
     TELEGRAM_PROFILE_STORAGE_KEY,
     telegramDraft,
     telegramAvatarRefreshRef,
+    telegramBotLinkRequestRef,
     setTelegramProfile,
     setTelegramDraft,
     setTelegramStatus,
@@ -2398,9 +2408,10 @@ function AppRuntime() {
     APP_PAGES,
     TELEGRAM_BOT_USERNAME,
     telegramConnectOpen,
+    telegramLinkCode,
     telegramLoginContainerRef,
     handleTelegramLoginAuth,
-    refreshTelegramConnection,
+    refreshTelegramConnection: checkTelegramLoginResult,
     setPage,
     setTelegramConnectOpen,
     setTelegramLoginWidgetReady,
@@ -2449,6 +2460,8 @@ function AppRuntime() {
 
   const startupGate = AppStartupGate({
     appLoading,
+    user,
+    profileAccount,
     currentUserRole,
     roleAccessGateState: getRoleAccessGateState({ isLoggedIn, currentUserRole }),
     firstSetupStillResolving,
@@ -2475,6 +2488,7 @@ function AppRuntime() {
     setLoginFieldErrors,
     loginSubmitting,
     passwordResetSending,
+    handleEmailSignup,
     handleGoogleAuth,
     handleLogin,
     handleLoginPasswordReset,
@@ -2504,11 +2518,15 @@ function AppRuntime() {
   });
 
   const routedPage = renderAppRoutePage({
+    initialWorkoutLoadState, retryInitialWorkouts, retryWorkoutSync,
     APP_VERSION,
     APP_PAGES,
     auth,
+    db,
     page: effectivePage,
     renderClientMainBottomBar,
+    logout,
+    openProfileAccount,
     workoutModeRemember,
     canUseAdminFeatures,
     canUseTrainerFeatures,
@@ -2569,6 +2587,9 @@ function AppRuntime() {
     adminAllUsersList,
     adminTrainingTemplates,
     nutrition,
+    loadAdminTrainingTemplates,
+    nutritionHistoryReady, nutritionLoadError: nutritionCoverage?.error,
+    loadNutritionHistory: () => loadNutritionFromFirebase(user?.uid, { mode: "full", force: true }),
     profileWorkoutCalendarData,
     user,
     getCompletedWorkoutSet,
@@ -2594,10 +2615,18 @@ function AppRuntime() {
     handleWorkoutDraftChoice
   });
 
+  const protectAdminPage = (content) => isClaimAdmin
+    ? <Suspense fallback={<RouteFallback />}><AdminSecurityKeyBoundary auth={auth} onLogout={logout}>{content}</AdminSecurityKeyBoundary></Suspense>
+    : content;
   if (isAppRouterPage(effectivePage, { selectedWorkoutId })) {
-    return routedPage;
+    return protectAdminPage(routedPage);
   }
   function renderNutritionPage() {
+    if (!isNutritionDayReady(nutritionDateKey)) {
+      return <RouteFallback title="Питание" activeTab="nutrition" renderBottomBar={renderClientMainBottomBar}
+        error={nutritionCoverage?.error} onRetry={() => loadNutritionFromFirebase(user?.uid,
+          { mode: "days", dayKeys: [nutritionDateKey], force: true })} />;
+    }
     const nutritionRouteProps = {
       activeNutritionSearchResultLimit,
       addNutritionFoodFromPicker,
@@ -2634,6 +2663,12 @@ function AppRuntime() {
       isAiNutritionPlanExpanded,
       isNutritionToday,
       nutrition,
+      nutritionHistoryReady,
+      nutritionHistoryLoading: nutritionCoverage?.loading,
+      nutritionHistoryError: nutritionCoverage?.error,
+      onLoadNutritionHistory: () => loadNutritionFromFirebase(user?.uid, { mode: "full", force: true }),
+      nutritionSyncRecoveryProps: { onReplay: () => replayFailedNutritionSync(user?.uid),
+        onRefresh: () => loadNutritionFromFirebase(user?.uid, { mode: "full", force: true }) },
       nutritionAmount,
       nutritionAmountError,
       nutritionAmountMode,
@@ -2687,7 +2722,7 @@ function AppRuntime() {
       pendingDishIngredient,
       pendingDishIngredientGrams,
       recentNutritionFoods,
-      removeSelectedDishIngredient,
+      removeSelectedDishIngredient, removeNutritionFood,
       removeNutritionVoiceAddedItem,
       updateNutritionVoiceAddedItem,
       renderTrainerMainBottomBar,
@@ -2740,12 +2775,13 @@ function AppRuntime() {
     };
 
     return (
-      <Suspense fallback={<RouteFallback />}>
+      <Suspense fallback={<RouteFallback title="Питание" activeTab="nutrition" renderBottomBar={renderClientMainBottomBar} />}>
         <NutritionRoute {...nutritionRouteProps} />
       </Suspense>
     );
   }
-  return renderAppTerminalRoute({
+  return protectAdminPage(renderAppTerminalRoute({
+    initialWorkoutLoadState, retryInitialWorkouts,
     ADMIN_CALENDAR_DAYS,
     ADMIN_EMAIL,
     adminActiveDayId,
@@ -2848,6 +2884,8 @@ function AppRuntime() {
     changeProfileLogin,
     requestProfileEmailChange,
     checkTelegramLoginResult,
+    startTelegramBotLink,
+    openProfileTelegramBotLink,
     clearClientProgram,
     clientProgressPhotos,
     clientTrainerTasks,
@@ -2877,6 +2915,7 @@ function AppRuntime() {
     exerciseNoteOpenId,
     exerciseTechniqueOpenId,
     exerciseValidationMessage,
+    workoutDraftSaveWarning,
     firstSetupSaveStatus,
     formatProfileMeasurementDate,
     formatProfileProgressPhotoDate,
@@ -3016,6 +3055,12 @@ function AppRuntime() {
     profileMeasurementOpen,
     profileMeasurementReturnTab,
     profileMeasurements,
+    profileMeasurementSnapshot,
+    nutritionHistoryReady,
+    clientDataLoad,
+    nutritionDayReady: isNutritionDayReady(todayNutritionKey()),
+    nutritionCoverage,
+    nutritionLoadError: nutritionCoverage?.error,
     profileMeasurementSaving,
     profileMeasurementsModalOpen,
     profileMeasurementStatus,
@@ -3214,6 +3259,8 @@ function AppRuntime() {
     swipeDirection,
     swipeOffset,
     telegramConnectOpen,
+    telegramBotLinkUrl,
+    setTelegramLinkCode,
     telegramLinking,
     telegramLoginContainerRef,
     telegramLoginWidgetReady,
@@ -3231,6 +3278,7 @@ function AppRuntime() {
     trainerClientSummariesLoading,
     trainerExerciseLibraryItems,
     trainerExerciseCards,
+    trainerLibraryLoadState,
     trainerNextSection,
     trainerSubscriptionNotificationSettings,
     trainerNextWorkspaceHandlers,
@@ -3269,5 +3317,5 @@ function AppRuntime() {
     workoutReadinessPending,
     workoutStarted,
     workoutModePreference
-  });
+  }));
 }

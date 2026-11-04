@@ -28,7 +28,7 @@ export const GLOBAL_MY_FOODS_BACKUP_STORAGE_KEY = "workout_global_my_foods_backu
 export const APP_THEME_STORAGE_KEY = "workout_app_theme_v2";
 export const FIRST_SETUP_DONE_USER_STORAGE_KEY = "workout_first_setup_done_user_uid";
 export const FIRST_SETUP_REQUIRED_VERSION = "v2";
-export const TELEGRAM_BOT_USERNAME = "tren_ai_coach_bot";
+export const TELEGRAM_BOT_USERNAME = "zmena_teleg_bot";
 export const TELEGRAM_PROFILE_STORAGE_KEY = "workout_telegram_profile_v1";
 
 export const WORKOUT_MODE_STORAGE_KEY = "workout_mode_preference_v1";

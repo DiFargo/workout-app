@@ -108,7 +108,7 @@
 }
 
 .createButton:hover {
-  background: var(--tn-purple-strong, var(--trainer-v2-accent, #806bb6));
+  background: var(--ownset-action-gradient);
 }
 
 .embedded .list {

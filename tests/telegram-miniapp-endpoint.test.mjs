@@ -50,13 +50,26 @@ beforeEach(() => {
   const authUsers = new Map([["linked-client", { uid: "linked-client", disabled: false, customClaims: { admin: false, keep: "existing" } }]]);
   const queries = [], tokenCalls = [], authReads = [], appCheckCalls = [];
   fixture = { docs, authUsers, queries, tokenCalls, authReads, appCheckCalls,
+    records: { users: docs, telegramIdentities: new Map([[telegramId, { uid: "linked-client", telegramUserId: telegramId }]]), accountDeletions: new Map() },
     botToken: "synthetic-telegram-endpoint-token", enforceAppCheck: false,
     bootstrapEnabled: false, bootstrapEmail: "", bootstrapTelegramId: "" };
   fixture.db = {
     collection(name) {
-      assert.equal(name, "users");
+      const records = fixture.records[name] ||= new Map();
       return {
+        doc(id) {
+          return {
+            id,
+            collection: name,
+            async get() {
+              const data = records.get(id);
+              return { exists: Boolean(data), data: () => data ? structuredClone(data) : undefined,
+                get: (field) => valueAt(data, field) };
+            }
+          };
+        },
         where(field, comparison, value) {
+          assert.equal(name, "users");
           assert.equal(comparison, "==");
           return { limit(max) {
             return { async get() {
@@ -67,6 +80,27 @@ beforeEach(() => {
           } };
         }
       };
+    },
+    async runTransaction(callback) {
+      const writes = [];
+      const transaction = {
+        async get(ref) {
+          const data = fixture.records[ref.collection]?.get(ref.id);
+          return { exists: Boolean(data), data: () => data ? structuredClone(data) : undefined,
+            get: (field) => valueAt(data, field) };
+        },
+        create(ref, data) { writes.push({ type: "create", ref, data }); },
+        set(ref, data, options) { writes.push({ type: "set", ref, data, options }); }
+      };
+      const result = await callback(transaction);
+      for (const write of writes) {
+        const records = fixture.records[write.ref.collection];
+        const current = records.get(write.ref.id) || {};
+        records.set(write.ref.id, write.type === "set" && write.options?.merge
+          ? { ...current, ...structuredClone(write.data) }
+          : structuredClone(write.data));
+      }
+      return result;
     }
   };
   fixture.auth = {
@@ -74,6 +108,10 @@ beforeEach(() => {
       authReads.push(uid);
       if (!authUsers.has(uid)) throw Object.assign(new Error("Synthetic missing identity"), { code: "auth/user-not-found" });
       return structuredClone(authUsers.get(uid));
+    },
+    async createUser(data) {
+      authUsers.set(data.uid, { ...structuredClone(data), disabled: false });
+      return structuredClone(authUsers.get(data.uid));
     },
     async createCustomToken(...args) { tokenCalls.push(args); return "synthetic-custom-token"; }
   };
@@ -127,12 +165,14 @@ test("a verified Telegram identity selects its linked UID and deduplicates legac
 
 test("active trainer and administrator identities retain their server identity and existing claims", async () => {
   for (const role of ["trainer", "admin"]) {
+    fixture.records.telegramIdentities.clear();
     fixture.docs.get("linked-client").role = role;
     fixture.authUsers.get("linked-client").customClaims = { admin: role === "admin", adminClaimVersion: "existing-version" };
     const before = structuredClone(fixture.authUsers.get("linked-client"));
     assert.equal((await request()).statusCode, 200);
     assert.deepEqual(fixture.tokenCalls.at(-1), ["linked-client"]);
     assert.deepEqual(fixture.authUsers.get("linked-client"), before);
+    assert.equal(fixture.records.telegramIdentities.get(telegramId).uid, "linked-client");
   }
 });
 
@@ -150,11 +190,38 @@ test("invalid, altered, expired and future-dated signatures fail before account 
   assert.deepEqual(fixture.queries, []);
   assert.deepEqual(fixture.authReads, []);
   assert.deepEqual(fixture.tokenCalls, []);
+  assert.equal(fixture.records.telegramPendingClientInvites, undefined, "unverified requests never read the server-only invite pointer");
 });
 
-test("an unknown Telegram account and multiple distinct linked accounts cannot obtain a token", async () => {
+test("client-supplied invite hints cannot redirect tokenless login to another UID", async () => {
+  const response = await request({
+    initData: signedInitData(),
+    pendingInvite: { token: "forged-client-invite-token_123456", uid: "unrelated-client" },
+    telegramPendingClientInvite: { uid: "unrelated-client", trainerId: "unrelated-trainer" }
+  });
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(fixture.tokenCalls, [["linked-client"]]);
+  assert.equal(fixture.docs.has("unrelated-client"), false);
+  assert.equal(fixture.records.telegramPendingClientInvites.size, 0);
+});
+
+test("an unknown Telegram account receives only a restricted pending profile and conflicting links get no token", async () => {
   fixture.docs.clear();
-  assert.equal((await request()).statusCode, 404);
+  fixture.records.telegramIdentities.clear();
+  const pending = await request();
+  const pendingUid = `telegram_${crypto.createHash("sha256").update(telegramId).digest("hex").slice(0, 24)}`;
+  assert.equal(pending.statusCode, 200);
+  assert.deepEqual(pending.data, { ok: true, customToken: "synthetic-custom-token" });
+  assert.equal(fixture.docs.get(pendingUid)?.role, "client");
+  assert.equal(fixture.docs.get(pendingUid)?.accountRegistrationType, "open");
+  assert.equal(fixture.docs.get(pendingUid)?.accountAccessStatus, "awaiting_trainer");
+  assert.equal(fixture.docs.get(pendingUid)?.trainerId, undefined);
+  assert.deepEqual(fixture.tokenCalls, [[pendingUid]]);
+
+  fixture.docs.clear();
+  fixture.records.telegramIdentities.clear();
+  fixture.authReads.length = 0;
+  fixture.tokenCalls.length = 0;
   fixture.docs.set("one", { role: "client", telegramUserId: telegramId });
   fixture.docs.set("two", { role: "client", telegram: { telegramUserId: telegramId } });
   const conflict = await request();

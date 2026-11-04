@@ -15,7 +15,8 @@ export function useTrainerAutoLoadEffect({
     if (!TRAINER_AUTO_LOAD_PAGES.has(page) || !canUseTrainerFeatures()) return;
 
     loadUsers();
-    loadAdminTrainingTemplates();
+    // Client directories and dashboards do not use the editable library.
+    if (page === "adminWorkouts") loadAdminTrainingTemplates();
     // Loader identities change with the orchestration context. The access and page
     // keys are the intended reload boundary; including loaders would create a loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps

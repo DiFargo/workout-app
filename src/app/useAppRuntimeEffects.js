@@ -1,9 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
 import { normalizeAppTheme } from "./appTheme";
 import { isTrainerForbiddenClientPage } from "./appNavigation";
 import { captureAuthSession } from "../utils/authSession.js";
+import { resolveUserRole } from "../utils/roleAccess.js";
+import { rememberOfflineClientProfile } from "../utils/offlineWorkoutAccess.js";
+import { invalidateSessionResource } from "../utils/sessionResource.js";
+import { invalidateWorkoutHistory } from "../utils/workoutHistoryRevision.js";
+import { invalidateWorkoutPlan } from "../utils/workoutPlanAuthority.js";
+import { compactStoredWorkoutPlans, createPersistableWorkoutPlan } from "../utils/workoutPlanStorage.js";
 import {
   addUserLocalBackup,
   safeWriteUserJsonStorage
@@ -39,8 +45,13 @@ export function useAppRuntimeEffects({
   setAppThemeCloudReady,
   setPage,
   setSelectedUserId,
+  setCurrentUserRole,
+  onMemberAccessRevoked,
+  onMemberAssignmentChanged,
   setShowFirstSetupOnboarding
 }) {
+  const revokeMemberMedia = useEffectEvent(() => onMemberAccessRevoked?.());
+  const refreshMemberAssignment = useEffectEvent(() => onMemberAssignmentChanged?.());
   useEffect(() => {
     const safeTheme = normalizeAppTheme(appTheme);
     document.documentElement.dataset.appTheme = safeTheme;
@@ -65,17 +76,48 @@ export function useAppRuntimeEffects({
 
   useEffect(() => {
     if (!user?.uid) return undefined;
-
-    return onSnapshot(
+    const session = captureAuthSession(auth);
+    if (session.uid !== user.uid || !session.isCurrent()) return undefined;
+    let active = true;
+    let previousAssignmentRevision = null;
+    let previousAccessRevision = null;
+    const unsubscribe = onSnapshot(
       doc(db, "users", user.uid),
+      { includeMetadataChanges: true },
       (snapshot) => {
-        const remoteTheme = normalizeAppTheme(snapshot.data()?.appTheme);
-        setAppTheme((currentTheme) => remoteTheme !== currentTheme ? remoteTheme : currentTheme);
+        if (!active || !session.isCurrent()) return;
+        const data = snapshot.data() || {};
+        const remoteTheme = normalizeAppTheme(data.appTheme);
+        setAppTheme((currentTheme) => active && session.isCurrent() && remoteTheme !== currentTheme ? remoteTheme : currentTheme);
         setAppThemeCloudReady(true);
+        if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites) {
+          rememberOfflineClientProfile(user.uid, data, true);
+          const accessRevision = JSON.stringify([data.role, data.accountAccessStatus, data.trainerAssignmentState,
+            data.active, data.archived, data.accessDisabled, data.membershipStatus]);
+          const assignmentRevision = JSON.stringify([data.role, data.accountAccessStatus, data.trainerAssignmentState,
+            data.active, data.archived, data.accessDisabled, data.membershipStatus, data.assignedProgramId,
+            data.assignedProgramAddedAt, data.assignedProgramUpdatedAt, data.assignedProgramLifecycleStatus,
+            data.trainerUid, data.trainerId, data.trainerEmail, data.workoutCalendar?.updatedAt]);
+          if (previousAssignmentRevision !== null && assignmentRevision !== previousAssignmentRevision) {
+            if (accessRevision !== previousAccessRevision) invalidateSessionResource(auth);
+            else invalidateSessionResource(auth, key => key.startsWith("client-demand:history:"));
+            invalidateWorkoutHistory(auth);
+            invalidateWorkoutPlan(auth);
+            refreshMemberAssignment();
+          }
+          previousAssignmentRevision = assignmentRevision;
+          previousAccessRevision = accessRevision;
+        }
+        if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites && snapshot.exists() &&
+          resolveUserRole({ role: data.role, accountAccessStatus: data.accountAccessStatus, trainerAssignmentState: data.trainerAssignmentState }) === "pending-client") {
+          revokeMemberMedia();
+          setCurrentUserRole?.(role => active && session.isCurrent() && role === "client" ? "pending-client" : role);
+        }
       },
       (error) => console.warn("Theme subscription error", error)
     );
-  }, [db, setAppTheme, setAppThemeCloudReady, user?.uid]);
+    return () => { active = false; unsubscribe(); };
+  }, [auth, db, setAppTheme, setAppThemeCloudReady, setCurrentUserRole, user?.uid]);
 
   useEffect(() => {
     const hasTrainerDashboard = Boolean(
@@ -130,8 +172,10 @@ export function useAppRuntimeEffects({
   useEffect(() => {
     if (!user?.uid) return;
 
+    compactStoredWorkoutPlans(user.uid, { workoutPlanBackupStorageKey });
+    const savedPlan = createPersistableWorkoutPlan(plan);
     safeWriteUserJsonStorage(workoutStorageKey, user.uid, plan);
-    addUserLocalBackup(workoutPlanBackupStorageKey, user.uid, { plan }, 10);
+    addUserLocalBackup(workoutPlanBackupStorageKey, user.uid, { plan: savedPlan }, 10);
   }, [plan, user?.uid, workoutPlanBackupStorageKey, workoutStorageKey]);
 
   useEffect(() => {

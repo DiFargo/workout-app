@@ -29,6 +29,7 @@ test("trainer invite uses the authorized admin endpoint and safely refreshes the
 
 test("trainer activation link can be copied from the success sheet", () => {
   assert.match(modalSource, /shareUrl \|\| invite\?\.activationUrl \|\| invite\?\.inviteUrl/);
-  assert.match(modalSource, /navigator\.clipboard\?\.writeText\(inviteUrl\)/);
+  assert.match(modalSource, /navigator\.clipboard\.writeText\(inviteUrl\)/);
+  assert.match(modalSource, /typeof navigator\.clipboard\?\.writeText !== "function"/);
   assert.match(modalSource, /createPortal\(modal, document\.body\)/);
 });

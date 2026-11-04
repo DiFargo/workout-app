@@ -1,8 +1,9 @@
 import TrainerProgramUnsavedDialog from "../../components/trainer/TrainerProgramUnsavedDialog";
+import TrainerEditorSheet from "../../components/trainer/TrainerEditorSheet.jsx";
 import { useEffect, useRef, useState } from "react";
 import { TrainerProgramConstructorStyleScope } from "../../components/trainer/TrainerWorkspace";
 import TrainerProgramConstructor from "../../components/trainer/TrainerProgramConstructor";
-import { Check, Save, Trash2, X } from "lucide-react";
+import { Check, Save, Settings2, Trash2, X } from "lucide-react";
 import TrainerProgramCopySheet from "./TrainerProgramCopySheet";
 import TrainerProgramLegacyEditor from "./TrainerProgramLegacyEditor";
 import TrainerProgramManagerBottomControls from "./TrainerProgramManagerBottomControls";
@@ -19,9 +20,13 @@ import {
 } from "../../utils/trainerProgramEditorDraft";
 
 import { getTrainerProgramEditorSnapshot } from "../../utils/trainerProgramEditorSnapshot.js";
-export { getTrainerProgramEditorSnapshot };
 
-export default function TrainerProgramManagerView({
+export default function TrainerProgramManagerView(props) {
+  const editing = props.isTrainerNextWorkspace() && props.adminProgramLibraryTab === "editor";
+  return <TrainerProgramManagerSession key={`${props.normalizedMonthProgram?.id || ""}:${editing}`} {...props} />;
+}
+
+function TrainerProgramManagerSession({
   usersList = [],
   APP_PAGES,
   addMonthBlock,
@@ -44,6 +49,8 @@ export default function TrainerProgramManagerView({
   adminSelectedExerciseId,
   adminSelectedTemplateId,
   adminTrainingTemplates,
+  trainerLibraryLoadState,
+  onRetryLibrary,
   canUseAdminFeatures,
   cancelMonthExerciseEdit,
   confirmRemoveMonthWorkout,
@@ -71,6 +78,7 @@ export default function TrainerProgramManagerView({
   normalizedMonthProgram,
   openAdminClientsWithFilter,
   openAdminProgramsOverview,
+  openTrainerExerciseLibrary,
   openCopyMonthProgramBlock,
   openMonthExerciseEditor,
   openMonthWorkoutContext,
@@ -114,14 +122,24 @@ export default function TrainerProgramManagerView({
   const [editorSaveState, setEditorSaveState] = useState("idle");
   const [editorSaveError, setEditorSaveError] = useState("");
   const [editorExitConfirmOpen, setEditorExitConfirmOpen] = useState(false);
-  const [editorDraftRecovery, setEditorDraftRecovery] = useState(null);
+  const [editorLibraryRequested, setEditorLibraryRequested] = useState(false);
+  const [templateSettingsOpen, setTemplateSettingsOpen] = useState(false);
+  const [editorDraftRecovery, setEditorDraftRecovery] = useState(() => {
+    if (!isEditorModalOpen || typeof restoreMonthProgramDraft !== "function") return null;
+    const draft = readTrainerProgramEditorDraft({
+      ownerUid: getTrainerProgramEditorDraftOwner(normalizedMonthProgram),
+      programId: String(normalizedMonthProgram?.id || "")
+    });
+    return draft && getTrainerProgramEditorSnapshot(draft.program) !== getTrainerProgramEditorSnapshot(normalizedMonthProgram)
+      ? draft : null;
+  });
+  const [editorInitialSnapshot, setEditorInitialSnapshot] = useState(() => isEditorModalOpen
+    ? getTrainerProgramEditorSnapshot(normalizedMonthProgram) : null);
   const editorSaveCloseTimerRef = useRef(null);
   const editorDraftSaveTimerRef = useRef(null);
-  const editorInitialSnapshotRef = useRef(null);
-  const editorProgramIdentityRef = useRef("");
+  const editorUploadSessionRef = useRef(Symbol("program-editor-upload-session"));
   const editorLatestProgramRef = useRef(null);
   const editorDraftContextRef = useRef(null);
-  const editorDraftRecoveryKeyRef = useRef("");
   const editorDraftShouldPersistRef = useRef(false);
   const isEditorSaveInProgress = editorSaveState !== "idle";
   const editorProgramIdentity = String(normalizedMonthProgram?.id || "");
@@ -136,8 +154,8 @@ export default function TrainerProgramManagerView({
   });
   const hasEditorUnsavedChanges = Boolean(
     isEditorModalOpen
-    && editorInitialSnapshotRef.current !== null
-    && editorInitialSnapshotRef.current !== getTrainerProgramEditorSnapshot(normalizedMonthProgram)
+    && editorInitialSnapshot !== null
+    && editorInitialSnapshot !== getTrainerProgramEditorSnapshot(normalizedMonthProgram)
   );
 
   function clearCurrentEditorDraft() {
@@ -165,6 +183,7 @@ export default function TrainerProgramManagerView({
   }
 
   useEffect(() => () => {
+    editorUploadSessionRef.current = null;
     if (editorSaveCloseTimerRef.current) window.clearTimeout(editorSaveCloseTimerRef.current);
     if (editorDraftSaveTimerRef.current) window.clearTimeout(editorDraftSaveTimerRef.current);
     if (editorDraftShouldPersistRef.current) persistCurrentEditorDraft();
@@ -177,70 +196,24 @@ export default function TrainerProgramManagerView({
   }, [editorSaveState, isEditorModalOpen]);
 
   useEffect(() => {
-    if (!isEditorModalOpen) {
-      if (editorDraftShouldPersistRef.current) persistCurrentEditorDraft();
-      if (editorDraftSaveTimerRef.current) window.clearTimeout(editorDraftSaveTimerRef.current);
-      editorDraftSaveTimerRef.current = null;
-      editorInitialSnapshotRef.current = null;
-      editorProgramIdentityRef.current = "";
-      editorLatestProgramRef.current = null;
-      editorDraftContextRef.current = null;
-      editorDraftRecoveryKeyRef.current = "";
-      editorDraftShouldPersistRef.current = false;
-      setEditorExitConfirmOpen(false);
-      setEditorDraftRecovery(null);
-      return;
-    }
-
-    if (
-      editorInitialSnapshotRef.current === null
-      || editorProgramIdentityRef.current !== editorProgramIdentity
-    ) {
-      editorInitialSnapshotRef.current = getTrainerProgramEditorSnapshot(normalizedMonthProgram);
-      editorProgramIdentityRef.current = editorProgramIdentity;
-    }
+    if (!isEditorModalOpen) return;
+    if (!editorUploadSessionRef.current) editorUploadSessionRef.current = Symbol("program-editor-upload-session");
 
     editorLatestProgramRef.current = normalizedMonthProgram;
     editorDraftContextRef.current = {
       ownerUid: editorDraftOwnerUid,
       programId: editorProgramIdentity,
       editorMode: editorDraftEditorMode,
-      initialSnapshot: editorInitialSnapshotRef.current
+      initialSnapshot: editorInitialSnapshot
     };
     editorDraftShouldPersistRef.current = true;
   }, [
     editorDraftEditorMode,
     editorDraftOwnerUid,
+    editorInitialSnapshot,
     editorProgramIdentity,
     isEditorModalOpen,
     normalizedMonthProgram
-  ]);
-
-  useEffect(() => {
-    if (
-      !isEditorModalOpen ||
-      !editorProgramIdentity ||
-      editorDraftRecoveryKeyRef.current === editorDraftKey ||
-      typeof restoreMonthProgramDraft !== "function"
-    ) return;
-
-    editorDraftRecoveryKeyRef.current = editorDraftKey;
-    const draft = readTrainerProgramEditorDraft({
-      ownerUid: editorDraftOwnerUid,
-      programId: editorProgramIdentity
-    });
-    if (!draft || getTrainerProgramEditorSnapshot(draft.program) === getTrainerProgramEditorSnapshot(normalizedMonthProgram)) {
-      return;
-    }
-
-    setEditorDraftRecovery(draft);
-  }, [
-    editorDraftKey,
-    editorDraftOwnerUid,
-    editorProgramIdentity,
-    isEditorModalOpen,
-    normalizedMonthProgram,
-    restoreMonthProgramDraft
   ]);
 
   useEffect(() => {
@@ -275,11 +248,13 @@ export default function TrainerProgramManagerView({
   function finalizeEditorClose({ restoreSavedProgram = false } = {}) {
     if (editorSaveCloseTimerRef.current) window.clearTimeout(editorSaveCloseTimerRef.current);
     editorSaveCloseTimerRef.current = null;
-    editorInitialSnapshotRef.current = null;
-    editorProgramIdentityRef.current = "";
+    setEditorInitialSnapshot(null);
+    editorUploadSessionRef.current = null;
     setEditorExitConfirmOpen(false);
     setEditorSaveState("idle");
-    openAdminProgramsOverview();
+    setEditorLibraryRequested(false);
+    if (editorLibraryRequested) openTrainerExerciseLibrary?.();
+    else openAdminProgramsOverview();
 
     if (restoreSavedProgram) {
       void refreshCurrentMonthProgram();
@@ -294,6 +269,17 @@ export default function TrainerProgramManagerView({
       return;
     }
     finalizeEditorClose();
+  }
+
+  function openLibraryFromEditor() {
+    if (isEditorSaveInProgress) return;
+    if (hasEditorUnsavedChanges) {
+      persistCurrentEditorDraft();
+      setEditorLibraryRequested(true);
+      setEditorExitConfirmOpen(true);
+      return;
+    }
+    openTrainerExerciseLibrary?.();
   }
 
   function discardEditorChanges() {
@@ -318,7 +304,7 @@ export default function TrainerProgramManagerView({
   }
 
   async function handleEditorProgramSave() {
-    if (isEditorSaveInProgress) return;
+    if (isEditorSaveInProgress || adminExerciseVideoUploadingId) return;
 
     if (hasEditorUnsavedChanges) persistCurrentEditorDraft();
     setEditorSaveError("");
@@ -334,7 +320,7 @@ export default function TrainerProgramManagerView({
       setEditorSaveState("saved");
       editorDraftShouldPersistRef.current = false;
       clearCurrentEditorDraft();
-      editorInitialSnapshotRef.current = getTrainerProgramEditorSnapshot(normalizedMonthProgram);
+      setEditorInitialSnapshot(getTrainerProgramEditorSnapshot(normalizedMonthProgram));
       editorSaveCloseTimerRef.current = window.setTimeout(() => {
         editorSaveCloseTimerRef.current = null;
         finalizeEditorClose();
@@ -353,6 +339,7 @@ export default function TrainerProgramManagerView({
         program={normalizedMonthProgram}
         months={monthGroups}
         exerciseLibrary={adminExerciseLibrary}
+        onOpenExerciseLibrary={openLibraryFromEditor}
         activeWorkoutId={adminOpenWorkoutId}
         onSelectWorkout={(workoutId) => {
           setAdminSelectedExerciseId("");
@@ -385,7 +372,12 @@ export default function TrainerProgramManagerView({
         onUpdateExerciseSet={updateMonthExerciseSet}
         onAddExerciseSet={addMonthExerciseSet}
         onRemoveExerciseSet={removeMonthExerciseSet}
-        onUploadExerciseVideo={uploadMonthExerciseVideo}
+        onUploadExerciseVideo={(...args) => {
+          const session = editorUploadSessionRef.current;
+          return uploadMonthExerciseVideo(...args, {
+            isCurrent: () => Boolean(session && editorUploadSessionRef.current === session)
+          });
+        }}
         exerciseVideoUploadingId={adminExerciseVideoUploadingId}
         showProgramActions={false}
         embeddedInModal={isEditorModalOpen}
@@ -414,6 +406,8 @@ export default function TrainerProgramManagerView({
           adminProgramImportInputRef={adminProgramImportInputRef}
           adminSelectedTemplateId={adminSelectedTemplateId}
           adminTrainingTemplates={adminTrainingTemplates}
+          trainerLibraryLoadState={trainerLibraryLoadState}
+          onRetryLibrary={onRetryLibrary}
           canUseAdminFeatures={canUseAdminFeatures}
           createNewMonthProgramDraft={createNewMonthProgramDraft}
           deleteSelectedProgramFromLibrary={deleteSelectedProgramFromLibrary}
@@ -436,6 +430,7 @@ export default function TrainerProgramManagerView({
           addMonthWorkout={addMonthWorkout}
           addProgramMonth={addProgramMonth}
           adminExerciseLibrary={adminExerciseLibrary}
+          onOpenExerciseLibrary={openLibraryFromEditor}
           adminExerciseSearch={adminExerciseSearch}
           adminExerciseVideoUploadingId={adminExerciseVideoUploadingId}
           adminOpenProgramBlocks={adminOpenProgramBlocks}
@@ -498,39 +493,44 @@ export default function TrainerProgramManagerView({
           >
             <header className={styles.editorModalHeader} data-trainer-modal-header="true">
               <label className={styles.editorProgramNameField}>
-                <span id="trainer-program-editor-modal-title">РЕДАКТОР ПРОГРАММЫ</span>
+                <span className={styles.editorTemplateLabel} id="trainer-program-editor-modal-title">Общий шаблон</span>
                 <input
                   value={normalizedMonthProgram?.name || ""}
                   onChange={(event) => updateMonthProgramName(event.target.value.slice(0, 80))}
                   maxLength={80}
-                  placeholder="Название программы"
+                  placeholder="Название шаблона"
                   aria-label="Название программы"
                   disabled={isEditorSaveInProgress}
                 />
               </label>
+              <div className={styles.editorHeaderActions}>
+              <button type="button" onClick={() => setTemplateSettingsOpen(true)} disabled={isEditorSaveInProgress} aria-label="Настройки шаблона"><Settings2 size={20} /></button>
               <button className={styles.editorModalClose} type="button" onClick={closeEditor} disabled={isEditorSaveInProgress} aria-label="Закрыть редактор программы">
                 <X size={20} />
               </button>
+              </div>
+              <p className={styles.editorPurpose}>При назначении клиент получит отдельную копию.</p>
             </header>
             <div className={`${styles.editorModalBody} ${styles.editorModalBodyProgram}`} data-trainer-modal-content="true">
-              <label className={styles.editorTestFlag}><input type="checkbox" checked={Boolean(normalizedMonthProgram?.isTest)} onChange={(event) => updateMonthProgramTestFlag?.(event.target.checked)} disabled={isEditorSaveInProgress} />Тестовая программа</label>
               {nextProgramConstructor}</div>
             <footer className={styles.editorModalFooter} data-trainer-modal-footer="true">
               {editorSaveError ? <p role="alert">{editorSaveError}</p> : null}
-              <button className={styles.editorModalDelete} type="button" onClick={deleteSelectedProgramFromLibrary} disabled={isEditorSaveInProgress}>
-                <Trash2 size={17} />Удалить
-              </button>
               <button
                 className={`${styles.editorModalSave}${editorSaveState === "saving" ? ` ${styles.editorModalSaveSaving}` : ""}${editorSaveState === "saved" ? ` ${styles.editorModalSaveSaved}` : ""}`}
                 type="button"
-                disabled={isEditorSaveInProgress}
+                disabled={isEditorSaveInProgress || Boolean(adminExerciseVideoUploadingId)}
                 onClick={handleEditorProgramSave}
               >
                 {editorSaveState === "saved" ? <Check size={17} /> : <Save size={17} />}
-                {editorSaveState === "saving" ? "Сохраняю…" : editorSaveState === "saved" ? "Сохранено" : "Сохранить"}
+                {adminExerciseVideoUploadingId ? "Загрузка видео…" : editorSaveState === "saving" ? "Сохраняю…" : editorSaveState === "saved" ? "Сохранено" : "Сохранить шаблон"}
               </button>
             </footer>
           </section>
+          {templateSettingsOpen ? <TrainerEditorSheet title="Настройки шаблона" className={styles.templateSettingsSheet} bodyClassName={styles.templateSettingsBody} onClose={() => setTemplateSettingsOpen(false)}>
+            <label className={styles.editorTestFlag}><input type="checkbox" checked={Boolean(normalizedMonthProgram?.isTest)} onChange={event => updateMonthProgramTestFlag?.(event.target.checked)} disabled={isEditorSaveInProgress} />Тестовая программа</label>
+            <p>Это общая основа программы. Персональная нагрузка настраивается в копии клиента.</p>
+            <button className={styles.editorModalDelete} type="button" onClick={() => { setTemplateSettingsOpen(false); deleteSelectedProgramFromLibrary(); }} disabled={isEditorSaveInProgress}><Trash2 size={17} aria-hidden="true" />Удалить шаблон</button>
+          </TrainerEditorSheet> : null}
           {editorDraftRecovery && !editorExitConfirmOpen ? (
             <div
               className={styles.editorExitConfirmBackdrop} data-modal-backdrop="true"
@@ -561,7 +561,7 @@ export default function TrainerProgramManagerView({
               </section>
             </div>
           ) : null}
-          {editorExitConfirmOpen ? <TrainerProgramUnsavedDialog onContinue={() => setEditorExitConfirmOpen(false)} onDiscard={discardEditorChanges} onSave={handleEditorProgramSave} saving={isEditorSaveInProgress} status={editorSaveError} /> : null}
+          {editorExitConfirmOpen ? <TrainerProgramUnsavedDialog onContinue={() => { setEditorExitConfirmOpen(false); setEditorLibraryRequested(false); }} onDiscard={discardEditorChanges} onSave={handleEditorProgramSave} saving={isEditorSaveInProgress} status={editorSaveError} /> : null}
         </div>
       ) : null}
 
