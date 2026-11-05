@@ -5,8 +5,10 @@ import { resolve } from "node:path";
 import { chromium } from "playwright";
 import { accountToken, inventory, readCatalog } from "./exercise-preview-batch.mjs";
 import { EXERCISE_VIDEO_PREVIEW_MAX_BYTES, EXERCISE_VIDEO_PREVIEW_PRIVATE_CACHE, resolveExerciseVideoPreviewAssetPath } from "../functions/exerciseVideoPreviewAsset.js";
+import { resolveProtectedExerciseVideoSource } from "../functions/protectedExerciseVideo.js";
 
-const directory = resolve("output/playwright/exercise-preview-assets-3.0.868");
+const copiedOnly = process.argv.includes("--copied-only");
+const directory = resolve(copiedOnly ? "output/playwright/copied-exercise-preview-repair" : "output/playwright/exercise-preview-assets-3.0.868");
 const bucket = "tren-85720.firebasestorage.app";
 const hash = bytes => createHash("md5").update(bytes).digest("base64");
 const metadataUrl = path => `https://storage.googleapis.com/storage/v1/b/${bucket}/o/${encodeURIComponent(path)}`;
@@ -14,13 +16,21 @@ const token = await accountToken();
 await mkdir(directory, { recursive: true });
 
 if (process.argv.includes("--prepare")) {
-  const catalog = inventory(await readCatalog(token));
+  const rawCatalog = await readCatalog(token);
+  const copiedOwners = new Set(rawCatalog.trainerExerciseCards.filter(card => card.copiedFrom?.operation === "trainer-library-copy-v1").map(card => card.ownerUid));
+  const catalog = inventory(rawCatalog);
   const jobs = [];
   for (const entry of catalog.entries) {
     if (!entry.videoRef || !Number.isFinite(entry.posterTime) || entry.hasCustomPoster) continue;
+    if (copiedOnly && !copiedOwners.has(entry.ownerUid)) continue;
     const video = catalog.videos.find(video => video.key === entry.videoKey);
     assert.equal(video.bucket, bucket);
     const objectPath = resolveExerciseVideoPreviewAssetPath({ ...video, previewTime: entry.posterTime });
+    if (copiedOnly) {
+      const existing = await fetch(metadataUrl(objectPath), { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20000) });
+      assert.ok([200, 404].includes(existing.status));
+      if (existing.status === 200) continue;
+    }
     if (!jobs.some(job => job.objectPath === objectPath)) jobs.push({ objectPath, video, previewTime: entry.posterTime, names: [entry.name] });
   }
   assert.ok(jobs.length > 0 && jobs.length <= 140, "Bounded current-library poster preparation");
@@ -115,6 +125,13 @@ if (process.argv.includes("--prepare")) {
   for (const asset of manifest.assets) {
     assert.ok(/^protected-exercise-previews\/v1\/[a-f0-9]{64}\.webp$/.test(asset.objectPath));
     assert.equal(asset.filename, asset.objectPath.split("/").at(-1));
+    if (copiedOnly) {
+      const source = resolveProtectedExerciseVideoSource(asset.sourceRef, bucket);
+      assert.equal(resolveExerciseVideoPreviewAssetPath({ ...source, previewTime: asset.previewTime }), asset.objectPath);
+      const metadata = await fetch(metadataUrl(source.objectPath), { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20000) });
+      assert.equal(metadata.status, 200);
+      assert.equal((await metadata.json()).generation, asset.sourceGeneration, "Video changed after preview preparation; prepare again");
+    }
     const bytes = await readFile(resolve(directory, asset.filename));
     assert.equal(hash(bytes), asset.md5Hash); assert.ok(bytes.length <= EXERCISE_VIDEO_PREVIEW_MAX_BYTES);
     const current = await fetch(metadataUrl(asset.objectPath), { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20000) });

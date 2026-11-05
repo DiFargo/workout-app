@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
 import { resolveProtectedExerciseVideoSource } from "../functions/protectedExerciseVideo.js";
 import { mapTemplateExerciseCards } from "../functions/exerciseCards.js";
+import { planExercisePreviewCopies, copyExercisePreviewAssets } from "./lib/exercise-preview-copy.mjs";
 
 const project = "tren-85720";
 const sourceEmail = "zahar.rusenko2000@gmail.com";
@@ -176,6 +177,10 @@ for (const [path, object] of allObjects) {
   }
   if (result.status !== 200 || result.body.md5Hash !== object.md5Hash || result.body.size !== object.size || result.body.metadata?.firebaseStorageDownloadTokens) throw new Error("Copied video verification failed");
 }
+const previewJobs = planExercisePreviewCopies(sourceCards.concat(sourceTemplates).map(data), mediaMap, bucket);
+const previewResult = await copyExercisePreviewAssets(previewJobs, { storage, bucket, apply: true });
+console.log(JSON.stringify({ previews: previewResult }));
+if (previewResult.sourceMissing) throw new Error("Source previews missing; prepare them before publishing copied library documents");
 function encode(value) {
   if (value === null) return { nullValue: null };
   if (typeof value === "string") return { stringValue: value };
