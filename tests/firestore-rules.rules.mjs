@@ -8,6 +8,7 @@ import { patchLibraryExercise, persistTrainerTemplateEdit } from "../src/utils/t
 import { buildTrainerClientProgramName } from "../src/utils/trainerClientProgramName.js";
 import { buildClientProgramLifecycleMetadata, buildProgramAssignmentMetadata } from "../src/utils/trainerProgramLifecycle.js";
 import { resolveAgendaScheduleInput } from "../src/utils/trainerScheduleAgenda.js";
+import { mergeProfileCalendarDraft } from "../src/features/client/profile/profileCalendarDraft.js";
 import { buildAiNutritionMonthlyPlan } from "../src/utils/aiNutritionPlanBuilder.js";
 import { after, before, beforeEach, test } from "node:test";
 
@@ -19,6 +20,29 @@ import {
 import { collection, deleteDoc, deleteField, doc, getDoc, getDocs, runTransaction, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 
 let testEnv;
+
+test("client calendar draft transaction preserves completed slots and rejects another client", async () => {
+  const calendar = { plannedWorkouts: [
+    { workoutId: "done", order: 1, date: "2026-10-31", completedDate: "2026-10-31", status: "completed" },
+    { workoutId: "next", order: 2, date: "2026-11-20", status: "planned", assignedProgramId: "p1" }
+  ] };
+  await testEnv.withSecurityRulesDisabled(async context => {
+    await setDoc(doc(context.firestore(), "users/calendar-owner"), { role: "client", trainerId: "trainer-1", workoutCalendar: calendar });
+    await setDoc(doc(context.firestore(), "users/calendar-other"), { role: "client", trainerId: "trainer-1" });
+  });
+  const db = testEnv.authenticatedContext("calendar-owner").firestore();
+  const ref = doc(db, "users/calendar-owner");
+  const slots = [{ workoutId: "done", order: 1, isCompleted: true }, { workoutId: "next", order: 2, plannedDate: "2026-11-20", isCompleted: false }];
+  await assertSucceeds(runTransaction(db, async transaction => {
+    const current = (await transaction.get(ref)).data().workoutCalendar;
+    transaction.update(ref, { workoutCalendar: mergeProfileCalendarDraft(current, calendar, slots, ["2026-11-24"], new Date("2026-11-08")), updatedAt: "2026-11-08" });
+  }));
+  const saved = (await getDoc(ref)).data().workoutCalendar;
+  assert.deepEqual(saved.plannedWorkouts[0], calendar.plannedWorkouts[0]);
+  assert.equal(saved.plannedWorkouts[1].date, "2026-11-24");
+  const other = testEnv.authenticatedContext("calendar-other").firestore();
+  await assertFails(updateDoc(doc(other, "users/calendar-owner"), { workoutCalendar: saved }));
+});
 
 test("nutrition cutover fences old writers and keeps server-owned protocol documents private", async () => {
   await testEnv.withSecurityRulesDisabled(async context => {

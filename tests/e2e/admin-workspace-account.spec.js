@@ -40,6 +40,45 @@ test("admin account controls make sign-out easy to find on desktop and mobile", 
   await expect(page.getByTestId("admin-harness-action")).toHaveText("logout");
 });
 
+test("admin feedback section reads messages, opens attachments and changes processing status", async ({ page }, testInfo) => {
+  const path = "users/synthetic/feedback/test";
+  const requests = [];
+  await page.route("**/api/admin/feedback", async route => {
+    const body = route.request().postDataJSON(); requests.push(body);
+    await route.fulfill({ contentType: "application/json", body: JSON.stringify(body.action === "list" ? { ok: true, items: [
+      { path, type: "bug", status: "new", displayName: "Тестовый пользователь", message: "Описание тестовой ошибки", contact: "test@example.invalid", createdAt: "2026-11-05T10:00:00Z", attachments: [{ path: "feedback/synthetic/test/log.txt", name: "log.txt" }, {path:"feedback/synthetic/test/photo.png",name:"photo.png",type:"image/png"}] }
+    ], nextCursor: "" } : body.action === "attachment" ? { ok: true, url: body.attachmentPath.endsWith("photo.png") ? "https://storage.googleapis.com/test/photo.png" : "https://storage.googleapis.com/test/log.txt" } : { ok: true }) });
+  });
+  await page.route("https://storage.googleapis.com/test/log.txt", route => route.fulfill({ contentType: "text/plain", body: "synthetic" }));
+  await page.route("https://storage.googleapis.com/test/photo.png", route => route.fulfill({contentType:"image/png",body:Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=","base64")}));
+  await page.goto("/tests/e2e/fixtures/admin-workspace.html");
+  await page.getByRole("button", { name: "Обратная связь", exact: true }).filter({ visible: true }).click();
+  const inbox = page.getByTestId("admin-feedback-inbox");
+  await expect(inbox).toContainText("Тестовый пользователь");
+  await expect(inbox).toContainText("test@example.invalid");
+  await expect(inbox.getByText("Описание тестовой ошибки",{exact:true})).toHaveCount(1);
+  const photo = inbox.getByRole("img",{name:"photo.png",exact:true});
+  await expect(photo).toBeVisible();
+  await expect.poll(() => photo.evaluate(node => node.complete && node.naturalWidth > 0)).toBe(true);
+  await inbox.getByRole("button",{name:"Увеличить фото photo.png"}).click();
+  const viewer = page.getByRole("dialog",{name:"Просмотр фото обращения"});
+  await expect(viewer).toBeVisible();
+  await viewer.getByRole("button",{name:"Закрыть фото"}).click();
+  await expect(viewer).not.toBeVisible();
+  await page.screenshot({path:testInfo.outputPath("feedback-inbox.png")});
+  await inbox.locator("summary").filter({hasText:"Файлы"}).click();
+  const popup = page.waitForEvent("popup");
+  await inbox.getByRole("button", { name: "log.txt Скачать" }).click();
+  const fileTab = await popup; await fileTab.close();
+  await inbox.getByRole("button", { name: "Отметить обработанным" }).click();
+  await expect(inbox).not.toContainText("Тестовый пользователь");
+  await inbox.getByRole("button", { name: "Обработанные", exact: true }).click();
+  await expect(inbox).toContainText("Тестовый пользователь");
+  expect(requests.some(body => body.action === "status" && body.status === "processed" && body.path === path)).toBe(true);
+  await page.getByRole("button", { name: "Обзор", exact: true }).filter({ visible: true }).click();
+  await expect(inbox).toHaveCount(0);
+});
+
 test("admin account actions remain available through all four actual section routes", async ({ page }, testInfo) => {
   const noErrors = failOnRuntimeErrors(page);
   if (testInfo.project.name.startsWith("desktop")) await page.setViewportSize({ width: 844, height: 390 });

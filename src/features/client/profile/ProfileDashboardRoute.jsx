@@ -31,14 +31,14 @@ import ProfileTrainerNotificationsModal from "./ProfileTrainerNotificationsModal
 import ProfileWorkoutJournalModal from "./ProfileWorkoutJournalModal";
 import { WorkoutModePickerDialog } from "../workouts/WorkoutListDialogs";
 import { uploadStorageFile } from "../../../utils/firebaseStorage";
+import { feedbackFileType, validateFeedbackFiles } from "../../../utils/feedbackAttachments.js";
+import { captureAuthSession } from "../../../utils/authSession.js";
 import { fetchAuthorizedWithTimeout } from "../../../utils/apiClient";
 import { mergeReminderCalendarPatch } from "../../../utils/clientReminderSettings";
 import { createClientReminderHandlers } from "./profileNotificationHandlers";
 import { getAccountRecoveryEmail } from "./profileAccountEmail.js";
 import { loadProfileAchievementsHistory } from "./profileAchievementsHistory.js";
 import { isDashboardNutritionDayKnown, runDashboardWorkoutAction } from "./profileDashboardPresentation.js";
-
-const MAX_FEEDBACK_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 
 function getSafeFeedbackAttachmentName(file) {
   const rawName = file?.name || "attachment";
@@ -254,6 +254,7 @@ export default function ProfileDashboardRoute(ctx) {
   } = ctx;
 
   const loadClientTrainerTasksRef = useRef(loadClientTrainerTasks);
+  const profileWorkoutCalendarBaselineRef = useRef(null);
   const { saveReminderSettings, sendTestReminder } = createClientReminderHandlers({
     auth,
     request: fetchAuthorizedWithTimeout,
@@ -298,6 +299,9 @@ export default function ProfileDashboardRoute(ctx) {
     profileCalendarScheduledDates,
     isTrainerManagedWorkoutSchedule,
     profileWorkoutScheduleRequiredCount,
+    profileWorkoutSlots,
+    profileWorkoutEditableDates,
+    profileWorkoutCompletedCount,
     profileWorkoutScheduleLockedDates,
     shiftProfileWorkoutCalendarMonth,
     toggleProfileWorkoutScheduledDate,
@@ -366,6 +370,7 @@ export default function ProfileDashboardRoute(ctx) {
     profileProgressPhotoCompareView,
     profileProgressPhotoFiles,
     profileWorkoutCalendarData,
+    profileWorkoutCalendarBaselineRef,
     profileWorkoutCalendarDate,
     profileWorkoutCalendarDraftDates,
     profileWorkoutCalendarEditing,
@@ -519,20 +524,20 @@ export default function ProfileDashboardRoute(ctx) {
     }
 
     const feedbackId = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    const attachmentFile = feedbackDraft?.attachmentFile || null;
+    const session = captureAuthSession(auth);
+    const files = feedbackDraft?.attachmentFiles || (feedbackDraft?.attachmentFile ? [feedbackDraft.attachmentFile] : []);
+    const fileError = validateFeedbackFiles(files);
+    if (fileError) throw new Error(fileError);
     const feedbackPayload = { ...feedbackDraft };
     delete feedbackPayload.attachmentFile;
+    delete feedbackPayload.attachmentFiles;
 
-    let attachment = null;
-
-    if (attachmentFile) {
-      if (attachmentFile.size > MAX_FEEDBACK_ATTACHMENT_BYTES) {
-        throw new Error("Feedback attachment is too large");
-      }
-
+    const attachments = [];
+    for (const [index, attachmentFile] of files.entries()) {
+      if (!session.isCurrent()) throw new Error("Сессия изменилась. Войдите и повторите отправку.");
       const safeName = getSafeFeedbackAttachmentName(attachmentFile);
-      const uploadedAttachment = await uploadStorageFile(`feedback/${user.uid}/${feedbackId}/${Date.now()}-${safeName}`, attachmentFile, {
-        contentType: attachmentFile.type || "application/octet-stream",
+      const uploadedAttachment = await uploadStorageFile(`feedback/${user.uid}/${feedbackId}/${index}-${safeName}`, attachmentFile, {
+        contentType: feedbackFileType(attachmentFile),
         customMetadata: {
           feedbackId,
           source: "client-cabinet",
@@ -540,18 +545,20 @@ export default function ProfileDashboardRoute(ctx) {
         }
       });
 
-      attachment = {
+      attachments.push({
         name: attachmentFile.name,
         path: uploadedAttachment.path,
         size: attachmentFile.size,
-        type: attachmentFile.type || "",
-        url: uploadedAttachment.url
-      };
+        type: feedbackFileType(attachmentFile)
+      });
     }
 
+    if (!session.isCurrent()) throw new Error("Сессия изменилась. Войдите и повторите отправку.");
     await setDoc(doc(db, "users", user.uid, "feedback", feedbackId), {
       ...feedbackPayload,
-      attachment,
+      attachment: attachments[0] || null,
+      attachments,
+      recipient: "admin",
       appVersion: APP_VERSION || "",
       createdAt: new Date().toISOString(),
       displayName: profileAccount?.displayName || activeProfile?.name || user.displayName || "",
@@ -801,21 +808,28 @@ export default function ProfileDashboardRoute(ctx) {
           selectedItems: selectedWorkoutCalendarItems,
           scheduledDates: profileCalendarScheduledDates,
           draftDates: profileWorkoutCalendarDraftDates,
-          canEditSchedule: true,
+          canEditSchedule: !historyLoading,
           isTrainerManaged: isTrainerManagedWorkoutSchedule,
           scheduleRequiredCount: profileWorkoutScheduleRequiredCount,
+          completedCount: profileWorkoutCompletedCount,
           editing: profileWorkoutCalendarEditing,
           saving: profileWorkoutCalendarSaving,
           status: profileWorkoutCalendarStatus,
+          statusTone: ["Расписание сохранено. Тренер увидит изменения.", "Тренировочные дни сохранены."].includes(profileWorkoutCalendarStatus) ? "success" : "error",
           getTimestampValue,
           onShiftMonth: shiftProfileWorkoutCalendarMonth,
           onStartEdit: () => {
-            setProfileWorkoutCalendarDraftDates(profileCalendarScheduledDates);
+            profileWorkoutCalendarBaselineRef.current = {
+              uid: auth.currentUser?.uid,
+              calendar: structuredClone(profileWorkoutCalendarData || {}),
+              slots: structuredClone(profileWorkoutSlots)
+            };
+            setProfileWorkoutCalendarDraftDates(profileWorkoutEditableDates);
             setProfileWorkoutCalendarEditing(true);
             setProfileWorkoutCalendarStatus("");
           },
           onCancelEdit: () => {
-            setProfileWorkoutCalendarDraftDates(profileCalendarScheduledDates);
+            setProfileWorkoutCalendarDraftDates(profileWorkoutEditableDates);
             setProfileWorkoutCalendarEditing(false);
             setProfileWorkoutCalendarStatus("");
           },
@@ -824,7 +838,6 @@ export default function ProfileDashboardRoute(ctx) {
             setProfileWorkoutCalendarDate(day.key);
             if (profileWorkoutCalendarEditing && day.isCurrentMonth) {
               if (profileWorkoutScheduleLockedDates.includes(day.key)) {
-                setProfileWorkoutCalendarStatus("Даты выполненных тренировок сохраняются в истории.");
                 return;
               }
 

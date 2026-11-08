@@ -1,3 +1,4 @@
+import { compactExistingBackupStorage, decodeBackupJson, encodeBackupJson, isCompressibleBackupKey } from "./backupStorageCodec.js";
 export const DATA_SAFETY_MAX_BACKUPS = 25;
 
 const QUOTA_ERROR_NAMES = new Set(["QuotaExceededError", "NS_ERROR_DOM_QUOTA_REACHED"]);
@@ -27,13 +28,16 @@ function removeDisposableBackups(exceptKey) {
 }
 
 function writeJsonStorage(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  const raw = JSON.stringify(value);
+  localStorage.setItem(key, isCompressibleBackupKey(key) ? encodeBackupJson(raw) : raw);
 }
 
 export function safeReadJsonStorage(key, fallback = null) {
   try {
     const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
+    if (!raw) return fallback;
+    const value = JSON.parse(raw);
+    return isCompressibleBackupKey(key) ? decodeBackupJson(value) : value;
   } catch {
     return fallback;
   }
@@ -45,7 +49,8 @@ export function safeWriteJsonStorage(key, value) {
     return true;
   } catch (error) {
     if (isQuotaExceeded(error)) {
-      if (removeDisposableBackups(key)) {
+      const compacted = compactExistingBackupStorage(localStorage, String(key).split(":")[1]);
+      if (removeDisposableBackups(key) || compacted) {
         try {
           writeJsonStorage(key, value);
           return true;
@@ -62,6 +67,13 @@ export function safeWriteJsonStorage(key, value) {
 
 export function addLocalBackup(key, item, limit = DATA_SAFETY_MAX_BACKUPS) {
   const current = safeReadJsonStorage(key, []);
+  // The plan persistence effect can run again without a content change.
+  // Do not spend storage on another timestamp around an identical snapshot.
+  if (isCompressibleBackupKey(key) && Array.isArray(current) && current.length &&
+    item && Object.keys(item).length === 1 && Object.hasOwn(item, "plan")) {
+    try { if (JSON.stringify(current[0]?.plan) === JSON.stringify(item.plan)) return current; }
+    catch { /* The regular guarded write reports serialization failures. */ }
+  }
   const next = [
     {
       id: item?.id || `${Date.now()}_${Math.random().toString(36).slice(2)}`,

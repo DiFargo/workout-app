@@ -3,6 +3,7 @@ import { Bug, Lightbulb, MessageCircle, Paperclip, Sparkles } from "lucide-react
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileFeedbackModal.module.css";
+import { mergeFeedbackFiles, validateFeedbackFiles } from "../../../utils/feedbackAttachments.js";
 
 const FEEDBACK_TYPES = [
   { id: "bug", label: "Ошибка", hint: "Что работает странно", icon: Bug },
@@ -11,13 +12,11 @@ const FEEDBACK_TYPES = [
   { id: "recommendation", label: "Предложение", hint: "Чего не хватает", icon: Sparkles }
 ];
 
-const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
-
 const INITIAL_DRAFT = {
   type: "bug",
   message: "",
   contact: "",
-  attachmentFile: null
+  attachmentFiles: []
 };
 
 function formatAttachmentSize(size) {
@@ -45,20 +44,11 @@ export default function ProfileFeedbackModal({
   const saving = status === "saving";
 
   function handleAttachmentChange(event) {
-    const file = event.target.files?.[0] || null;
-
-    if (!file) {
-      setDraft((current) => ({ ...current, attachmentFile: null }));
-      return;
-    }
-
-    if (file.size > MAX_ATTACHMENT_BYTES) {
-      event.target.value = "";
-      setStatus("Файл слишком большой. Можно прикрепить файл до 25 МБ.");
-      return;
-    }
-
-    setDraft((current) => ({ ...current, attachmentFile: file }));
+    const files = mergeFeedbackFiles(draft.attachmentFiles, [...(event.target.files || [])]);
+    event.target.value = "";
+    const error = validateFeedbackFiles(files);
+    if (error) { setStatus(error); return; }
+    setDraft((current) => ({ ...current, attachmentFiles: files }));
     setStatus("");
   }
 
@@ -80,9 +70,10 @@ export default function ProfileFeedbackModal({
         typeLabel: selectedType.label,
         message: trimmedMessage,
         contact: draft.contact.trim(),
-        attachmentFile: draft.attachmentFile
+        attachmentFiles: draft.attachmentFiles
       });
-      setStatus("Спасибо, отправлено. Мы это увидим.");
+      setDraft({ ...INITIAL_DRAFT, contact: defaultContact });
+      setStatus("Отправлено администратору. Спасибо!");
       window.setTimeout(onClose, 850);
     } catch {
       setStatus("Не получилось отправить. Проверь интернет и попробуй ещё раз.");
@@ -130,6 +121,7 @@ export default function ProfileFeedbackModal({
         />
 
         <div className={styles.body}>
+          <p className={styles.recipient}>Сообщение получит администратор приложения.</p>
           <div className={styles.typeGrid} role="group" aria-label="Тип сообщения">
             {FEEDBACK_TYPES.map((type) => {
               const TypeIcon = type.icon;
@@ -140,6 +132,8 @@ export default function ProfileFeedbackModal({
                 className={`${styles.typeButton} ${draft.type === type.id ? styles.activeType : ""}`}
                 data-testid="profile-feedback-type"
                 aria-pressed={draft.type === type.id}
+                disabled={saving}
+                title={type.hint}
                 onClick={() => {
                   setDraft((current) => ({ ...current, type: type.id }));
                   setStatus("");
@@ -155,12 +149,28 @@ export default function ProfileFeedbackModal({
             })}
           </div>
 
+          <div className={styles.attachment}>
+            <label className={styles.attachmentPicker}>
+              <input className={styles.fileInput} type="file" multiple
+                accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime,.pdf,.txt,.log"
+                disabled={saving} onChange={handleAttachmentChange} />
+              <span className={styles.attachmentTitle}><Paperclip size={17} aria-hidden="true" /> Прикрепить файлы</span>
+              <small className={styles.attachmentHint}>До 5 файлов · каждый меньше 25 МБ · всего до 50 МБ</small>
+            </label>
+            {draft.attachmentFiles.map((file, index) => <div className={styles.attachmentFile} key={`${file.name}:${file.size}:${index}`}>
+              <span className={styles.fileName}>{file.name}</span>
+              <small className={styles.fileSize}>{formatAttachmentSize(file.size)}</small>
+              <button className={styles.removeAttachment} type="button" aria-label={`Убрать вложение ${file.name}`} disabled={saving}
+                onClick={() => setDraft(current => ({ ...current, attachmentFiles: current.attachmentFiles.filter((_, position) => position !== index) }))}>×</button>
+            </div>)}
+          </div>
+
           <label className={styles.field}>
-            <span className={styles.fieldLabel}>{selectedType.label}</span>
+            <span className={styles.fieldLabel}>Сообщение</span>
             <textarea
               className={styles.textarea}
               value={draft.message}
-              rows={6}
+              rows={4}
               maxLength={1200}
               placeholder="Опиши, что произошло, что стоит улучшить или какую идею хочешь предложить."
               disabled={saving}
@@ -172,6 +182,8 @@ export default function ProfileFeedbackModal({
             <small className={styles.counter}>{draft.message.length}/1200</small>
           </label>
 
+          <details className={styles.contactDetails}>
+          <summary>Контакт для ответа <small>{draft.contact || "Не указан"}</small></summary>
           <label className={styles.field}>
             <span className={styles.fieldLabel}>Контакт для ответа</span>
             <input
@@ -183,35 +195,7 @@ export default function ProfileFeedbackModal({
               onChange={(event) => setDraft((current) => ({ ...current, contact: event.target.value }))}
             />
           </label>
-
-          <div className={styles.attachment}>
-            <label className={styles.attachmentPicker}>
-              <input
-                className={styles.fileInput}
-                type="file"
-                accept="image/*,video/*,.pdf,.txt,.log"
-                disabled={saving}
-                onChange={handleAttachmentChange}
-              />
-              <span className={styles.attachmentTitle}><Paperclip size={17} strokeWidth={2.1} aria-hidden="true" /> Прикрепить файл</span>
-              <small className={styles.attachmentHint}>Скрин, фото, видео или лог до 25 МБ</small>
-            </label>
-            {draft.attachmentFile ? (
-              <div className={styles.attachmentFile}>
-                <span className={styles.fileName}>{draft.attachmentFile.name}</span>
-                <small className={styles.fileSize}>{formatAttachmentSize(draft.attachmentFile.size)}</small>
-                <button
-                  className={styles.removeAttachment}
-                  type="button"
-                  aria-label="Убрать вложение"
-                  disabled={saving}
-                  onClick={() => setDraft((current) => ({ ...current, attachmentFile: null }))}
-                >
-                  ×
-                </button>
-              </div>
-            ) : null}
-          </div>
+          </details>
 
           {status ? (
             <p className={`${styles.status} ${status === "saving" ? "" : styles.visibleStatus}`} role="status" aria-live="polite">

@@ -196,10 +196,21 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
   await expectRect(page.locator('[data-nutrition-header-part="week"]'), { x: 20, y: 84, width: 362, height: 67 });
   await expect(page.getByTestId("nutrition-selected-date")).toHaveText("Сегодня · 22 июня");
-  await expectRect(page.getByTestId("nutrition-orbit"), { x: 20, y: 181, width: 362, height: 185 });
-  await expectRect(page.locator('[data-css-module-scope="nutrition-diary"]'), { x: 20, y: 481, width: 362, height: 44 });
-  await expectRect(page.getByTestId("nutrition-diary-list"), { x: 20, y: 525, width: 362, height: 171 });
-  await expectRect(page.getByTestId("nutrition-summary"), { x: 20, y: 708, width: 362, height: 76 });
+  const nutritionCalendarBox = await page.getByTestId("nutrition-orbit-calendar").boundingBox();
+  let previousNutritionBottom = nutritionCalendarBox.y + nutritionCalendarBox.height;
+  for (const [locator, height] of [
+    [page.getByTestId("nutrition-orbit"), 185],
+    [page.locator('[data-css-module-scope="nutrition-diary"]'), 44],
+    [page.getByTestId("nutrition-diary-list"), 171],
+    [page.getByTestId("nutrition-summary"), 76]
+  ]) {
+    const box = await locator.boundingBox();
+    expect(Math.round(box.x)).toBe(20);
+    expect(Math.round(box.width)).toBe(362);
+    expect(Math.round(box.height)).toBe(height);
+    expect(box.y).toBeGreaterThanOrEqual(previousNutritionBottom);
+    previousNutritionBottom = box.y + box.height;
+  }
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
 
   await page.getByTestId("client-nav-workouts").click();

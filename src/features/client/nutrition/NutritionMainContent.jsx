@@ -26,13 +26,12 @@ export default function NutritionMainContent({
   return (
     <>
       <NutritionHeader {...headerProps} />
-      <NutritionSyncRecovery {...syncRecoveryProps} />
 
       {calendarOpen && (
         <NutritionCalendarModal {...calendarProps} />
       )}
 
-      <NutritionOrbit {...orbitProps} />
+      <NutritionOrbit {...orbitProps} saveStatus={<NutritionSyncRecovery {...syncRecoveryProps} />} />
 
       <NutritionDiary {...diaryProps} />
 

@@ -18,6 +18,27 @@ async function openAgenda(page, extra = "") {
   return dialog;
 }
 
+test("schedule sheet stays above client tabs while its content scrolls", async ({ page }, testInfo) => {
+  const noErrors = failOnRuntimeErrors(page);
+  const dialog = await openAgenda(page);
+  const backdrop = page.locator('[data-trainer-modal-backdrop="true"]').filter({ has: dialog });
+  await expect.poll(async () => backdrop.evaluate(el => {
+    const tabs = document.querySelector('.trainerNextClientTabs');
+    const rect = tabs?.getBoundingClientRect();
+    if (!rect || rect.width === 0 || rect.height === 0) return true;
+    const x = Math.max(1, Math.min(innerWidth - 1, rect.left + rect.width / 2));
+    const y = Math.max(1, Math.min(innerHeight - 1, rect.top + rect.height / 2));
+    return el.contains(document.elementFromPoint(x, y));
+  })).toBe(true);
+  await dialog.locator('[data-trainer-modal-content="true"]').evaluate(el => { el.scrollTop = el.scrollHeight; });
+  await expect(dialog.getByRole('button', { name: 'Закрыть: Расписание и абонемент', exact: true })).toBeVisible();
+  await dialog.screenshot({ path: testInfo.outputPath('schedule-above-client-tabs.png') });
+  await dialog.getByRole('button', { name: 'Закрыть: Расписание и абонемент', exact: true }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Тренировки', exact: true })).toBeVisible();
+  noErrors();
+});
+
 test("single schedule editor preserves completed dates, manual adjustments and cancellation", async ({ page }, testInfo) => {
   const noErrors = failOnRuntimeErrors(page);
   const dialog = await openAgenda(page);

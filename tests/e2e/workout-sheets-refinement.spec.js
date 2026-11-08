@@ -21,7 +21,7 @@ for (const sheet of ["calendar", "history", "mode", "feedback"]) {
       expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
       expect(await dialog.evaluate(node => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
       if (viewport.width === 375) await page.screenshot({ path: testInfo.outputPath(`${sheet}-375.png`), scale: "css" });
-      const controls = dialog.locator('button:visible, input:not([type="file"]):not([type="checkbox"]), textarea');
+      const controls = dialog.locator('button:visible, input:visible:not([type="file"]):not([type="checkbox"]), textarea:visible');
       for (const control of await controls.all()) {
         await control.scrollIntoViewIfNeeded();
         const bounds = await control.boundingBox();
@@ -36,6 +36,25 @@ for (const sheet of ["calendar", "history", "mode", "feedback"]) {
     }
   });
 }
+test("calendar month controls remain reachable after scrolling on a small phone", async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  const dialog = await openSheet(page, "calendar");
+  const panel = dialog.getByRole("tabpanel", { name: "Календарь тренировок", exact: true });
+  await panel.evaluate(el => { el.parentElement.scrollTop = el.parentElement.scrollHeight; });
+  for (const name of ["Предыдущий месяц", "Следующий месяц"]) {
+    const control = dialog.getByRole("button", { name, exact: true });
+    expect(await control.evaluate(el => {
+      const r = el.getBoundingClientRect();
+      return r.height >= 44 && r.width >= 44 && el.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+    })).toBe(true);
+  }
+  await dialog.getByRole("button", { name: "Следующий месяц", exact: true }).click();
+  await expect(dialog).toContainText("октябрь 2026");
+  await dialog.getByRole("button", { name: "Предыдущий месяц", exact: true }).click();
+  await expect(dialog).toContainText("сентябрь 2026");
+  await dialog.screenshot({ path: testInfo.outputPath("calendar-sticky-month-navigation.png") });
+});
+
 test("calendar keeps month navigation, date editing, cancel and save", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   const dialog = await openSheet(page, "calendar");
@@ -86,19 +105,31 @@ test("feedback retains attachment, validation, retry and completion", async ({ p
   await page.setViewportSize({ width: 375, height: 667 });
   const dialog = await openSheet(page, "feedback", "&failFirst=1");
   const submit = dialog.getByRole("button", { name: "Отправить", exact: true });
+  const types = await page.getByTestId("profile-feedback-type").all();
+  const rows = await Promise.all(types.map(async type => Math.round((await type.boundingBox()).y)));
+  expect(new Set(rows).size).toBe(1);
+  const fileBox = await dialog.locator('label').filter({ hasText: "Прикрепить файлы" }).boundingBox();
+  const textBox = await dialog.locator('textarea').boundingBox();
+  expect(fileBox.y).toBeLessThan(textBox.y);
+  await expect(dialog).toContainText("администратор приложения");
   await expect(submit).toBeDisabled();
   await page.getByTestId("profile-feedback-type").nth(2).click();
+  const selected = page.getByTestId("profile-feedback-type").nth(2);
+  await expect(selected).toHaveAttribute("aria-pressed", "true");
+  expect(await selected.evaluate(node => getComputedStyle(node).backgroundImage)).toContain("linear-gradient");
+  await expect(selected).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(page.getByTestId("profile-feedback-type").first()).toHaveAttribute("aria-pressed", "false");
   await dialog.locator("textarea").fill("Добавьте удобный просмотр результатов тренировки.");
   await dialog.locator('input[type="file"]').setInputFiles({ name: "feedback-example.txt", mimeType: "text/plain", buffer: Buffer.from("Example") });
   await expect(dialog).toContainText("feedback-example.txt");
-  await dialog.getByRole("button", { name: "Убрать вложение" }).click();
+  await dialog.getByRole("button", { name: "Убрать вложение feedback-example.txt", exact: true }).click();
   await expect(dialog.getByText("feedback-example.txt", { exact: true })).toHaveCount(0);
-  await dialog.locator('input[type="file"]').setInputFiles({ name: "feedback-example.txt", mimeType: "text/plain", buffer: Buffer.from("Example") });
+  await dialog.locator('input[type="file"]').setInputFiles([{ name: "feedback-example.txt", mimeType: "text/plain", buffer: Buffer.from("Example") }, {name:"second.log",mimeType:"text/plain",buffer:Buffer.from("log")}]);
   await submit.click();
   await expect(dialog.getByRole("status")).toContainText("Не получилось отправить");
   await submit.click();
   await expect(page.getByTestId("workout-sheets-result")).toContainText('"type":"idea"');
-  await expect(page.getByTestId("workout-sheets-result")).toContainText('"file":"feedback-example.txt"');
+  await expect(page.getByTestId("workout-sheets-result")).toContainText('"files":["feedback-example.txt","second.log"]');
   await expect(dialog).toHaveCount(0);
 });
 

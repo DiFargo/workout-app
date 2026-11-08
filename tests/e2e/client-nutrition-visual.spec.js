@@ -1973,6 +1973,11 @@ test("CSS V2 nutrition energy card keeps progress, macros and food actions reada
     await expect(macros.locator(":scope > div b")).toHaveText(["76 / 172 г","36 / 62 г","83 / 317 г"]);
     await expect(macros.locator("i")).toHaveCount(3);
     const cardBox=await card.boundingBox();
+    const calendar=page.getByTestId("nutrition-orbit-calendar");
+    await expect(calendar.getByTestId("nutrition-selected-date")).toBeVisible();
+    const calendarBox=await calendar.boundingBox();
+    expect(calendarBox.y+calendarBox.height).toBeLessThanOrEqual(cardBox.y);
+    await expect(page.getByTestId("nutrition-orbit-add").locator("..").getByRole("button")).toHaveCount(3);
     expect(cardBox.width).toBeCloseTo(viewport.cardWidth,1);
     expect(cardBox.height).toBeCloseTo(viewport.width<=360 ? 180.8 : 184.8,1);
     expect(cardBox.x).toBeGreaterThanOrEqual(0);
@@ -1983,6 +1988,12 @@ test("CSS V2 nutrition energy card keeps progress, macros and food actions reada
     await expect(page.getByRole("dialog",{name:"Поиск еды"})).toBeVisible();
     await page.locator('[data-food-search-header-action="close"]').click();
     await expect(page.getByRole("dialog",{name:"Поиск еды"})).toBeHidden();
+    if (viewport.width === 390) {
+      await attachScreenshot(page, testInfo, "nutrition-date-toolbar-mobile.png");
+      await calendar.click();
+      await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
+      await page.getByTestId("nutrition-calendar-close").click();
+    }
   }
   await page.setViewportSize({width:390,height:844});
   await openClientNutritionHarness(page,"dark-green");

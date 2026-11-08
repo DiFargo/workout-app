@@ -297,12 +297,17 @@ export function normalizeWorkoutCalendarSchedule(calendar = {}, workouts = []) {
   const usedDates = new Set();
   const matchingSlots = safeWorkouts.map((workout, index) => findMatchingPlannedWorkout(plannedWorkouts, workout, index));
   const pinnedDates = new Map();
+  const pinnedIndices = new Set();
   matchingSlots.forEach((slot, index) => {
     const workout = safeWorkouts[index];
     const id = String(workout?.id || "").trim();
     const date = toWorkoutDateKey(slot?.movedToDate || slot?.date);
     if (slot.dateOrderPolicy === "workout_identity" && id && String(slot.workoutId || "").trim() === id &&
-      matchesWorkoutAssignment(slot, workout) && date && !pinnedDates.has(date)) pinnedDates.set(date, index);
+      matchesWorkoutAssignment(slot, workout) && date) {
+      if (!pinnedDates.has(date)) pinnedDates.set(date, new Set());
+      pinnedDates.get(date).add(index);
+      pinnedIndices.add(index);
+    }
   });
   let previousDate = "";
 
@@ -316,11 +321,13 @@ export function normalizeWorkoutCalendarSchedule(calendar = {}, workouts = []) {
       workout?.plannedDate ||
       ""
     );
-    const pinned = pinnedDates.get(requestedDate) === index;
-    const canUseDate = date => !usedDates.has(date) && (!pinnedDates.has(date) || pinnedDates.get(date) === index);
+    const pinned = pinnedIndices.has(index);
+    const canUseDate = date => !usedDates.has(date) && (!pinnedDates.has(date) || pinnedDates.get(date).has(index));
+    // Explicit identity-bound dates are authoritative. A completed workout's
+    // obsolete planned date may equal a remaining workout's new date; history
+    // keeps the actual completion independently. Do not silently move either.
     const canKeepRequestedDate = requestedDate &&
-      canUseDate(requestedDate) &&
-      (pinned || !previousDate || requestedDate > previousDate);
+      (pinned || (canUseDate(requestedDate) && (!previousDate || requestedDate > previousDate)));
     let date = canKeepRequestedDate ? requestedDate : candidateDates.find((candidate) => (
       canUseDate(candidate) && (!previousDate || candidate > previousDate)
     ));
@@ -347,9 +354,9 @@ export function normalizeWorkoutCalendarSchedule(calendar = {}, workouts = []) {
       status: status === "moved" ? "planned" : status || "planned"
     };
   });
-  const scheduledDates = normalizedPlannedWorkouts
+  const scheduledDates = [...new Set(normalizedPlannedWorkouts
     .map((item) => item.date)
-    .filter(Boolean).sort();
+    .filter(Boolean))].sort();
 
   return {
     ...safeCalendar,

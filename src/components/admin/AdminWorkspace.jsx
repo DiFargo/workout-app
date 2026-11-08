@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useContext, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react";
 import {
   ChevronRight,
   ClipboardList,
@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   KeyRound,
   LogOut,
+  MessageSquare,
   UserRound,
   UsersRound,
   X
@@ -19,6 +20,7 @@ import { captureAuthSession } from "../../utils/authSession.js";
 import { useModalBackNavigation } from "../../shared/hooks/useModalBackNavigation.js";
 import styles from "./AdminWorkspace.module.css";
 import { AdminSecurityKeyContext } from "./AdminSecurityKeyContext.js";
+const AdminFeedbackInbox = lazy(() => import("./AdminFeedbackInbox.jsx"));
 
 export function getAdminRecoveryAccountLabel(client = {}) {
   const email = String(client.email || "").trim();
@@ -163,11 +165,12 @@ export const ADMIN_WORKSPACE_SECTIONS = [
     description: "Общая библиотека упражнений",
     icon: Dumbbell
   },
+  { id: "feedback", label: "Обратная связь", shortLabel: "Обращения", description: "Сообщения пользователей администратору", icon: MessageSquare },
 ];
 
 function getSection(sectionId) {
   return ADMIN_WORKSPACE_SECTIONS.find((section) => section.id === sectionId)
-    || ADMIN_WORKSPACE_SECTIONS[0];
+    || ADMIN_WORKSPACE_SECTIONS.find(section => section.id === "overview");
 }
 
 function AdminWorkspaceEmptyState({ section }) {
@@ -302,6 +305,8 @@ export default function AdminWorkspace({
   const headerRef = useRef(null);
   const [accountOpen, setAccountOpen] = useState(false);
   const [recoveryOpen, setRecoveryOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  useModalBackNavigation({ open: feedbackOpen, onBack: () => setFeedbackOpen(false) });
   useModalBackNavigation({ open: accountOpen, onBack: () => setAccountOpen(false) });
   useEffect(() => {
     if (!accountOpen) return undefined;
@@ -311,8 +316,8 @@ export default function AdminWorkspace({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [accountOpen]);
-  const activeItem = getSection(activeSection);
-  const content = children ?? renderContent?.(activeItem.id);
+  const activeItem = getSection(feedbackOpen ? "feedback" : activeSection);
+  const content = feedbackOpen ? <Suspense fallback={<p role="status">Загружаем обращения…</p>}><AdminFeedbackInbox /></Suspense> : children ?? renderContent?.(activeItem.id);
   const accountName = adminName || "Администратор";
   const accountInitial = String(accountName || adminMeta || "A").trim().slice(0, 1).toLocaleUpperCase("ru");
   const canOpenAccount = typeof onProfileClick === "function" || typeof onLogout === "function";
@@ -329,6 +334,8 @@ export default function AdminWorkspace({
   }, [contentLayout]);
 
   const handleSectionChange = (sectionId) => {
+    setFeedbackOpen(sectionId === "feedback");
+    if (sectionId === "feedback") return;
     onSectionChange?.(sectionId);
   };
 
@@ -397,8 +404,8 @@ export default function AdminWorkspace({
       <main className={styles.mainContent}>
         <header ref={headerRef} className={styles.header}>
           <div>
-            <h1>{headerTitle || (activeItem.id === "overview" ? "Обзор" : activeItem.label)}</h1>
-            <span>{subtitle}</span>
+            <h1>{feedbackOpen ? "Обратная связь" : headerTitle || (activeItem.id === "overview" ? "Обзор" : activeItem.label)}</h1>
+            <span>{feedbackOpen ? "Обращения пользователей и вложения" : subtitle}</span>
           </div>
           {canOpenAccount ? (
             <button

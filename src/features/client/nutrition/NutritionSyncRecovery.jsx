@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { Cloud } from "lucide-react";
 import { auth } from "../../../firebase.js";
 import { captureAuthSession } from "../../../utils/authSession.js";
 import { showAppConfirm, showAppError } from "../../../utils/appFeedback.js";
@@ -89,7 +90,9 @@ export default function NutritionSyncRecovery({ onReplay, onRefresh }) {
     }
   };
   return <section className={`${styles.notice} ${state === "cloud" ? styles.compact : ""}`} role="status" aria-live="polite" aria-atomic="true"
+    title={state === "cloud" ? title : undefined}
     data-testid={hasPending || busy || error ? "nutrition-sync-recovery" : "nutrition-save-status"} data-save-state={state}>
+    {state === "cloud" ? <Cloud className={styles.cloudIcon} aria-hidden="true" /> : null}
     <p className={styles.title}>{title}</p>
     {description ? <p className={styles.description}>{description}</p> : null}
     {state !== "cloud" ? <button type="button" disabled={state === "saving" || !onReplay} onClick={recover}>

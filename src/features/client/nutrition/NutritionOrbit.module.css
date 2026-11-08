@@ -455,10 +455,18 @@
 .macroTrack i { display:block; height:100%; background:var(--apple-macro-progress); border-radius:5px; }
 .renderHeading { margin:14px 22px 9px; min-height:24px; display:flex; align-items:center; }
 .renderHeading h2 { margin:0; color:var(--apple-text); font-size:18px; font-weight:680; line-height:1.25; letter-spacing:-.4px; }
-.renderQuick { margin:0 20px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; }
+.renderQuick { margin:0 20px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
 .renderQuick button { min-width:0; min-height:63px; padding:9px 2px 8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; border:0; border-radius:14px; color:var(--apple-text); background:var(--apple-surface); font:inherit; font-size:11px; font-weight:550; cursor:pointer; }
 .renderQuick button > span { display:grid; place-items:center; width:21px; height:21px; color:var(--apple-blue); }
 .renderQuick svg { width:21px; height:21px; }
 .renderQuick button:active { background:var(--apple-surface-muted); transform:scale(.97); }
 @media(max-width:360px) { .renderEnergy { --energy-ring-size:88px; margin-inline:15px; gap:0 12px; } .renderQuick { margin-inline:15px; } .renderHeading { margin-inline:17px; } }
-.selectedDate { margin: 0 20px 8px; color: var(--apple-secondary); font-size: 13px; line-height: 1.4; }
+.dateToolbar { margin:8px 20px 0; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; }
+.dateButton { min-width:0; min-height:44px; padding:8px 0; display:flex; align-items:center; gap:8px; border:0; background:transparent; color:var(--apple-text,#1c1c1e); font:inherit; font-size:14px; text-align:left; cursor:pointer; }
+.dateButton span { min-width:0; overflow-wrap:anywhere; }
+.dateButton svg { width:18px; height:18px; flex:none; color:var(--apple-blue,#3c6faa); }
+.dateButton svg:last-child { width:14px; height:14px; }
+.dateButton:active { opacity:.7; }
+.dateButton:focus-visible { outline:2px solid var(--apple-blue,#3c6faa); outline-offset:4px; border-radius:6px; }
+.dateToolbar > [data-save-state]:not([data-save-state="cloud"]) { flex-basis:100%; margin:0; }
+@media(max-width:360px) { .dateToolbar { margin-inline:15px; } }

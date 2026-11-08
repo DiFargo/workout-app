@@ -15,7 +15,8 @@
   --trainer-modal-inset: max(12px, env(safe-area-inset-top));
   position: fixed !important;
   /* One layer above every dock, sheet and legacy workspace overlay. */
-  z-index: var(--trainer-modal-layer) !important;
+  /* Portals mounted under body do not inherit the workspace scope tokens. */
+  z-index: var(--trainer-modal-layer, 110000) !important;
   inset: 0 !important;
   box-sizing: border-box;
   display: grid !important;
@@ -110,7 +111,7 @@
 
 :global([data-trainer-modal-surface="true"][data-trainer-modal-floating="true"]) {
   position: fixed !important;
-  z-index: calc(var(--trainer-modal-layer) + 1) !important;
+  z-index: calc(var(--trainer-modal-layer, 110000) + 1) !important;
   inset: auto !important;
   top: 50% !important;
   left: 50% !important;

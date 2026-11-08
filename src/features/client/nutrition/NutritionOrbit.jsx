@@ -1,4 +1,4 @@
-import { CalendarDays, Camera, Flame, Mic, Plus, RefreshCw } from "lucide-react";
+import { CalendarDays, Camera, ChevronDown, Flame, Mic, Plus, RefreshCw } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./NutritionOrbit.module.css";
 import NutritionVoiceModal from "./NutritionVoiceModal";
@@ -55,6 +55,7 @@ export default function NutritionOrbit({
   items = [],
   dateTitle,
   dateKey,
+  saveStatus,
   streakText,
   onAdd,
   onOpenCalendar,
@@ -156,7 +157,15 @@ export default function NutritionOrbit({
     const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
     const isSelectedToday = !dateKey || dateKey === todayKey;
     return <>
-      <p className={styles.selectedDate} data-testid="nutrition-selected-date">{isSelectedToday ? "Сегодня" : formatSelectedDate(dateKey, dateTitle)}{isSelectedToday && dateKey ? ` · ${formatSelectedDate(dateKey, dateTitle)}` : ""}</p>
+      <div className={styles.dateToolbar}>
+        <button type="button" className={styles.dateButton} data-testid="nutrition-orbit-calendar"
+          onClick={onOpenCalendar} aria-label="Открыть календарь питания" aria-haspopup="dialog">
+          <CalendarDays aria-hidden="true" />
+          <span data-testid="nutrition-selected-date">{isSelectedToday ? "Сегодня" : formatSelectedDate(dateKey, dateTitle)}{isSelectedToday && dateKey ? ` · ${formatSelectedDate(dateKey, dateTitle)}` : ""}</span>
+          <ChevronDown aria-hidden="true" />
+        </button>
+        {saveStatus}
+      </div>
       <section className={styles.renderEnergy} data-testid="nutrition-orbit">
         <div className={styles.renderRing} style={{ "--nutrition-progress": `${calorieProgressRounded * 3.6}deg` }}><span><strong>{getNumericText(calories.amount)}</strong><small>из {targetCalories} ккал</small></span></div>
         <div className={styles.renderCopy}>
@@ -173,7 +182,6 @@ export default function NutritionOrbit({
         <button type="button" data-testid="nutrition-orbit-add" aria-label="Добавить еду: продукт" onClick={onAdd}><span><Plus aria-hidden="true" /></span>Продукт</button>
         <button type="button" data-testid="nutrition-orbit-photo-search" onClick={openPhotoSearch}><span><Camera aria-hidden="true" /></span>Фото AI</button>
         <button type="button" ref={voiceButtonRef} data-testid="nutrition-orbit-audio-search" onClick={handleVoiceAction}><span>{voiceSearchFailed ? <RefreshCw aria-hidden="true" /> : <Mic aria-hidden="true" />}</span>Голос</button>
-        <button type="button" data-testid="nutrition-orbit-calendar" onClick={onOpenCalendar}><span><CalendarDays aria-hidden="true" /></span>Календарь</button>
         <input ref={photoSearchInputRef} className={styles.photoSearchInput} data-testid="nutrition-orbit-photo-input" type="file" accept="image/*" capture="environment" onChange={onPhotoSearch}/>
       </div>
       <NutritionVoiceModal open={voiceModalOpen} origin={voiceButtonOrigin} voiceState={voiceState} audioLevel={voiceAudioLevel} feedback={voiceFeedback} voiceAddedItems={voiceAddedItems} onClose={closeVoiceModal} onVoiceStart={onVoiceStart} onVoiceEnd={onVoiceEnd} onVoiceAddedItemRemove={onVoiceAddedItemRemove} onVoiceAddedItemUpdate={onVoiceAddedItemUpdate} onVoiceDone={finishVoiceResult}/>
@@ -182,6 +190,7 @@ export default function NutritionOrbit({
 
   return (
     <>
+      {saveStatus}
       <section className={styles.root} aria-label="Добавить еду" data-testid="nutrition-orbit" data-css-module-scope="nutrition-orbit">
         <div className={styles.card} data-nutrition-orbit-part="card">
         <header className={styles.header}>

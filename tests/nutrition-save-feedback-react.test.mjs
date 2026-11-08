@@ -97,7 +97,7 @@ async function fixture(run, { withoutBaseline = false } = {}) {
     await page.clock.install({ time: new Date("2026-10-30T10:00:00Z") });
     await page.addStyleTag({ content: `body{margin:0;background:#f2f2f7;font-family:Arial,sans-serif}${styles}` });
     await page.addScriptTag({ content: code });
-    await expect(page.getByText(withoutBaseline ? "Сохранено только на устройстве" : "Сохранено в облаке", { exact: true })).toBeVisible();
+    await expect(withoutBaseline ? page.getByText("Сохранено только на устройстве", { exact: true }) : page.getByTestId("nutrition-save-status")).toBeVisible();
     await run(page);
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
@@ -116,7 +116,8 @@ test("реальный UI питания: local → отправка → cloud �
     assert.equal(await page.getByTestId("water").textContent(), "300");
     await expect(page.getByText("Сохранено в облаке", { exact: true })).toHaveCount(0);
     await page.clock.runFor(700);
-    await expect(page.getByText("Сохранено в облаке", { exact: true })).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-status")).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-status")).toHaveAttribute("title", "Сохранено в облаке");
     assert.equal(await page.evaluate(() => window.scene.queue()), null);
   });
 });
@@ -139,7 +140,7 @@ test("реальный UI питания: отказ облака даёт по�
     }
     await page.evaluate(() => { window.io.fail = false; });
     await retry.click();
-    await expect(page.getByText("Сохранено в облаке", { exact: true })).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-status")).toBeVisible();
     assert.equal(await page.getByTestId("water").textContent(), "400");
     assert.equal(await page.evaluate(() => window.scene.queue()), null);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
@@ -168,7 +169,7 @@ test("реальный UI питания: quota не обещает локаль
     assert.equal(await page.getByTestId("water").textContent(), "500");
     await page.evaluate(() => { window.storageFull = false; });
     await page.getByRole("button", { name: "Повторить сохранение" }).click();
-    await expect(page.getByText("Сохранено в облаке", { exact: true })).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-status")).toBeVisible();
     assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem("nutrition:client")).days.today.water), 500);
     assert.equal(await page.getByTestId("water").textContent(), "500");
   });

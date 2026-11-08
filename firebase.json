@@ -90,6 +90,10 @@
         "function": { "functionId": "adminSecurityKeys", "region": "europe-west1" }
       },
       {
+        "source": "/api/admin/feedback",
+        "function": { "functionId": "adminFeedback", "region": "europe-west1" }
+      },
+      {
         "source": "/api/trainer-program-assignment-delete",
         "function": { "functionId": "deleteEmptyClientProgramAssignment", "region": "europe-west1" }
       },

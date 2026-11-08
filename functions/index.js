@@ -21,6 +21,7 @@ import { manageTrainerExerciseCards } from "./trainerExerciseCards.js";
 import { deleteEmptyClientProgramAssignment as deleteEmptyProgramAssignment } from "./deleteEmptyClientProgramAssignment.js";
 import { hasAdminSecurityKeyProof } from "./adminSecurityKeyAccess.js";
 import { createAdminSecurityKeysHandler } from "./adminSecurityKeys.js";
+import { manageAdminFeedback } from "./adminFeedback.js";
 import { INVITE_PAGE_STYLES, formatInviteAccountLabel } from "./invitePageStyles.js";
 import { getActivePlanWorkouts, getDueProgressReminderTypes, getDueReminderOffsets, getMinskDateKey, getNextScheduledWorkout, getPlannedWorkoutForReminder } from "./reminderSchedule.js";
 import { isTelegramRemindersEnabled } from "./telegramNotificationPreferences.js";
@@ -1199,6 +1200,24 @@ export const clientExerciseMedia = onRequest(
       return json(res, 200, await readClientExerciseMedia({ db: admin.firestore(), context, clientId: req.body?.clientId || context.uid }));
     } catch (error) {
       return json(res, getHttpErrorStatus(error), { error: "Не удалось обновить видео упражнений." });
+    }
+  }
+);
+
+export const adminFeedback = onRequest(
+  { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, invoker: "public" },
+  async (req, res) => {
+    res.set("Cache-Control", "private, no-store");
+    if (req.method !== "POST") return json(res, 405, { error: "method-not-allowed" });
+    try {
+      const context = await requireActiveMember(req);
+      assertAdminContext(context);
+      await enforceRateLimit(context.uid, "admin-feedback", { limit: 60, windowMs: 60000 });
+      return json(res, 200, await manageAdminFeedback({ db: admin.firestore(), storage: admin.storage(),
+        bucket: getStorageBucketName(), context, body: req.body || {} }));
+    } catch (error) {
+      const status = getHttpErrorStatus(error);
+      return json(res, status, { error: status >= 500 ? "Не удалось загрузить обращения. Повторите позже." : error.message });
     }
   }
 );

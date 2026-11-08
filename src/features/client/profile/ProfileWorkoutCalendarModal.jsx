@@ -15,9 +15,11 @@ export function ProfileWorkoutCalendarContent({
   canEditSchedule = true,
   isTrainerManaged = false,
   scheduleRequiredCount = 0,
+  completedCount = 0,
   editing,
   saving,
   status,
+  statusTone = "error",
   getTimestampValue,
   onShiftMonth,
   onStartEdit,
@@ -33,7 +35,7 @@ export function ProfileWorkoutCalendarContent({
   const selectedStatuses = getWorkoutCalendarDayStatuses(selectedDay, editing);
   const scheduleCountLabel = scheduleRequiredCount === 1
     ? "1 дату"
-    : `${scheduleRequiredCount} дат`;
+    : `${scheduleRequiredCount} ${scheduleRequiredCount % 10 >= 2 && scheduleRequiredCount % 10 <= 4 && (scheduleRequiredCount % 100 < 12 || scheduleRequiredCount % 100 > 14) ? "даты" : "дат"}`;
 
   return (
     <div
@@ -62,8 +64,8 @@ export function ProfileWorkoutCalendarContent({
           <small className={styles.plannerDescription}>
             {editing
               ? scheduleRequiredCount
-                ? `Выберите ${scheduleCountLabel}; программа останется без изменений.`
-                : "Нажимай на даты текущего месяца"
+                ? `Осталось назначить: ${scheduleCountLabel}. Выполнено занятий: ${completedCount} — их даты не меняются.`
+                : completedCount ? "Все занятия выполнены. Их даты сохранены в истории." : "Нажимай на даты текущего месяца"
               : isTrainerManaged
                 ? "Вы выбираете дни, а тренер видит изменения."
                 : `${scheduledThisMonth} дней запланировано`}
@@ -75,12 +77,12 @@ export function ProfileWorkoutCalendarContent({
               <button className={`${styles.actionButton} ${styles.secondaryAction}`} type="button" disabled={saving} onClick={onCancelEdit}>
                 Отмена
               </button>
-              <button className={styles.actionButton} type="button" disabled={saving} onClick={onSave}>
+              <button className={styles.actionButton} type="button" disabled={saving || (completedCount > 0 && scheduleRequiredCount === 0)} onClick={onSave}>
                 {saving ? "Сохраняю..." : "Сохранить"}
               </button>
             </div>
           ) : (
-            <button className={styles.plannerButton} data-testid="profile-workout-calendar-edit" type="button" onClick={onStartEdit}>
+            <button className={styles.plannerButton} data-testid="profile-workout-calendar-edit" type="button" disabled={completedCount > 0 && scheduleRequiredCount === 0} onClick={onStartEdit}>
               Изменить расписание
             </button>
           )
@@ -125,7 +127,7 @@ export function ProfileWorkoutCalendarContent({
                 editing && day.isScheduleLocked ? styles.locked : "",
                 day.key === selectedDate ? styles.selected : ""
               ].filter(Boolean).join(" ")}
-              disabled={editing && !day.isCurrentMonth}
+              disabled={editing && (!day.isCurrentMonth || day.isScheduleLocked)}
               onClick={() => onDayClick(day)}
               aria-pressed={day.key === selectedDate}
               aria-current={day.isToday ? "date" : undefined}
@@ -163,7 +165,7 @@ export function ProfileWorkoutCalendarContent({
       </div>
 
       {status && (
-        <p className={`${styles.status} ${(status.includes("сохранены") || status.includes("сохранено")) ? styles.success : ""}`} role="status" aria-live="polite">
+        <p className={`${styles.status} ${statusTone === "success" ? styles.success : ""}`} role="status" aria-live="polite">
           {status}
         </p>
       )}

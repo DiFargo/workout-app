@@ -1,5 +1,5 @@
 import { isWorkoutPlanForMode } from "../../../utils/workoutPlanMode.js";
-import { getWorkoutScheduleCalendarForWorkouts, normalizeWorkoutCalendarSchedule } from "../../../utils/workoutSchedule.js";
+import { getWorkoutScheduleCalendarForWorkouts } from "../../../utils/workoutSchedule.js";
 import { limitUserDisplayName } from "../../../utils/userDisplayName.js";
 import { getClientReminderSettings } from "../../../utils/clientReminderSettings.js";
 import { getProfileBodyMeasurementCheckInState, getProfileProgressPhotoCheckInState } from "./profileDashboardTasks.js";
@@ -7,6 +7,9 @@ import { getProfileOverviewMeasurements } from "../../../utils/profileOverviewMe
 import { getClientWorkoutCompletionHistory } from "../../../utils/clientWorkoutEvidence.js";
 import { isBodyMeasurementRecord } from "../../../utils/bodyMeasurementRecords.js";
 import { getDashboardEmptyWorkoutAction } from "./profileDashboardPresentation.js";
+import { getProfileCalendarDraft, mergeProfileCalendarDraft } from "./profileCalendarDraft.js";
+import { resolveTrainerAssignmentWorkoutOrder } from "../../../utils/trainerAssignmentWorkoutOrder.js";
+import { runTransaction } from "firebase/firestore";
 
 export function getTimeOfDayGreeting(date = new Date()) {
   const hour = date instanceof Date && Number.isFinite(date.getTime())
@@ -134,7 +137,6 @@ export function buildProfileDashboardModel(ctx) {
     buildPlannedWorkoutSlots,
     buildProgressInsight,
     buildWorkoutScheduleCalendarEntries,
-    buildWorkoutScheduleDraft,
     clientProgressPhotos,
     clientTrainerTasks,
     db,
@@ -149,7 +151,6 @@ export function buildProfileDashboardModel(ctx) {
     getAiNutritionGoalLabel,
     getAiNutritionTrainingDays,
     getClientNutritionDisplayPlan,
-    getDoc,
     getNutritionDayTotals,
     getProfileNextTrainingText,
     getProgramHistoryItems,
@@ -171,6 +172,7 @@ export function buildProfileDashboardModel(ctx) {
     profileProgressPhotoCompareView,
     profileProgressPhotoFiles,
     profileWorkoutCalendarData,
+    profileWorkoutCalendarBaselineRef,
     profileWorkoutCalendarDate,
     profileWorkoutCalendarDraftDates,
     profileWorkoutCalendarEditing,
@@ -178,7 +180,6 @@ export function buildProfileDashboardModel(ctx) {
     profileWorkoutCalendarSaving,
     profileWorkoutHistoryProgramScope,
     safeWriteUserJsonStorage,
-    setDoc,
     setProfileWorkoutCalendarData,
     setProfileWorkoutCalendarDate,
     setProfileWorkoutCalendarDraftDates,
@@ -309,7 +310,9 @@ export function buildProfileDashboardModel(ctx) {
     const selectedModePlan = isWorkoutPlanForMode(plan, selectedWorkoutMode)
       ? plan
       : { workouts: [] };
-    const profileCalendarWorkouts = sortWorkoutDays(selectedModePlan.workouts || []);
+    const profileCalendarWorkouts = resolveTrainerAssignmentWorkoutOrder(
+      sortWorkoutDays(selectedModePlan.workouts || []), profileWorkoutCalendarData
+    );
     const isTrainerManagedWorkoutSchedule = selectedWorkoutMode === "individual" && (
       Boolean(selectedModePlan?.assignedProgramId || selectedModePlan?.assignedProgramUpdatedAt) ||
       profileCalendarWorkouts.some((workout) => (
@@ -334,16 +337,22 @@ export function buildProfileDashboardModel(ctx) {
       scheduledDates: dashboardScheduledDates,
       monthlyTrainingDates: dashboardScheduledDates
     };
-    const profileWorkoutSlots = buildPlannedWorkoutSlots({
+    const currentProfileWorkoutSlots = buildPlannedWorkoutSlots({
       workouts: profileCalendarWorkouts,
       calendar: profileCalendarSource,
       history
     });
-    const profileWorkoutScheduleRequiredCount = profileCalendarWorkouts.length;
+    const editingBaseline = profileWorkoutCalendarEditing && profileWorkoutCalendarBaselineRef?.current?.uid === auth.currentUser?.uid
+      ? profileWorkoutCalendarBaselineRef.current : null;
+    const profileWorkoutSlots = editingBaseline?.slots || currentProfileWorkoutSlots;
+    const profileCalendarDraft = getProfileCalendarDraft(profileWorkoutSlots);
+    const profileWorkoutEditableDates = profileCalendarDraft.dates;
+    const profileWorkoutCompletedCount = profileCalendarDraft.completedCount;
+    const profileWorkoutScheduleRequiredCount = profileCalendarDraft.requiredCount;
     const profileWorkoutScheduleLockedDates = normalizeDashboardDateKeys(
       profileWorkoutSlots
         .filter((slot) => slot?.isCompleted)
-        .map((slot) => slot?.plannedDate || slot?.shiftedDate || "")
+        .map((slot) => slot?.completedDate || slot?.plannedDate || "")
     );
     const nextWorkoutSlot = profileWorkoutSlots.find((slot) => !slot.isCompleted) || profileWorkoutSlots[0] || null;
     const nextWorkoutSource = profileCalendarWorkouts.find((workout) => (
@@ -397,10 +406,8 @@ export function buildProfileDashboardModel(ctx) {
       result[entry.date].push(entry);
       return result;
     }, {});
-    const profileWorkoutDraftEntriesByDate = profileWorkoutCalendarDraftDates.reduce((result, date, index) => {
-      result[date] = profileWorkoutEntriesByDate[date]?.length
-        ? profileWorkoutEntriesByDate[date]
-        : [{ date, order: index + 1, status: "planned", title: `Тренировка №${index + 1}` }];
+    const profileWorkoutDraftEntriesByDate = getProfileCalendarDraft(profileWorkoutSlots, profileWorkoutCalendarDraftDates).entries.reduce((result, entry) => {
+      result[entry.date] = [...(result[entry.date] || []), entry];
       return result;
     }, {});
     const profileWorkoutVisibleEntriesByDate = profileWorkoutCalendarEditing
@@ -446,13 +453,10 @@ export function buildProfileDashboardModel(ctx) {
       const uid = auth.currentUser?.uid;
       if (!uid || profileWorkoutCalendarSaving) return;
 
-      const scheduledDates = normalizeDashboardDateKeys([
-        ...profileWorkoutCalendarDraftDates,
-        ...profileWorkoutScheduleLockedDates
-      ]);
+      const scheduledDates = normalizeDashboardDateKeys(profileWorkoutCalendarDraftDates);
 
-      if (profileWorkoutScheduleRequiredCount && scheduledDates.length !== profileWorkoutScheduleRequiredCount) {
-        setProfileWorkoutCalendarStatus("Количество дней должно совпадать с количеством тренировок в программе.");
+      if (scheduledDates.length !== profileWorkoutScheduleRequiredCount) {
+        setProfileWorkoutCalendarStatus("Выберите по одной дате для каждого оставшегося занятия.");
         return false;
       }
 
@@ -461,62 +465,22 @@ export function buildProfileDashboardModel(ctx) {
 
       try {
         const userRef = doc(db, "users", uid);
-        const userSnapshot = await getDoc(userRef);
-        const currentCalendar = userSnapshot.exists()
-          ? userSnapshot.data()?.workoutCalendar || {}
-          : {};
-        const existingPlannedWorkouts = Array.isArray(currentCalendar.plannedWorkouts)
-          ? currentCalendar.plannedWorkouts
-          : [];
-        const plannedWorkouts = buildWorkoutScheduleDraft(scheduledDates, profileCalendarWorkouts)
-          .map((entry, index) => {
-            const existing = existingPlannedWorkouts.find((item) => (
-              String(item?.workoutId || "").trim() === String(entry.workoutId || "").trim() ||
-              Number(item?.order) === index + 1
-            )) || {};
-            const workout = profileCalendarWorkouts[index] || {};
-            const assignmentInfo = {
-              assignedProgramId: existing.assignedProgramId || workout.assignedProgramId || currentCalendar.assignedProgramId || "",
-              assignedProgramName: existing.assignedProgramName || workout.assignedProgramName || currentCalendar.assignedProgramName || "",
-              assignedProgramUpdatedAt: existing.assignedProgramUpdatedAt || workout.assignedProgramUpdatedAt || currentCalendar.assignedProgramUpdatedAt || "",
-              assignedProgramAddedAt: existing.assignedProgramAddedAt || existing.programAssignmentId || workout.assignedProgramAddedAt || workout.programAssignmentId || currentCalendar.assignedProgramAddedAt || ""
-            };
-
-            const isCompleted = ["completed", "completed_off_date"].includes(
-              String(existing.status || "").trim().toLowerCase()
-            ) || Boolean(existing.completedDate);
-
-            const redated = { ...existing };
-            delete redated.dateOrderPolicy;
-            return {
-              ...redated,
-              ...entry,
-              ...assignmentInfo,
-              status: isCompleted ? existing.status || "completed" : entry.status,
-              movedToDate: "",
-              statusUpdatedAt: existing.statusUpdatedAt || "",
-              completedDate: existing.completedDate || ""
-            };
-          });
         const nowIso = new Date().toISOString();
-        const nextCalendar = normalizeWorkoutCalendarSchedule({
-          ...currentCalendar,
-          scheduledDates,
-          monthlyTrainingDates: scheduledDates,
-          plannedWorkouts,
-          scheduleUpdatedBy: "client",
-          clientScheduleUpdatedAt: nowIso,
-          clientScheduleRequiresReview: isTrainerManagedWorkoutSchedule,
-          updatedAt: nowIso
-        }, profileCalendarWorkouts);
-
-        await setDoc(userRef, {
-          workoutCalendar: nextCalendar,
-          updatedAt: nowIso
-        }, { merge: true });
+        const nextCalendar = await runTransaction(db, async transaction => {
+          const snapshot = await transaction.get(userRef);
+          if (!snapshot.exists()) throw new Error("calendar/stale-assignment");
+          const currentCalendar = snapshot.data().workoutCalendar || {};
+          const next = {
+            ...mergeProfileCalendarDraft(currentCalendar, editingBaseline?.calendar || profileWorkoutCalendarData, profileWorkoutSlots, scheduledDates),
+            scheduleUpdatedBy: "client", clientScheduleUpdatedAt: nowIso,
+            clientScheduleRequiresReview: isTrainerManagedWorkoutSchedule, updatedAt: nowIso
+          };
+          transaction.update(userRef, { workoutCalendar: next, updatedAt: nowIso });
+          return next;
+        });
 
         setProfileWorkoutScheduledDates(nextCalendar.scheduledDates);
-        setProfileWorkoutCalendarDraftDates(nextCalendar.scheduledDates);
+        setProfileWorkoutCalendarDraftDates(scheduledDates);
         setProfileWorkoutCalendarData(nextCalendar);
         safeWriteUserJsonStorage(WORKOUT_CALENDAR_STORAGE_KEY, uid, nextCalendar);
         setProfileWorkoutCalendarEditing(false);
@@ -527,7 +491,9 @@ export function buildProfileDashboardModel(ctx) {
         );
       } catch (error) {
         console.error("Workout calendar save failed:", error);
-        setProfileWorkoutCalendarStatus("Не получилось сохранить дни. Проверь соединение.");
+        setProfileWorkoutCalendarStatus(error.message === "calendar/stale-assignment"
+          ? "Тренер изменил одно из оставшихся занятий или оно уже выполнено. Выбранные даты не удалены. Проверьте актуальное расписание перед повторной настройкой."
+          : "Не получилось сохранить дни. Проверь соединение.");
       } finally {
         setProfileWorkoutCalendarSaving(false);
       }
@@ -696,6 +662,8 @@ export function buildProfileDashboardModel(ctx) {
     profileCalendarWorkouts,
     profileCalendarSource,
     profileCalendarScheduledDates: dashboardScheduledDates,
+    profileWorkoutEditableDates,
+    profileWorkoutCompletedCount,
     canEditProfileWorkoutSchedule,
     isTrainerManagedWorkoutSchedule,
     profileWorkoutScheduleRequiredCount,
