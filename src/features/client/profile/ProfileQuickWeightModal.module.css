@@ -21,7 +21,7 @@
   gap: 14px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
-  background: #fff;
+  background: var(--apple-surface, #fff);
   box-shadow: 0 20px 50px rgba(52, 43, 72, 0.22);
   color: var(--apple-text, #1c282e);
 }
@@ -38,7 +38,7 @@
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 50%;
   background: var(--apple-canvas, #f5f7f8);
-  color: #6f6878;
+  color: var(--apple-secondary, #6f6878);
   cursor: pointer;
 }
 
@@ -85,7 +85,7 @@
   width: 100%;
   display: grid;
   gap: 7px;
-  color: #5e5867;
+  color: var(--apple-secondary, #5e5867);
   font-size: 12px;
   font-weight: 750;
 }
@@ -99,7 +99,7 @@
   gap: 8px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
-  background: #fff;
+  background: var(--apple-surface-muted, #fff);
 }
 
 .inputWrap input {
@@ -123,7 +123,7 @@
 }
 
 .inputWrap input::placeholder {
-  color: #b2acbb;
+  color: var(--apple-secondary, #b2acbb);
 }
 
 .inputWrap span {
@@ -149,7 +149,7 @@
   border-radius: 16px;
   background: var(--ownset-action-gradient);
   box-shadow: 0 9px 18px rgba(40, 110, 91, 0.25);
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   font: inherit;
   font-size: 15px;
   font-weight: 800;

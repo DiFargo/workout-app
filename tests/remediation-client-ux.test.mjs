@@ -36,6 +36,14 @@ const compiled = { exports: {} };
 new Function("require", "module", "exports", generated.output[0].code)(createRequire(import.meta.url), compiled, compiled.exports);
 const { render } = compiled.exports;
 
+test("Night Glass: quarter and all-time progress retain real historical measurements", () => {
+  const now = new Date(2026, 10, 8, 12);
+  const records = [{date:"2026-05-05",weight:80},{date:"2026-09-01",weight:79},{date:"2026-11-08",weight:78},{date:"2026-11-09",weight:77}];
+  assert.deepEqual(getPeriodMeasurements(records,"quarter",now).map(item=>item.weight),[79,78]);
+  assert.deepEqual(getPeriodMeasurements(records,"all",now).map(item=>item.weight),[80,79,78]);
+  assert.equal(progressPeriodRange("quarter",now).days,90);
+});
+
 test("П06: real lazy route accepts the boolean role contract and keeps the active client dock", () => {
   const html = render("Router", { page: "workouts", canUseTrainerFeatures: false,
     canUseAdminFeatures: () => false, workoutListProps: {}, renderClientMainBottomBar: tab => `Navigation:${tab}` });

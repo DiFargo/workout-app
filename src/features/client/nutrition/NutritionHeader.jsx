@@ -1,4 +1,5 @@
 import { todayNutritionKey } from "../../../domain/nutritionPresentation";
+import { CalendarDays } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import weeklyCalendarStyles from "../../../shared/ui/WeeklyCalendar.module.css";
 import styles from "./NutritionHeader.module.css";
@@ -12,7 +13,8 @@ export default function NutritionHeader({
   weekDates,
   nutrition,
   nutritionDateKey,
-  onSelectDate
+  onSelectDate,
+  onOpenCalendar
 }) {
   return (
     <>
@@ -26,6 +28,7 @@ export default function NutritionHeader({
         testId="nutrition-header"
         scope="nutrition-header"
         barPart="title-row"
+        actions={onOpenCalendar ? <button type="button" aria-label="Календарь питания" onClick={onOpenCalendar}><CalendarDays aria-hidden="true" /></button> : undefined}
       />
 
       <div className={`${styles.week} ${weeklyCalendarStyles.root}`} data-week-calendar="nutrition" data-nutrition-header-part="week">

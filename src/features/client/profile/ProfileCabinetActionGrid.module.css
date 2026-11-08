@@ -30,3 +30,21 @@
 .trainer .section h2 { display:none; }
 .trainer .section { margin-top:16px; }
 @media(max-width:360px) { .profileCard { padding-inline:13px; gap:9px; } .avatar { width:45px; height:45px; } .profileCopy strong { font-size:18px; } .row { gap:9px; padding-inline:12px; } .status { font-size:10px; } }
+
+:global(html[data-client-appearance]) .root .profileCard { padding:20px; border-radius:22px; gap:14px; background:var(--client-profile-surface); box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .avatar { width:52px; height:52px; background:linear-gradient(135deg,#8bd0bc,#4c9d91 65%,#367e83); color:#fff; }
+:global(html[data-client-appearance]) .profileCopy strong { font-size:21px; }
+:global(html[data-client-appearance]) .profileCopy small { font-size:12px; }
+:global(html[data-client-appearance]) .section h2 { font-size:13px; margin:24px 14px 9px; }
+:global(html[data-client-appearance]) .group { border-radius:22px; box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .row { min-height:72px; padding:14px 16px; gap:12px; }
+:global(html[data-client-appearance]) .icon { width:32px; height:32px; border-radius:10px; background:var(--ownset-soft-gradient); color:var(--apple-blue); }
+:global(html[data-client-appearance]) .icon svg { width:20px; height:20px; }
+:global(html[data-client-appearance]) .text strong { font-size:17px; font-weight:500; }
+:global(html[data-client-appearance]) .text small { font-size:13px; }
+:global(html[data-client-appearance]) .status { font-size:12px; }
+.profileOverlay { position:fixed; inset:0; z-index:1800; display:flex; align-items:flex-end; justify-content:center; padding:0; background:rgba(28,59,76,.28); }
+.profileSheet { width:min(600px,100%); padding:24px 20px calc(20px + env(safe-area-inset-bottom,0px)); border-radius:28px 28px 0 0; background:var(--client-sheet-background,var(--apple-canvas)); }
+.profileSheet h2 { margin:0 0 16px; font-size:22px; }
+.profileDone { min-height:52px; width:100%; margin-top:20px; border:0; border-radius:26px; background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); font:inherit; font-weight:600; cursor:pointer; }
+@media(min-width:700px) { .profileOverlay { align-items:center; } .profileSheet { border-radius:28px; } }

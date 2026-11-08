@@ -25,7 +25,7 @@ export default function NutritionMainContent({
 
   return (
     <>
-      <NutritionHeader {...headerProps} />
+      <NutritionHeader {...headerProps} onOpenCalendar={orbitProps?.onOpenCalendar} />
 
       {calendarOpen && (
         <NutritionCalendarModal {...calendarProps} />

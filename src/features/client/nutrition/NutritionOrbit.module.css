@@ -470,3 +470,26 @@
 .dateButton:focus-visible { outline:2px solid var(--apple-blue,#3c6faa); outline-offset:4px; border-radius:6px; }
 .dateToolbar > [data-save-state]:not([data-save-state="cloud"]) { flex-basis:100%; margin:0; }
 @media(max-width:360px) { .dateToolbar { margin-inline:15px; } }
+
+:global(html[data-client-appearance]) .dateToolbar { margin:0 20px 17px; }
+:global(html[data-client-appearance]) .dateButton { min-height:44px; padding:8px 12px; font-size:13px; border:1px solid var(--client-glass-border); border-radius:24px; background:var(--client-glass); box-shadow:var(--client-glass-shadow); color:var(--apple-blue); }
+:global(html[data-client-appearance]) .renderEnergy { --energy-ring-size:110px; margin:0 20px; padding:20px; gap:0 20px; border-radius:22px; box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .renderRing { padding:7px; background:conic-gradient(var(--apple-macro-progress) var(--nutrition-progress),var(--apple-rhythm-track) 0); }
+:global(html[data-client-appearance]) .renderRing > span { background:var(--apple-surface); }
+:global(html[data-client-appearance]) .renderRing strong { font-size:25px; }
+:global(html[data-client-appearance]) .renderCopyHead p { font-size:11px; }
+:global(html[data-client-appearance]) .renderCopyHead h2 { font-size:27px; }
+:global(html[data-client-appearance]) .renderMacros { margin-top:20px; padding-top:16px; gap:14px; }
+:global(html[data-client-appearance]) .renderMacros > div > span { font-size:11px; }
+:global(html[data-client-appearance]) .renderMacros b { font-size:14px; }
+:global(html[data-client-appearance]) .renderMacros b small { font-size:11px; }
+:global(html[data-client-appearance]) .macroTrack { height:4px; }
+:global(html[data-client-appearance]) .renderMacros > div:nth-child(1) i { background:linear-gradient(90deg,#75c5d1,#3398b1); }
+:global(html[data-client-appearance]) .renderMacros > div:nth-child(2) i { background:linear-gradient(90deg,#94cea9,#4fa38a); }
+:global(html[data-client-appearance]) .renderMacros > div:nth-child(3) i { background:linear-gradient(90deg,#c4b2e5,#9f85c8); }
+:global(html[data-client-appearance]) .renderHeading { margin:24px 20px 10px; }
+:global(html[data-client-appearance]) .renderHeading h2 { font-size:20px; font-weight:650; }
+:global(html[data-client-appearance]) .renderQuick { gap:0; border-radius:22px; overflow:hidden; background:var(--apple-surface); box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .renderQuick button { min-height:78px; border-radius:0; gap:8px; background:transparent; color:var(--apple-blue); font-size:12px; }
+:global(html[data-client-appearance]) .renderQuick button + button { border-left:1px solid var(--apple-separator); }
+@media(max-width:374px) { :global(html[data-client-appearance]) .renderEnergy { --energy-ring-size:96px; gap:0 12px; padding:16px; } }

@@ -1,6 +1,10 @@
 
 import { CalendarDays, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, Home, UserRound, Utensils } from "lucide-react";
+import { useLayoutEffect, useRef } from "react";
 import styles from "./BottomBar.module.css";
+
+const CLIENT_TABS = ["main", "workouts", "nutrition", "progress", "cabinet"];
+let previousClientTab = "main";
 
 function runDeferredTouchPreload(preload) {
   if (typeof preload !== "function") return undefined;
@@ -32,6 +36,18 @@ export function ClientMainBottomBar({
   onOpenTrainerPrograms,
   onLoadTrainerCabinet
 }) {
+  const lensRef = useRef(null);
+  const tabIndex = Math.max(0, CLIENT_TABS.indexOf(activeTab));
+  useLayoutEffect(() => {
+    if (isTrainerMode || !lensRef.current) return;
+    const from = Math.max(0, CLIENT_TABS.indexOf(previousClientTab));
+    previousClientTab = activeTab;
+    if (from === tabIndex || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const lens = lensRef.current;
+    const animation = lens.animate([{ transform: `translateX(${from * 100}%)` }, { transform: `translateX(${tabIndex * 100}%)` }],
+      { duration: 240, easing: "cubic-bezier(.2,.8,.2,1)" });
+    return () => animation.cancel();
+  }, [activeTab, isTrainerMode, tabIndex]);
   const preloadMain = runDeferredTouchPreload(onPreloadMain);
   const preloadTraining = runDeferredTouchPreload(onPreloadTraining);
   const preloadNutrition = runDeferredTouchPreload(onPreloadNutrition);
@@ -67,6 +83,7 @@ export function ClientMainBottomBar({
         data-testid="client-bottom-nav"
         aria-label="Основные разделы"
       >
+      <span ref={lensRef} className={styles.lens} aria-hidden="true" style={{ transform: `translateX(${tabIndex * 100}%)` }} />
       <button
         type="button"
         data-testid="client-nav-main"

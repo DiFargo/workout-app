@@ -65,3 +65,38 @@
 .dataLoadNotice button { min-height: 44px; padding: 8px 10px; border: 1px solid rgba(60,60,67,.12); border-radius: 10px; background: var(--apple-surface); color: var(--apple-blue); font: inherit; cursor: pointer; }
 .dataLoadNotice button:disabled { opacity: .55; cursor: wait; }
 .dataLoadNotice button:focus-visible { outline: 3px solid var(--apple-blue); outline-offset: 2px; }
+
+.workoutHero { padding:20px; border-radius:26px; background:var(--client-hero,var(--ownset-soft-gradient)); box-shadow:var(--client-hero-shadow); color:var(--apple-text); }
+.workoutHero .heroTop { margin-bottom:18px; }
+.workoutHero .heroTop > span:first-child { min-height:24px; padding:4px 8px; font-size:11px; font-weight:500; line-height:16px; }
+:global(html[data-client-appearance="dark"]) .workoutHero .heroTop > span:first-child { color:#b4e5dc; background:rgba(115,187,175,.12); box-shadow:inset 0 0 0 1px rgba(165,220,210,.07); }
+.workoutHero .heroTop > span:first-child svg { width:12px; height:12px; }
+.workoutHero .heroTop > small { max-width:42%; color:var(--apple-secondary); font-size:11px; text-align:right; }
+.workoutHero h2 { margin:0; font-size:25px; line-height:1.2; font-weight:700; letter-spacing:-.6px; }
+.workoutMeta { display:flex; align-items:center; gap:7px; margin-top:14px; color:var(--apple-secondary); font-size:12px; }
+.workoutFocus { margin:7px 0 0; font-size:14px; line-height:20px; color:var(--apple-secondary); }
+:global(html[data-client-appearance]) .welcome { padding-bottom:23px; }
+.workoutMeta svg { width:14px; height:14px; }
+.workoutPrimary { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; min-height:52px; padding:12px 16px; margin-top:20px; border:0; border-radius:26px; background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); font:inherit; font-size:15px; font-weight:650; box-shadow:inset 0 1px 1px #ffffff66,0 6px 13px -5px #28777459; cursor:pointer; }
+.workoutPrimary svg { width:19px; height:19px; }
+.workoutPrimary:active { filter:brightness(.94); }
+.workoutPrimary:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
+.reminders > .heroTop,.reminders > p { display:none; }
+.reminders > h2 { margin:26px 0 10px; font-size:20px; font-weight:650; letter-spacing:-.4px; }
+:global(html[data-client-appearance]) .sectionHead { margin:26px 0 10px; padding:0; }
+:global(html[data-client-appearance]) .sectionHead h3 { font-size:20px; font-weight:650; }
+:global(html[data-client-appearance]) .metrics { gap:0; padding:18px 0; border-radius:22px; background:var(--apple-surface); box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .metrics button { min-height:78px; padding:0 14px; border-radius:0; background:transparent; }
+:global(html[data-client-appearance]) .metrics button + button { border-left:1px solid var(--apple-separator); }
+:global(html[data-client-appearance]) .metrics strong { font-size:28px; margin-top:8px; }
+:global(html[data-client-appearance]) .metrics small { display:block; width:100%; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:15px; }
+:global(html[data-client-appearance]) .taskList { gap:0; margin:0; border-radius:22px; overflow:hidden; box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .taskRow { min-height:72px; border:0; border-radius:0; padding:14px 16px; grid-template-columns:32px minmax(0,1fr) 16px; gap:12px; }
+:global(html[data-client-appearance]) .taskRow + .taskRow { border-top:1px solid var(--apple-separator); }
+:global(html[data-client-appearance]) .taskIcon { width:32px; height:32px; border-radius:10px; background:var(--ownset-soft-gradient); }
+:global(html[data-client-appearance]) .taskCopy strong { font-size:17px; font-weight:500; }
+:global(html[data-client-appearance]) .taskCopy small { font-size:13px; }
+:global(html[data-client-appearance]) .coach { min-height:72px; padding:14px 16px; border-radius:22px; grid-template-columns:32px minmax(0,1fr) auto; gap:12px; box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .avatar { width:32px; height:32px; border-radius:10px; background:var(--ownset-soft-gradient); color:var(--apple-blue); }
+:global(html[data-client-appearance]) .coachCopy strong { font-size:17px; font-weight:500; }
+:global(html[data-client-appearance]) .coachCopy small { font-size:13px; }

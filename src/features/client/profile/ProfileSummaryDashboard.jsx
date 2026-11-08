@@ -1,4 +1,4 @@
-import { ArrowRight, Bell, Camera, CheckCircle2, ChevronRight, Dumbbell, Ruler, Scale } from "lucide-react";
+import { ArrowRight, Bell, Camera, CheckCircle2, ChevronRight, Dumbbell, Ruler, Scale, MessageCircle } from "lucide-react";
 import styles from "./ProfileSummaryDashboard.module.css";
 import { buildProfileDashboardTasks } from "./profileDashboardTasks.js";
 import { getDashboardWeightPresentation } from "./profileDashboardPresentation.js";
@@ -130,6 +130,9 @@ export default function ProfileSummaryDashboard({
   };
   const latestMessage = activeTrainerNotifications.find((notification) => notification?.notificationType === "message");
   const messagePreview = String(latestMessage?.message || latestMessage?.text || latestMessage?.description || "").trim();
+  const workoutTask = dashboardTasks.find(task => task.kind === "workout");
+  const hasWorkoutHero = workoutReady && workoutTitle && Number(exerciseCount) > 0;
+  const reminderTasks = hasWorkoutHero ? dashboardTasks.filter(task => task.kind !== "workout") : dashboardTasks;
 
   return (
     <div className={styles.root} data-testid="profile-summary-dashboard">
@@ -137,22 +140,29 @@ export default function ProfileSummaryDashboard({
         <p>{summaryDateLabel}</p>
         <h2 data-testid="profile-summary-greeting">{summaryGreeting}</h2>
       </section>
-      <section className={styles.hero} data-testid="profile-summary-task-card" aria-labelledby="profileSummaryTaskHeading">
+      {hasWorkoutHero ? <section className={styles.workoutHero} aria-label="Тренировка по плану">
+        <div className={styles.heroTop}><span><Dumbbell aria-hidden="true" />{isWorkoutToday ? "Сегодня по плану" : workoutState === "draft" ? "Тренировка начата" : "Твой план"}</span><small>{workoutDate}</small></div>
+        <h2>{workoutTitle}</h2>
+        <p className={styles.workoutFocus}>{isBasicPlan ? "Базовая тренировка" : "Индивидуальная программа"}</p>
+        <div className={styles.workoutMeta}><Dumbbell aria-hidden="true" />{formatRussianCount(Math.max(0, Number(exerciseCount) || 0), ["упражнение", "упражнения", "упражнений"])}</div>
+        <button type="button" className={styles.workoutPrimary} data-testid="profile-summary-primary" data-task-id="workout" onClick={onOpenWorkout}>{workoutTask?.actionLabel || workoutActionLabel || "Открыть тренировку"}<ArrowRight aria-hidden="true" /></button>
+      </section> : null}
+      <section className={styles.reminders} data-testid="profile-summary-task-card" aria-labelledby="profileSummaryTaskHeading">
         <div className={styles.heroTop}>
           <span><Dumbbell aria-hidden="true" />План на сегодня</span>
           <span className={styles.taskCount} role="status" aria-live="polite" aria-atomic="true" data-testid="profile-summary-task-count">
             {taskDataUnknown && !dashboardTasks.length ? dataLoadFailed ? "Не все данные" : "Уточняем задачи" : formatRussianCount(dashboardTasks.length, ["задача", "задачи", "задач"])}
           </span>
         </div>
-        <h2 id="profileSummaryTaskHeading" data-testid="profile-summary-task-title">Что важно сегодня?</h2>
+        <h2 id="profileSummaryTaskHeading" data-testid="profile-summary-task-title">Не забудь</h2>
         <p>{!workoutReady ? "Задачи по тренировкам появятся после загрузки плана." : dashboardTasks.length
           ? "Только то, что актуально для вашего плана и прогресса."
           : taskDataUnknown ? dataLoadFailed ? "Не удалось проверить все задачи. Повторите загрузку." : "Проверяем актуальные задачи. Это займёт немного времени."
             : "На сегодня нет актуальных задач."}</p>
         {!workoutReady && <div className={styles.workoutLoadState} role="status" data-testid="profile-summary-workout-loading"><strong>{workoutLoadState === "error" ? "Не удалось загрузить план" : "Загружаем план тренировок…"}</strong>{workoutLoadState === "error" && onRetryWorkoutLoad && <button type="button" onClick={onRetryWorkoutLoad}>Повторить загрузку</button>}</div>}
-        {dashboardTasks.length ? (
+        {reminderTasks.length ? (
           <div className={styles.taskList}>
-            {dashboardTasks.map((task, index) => {
+            {reminderTasks.map((task, index) => {
               const TaskIcon = DASHBOARD_TASK_ICONS[task.kind];
               const isPrimaryWorkout = task.kind === "workout" && index === 0;
               return (
@@ -194,16 +204,16 @@ export default function ProfileSummaryDashboard({
         </div>}
       </section>
 
-      <div className={styles.sectionHead}><h3>Ваши показатели</h3></div>
+      <div className={styles.sectionHead}><h3>Твой ритм</h3></div>
       <div className={styles.metrics}>
         <button type="button" data-testid="profile-summary-workout-log" disabled={!workoutReady} onClick={onOpenWorkout}><span>Тренировки</span><strong>{workoutReady ? loggedWorkoutCount : workoutLoadState === "error" ? "—" : "…"}</strong><small>{workoutReady ? "завершено" : workoutLoadState === "error" ? "план не загружен" : "план загружается"}</small></button>
         <button type="button" data-testid="profile-summary-nutrition" onClick={onOpenNutrition}><span>Питание</span><strong>{nutritionReady ? consumedCalories.toLocaleString("ru-RU") : nutritionFailed ? "—" : "…"}</strong><small>{!nutritionReady ? nutritionFailed ? "Не удалось загрузить" : "Загружаем дневник…" : targetCalories ? `из ${targetCalories.toLocaleString("ru-RU")} ккал` : "цель не задана"}</small></button>
         <button type="button" data-testid="profile-summary-weight" onClick={onOpenProgress}><span>Вес</span><strong>{weightPresentation.value}</strong><small>{weightPresentation.note}</small></button>
       </div>
 
-      <div className={styles.sectionHead}><h3>{isBasicPlan ? "Сообщения и напоминания" : "Тренер рядом"}</h3></div>
+      <div className={styles.sectionHead}><h3>{isBasicPlan ? "Сообщения и напоминания" : "На связи"}</h3></div>
       <button type="button" className={styles.coach} data-testid="profile-summary-notifications-button" onClick={onOpenTrainer}>
-        <span className={styles.avatar} aria-hidden="true">{isBasicPlan ? <Bell size={24} /> : "ТР"}</span>
+        <span className={styles.avatar} aria-hidden="true">{isBasicPlan ? <Bell size={20} /> : <MessageCircle size={20} />}</span>
         <span className={styles.coachCopy}><strong>{isBasicPlan ? "Уведомления" : "Ваш тренер"}</strong><small data-testid="profile-summary-trainer-status">{trainerTasksReady ? trainerNotificationLabel || "Новых сообщений нет" : dataLoadState.tasks?.status === "error" ? "Не удалось загрузить сообщения" : "Загружаем сообщения…"}</small></span>
         {trainerTasksReady && notificationCount > 0 && <span className={styles.notificationBadge} data-testid="profile-summary-trainer-badge" aria-label={`${notificationCount} новых уведомлений`} />}
         {trainerTasksReady && messagePreview && <span className={styles.messagePreview}>{messagePreview}</span>}

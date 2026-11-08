@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent } from "react";
+import { useClientAppearance } from "../features/client/appearance/clientAppearance.js";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
 import { normalizeAppTheme } from "./appTheme";
@@ -50,6 +51,7 @@ export function useAppRuntimeEffects({
   onMemberAssignmentChanged,
   setShowFirstSetupOnboarding
 }) {
+  useClientAppearance(isLoggedIn && currentUserRole === "client");
   const revokeMemberMedia = useEffectEvent(() => onMemberAccessRevoked?.());
   const refreshMemberAssignment = useEffectEvent(() => onMemberAssignmentChanged?.());
   useEffect(() => {

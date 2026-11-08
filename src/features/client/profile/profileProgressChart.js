@@ -6,12 +6,13 @@ export function measurementTimestamp(measurement = {}) {
 }
 
 export function progressPeriodRange(period, now = new Date()) {
-  const days = period === "year" ? 366 : period === "halfYear" ? 183 : 30;
+  const days = period === "year" ? 366 : period === "halfYear" ? 183 : period === "quarter" ? 90 : 30;
   const to = new Date(now);
   to.setHours(23, 59, 59, 999);
   const from = new Date(now);
   from.setHours(0, 0, 0, 0);
   from.setDate(from.getDate() - days + 1);
+  if (period === "all") from.setTime(0);
   return { from, to, days };
 }
 

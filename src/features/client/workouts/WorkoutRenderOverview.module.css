@@ -1,10 +1,40 @@
 .page { margin:0 auto; height:100dvh; overflow:hidden auto; scrollbar-width:none; background:var(--apple-canvas); color:var(--apple-text); font-family:var(--font-family-sans); }
 .content { padding:2px 20px calc(92px + env(safe-area-inset-bottom,0px)); }
 .week { margin:0; }
+.page { background:var(--ios-canvas-background,var(--apple-canvas)); }
 .historyRow.basicPickerRow { margin-top:14px; border:1px solid var(--apple-separator); text-align:left; touch-action:manipulation; }
 .basicPickerRow > span:nth-child(2) { min-width:0; }
 .basicPickerRow strong { overflow-wrap:anywhere; }
 .basicPickerRow:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
+
+:global(html[data-client-appearance]) .content { padding-top:0; }
+:global(html[data-client-appearance]) .sectionHead { margin:24px 0 10px; padding:0; }
+:global(html[data-client-appearance]) .sectionHead h2 { font-size:20px; font-weight:650; }
+:global(html[data-client-appearance]) .sectionHead button { font-size:13px; }
+:global(html[data-client-appearance]) .workoutCard { padding:20px; border-radius:26px; background:var(--client-hero); box-shadow:var(--client-hero-shadow); }
+:global(html[data-client-appearance]) .workoutLabel { margin-bottom:20px; }
+:global(html[data-client-appearance]) .workoutLabel > span { font-size:10px; font-weight:500; }
+:global(html[data-client-appearance]) .workoutLabel > small { font-size:11px; font-weight:500; }
+:global(html[data-client-appearance]) .order { display:none; }
+:global(html[data-client-appearance]) .workoutCopy strong { font-size:25px; font-weight:700; }
+:global(html[data-client-appearance]) .workoutCopy small { font-size:14px; }
+:global(html[data-client-appearance]) .exerciseMeta { margin-top:16px; padding-top:14px; border-top:1px solid var(--apple-separator); }
+:global(html[data-client-appearance]) .exerciseMeta p { font-size:13px; }
+:global(html[data-client-appearance]) .start { min-height:52px; border-radius:26px; font-size:15px; color:var(--client-action-ink,#fff); }
+:global(html[data-client-appearance]) .actions { margin-top:18px; }
+:global(html[data-client-appearance]) .program { border-radius:22px; padding:20px; background:var(--client-profile-surface); box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .programHead { padding:0; gap:12px; }
+:global(html[data-client-appearance]) .programHead strong { font-size:16px; font-weight:600; }
+:global(html[data-client-appearance]) .programHead small { font-size:11px; }
+:global(html[data-client-appearance]) .programProgress { padding:0; margin-top:20px; font-size:11px; }
+:global(html[data-client-appearance]) .programTrack { margin:10px 0 0; height:4px; }
+:global(html[data-client-appearance]) .programBottom { margin-top:16px; border-top:1px solid var(--apple-separator); padding:12px 0 0; }
+:global(html[data-client-appearance]) .programBottom button { font-size:13px; }
+:global(html[data-client-appearance]) .historyRow { margin-top:14px; padding:14px 16px; min-height:72px; border-radius:22px; background:var(--apple-surface); box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .historyRow strong { font-size:17px; font-weight:500; }
+:global(html[data-client-appearance]) .historyRow small { font-size:13px; }
+:global(html[data-client-appearance]) .historyIcon { width:32px; height:32px; color:var(--apple-orange); background:var(--apple-orange-tint); }
+:global(html[data-client-appearance]) .managementHint { font-size:12px; }
 .syncNotice { display:grid; gap:6px; margin-top:12px; padding:12px; border-radius:12px; background:var(--apple-surface); font-size:12px; line-height:1.45; }
 .syncNotice span { color:var(--apple-secondary); }
 .syncNotice button { min-height:44px; border:0; border-radius:10px; background:var(--apple-surface-muted); color:var(--apple-blue); font:inherit; }

@@ -1,4 +1,4 @@
-import { Camera, ChevronRight, Ruler, Trophy } from "lucide-react";
+import { Camera, ChevronRight, Ruler, Trophy, X } from "lucide-react";
 import { useState } from "react";
 import styles from "./ProfileMeasurementWizardPanel.module.css";
 import { measurementTimestamp as getTimestamp, progressPeriodRange, getPeriodMeasurements, buildWeightChart } from "./profileProgressChart.js";
@@ -37,8 +37,8 @@ function buildFieldComparison(measurements, field) {
 
 const PERIOD_OPTIONS = [
   { id: "month", label: "Месяц", days: 30 },
-  { id: "halfYear", label: "6 месяцев", days: 183 },
-  { id: "year", label: "Год", days: 366 }
+  { id: "quarter", label: "3 месяца", days: 90 },
+  { id: "all", label: "Всё время" }
 ];
 
 export default function ProfileMeasurementWizardPanel({
@@ -57,6 +57,7 @@ export default function ProfileMeasurementWizardPanel({
 }) {
   const [period, setPeriod] = useState("month");
   const [achievementsOpen, setAchievementsOpen] = useState(false);
+  const [weightDetailsOpen, setWeightDetailsOpen] = useState(false);
   if (!visible) return null;
   const sortedMeasurements = [...(Array.isArray(measurements) ? measurements : [])].sort((a, b) => getTimestamp(b) - getTimestamp(a));
   const effectiveMeasurements = sortedMeasurements.length ? sortedMeasurements : latestMeasurement ? [latestMeasurement] : [];
@@ -86,10 +87,9 @@ export default function ProfileMeasurementWizardPanel({
         onClick={() => setPeriod(option.id)}
       >{option.label}</button>)}
     </div>
-    <section className={styles.chartCard} data-testid="profile-progress-weight-card">
-      <p className={styles.periodRange} data-testid="profile-progress-period-range">{period === "month" ? "Последние 30 дней · " : ""}{rangeDate(periodRange.from)} — {rangeDate(periodRange.to)}</p>
+    <section className={styles.chartCard} data-testid="profile-progress-weight-card" aria-label={period === "all" ? "Все сохранённые замеры веса" : `${period === "month" ? "Последние 30 дней · " : ""}${rangeDate(periodRange.from)} — ${rangeDate(periodRange.to)}`}>
       <div className={styles.chartTop}>
-        <div><span>Последний вес</span><strong>{weightComparison.value === null ? "—" : formatNumber(weightComparison.value)} <small>кг</small></strong></div>
+        <div><span>Динамика веса</span><strong>{weightComparison.value === null ? "—" : formatNumber(weightComparison.value)} <small>кг</small></strong></div>
         <div className={styles.weightChange} data-testid="profile-progress-weight-delta"><strong>{formatDelta(weightComparison.delta, "кг")}</strong><small>{weightComparison.delta === null ? "Добавьте ещё один замер" : "с прошлого замера"}</small></div>
       </div>
       {chart.points.length ? <>
@@ -119,25 +119,30 @@ export default function ProfileMeasurementWizardPanel({
           })}
         </svg>
         <div className={styles.chartDates}><span>{formatMeasurementDate(firstPoint.measurement)}</span><span>{formatMeasurementDate(lastPoint.measurement)}</span></div>
-        <details className={styles.chartValues}><summary>Даты и значения</summary><ul>{periodMeasurements.filter(item => toNumber(item.weight) !== null).map((item, index) => <li key={`${getTimestamp(item)}-${index}`}>{formatMeasurementDate(item)} · {formatNumber(toNumber(item.weight))} кг</li>)}</ul></details>
       </> : <p className={styles.chartEmpty}>{weightComparison.value === null ? "Добавьте первый вес, чтобы увидеть реальную динамику." : `За выбранный период свежих замеров веса нет. ${weightNote}.`}</p>}
-      {onAddWeight ? <div className={styles.chartEntry}><small>{weightNote}</small><button type="button" data-testid="profile-progress-add-weight" onClick={onAddWeight}>Добавить вес</button></div> : null}
+      <button type="button" className={styles.chartOpen} aria-label="История веса и добавление записи" aria-haspopup="dialog" onClick={() => setWeightDetailsOpen(true)} />
     </section>
+    {weightDetailsOpen && <div className={styles.detailsOverlay} data-modal-backdrop="true" onClick={() => setWeightDetailsOpen(false)}><section className={styles.detailsSheet} role="dialog" aria-modal="true" aria-label="История веса" data-modal-surface="true" onClick={event => event.stopPropagation()}>
+      <header><h2>История веса</h2><button type="button" aria-label="Закрыть историю веса" onClick={() => setWeightDetailsOpen(false)}><X aria-hidden="true" /></button></header>
+      <p className={styles.periodRange} data-testid="profile-progress-period-range">{period === "all" ? "Все сохранённые замеры" : `${period === "month" ? "Последние 30 дней · " : ""}${rangeDate(periodRange.from)} — ${rangeDate(periodRange.to)}`}</p>
+      {periodMeasurements.filter(item => toNumber(item.weight) !== null).length ? <ul>{[...periodMeasurements].reverse().filter(item => toNumber(item.weight) !== null).map((item,index) => <li key={`${getTimestamp(item)}-${index}`}><span>{formatMeasurementDate(item)}</span><strong>{formatNumber(toNumber(item.weight))} кг</strong></li>)}</ul> : <p>{weightNote}</p>}
+      {onAddWeight && <button type="button" className={styles.addWeight} data-testid="profile-progress-add-weight" onClick={() => { setWeightDetailsOpen(false); onAddWeight(); }}>Добавить вес</button>}
+    </section></div>}
 
-    <div className={styles.sectionHead}><h3>Достижения</h3></div>
+    <div className={styles.sectionHead}><h3>Каждая тренировка важна</h3></div>
     <button type="button" className={styles.achievement} data-testid="profile-progress-achievement" aria-haspopup="dialog" onClick={() => setAchievementsOpen(true)}>
-      <span><Trophy aria-hidden="true" /></span><div><strong>{totalWorkouts > 0 ? `${totalWorkouts} тренировок завершено` : "Первая тренировка впереди"}</strong><small>Каждое занятие — шаг вперёд</small></div>
-      <ChevronRight className={styles.achievementChevron} aria-hidden="true" />
+      <span><Trophy aria-hidden="true" /></span><div><strong>{totalWorkouts > 0 ? totalWorkouts : "Первая тренировка впереди"}</strong><small>{totalWorkouts > 0 ? "тренировок завершено за всё время" : "Каждое занятие — шаг вперёд"}</small></div>
+      <span className={styles.achievementFooter}>Все достижения<ChevronRight aria-hidden="true" /></span>
     </button>
     {achievementsOpen && <ProfileAchievementsModal historyLoader={onLoadAchievements} now={now} onClose={() => setAchievementsOpen(false)} />}
 
     <div className={styles.sectionHead}><h3>Контроль тела</h3></div>
     <section className={styles.controlGroup} data-testid="profile-progress-controls">
-      <button type="button" className={styles.controlRow} data-testid="profile-progress-photos-open" onClick={onOpenPhotos}>
-        <span className={`${styles.controlIcon} ${styles.photoIcon}`}><Camera aria-hidden="true" /></span><span><strong>Фото прогресса</strong><small>{photoNote}</small></span><ChevronRight aria-hidden="true" />
-      </button>
       <button type="button" className={styles.controlRow} data-testid="profile-measurement-start" onClick={onStart}>
         <span className={`${styles.controlIcon} ${styles.measurementIcon}`}><Ruler aria-hidden="true" /></span><span><strong>Замеры тела</strong><small>{measurementNote}</small></span><ChevronRight aria-hidden="true" />
+      </button>
+      <button type="button" className={styles.controlRow} data-testid="profile-progress-photos-open" onClick={onOpenPhotos}>
+        <span className={`${styles.controlIcon} ${styles.photoIcon}`}><Camera aria-hidden="true" /></span><span><strong>Фото прогресса</strong><small>{photoNote}</small></span><ChevronRight aria-hidden="true" />
       </button>
     </section>
     <p className={styles.note}>Вес и замеры помогают наблюдать динамику. Отдельное значение — только часть картины.</p>

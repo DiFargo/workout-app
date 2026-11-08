@@ -2,6 +2,8 @@
   box-sizing: border-box;
 }
 
+:global(html:root[data-client-appearance]) .shell.shell.shell { border-radius:0; background:var(--ios-canvas-background); color:var(--apple-text); }
+
 @media (max-width: 699px) {
   .shell.shell {
     width: 100%;

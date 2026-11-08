@@ -1,0 +1,59 @@
+/* Color/material contract from zmena-telegram-ios-night-glass.html.
+   Geometry remains in the owning component's CSS Module. Never active for staff. */
+:global(html:root[data-client-appearance]) {
+  color-scheme: light;
+  --client-canvas-image:var(--ios-canvas-background); --client-chrome-filter:blur(24px) saturate(135%); --client-title-weight:700; --client-title-tracking:-.8px; --client-dock-underlay:var(--apple-canvas);
+  --apple-canvas:#edf4f7; --apple-surface:rgba(255,255,255,.94); --apple-surface-muted:#e2eff2;
+  --apple-text:#182e3e; --apple-secondary:#536b7b; --apple-blue:#2f6f73; --apple-blue-pressed:#255c60;
+  --apple-action:#2f6f73; --apple-action-pressed:#255c60; --apple-blue-tint:#e2eff2;
+  --apple-separator:rgba(84,126,147,.14); --apple-rhythm-track:#dce8ed; --apple-macro-progress:#469aa0;
+  --apple-segmented-fill:rgba(128,150,165,.13); --apple-green:#247245; --apple-green-tint:#e1f3e8;
+  --apple-orange:#946e25; --apple-orange-tint:#fff6df;
+  --ownset-action-gradient:linear-gradient(112deg,#2f6f73 0%,#337c7c 54%,#397e70 100%);
+  --ownset-soft-gradient:linear-gradient(135deg,#e0f0f4,#e7f3f9);
+  --client-action-ink:#fff;
+  --client-modal-close-surface:var(--apple-surface-muted); --client-modal-input-surface:var(--apple-surface);
+  --color-accent-contrast:var(--client-action-ink);
+  --client-hero:radial-gradient(ellipse 66% 104% at 106% -4%,rgba(109,179,213,.48) 0%,rgba(143,198,224,.31) 62%,transparent 63%),radial-gradient(ellipse 72% 84% at 108% 106%,rgba(112,195,165,.45) 0%,rgba(163,218,198,.26) 63%,transparent 64%),linear-gradient(118deg,#f2fafc 0%,#dceff6 57%,#d4eee5 100%);
+  --client-hero-shadow:inset 0 0 0 1px rgba(255,255,255,.82),0 6px 18px -12px rgba(45,105,124,.2);
+  --client-card-shadow:0 2px 8px rgba(44,83,108,.025);
+  --client-profile-surface:radial-gradient(ellipse at 98% 0%,rgba(154,213,193,.32),transparent 60%),linear-gradient(125deg,rgba(255,255,255,.91),rgba(218,239,248,.74));
+  --client-glass:linear-gradient(160deg,rgba(255,255,255,.77),rgba(241,250,255,.55));
+  --client-glass-border:rgba(255,255,255,.98);
+  --client-glass-shadow:inset 0 2px 2px #fff,inset 0 -1px 2px rgba(116,165,185,.13),0 7px 18px rgba(44,99,125,.12);
+  --client-lens:linear-gradient(145deg,rgba(255,255,255,.96),rgba(200,228,234,.68));
+  --client-lens-shadow:inset 0 1px 2px #fff,inset 0 -1px 1px rgba(118,173,187,.15),0 2px 7px rgba(50,110,131,.08);
+  --client-nav-text:#617c91; --client-nav-current:#16647d;
+  --ios-canvas-background:radial-gradient(ellipse at 4% 35%,rgba(167,199,231,.32),transparent 55%),radial-gradient(ellipse at 98% 57%,rgba(174,222,210,.30),transparent 50%),linear-gradient(158deg,#f2f7fa,#eaf3f7 64%,#edf5f9);
+  --client-header-background:rgba(242,247,250,.94);
+  --client-sheet-background:linear-gradient(145deg,#f6fafc,#eaf4f7 65%,#e7f3ee);
+}
+:global(html:root[data-client-appearance="dark"]) {
+  color-scheme:dark;
+  --apple-canvas:#08080b; --apple-surface:#171c23; --apple-surface-muted:#232b34;
+  --apple-text:#eff5f8; --apple-secondary:#a5b5c2; --apple-blue:#a8d9e7; --apple-blue-pressed:#c2f0e5;
+  --apple-action:#a8d9e7; --apple-action-pressed:#c2f0e5; --apple-blue-tint:#263a43;
+  --apple-separator:rgba(191,217,229,.12); --apple-rhythm-track:#2b3943; --apple-macro-progress:#91d0c9;
+  --apple-segmented-fill:#1e2831; --apple-green:#9bdfb5; --apple-green-tint:#1b352b;
+  --apple-orange:#e5c783; --apple-orange-tint:#3a3323; --apple-red:#ff8d91; --apple-red-tint:#3b222a;
+  --ownset-action-gradient:linear-gradient(112deg,#9fd9ca 0%,#97ced3 54%,#a7c7e7 100%);
+  --ownset-soft-gradient:linear-gradient(140deg,#263a43,#24343f); --client-action-ink:#102e35;
+  --client-hero:radial-gradient(ellipse 66% 104% at 106% -4%,rgba(81,144,174,.27) 0%,rgba(81,144,174,.15) 62%,transparent 63%),radial-gradient(ellipse 72% 84% at 108% 106%,rgba(74,151,120,.23) 0%,rgba(74,151,120,.11) 63%,transparent 64%),linear-gradient(118deg,#17252c,#1a2a33 57%,#1b302e);
+  --client-hero-shadow:inset 0 0 0 1px rgba(154,211,211,.16),inset 0 1px rgba(220,246,245,.04),0 6px 18px -12px #0009;
+  --client-card-shadow:inset 0 0 0 1px rgba(200,222,235,.045),0 2px 8px rgba(0,0,0,.12);
+  --client-profile-surface:radial-gradient(ellipse at 98% 0%,rgba(83,153,131,.13),transparent 65%),linear-gradient(125deg,#1a242c,#1b2c32);
+  --client-glass:linear-gradient(160deg,rgba(44,58,72,.83),rgba(19,29,38,.88));
+  --client-glass-border:rgba(190,221,236,.22); --client-glass-shadow:inset 0 1px 1px rgba(231,248,255,.16),inset 0 -1px 1px rgba(0,0,0,.4),0 7px 18px #0005;
+  --client-lens:linear-gradient(145deg,rgba(159,217,202,.23),rgba(167,199,231,.11));
+  --client-lens-shadow:inset 0 1px rgba(222,255,250,.10),0 2px 5px #0002;
+  --client-nav-text:#a2b3c2; --client-nav-current:#c2f0e5;
+  --ios-canvas-background:radial-gradient(ellipse at -8% 32%,rgba(41,67,80,.17),transparent 54%),radial-gradient(ellipse at 110% 59%,rgba(31,71,63,.12),transparent 50%),#08080b;
+  --client-header-background:rgba(8,8,11,.94); --client-sheet-background:#202a33;
+}
+:global(html:root[data-client-appearance]) {
+  --bg:var(--apple-canvas); --card:var(--apple-surface); --card-2:var(--apple-surface-muted); --text:var(--apple-text); --muted:var(--apple-secondary); --line:var(--apple-separator); --accent:var(--apple-blue);
+  --color-background:var(--apple-canvas); --color-surface:var(--apple-surface); --color-surface-raised:var(--apple-surface); --color-surface-muted:var(--apple-surface-muted); --color-text:var(--apple-text); --color-text-primary:var(--apple-text); --color-heading:var(--apple-text); --color-text-muted:var(--apple-secondary); --color-border:var(--apple-separator); --color-accent:var(--apple-blue); --color-accent-strong:var(--apple-blue-pressed);
+  --ios-canvas:var(--apple-canvas); --ios-surface:var(--apple-surface); --ios-surface-muted:var(--apple-surface-muted); --ios-text:var(--apple-text); --ios-muted:var(--apple-secondary); --ios-line:var(--apple-separator); --ios-accent:var(--apple-blue); --ios-accent-text:var(--apple-blue); --ios-accent-soft:var(--apple-blue-tint); --ios-success:var(--apple-green); --ios-danger:var(--apple-red);
+  --ios-glass-surface:var(--client-glass); --ios-glass-border:var(--client-glass-border); --ios-glass-shadow:var(--client-glass-shadow);
+  --color-dialog-surface:var(--client-sheet-background); --color-control-surface:var(--apple-surface); --color-control-text:var(--apple-text); --color-control-border:var(--apple-separator);
+}

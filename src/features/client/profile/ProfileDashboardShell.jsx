@@ -1,4 +1,5 @@
 import styles from "./ProfileDashboardShell.module.css";
+import { useLayoutEffect, useRef } from "react";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 
 const SUPPORTED_MODES = new Set(["main", "cabinet", "measurements", "settings", "nutrition"]);
@@ -26,9 +27,19 @@ export function ProfileDashboardShell({
   testId
 }) {
   const normalizedMode = normalizeMode(mode);
+  const shellRef = useRef(null);
+  const scrollPositions = useRef({});
+  useLayoutEffect(() => {
+    const shell = shellRef.current;
+    if (!shell || legacyTrainer) return undefined;
+    const positions = scrollPositions.current;
+    shell.scrollTop = positions[normalizedMode] || 0;
+    return () => { positions[normalizedMode] = shell.scrollTop; };
+  }, [normalizedMode, legacyTrainer]);
 
   return (
     <div
+      ref={shellRef}
       className={legacyTrainer
         ? getLegacyRootClass(normalizedMode)
         : `${styles.root} ${styles[normalizedMode]} ${adaptiveShellStyles.shell}`}

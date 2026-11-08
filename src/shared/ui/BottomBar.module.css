@@ -8,6 +8,7 @@
   pointer-events: none;
   z-index: 90;
 }
+.lens { display:none; }
 .mainDock, .nutritionDock, .trainingDock { isolation: isolate; }
 .main, .nutrition, .training {
   box-sizing: border-box;
@@ -89,3 +90,21 @@
   .dock { bottom: 12px; }
   .main, .nutrition, .training { border-radius: 0 0 28px 28px; }
 }
+
+:global(html[data-client-appearance]) .dock { padding:0 12px max(8px,env(safe-area-inset-bottom,0px),var(--telegram-safe-area-bottom,0px),var(--telegram-content-safe-area-bottom,0px)); box-sizing:border-box; }
+:global(html[data-client-appearance]) .dock::before { content:""; position:absolute; z-index:-1; inset:35px 0 0; background:var(--apple-canvas); pointer-events:none; }
+:global(html[data-client-appearance]) .main,
+:global(html[data-client-appearance]) .nutrition { position:relative; width:min(100%,576px); max-width:576px; height:70px; min-height:70px; margin:0; padding:5px; border:1px solid var(--client-glass-border); border-radius:38px; color:var(--client-nav-text); background:var(--client-glass); box-shadow:var(--client-glass-shadow); backdrop-filter:blur(24px) saturate(135%); -webkit-backdrop-filter:blur(24px) saturate(135%); isolation:isolate; }
+:global(html[data-client-appearance]) .lens { position:absolute; display:block; top:5px; left:5px; width:calc((100% - 10px) / 5); height:58px; border:1px solid var(--client-glass-border); box-sizing:border-box; border-radius:31px; background:var(--client-lens); box-shadow:var(--client-lens-shadow); pointer-events:none; z-index:-1; }
+:global(html[data-client-appearance]) .main > button,
+:global(html[data-client-appearance]) .nutrition > button { gap:3px; padding:4px 0; min-height:58px; border-radius:30px; background:transparent; }
+:global(html[data-client-appearance]) .main strong,
+:global(html[data-client-appearance]) .nutrition strong { font-size:10px; line-height:13px; font-weight:550; }
+:global(html[data-client-appearance]) .main > .active,
+:global(html[data-client-appearance]) .nutrition > .active { color:var(--client-nav-current); background:transparent; }
+:global(html[data-client-appearance]) .main > .active::before,
+:global(html[data-client-appearance]) .nutrition > .active::before { display:none; }
+:global(html[data-client-appearance]) .active svg { stroke-width:1.8; }
+@media (max-width:374px) { :global(html[data-client-appearance]) .main strong,:global(html[data-client-appearance]) .nutrition strong { font-size:9px; } }
+@media (min-width:700px) { :global(html[data-client-appearance]) .dock { bottom:0; } }
+@media (prefers-reduced-transparency:reduce) { :global(html[data-client-appearance]) .main,:global(html[data-client-appearance]) .nutrition { background:var(--apple-surface); backdrop-filter:none; -webkit-backdrop-filter:none; } }

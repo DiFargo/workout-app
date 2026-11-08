@@ -5,6 +5,18 @@
   margin: 12px 16px 0;
 }
 
+:global(html[data-client-appearance]) .diaryBlock { width:calc(100% - 40px); margin:24px 20px 10px; height:auto; }
+:global(html[data-client-appearance]) .diaryHeader { height:auto; min-height:24px; padding:0; }
+:global(html[data-client-appearance]) .titleText { font-size:20px; font-weight:650; }
+:global(html[data-client-appearance]) .mealList { width:calc(100% - 40px); height:auto; margin:0 20px; border:0; border-radius:22px; background:var(--apple-surface); box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .mealCard,:global(html[data-client-appearance]) .mealRow { height:76px; }
+:global(html[data-client-appearance]) .mealRow { grid-template-columns:minmax(0,1fr) auto 44px; padding:12px 16px; gap:12px; }
+:global(html[data-client-appearance]) .mealTitle strong { font-size:16px; line-height:22px; font-weight:600; }
+:global(html[data-client-appearance]) .mealTitle span { font-size:12px; line-height:18px; }
+:global(html[data-client-appearance]) .mealCalories strong { font-size:16px; color:var(--apple-text); }
+:global(html[data-client-appearance]) .mealAddButton { background:var(--ownset-soft-gradient); color:var(--apple-blue); }
+:global(html[data-client-appearance]) .modalHeader,:global(html[data-client-appearance]) .mealGroup { background:var(--apple-surface); }
+
 .diaryHeader {
   width: 100%;
   height: 35px;

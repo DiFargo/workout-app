@@ -133,6 +133,7 @@ export default function WorkoutRenderOverview({
         titleTestId="workout-list-title"
         testId="workout-list-header"
         scope="workout-render-header"
+        actions={<button type="button" aria-label="Расписание тренировок" onClick={onPlan}><CalendarDays aria-hidden="true" /></button>}
         primary
       />
       <main className={styles.content}>
@@ -172,7 +173,7 @@ export default function WorkoutRenderOverview({
             <ChevronRight aria-hidden="true" />
           </button>
         ) : null}
-        <div className={styles.sectionHead}><h2>Ваша программа</h2></div>
+        <div className={styles.sectionHead}><h2>Твоя программа</h2></div>
         <section className={styles.program}>
           <div className={styles.programHead}><span className={styles.programIcon}><Dumbbell aria-hidden="true" /></span><span><strong>{programName || "Программа тренировок"}</strong><small>{programType === "basic" ? "Базовые тренировки" : "Программа от тренера"}</small></span></div>
           <div className={styles.programProgress}><span>{completedCount} из {total} тренировок</span><span>{Math.max(total - completedCount, 0)} осталось</span></div>

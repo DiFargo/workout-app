@@ -4,6 +4,7 @@ import { defaultNutritionState } from "../../data/nutritionDefaults";
 import { todayNutritionKey } from "../../domain/nutritionPresentation";
 import { APP_VERSION } from "../../constants/appConfig";
 import { normalizeAppTheme } from "../../app/appTheme";
+import { useClientAppearance } from "../../features/client/appearance/clientAppearance.js";
 import { POST_WORKOUT_FEEDBACK_OPTIONS } from "../../domain/workoutPresentation";
 import { ClientMainBottomBar } from "../../shared/ui/BottomBar";
 import FirstSetupOnboarding from "../../features/auth/FirstSetupOnboarding";
@@ -487,6 +488,7 @@ function HarnessCabinetActions({
 }
 
 export default function ClientE2EHarness() {
+  useClientAppearance();
   const harnessParams = typeof window !== "undefined"
     ? new URLSearchParams(window.location.search)
     : null;

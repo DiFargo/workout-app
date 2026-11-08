@@ -50,7 +50,7 @@
 
 :global(:root[data-app-theme="warm-light"] body [data-modal-surface="true"] button[aria-label^="Закрыть"]) {
   border-color: var(--apple-separator, rgba(57, 82, 91,.12));
-  background: #ffffff;
+  background: var(--client-modal-close-surface, #ffffff);
   color: var(--apple-blue-pressed, #315f91);
   box-shadow: none;
   backdrop-filter: none;
@@ -67,7 +67,7 @@
   place-items: center;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--client-modal-close-surface, #ffffff);
   color: var(--apple-blue-pressed, #315f91);
   box-shadow: none;
 }
@@ -98,7 +98,7 @@
 :global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] input),
 :global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] textarea),
 :global(:root[data-app-theme="warm-light"] body [data-cabinet-sheet="true"] select) {
-  background-color: #ffffff;
+  background-color: var(--client-modal-input-surface, #ffffff);
   color: var(--apple-text, #1c282e);
 }
 
