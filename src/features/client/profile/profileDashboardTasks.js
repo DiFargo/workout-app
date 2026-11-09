@@ -1,5 +1,6 @@
 import { isBodyMeasurementRecord } from "../../../utils/bodyMeasurementRecords.js";
 import { getMeasurementTimestampValue } from "../../../utils/profileMeasurements.js";
+import { getTrainerTaskStatus } from "../../../domain/clientInsights.js";
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 export const PROFILE_PROGRESS_PHOTO_INTERVAL_DAYS = 14;
@@ -99,6 +100,8 @@ export function buildProfileDashboardTasks({
   workoutDate,
   workoutExerciseCount,
   workoutActionLabel,
+  trainerNotifications = [],
+  trainerTasksReady = true,
   weightCheckIn,
   measurementsCheckIn,
   progressPhotoCheckIn,
@@ -159,6 +162,33 @@ export function buildProfileDashboardTasks({
       title: "Продолжите тренировочный план",
       note: "Следующее занятие пока не запланировано.",
       actionLabel: workoutActionLabel || "Открыть тренировки"
+    });
+  }
+
+  const activeTrainerTasks = trainerTasksReady && Array.isArray(trainerNotifications)
+    ? trainerNotifications.filter(task => task && typeof task === "object" && !Array.isArray(task) &&
+      task.notificationType !== "message" && getTrainerTaskStatus(task).id !== "completed")
+    : [];
+  if (activeTrainerTasks.length) {
+    const count = activeTrainerTasks.length;
+    const singleTask = count === 1 ? activeTrainerTasks[0] : null;
+    const dueParts = typeof singleTask?.dueDate === "string"
+      ? singleTask.dueDate.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/) : null;
+    const dueDate = dueParts ? new Date(toTimestamp(singleTask.dueDate)) : null;
+    const validDueDate = dueDate && dueDate.getFullYear() === Number(dueParts[1]) &&
+      dueDate.getMonth() + 1 === Number(dueParts[2]) && dueDate.getDate() === Number(dueParts[3]);
+    const description = typeof singleTask?.description === "string" ? singleTask.description.trim() : "";
+    tasks.push({
+      id: "trainer",
+      kind: "trainer",
+      taskCount: count,
+      title: singleTask
+        ? (typeof singleTask.title === "string" && singleTask.title.trim()) || "Задание тренера"
+        : `${formatRussianCount(count, ["задание", "задания", "заданий"])} от тренера`,
+      note: singleTask
+        ? validDueDate ? `До ${dueDate.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })}` : description
+        : "Откройте список активных заданий.",
+      actionLabel: count === 1 ? "Открыть задание" : "Открыть задания"
     });
   }
 

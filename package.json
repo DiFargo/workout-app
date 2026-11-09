@@ -1,7 +1,7 @@
 {
   "name": "workout-app",
   "private": true,
-  "version": "3.0.939",
+  "version": "3.0.940",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -6,7 +6,7 @@
 .heroTop { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:11px; }
 .heroTop > span:first-child { display:inline-flex; align-items:center; gap:6px; min-height:28px; padding:5px 9px; background:rgba(255,255,255,.56); color:var(--apple-blue); border-radius:9px; font-size:12px; line-height:18px; font-weight:650; }
 .heroTop > span:first-child svg { flex-shrink:0; width:16px; height:16px; }
-.taskCount { min-height:28px; padding:5px 10px; display:inline-flex; align-items:center; border:1px solid rgba(60,60,67,.08); border-radius:999px; background:rgba(255,255,255,.78); color:var(--apple-blue-pressed); font-size:11px; line-height:16px; font-weight:650; white-space:nowrap; }
+.taskCount { min-height:28px; padding:5px 10px; display:inline-flex; align-items:center; border:1px solid var(--apple-separator); border-radius:999px; background:var(--apple-surface); color:var(--apple-blue); font-size:11px; line-height:16px; font-weight:650; text-align:right; }
 .hero h2 { margin:0; font-size:21px; line-height:1.2; letter-spacing:-.55px; font-weight:700; }
 .hero > p { margin:4px 0 0; color:var(--apple-secondary); font-size:12px; line-height:1.45; }
 .hero h2, .hero > p { overflow-wrap:anywhere; }
@@ -22,7 +22,7 @@
 .taskCopy small { color:var(--apple-secondary); font-size:12px; line-height:1.4; overflow-wrap:anywhere; }
 .taskArrow { width:28px; height:28px; display:grid; place-items:center; color:var(--apple-blue); }
 .primaryTask { background:var(--apple-surface); border-color:rgba(60,111,170,.15); }
-.primaryTask .taskArrow { border-radius:50%; background:var(--apple-blue); color:var(--client-action-ink,#fff); }
+.primaryTask .taskArrow { border-radius:50%; background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); }
 .emptyTasks { min-height:70px; margin-top:11px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:15px; background:var(--apple-surface); color:var(--apple-success); font-size:13px; font-weight:650; }
 .emptyTasks span { color:var(--apple-text); }
 .sectionHead { display: flex; align-items: center; min-height:24px; margin:18px 0 9px; padding: 0 2px; }
@@ -66,33 +66,12 @@
 .dataLoadNotice button:disabled { opacity: .55; cursor: wait; }
 .dataLoadNotice button:focus-visible { outline: 3px solid var(--apple-blue); outline-offset: 2px; }
 
-.workoutHero { padding:20px; border-radius:26px; background:var(--client-hero,var(--ownset-soft-gradient)); box-shadow:var(--client-hero-shadow); color:var(--apple-text); }
-.workoutHero { position:relative; }
-.planCard:not(.workoutHero) { padding:20px; border-radius:26px; background:var(--client-hero,var(--ownset-soft-gradient)); box-shadow:var(--client-hero-shadow); }
-.workoutHeroMain { position:relative; }
-.workoutHeroMain .workoutHeroAction { inset:-20px; width:calc(100% + 40px); height:calc(100% + 40px); border-radius:26px; }
-.workoutHeroAction { position:absolute; inset:0; width:100%; height:100%; border:0; border-radius:inherit; background:transparent; cursor:pointer; z-index:1; touch-action:manipulation; }
-.workoutHeroAction:active { background:rgba(100,150,150,.06); }
-.workoutHeroAction:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
-.workoutHero .heroTop { margin-bottom:18px; }
-.workoutHero .heroTop > span:first-child { min-height:24px; padding:4px 8px; font-size:11px; font-weight:500; line-height:16px; }
-:global(html[data-client-appearance="dark"]) .workoutHero .heroTop > span:first-child { color:#b4e5dc; background:rgba(115,187,175,.12); box-shadow:inset 0 0 0 1px rgba(165,220,210,.07); }
-.workoutHero .heroTop > span:first-child svg { width:12px; height:12px; }
-.workoutHero .heroTop > small { max-width:42%; color:var(--apple-secondary); font-size:11px; text-align:right; }
-.workoutHero h2 { margin:18px 0 7px; font-size:25px; line-height:1.17; font-weight:600; letter-spacing:-.55px; }
-.workoutMeta { display:flex; align-items:center; gap:15px; margin:0; color:var(--apple-secondary); font-size:13px; line-height:normal; }
-.workoutFocus { margin:0 0 12px; font-size:15px; line-height:normal; color:var(--apple-secondary); }
+.planCard { padding:20px; border-radius:26px; background:var(--client-hero,var(--ownset-soft-gradient)); box-shadow:var(--client-hero-shadow); color:var(--apple-text); }
+:global(html[data-client-appearance="dark"]) .planCard .heroTop > span:first-child { color:var(--apple-blue); background:var(--apple-surface); }
 :global(html[data-client-appearance]) .welcome { padding-bottom:22px; }
 :global(html[data-client-appearance]) .welcome p { margin:0; font-size:13px; line-height:normal; }
 :global(html[data-client-appearance]) .welcome h2 { margin:6px 0 0; font-weight:600; letter-spacing:-.45px; line-height:normal; }
-.workoutMeta > span { display:inline-flex; align-items:center; gap:5px; }
-.workoutMeta svg { width:15px; height:15px; }
 .coachTrailing { display:flex; align-items:center; gap:5px; color:var(--apple-secondary); }
-.workoutPrimary { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; min-height:52px; padding:1px 6px; margin-top:20px; border:0; border-radius:26px; background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); font:inherit; font-size:15px; font-weight:600; letter-spacing:-.15px; box-shadow:inset 0 1px 1px #ffffff66,inset 0 -1px 1px #1349481f,0 6px 13px -5px #28777459; cursor:pointer; }
-.workoutPrimary svg { width:19px; height:19px; }
-.workoutPrimary:active { filter:brightness(.94); }
-.workoutPrimary:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
-.reminders > .heroTop,.reminders > p { display:none; }
 .planCard.reminders > .heroTop { display:flex; }
 .planCard.reminders > p { display:block; margin:8px 0; color:var(--apple-secondary); font-size:13px; line-height:1.45; }
 .planCard.reminders > h2 { margin:12px 0 8px; }
@@ -109,8 +88,6 @@
 :global(html[data-client-appearance]) .taskList { gap:0; margin:0; border-radius:22px; overflow:hidden; box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .taskRow { min-height:72px; border:0; border-radius:0; padding:14px 16px; grid-template-columns:32px minmax(0,1fr) 16px; gap:12px; }
 :global(html[data-client-appearance]) .taskRow + .taskRow { border-top:1px solid var(--apple-separator); }
-:global(html[data-client-appearance]) .heroTasks { position:relative; z-index:2; margin-top:20px; padding-top:6px; border-top:1px solid var(--apple-separator); border-radius:0; box-shadow:none; overflow:visible; }
-:global(html[data-client-appearance]) .heroTasks .taskRow { padding:12px 0; border-radius:0; background:transparent; }
 :global(html[data-client-appearance]) .taskIcon { width:32px; height:32px; border-radius:10px; background:var(--ownset-soft-gradient); }
 :global(html[data-client-appearance]) .taskCopy strong { font-size:17px; font-weight:400; line-height:1.25; letter-spacing:-.25px; }
 :global(html[data-client-appearance]) .taskCopy { gap:4px; }
@@ -119,3 +96,12 @@
 :global(html[data-client-appearance]) .avatar { width:32px; height:32px; border-radius:10px; background:var(--ownset-soft-gradient); color:var(--apple-blue); }
 :global(html[data-client-appearance]) .coachCopy strong { font-size:17px; font-weight:400; line-height:1.25; letter-spacing:-.25px; }
 :global(html[data-client-appearance]) .coachCopy small { font-size:13px; }
+.upcomingWorkout { display:grid; grid-template-columns:minmax(0,1fr) 18px; align-items:center; gap:12px; width:100%; min-height:60px; margin-top:12px; padding:12px 2px 0; border:0; border-top:1px solid var(--apple-separator); border-radius:0; background:transparent; color:var(--apple-blue); font:inherit; text-align:left; cursor:pointer; touch-action:manipulation; }
+.upcomingWorkout > span { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.upcomingWorkout small { color:var(--apple-secondary); font-size:12px; line-height:1.4; overflow-wrap:anywhere; }
+.upcomingWorkout strong { color:var(--apple-text); font-size:15px; line-height:1.4; font-weight:600; overflow-wrap:anywhere; }
+.upcomingWorkout:active { opacity:.75; }
+.upcomingWorkout:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; border-radius:8px; }
+:global(html[data-platform="telegram"]) .planCard { padding:14px; }
+@media (max-width:360px) { .planCard { padding:14px; } .heroTop { align-items:flex-start; } .heroTop > span:first-child { flex-shrink:0; } }
+@media (prefers-reduced-motion:reduce) { .taskRow { transition:none; } }

@@ -27,8 +27,8 @@ export function WorkoutExitDialog({ open, onStay, onLeave }) {
         <h2>Выйти из тренировки?</h2>
         <p>Введённые данные сохранены в черновике. Ты сможешь продолжить позже.</p>
         <div className={styles.exitActions}>
-          <button type="button" onClick={onStay}>Остаться</button>
-          <button type="button" onClick={onLeave}>Выйти</button>
+          <button type="button" className={styles.primaryButton} onClick={onStay}>Остаться</button>
+          <button type="button" className={styles.secondaryButton} onClick={onLeave}>Выйти</button>
         </div>
       </div>
     </div>
@@ -57,8 +57,8 @@ export function WorkoutIncompleteDialog({ open, completion, onContinue, onSave }
           Остальные подходы будут отмечены как невыполненные.
         </p>
         <div className={styles.exitActions}>
-          <button type="button" onClick={onContinue}>Продолжить тренировку</button>
-          <button type="button" onClick={onSave}>Сохранить неполную</button>
+          <button type="button" className={styles.secondaryButton} onClick={onContinue}>Продолжить тренировку</button>
+          <button type="button" className={styles.primaryButton} onClick={onSave}>Сохранить неполную</button>
         </div>
       </div>
     </div>
@@ -255,10 +255,10 @@ export function WorkoutDraftRestoreDialog({
         </p>
 
         <div className={styles.draftActions}>
-          <button type="button" className={styles.restoreButton} onClick={onRestore} data-modal-autofocus="true" autoFocus>
+          <button type="button" className={`${styles.restoreButton} ${styles.primaryButton}`} onClick={onRestore} data-modal-autofocus="true" autoFocus>
             Продолжить тренировку
           </button>
-          <button type="button" className={styles.restartButton} onClick={onRestart}>
+          <button type="button" className={`${styles.restartButton} ${styles.secondaryButton}`} onClick={onRestart}>
             Начать заново
           </button>
         </div>

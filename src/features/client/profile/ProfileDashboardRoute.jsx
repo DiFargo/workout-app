@@ -257,7 +257,6 @@ export default function ProfileDashboardRoute(ctx) {
     endProfileAvatarCropDrag
   } = ctx;
 
-  const loadClientTrainerTasksRef = useRef(loadClientTrainerTasks);
   const profileWorkoutCalendarBaselineRef = useRef(null);
   const { saveReminderSettings, sendTestReminder } = createClientReminderHandlers({
     auth,
@@ -292,10 +291,6 @@ export default function ProfileDashboardRoute(ctx) {
     window.addEventListener("focus", refresh);
     return () => { active = false; window.removeEventListener("focus", refresh); };
   }, [APP_PAGES.MAIN, dashboardUid, hasTrainerFeatures, page, plan]);
-
-  useEffect(() => {
-    loadClientTrainerTasksRef.current = loadClientTrainerTasks;
-  }, [loadClientTrainerTasks]);
 
   const {
     isMainDashboard,
@@ -440,11 +435,13 @@ export default function ProfileDashboardRoute(ctx) {
   }
   const selectedWorkoutMode = workoutModePreference?.mode === "basic" ? "basic" : "individual";
 
-  useEffect(() => {
-    if (!isMainDashboard || hasTrainerFeatures || !clientUid) return;
-
-    void loadClientTrainerTasksRef.current?.(clientUid);
-  }, [clientUid, hasTrainerFeatures, isMainDashboard]);
+  function openTrainerNotifications() {
+    if (isMainDashboard && clientDataLoad?.retry) clientDataLoad.retry(["tasks"]);
+    else if (clientUid) void loadClientTrainerTasks?.(clientUid, { throwOnError: true })?.catch(error => {
+      console.warn("Trainer notifications refresh failed:", error);
+    });
+    setProfileTrainerNotificationsOpen(true);
+  }
 
   useEffect(() => {
     if (!isMainDashboard || hasTrainerFeatures || !clientUid) {
@@ -622,10 +619,7 @@ export default function ProfileDashboardRoute(ctx) {
         trainerNotificationCount={trainerNotificationCount}
         mainTitle="Сегодня"
         onAddMeasurement={openProfileBodyControlMeasurements}
-        onOpenTrainerNotifications={() => {
-          if (clientUid) void loadClientTrainerTasks?.(clientUid);
-          setProfileTrainerNotificationsOpen(true);
-        }}
+        onOpenTrainerNotifications={openTrainerNotifications}
       />
 
       {!isMainDashboard && visibleProfileTab === "cabinet" && (
@@ -715,10 +709,7 @@ export default function ProfileDashboardRoute(ctx) {
             onOpenWeight={openQuickWeightModal}
             onOpenMeasurements={openProfileMeasurementsFromDashboard}
             onOpenProgressPhotos={openProfileProgressPhotosFromDashboard}
-            onOpenTrainer={() => {
-              if (clientUid) void loadClientTrainerTasks?.(clientUid);
-              setProfileTrainerNotificationsOpen(true);
-            }}
+            onOpenTrainer={openTrainerNotifications}
           />
         )}
 

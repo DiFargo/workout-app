@@ -1430,3 +1430,25 @@
   :global(:root[data-app-theme="warm-light"]) .postOption.postOption > strong { margin: 0; overflow: visible; white-space: normal; }
   :global(:root[data-app-theme="warm-light"]) .postOption.postOption > small { grid-column: 2; margin: 3px 0 0; }
 }
+
+/* Client action roles are explicit: the light/dark appearance must not depend
+   on button order or on the legacy warm-light theme attribute. */
+:global(html:root[data-client-appearance]) .exitCard.exitCard .exitActions.exitActions > .primaryButton,
+:global(html:root[data-client-appearance]) .draftActions.draftActions > .primaryButton.primaryButton {
+  color: var(--client-action-ink);
+  -webkit-text-fill-color: currentColor;
+  background: var(--ownset-action-gradient);
+}
+
+:global(html:root[data-client-appearance]) .exitCard.exitCard .exitActions.exitActions > .secondaryButton,
+:global(html:root[data-client-appearance]) .draftActions.draftActions > .secondaryButton.secondaryButton {
+  color: var(--client-text);
+  -webkit-text-fill-color: currentColor;
+  background: var(--client-surface-muted);
+}
+
+:global(html:root[data-client-appearance]) .postOption.postOption {
+  color: var(--client-text);
+  -webkit-text-fill-color: currentColor;
+  background: var(--client-surface);
+}
