@@ -854,7 +854,7 @@
 :global(:root[data-app-theme="legacy-inactive"]) .root {
   --background-ai-coach-page: radial-gradient(circle at top, rgba(127, 159, 58, 0.16) 0%, transparent 34%), linear-gradient(180deg, var(--apple-text, #1c1c1e) 0%, var(--apple-text, #1c1c1e) 100%);
   --color-ai-coach-text: var(--apple-text, #1c1c1e);
-  --color-ai-coach-heading: #ffffff;
+  --color-ai-coach-heading: var(--client-surface, #ffffff);
   --color-ai-coach-heading-soft: rgba(255, 255, 255, 0.88);
   --color-ai-coach-heading-strong: rgba(255, 255, 255, 0.9);
   --color-ai-coach-muted: rgba(255, 255, 255, 0.48);

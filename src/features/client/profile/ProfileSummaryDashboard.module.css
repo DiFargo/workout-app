@@ -67,6 +67,10 @@
 .dataLoadNotice button:focus-visible { outline: 3px solid var(--apple-blue); outline-offset: 2px; }
 
 .workoutHero { padding:20px; border-radius:26px; background:var(--client-hero,var(--ownset-soft-gradient)); box-shadow:var(--client-hero-shadow); color:var(--apple-text); }
+.workoutHero { position:relative; }
+.workoutHeroAction { position:absolute; inset:0; width:100%; height:100%; border:0; border-radius:inherit; background:transparent; cursor:pointer; z-index:1; touch-action:manipulation; }
+.workoutHeroAction:active { background:rgba(100,150,150,.06); }
+.workoutHeroAction:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
 .workoutHero .heroTop { margin-bottom:18px; }
 .workoutHero .heroTop > span:first-child { min-height:24px; padding:4px 8px; font-size:11px; font-weight:500; line-height:16px; }
 :global(html[data-client-appearance="dark"]) .workoutHero .heroTop > span:first-child { color:#b4e5dc; background:rgba(115,187,175,.12); box-shadow:inset 0 0 0 1px rgba(165,220,210,.07); }

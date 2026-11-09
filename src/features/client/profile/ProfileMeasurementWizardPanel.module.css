@@ -52,7 +52,7 @@
 
 :global(html[data-client-appearance]) .periods { min-height:44px; margin-bottom:17px; border-radius:12px; padding:3px; gap:2px; }
 :global(html[data-client-appearance]) .periods button { min-height:38px; padding:1px 6px; font-size:13px; font-weight:600; border:0; border-radius:9px; }
-:global(html[data-client-appearance]) .periods button[aria-selected="true"] { background:#fff; box-shadow:0 2px 5px rgba(35,67,82,.12); }
+:global(html[data-client-appearance]) .periods button[aria-selected="true"] { background:var(--client-surface, #fff); box-shadow:0 2px 5px rgba(35,67,82,.12); }
 :global(html[data-client-appearance="dark"]) .periods button[aria-selected="true"] { background:#3b4b59; }
 :global(html[data-client-appearance]) .chartCard { padding:20px; border-radius:22px; box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .periodRange { font-size:11px; }

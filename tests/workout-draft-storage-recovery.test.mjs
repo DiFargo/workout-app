@@ -20,6 +20,8 @@ const bundle = await rolldown({ input: "draft-recovery-scene", platform: "browse
       if (id === "fixture-firestore") return `
         export const doc=()=>{throw new Error('Firestore must not be called by draft recovery test')};
         export const writeBatch=()=>{throw new Error('Firestore must not be called by draft recovery test')};
+        export const onSnapshot=()=>{throw new Error('Closed basic-mode picker must not subscribe during draft recovery')};
+        export const getDocFromServer=()=>{throw new Error('Individual draft recovery must not check basic-mode access')};
       `;
       if (id === "fixture-hook-react") return `
         export {useRef,useEffect} from 'react';

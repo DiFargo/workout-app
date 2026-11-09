@@ -493,7 +493,7 @@
   gap: 8px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
@@ -514,13 +514,13 @@
 
 :global(:root[data-app-theme="warm-light"]) .emptyRecent {
   border-color: var(--apple-separator, rgba(57, 82, 91,.12));
-  background: #fff;
+  background: var(--client-surface, #fff);
 }
 
 :global(:root[data-app-theme="warm-light"]) .createInMy {
   margin-bottom: 12px;
   border-color: var(--apple-separator, rgba(57, 82, 91,.12));
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
 }
 
@@ -549,7 +549,7 @@
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
   outline: 0;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: 0 8px 28px rgba(27, 35, 31, 0.1);
 }
@@ -603,7 +603,7 @@
 
 .geminiNotice { margin: 0 0 12px; color: var(--apple-secondary-text, #617078); font-size: 13px; line-height: 1.5; }
 
-.searchSuggestions { width: 100%; min-height: 150px; border: 0; background: #fff; border-radius: 12px; }
+.searchSuggestions { width: 100%; min-height: 150px; border: 0; background: var(--client-surface, #fff); border-radius: 12px; }
 .catalogAiSearch {
   min-height: 44px;
   margin: 8px 0;

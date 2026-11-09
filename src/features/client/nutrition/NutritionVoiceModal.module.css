@@ -53,7 +53,7 @@
   align-items: stretch;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
   text-align: center;
   animation: voiceSheetEnter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -127,7 +127,7 @@
   align-items: center;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
   pointer-events: auto;
   text-align: center;
@@ -274,7 +274,7 @@
   gap: 8px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   cursor: pointer;
   transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
 }
@@ -429,7 +429,7 @@
   gap: 9px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 11px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   font-size: 12px;
   font-weight: 700;
@@ -460,7 +460,7 @@
   border: 0;
   border-radius: 13px;
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   font: inherit;
   font-size: 13px;
   font-weight: 750;
@@ -555,7 +555,7 @@
   gap: 2px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   font: inherit;
   text-align: left;
@@ -850,7 +850,7 @@
   border: 0;
   border-radius: 50%;
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   box-shadow: 0 12px 26px rgba(47, 125, 104, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   cursor: pointer;
   touch-action: none;
@@ -948,7 +948,7 @@
   border: 0;
   border-radius: 16px;
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   font: inherit;
   font-size: 15px;
   font-weight: 750;

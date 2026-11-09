@@ -476,7 +476,7 @@
 }
 
 /* Cabinet connections use the same grouped rows as the main account page. */
-.modal.section { margin: 0; padding: 0; overflow: hidden; border: 0; border-radius: 18px; background: #ffffff; box-shadow: none; }
+.modal.section { margin: 0; padding: 0; overflow: hidden; border: 0; border-radius: 18px; background: var(--client-surface, #ffffff); box-shadow: none; }
 .modal .actions { gap: 0; }
 .modal .item, .modal .notificationButton {
   min-height: 74px;
@@ -485,7 +485,7 @@
   border: 0;
   border-bottom: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   box-shadow: none;
   color: var(--apple-text, #1c282e);
   font-family: inherit;
@@ -505,10 +505,10 @@
   color: var(--apple-secondary, #617078); font-size: 13px; font-weight: 400; line-height: 1.4;
 }
 .modal .badge { display: none; }
-.modal .arrow { display: grid; color: #8e8e93; }
+.modal .arrow { display: grid; color: var(--client-secondary, #8e8e93); }
 .modal .arrow svg { width: 18px; height: 18px; stroke-width: 1.8; }
 .modal .toggle { height: 28px; padding: 3px; border: 0; background: #d1d1d6; box-shadow: none; }
-.modal .toggleKnob { width: 22px; height: 22px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.modal .toggleKnob { width: 22px; height: 22px; background: var(--client-surface, #ffffff); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 .modal .notificationButton[aria-pressed="true"] .toggle { background: var(--ownset-action-gradient); }
 .modal .notificationButton:active, .modal .item:active { transform: none; background: var(--apple-surface-muted, #edf1f3); }
 .modal button:focus-visible { outline: 2px solid var(--apple-blue, #376b91); outline-offset: -3px; }

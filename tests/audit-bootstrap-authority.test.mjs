@@ -83,6 +83,16 @@ test("pending remote bootstrap discards a response from an expired run", async (
   assert.deepEqual(h.writes, []);
 });
 
+test("bootstrap ignores a remembered basic mode until the administrator grants it", async () => {
+  for (const allowed of [false, true]) {
+    profileRead = async () => snapshot({ role: "client", basicWorkoutAccess: allowed,
+      workoutModePreference: { mode: "basic", remember: true } });
+    const h = harness();
+    assert.equal(await loadRemoteUserBootstrapState(h.options), "client");
+    assert.equal(h.state.setWorkoutModePreference.mode, allowed ? "basic" : "individual");
+  }
+});
+
 test("deferred remote profile callback preserves a new account's draft", async () => {
   profileRead = async () => snapshot({ role: "client", aiNutritionProfile: { name: "A", weight: "81", goal: "cut" } });
   const h = harness();

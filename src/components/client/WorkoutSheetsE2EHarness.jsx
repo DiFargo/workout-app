@@ -88,6 +88,7 @@ export default function WorkoutSheetsE2EHarness({ sheet = "calendar", failFirst 
         onToggleItem: id => setOpenItemId(current => current === id ? "" : id), onRequestDelete: item => setResult(`delete-request:${item.id}`) }}
     />
     <WorkoutModePickerDialog open={open && sheet === "mode"} workoutModePreference={{ mode }} rememberChoice={remember}
+      basicWorkoutAccessAllowed={!new URLSearchParams(window.location.search).has("basicAccessDenied")}
       onClose={() => setOpen(false)} onRememberChoiceChange={setRemember}
       onOpenBasic={() => { setMode("basic"); setResult(`basic:${remember}`); }}
       onOpenIndividual={() => { setMode("individual"); setResult(`individual:${remember}`); }} />

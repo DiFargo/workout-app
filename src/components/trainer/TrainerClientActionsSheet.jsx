@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from "react";
-import { Archive, ArchiveRestore, Bell, CalendarDays, ChevronDown, ChevronRight, Download, FileText, FlaskConical, SlidersHorizontal, Trash2, UserRound } from "lucide-react";
+import { Archive, ArchiveRestore, Bell, CalendarDays, ChevronDown, ChevronRight, Download, Dumbbell, FileText, FlaskConical, SlidersHorizontal, Trash2, UserRound } from "lucide-react";
 import { useModalBackNavigation } from "../../shared/hooks/useModalBackNavigation";
 import TrainerClientUtilitySheet from "./TrainerClientUtilitySheet";
 import styles from "./TrainerClientActionsSheet.module.css";
@@ -22,7 +22,7 @@ function ActionRow({ icon: Icon, title, description, onClick, disabled, danger =
   </button>;
 }
 
-export default function TrainerClientActionsSheet({ clientName, archived = false, isTest = false, canDeleteClient = false, showSchedule = true, status = "", onAction, onClose }) {
+export default function TrainerClientActionsSheet({ clientName, archived = false, isTest = false, canDeleteClient = false, basicWorkoutAccess = false, showSchedule = true, status = "", onAction, onClose }) {
   const id = useId();
   const busyRef = useRef(false);
   const [startingStatus, setStartingStatus] = useState(status);
@@ -69,6 +69,7 @@ export default function TrainerClientActionsSheet({ clientName, archived = false
         {showSchedule ? row("open_calendar", CalendarDays, "Расписание и абонемент", "Даты тренировок и баланс занятий") : null}
         {row("open_notifications", Bell, "Напоминания", "Тренировки, фото и замеры")}
         {row("open_access_info", UserRound, "Данные для входа и связи", "Логин, почта и Telegram — без пароля")}
+        {canDeleteClient ? row(basicWorkoutAccess ? "revoke_basic_access" : "grant_basic_access", Dumbbell, basicWorkoutAccess ? "Базовые тренировки: доступны" : "Открыть базовые тренировки", basicWorkoutAccess ? "Отключить самостоятельный режим · история сохранится" : "Разрешить режим «Сейчас» и «На месяц» · только администратор") : null}
       </div>
       <details className={styles.more}>
         <summary aria-controls={`${id}-extra`}>

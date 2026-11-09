@@ -2,8 +2,8 @@
   position: relative;
   z-index: 5;
   padding: 10px;
-  background: var(--surface, #fff);
-  color: var(--text-primary, #1c1c1e);
+  background: var(--client-surface, var(--surface, #fff));
+  color: var(--client-text, var(--text-primary, #1c1c1e));
   font-size: 13px;
 }
 
@@ -38,8 +38,8 @@
   padding: 0 10px;
   border: 1px solid var(--border, rgba(60, 60, 67, .12));
   border-radius: 10px;
-  background: var(--surface-secondary, #efeff4);
-  color: var(--text-primary, #1c1c1e);
+  background: var(--client-surface-muted, var(--surface-secondary, #efeff4));
+  color: var(--client-text, var(--text-primary, #1c1c1e));
   font: inherit;
   font-weight: 600;
   pointer-events: auto;

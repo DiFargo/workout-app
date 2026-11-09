@@ -7,7 +7,7 @@ const completionFields = ["id", "clientSaveId", "workoutId", "workoutName", "wor
   "order", "scheduleOrder", "sortOrder", "index", "assignedProgramUpdatedAt", "assignmentVersion",
   "assignedProgramId", "assignedProgramAddedAt", "programAssignmentId", "assignedAt", "startedAt",
   "date", "completedAt", "finishedAt", "createdAt"];
-const profileFields = ["role", "active", "archived", "accessDisabled", "membershipStatus", "accountAccessStatus",
+const profileFields = ["role", "active", "archived", "accessDisabled", "membershipStatus", "accountAccessStatus", "basicWorkoutAccess",
   "assignedProgramId", "assignedProgramName", "assignedProgramAt", "assignedProgramUpdatedAt",
   "assignedProgramAddedAt", "assignedProgramLifecycleStatus", "assignedAt", "basicWorkoutPlan", "workoutCalendar",
   "workoutModePreference", "trainerAssignmentState", "assignedTrainerId", "trainerId", "coachId", "createdByUid", "updatedAt"];

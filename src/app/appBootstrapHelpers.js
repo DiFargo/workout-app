@@ -314,7 +314,7 @@ export async function loadRemoteUserBootstrapState({
         (Number.isFinite(cachedWorkoutModeUpdatedAt) &&
           (!Number.isFinite(remoteWorkoutModeUpdatedAt) || cachedWorkoutModeUpdatedAt > remoteWorkoutModeUpdatedAt))
       );
-    const resolvedWorkoutModePreference =
+    let resolvedWorkoutModePreference =
       shouldPreferCachedWorkoutMode
         ? {
             mode: cachedWorkoutMode,
@@ -329,6 +329,10 @@ export async function loadRemoteUserBootstrapState({
           }
         : (cachedWorkoutModePreference || getDefaultWorkoutModePreference());
 
+    // A remembered/local basic mode never substitutes an administrator grant.
+    if (storedRole === "client" && roleData.basicWorkoutAccess !== true && resolvedWorkoutModePreference?.mode === "basic") {
+      resolvedWorkoutModePreference = { ...resolvedWorkoutModePreference, mode: "individual" };
+    }
     const resolvedRole = resolveUserRole({
       isAdminClaim: isAdmin,
       role: roleData.role,

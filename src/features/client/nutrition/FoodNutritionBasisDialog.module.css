@@ -1,12 +1,12 @@
-.dialog { width: calc(100% - 24px); max-width: 440px; max-height: 85dvh; padding: 24px; border: 0; border-radius: 24px; background: #fff; color: #1c282e; box-shadow: 0 18px 65px #0002; overflow: auto; }
+.dialog { width: calc(100% - 24px); max-width: 440px; max-height: 85dvh; padding: 24px; border: 0; border-radius: 24px; background: var(--client-surface, #fff); color: var(--client-text, #1c282e); box-shadow: 0 18px 65px #0002; overflow: auto; }
 .dialog::backdrop { background: #0005; }
 .dialog h2 { font-size: 20px; line-height: 1.3; padding-right: 20px; }
-.dialog p { font-size: 14px; line-height: 1.5; color: #617078; }
-.close { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: #edf1f3; font-size: 24px; cursor: pointer; }
+.dialog p { font-size: 14px; line-height: 1.5; color: var(--client-secondary, #617078); }
+.close { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--client-surface-muted, #edf1f3); font-size: 24px; cursor: pointer; }
 .fields { display: flex; gap: 12px; }
-.fields label { flex: 1; min-width: 0; display: grid; gap: 6px; font-size: 13px; color: #617078; }
-.fields input,.fields select { width: 100%; min-height: 46px; min-width: 0; padding: 10px; border: 1px solid #d1d1d6; border-radius: 10px; background: #fff; color: #1c282e; font: inherit; font-size: 16px; }
-.confirm { width: 100%; min-height: 48px; padding: 12px; border: 0; border-radius: 12px; background: var(--ownset-action-gradient); color: white; font: inherit; cursor: pointer; }
+.fields label { flex: 1; min-width: 0; display: grid; gap: 6px; font-size: 13px; color: var(--client-secondary, #617078); }
+.fields input,.fields select { width: 100%; min-height: 46px; min-width: 0; padding: 10px; border: 1px solid #d1d1d6; border-radius: 10px; background: var(--client-surface, #fff); color: var(--client-text, #1c282e); font: inherit; font-size: 16px; }
+.confirm { width: 100%; min-height: 48px; padding: 12px; border: 0; border-radius: 12px; background: var(--ownset-action-gradient); color: var(--client-action-ink, white); font: inherit; cursor: pointer; }
 .confirm:disabled { opacity: .5; }
 .dialog :focus-visible { outline: 2px solid #396ba6; outline-offset: 3px; }
 @media(max-width:440px) { .dialog { width: 100%; margin: auto 0 0; max-width: 100%; border-radius: 24px 24px 0 0; padding-bottom: calc(24px + env(safe-area-inset-bottom)); } }

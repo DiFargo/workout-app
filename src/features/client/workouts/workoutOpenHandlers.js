@@ -6,6 +6,7 @@ import { buildCompletedWorkoutSet, getWorkoutAssignmentVersion, isWorkoutComplet
 import { canResumeWorkoutDraft, restoreWorkoutDraftPlan } from "../../../utils/workoutDraftState";
 import { doc, writeBatch } from "firebase/firestore";
 import { captureAuthSession } from "../../../utils/authSession.js";
+import { verifyBasicWorkoutAccess } from "../../../utils/basicWorkoutAccessClient.js";
 import { getClientWorkoutCompletionHistory, getClientWorkoutReadModel } from "../../../utils/clientWorkoutEvidence.js";
 import {
   clearWorkoutDraft,
@@ -28,6 +29,8 @@ export function createWorkoutOpenHandlers({
   workoutDraftRestorePrompt,
   workoutOpenContextRef,
   onDraftReadError,
+  onBasicAccessDenied = onDraftReadError,
+  verifyBasicAccess = verifyBasicWorkoutAccess,
   loadHistory,
   loadWorkoutsFromFirebase,
   setPlan,
@@ -65,6 +68,8 @@ export function createWorkoutOpenHandlers({
 }) {
   async function applyBasicWorkoutPlan(quizOverride = basicWorkoutQuiz, { startWorkout = false } = {}) {
     const currentUser = auth.currentUser || user;
+    try { await verifyBasicAccess({ auth, db }); }
+    catch (error) { return { cloudSaved: false, error }; }
     const nextPlan = buildBasicWorkoutPlanFromQuiz(quizOverride, undefined, {
       profile: aiNutritionProfile || aiNutritionProfileDraft,
       history
@@ -298,6 +303,11 @@ export function createWorkoutOpenHandlers({
       return;
     }
 
+    if (plan?.source === "basic" || selectedPlanWorkout?.source === "basic") {
+      try { await verifyBasicAccess({ auth, db }); }
+      catch (error) { if (isCurrentOpen()) onBasicAccessDenied?.(error.message); return; }
+      if (!isCurrentOpen()) return;
+    }
     openWorkoutWithDraftChoice(id, savedDraft, false);
   }
 
@@ -327,6 +337,11 @@ export function createWorkoutOpenHandlers({
     if (!shouldRestoreDraft) {
       const currentUser = auth.currentUser || user;
       const session = captureAuthSession(auth);
+      if (plan?.source === "basic" || pendingWorkout?.source === "basic") {
+        try { await verifyBasicAccess({ auth, db }); }
+        catch (error) { if (session.isCurrent()) onBasicAccessDenied?.(error.message); return; }
+        if (!session.isCurrent()) return;
+      }
       const freshPlan = await loadWorkoutsFromFirebase(currentUser?.uid, { force: true, requireFresh: true });
       // An authoritative absence is not permission to restore a stale plan.
       // Keep the draft intact when the assignment changed or reload failed.

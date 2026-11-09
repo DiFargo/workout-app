@@ -41,7 +41,7 @@
 
 .planSwitcher button[aria-current="page"] {
   color: var(--apple-blue, #376b91);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   box-shadow: 0 2px 8px rgba(69, 57, 85, 0.09);
 }
 
@@ -128,7 +128,7 @@
   max-height: 44px;
   padding: 0;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
@@ -145,7 +145,7 @@
   width: 100%;
   display: grid;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 22px;
   box-shadow: none;
@@ -268,7 +268,7 @@
   min-height: 48px;
   height: 48px;
   margin-top: 12px;
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
@@ -713,7 +713,7 @@
   gap: 12px;
   padding: 18px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 22px;
 }
@@ -902,7 +902,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
@@ -1162,7 +1162,7 @@
   flex: 0 0 auto;
   gap: 6px;
   padding-top: 8px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
@@ -1378,7 +1378,7 @@
 
 .microcycleTabs button.activeMicrocycleTab {
   color: var(--apple-blue-pressed, #315f91);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   box-shadow: 0 1px 5px rgba(60, 48, 82, 0.08);
 }
 
@@ -1449,7 +1449,7 @@
   gap: 10px;
   color: var(--apple-text, #1c282e);
   text-align: center;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 28px;
   box-shadow: 0 22px 54px rgba(27, 35, 31, 0.2);
@@ -1491,7 +1491,7 @@
 }
 
 .generationIcon.generationReadyIcon {
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #708d79;
   animation: none;
 }
@@ -1628,7 +1628,7 @@
 }
 
 .generationSteps li.generationStepComplete i {
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #708d79;
 }
 
@@ -1702,7 +1702,7 @@
   gap: 10px;
   padding: 18px 16px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 12px 30px rgba(27, 35, 31, 0.08);
@@ -1812,7 +1812,7 @@
   width: 100%;
   min-height: 52px;
   margin-top: 4px;
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   font-size: 16px;
   font-weight: 750;
   background: var(--ownset-action-gradient);

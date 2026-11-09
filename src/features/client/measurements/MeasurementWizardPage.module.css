@@ -686,7 +686,7 @@
 :global(:root[data-app-theme="warm-light"]) .navigation .next {
   border-radius: 17px;
   background: var(--ownset-action-gradient);
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   box-shadow: none;
 }
 
@@ -759,7 +759,7 @@
   gap: 12px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   color: var(--apple-text, #1c282e);
   box-shadow: 0 14px 38px rgba(27, 35, 31, 0.07);
 }
@@ -921,7 +921,7 @@
 :global(:root) .page .input input {
   height: 52px;
   border-radius: 13px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   color: var(--apple-text, #1c282e);
   font-size: 30px;
   font-weight: 700;
@@ -1025,7 +1025,7 @@
   grid-template-columns: 104px minmax(0, 1fr);
   gap: 8px;
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -1055,7 +1055,7 @@
 
 :global(:root) .page .navigation .next {
   background: var(--ownset-action-gradient);
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
 }
 
 @media (max-width: 370px), (max-height: 720px) {

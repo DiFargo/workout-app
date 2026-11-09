@@ -69,6 +69,6 @@
   font-weight: 700;
 }
 .hasFood:not(.selected) .dateNumber { border-color: var(--apple-blue, #4f718c); background: var(--apple-surface, #fff); color: var(--apple-blue, #4f718c); }
-.selected .dateNumber { border-color: var(--apple-blue, #4f718c); background: var(--ownset-action-gradient); color: #fff; }
+.selected .dateNumber { border-color: var(--apple-blue, #4f718c); background: var(--ownset-action-gradient); color: var(--client-action-ink, #fff); }
 .selected .dayLabel { color: var(--apple-blue, #007aff); }
 :global(html[data-client-appearance]) .week { display:none; }

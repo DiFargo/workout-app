@@ -29,7 +29,7 @@ export default function ProfileCabinetActionGrid({ showClientOnlyActions, avatar
     <section className={styles.section}><h2>{showClientOnlyActions ? "Настройки" : "Приложение"}</h2><div className={styles.group}>
       <ActionRow kind="notifications" icon={Bell} referenceIcon={showClientOnlyActions ? "bell" : undefined} title="Уведомления" note="Настройка напоминаний" onClick={onOpenNotifications} />
       <ActionRow kind="account" icon={showClientOnlyActions ? ShieldCheck : Link2} referenceIcon={showClientOnlyActions ? "shield" : undefined} title={showClientOnlyActions ? "Вход и безопасность" : "Подключение аккаунтов"} note={showClientOnlyActions ? "Email, пароль и Telegram" : "Почта и Telegram"} onClick={onOpenConnections} />
-      {showClientOnlyActions && <ActionRow kind="appearance" icon={Settings2} referenceIcon="settings" title="Оформление" note={`Тема: ${appearance === "dark" ? "тёмная" : appearance === "light" ? "светлая" : "системная"}`} onClick={() => setAppearanceOpen(true)} />}
+      {showClientOnlyActions && <ActionRow kind="appearance" icon={Settings2} referenceIcon="settings" title="Оформление" note={`Тема: ${appearance === "dark" ? "тёмная" : "светлая"}`} onClick={() => setAppearanceOpen(true)} />}
       {!showClientOnlyActions && <ActionRow kind="feedback" icon={MessageCircle} title="Помощь и обратная связь" onClick={onOpenFeedback} />}
     </div></section>
     {showClientOnlyActions && <section className={styles.section}><h2>Мы рядом</h2><div className={styles.group}>

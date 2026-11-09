@@ -1,5 +1,6 @@
 import { onRequest, onCall, HttpsError } from "firebase-functions/v2/https";
 import { fetchGeminiNutritionFoods } from "./geminiNutritionSearch.js";
+import { assertBasicWorkoutAccess } from "./basicWorkoutAccess.js";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { onDocumentCreated, onDocumentDeleted } from "firebase-functions/v2/firestore";
 import { onObjectFinalized } from "firebase-functions/v2/storage";
@@ -4014,6 +4015,7 @@ export const aiBasicWorkoutPlan = onRequest(
     try {
       // Authentication is not admission: paid provider calls require membership.
       const context = await requireActiveMember(req);
+      assertBasicWorkoutAccess(context.userData);
       const profile = normalizeBasicWorkoutAiProfile(req.body?.profile || {});
       if (req.body?.provider === "gemini") {
         return await respondWithHybridBasicWorkout({ res, profile, context, apiVersion });

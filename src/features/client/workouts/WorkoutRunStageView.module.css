@@ -203,7 +203,7 @@
   overflow: hidden;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   box-shadow: 0 2px 7px rgba(27, 35, 31, 0.05);
 }
 
@@ -456,7 +456,7 @@
   gap: 10px;
   overflow: hidden auto;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
@@ -498,9 +498,9 @@
 }
 .planSection.planSection { height: auto; margin: 8px 0 0; }
 .planHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 4px 6px; }
-.planHeading h2 { margin: 0; color: #617078; font-size: .8125rem; font-weight: 500; line-height: 1.4; letter-spacing: .35px; text-transform: uppercase; }
-.planHeading > span { font-size: .8125rem; color: #617078; font-variant-numeric: tabular-nums; flex-shrink: 0; }
-.planCard.planCard { height: auto; min-height: 0; overflow: visible; border: 0; border-radius: 22px; background: #fff; box-shadow: none; }
+.planHeading h2 { margin: 0; color: var(--client-secondary, #617078); font-size: .8125rem; font-weight: 500; line-height: 1.4; letter-spacing: .35px; text-transform: uppercase; }
+.planHeading > span { font-size: .8125rem; color: var(--client-secondary, #617078); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.planCard.planCard { height: auto; min-height: 0; overflow: visible; border: 0; border-radius: 22px; background: var(--client-surface, #fff); box-shadow: none; }
 
 /* Fit preparation to the measured space between the header and bottom dock.
    Normal flow preserves the final scroll inset in WebKit for enlarged text. */

@@ -233,7 +233,7 @@
     width: 3.5rem;
     height: 3.5rem;
     place-items: center;
-    color: #fff;
+    color: var(--client-action-ink, #fff);
     font-size: 1.75rem;
     font-weight: 800;
     background: var(--ownset-action-gradient);
@@ -483,7 +483,7 @@
   }
 
   .completedBadge {
-    color: #fff;
+    color: var(--client-text, #fff);
     background: color-mix(in srgb, var(--color-success) 88%, transparent);
   }
 
@@ -496,7 +496,7 @@
     height: 1.8rem;
     display: grid;
     place-items: center;
-    color: #ffffff;
+    color: var(--client-text, #ffffff);
     background: color-mix(in srgb, var(--color-success) 88%, transparent);
     box-shadow: 0 0.3rem 0.75rem rgba(47, 83, 56, 0.16);
     font-size: 0.68rem;
@@ -513,7 +513,7 @@
   }
 
   .syncBadge {
-    color: #fff;
+    color: var(--client-text, #fff);
     background: color-mix(in srgb, var(--color-text) 72%, transparent);
   }
 
@@ -631,7 +631,7 @@
     flex-direction: column;
     justify-content: center;
     gap: var(--space-2);
-    color: #fff;
+    color: var(--client-action-ink, #fff);
     background:
       radial-gradient(circle at 72% 28%, color-mix(in srgb, var(--color-accent) 42%, transparent), transparent 34%),
       #1a1d18;
@@ -653,7 +653,7 @@
     left: var(--space-4);
     width: calc(100% - 2 * var(--space-4));
     min-height: 4rem;
-    color: #fff;
+    color: var(--client-action-ink, #fff);
     font-size: 1rem;
     background: var(--ownset-action-gradient);
     border-radius: 1.15rem;
@@ -661,7 +661,7 @@
   }
 
   .completedStartButton {
-    color: #ffffff;
+    color: var(--client-text, #ffffff);
     background: #a8a5ad;
     box-shadow: none;
   }
@@ -1094,7 +1094,7 @@
       height: 100%;
       align-items: stretch;
       overflow: hidden;
-      background: #fff;
+      background: var(--client-surface, #fff);
       border-radius: inherit;
       opacity: 1;
     }
@@ -1125,7 +1125,7 @@
       padding: 0 0.75rem 0 4.375rem;
       align-items: center;
       justify-content: flex-start;
-      color: #fff;
+      color: var(--client-action-ink, #fff);
       font-size: 1.1875rem;
       font-weight: 950;
       line-height: 1;
@@ -1187,7 +1187,7 @@
       padding: 0;
       place-items: center;
       color: var(--apple-text, #1c282e);
-      background: #fff;
+      background: var(--client-surface, #fff);
       border: 0.0625rem solid var(--apple-separator, rgba(57, 82, 91,.12));
       border-radius: 50%;
     }
@@ -1766,7 +1766,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #fff;
+      background: var(--client-surface, #fff);
       border-radius: inherit;
       opacity: 1;
     }
@@ -1797,7 +1797,7 @@
       padding: 0 0.75rem 0 4.375rem;
       align-items: center;
       justify-content: flex-start;
-      color: #fff;
+      color: var(--client-action-ink, #fff);
       font-size: 1rem;
       font-weight: 950;
       line-height: 1;
@@ -2189,7 +2189,7 @@
   grid-template-columns: 58px minmax(0, 1fr) 28px;
   gap: 12px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
   box-shadow: none;
@@ -2257,7 +2257,7 @@
   overflow: hidden;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
 }
 
@@ -2324,7 +2324,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .completedBadge.completedBadge {
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #708d79;
 }
 
@@ -2334,7 +2334,7 @@
   left: -52px;
   width: 172px;
   height: 28px;
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: rgba(106, 132, 113, 0.92);
   box-shadow: 0 5px 12px rgba(57, 78, 62, 0.16);
   font-size: 10px;
@@ -2345,7 +2345,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .syncBadge.syncBadge {
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #a9d2c3;
 }
 
@@ -2464,7 +2464,7 @@
   padding: 0 18px;
   display: grid;
   place-items: center;
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
@@ -2477,7 +2477,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .completedStartButton.completedStartButton {
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #a8a5ad;
   box-shadow: none;
 }
@@ -2494,7 +2494,7 @@
   align-content: center;
   gap: 10px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: none;
@@ -2522,7 +2522,7 @@
 :global(:root[data-app-theme="warm-light"]) .emptyState.emptyState > button {
   min-height: 48px;
   margin-top: 6px;
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border-radius: 17px;
 }
@@ -2571,7 +2571,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 14px;
   text-transform: none;
@@ -2589,7 +2589,7 @@
   padding: 9px 12px 13px;
   align-items: flex-start;
   color: var(--apple-secondary, #617078);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
   font-size: 10px;
@@ -2700,7 +2700,7 @@
 :global(:root[data-app-theme="warm-light"]) .completionState.completionState {
   padding: 24px 20px 20px;
   gap: 14px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border-color: var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 12px 26px rgba(27, 35, 31, 0.08);
@@ -2717,7 +2717,7 @@
 :global(:root[data-app-theme="warm-light"]) .completionIcon.completionIcon {
   width: 56px;
   height: 56px;
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   font-size: 28px;
   background: var(--ownset-action-gradient);
   box-shadow: 0 12px 24px rgba(40, 110, 91, 0.22);
@@ -2921,4 +2921,4 @@
 .loadState { margin: 16px; padding: 20px; border-radius: 20px; background: var(--apple-surface); color: var(--apple-text); }
 .loadState h2 { margin: 0 0 10px; font-size: 19px; }
 .loadState p { color: var(--apple-secondary); font-size: 14px; line-height: 1.5; }
-.loadState button { min-height: 44px; border: 0; border-radius: 12px; padding: 10px 16px; background: var(--ownset-action-gradient); color: #fff; font: inherit; }
+.loadState button { min-height: 44px; border: 0; border-radius: 12px; padding: 10px 16px; background: var(--ownset-action-gradient); color: var(--client-action-ink, #fff); font: inherit; }

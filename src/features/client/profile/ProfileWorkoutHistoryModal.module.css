@@ -37,7 +37,7 @@
   overflow: hidden;
   border: 1px solid transparent;
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   color: var(--apple-text, #1c282e);
 }
 
@@ -158,7 +158,7 @@
   align-items: center;
   gap: 6px;
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   color: var(--apple-text, #1c282e);
   font-size: 12px;
 }
@@ -185,8 +185,8 @@
   min-height: 44px;
   border: 0;
   border-radius: 10px;
-  background: #fff3f2;
-  color: #b42318;
+  background: var(--client-danger-soft, #fff3f2);
+  color: var(--client-danger, #b42318);
   font-size: 14px;
   font-weight: 500;
 }

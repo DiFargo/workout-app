@@ -25,6 +25,7 @@ const ProtectedExerciseVideo = forwardRef(function ProtectedExerciseVideo({ src,
   const [failedPoster, setFailedPoster] = useState("");
   const [playedSource, setPlayedSource] = useState("");
   const [videoIntent, setVideoIntent] = useState("");
+  const [fallbackPreview, setFallbackPreview] = useState("");
   const videoRef = useRef(null);
   const playbackToRestore = useRef(null);
   const intentionalCleanup = useRef(false);
@@ -32,39 +33,31 @@ const ProtectedExerciseVideo = forwardRef(function ProtectedExerciseVideo({ src,
   const posterTime = normalizeExerciseVideoPosterTime(previewTime);
   const requestedPosterTime = preferPoster ? posterTime : null;
   const previewSource = `${session}:${src}`;
-  const posterOnly = preferPoster && requiresAccess && videoIntent !== previewSource;
+  const previewIdentity = `${previewSource}:${posterTime}`;
+  const seekFallback = preferPoster && requiresAccess && fallbackPreview === previewIdentity;
+  const posterOnly = preferPoster && requiresAccess && videoIntent !== previewSource && !seekFallback;
   const current = access?.source === src && access.session === session && access.previewTime === requestedPosterTime ? access : null;
   const nativeSource = current?.url || (!requiresAccess ? src : undefined);
   // While signing, do not request metadata just to seek to a preview. The
   // poster layer reuses the video's CSS crop and needs no MP4 bytes.
-  const waitingForPoster = preferPoster && requiresAccess && (!current || current.posterPending);
+  const waitingForPoster = preferPoster && requiresAccess && !seekFallback && (!current || current.posterPending);
   const posterIdentity = `${previewSource}:${posterTime}:${current?.posterUrl || ""}`;
   const rejectedBlob = failedPoster === `blob:${posterIdentity}`;
-  const fastPoster = preferPoster && !current?.posterPending && failedPoster !== posterIdentity
+  const fastPoster = preferPoster && !seekFallback && !current?.posterPending && failedPoster !== posterIdentity
     ? (!rejectedBlob && current?.posterBlobUrl) || current?.posterUrl : undefined;
-  const posterUnavailable = Boolean(preferPoster && requiresAccess && current && !current.error &&
+  const posterUnavailable = Boolean(preferPoster && requiresAccess && !seekFallback && current && !current.error &&
     !waitingForPoster && !fastPoster && playedSource !== previewSource);
-  const seekPreviewTime = preferPoster && requiresAccess || waitingForPoster || fastPoster ? null : posterTime;
-  const preload = posterOnly || waitingForPoster || fastPoster
+  const seekPreviewTime = seekFallback ? posterTime ?? 0 : preferPoster && requiresAccess || waitingForPoster || fastPoster ? null : posterTime;
+  const preload = seekFallback && playedSource !== previewSource ? "metadata" : posterOnly || waitingForPoster || fastPoster
     ? playbackToRestore.current?.playing ? "auto" : "none" : props.preload;
 
   useEffect(() => {
-    if (!posterUnavailable) return undefined;
-    const retry = () => {
-      protectedExerciseVideoAccess.invalidate(src);
-      setFailedPoster("");
-      setAttempt(value => value + 1);
-    };
-    const onVisible = () => {
-      if (document.visibilityState === "visible" && navigator.onLine !== false) retry();
-    };
-    window.addEventListener("online", retry);
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      window.removeEventListener("online", retry);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
-  }, [src, session, posterUnavailable]);
+    // A trainer can select a new moment before a prebuilt WebP exists for it.
+    // Retrying that optional image forever cannot create it. Only in this
+    // degraded case request the ordinary authenticated video capability and
+    // seek the exact chosen frame; available posters still load zero MP4 bytes.
+    if (posterUnavailable) setFallbackPreview(previewIdentity);
+  }, [posterUnavailable, previewIdentity]);
 
   useEffect(() => {
     if (seekPreviewTime === null) {
@@ -136,9 +129,9 @@ const ProtectedExerciseVideo = forwardRef(function ProtectedExerciseVideo({ src,
       if (result.expiresAt && video?.getAttribute("src") && video.getAttribute("src") !== result.url) {
         playbackToRestore.current = { time: video.currentTime, playing: !video.paused };
       }
-      const cachedPoster = preferPoster && result.posterUrl
+      const cachedPoster = preferPoster && !seekFallback && result.posterUrl
         ? protectedExerciseVideoAccess.getCachedPoster(src, { previewTime: requestedPosterTime }) : null;
-      const posterPending = Boolean(preferPoster && result.posterUrl && !cachedPoster);
+      const posterPending = Boolean(preferPoster && !seekFallback && result.posterUrl && !cachedPoster);
       const nextAccess = { source: src, session, attempt, previewTime: requestedPosterTime, ...result };
       const publish = patch => setAccess(previous => ({ ...nextAccess, ...patch,
         // A late poster task cannot remove a URL already requested by Play.
@@ -170,13 +163,13 @@ const ProtectedExerciseVideo = forwardRef(function ProtectedExerciseVideo({ src,
       active = false;
       window.clearTimeout(refreshTimer);
     };
-  }, [src, session, attempt, requestedPosterTime, preferPoster, previewSource, posterTime, posterOnly]);
+  }, [src, session, attempt, requestedPosterTime, preferPoster, previewSource, posterTime, posterOnly, seekFallback]);
 
   return <>
     <video {...props} key={`${session}:${src}`} src={nativeSource || undefined}
       poster={props.poster} preload={preload}
       data-video-preview-time={posterTime ?? "default"}
-      data-video-preview-mode={fastPoster ? "poster" : waitingForPoster ? "pending" : posterOnly ? "unavailable" : preferPoster && requiresAccess ? "playback" : "seek"}
+      data-video-preview-mode={fastPoster ? "poster" : waitingForPoster ? "pending" : seekFallback ? "seek" : posterOnly ? "unavailable" : preferPoster && requiresAccess ? "playback" : "seek"}
       data-protected-video-state={!requiresAccess ? "public" : current?.error ? "error" : current?.url || current?.posterOnly ? "ready" : "pending"}
       data-video-session={session} ref={(element) => {
       videoRef.current = element;
@@ -217,16 +210,6 @@ const ProtectedExerciseVideo = forwardRef(function ProtectedExerciseVideo({ src,
           setFailedPoster(`blob:${posterIdentity}`);
         } else setFailedPoster(posterIdentity);
       }} /> : null}
-    {posterUnavailable ? <div className={`${styles.error} ${styles.posterError}`} role="status" data-video-poster-error="true">
-      <span>Превью не загрузилось</span>
-      <button className={styles.retry} type="button" aria-label="Повторить загрузку превью"
-        disabled={current.attempt !== attempt} onClick={(event) => {
-          event.stopPropagation();
-          protectedExerciseVideoAccess.invalidate(src);
-          setFailedPoster("");
-          setAttempt(value => value + 1);
-        }}>Повторить превью</button>
-    </div> : null}
     {current?.error ? <div className={`${styles.error}${preferPoster ? ` ${styles.posterError}` : ""}`} role="alert" data-protected-video-error="true">
       <span>{current.error.message || "Не удалось загрузить видео."}</span>
       <button className={styles.retry} type="button" disabled={current.attempt !== attempt} onClick={(event) => {

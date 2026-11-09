@@ -18,9 +18,10 @@ const cleanupImports = installRuntimeImports({
 after(cleanupImports);
 const { createWorkoutOpenHandlers } = await import("../src/features/client/workouts/workoutOpenHandlers.js");
 
-function fixture() {
+function fixture({ basic = false, accessDenied = false } = {}) {
   const auth = { currentUser: { uid: "draft-client" } };
   const plan = {
+    ...(basic ? { source: "basic" } : {}),
     assignedProgramUpdatedAt: "assignment-1",
     workouts: ["day-a", "day-b", "completed-day"].map(id => ({
       id, name: id, assignedProgramUpdatedAt: "assignment-1",
@@ -29,7 +30,7 @@ function fixture() {
     }))
   };
   const workoutOpenContextRef = { current: { request: 0, plan, page: "workouts" } };
-  const calls = { reads: [], cleared: [], setters: [], readErrors: 0, history: 0 };
+  const calls = { reads: [], cleared: [], setters: [], readErrors: 0, history: 0, basicChecks: 0 };
   activeStorage = {
     cleared: calls.cleared,
     read(uid, workoutId) {
@@ -45,11 +46,17 @@ function fixture() {
     "PostWorkoutFeedbackOpen", "WorkoutReadinessOpen", "IsWorkoutSaved", "WorkoutClientComment",
     "ShowWorkoutSavedCard", "WorkoutDraftRestorePrompt", "Page"
   ].map(name => [`set${name}`, value => calls.setters.push({ name, value })]));
-  const createHandlers = () => createWorkoutOpenHandlers({
+  const createHandlers = (overrides = {}) => createWorkoutOpenHandlers({
     ...setters, auth, user: auth.currentUser, plan: workoutOpenContextRef.current.plan,
     history: [], APP_PAGES: { HISTORY: "history" }, workoutOpenContextRef,
     onDraftReadError: () => { calls.readErrors += 1; },
-    loadHistory: () => { calls.history += 1; }
+    loadHistory: () => { calls.history += 1; },
+    verifyBasicAccess: async () => {
+      calls.basicChecks += 1;
+      if (accessDenied) throw new Error("basic_workout_access_required");
+      return true;
+    },
+    ...overrides
   });
   const draft = (workoutId = "day-a") => ({
     uid: "draft-client", workoutId, assignmentVersion: "assignment-1",
@@ -65,6 +72,36 @@ function assertNoOpenEffects(env) {
   assert.equal(env.calls.history, 0);
   assert.equal(env.calls.readErrors, 0);
 }
+
+test("базовый режим: без разрешения администратора новая тренировка не начинается", async () => {
+  const env = fixture({ basic: true, accessDenied: true });
+  const opening = env.createHandlers().openWorkout("day-a");
+  env.calls.reads[0].resolve(null);
+  await opening;
+  assert.equal(env.calls.basicChecks, 1);
+  assert.equal(env.calls.readErrors, 1);
+  assert.deepEqual(env.calls.setters, []);
+  assert.deepEqual(env.calls.cleared, []);
+});
+
+test("базовый режим: отзыв доступа не уничтожает начатый черновик и разрешает только продолжение", async () => {
+  const env = fixture({ basic: true, accessDenied: true });
+  const savedDraft = env.draft();
+  const pending = { workoutId: "day-a", savedDraft };
+  const opening = env.createHandlers().openWorkout("day-a");
+  env.calls.reads[0].resolve(savedDraft);
+  await opening;
+  assert.equal(env.calls.basicChecks, 0);
+  assert.deepEqual(env.calls.setters, [{ name: "WorkoutDraftRestorePrompt", value: pending }]);
+  await env.createHandlers({ workoutDraftRestorePrompt: pending }).handleWorkoutDraftChoice(false);
+  assert.equal(env.calls.basicChecks, 1);
+  assert.deepEqual(env.calls.cleared, []);
+  env.calls.setters.length = 0;
+  await env.createHandlers({ workoutDraftRestorePrompt: pending }).handleWorkoutDraftChoice(true);
+  assert.equal(env.calls.basicChecks, 1);
+  assert.ok(env.calls.setters.some(item => item.name === "WorkoutStarted" && item.value === true));
+  assert.deepEqual(env.calls.cleared, []);
+});
 
 test("открытие: поздний draft A не перекрывает открытие B через новую render-фабрику", async () => {
   const env = fixture();

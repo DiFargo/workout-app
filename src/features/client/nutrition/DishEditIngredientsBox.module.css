@@ -282,7 +282,7 @@
   padding: 12px;
   border: 0;
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
@@ -300,7 +300,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .empty { min-height: 0; margin-top: 8px; padding: 0; background: transparent; color: var(--apple-secondary, #617078); text-align: left; justify-content: flex-start; font-weight: 400; line-height: 1.4; }
-:global(:root[data-app-theme="warm-light"]) .row { border-color: var(--apple-separator, rgba(57, 82, 91,.12)); background: #fff; color: var(--apple-text, #1c282e); }
+:global(:root[data-app-theme="warm-light"]) .row { border-color: var(--apple-separator, rgba(57, 82, 91,.12)); background: var(--client-surface, #fff); color: var(--apple-text, #1c282e); }
 :global(:root[data-app-theme="warm-light"]) .icon { border: 0; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-action, #396ba6); }
 :global(:root[data-app-theme="warm-light"]) .name,
 :global(:root[data-app-theme="warm-light"]) .nutrition { color: var(--apple-text, #1c282e); -webkit-text-fill-color: var(--apple-text, #1c282e); font-weight: 600; }

@@ -223,7 +223,7 @@
   padding: 18px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
@@ -276,7 +276,7 @@
   grid-template-columns: 44px minmax(0, 1fr);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-action, #396ba6);
   box-shadow: none;
 }

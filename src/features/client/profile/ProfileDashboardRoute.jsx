@@ -594,7 +594,7 @@ export default function ProfileDashboardRoute(ctx) {
         showTrainerNotifications={!canUseTrainerFeatures()}
         trainerNotificationCount={trainerNotificationCount}
         mainTitle="Сегодня"
-        onOpenCalendar={openProfileWorkoutJournalCalendar}
+        onAddMeasurement={openProfileBodyControlMeasurements}
         onOpenTrainerNotifications={() => {
           if (clientUid) void loadClientTrainerTasks?.(clientUid);
           setProfileTrainerNotificationsOpen(true);

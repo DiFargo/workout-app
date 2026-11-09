@@ -70,7 +70,7 @@
   border: 2px solid var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 50%;
   background: var(--ownset-action-gradient, var(--apple-action, #3f73b8));
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   box-shadow: none;
 }
 

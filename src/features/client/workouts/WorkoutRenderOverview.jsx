@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MoonStar, RotateCcw, X } from "lucide-react";
+import { ListChecks, MoonStar, RotateCcw, X } from "lucide-react";
 import { ArrowRight, CalendarDays, ChevronRight, Dumbbell, Info, Trophy } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
@@ -102,7 +102,7 @@ function ActionDialog({ mode, workout, workoutDate, onClose, onConfirm, onResche
 }
 
 export default function WorkoutRenderOverview({
-  workout, workoutDate, scheduledDates = [], programName, index = 0, total = 0, completedCount = 0,
+  workout, workoutDate, scheduledDates = [], programName, index = 0, total = 0, completedCount = 0, exerciseProgress = [],
   programType = "individual", todayState = "today", missedCount = 0, isTrainerMode, renderBottomBar, onOpen, onViewResult,
   onReschedule, onHistory, onPlan, onProgram, onCreateBasicWorkout, navigation,
   localOnlyPlan = false, pendingSyncCount = 0, onRetrySync
@@ -134,7 +134,7 @@ export default function WorkoutRenderOverview({
         titleTestId="workout-list-title"
         testId="workout-list-header"
         scope="workout-render-header"
-        actions={<button type="button" aria-label="Расписание тренировок" onClick={onPlan}><CalendarDays aria-hidden="true" /></button>}
+        actions={<button type="button" data-testid="workout-plan-button" aria-label="Расписание тренировок" onClick={onPlan}><ListChecks aria-hidden="true" /></button>}
         primary
       />
       <main className={styles.content}>
@@ -155,14 +155,17 @@ export default function WorkoutRenderOverview({
           {pendingSyncCount > 0 && syncRetryState === "pending" && <span>Ожидаем подтверждения облачной записи. Если уведомление остаётся, проверьте интернет и повторите отправку.</span>}
           {pendingSyncCount > 0 && syncRetryState === "error" && <span>Не удалось отправить результаты. Они остаются на устройстве. Проверьте интернет и повторите отправку.</span>}
         </aside>}
-        <div className={`${styles.sectionHead} ${styles.nextWorkoutHeading}`}><h2>{upcoming ? "Следующая тренировка" : "Сегодня"}</h2><button type="button" data-testid="workout-plan-button" onClick={onPlan}>Расписание</button></div>
+        <div className={`${styles.sectionHead} ${styles.nextWorkoutHeading}`}><h2>{upcoming ? "Следующая тренировка" : "Сегодня"}</h2></div>
         <section className={`${styles.workoutCard} ${styles[`state_${todayState}`] || ""}`} data-testid="workout-today-card" data-state={todayState}>
           <div data-testid="workout-list-card">
           <div className={styles.workoutLabel}><span>{programType === "basic" ? "Базовая программа" : "Индивидуальная программа"}</span><small>{todayState === "draft" ? "В процессе" : todayState === "missed" ? "Перенос" : formatWorkoutDateLabel(workoutDate, "Без даты")}</small></div>
           {!completed ? <div className={styles.workoutSummary}><span className={styles.order}>{String(index + 1).padStart(2, "0")}</span><span className={styles.workoutCopy}><strong>{workout?.name || `Тренировка ${index + 1}`}</strong><small>Тренировка {index + 1}</small></span></div> : <h2 className={styles.completedTitle}>{state.title}</h2>}
           {!completed ? <div className={styles.exerciseMeta}><p>{formatRussianCount(exerciseCount, ["упражнение", "упражнения", "упражнений"])}{setCount ? ` · ${formatRussianCount(setCount, ["подход", "подхода", "подходов"])}` : ""}{["today", "draft"].includes(todayState) ? null : <><br />{state.description}</>}</p><StateIcon aria-hidden="true" /></div> : <p className={styles.advice}>{state.description}</p>}
           {todayState === "missed" && missedCount > 1 ? <p className={styles.advice}>Пропущено: {missedCount}. Порядок программы сохраняется.</p> : null}
-          {todayState === "draft" ? <div className={styles.progress} data-testid="workout-list-progress" style={{ "--exercise-count": Math.max(exerciseCount, 1) }} aria-label={`${exerciseCount} упражнений`}>{Array.from({ length: Math.max(exerciseCount, 1) }, (_, itemIndex) => <span key={itemIndex} />)}</div> : null}
+          {todayState === "draft" && exerciseCount > 0 ? <div className={styles.progress} data-testid="workout-list-progress" role="progressbar" aria-valuemin={0} aria-valuemax={exerciseCount} aria-valuenow={exerciseProgress.filter(item => item.completed).length} aria-label="Выполненные упражнения">{Array.from({ length: exerciseCount }, (_, itemIndex) => {
+            const progress = exerciseProgress[itemIndex];
+            return <span key={itemIndex} data-completed={progress?.completed ? "true" : "false"} style={{ "--exercise-progress": `${Math.round((progress?.fraction || 0) * 100)}%` }} />;
+          })}</div> : null}
           <div className={styles.actions}><button className={styles.start} type="button" data-testid="workout-start-button" onClick={handlePrimary}>{state.primary}<ArrowRight aria-hidden="true" /></button>{state.secondary ? <button className={styles.secondary} type="button" onClick={() => setDialogMode("reschedule")}>{state.secondary}</button> : null}</div>
           </div>
         </section>

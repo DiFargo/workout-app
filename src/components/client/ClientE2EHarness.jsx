@@ -1431,6 +1431,7 @@ export default function ClientE2EHarness() {
     return (
       <main data-testid="client-harness-workout-mode">
         <WorkoutModePage
+          basicWorkoutAccessAllowed={true}
           renderClientMainBottomBar={renderBottomBar}
           canUseTrainerFeatures={false}
           onBackToMain={() => setPage("main")}
@@ -2160,6 +2161,7 @@ export default function ClientE2EHarness() {
         />
         <WorkoutModePickerDialog
           open={cabinetWorkoutModeOpen}
+          basicWorkoutAccessAllowed={true}
           workoutModePreference={{ mode: "individual", remember: false }}
           onClose={() => setCabinetWorkoutModeOpen(false)}
           onOpenBasic={() => {
@@ -2400,7 +2402,7 @@ export default function ClientE2EHarness() {
           activeTab="progress"
           renderBottomBar={renderBottomBar}
           showTrainerNotifications={false}
-          onOpenCalendar={() => { setCabinetWorkoutJournalTab("calendar"); setCabinetWorkoutJournalOpen(true); setPage("cabinet"); }}
+          onAddMeasurement={() => setCabinetMeasurementsOpen(true)}
           trainerNotificationCount={0}
           onOpenTrainerNotifications={() => {}}
         />

@@ -350,7 +350,7 @@
 :global(:root[data-app-theme="warm-light"]) .loading {
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-secondary, #617078);
   box-shadow: none;
   font-weight: 500;
@@ -375,7 +375,7 @@
   gap: 10px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
@@ -444,7 +444,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .showMoreCount {
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-action, #396ba6);
 }
 

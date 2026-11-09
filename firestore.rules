@@ -1,5 +1,9 @@
 rules_version = '2';
 
+// users.basicWorkoutAccess: optional boolean, issued/revoked only by an
+// authenticated administrator with the existing role and security-key proof.
+// Missing means no new basic plan. Historical workout reads are unchanged.
+
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() {
@@ -96,6 +100,7 @@ service cloud.firestore {
 
     function protectedUserFields() {
       return [
+        "basicWorkoutAccess",
         "loginLower",
         "email",
         "profileIdentityOperation",
@@ -183,8 +188,39 @@ service cloud.firestore {
 
     function isSafeOwnerUpdate(uid) {
       return isOwner(uid) &&
+        isAllowedBasicProfileUpdate() &&
         !request.resource.data.diff(resource.data).affectedKeys().hasAny(protectedUserFields()) &&
         !request.resource.data.get("accountProfile", {}).diff(resource.data.get("accountProfile", {})).affectedKeys().hasAny(["login", "email"]);
+    }
+
+    function isValidBasicWorkoutAccess(data) {
+      return !data.keys().hasAny(["basicWorkoutAccess"]) || data.basicWorkoutAccess is bool;
+    }
+
+    function isAllowedBasicProfileUpdate() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return resource.data.get("basicWorkoutAccess", false) == true ||
+        (!changed.hasAny(["basicWorkoutPlan"]) &&
+          (!changed.hasAny(["workoutModePreference"]) ||
+            request.resource.data.get("workoutModePreference", {}).get("mode", "") != "basic"));
+    }
+
+    function isBasicWorkoutData(data) {
+      return data.get("source", "") == "basic" || data.keys().hasAny(["basicPlanId"]) ||
+        (data.get("assignedProgramUpdatedAt", "") is string &&
+          data.get("assignedProgramUpdatedAt", "").matches("^basic:.*"));
+    }
+
+    function hasBasicWorkoutGrant(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.get("basicWorkoutAccess", false) == true;
+    }
+
+    function isAllowedOwnerBasicWorkoutUpdate(uid) {
+      return (!isBasicWorkoutData(resource.data) && !isBasicWorkoutData(request.resource.data)) || hasBasicWorkoutGrant(uid) ||
+        (isBasicWorkoutData(resource.data) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            "status", "statusUpdatedAt", "completed", "completedAt", "updatedAt"
+          ]));
     }
 
     // Some profiles created before role-based access did not receive a role or
@@ -1050,7 +1086,9 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
-      allow create: if !request.resource.data.keys().hasAny(adminSecurityKeyFields()) &&
+      allow create: if isValidBasicWorkoutAccess(request.resource.data) &&
+        (!request.resource.data.keys().hasAny(["basicWorkoutAccess", "basicWorkoutPlan"]) || isAdmin()) &&
+        !request.resource.data.keys().hasAny(adminSecurityKeyFields()) &&
         (isAdmin() || isInvitedOwnerCreate(uid) || isOpenRegistrationOwnerCreate(uid) || isTrainerCreatingAssignedClient(uid));
       // A signed-in user may check that their own bootstrap profile is absent
       // before creating a restricted open-registration profile. This grants
@@ -1059,7 +1097,8 @@ service cloud.firestore {
         isPendingClientOwner(uid, resource.data) ||
         (isAuthenticatedOwner(uid) && !exists(/databases/$(database)/documents/users/$(uid)));
       allow list: if isOwnerOrAdmin(uid) || isAssignedTrainerData(resource.data);
-      allow update: if !request.resource.data.diff(resource.data).affectedKeys().hasAny(adminSecurityKeyFields()) &&
+      allow update: if isValidBasicWorkoutAccess(request.resource.data) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(adminSecurityKeyFields()) &&
         (!request.resource.data.diff(resource.data).affectedKeys().hasAny(["subscription"]) || accountingWritesAvailable()) &&
         (isAdmin() || isSafeOwnerUpdate(uid) || isLegacyClientActivation(uid) || isTrainerClientUpdate());
       // Prevent a browser administrator from bypassing enrollment by deleting
@@ -1068,13 +1107,15 @@ service cloud.firestore {
 
       match /workouts/{workoutId} {
         allow read: if isOwnerOrAdmin(uid) || isAssignedTrainer(uid);
-        allow create: if isOwnerOrAdmin(uid) || isTrainerClientProgramDayCreate(uid) || isTrainerOwnedProgramWorkoutCreate(uid);
+        allow create: if isAdmin() || (isOwner(uid) &&
+          (!isBasicWorkoutData(request.resource.data) || hasBasicWorkoutGrant(uid))) ||
+          isTrainerClientProgramDayCreate(uid) || isTrainerOwnedProgramWorkoutCreate(uid);
       // Restore is deliberately checked first. A client program can contain
       // many archived workout documents, restored in one batch. Evaluating
       // the broad edit/archive branches for every document first can exceed
       // Firestore's rule-expression budget and rejects an otherwise valid
       // restore operation.
-      allow update: if isOwnerOrAdmin(uid) || (
+      allow update: if isAdmin() || (isOwner(uid) && isAllowedOwnerBasicWorkoutUpdate(uid)) || (
         isTrainerManagingClientWorkouts(uid) && (
           isTrainerArchivedProgramWorkoutRestoreFields() ||
           isTrainerProgramWorkoutArchiveFields(uid) ||

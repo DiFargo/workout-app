@@ -30,7 +30,7 @@
   color: var(--color-profile-modal);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
-  --gradient-primary: var(--apple-action, #396ba6);
+  --gradient-primary: var(--ownset-action-gradient);
 }
 
 .dialog button { font-family: inherit; }
@@ -69,7 +69,7 @@
 }
 
 .activeTab {
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   box-shadow: none;
   color: var(--apple-text, #1c282e);
 }

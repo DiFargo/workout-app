@@ -25,7 +25,7 @@
   overflow: hidden;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   box-shadow: 0 2px 7px rgba(27, 35, 31, 0.07);
 }
 :global(:root[data-app-theme="warm-light"]) :global([data-testid="basic-workout-exercise-explainer"]) .frame.frame {
@@ -41,7 +41,7 @@
   width: 100%;
   height: 100%;
   border-radius: 16px;
-  background: var(--apple-text, #1c282e);
+  background: #101419;
   object-fit: cover;
 }
 :global(:root[data-app-theme="warm-light"]) .inlineControl.inlineControl {
@@ -100,7 +100,7 @@
   z-index: 4;
   border: 0;
   border-radius: 14px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   font: inherit;
   font-size: 10px;
@@ -330,16 +330,16 @@
 /* Stable square media; its content scrolls independently of the fixed dock. */
 :global(:root[data-app-theme="warm-light"]) .frame.frame {
   width: 100%; max-width: none; height: auto; min-height: 0; max-height: none; aspect-ratio: 1;
-  padding: 0; margin: 0; border: 0; border-radius: 26px; background: #f1eef5; box-shadow: none; overflow: hidden;
+  padding: 0; margin: 0; border: 0; border-radius: 26px; background: #101419; box-shadow: none; overflow: hidden;
 }
 :global(:root[data-app-theme="warm-light"]) .video.video { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; margin: 0; border-radius: 26px; object-fit: contain; }
-:global(:root[data-app-theme="warm-light"]) .fallbackContent.fallbackContent { padding: 0; background: #f1eef5; }
+:global(:root[data-app-theme="warm-light"]) .fallbackContent.fallbackContent { padding: 0; background:var(--client-surface-muted, #f1eef5); }
 .fallbackIllustration.fallbackIllustration { opacity: 1; object-fit: contain; object-position: center; transform: scale(1.12); }
 .fallbackContent.fallbackContent::after { display: none; }
 .fallbackCopy.fallbackCopy { position: absolute; bottom: 12px; right: 12px; max-width: calc(100% - 24px); padding: 7px 10px; border-radius: 20px; background: #fffffff0; }
-.fallbackContent.fallbackContent strong { color: #617078; font-size: 11px; font-weight: 400; line-height: 1.4; }
+.fallbackContent.fallbackContent strong { color: var(--client-secondary, #617078); font-size: 11px; font-weight: 400; line-height: 1.4; }
 .fallbackContent.fallbackContent small { display: none; }
-.fallbackCopy .retryButton { color: #376b91; background: white; font-size: 13px; }
+.fallbackCopy .retryButton { color: var(--client-accent, #376b91); background: var(--client-surface, white); font-size: 13px; }
 :global(:root[data-app-theme="warm-light"]) .frame:has(.fallbackContent) .techniqueButton { top: 12px; left: 12px; right: auto; bottom: auto; font-size: 13px; font-weight: 500; }
 
 /* The glass is confined to the controls, leaving the exercise demonstration clear. */

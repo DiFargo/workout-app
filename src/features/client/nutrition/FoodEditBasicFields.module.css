@@ -500,7 +500,7 @@
   gap: 10px;
   border: 0;
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
@@ -534,7 +534,7 @@
   padding: 10px 12px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 12px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: none;
@@ -569,7 +569,7 @@
   min-height: 44px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: none;
@@ -586,7 +586,7 @@
 :global(:root[data-app-theme="warm-light"]) .macroField { padding: 0; border: 0; border-radius: 0; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .macroTitle { overflow: visible; text-align: left; white-space: normal; }
 :global(:root[data-app-theme="warm-light"]) .macroInput { padding-inline: 4px; border: 0; background: var(--apple-surface-muted, #edf1f3); font-variant-numeric: tabular-nums; }
-:global(:root[data-app-theme="warm-light"]) .portionRow { height: 46px; min-height: 46px; max-height: none; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) 52px; gap: 0; border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12)); border-radius: 12px; background: #fff; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .portionRow { height: 46px; min-height: 46px; max-height: none; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) 52px; gap: 0; border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12)); border-radius: 12px; background: var(--client-surface, #fff); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .portionRow .portionInput { border: 0; background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .portionToggle {
   position: static;
@@ -603,7 +603,7 @@
   font-weight: 600;
 }
 
-:global(:root[data-app-theme="warm-light"]) .validation { border-color: rgba(180, 35, 24, .2); background: #fff5f4; color: #b42318; font-size: 12px; font-weight: 500; }
+:global(:root[data-app-theme="warm-light"]) .validation { border-color: rgba(180, 35, 24, .2); background: #fff5f4; color: var(--client-danger, #b42318); font-size: 12px; font-weight: 500; }
 
 :global(:root[data-app-theme="warm-light"]) .mainSection { grid-template-columns: minmax(0, 1fr) 60px; align-items: end; gap: 10px; }
 :global(:root[data-app-theme="warm-light"]) .mainSection .field { min-width: 0; gap: 6px; }

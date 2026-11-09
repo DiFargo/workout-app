@@ -7,6 +7,7 @@ import MorphingIcon from "../../../shared/ui/MorphingIcon";
 import styles from "./WorkoutListDialogs.module.css";
 import { formatRussianCount } from "../../../utils/russianCount.js";
 import { buildWorkoutHistoryAchievements } from "./workoutHistoryAchievements.js";
+import { useBasicWorkoutAccess } from "./basicWorkoutAccess.js";
 
 function useDismissDialog(open, onClose) {
   useEffect(() => {
@@ -57,12 +58,15 @@ export function WorkoutModePickerDialog({
   open,
   workoutModePreference,
   rememberChoice,
+  basicWorkoutAccessAllowed,
   onClose,
   onOpenBasic,
   onOpenIndividual,
   onRememberChoiceChange
 }) {
   useDismissDialog(open, onClose);
+  const basicAccess = useBasicWorkoutAccess(open && basicWorkoutAccessAllowed === undefined);
+  const basicAllowed = basicWorkoutAccessAllowed ?? basicAccess.allowed;
   if (!open) return null;
   const rememberChecked = Boolean(rememberChoice ?? workoutModePreference?.remember);
 
@@ -111,12 +115,13 @@ export function WorkoutModePickerDialog({
             className={`${styles.option} ${workoutModePreference.mode === "basic" ? styles.optionActive : ""}`}
             data-testid="workout-mode-option"
             aria-pressed={workoutModePreference.mode === "basic"}
+            disabled={!basicAllowed}
             onClick={onOpenBasic}
           >
             <span className={styles.optionIcon} aria-hidden="true"><Dumbbell /></span>
             <div className={styles.optionContent}>
               <strong className={styles.optionTitle}>Базовые тренировки</strong>
-              <small className={styles.optionDescription}>Подбор готовой программы по цели и опыту</small>
+              <small className={styles.optionDescription}>{basicAllowed ? "Подбор готовой программы по цели и опыту" : basicAccess.loading ? "Проверяем доступ…" : "Доступ открывает администратор"}</small>
             </div>
             <i className={styles.optionIndicator} aria-hidden="true">{workoutModePreference.mode === "basic" ? <Check /> : <ChevronRight />}</i>
           </button>

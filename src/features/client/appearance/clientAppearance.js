@@ -3,13 +3,21 @@ import styles from "./ClientAppearance.module.css";
 
 const STORAGE_KEY = "zmena-client-appearance-v1";
 const CHANGE_EVENT = "zmena-client-appearance-change";
-const choices = new Set(["light", "dark", "system"]);
+const choices = new Set(["light", "dark"]);
 let volatilePreference = null;
+
+function resolveLegacyPreference(value) {
+  if (choices.has(value)) return value;
+  if (value !== "system") return "light";
+  const telegram = window.Telegram?.WebApp;
+  const liveTelegram = Boolean(telegram?.initData || (telegram?.platform && telegram.platform !== "unknown"));
+  return (liveTelegram ? telegram.colorScheme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+}
 
 function readPreference() {
   if (volatilePreference) return volatilePreference;
-  try { const value = localStorage.getItem(STORAGE_KEY); return choices.has(value) ? value : "system"; }
-  catch { return "system"; }
+  try { return resolveLegacyPreference(localStorage.getItem(STORAGE_KEY)); }
+  catch { return "light"; }
 }
 
 function subscribe(listener) {
@@ -26,7 +34,7 @@ export function setClientAppearance(value) {
 }
 
 export function useClientAppearancePreference() {
-  return useSyncExternalStore(subscribe, readPreference, () => "system");
+  return useSyncExternalStore(subscribe, readPreference, () => "light");
 }
 
 // Presentation only: no account, role, cloud preference or navigation is changed.
@@ -35,14 +43,14 @@ export function useClientAppearance(active = true) {
     if (!active) return undefined;
     const root = document.documentElement;
     root.classList.add(styles.scope);
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
     const telegram = window.Telegram?.WebApp;
     const liveTelegram = Boolean(telegram?.initData || (telegram?.platform && telegram.platform !== "unknown"));
     let preference = readPreference();
+    // Resolve the retired system choice once; only explicit light/dark remain.
+    try { localStorage.setItem(STORAGE_KEY, preference); } catch { volatilePreference = preference; }
     function apply(event) {
       preference = choices.has(event?.detail) ? event.detail : readPreference();
-      const systemDark = liveTelegram ? telegram.colorScheme === "dark" : media.matches;
-      const dark = preference === "dark" || (preference === "system" && systemDark);
+      const dark = preference === "dark";
       root.dataset.clientAppearance = dark ? "dark" : "light";
       if (liveTelegram && telegram.isVersionAtLeast?.("6.1")) {
         try {
@@ -55,14 +63,12 @@ export function useClientAppearance(active = true) {
     apply();
     window.addEventListener(CHANGE_EVENT, apply);
     window.addEventListener("storage", apply);
-    media.addEventListener("change", apply);
     if (liveTelegram) telegram.onEvent?.("themeChanged", apply);
     return () => {
       delete root.dataset.clientAppearance;
       root.classList.remove(styles.scope);
       window.removeEventListener(CHANGE_EVENT, apply);
       window.removeEventListener("storage", apply);
-      media.removeEventListener("change", apply);
       if (liveTelegram) telegram.offEvent?.("themeChanged", apply);
     };
   }, [active]);

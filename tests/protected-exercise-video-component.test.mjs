@@ -302,7 +302,7 @@ test("a corrupt cached Blob is invalidated and replaced by the signed image, not
   } finally { await browser.close(); }
 });
 
-test("failed or corrupt direct poster exposes preview retry, recovers a fresh image and still starts Play at zero", { timeout: 30000 }, async () => {
+test("failed or corrupt direct poster automatically seeks the chosen frame through a protected video capability", { timeout: 30000 }, async () => {
   const browser = await chromium.launch();
   try {
     for (const status of [404, 403, 200]) {
@@ -320,30 +320,19 @@ test("failed or corrupt direct poster exposes preview retry, recovers a fresh im
       await page.evaluate(() => window.videoIO.resolve("https://signed.test/video.mp4", "https://signed.test/broken.webp"));
       const video = page.getByLabel("Exercise preview");
       await expect.poll(() => imageRequests).toBe(1);
-      const retry = page.getByRole("button", { name: "Повторить загрузку превью", exact: true });
-      await expect(retry).toBeVisible();
-      await expect(video).toHaveAttribute("preload", "none");
-      await expect(video).not.toHaveAttribute("src");
+      await expect(video).toHaveAttribute("data-video-preview-mode", "seek");
+      await expect(video).toHaveAttribute("preload", "metadata");
       assert.equal(imageRequests, 1);
-      const invalidations = await page.evaluate(() => window.videoIO.invalidations);
-      await retry.click();
       await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBeGreaterThan(0);
-      assert.equal(await page.evaluate(() => window.videoIO.invalidations), invalidations + 1);
-      assert.equal(await page.evaluate(() => window.videoIO.requests.every(request => request.options.posterOnly)), true);
-      await page.evaluate(() => window.videoIO.resolve("https://signed.test/video.mp4", "https://signed.test/recovered.webp"));
-      const poster = page.locator("img[data-video-poster]");
-      await expect(poster).toHaveAttribute("src", "https://signed.test/recovered.webp");
-      await expect.poll(() => poster.evaluate(node => node.complete && node.naturalWidth > 0)).toBe(true);
-      await expect(retry).toHaveCount(0);
-      await expect(video).not.toHaveAttribute("src");
-      await expect(video).toHaveAttribute("preload", "none");
-      assert.equal(await page.evaluate(() => window.videoIO.signedCalls.every(call => call.options.posterOnly)), true);
-      await video.evaluate(node => { node.dispatchEvent(new Event("loadstart")); node.dispatchEvent(new Event("loadedmetadata")); });
-      assert.equal(await video.evaluate(node => node.currentTime), 0);
-      await video.evaluate(node => { void node.play(); });
-      await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBeGreaterThan(0);
-      await page.evaluate(() => window.videoIO.resolve("https://signed.test/video.mp4"));
+      assert.equal(await page.evaluate(() => window.videoIO.requests.every(request => request.options.posterOnly === undefined)), true);
+      await page.evaluate(() => window.videoIO.resolve("https://signed.test/video.mp4", "https://signed.test/broken.webp"));
       await expect(video).toHaveAttribute("src", "https://signed.test/video.mp4");
+      await expect(page.locator("img[data-video-poster]")).toHaveCount(0);
+      await video.evaluate(node => { node.dispatchEvent(new Event("loadstart")); node.dispatchEvent(new Event("loadedmetadata")); });
+      assert.equal(await video.evaluate(node => node.currentTime), 12);
+      assert.equal(await video.evaluate(node => node.paused), true);
+      assert.equal(await page.evaluate(() => window.videoIO.playCalls), 0);
+      await video.evaluate(node => node.play());
       assert.equal(await video.evaluate(node => node.currentTime), 0);
       assert.equal(await page.evaluate(() => window.videoIO.errors), 0, "poster failure must not mark the playable video as failed");
       await page.close();
@@ -351,7 +340,7 @@ test("failed or corrupt direct poster exposes preview retry, recovers a fresh im
   } finally { await browser.close(); }
 });
 
-test("a missing API poster exposes preview retry and can recover without signing or loading video in advance", { timeout: 30000 }, async () => {
+test("a newly selected moment without a prebuilt API poster recovers its exact paused frame and first Play starts at zero", { timeout: 30000 }, async () => {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage();
@@ -363,27 +352,49 @@ test("a missing API poster exposes preview retry and can recover without signing
     await expect(video).toHaveAttribute("preload", "none");
     await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBeGreaterThan(0);
     await page.evaluate(() => window.videoIO.resolve("https://signed.test/legacy.mp4", ""));
-    await expect(video).toHaveAttribute("preload", "none");
+    await expect(video).toHaveAttribute("preload", "metadata");
     await expect(video).not.toHaveAttribute("poster");
-    const retry = page.getByRole("button", { name: "Повторить загрузку превью", exact: true });
-    await expect(retry).toBeVisible();
-    await expect(video).not.toHaveAttribute("src");
-    await retry.click();
+    await expect(video).toHaveAttribute("data-video-preview-mode", "seek");
     await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBeGreaterThan(0);
-    assert.equal(await page.evaluate(() => window.videoIO.invalidations), 1);
-    await page.evaluate(() => window.videoIO.resolve("https://signed.test/legacy.mp4", "https://signed.test/legacy-recovered.webp"));
-    await expect(page.locator("img[data-video-poster]")).toHaveAttribute("src", "https://signed.test/legacy-recovered.webp");
-    await expect.poll(() => page.locator("img[data-video-poster]").evaluate(node => node.complete && node.naturalWidth > 0)).toBe(true);
-    await expect(retry).toHaveCount(0);
-    await expect(video).not.toHaveAttribute("src");
-    await expect(video).toHaveAttribute("preload", "none");
-    assert.equal(await page.evaluate(() => window.videoIO.signedCalls.every(call => call.options.posterOnly)), true);
-    await video.evaluate(node => node.dispatchEvent(new Event("loadedmetadata")));
-    assert.equal(await video.evaluate(node => node.currentTime), 0);
-    await video.evaluate(node => { void node.play(); });
-    await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBeGreaterThan(0);
+    assert.equal(await page.evaluate(() => window.videoIO.requests.every(request => request.options.posterOnly === undefined)), true);
     await page.evaluate(() => window.videoIO.resolve("https://signed.test/legacy.mp4"));
     await expect(video).toHaveAttribute("src", "https://signed.test/legacy.mp4");
+    await expect(page.getByRole("button", { name: "Повторить загрузку превью", exact: true })).toHaveCount(0);
+    await video.evaluate(node => node.dispatchEvent(new Event("loadedmetadata")));
+    assert.equal(await video.evaluate(node => node.currentTime), 12);
+    assert.equal(await video.evaluate(node => node.paused), true);
+    await video.evaluate(node => node.play());
     assert.equal(await video.evaluate(node => node.currentTime), 0);
+    await video.evaluate(node => { node.currentTime = 25; node.pause(); node.play(); });
+    assert.equal(await video.evaluate(node => node.currentTime), 25, "resuming real playback must not seek to the preview again");
+  } finally { await browser.close(); }
+});
+
+test("missing-poster fallback does not bypass denied access and a same-UID new session discards its late URL", { timeout: 30000 }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage();
+    await page.setContent('<main id="root"></main>');
+    await page.addScriptTag({ content: generated.output[0].code });
+    await page.evaluate(() => window.ProtectedVideoProbe.mount("gs://app/new-moment.mp4", 7.9, { preferPoster: true }));
+    const video = page.getByLabel("Exercise preview");
+    await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBeGreaterThan(0);
+    await page.evaluate(() => window.videoIO.resolve("", ""));
+    await expect(video).toHaveAttribute("data-video-preview-mode", "seek");
+    await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBe(1);
+    await page.evaluate(() => window.videoIO.reject());
+    await expect(page.getByRole("alert")).toContainText("Подпись временно недоступна");
+    await expect(video).not.toHaveAttribute("src");
+    await page.getByRole("button", { name: "Повторить загрузку", exact: true }).click();
+    await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBe(1);
+    await page.evaluate(() => {
+      window.lateFallback = window.videoIO.requests.shift();
+      window.videoIO.changeSession();
+    });
+    await expect.poll(() => page.evaluate(() => window.videoIO.requests.length)).toBeGreaterThan(0);
+    await page.evaluate(() => window.lateFallback.resolve({ url: "https://signed.test/old-session.mp4", expiresAt: Date.now() + 40000 }));
+    await expect(video).not.toHaveAttribute("src");
+    await expect(video).toHaveAttribute("preload", "none");
+    assert.equal(await page.evaluate(() => window.videoIO.playCalls), 0);
   } finally { await browser.close(); }
 });

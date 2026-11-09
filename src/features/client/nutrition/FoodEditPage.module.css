@@ -648,7 +648,7 @@
   min-height: 44px;
   border: 0;
   border-radius: 50%;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
@@ -667,7 +667,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .content::-webkit-scrollbar { display: none; }
 
-:global(:root[data-app-theme="warm-light"]) .noteField { margin: 0; padding: 12px; gap: 6px; border-radius: 18px; background: #fff; color: var(--apple-text, #1c282e); backdrop-filter: none; -webkit-backdrop-filter: none; }
+:global(:root[data-app-theme="warm-light"]) .noteField { margin: 0; padding: 12px; gap: 6px; border-radius: 18px; background: var(--client-surface, #fff); color: var(--apple-text, #1c282e); backdrop-filter: none; -webkit-backdrop-filter: none; }
 :global(:root[data-app-theme="warm-light"]) .noteLabel { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-size: 12px; font-weight: 500; text-transform: none; }
 :global(:root[data-app-theme="warm-light"]) .noteInput {
   height: 64px;
@@ -675,7 +675,7 @@
   padding: 8px 10px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 12px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   caret-color: var(--apple-action, #396ba6);
   -webkit-text-fill-color: var(--apple-text, #1c282e);
@@ -702,7 +702,7 @@
   border: 0;
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-secondary, #617078);
   box-shadow: none;
   transform: none;
@@ -744,8 +744,8 @@
 :global(:root[data-app-theme="warm-light"]) .confirmAction:not(:disabled) {
   border: 0;
   background: var(--ownset-action-gradient);
-  color: #fff;
-  -webkit-text-fill-color: #fff;
+  color: var(--client-action-ink, #fff);
+  -webkit-text-fill-color: var(--client-action-ink, #fff);
   box-shadow: none;
 }
 

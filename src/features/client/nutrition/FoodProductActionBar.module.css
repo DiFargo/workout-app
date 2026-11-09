@@ -144,7 +144,7 @@
   border: 0;
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   color: var(--apple-secondary, #617078);
   box-shadow: none;
   backdrop-filter: none;
@@ -170,4 +170,4 @@
 :global(:root[data-app-theme="warm-light"]) .button > span svg { width: 20px; height: 20px; }
 :global(:root[data-app-theme="warm-light"]) .add,
 :global(:root[data-app-theme="warm-light"]) .add:hover,
-:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: var(--ownset-action-gradient); color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .add:active { border: 0; background: var(--ownset-action-gradient); color: var(--client-action-ink, #fff); }

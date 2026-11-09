@@ -240,6 +240,7 @@
 
 .embedded {
   padding-top: 0;
+  --client-header-background:var(--client-sheet-background);
 }
 
 .embeddedFrame {
@@ -339,7 +340,7 @@
   }
 }
 
-:global(html[data-client-appearance]) .root.primary:not(.embedded) { padding-top:8px; padding-bottom:12px; background:var(--client-header-background); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+:global(html[data-client-appearance]) .root.primary:not(.embedded) { padding-top:max(8px, env(safe-area-inset-top, 0px)); padding-bottom:12px; background:var(--client-header-background); backdrop-filter:none; -webkit-backdrop-filter:none; }
 :global(html[data-client-appearance]) .root.primary:not(.embedded) .bar { height:50px; min-height:50px; }
 :global(html[data-client-appearance]) .root.primary .title { font-size:32px; font-weight:700; letter-spacing:-.8px; line-height:1.15; }
 :global(html[data-client-appearance]) .root.primary .actions button { border:1px solid var(--client-round-border); background:var(--client-round-surface); box-shadow:var(--client-round-shadow); color:var(--client-round-ink); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }

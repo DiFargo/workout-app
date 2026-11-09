@@ -436,7 +436,7 @@ test("basic offline completion persists the shifted calendar and profile plan in
   const plan = { source: "basic", basicPlanId: "basic-test", workouts: [day("one", "2026-09-01"), day("two", "2026-09-03")] };
   await testEnv.withSecurityRulesDisabled(async (context) => {
     const db = context.firestore();
-    await setDoc(doc(db, "users/client-1"), { role: "client", basicWorkoutPlan: plan });
+    await setDoc(doc(db, "users/client-1"), { role: "client", basicWorkoutAccess: true, basicWorkoutPlan: plan });
     for (const item of plan.workouts) await setDoc(doc(db, "users/client-1/workouts", item.id), item);
   });
   const db = testEnv.authenticatedContext("client-1").firestore();
@@ -632,6 +632,7 @@ test("client can save their own basic plan without changing trainer assignment f
     await setDoc(doc(context.firestore(), "users", "client-1"), {
       role: "client",
       assignedProgramId: "trainer-program",
+      basicWorkoutAccess: true,
       assignedWorkoutCount: 8
     });
   });

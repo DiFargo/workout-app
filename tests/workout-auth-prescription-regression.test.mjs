@@ -380,10 +380,23 @@ test("basic completion preserves the independently assigned trainer calendar", a
   const basic = { id: "basic-1", basicPlanId: "basic-1", source: "basic", workouts: [{ ...assignedPlan().workouts[0], source: "basic", assignedProgramId: "", scheduledDate: "2026-10-10" }] };
   const otherSlot = { workoutId: "trainer-other", assignedProgramId: "program-b", assignedProgramAddedAt: "assignment-b", date: "2026-10-22", order: 1, status: "planned", coachNote: "keep" };
   const calendar = { planRevision: 7, scheduledDates: ["2026-10-10", "2026-10-22"], plannedWorkouts: [{ workoutId: "day-a", date: "2026-10-10", order: 1, status: "planned" }, otherSlot] };
-  transact = async callback => callback({ ...transaction(), get: async ref => ref.path === "users/a" ? { exists: () => true, data: () => ({ basicWorkoutPlan: basic, workoutCalendar: calendar }) } : { exists: () => false, data: () => ({}) } });
+  transact = async callback => callback({ ...transaction(), get: async ref => ref.path === "users/a" ? { exists: () => true, data: () => ({ basicWorkoutAccess: true, basicWorkoutPlan: basic, workoutCalendar: calendar }) } : { exists: () => false, data: () => ({}) } });
   await persistWorkoutCompletion({ db: {}, uid: "a", entry: { clientSaveId: "basic-save", finishedAt: "2026-10-10T12:00:00Z" }, completion: { plan: basic, workout: basic.workouts[0] } });
   const saved = writes.find(item => item.path === "users/a").data.workoutCalendar;
   assert.deepEqual(saved.plannedWorkouts.find(slot => slot.workoutId === "trainer-other"), otherSlot);
   assert.ok(saved.scheduledDates.includes("2026-10-22"));
   assert.equal(saved.planRevision, 8);
+});
+
+test("revoked basic access preserves an in-flight result without advancing its plan or calendar", async () => {
+  const basic = { id: "basic-1", basicPlanId: "basic-1", source: "basic", workouts: [{ ...assignedPlan().workouts[0], source: "basic", assignedProgramId: "" }] };
+  transact = async callback => callback({ ...transaction(), get: async ref => ref.path === "users/a"
+    ? { exists: () => true, data: () => ({ basicWorkoutAccess: false, basicWorkoutPlan: basic }) }
+    : { exists: () => false, data: () => ({}) } });
+  const result = await persistWorkoutCompletion({ db: {}, uid: "a", entry: { clientSaveId: "revoked-basic-save", finishedAt: "2026-10-10T12:00:00Z" }, completion: { plan: basic, workout: basic.workouts[0] } });
+  assert.equal(result.saved, true);
+  assert.equal(result.plan, null);
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].path, "users/a/history/revoked-basic-save");
+  assert.equal(writes[0].data.completionApplied, true);
 });

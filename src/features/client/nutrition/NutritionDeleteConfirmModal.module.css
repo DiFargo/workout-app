@@ -151,7 +151,7 @@
   padding: 22px 18px 18px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
@@ -161,4 +161,4 @@
 :global(:root[data-app-theme="warm-light"]) .title { color: var(--apple-text, #1c282e); font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .description { color: var(--apple-secondary, #617078); font-weight: 450; }
 :global(:root[data-app-theme="warm-light"]) .actionButton { min-height: 50px; border: 0; border-radius: 16px; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-text, #1c282e); font-weight: 600; }
-:global(:root[data-app-theme="warm-light"]) .dangerAction { background: #b36e72; color: #fff; }
+:global(:root[data-app-theme="warm-light"]) .dangerAction { background: #b36e72; color: var(--client-text, #fff); }

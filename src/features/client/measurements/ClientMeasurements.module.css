@@ -87,7 +87,7 @@
 
 .adminClientMeasurementsHead h3 {
   margin: 0;
-  color: #fff;
+  color: var(--client-text, #fff);
   font-size: 22px;
   font-weight: 950;
   line-height: 1.05;
@@ -143,7 +143,7 @@
 }
 
 .adminClientMeasurementItem strong {
-  color: #fff;
+  color: var(--client-text, #fff);
   font-size: 23px;
   font-weight: 950;
   line-height: 1;

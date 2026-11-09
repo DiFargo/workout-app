@@ -5638,7 +5638,7 @@ function TrainerClientDetail({
       ) : null}
 
       {actionsOpen ? (
-        <TrainerClientActionsSheet clientName={name} archived={client.archived} isTest={client.isTest} canDeleteClient={canDeleteClient} showSchedule={isTrainerV2Path(window.location.pathname)} status={programStatus} onAction={runClientAction} onClose={() => setActionsOpen(false)} />
+        <TrainerClientActionsSheet clientName={name} archived={client.archived} isTest={client.isTest} canDeleteClient={canDeleteClient} basicWorkoutAccess={client.basicWorkoutAccess === true} showSchedule={isTrainerV2Path(window.location.pathname)} status={programStatus} onAction={runClientAction} onClose={() => setActionsOpen(false)} />
       ) : null}
       {setupWizardOpen ? (
         <TrainerClientSetupFlowModal

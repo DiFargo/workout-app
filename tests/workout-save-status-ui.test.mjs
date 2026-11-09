@@ -21,12 +21,15 @@ const bundle = await rolldown({
         import {flushSync} from 'react-dom';
         import Finish from ${JSON.stringify(source("features/client/workouts/WorkoutFinishStage.jsx"))};
         import Overview from ${JSON.stringify(source("features/client/workouts/WorkoutRenderOverview.jsx"))};
+        import Summary from ${JSON.stringify(source("features/client/profile/ProfileSummaryDashboard.jsx"))};
         import {buildWorkoutFinishSummary} from ${JSON.stringify(source("domain/workoutPresentation.js"))};
         const root=createRoot(document.getElementById('root'));
         let finish={completedExercisesCount:1,exerciseCount:1,finishPresentation:{day:'День 1'},
           finishStats:[],incompleteExerciseNames:[],workoutClientComment:'',isSaving:false,isWorkoutSaved:false};
         let overview={workout:{name:'День 1',exercises:[]},renderBottomBar:()=>null,pendingSyncCount:2,localOnlyPlan:true};
-        window.workoutUi={saveCalls:0,retryCalls:0,retries:[],rescheduleCalls:[],reschedules:[],unhandled:[]};
+        window.workoutUi={openCalls:0,planCalls:0,saveCalls:0,retryCalls:0,retries:[],rescheduleCalls:[],reschedules:[],unhandled:[]};
+        window.workoutUi.summary=()=>flushSync(()=>root.render(<Summary workoutTitle="Тренировка 6"
+          exerciseCount={7} workoutActionLabel="Открыть тренировку" onOpenWorkout={()=>window.workoutUi.openCalls++}/>));
         window.addEventListener('unhandledrejection',event=>{
           window.workoutUi.unhandled.push(String(event.reason));event.preventDefault();
         });
@@ -38,7 +41,8 @@ const bundle = await rolldown({
         };
         window.workoutUi.overview=patch=>{
           overview={...overview,...patch};
-          flushSync(()=>root.render(<Overview {...overview} onRetrySync={()=>{
+          flushSync(()=>root.render(<Overview {...overview} onOpen={()=>window.workoutUi.openCalls++}
+            onPlan={()=>window.workoutUi.planCalls++} onRetrySync={()=>{
             window.workoutUi.retryCalls++;
             return new Promise((resolve,reject)=>window.workoutUi.retries.push({resolve,reject}));
           }} onReschedule={date=>{
@@ -63,6 +67,32 @@ async function openProbe(browser) {
   await page.addScriptTag({ content: generated.output[0].code });
   return page;
 }
+
+test("карточка главной — одна доступная кнопка, а обзор показывает реальное выполнение и единственный вход в расписание", { timeout: 30000 }, async () => {
+  const browser = await chromium.launch();
+  try {
+    const page = await openProbe(browser);
+    await page.evaluate(() => window.workoutUi.summary());
+    const heroAction = page.getByRole("button", { name: "Открыть тренировку: Тренировка 6", exact: true });
+    await heroAction.click();
+    await heroAction.focus();
+    await page.keyboard.press("Enter");
+    assert.equal(await page.evaluate(() => window.workoutUi.openCalls), 2);
+    assert.equal(await heroAction.locator("button").count(), 0, "интерактивные кнопки не вложены друг в друга");
+    await page.evaluate(() => window.workoutUi.overview({ todayState: "draft", workout: { exercises: [{}, {}, {}] },
+      exerciseProgress: [{ completed: true, fraction: 1 }, { completed: false, fraction: .5 }, { completed: false, fraction: 0 }] }));
+    const progress = page.getByRole("progressbar", { name: "Выполненные упражнения", exact: true });
+    assert.equal(await progress.getAttribute("aria-valuenow"), "1");
+    assert.equal(await progress.getAttribute("aria-valuemax"), "3");
+    assert.equal(await progress.locator('[data-completed="true"]').count(), 1);
+    assert.equal(await progress.locator("span").nth(1).evaluate(node => node.style.getPropertyValue("--exercise-progress")), "50%");
+    const schedule = page.getByRole("button", { name: "Расписание тренировок", exact: true });
+    assert.equal(await schedule.count(), 1);
+    assert.equal(await page.getByRole("button", { name: "Расписание", exact: true }).count(), 0);
+    await schedule.click();
+    assert.equal(await page.evaluate(() => window.workoutUi.planCalls), 1);
+  } finally { await browser.close(); }
+});
 
 test("экран завершения различает ожидание, локальное сохранение, подтверждённое облако и отказ", { timeout: 30000 }, async () => {
   const browser = await chromium.launch();

@@ -285,7 +285,7 @@
   border: 0;
   border-radius: 16px;
   background: var(--ownset-action-gradient, var(--apple-action, #3f73b8));
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   font-size: 16px;
   font-weight: 600;
   box-shadow: none;

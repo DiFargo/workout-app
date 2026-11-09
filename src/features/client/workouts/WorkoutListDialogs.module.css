@@ -618,7 +618,7 @@
   grid-template-columns: 44px minmax(0, 1fr) 20px;
   gap: 11px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid transparent;
   border-radius: 18px;
 }
@@ -632,7 +632,7 @@
   width: 44px;
   height: 44px;
   color: var(--apple-action, #396ba6);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border-radius: 14px;
   font-size: 16px;
   font-weight: 750;
@@ -662,7 +662,7 @@
   margin-top: 10px;
   padding: 0 12px;
   color: var(--apple-secondary, #617078);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 0;
   border-radius: 16px;
   font-size: 12px;
@@ -697,12 +697,12 @@
 :global(:root[data-app-theme="warm-light"]) .planSummaryIcon.planSummaryIcon,
 :global(:root[data-app-theme="warm-light"]) .planOrder.planOrder {
   color: var(--apple-action, #396ba6);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
 }
 
 :global(:root[data-app-theme="warm-light"]) .planItem.planItem {
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
@@ -713,7 +713,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .programWorkout.programWorkout {
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border-color: var(--apple-separator, rgba(57, 82, 91,.12));
 }
 
@@ -744,7 +744,7 @@
   min-height: 62px;
   padding: 9px 10px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 0;
   border-radius: 16px;
 }
@@ -771,7 +771,7 @@
 :global(:root[data-app-theme="warm-light"]) .historyAllButton.historyAllButton {
   min-height: 48px;
   margin-top: 10px;
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
@@ -885,7 +885,7 @@
   border: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 17px;
   color: var(--apple-text, #1c1c1e);
-  background: #fff;
+  background: var(--client-surface, #fff);
 }
 
 .historyStats svg { color: var(--apple-secondary, #636366); }
@@ -907,7 +907,7 @@
   border: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 17px;
   color: var(--apple-text, #1c1c1e);
-  background: #fff;
+  background: var(--client-surface, #fff);
 }
 
 .historyHighlights small { color: var(--apple-secondary, #636366); font-size: 11px; line-height: 1.35; }
@@ -931,7 +931,7 @@
   border: 1px solid var(--apple-separator, rgba(60, 60, 67, .12));
   border-radius: 17px;
   color: var(--apple-text, #1c1c1e);
-  background: #fff;
+  background: var(--client-surface, #fff);
 }
 
 .historyLoadNotice strong { font-size: 14px; font-weight: 650; line-height: 1.35; }
@@ -942,7 +942,7 @@
   padding: 10px 14px;
   border: 0;
   border-radius: 13px;
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   background: var(--ownset-action-gradient);
   font: inherit;
   font-size: 13px;

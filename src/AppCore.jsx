@@ -1991,6 +1991,7 @@ function AppRuntime() {
     setIndividualWorkoutIndexInitialized,
     setPlan,
     setPage,
+    onBasicAccessDenied: (message) => showAppError("load", message),
     loadWorkoutsFromFirebase
   });
 
@@ -2271,6 +2272,7 @@ function AppRuntime() {
     workoutDraftRestorePrompt,
     workoutOpenContextRef,
     onDraftReadError: () => showAppError("load", "Не удалось проверить сохранённую тренировку на устройстве. Попробуй открыть её ещё раз. Черновик не удалён."),
+    onBasicAccessDenied: (message) => showAppError("load", message),
     loadHistory,
     loadWorkoutsFromFirebase,
     setPlan,

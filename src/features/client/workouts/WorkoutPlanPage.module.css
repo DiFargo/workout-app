@@ -70,7 +70,7 @@
     min-height: 78px;
     padding: 8px;
     color: var(--apple-text, #1c282e);
-    background: #ffffff;
+    background: var(--client-surface, #ffffff);
     border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 22px;
     box-shadow: none;
@@ -109,12 +109,12 @@
 
   :global(:root[data-app-theme="warm-light"]) .microcycleTabs button.activeMicrocycleTab {
     color: var(--apple-blue-pressed, #315f91);
-    background: #ffffff;
+    background: var(--client-surface, #ffffff);
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week {
     overflow: hidden;
-    background: #ffffff;
+    background: var(--client-surface, #ffffff);
     border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 22px;
   }
@@ -138,7 +138,7 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button:active {
-    background: #ffffff;
+    background: var(--client-surface, #ffffff);
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button small,
@@ -170,7 +170,7 @@
   }
 
   :global(:root[data-app-theme="warm-light"]) .week.week button.completed > i {
-    color: #ffffff;
+    color: var(--client-text, #ffffff);
     background: #708d79;
     border: 0;
   }
@@ -180,7 +180,7 @@
     padding: 28px 22px;
     gap: 7px;
     color: var(--apple-text, #1c282e);
-    background: #ffffff;
+    background: var(--client-surface, #ffffff);
     border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 24px;
   }
@@ -323,7 +323,7 @@
     min-height: 40px;
     margin-top: 7px;
     padding: 8px 13px;
-    color: #fff;
+    color: var(--client-text, #fff);
     font: inherit;
     font-size: 12px;
     font-weight: 750;

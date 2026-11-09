@@ -1,5 +1,5 @@
-import { ChevronDown, Flame, RefreshCw } from "lucide-react";
-import { CalendarDays, Camera, Mic, Plus } from "../../../shared/ui/ClientReferenceIcon.jsx";
+import { Flame, RefreshCw } from "lucide-react";
+import { Camera, Mic, Plus } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./NutritionOrbit.module.css";
 import NutritionVoiceModal from "./NutritionVoiceModal";
@@ -59,7 +59,6 @@ export default function NutritionOrbit({
   saveStatus,
   streakText,
   onAdd,
-  onOpenCalendar,
   onPhotoSearch,
   voiceEnabled = false,
   voiceState = "idle",
@@ -159,12 +158,7 @@ export default function NutritionOrbit({
     const isSelectedToday = !dateKey || dateKey === todayKey;
     return <>
       <div className={styles.dateToolbar}>
-        <button type="button" className={styles.dateButton} data-testid="nutrition-orbit-calendar"
-          onClick={onOpenCalendar} aria-label="Открыть календарь питания" aria-haspopup="dialog">
-          <CalendarDays aria-hidden="true" />
-          <span data-testid="nutrition-selected-date">{isSelectedToday ? "Сегодня" : formatSelectedDate(dateKey, dateTitle)}{isSelectedToday && dateKey ? ` · ${formatSelectedDate(dateKey, dateTitle)}` : ""}</span>
-          <ChevronDown aria-hidden="true" />
-        </button>
+        {!isSelectedToday && <span className={styles.selectedDate} data-testid="nutrition-selected-date">{formatSelectedDate(dateKey, dateTitle)}</span>}
         {saveStatus}
       </div>
       <section className={styles.renderEnergy} data-testid="nutrition-orbit">

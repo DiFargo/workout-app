@@ -115,7 +115,7 @@
   align-items: center;
   gap: 12px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 22px;
   box-shadow: var(--ios-glass-shadow, none);
@@ -124,7 +124,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .card.card:active {
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   transform: scale(0.99);
 }
 
@@ -163,7 +163,7 @@
   margin-top: 12px;
   padding: 0 14px;
   color: var(--apple-secondary, #617078);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   box-shadow: none;

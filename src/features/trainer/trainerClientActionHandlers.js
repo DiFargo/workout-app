@@ -237,6 +237,23 @@ export async function handleTrainerClientActionWithDeps({
   }
 
   try {
+    if (action === "grant_basic_access" || action === "revoke_basic_access") {
+      if (!canUseAdminFeatures() || (client.role && client.role !== "client")) {
+        setAdminClientStatus("Только администратор может менять доступ клиента к базовым тренировкам.");
+        return false;
+      }
+      const allowed = action === "grant_basic_access";
+      const confirmed = await showAppConfirm(allowed
+        ? "Разрешить клиенту базовые тренировки «Сейчас» и «На месяц»? Индивидуальная программа не изменится."
+        : "Отключить базовые тренировки? История и индивидуальная программа сохранятся.");
+      if (!confirmed) return false;
+      const patch = { basicWorkoutAccess: allowed, updatedAt: new Date().toISOString() };
+      await setDoc(doc(db, "users", client.id), patch, { merge: true });
+      setUsersList(items => items.map(item => item.id === client.id ? { ...item, ...patch } : item));
+      setAdminSelectedClient(item => item?.id === client.id ? { ...item, ...patch } : item);
+      setAdminClientStatus(allowed ? "Доступ к базовым тренировкам открыт." : "Доступ к базовым тренировкам отключён. История сохранена.");
+      return true;
+    }
     if (action === "mark_test" || action === "mark_real") {
       const patch = { isTest: action === "mark_test", updatedAt: new Date().toISOString() };
       await setDoc(doc(db, "users", client.id), patch, { merge: true });

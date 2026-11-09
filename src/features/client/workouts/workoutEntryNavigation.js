@@ -4,6 +4,7 @@ import {
 } from "../../../utils/userScopedStorage.js";
 import { doc, setDoc } from "firebase/firestore";
 import { hasSavedWorkoutPlanForMode, isWorkoutPlanForMode } from "../../../utils/workoutPlanMode.js";
+import { verifyBasicWorkoutAccess } from "../../../utils/basicWorkoutAccessClient.js";
 
 export function createWorkoutEntryNavigation({
   APP_PAGES,
@@ -23,6 +24,8 @@ export function createWorkoutEntryNavigation({
   setIndividualWorkoutIndexInitialized,
   setPlan,
   setPage,
+  onBasicAccessDenied = () => {},
+  verifyBasicAccess = verifyBasicWorkoutAccess,
   loadWorkoutsFromFirebase
 }) {
   function saveWorkoutModePreference(mode, remember = workoutModeRemember) {
@@ -87,7 +90,9 @@ export function createWorkoutEntryNavigation({
     }
   }
 
-  function openSavedBasicWorkoutsOrQuiz() {
+  async function openSavedBasicWorkoutsOrQuiz() {
+    try { await verifyBasicAccess({ auth, db }); }
+    catch (error) { onBasicAccessDenied(error.message); return false; }
     saveWorkoutModePreference("basic", workoutModeRemember);
     const currentUserId = (auth.currentUser || user)?.uid;
     const cachedBasicPlan = currentUserId && BASIC_WORKOUT_PLAN_STORAGE_KEY
@@ -119,22 +124,25 @@ export function createWorkoutEntryNavigation({
         console.warn("Background basic workouts refresh error", error);
       });
     }
+    return true;
   }
 
-  function openBasicWorkoutQuiz() {
+  async function openBasicWorkoutQuiz() {
+    try { await verifyBasicAccess({ auth, db }); }
+    catch (error) { onBasicAccessDenied(error.message); return false; }
     saveWorkoutModePreference("basic", workoutModeRemember);
     setSelectedWorkoutId(null);
     setPage(APP_PAGES.BASIC_WORKOUT_QUIZ);
   }
 
-  function openTrainingEntry() {
+  async function openTrainingEntry() {
     const currentUser = auth.currentUser || user;
     const savedPreference = currentUser?.uid
       ? safeReadUserJsonStorage(WORKOUT_MODE_STORAGE_KEY, currentUser.uid, workoutModePreference)
       : workoutModePreference;
 
     if (savedPreference?.mode === "basic") {
-      openSavedBasicWorkoutsOrQuiz();
+      if (!await openSavedBasicWorkoutsOrQuiz()) openIndividualWorkouts();
       return;
     }
 

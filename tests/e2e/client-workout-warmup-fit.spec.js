@@ -71,7 +71,7 @@ test('warmup refits live and keeps step confirmation, presets, timer and start n
   await expect(card).toContainText('5:00');
   await page.getByRole('button', { name: 'Начать тренировку', exact: true }).click();
   await expect(page.getByTestId('workout-exercise-set-row')).toHaveCount(1);
-  await expect(page.getByTestId('workout-primary-action')).toHaveAccessibleName('Подход выполнен');
+  await expect(page.getByTestId('workout-primary-action')).toHaveAccessibleName('Завершить подход');
   await page.getByRole('button', { name: 'Предыдущее упражнение', exact: true }).click();
   await expectWarmupFits(page);
   assertNoErrors();

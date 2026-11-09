@@ -94,7 +94,7 @@
   padding: 14px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: none;
 }

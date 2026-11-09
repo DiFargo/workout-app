@@ -8,11 +8,15 @@ const source = (await readFile(new URL("../src/features/client/workouts/workoutO
   .replace(/^import[\s\S]*?;\r?\n/gm, "")
   .replace("export function createWorkoutOpenHandlers", "function createWorkoutOpenHandlers");
 
-function setup({ rejected = false, offline = false, workoutDraftRestorePrompt = null } = {}) {
+function setup({ rejected = false, offline = false, accessDenied = false, workoutDraftRestorePrompt = null } = {}) {
   const events = [];
   const nextPlan = { id: "new-plan", workouts: [{ id: "new-workout", exercises: [] }] };
   const factory = vm.runInNewContext(`${source}\ncreateWorkoutOpenHandlers`, {
     buildBasicWorkoutPlanFromQuiz: () => nextPlan,
+    verifyBasicWorkoutAccess: async () => {
+      if (accessDenied) throw new Error("basic_workout_access_required");
+      return true;
+    },
     syncWorkoutCalendarWithPlan: () => ({}),
     doc: (...parts) => parts,
     writeBatch: () => ({
@@ -83,5 +87,15 @@ test("failed or offline saves never navigate or open a workout", async () => {
       assert.equal((await handlers.applyBasicWorkoutPlan({}, { startWorkout })).cloudSaved, false);
       assert.equal(events.some(([key]) => key.startsWith("set")), false);
     }
+  }
+});
+
+test("missing admin grant prevents basic plan saving and start without changing the assigned plan", async () => {
+  for (const startWorkout of [false, true]) {
+    const { handlers, events } = setup({ accessDenied: true });
+    const result = await handlers.applyBasicWorkoutPlan({}, { startWorkout });
+    assert.equal(result.cloudSaved, false);
+    assert.equal(result.error.message, "basic_workout_access_required");
+    assert.deepEqual(events, []);
   }
 });

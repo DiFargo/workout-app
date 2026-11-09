@@ -18,6 +18,7 @@ function createNavigation(plan) {
       BASIC_WORKOUT_QUIZ: "basicWorkoutQuiz"
     },
     auth: { currentUser: null },
+    verifyBasicAccess: async () => true,
     user: null,
     plan,
     workoutModePreference: { mode: "basic" },
@@ -39,33 +40,33 @@ function createNavigation(plan) {
   };
 }
 
-test("basic entry opens an existing basic plan instead of the generator", () => {
+test("basic entry opens an existing basic plan instead of the generator", async () => {
   const harness = createNavigation({
     source: "basic",
     workouts: [{ id: "basic-1", source: "basic" }]
   });
   try {
-    harness.navigation.openSavedBasicWorkoutsOrQuiz();
+    await harness.navigation.openSavedBasicWorkoutsOrQuiz();
     assert.deepEqual(harness.openedPages, ["workouts"]);
   } finally {
     harness.restoreWindow();
   }
 });
 
-test("basic entry opens today's constructor when no plan is saved", () => {
+test("basic entry opens today's constructor when no plan is saved", async () => {
   const harness = createNavigation({ source: "basic", workouts: [] });
   try {
-    harness.navigation.openSavedBasicWorkoutsOrQuiz();
+    await harness.navigation.openSavedBasicWorkoutsOrQuiz();
     assert.deepEqual(harness.openedPages, ["basicWorkoutToday"]);
   } finally {
     harness.restoreWindow();
   }
 });
 
-test("basic plan settings open the four-week questionnaire", () => {
+test("basic plan settings open the four-week questionnaire", async () => {
   const harness = createNavigation({ source: "basic", workouts: [] });
   try {
-    harness.navigation.openBasicWorkoutQuiz();
+    await harness.navigation.openBasicWorkoutQuiz();
     assert.deepEqual(harness.openedPages, ["basicWorkoutQuiz"]);
   } finally {
     harness.restoreWindow();

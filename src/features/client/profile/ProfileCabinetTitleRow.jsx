@@ -2,7 +2,7 @@ import { RefreshCw } from "lucide-react";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import styles from "./ProfileCabinetTitleRow.module.css";
 import { useState } from "react";
-import { Settings2 } from "../../../shared/ui/ClientReferenceIcon.jsx";
+import { Palette } from "lucide-react";
 import ClientAppearanceSheet from "../appearance/ClientAppearanceSheet.jsx";
 
 export default function ProfileCabinetTitleRow({
@@ -28,7 +28,7 @@ export default function ProfileCabinetTitleRow({
           title={clientAppearance ? "Оформление приложения" : "Обновить данные"}
           onClick={clientAppearance ? () => setAppearanceOpen(true) : onRefresh}
         >
-          {clientAppearance ? <Settings2 /> : <RefreshCw aria-hidden="true" />}
+          {clientAppearance ? <Palette aria-hidden="true" /> : <RefreshCw aria-hidden="true" />}
         </button>
       )}
     />{appearanceOpen && <ClientAppearanceSheet onClose={() => setAppearanceOpen(false)} onRefresh={onRefresh} />}</>

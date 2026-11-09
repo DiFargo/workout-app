@@ -37,7 +37,7 @@
 
 :global(html[data-client-appearance]) .root .profileCard { padding:20px; border-radius:22px; gap:14px; background:var(--client-profile-surface); box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .accountRow { gap:14px; min-height:58px; }
-:global(html[data-client-appearance]) .avatar { width:58px; height:58px; background:linear-gradient(135deg,#8bd0bc,#4c9d91 65%,#367e83); color:#fff; font-weight:500; }
+:global(html[data-client-appearance]) .avatar { width:58px; height:58px; background:linear-gradient(135deg,#8bd0bc,#4c9d91 65%,#367e83); color:var(--client-action-ink, #fff); font-weight:500; }
 :global(html[data-client-appearance="dark"]) .avatar { background:linear-gradient(135deg,#345c58,#274744 62%,#273f4c); color:#c2ecdf; }
 :global(html[data-client-appearance]) .profileCopy strong { font-size:21px; font-weight:600; line-height:normal; letter-spacing:-.5px; }
 :global(html[data-client-appearance]) .profileCopy small { font-size:13px; margin-top:4px; line-height:normal; }

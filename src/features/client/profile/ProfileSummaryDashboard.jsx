@@ -143,11 +143,12 @@ export default function ProfileSummaryDashboard({
         <h2 data-testid="profile-summary-greeting">{summaryGreeting}</h2>
       </section>
       {hasWorkoutHero ? <section className={styles.workoutHero} aria-label="Тренировка по плану">
+        <button type="button" className={styles.workoutHeroAction} data-testid="profile-summary-primary" data-task-id="workout" aria-label={`${workoutTask?.actionLabel || workoutActionLabel || "Открыть тренировку"}: ${workoutTitle}`} onClick={onOpenWorkout} />
         <div className={styles.heroTop}><span><Dumbbell aria-hidden="true" />{isWorkoutToday ? "Сегодня по плану" : workoutState === "draft" ? "Тренировка начата" : "Твой план"}</span><small>{workoutPosition || workoutDate}</small></div>
         <h2>{workoutTitle}</h2>
         <p className={styles.workoutFocus}>{isBasicPlan ? "Базовая тренировка" : "Индивидуальная программа"}</p>
         <div className={styles.workoutMeta}><span><Dumbbell aria-hidden="true" />{formatRussianCount(Math.max(0, Number(exerciseCount) || 0), ["упражнение", "упражнения", "упражнений"])}</span></div>
-        <button type="button" className={styles.workoutPrimary} data-testid="profile-summary-primary" data-task-id="workout" onClick={onOpenWorkout}>{workoutTask?.actionLabel || workoutActionLabel || "Открыть тренировку"}<ArrowRight aria-hidden="true" /></button>
+        <span className={styles.workoutPrimary} aria-hidden="true">{workoutTask?.actionLabel || workoutActionLabel || "Открыть тренировку"}<ArrowRight aria-hidden="true" /></span>
       </section> : null}
       <section className={styles.reminders} data-testid="profile-summary-task-card" aria-labelledby="profileSummaryTaskHeading">
         <div className={styles.heroTop}>

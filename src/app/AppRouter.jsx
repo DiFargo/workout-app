@@ -15,6 +15,7 @@ import {
 import AccessDeniedScreen from "../components/common/AccessDeniedScreen";
 import RouteFallback from "./RouteFallback";
 import RouteContentReady from "./RouteContentReady.jsx";
+import BasicWorkoutAccessBoundary from "../features/client/workouts/BasicWorkoutAccessBoundary.jsx";
 
 const AdminLibraryRoute = lazy(loadAdminLibraryRoute);
 const AdminPanelHub = lazy(loadAdminPanelHub);
@@ -193,6 +194,7 @@ export default function AppRouter({
 
   if (page === APP_PAGES.BASIC_WORKOUT_QUIZ) {
     return renderLazyRoute(
+      <BasicWorkoutAccessBoundary onBack={onOpenIndividualWorkouts} renderBottomBar={renderClientMainBottomBar}>
       <BasicWorkoutQuizPage
         appVersion={appVersion}
         renderClientMainBottomBar={renderClientMainBottomBar}
@@ -221,11 +223,13 @@ export default function AppRouter({
         onOpenTrainerPrograms={onOpenTrainerPrograms}
         onLoadTrainerCabinet={onOpenCabinet}
       />
+      </BasicWorkoutAccessBoundary>
     );
   }
 
   if (page === APP_PAGES.BASIC_WORKOUT_TODAY) {
     return renderLazyRoute(
+      <BasicWorkoutAccessBoundary onBack={onOpenIndividualWorkouts} renderBottomBar={renderClientMainBottomBar}>
       <BasicWorkoutTodayPage
         renderClientMainBottomBar={renderClientMainBottomBar}
         basicWorkoutQuiz={basicWorkoutQuiz}
@@ -248,6 +252,7 @@ export default function AppRouter({
         onOpenTrainerPrograms={onOpenTrainerPrograms}
         onLoadTrainerCabinet={onOpenCabinet}
       />
+      </BasicWorkoutAccessBoundary>
     );
   }
 

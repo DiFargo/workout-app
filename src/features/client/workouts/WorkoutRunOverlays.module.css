@@ -231,7 +231,7 @@
   z-index: 103;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-blue-pressed, #315f91);
   box-shadow: 0 2px 7px rgba(27, 35, 31, 0.05);
   line-height: 1;
@@ -506,7 +506,7 @@
   padding: 0;
   border: 0;
   background: none;
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   font-size: 28px;
   cursor: pointer;
 }
@@ -598,7 +598,7 @@
   justify-content: center;
   gap: 18px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   text-align: center;
@@ -621,8 +621,8 @@
   height: 48px;
   margin: 0 16px;
   position: static;
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
+  -webkit-text-fill-color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
@@ -651,7 +651,7 @@
   min-height: 44px;
   display: grid;
   place-items: center;
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: rgba(255, 255, 255, 0.14);
   border: 0;
   border-radius: 16px;
@@ -716,12 +716,12 @@
 :global(:root[data-app-theme="warm-light"]) .closeButton.closeButton {
   right: calc(50% - var(--workout-run-content-half, min(380px, 50vw)) + 20px);
   width: 48px; min-width: 48px; height: 48px; min-height: 48px; max-height: none;
-  background: #fff; color: #617078; -webkit-text-fill-color: #617078; box-shadow: 0 1px 3px #1c282e0a, 0 5px 16px #1c282e05;
+  background: var(--client-surface, #fff); color: var(--client-secondary, #617078); -webkit-text-fill-color: var(--client-secondary, #617078); box-shadow: 0 1px 3px #1c282e0a, 0 5px 16px #1c282e05;
 }
 :global(:root[data-app-theme="warm-light"]) .backButton.backButton {
   left: calc(50% - var(--workout-run-content-half, min(380px, 50vw)) + 16px);
   width: 90px; max-width: 90px; display: flex; justify-content: flex-start; gap: 3px;
-  background: transparent; border-radius: 12px; color: #376b91; -webkit-text-fill-color: #376b91; font-size: 1.0625rem; font-weight: 400;
+  background: transparent; border-radius: 12px; color: var(--client-accent, #376b91); -webkit-text-fill-color: var(--client-accent, #376b91); font-size: 1.0625rem; font-weight: 400;
 }
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle,
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow {
@@ -737,7 +737,7 @@
 }
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleProgress {
   position: absolute; top: max(8px,env(safe-area-inset-top)); left: 104px; right: 104px; min-height: 44px;
-  display: flex; align-items: center; justify-content: center; color: #1c282e; font-size: 0.9375rem; font-weight: 600; line-height: 1.125rem;
+  display: flex; align-items: center; justify-content: center; color: var(--client-text, #1c282e); font-size: 0.9375rem; font-weight: 600; line-height: 1.125rem;
 }
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleProgress svg { display: none; }
 :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle .stageTitleText.exerciseTitle { font-size: 1.625rem; letter-spacing: -.6px; }

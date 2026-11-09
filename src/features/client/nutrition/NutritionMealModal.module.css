@@ -1,6 +1,6 @@
 .overlay {
   --meal-backdrop: rgba(0, 0, 0, 0.62);
-  --meal-backdrop-color: #fff;
+  --meal-backdrop-color: var(--client-surface, #fff);
   --meal-overlay-text: var(--apple-text, #1c282e);
   --meal-sheet-border: rgba(255, 255, 255, 0.09);
   --meal-sheet-background: linear-gradient(180deg, rgba(18, 21, 19, 0.98), rgba(9, 12, 9, 0.98));
@@ -442,10 +442,10 @@
   --meal-close-border: transparent;
   --meal-close-background: var(--apple-surface-muted, #edf1f3);
   --meal-close-color: var(--apple-text, #1c282e);
-  --meal-row-background: #fff;
+  --meal-row-background: var(--client-surface, #fff);
   --meal-row-active: #ffffff;
   --meal-delete-background: #b36e72;
-  --meal-delete-color: #fff;
+  --meal-delete-color: var(--client-surface, #fff);
   --meal-food-icon-border: transparent;
   --meal-food-icon-background: var(--apple-surface-muted, #edf1f3);
   --meal-food-icon-shadow: none;
@@ -458,7 +458,7 @@
   --meal-arrow-fill: var(--apple-secondary, #617078);
   --meal-add-border: transparent;
   --meal-add-background: var(--apple-action, #396ba6);
-  --meal-add-color: #fff;
+  --meal-add-color: var(--client-surface, #fff);
   align-items: flex-end;
   padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
 }
@@ -484,14 +484,14 @@
 :global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 0; border-radius: 50%; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-text, #1c282e); font-size: 24px; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .list { gap: 8px; }
 :global(:root[data-app-theme="warm-light"]) .swipeShell { border-radius: 18px; background: #b36e72; }
-:global(:root[data-app-theme="warm-light"]) .row { min-height: 68px; padding: 9px 12px; border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12)); border-radius: 18px; background: #fff; color: var(--apple-text, #1c282e); box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .row { min-height: 68px; padding: 9px 12px; border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12)); border-radius: 18px; background: var(--client-surface, #fff); color: var(--apple-text, #1c282e); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .foodIconWrap { border: 0; border-radius: 14px; background: var(--apple-surface-muted, #edf1f3); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .calories,
 :global(:root[data-app-theme="warm-light"]) .name { color: var(--apple-text, #1c282e); font-weight: 650; }
 :global(:root[data-app-theme="warm-light"]) .caloriesLabel,
 :global(:root[data-app-theme="warm-light"]) .amount { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-weight: 450; }
 :global(:root[data-app-theme="warm-light"]) .arrow { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); }
-:global(:root[data-app-theme="warm-light"]) .addButton { min-height: 54px; border: 0; border-radius: 18px; background: var(--ownset-action-gradient); color: #fff; box-shadow: none; font-weight: 600; }
+:global(:root[data-app-theme="warm-light"]) .addButton { min-height: 54px; border: 0; border-radius: 18px; background: var(--ownset-action-gradient); color: var(--client-action-ink, #fff); box-shadow: none; font-weight: 600; }
 .withRemove { display: grid; grid-template-columns: minmax(0, 1fr) 44px; }
 .removeButton { position: relative; z-index: 2; min-width: 44px; min-height: 44px; border: 0; background: var(--apple-surface, #fff); color: var(--apple-red, #b42318); display: grid; place-items: center; }
 .removeButton svg { width: 18px; height: 18px; }

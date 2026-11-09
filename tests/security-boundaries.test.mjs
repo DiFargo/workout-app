@@ -180,7 +180,7 @@ test("profile owners cannot change role and trainer assignment fields", () => {
   assert.match(rulesSource, /function isLegacyClientActivation\(uid\)/);
   assert.match(
     rulesSource,
-    /allow update: if !request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasAny\(adminSecurityKeyFields\(\)\) &&\s*\(!request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasAny\(\["subscription"\]\) \|\| accountingWritesAvailable\(\)\) &&\s*\(isAdmin\(\) \|\| isSafeOwnerUpdate\(uid\) \|\| isLegacyClientActivation\(uid\) \|\| isTrainerClientUpdate\(\)\);/
+    /allow update: if isValidBasicWorkoutAccess\(request\.resource\.data\) &&\s*!request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasAny\(adminSecurityKeyFields\(\)\) &&\s*\(!request\.resource\.data\.diff\(resource\.data\)\.affectedKeys\(\)\.hasAny\(\["subscription"\]\) \|\| accountingWritesAvailable\(\)\) &&\s*\(isAdmin\(\) \|\| isSafeOwnerUpdate\(uid\) \|\| isLegacyClientActivation\(uid\) \|\| isTrainerClientUpdate\(\)\);/
   );
   assert.match(
     rulesSource,

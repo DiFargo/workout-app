@@ -22,6 +22,7 @@ import { safeReadJsonStorage } from "../../../utils/storageSafety";
 import { getNewestWorkoutDraft, getWorkoutDraftKey } from "../../../utils/workoutDraftStorage";
 import { listWorkoutDraftFallbacks } from "../../../utils/workoutDraftFallbackStorage.js";
 import { canResumeWorkoutDraft } from "../../../utils/workoutDraftState";
+import { getWorkoutOverviewProgress } from "../../../utils/workoutOverviewProgress.js";
 import { WorkoutDraftRestoreDialog } from "../../../components/workout/WorkoutDialogs";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { IndividualWorkoutHistoryDialog, WorkoutPlanDialog, WorkoutProgramDialog } from "./WorkoutListDialogs";
@@ -442,6 +443,7 @@ export default function WorkoutListPage({
         index={overviewProgramIndex}
         total={sortedWorkouts.length}
         completedCount={completedWorkoutCount}
+        exerciseProgress={getWorkoutOverviewProgress(overviewWorkout, hasActiveWorkoutDraft ? activeWorkoutDraft : null, assignmentVersion)}
         localOnlyPlan={hasLocalOnlyPlanSave}
         pendingSyncCount={currentAssignmentHistoryItems.filter(item => item.pendingSync).length}
         onRetrySync={onRetrySync}

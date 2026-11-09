@@ -1,5 +1,5 @@
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
-import { Bell, CalendarDays } from "../../../shared/ui/ClientReferenceIcon.jsx";
+import { Bell, Ruler } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import styles from "./ProfilePageChrome.module.css";
 
 export default function ProfilePageChrome({
@@ -10,7 +10,7 @@ export default function ProfilePageChrome({
   showTrainerNotifications,
   trainerNotificationCount = 0,
   onOpenTrainerNotifications,
-  onOpenCalendar
+  onAddMeasurement
 }) {
   return (
     <>
@@ -39,7 +39,7 @@ export default function ProfilePageChrome({
           titleTestId="profile-progress-title"
           testId="profile-progress-header"
           scope="profile-page-chrome"
-          actions={onOpenCalendar ? <button type="button" aria-label="Календарь тренировок" onClick={onOpenCalendar}><CalendarDays /></button> : null}
+          actions={onAddMeasurement ? <button type="button" aria-label="Добавить замеры" onClick={onAddMeasurement}><Ruler /></button> : null}
         />
       )}
     </>

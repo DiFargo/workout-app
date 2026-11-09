@@ -2,7 +2,7 @@ import { safeReadUserJsonStorage, safeWriteUserJsonStorage } from "./userScopedS
 
 const PROFILE_KEY = "workout_offline_member_v1";
 const PLAN_KEY = "workout_offline_plan_certificate_v1";
-const PROFILE_FIELDS = ["role", "accountAccessStatus", "trainerAssignmentState", "active", "archived",
+const PROFILE_FIELDS = ["role", "accountAccessStatus", "trainerAssignmentState", "active", "archived", "basicWorkoutAccess",
   "accessDisabled", "membershipStatus", "assignedProgramId", "assignedProgramAt", "assignedProgramAddedAt",
   "assignedProgramUpdatedAt", "assignedProgramLifecycleStatus", "trainerUid", "trainerId", "trainerEmail",
   "workoutModePreference", "accountProfile", "name", "appTheme", "aiNutritionProfile", "aiNutritionPlan",

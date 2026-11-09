@@ -354,7 +354,7 @@
   height: 44px;
   flex-basis: 34px;
   color: var(--apple-action, #396ba6);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 0;
 }
 
@@ -371,7 +371,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .steps.steps {
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 19px;
 }
@@ -390,7 +390,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .item.item.completed {
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
 }
 
 :global(:root[data-app-theme="warm-light"]) .itemMarker.itemMarker {
@@ -399,7 +399,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .completed .itemMarker.itemMarker {
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #708d79;
 }
 
@@ -438,7 +438,7 @@
   min-width: 44px;
   height: 44px;
   color: var(--apple-action, #396ba6);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 0;
   border-radius: 17px;
   font-size: 11px;
@@ -446,36 +446,36 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .timerButton.timerButtonActive {
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
 }
 
 :global(:root[data-app-theme="warm-light"]) .planHeader.planHeader { padding: 0 4px max(4px, calc(var(--warmup-block-gap, 16px) - 4px)); background: transparent; border: 0; box-shadow: none; text-align: left; }
 :global(:root[data-app-theme="warm-light"]) .planMeta.planMeta { min-height: 20px; margin-bottom: 0; justify-content: space-between; }
-:global(:root[data-app-theme="warm-light"]) .planBadge.planBadge { min-height: 20px; font-size: 0.8125rem; font-weight: 500; background: transparent; padding: 0; color: #617078; letter-spacing: .35px; text-transform: uppercase; }
+:global(:root[data-app-theme="warm-light"]) .planBadge.planBadge { min-height: 20px; font-size: 0.8125rem; font-weight: 500; background: transparent; padding: 0; color: var(--client-secondary, #617078); letter-spacing: .35px; text-transform: uppercase; }
 :global(:root[data-app-theme="warm-light"]) .planAccent.planAccent { display: none; }
 :global(:root[data-app-theme="warm-light"]) .planWorkout.planWorkout,
 :global(:root[data-app-theme="warm-light"]) .planSummary.planSummary { font-size: 0.8125rem; font-weight: 400; line-height: 1.4; }
 :global(:root[data-app-theme="warm-light"]) .planSummary.planSummary { margin-top: 0; }
 :global(:root[data-app-theme="warm-light"]) .hero.hero { gap: var(--warmup-block-gap, 16px); }
-:global(:root[data-app-theme="warm-light"]) .intro.intro { background: white; border-radius: 22px; padding: var(--warmup-block-padding, 18px) var(--warmup-inline-padding, 16px); gap: var(--warmup-item-gap, 12px); }
+:global(:root[data-app-theme="warm-light"]) .intro.intro { background: var(--client-surface, white); border-radius: 22px; padding: var(--warmup-block-padding, 18px) var(--warmup-inline-padding, 16px); gap: var(--warmup-item-gap, 12px); }
 :global(:root[data-app-theme="warm-light"]) .intro.intro strong { font-size: var(--warmup-title-size, 1.0625rem); font-weight: 600; line-height: 1.3; }
 :global(:root[data-app-theme="warm-light"]) .intro.intro p { font-size: var(--warmup-copy-size, .875rem); font-weight: 400; line-height: 1.4; margin-top: 4px; }
-:global(:root[data-app-theme="warm-light"]) .introMarker.introMarker { width: var(--warmup-marker-size, 36px); height: var(--warmup-marker-size, 36px); flex-basis: var(--warmup-marker-size, 36px); border-radius: 50%; background: #e8f1f2; }
+:global(:root[data-app-theme="warm-light"]) .introMarker.introMarker { width: var(--warmup-marker-size, 36px); height: var(--warmup-marker-size, 36px); flex-basis: var(--warmup-marker-size, 36px); border-radius: 50%; background: var(--client-accent-soft, #e8f1f2); }
 :global(:root[data-app-theme="warm-light"]) .steps.steps { flex: 0 0 auto; border: 0; border-radius: 22px; }
 :global(:root[data-app-theme="warm-light"]) .item.item { min-height: clamp(56px, calc(var(--workout-stage-usable-height, 520px) * .112), 80px); padding: var(--warmup-block-padding, 17px) var(--warmup-inline-padding, 16px); grid-template-columns: var(--warmup-marker-size, 34px) minmax(0, 1fr); gap: var(--warmup-item-gap, 12px); }
 :global(:root[data-app-theme="warm-light"]) .item.item strong { font-size: min(1rem, var(--warmup-title-size, 1rem)); font-weight: 600; line-height: 1.3; }
 :global(:root[data-app-theme="warm-light"]) .item.item small { font-size: 0.8125rem; font-weight: 400; line-height: 1.4; }
 :global(:root[data-app-theme="warm-light"]) .itemMarker.itemMarker { width: var(--warmup-marker-size, 32px); height: var(--warmup-marker-size, 32px); border-radius: 50%; font-size: 0.875rem; font-weight: 500; }
-:global(:root[data-app-theme="warm-light"]) .completed .itemMarker.itemMarker { color: #237a42; background: #eaf4ee; }
-:global(:root[data-app-theme="warm-light"]) .timer.timer { display: flex; flex: 0 0 auto; flex-direction: column; align-items: stretch; gap: max(4px, calc(var(--warmup-block-gap, 16px) - 4px)); padding: var(--warmup-block-padding, 18px) 16px; border-radius: 22px; background: white; }
+:global(:root[data-app-theme="warm-light"]) .completed .itemMarker.itemMarker { color: var(--client-success, #237a42); background: var(--client-success-soft, #eaf4ee); }
+:global(:root[data-app-theme="warm-light"]) .timer.timer { display: flex; flex: 0 0 auto; flex-direction: column; align-items: stretch; gap: max(4px, calc(var(--warmup-block-gap, 16px) - 4px)); padding: var(--warmup-block-padding, 18px) 16px; border-radius: 22px; background: var(--client-surface, white); }
 :global(:root[data-app-theme="warm-light"]) .timerSummary.timerSummary { display: flex; align-items: center; justify-content: space-between; }
 :global(:root[data-app-theme="warm-light"]) .timerSummary.timerSummary span { font-size: 0.875rem; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .timerSummary.timerSummary strong { margin: 0; font-size: clamp(1.625rem, calc(var(--workout-stage-usable-height, 520px) * .055), 2rem); font-weight: 400; line-height: 1.1; font-variant-numeric: tabular-nums; }
 :global(:root[data-app-theme="warm-light"]) .timerControls.timerControls { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; }
-:global(:root[data-app-theme="warm-light"]) .timerButton.timerButton { font-size: 0.875rem; font-weight: 500; border-radius: 99px; height: auto; min-height: 48px; max-height: none; padding: 10px 6px; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; background: #edf1f3; color: #617078; }
-:global(:root[data-app-theme="warm-light"]) .timerButton.timerButtonActive { background: #e8f1f2; color: #376b91; }
-:global(:root[data-app-theme="warm-light"]) .timerControls.timerControls .timerButton:last-child { background: var(--ownset-action-gradient); color: white; }
+:global(:root[data-app-theme="warm-light"]) .timerButton.timerButton { font-size: 0.875rem; font-weight: 500; border-radius: 99px; height: auto; min-height: 48px; max-height: none; padding: 10px 6px; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; background: var(--client-surface-muted, #edf1f3); color: var(--client-secondary, #617078); }
+:global(:root[data-app-theme="warm-light"]) .timerButton.timerButtonActive { background: var(--client-accent-soft, #e8f1f2); color: var(--client-accent, #376b91); }
+:global(:root[data-app-theme="warm-light"]) .timerControls.timerControls .timerButton:last-child { background: var(--ownset-action-gradient); color: var(--client-action-ink, white); }
 :global(:root[data-app-theme="warm-light"]) .intro.intro > div,
 :global(:root[data-app-theme="warm-light"]) .itemContent.itemContent { min-width: 0; overflow-wrap: anywhere; }
 :global(:root[data-app-theme="warm-light"]) .timerSummary.timerSummary { flex-wrap: wrap; gap: 8px; }

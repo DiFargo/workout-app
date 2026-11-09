@@ -38,7 +38,9 @@ export async function persistWorkoutCompletion({ db, uid, entry, completion = nu
       const sameAssignment = basic
         ? Boolean(user.basicWorkoutPlan && String(user.basicWorkoutPlan.basicPlanId || user.basicWorkoutPlan.id) === String(original.basicPlanId || original.id))
         : Boolean(entry.assignedProgramId && entry.assignedProgramId === user.assignedProgramId && (!entry.assignedProgramUpdatedAt || entry.assignedProgramUpdatedAt === user.assignedProgramUpdatedAt));
-      if (sameAssignment) {
+      // Revoking future basic-mode access must never strand an in-flight or
+      // offline result. Save its history, but do not advance the revoked plan.
+      if (sameAssignment && (!basic || user.basicWorkoutAccess === true)) {
         const freshBasic = user.basicWorkoutPlan;
         const freshDays = basic ? freshBasic.workouts || [] : snapshots.filter((snapshot) => snapshot.exists()).map((snapshot) => ({ ...snapshot.data(), id: snapshot.id }));
         const fresh = { ...original, ...(basic ? freshBasic : {}), workouts: freshDays };

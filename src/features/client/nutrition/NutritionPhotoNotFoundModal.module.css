@@ -145,7 +145,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .overlay {
-  --photo-modal-surface: #fff;
+  --photo-modal-surface: var(--client-surface, #fff);
   --photo-modal-text: var(--apple-text, #1c282e);
   --photo-modal-muted: var(--apple-secondary, #617078);
   --photo-modal-border: var(--apple-separator, rgba(57, 82, 91,.12));
@@ -164,7 +164,7 @@
   padding: 22px 18px 18px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
 }
@@ -190,7 +190,7 @@
   min-height: 50px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-action, #396ba6);
   font-weight: 600;
 }
@@ -198,5 +198,5 @@
 :global(:root[data-app-theme="warm-light"]) .primaryAction {
   border-color: var(--apple-action, #396ba6);
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--client-action-ink, #fff);
 }

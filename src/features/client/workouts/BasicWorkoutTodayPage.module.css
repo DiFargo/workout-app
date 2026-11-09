@@ -47,7 +47,7 @@
 
 .planSwitcher button[aria-current="page"] {
   color: var(--apple-blue, #3C6FAA);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   box-shadow: 0 2px 8px rgba(69, 57, 85, 0.09);
 }
 
@@ -92,7 +92,7 @@
 .actionBar { position:fixed; z-index:80; bottom:calc(70px + max(env(safe-area-inset-bottom,0px),var(--telegram-safe-area-bottom,0px),var(--telegram-content-safe-area-bottom,0px))); left:50%; transform:translateX(-50%); width:min(100%,430px); display:grid; gap:8px; padding:10px 16px; background:var(--apple-canvas,#F2F2F7); border-top:1px solid var(--apple-separator,rgba(60,60,67,.12)); }
 .actionBar .generationLimit { padding:0; border:0; background:transparent; font-size:12px; }
 .actionBar .primaryButton { width:100%; box-shadow:none; }
-.selectionSummary { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:64px; padding:12px; border:1px solid var(--apple-separator,rgba(60,60,67,.12)); border-radius:16px; background:#fff; color:var(--apple-blue,#3C6FAA); text-align:left; font:inherit; cursor:pointer; }
+.selectionSummary { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:64px; padding:12px; border:1px solid var(--apple-separator,rgba(60,60,67,.12)); border-radius:16px; background:var(--client-surface, #fff); color:var(--apple-blue,#3C6FAA); text-align:left; font:inherit; cursor:pointer; }
 .selectionSummary > span:first-child { display:grid; gap:4px; min-width:0; }
 .selectionSummary small { color:var(--apple-secondary,#636366); font-size:12px; }
 .selectionSummary strong { color:var(--apple-text,#1C1C1E); font-size:15px; overflow-wrap:anywhere; }
@@ -178,7 +178,7 @@
   overflow: hidden;
   color: var(--apple-text, #1c282e);
   text-align: left;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   box-shadow: 0 2px 8px rgba(63, 54, 75, 0.04);
@@ -259,7 +259,7 @@
   right: 7px;
   display: grid;
   place-items: center;
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: var(--apple-blue-pressed, #315f91);
   border-radius: 50%;
 }
@@ -274,7 +274,7 @@
 .resultCard,
 .advancedSettings,
 .selectionHint {
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
 }
@@ -360,7 +360,7 @@
 }
 
 .segmentedControl button[data-selected="true"] {
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border-color: transparent;
   box-shadow: 0 1px 5px rgba(69, 57, 85, 0.11);
 }
@@ -466,7 +466,7 @@
 }
 
 .primaryButton {
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border: 0;
   border-radius: 17px;
@@ -634,7 +634,7 @@
 
 .secondaryButton {
   color: var(--apple-blue-pressed, #315f91);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(60,60,67,.12));
   border-radius: 17px;
 }
@@ -663,7 +663,7 @@
   justify-items: center;
   gap: 10px;
   text-align: center;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
   box-shadow: 0 22px 54px rgba(27, 35, 31, 0.2);

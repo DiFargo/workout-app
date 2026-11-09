@@ -2,10 +2,12 @@ import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { ChevronRight, ClipboardList, Dumbbell } from "lucide-react";
 import adaptiveShellStyles from "../../../shared/ui/ClientAdaptiveShell.module.css";
 import styles from "./WorkoutModePage.module.css";
+import { useBasicWorkoutAccess } from "./basicWorkoutAccess.js";
 
 export default function WorkoutModePage({
   renderClientMainBottomBar,
   canUseTrainerFeatures,
+  basicWorkoutAccessAllowed,
   onBackToMain,
   onOpenBasicWorkouts,
   onOpenIndividualWorkouts,
@@ -16,6 +18,8 @@ export default function WorkoutModePage({
   onOpenTrainerPrograms,
   onLoadTrainerCabinet
 }) {
+  const basicAccess = useBasicWorkoutAccess(basicWorkoutAccessAllowed === undefined);
+  const basicAllowed = basicWorkoutAccessAllowed ?? basicAccess.allowed;
   return (
     <div className={`${styles.page} ${adaptiveShellStyles.shell}`} data-client-adaptive-shell="true" data-testid="workout-mode-page" data-css-module-scope="workout-mode">
       <ClientPageHeader
@@ -34,12 +38,12 @@ export default function WorkoutModePage({
       </p>
 
       <section className={styles.cards} data-testid="workout-mode-cards">
-        <button className={styles.card} data-testid="workout-mode-card" type="button" onClick={onOpenBasicWorkouts}>
+        <button className={styles.card} data-testid="workout-mode-card" type="button" onClick={onOpenBasicWorkouts} disabled={!basicAllowed}>
           <span className={styles.icon} aria-hidden="true"><Dumbbell /></span>
           <div>
             <span className={styles.kicker}>Самостоятельно</span>
             <strong>Базовые тренировки</strong>
-            <small>Тренировка на сегодня или программа на четыре недели.</small>
+            <small>{basicAllowed ? "Тренировка на сегодня или программа на четыре недели." : basicAccess.loading ? "Проверяем доступ…" : "Доступ открывает администратор."}</small>
           </div>
           <i aria-hidden="true"><ChevronRight /></i>
         </button>

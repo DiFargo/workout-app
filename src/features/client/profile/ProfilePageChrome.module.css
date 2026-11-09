@@ -33,7 +33,7 @@
   border: 2px solid #fff;
   border-radius: 9px;
   background: #b36e72;
-  color: #fff;
+  color: var(--client-text, #fff);
   font-size: 9px;
   font-style: normal;
   font-weight: 700;

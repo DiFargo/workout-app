@@ -46,7 +46,7 @@
 .state { text-align:center; padding:30px 12px 38px; }
 .state h3 { font-size:17px; margin:12px 0 8px; }
 .state p { font-size:14px; line-height:1.5; color:var(--apple-secondary,#636366); margin:0; }
-.retry { min-height:44px; margin-top:20px; padding:10px 22px; border:0; border-radius:12px; background:var(--ownset-action-gradient); color:#fff; font:inherit; font-size:15px; cursor:pointer; }
+.retry { min-height:44px; margin-top:20px; padding:10px 22px; border:0; border-radius:12px; background:var(--ownset-action-gradient); color:var(--client-action-ink, #fff); font:inherit; font-size:15px; cursor:pointer; }
 .dialog button:focus-visible,.values summary:focus-visible { outline:2px solid var(--apple-blue,#3c6faa); outline-offset:2px; }
 .dialog button:active { opacity:.72; }
 @media (max-width:600px) { .overlay { align-items:end; padding-left:0; padding-right:0; padding-bottom:0; } .dialog { width:100%; max-height:calc(100dvh - max(12px,env(safe-area-inset-top,0px))); border-radius:26px 26px 0 0; border-bottom:0; } .body { padding:16px 16px max(20px,env(safe-area-inset-bottom,0px)); } .header { padding:15px 16px; } }

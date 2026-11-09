@@ -53,8 +53,8 @@
   font-weight: 600;
   cursor: pointer;
 }
-.tab[aria-selected="true"] { background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); color: #fff; }
-.tab[aria-selected="true"] .tabCount { color: #fff; }
+.tab[aria-selected="true"] { background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); color: var(--client-action-ink, #fff); }
+.tab[aria-selected="true"] .tabCount { color: var(--client-text, #fff); }
 .tabCount { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--apple-muted, #636366); }
 .summary { margin: 0; color: var(--apple-muted, #636366); font-size: 12px; line-height: 1.45; }
 .error { margin: 0; color: var(--apple-danger, #b3261e); font-size: 12px; line-height: 1.45; }
@@ -120,7 +120,7 @@
   overflow-wrap: anywhere;
   cursor: pointer;
 }
-.primaryAction { border-color: transparent; background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); color: #fff; }
+.primaryAction { border-color: transparent; background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)); color: var(--client-action-ink, #fff); }
 .actionButton:disabled { opacity: .65; cursor: wait; }
 .actionButton:not(:disabled):active, .tab:active { filter: brightness(.94); }
 .tab:focus-visible, .actionButton:focus-visible, .messageDetails summary:focus-visible, .list:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }

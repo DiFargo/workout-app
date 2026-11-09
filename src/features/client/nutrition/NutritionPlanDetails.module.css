@@ -500,7 +500,7 @@
   --plan-panel-border: #e5e7f0;
   --plan-text: var(--apple-secondary, #617078);
   --plan-muted: var(--apple-secondary, #617078);
-  --plan-chip-background: #fff;
+  --plan-chip-background: var(--client-surface, #fff);
   --plan-chip-border: var(--apple-separator, rgba(57, 82, 91,.12));
   --plan-chip-text: var(--apple-secondary, #617078);
   --plan-close-background: var(--apple-surface-muted, #edf1f3);
@@ -612,7 +612,7 @@
   padding: 16px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   -webkit-text-fill-color: var(--apple-text, #1c282e);
   box-shadow: 0 20px 60px rgba(27, 35, 31, 0.16);
@@ -637,7 +637,7 @@
 :global(:root[data-app-theme="warm-light"]) .conclusion {
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: none;
 }
@@ -757,7 +757,7 @@
   gap: 10px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #fff;
+  background: var(--client-surface, #fff);
 }
 
 .calorieTopline,
@@ -867,7 +867,7 @@
   align-items: flex-start;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   text-align: left;
 }
 
@@ -1000,7 +1000,7 @@
 :global(:root) .modern .close {
   grid-column: 2;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   color: var(--apple-text, #1c282e);
   box-shadow: 0 5px 16px rgba(27, 35, 31, 0.06);
   -webkit-text-fill-color: var(--apple-text, #1c282e);
@@ -1011,7 +1011,7 @@
   padding: 12px 14px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   text-align: left;
 }
 
@@ -1053,7 +1053,7 @@
   gap: 12px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
 }
 
 :global(:root) .modern .calorieTopline {
@@ -1151,7 +1151,7 @@
   align-items: stretch;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   text-align: left;
 }
 
@@ -1207,7 +1207,7 @@
   padding: 14px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   text-align: left;
 }
 

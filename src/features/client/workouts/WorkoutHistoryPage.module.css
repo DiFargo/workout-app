@@ -78,7 +78,7 @@
   height: 44px;
   min-height: 44px;
   color: var(--apple-action, #396ba6);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 16px;
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
@@ -91,7 +91,7 @@
   padding: 8px;
   gap: 0;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 22px;
   box-shadow: none;
@@ -163,7 +163,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .cardInner.cardInner {
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   background-image: none;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 22px;
@@ -251,7 +251,7 @@
 
 :global(:root[data-app-theme="warm-light"]) .deleteAction.deleteAction {
   width: 92px;
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #b36e72;
   background-image: none;
   border-radius: 0 22px 22px 0;
@@ -263,7 +263,7 @@
   min-height: 250px;
   padding: 28px 22px;
   color: var(--apple-secondary, #617078);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: none;

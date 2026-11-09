@@ -15,7 +15,7 @@ const firebaseArgs = [
   "emulators:exec",
   "--only",
   "firestore,storage",
-  "node --test tests/firestore-rules.rules.mjs tests/exercise-cards.rules.mjs tests/admin-storage-access.rules.mjs"
+  "node --test tests/firestore-rules.rules.mjs tests/exercise-cards.rules.mjs tests/admin-storage-access.rules.mjs tests/basic-workout-access.rules.mjs"
 ];
 
 function run(command, args, options = {}) {
@@ -48,7 +48,7 @@ for (const directory of await readdir(path.join(cachePath, "_npx")).catch(() => 
 // Clean CI still uses the pinned npx command below.
 const command = cachedCli ? process.execPath : isWindows ? (process.env.ComSpec || "cmd.exe") : "npx";
 const args = cachedCli ? [cachedCli, "--project", "demo-workout-rules", "emulators:exec", "--only", "firestore,storage",
-  "node --test tests/firestore-rules.rules.mjs tests/exercise-cards.rules.mjs tests/admin-storage-access.rules.mjs"] : isWindows
+  "node --test tests/firestore-rules.rules.mjs tests/exercise-cards.rules.mjs tests/admin-storage-access.rules.mjs tests/basic-workout-access.rules.mjs"] : isWindows
   ? ["/d", "/c", path.join(workspacePath, "scripts", "run-firestore-rules.cmd")]
   : firebaseArgs;
 

@@ -134,7 +134,7 @@
   width: min(370px, 100%);
   padding: 20px 16px 16px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   background-image: none;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
@@ -188,7 +188,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .actions.actions .danger {
-  color: #ffffff;
+  color: var(--client-text, #ffffff);
   background: #b36e72;
   border: 0;
 }

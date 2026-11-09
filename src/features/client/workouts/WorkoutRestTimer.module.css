@@ -9,7 +9,7 @@
   gap: 6px;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 20px;
-  background: #fff;
+  background: var(--client-surface, #fff);
   color: var(--apple-text, #1c282e);
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
 }
@@ -28,7 +28,7 @@
   border: 0;
   border-radius: 15px;
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   font: inherit;
   font-size: 10px;
   font-weight: 700;
@@ -38,7 +38,7 @@
 .startButton svg { width: 11px; height: 11px; fill: currentColor; stroke-width: 2.6; }
 .startButton.running { background: var(--ownset-action-gradient); }
 .controls { display: flex; gap: 5px; }
-.controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: #f4f4f8; color: var(--apple-text, #1c282e); font: inherit; font-size: 10px; font-weight: 700; }
+.controls button { width: 42px; height: 30px; padding: 0; border: 0; border-radius: 15px; background: var(--client-surface-muted, #f4f4f8); color: var(--apple-text, #1c282e); font: inherit; font-size: 10px; font-weight: 700; }
 .controls .add { background: var(--apple-surface-muted, #edf1f3); color: var(--apple-action, #396ba6); }
 
 .compact {
@@ -163,7 +163,7 @@
 
 .expandedControls .expandedPrimary {
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   box-shadow: none;
 }
 
@@ -191,7 +191,7 @@
   border-radius: 12px;
   background: var(--ownset-action-gradient);
   box-shadow: none;
-  color: #fff;
+  color: var(--client-action-ink, #fff);
   font: inherit;
   font-size: 15px;
   font-weight: 750;
@@ -240,27 +240,27 @@
 .expandedBackdrop.expandedBackdrop { display: grid; place-items: end center; padding: max(20px,env(safe-area-inset-top)) 0 0; background: rgba(28,28,30,.22); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
 .expandedTimer.expandedTimer { width: min(100%,520px); max-height: calc(100dvh - 20px - env(safe-area-inset-top)); align-self: end; padding: 34px 24px max(24px,env(safe-area-inset-bottom)); border: 0; border-radius: 34px 34px 0 0; box-shadow: 0 20px 60px #0002; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; }
 .expandedTimer::before { content: ""; position: absolute; top: 10px; left: calc(50% - 16px); width: 32px; height: 4px; border-radius: 9px; background: #d1d1d8; }
-.expandedLabel.expandedLabel { font-size: 17px; font-weight: 600; color: #1c282e; margin: 0 40px 28px; min-height: 24px; }
+.expandedLabel.expandedLabel { font-size: 17px; font-weight: 600; color: var(--client-text, #1c282e); margin: 0 40px 28px; min-height: 24px; }
 .expandedLabel svg { display: none; }
-.minimizeButton.minimizeButton { width: 44px; height: 44px; top: 24px; right: 16px; background: #e5e5ea; color: #617078; }
+.minimizeButton.minimizeButton { width: 44px; height: 44px; top: 24px; right: 16px; background: var(--client-surface-muted, #e5e5ea); color: var(--client-secondary, #617078); }
 .timerFace { position: relative; width: 242px; height: 242px; margin: 0 auto 6px; display: grid; place-content: center; gap: 8px; }
 .timerRing { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .timerRing circle { fill: none; stroke-width: 2.5; }
-.timerTrack { stroke: #dbdfe6; }
-.timerProgress { stroke: #396ba6; stroke-linecap: round; }
+.timerTrack { stroke: var(--client-track, #dbdfe6); }
+.timerProgress { stroke: var(--client-accent, #396ba6); stroke-linecap: round; }
 .expandedCountdown.expandedCountdown { margin: 0; font-size: 80px; font-weight: 300; line-height: 1; letter-spacing: -3.2px; }
-.timerState { font-size: 13px; color: #617078; }
+.timerState { font-size: 13px; color: var(--client-secondary, #617078); }
 .expandedTimer.expandedTimer p { margin: 16px 0 28px; max-width: 280px; font-size: 14px; line-height: 1.5; }
 .expandedControls.expandedControls { grid-template-columns: 60px minmax(0,1fr) 60px; gap: 14px; }
-.expandedControls.expandedControls button { height: 56px; min-height: 56px; border-radius: 99px; font-size: 17px; font-weight: 500; background: white; }
-.expandedControls.expandedControls .expandedPrimary { background: var(--ownset-action-gradient); color: white; }
-.expandedControls.expandedControls.withCompletionAction .expandedPrimary { background: #edf1f3; color: #617078; }
+.expandedControls.expandedControls button { height: 56px; min-height: 56px; border-radius: 99px; font-size: 17px; font-weight: 500; background: var(--client-surface, white); }
+.expandedControls.expandedControls .expandedPrimary { background: var(--ownset-action-gradient); color: var(--client-action-ink, white); }
+.expandedControls.expandedControls.withCompletionAction .expandedPrimary { background: var(--client-surface-muted, #edf1f3); color: var(--client-secondary, #617078); }
 .completionAction.completionAction { border-radius: 99px; font-size: 16px; font-weight: 600; }
 .keepCompactButton.keepCompactButton { min-height: 48px; margin-top: 8px; font-size: 16px; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .root.root.compact { height: auto; min-height: 44px; max-height: none; width: 100%; padding: 0; background: transparent; border: 0; border-radius: 14px; box-shadow: none; }
 @media(max-height:650px) { .timerFace { width: 190px; height: 190px; }.expandedCountdown.expandedCountdown { font-size: 65px; }.expandedLabel.expandedLabel { margin-bottom: 16px; } }
 
-.dockedTimer { display:flex; align-items:center; margin:0 6px 10px; background:#e8f1f2; border-radius:16px; color:#376b91; }
+.dockedTimer { display:flex; align-items:center; margin:0 6px 10px; background:var(--client-accent-soft, #e8f1f2); border-radius:16px; color:var(--client-accent, #376b91); }
 .dockedOpen { box-sizing:border-box; width:100%; min-width:0; min-height:48px; height:auto; padding:8px 12px; border:0; border-radius:inherit; background:transparent; color:inherit; font:inherit; font-size:0.875rem; font-weight:400; line-height:1.35; display:flex; align-items:center; gap:8px; white-space:normal; text-align:left; cursor:pointer; touch-action:manipulation; }
 .dockedTimer svg { width:18px; height:18px; flex-shrink:0; }
 .dockedCopy { min-width:0; display:flex; flex-wrap:wrap; align-items:baseline; column-gap:8px; row-gap:2px; }
