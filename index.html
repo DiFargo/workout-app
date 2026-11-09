@@ -15,22 +15,42 @@
     <meta name="apple-mobile-web-app-title" content="Zmena" />
     <meta name="application-name" content="Zmena" />
     <link rel="apple-touch-icon" href="/icons/ownset-180.png?v=gradient-1" />
+    <script id="startup-appearance">
+      // Resolve the saved client choice before either loading screen can paint.
+      (() => {
+        let appearance = 'light';
+        try {
+          const saved = localStorage.getItem('zmena-client-appearance-v1');
+          if (saved === 'dark') appearance = 'dark';
+          else if (saved === 'system') {
+            const telegram = window.Telegram?.WebApp;
+            const liveTelegram = Boolean(telegram?.initData || (telegram?.platform && telegram.platform !== 'unknown'));
+            const dark = liveTelegram ? telegram.colorScheme === 'dark' : window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+            appearance = dark ? 'dark' : 'light';
+          }
+        } catch { /* Storage may be unavailable in a restricted WebView. */ }
+        document.documentElement.dataset.startupAppearance = appearance;
+      })();
+    </script>
     <script id="telegram-web-app-sdk" async src="https://telegram.org/js/telegram-web-app.js?63"></script>
     <style>
-      html,body,#root{min-height:100%;margin:0;background:#f5f7f8}
+      :root{--startup-canvas:#f5f7f8;--startup-text:#1c282e;--startup-secondary:#617078;--startup-track:rgba(57,82,91,.12);--startup-action-gradient:linear-gradient(115deg,#467b72,#3e748b 54%,#3565a3);--startup-action-ink:#fff}
+      :root[data-startup-appearance="dark"]{--startup-canvas:#08080b;--startup-text:#eff5f8;--startup-secondary:#a5b5c2;--startup-track:#2b3943;--startup-action-gradient:linear-gradient(112deg,#9fd9ca,#97ced3 54%,#a7c7e7);--startup-action-ink:#102e35}
+      html,body,#root{min-height:100%;margin:0;background:var(--startup-canvas)}
+      html[data-startup-appearance="dark"]:has(#startup){color-scheme:dark}
       html{-webkit-tap-highlight-color:transparent}
       /* Match AuthScreens.module.css AppSplash before React and its CSS load. */
-      #startup{box-sizing:border-box;width:min(100%,402px);min-height:100dvh;margin:0 auto;display:grid;place-items:center;overflow:hidden;padding:max(24px,env(safe-area-inset-top,0px)) 24px max(24px,env(safe-area-inset-bottom,0px));color:#1c282e;background:#f5f7f8;font:16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;text-align:center}
+      #startup{box-sizing:border-box;width:min(100%,402px);min-height:100dvh;margin:0 auto;display:grid;place-items:center;overflow:hidden;padding:max(24px,env(safe-area-inset-top,0px)) 24px max(24px,env(safe-area-inset-bottom,0px));color:var(--startup-text);background:var(--startup-canvas);font:16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;text-align:center}
       #startup-inner{box-sizing:border-box;position:relative;display:flex;width:min(100%,320px);flex-direction:column;align-items:center;justify-content:center}
       #startup img{display:block;width:68px;height:68px;flex-shrink:0;margin-bottom:20px;object-fit:contain}
-      #startup h1{margin:0;color:#1c282e;font-size:44px;font-weight:900;line-height:.95;letter-spacing:-.035em}
-      #startup-message{margin:14px 0 0;color:#617078;font-size:15px;font-weight:800;letter-spacing:.02em}
-      #startup-caption{max-width:250px;margin:6px 0 0;color:#9a94a1;font-size:12px;font-weight:600;line-height:1.35;text-align:center}
-      #startup-progress{width:220px;height:5px;margin-top:28px;overflow:hidden;border-radius:999px;background:rgba(57,82,91,.12)}
-      #startup-progress span{display:block;width:42%;height:100%;border-radius:inherit;background:linear-gradient(115deg,#467b72,#3e748b 54%,#3565a3);animation:startup-loading 1.2s ease-in-out infinite}
+      #startup h1{margin:0;color:var(--startup-text);font-size:44px;font-weight:900;line-height:.95;letter-spacing:-.035em}
+      #startup-message{margin:14px 0 0;color:var(--startup-secondary);font-size:15px;font-weight:800;letter-spacing:.02em}
+      #startup-caption{max-width:250px;margin:6px 0 0;color:var(--startup-secondary);font-size:12px;font-weight:600;line-height:1.35;text-align:center}
+      #startup-progress{width:220px;height:5px;margin-top:28px;overflow:hidden;border-radius:999px;background:var(--startup-track)}
+      #startup-progress span{display:block;width:42%;height:100%;border-radius:inherit;background:var(--startup-action-gradient);animation:startup-loading 1.2s ease-in-out infinite}
       @keyframes startup-loading{0%{transform:translateX(-115%)}55%{transform:translateX(95%)}100%{transform:translateX(245%)}}
       @media(prefers-reduced-motion:reduce){#startup-progress span{animation:none}}
-      #startup button{min-height:48px;padding:12px 24px;border:0;border-radius:14px;background:linear-gradient(115deg,#467b72,#3e748b 54%,#3565a3);color:white;font:inherit;cursor:pointer}
+      #startup button{min-height:48px;padding:12px 24px;border:0;border-radius:14px;background:var(--startup-action-gradient);color:var(--startup-action-ink);font:inherit;cursor:pointer}
     </style>
   </head>
   <body>

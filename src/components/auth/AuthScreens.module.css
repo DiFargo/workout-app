@@ -880,6 +880,48 @@
   display: none;
 }
 
+/* The saved preference is available before auth resolves. Once the client
+   mounts, its live theme tokens take over (including lazy-route fallbacks). */
+:global(html:root[data-startup-appearance]) .appSplash {
+  background: var(--client-canvas, var(--startup-canvas, #f5f7f8));
+  color: var(--client-text, var(--startup-text, #1c282e));
+}
+
+:global(html:root[data-startup-appearance]) .splashLogo {
+  color: var(--client-text, var(--startup-text, #1c282e));
+}
+
+:global(html:root[data-startup-appearance]) :is(.splashText, .splashCaption, .splashRecovery p) {
+  color: var(--client-secondary, var(--startup-secondary, #617078));
+}
+
+:global(html:root[data-startup-appearance]) .splashProgress {
+  background: var(--client-track, var(--startup-track, rgba(57, 82, 91, .12)));
+}
+
+:global(html:root[data-startup-appearance]) :is(.splashProgress > span, .splashRetry) {
+  background: var(--startup-action-gradient, var(--ownset-action-gradient));
+}
+
+:global(html:root[data-client-appearance]) :is(.splashProgress > span, .splashRetry) {
+  background: var(--ownset-action-gradient);
+}
+
+:global(html:root[data-startup-appearance]) .splashRetry {
+  color: var(--client-action-ink, var(--startup-action-ink, #fff));
+}
+
+/* Scope the viewport background to the loading state, never staff screens. */
+:global(html:root[data-startup-appearance]):has(:global(#startup), .appSplash),
+:global(html:root[data-startup-appearance]):has(:global(#startup), .appSplash) :global(body),
+:global(html:root[data-startup-appearance]):has(:global(#startup), .appSplash) :global(#root) {
+  background: var(--client-canvas, var(--startup-canvas, #f5f7f8)) !important;
+}
+
+:global(html:root[data-startup-appearance="dark"]:not([data-client-appearance])):has(:global(#startup), .appSplash) {
+  color-scheme: dark;
+}
+
 .loginPage {
   gap: 22px;
 }
