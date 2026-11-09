@@ -18,7 +18,7 @@ const bundle = await rolldown({ input: "nutrition-save-feedback-scene", platform
       return null;
     },
     load(id) {
-      if (id.endsWith(".css")) return { code: 'export default {notice:"notice",compact:"compact",title:"title",description:"description"};', moduleType: "js" };
+      if (id.endsWith(".css")) return { code: 'export default Object.fromEntries(["status","indicator","announcement","details","title","description","retry","critical","stateCloud","stateSaving","stateLocal","stateError","stateUnknown"].map(key=>[key,key]));', moduleType: "js" };
       if (id === "fixture-auth") return "export const auth={currentUser:{uid:'client'}};export const db={};";
       if (id === "fixture-feedback") return "export const showAppError=()=>{};export const showAppConfirm=async()=>true;";
       if (id === "fixture-api") return "export const fetchAuthorizedWithTimeout=async()=>{throw new Error('network disabled in synthetic UI test')};";
@@ -97,15 +97,31 @@ async function fixture(run, { withoutBaseline = false } = {}) {
     await page.clock.install({ time: new Date("2026-10-30T10:00:00Z") });
     await page.addStyleTag({ content: `body{margin:0;background:#f2f2f7;font-family:Arial,sans-serif}${styles}` });
     await page.addScriptTag({ content: code });
-    await expect(withoutBaseline ? page.getByText("Сохранено только на устройстве", { exact: true }) : page.getByTestId("nutrition-save-status")).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-indicator")).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-indicator")).toHaveAttribute("aria-label", withoutBaseline
+      ? "Сохранено только на устройстве" : "Сохранено в облаке");
     await run(page);
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
 }
 
+async function openStatus(page) {
+  const indicator = page.getByTestId("nutrition-save-indicator");
+  if (await indicator.getAttribute("aria-expanded") !== "true") await indicator.click();
+  await expect(page.getByTestId("nutrition-save-details")).toBeVisible();
+}
+
 test("реальный UI питания: local → отправка → cloud только после ack, новый ввод переживает старый ack", { timeout: 30000 }, async () => {
   await fixture(async page => {
+    const writesBeforeOpen = await page.evaluate(() => ({ sets: window.io.sets, transactions: window.io.transactions }));
+    await openStatus(page);
+    await expect(page.getByText("Сохранено в облаке", { exact: true })).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-details").getByRole("button")).toHaveCount(0);
+    assert.deepEqual(await page.evaluate(() => ({ sets: window.io.sets, transactions: window.io.transactions })), writesBeforeOpen);
+    await page.getByTestId("nutrition-save-indicator").click();
     await page.evaluate(() => { window.io.hold = true; window.scene.edit(200); });
+    await openStatus(page);
+    await expect(page.getByTestId("nutrition-sync-recovery")).toHaveAttribute("data-save-state", "local");
     await expect(page.getByText("Сохранено только на устройстве", { exact: true })).toBeVisible();
     await page.clock.runFor(700);
     await expect(page.getByText("Сохраняем в облако…", { exact: true })).toBeVisible();
@@ -117,6 +133,7 @@ test("реальный UI питания: local → отправка → cloud �
     await expect(page.getByText("Сохранено в облаке", { exact: true })).toHaveCount(0);
     await page.clock.runFor(700);
     await expect(page.getByTestId("nutrition-save-status")).toBeVisible();
+    await expect(page.getByTestId("nutrition-save-status")).toHaveAttribute("data-save-state", "cloud");
     await expect(page.getByTestId("nutrition-save-status")).toHaveAttribute("title", "Сохранено в облаке");
     assert.equal(await page.evaluate(() => window.scene.queue()), null);
   });
@@ -126,6 +143,7 @@ test("реальный UI питания: отказ облака даёт по�
   await fixture(async page => {
     await page.evaluate(() => { window.io.fail = true; window.scene.edit(400); });
     await page.clock.runFor(700);
+    await openStatus(page);
     await expect(page.getByText("Не удалось сохранить в облаке", { exact: true })).toBeVisible();
     await expect(page.getByText("Локальная копия сохранена. Проверьте интернет и повторите отправку.")).toBeVisible();
     const retry = page.getByRole("button", { name: "Повторить сохранение" });
@@ -151,8 +169,12 @@ test("реальный UI питания: смена auth-сессии скры�
   await fixture(async page => {
     await page.evaluate(() => { window.io.hold = true; window.scene.edit(600); });
     await page.clock.runFor(700);
+    await openStatus(page);
     await expect(page.getByText("Сохраняем в облако…", { exact: true })).toBeVisible();
     await page.evaluate(() => window.scene.changeAuth("other"));
+    await expect(page.getByTestId("nutrition-save-details")).toHaveCount(0);
+    await expect(page.getByTestId("nutrition-save-indicator")).toHaveAttribute("aria-expanded", "false");
+    await openStatus(page);
     await expect(page.getByText("Сохранено только на устройстве", { exact: true })).toBeVisible();
     await page.evaluate(() => window.scene.release());
     await expect(page.getByText("Сохранено в облаке", { exact: true })).toHaveCount(0);
@@ -164,6 +186,8 @@ test("реальный UI питания: смена auth-сессии скры�
 test("реальный UI питания: quota не обещает локальную копию, повтор сначала восстанавливает её", { timeout: 30000 }, async () => {
   await fixture(async page => {
     await page.evaluate(() => { window.storageFull = true; window.scene.edit(500); });
+    await expect(page.getByRole("alert")).toContainText("Не закрывайте приложение до подтверждения сохранения.");
+    await openStatus(page);
     await expect(page.getByText("Не удалось сохранить на устройстве", { exact: true })).toBeVisible();
     await expect(page.getByText(/Не закрывайте приложение\. Освободите место/)).toBeVisible();
     assert.equal(await page.getByTestId("water").textContent(), "500");
@@ -179,6 +203,7 @@ test("реальный UI питания: отказ первичной загр
   await fixture(async page => {
     await page.evaluate(() => window.scene.failInitialLoad());
     await page.clock.runFor(2700);
+    await openStatus(page);
     await expect(page.getByText("Сохранено в облаке", { exact: true })).toHaveCount(0);
     await expect(page.getByText("Сохранено только на устройстве", { exact: true })).toBeVisible();
     assert.equal(await page.evaluate(() => window.io.transactions), 0);

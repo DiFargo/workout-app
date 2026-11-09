@@ -33,7 +33,7 @@ const bundle = await rolldown({ input: "nutrition-loading-recovery-fixture", pla
         import{advanceAuthSession}from ${source("utils/authSession.js")};
         import{auth}from'fixture-auth';
         configureNutritionDayStorage({enabled:true});advanceAuthSession(auth);
-        window.calls=[];window.pendingRows=[{id:'local',status:'rebase-required'}];window.confirmResult=false;
+        window.calls=[];window.pendingRows=window.emptyPending?[]:[{id:'local',status:'rebase-required'}];window.confirmResult=false;
         window.mergeCoverage=mergeNutritionCoverage;
         function Scene(){const[user,setUser]=useState(auth.currentUser),[mounted,setMounted]=useState(true);
           const[nutrition,setNutrition]=useState({__uid:user.uid,__nutritionStorage:{generation:'g',writerEpoch:1},days:{}});
@@ -49,13 +49,15 @@ const bundle = await rolldown({ input: "nutrition-loading-recovery-fixture", pla
   }] });
 const generated = await bundle.generate({ format: "iife", codeSplitting: false }); await bundle.close();
 
-async function fixture(run) {
+async function fixture(run, { emptyPending = false } = {}) {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({ viewport: { width: 375, height: 812 } }); const errors = [];
     page.on("pageerror", error => errors.push(error.message));
-    await page.setContent('<main id="root"></main>'); await page.addScriptTag({ content: generated.output[0].code });
-    await expect(page.getByTestId("nutrition-sync-recovery")).toBeVisible();
+    await page.setContent('<main id="root"></main>');
+    await page.evaluate(value => { window.emptyPending = value; }, emptyPending);
+    await page.addScriptTag({ content: generated.output[0].code });
+    await expect(page.getByTestId(emptyPending ? "nutrition-save-status" : "nutrition-sync-recovery")).toBeVisible();
     await run(page); assert.deepEqual(errors, []);
   } finally { await browser.close(); }
 }
@@ -63,6 +65,10 @@ const coverage = (revision, fields = {}) => ({ uid: "client", generation: "g", w
   complete: false, loadedDayKeys: [], missingDayKeys: [], loading: false, ...fields });
 const update = (page, value) => page.evaluate(value => window.coverageUpdate(value), value);
 const readState = page => page.getByTestId("coverage").evaluate(element => JSON.parse(element.textContent));
+const openStatus = async page => {
+  await page.getByTestId("nutrition-save-indicator").click();
+  await expect(page.getByTestId("nutrition-save-details")).toBeVisible();
+};
 
 test("actual coverage hook keeps A ready across A → B → cached A and treats known missing days as loaded coverage", { timeout: 30000 }, async () => {
   await fixture(async page => {
@@ -93,6 +99,8 @@ test("actual coverage hook revokes full authority on a new partial revision or g
 
 test("recovery cancel performs no rebase, replay or refresh and discloses possible deleted-record restoration", { timeout: 30000 }, async () => {
   await fixture(async page => {
+    await openStatus(page);
+    assert.deepEqual(await page.evaluate(() => window.calls), []);
     await page.getByRole("button", { name: "Проверить и перенести" }).click();
     await expect(page.getByRole("button", { name: "Проверить и перенести" })).toBeEnabled();
     assert.deepEqual(await page.evaluate(() => window.calls), ["confirm"]);
@@ -101,15 +109,18 @@ test("recovery cancel performs no rebase, replay or refresh and discloses possib
   });
 });
 
-test("confirmed recovery waits for rebase before replay and refresh, then removes the pending notice", { timeout: 30000 }, async () => {
+test("confirmed recovery waits for rebase before replay and refresh, then leaves an unconfirmed status rather than claiming cloud ack", { timeout: 30000 }, async () => {
   await fixture(async page => {
     await page.evaluate(() => { window.confirmResult = true; window.holdRebase = true; });
+    await openStatus(page);
     await page.getByRole("button", { name: "Проверить и перенести" }).click();
     await expect.poll(() => page.evaluate(() => window.calls.length)).toBe(2);
     assert.deepEqual(await page.evaluate(() => window.calls), ["confirm", ["rebase", "client", { confirmed: true }]]);
     await expect(page.getByRole("button", { name: "Синхронизируем…" })).toBeDisabled();
     await page.evaluate(() => window.finishRebase());
     await expect(page.getByTestId("nutrition-sync-recovery")).toHaveCount(0);
+    await expect(page.getByTestId("nutrition-save-status")).toHaveAttribute("data-save-state", "unknown");
+    await expect(page.getByTestId("nutrition-save-indicator")).not.toHaveAttribute("aria-label", "Сохранено в облаке");
     assert.deepEqual(await page.evaluate(() => window.calls), ["confirm", ["rebase", "client", { confirmed: true }], "replay", "refresh"]);
   });
 });
@@ -117,18 +128,45 @@ test("confirmed recovery waits for rebase before replay and refresh, then remove
 test("auth changes during confirmation or rebase discard late recovery continuations", { timeout: 30000 }, async () => {
   await fixture(async page => {
     await page.evaluate(() => { window.holdConfirm = true; });
+    await openStatus(page);
     await page.getByRole("button", { name: "Проверить и перенести" }).click();
     await expect.poll(() => page.evaluate(() => typeof window.finishConfirm)).toBe("function");
     await page.evaluate(() => { window.advanceSameAuth(); window.finishConfirm(true); });
+    await expect(page.getByTestId("nutrition-save-details")).toHaveCount(0);
     await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 0)));
     assert.deepEqual(await page.evaluate(() => window.calls), ["confirm"]);
   });
   await fixture(async page => {
     await page.evaluate(() => { window.confirmResult = true; window.holdRebase = true; });
+    await openStatus(page);
     await page.getByRole("button", { name: "Проверить и перенести" }).click();
     await expect.poll(() => page.evaluate(() => typeof window.finishRebase)).toBe("function");
     await page.evaluate(() => { window.changeAuth("other-client"); window.finishRebase(); });
+    await expect(page.getByTestId("nutrition-save-details")).toHaveCount(0);
     await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 0)));
     assert.deepEqual(await page.evaluate(() => window.calls), ["confirm", ["rebase", "client", { confirmed: true }]]);
   });
+});
+
+test("unconfirmed status stays interactive without writes; Escape and outside click close its details", { timeout: 30000 }, async () => {
+  await fixture(async page => {
+    const status = page.getByTestId("nutrition-save-status");
+    const indicator = page.getByTestId("nutrition-save-indicator");
+    await expect(status).toHaveAttribute("data-save-state", "unknown");
+    await expect(indicator).not.toHaveAttribute("aria-label", "Сохранено в облаке");
+    await expect(indicator).toHaveAttribute("aria-label", await status.getAttribute("title"));
+    await expect(indicator).toHaveAttribute("aria-expanded", "false");
+    await openStatus(page);
+    await expect(page.getByTestId("nutrition-save-details").getByRole("button")).toHaveCount(0);
+    assert.deepEqual(await page.evaluate(() => window.calls), []);
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("nutrition-save-details")).toHaveCount(0);
+    await expect(indicator).toBeFocused();
+    await expect(indicator).toHaveAttribute("aria-expanded", "false");
+    await openStatus(page);
+    await page.getByTestId("coverage").click();
+    await expect(page.getByTestId("nutrition-save-details")).toHaveCount(0);
+    await expect(indicator).toHaveAttribute("aria-expanded", "false");
+    assert.deepEqual(await page.evaluate(() => window.calls), []);
+  }, { emptyPending: true });
 });
