@@ -340,8 +340,8 @@
   }
 }
 
-:global(html[data-client-appearance]) .root.primary:not(.embedded) { padding-top:max(8px, env(safe-area-inset-top, 0px)); padding-bottom:12px; background:var(--client-header-background); backdrop-filter:none; -webkit-backdrop-filter:none; }
-:global(html[data-client-appearance]) .root.primary:not(.embedded) .bar { height:50px; min-height:50px; }
-:global(html[data-client-appearance]) .root.primary .title { font-size:32px; font-weight:700; letter-spacing:-.8px; line-height:1.15; }
+:global(html[data-client-appearance]) .root.primary:not(.embedded) { --client-primary-title-size:1.5rem; --client-title-tracking:-.45px; padding-top:max(8px, env(safe-area-inset-top, 0px)); padding-bottom:4px; background:var(--client-header-background); backdrop-filter:none; -webkit-backdrop-filter:none; }
+:global(html[data-client-appearance]) .root.primary:not(.embedded) .bar { height:max(44px, 1.75rem); min-height:max(44px, 1.75rem); }
+:global(html[data-client-appearance]) .root.primary .title { font-size:var(--client-primary-title-size, 32px); font-weight:700; letter-spacing:var(--client-title-tracking, -.8px); line-height:1.15; }
 :global(html[data-client-appearance]) .root.primary .actions button { border:1px solid var(--client-round-border); background:var(--client-round-surface); box-shadow:var(--client-round-shadow); color:var(--client-round-ink); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
 :global(html[data-client-appearance]) .root.primary .actions button svg { width:22px; height:22px; stroke-width:1.7; }

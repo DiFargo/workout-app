@@ -140,7 +140,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expect(page.locator("body")).toHaveCSS("overscroll-behavior-y", "none");
   await expectRect(mainHeader, { x: 0, y: 0, width: 402, height: 82 });
   await expectRect(page.getByTestId("profile-main-title"), { x: 20, y: 26, width: 122, height: 36 });
-  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "24px");
   await expectRect(page.getByTestId("profile-main-notifications"), { x: 338, y: 23, width: 44, height: 44 });
   const dashboard = page.getByTestId("profile-summary-dashboard");
   const taskCard = dashboard.getByTestId("profile-summary-task-card");
@@ -176,7 +176,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
 
   await page.getByTestId("client-nav-cabinet").click();
   await expect(page.getByTestId("profile-cabinet-title")).toHaveText("Кабинет");
-  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "24px");
   await expectRect(page.locator('[data-css-module-scope="profile-cabinet-title-row"]'), { x: 0, y: 0, width: 402, height: 82 });
   await expectRect(page.locator('[data-client-page-header] > [data-testid="profile-cabinet-title-row"]'), { x: 20, y: 23, width: 362, height: 42 });
   await expectRect(page.getByTestId("profile-cabinet-action-questionnaire"), { x: 20, y: 233, width: 362, height: 54 });
@@ -190,7 +190,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
 
   await page.getByTestId("client-nav-nutrition").click();
   await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveText("Питание");
-  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "32px");
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "24px");
   await expectRect(page.locator('[data-nutrition-header-part="title-row"]'), { x: 20, y: 23, width: 362, height: 42 });
   await expect(page.getByTestId("nutrition-header-calendar")).toHaveCount(0);
   await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
@@ -214,7 +214,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 804, width: 402, height: 70 });
 
   await page.getByTestId("client-nav-workouts").click();
-  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "24px");
   await expectRect(page.getByTestId("workout-week-calendar"), { x: 20, y: 84, width: 362, height: 67 });
   await expectRect(page.getByTestId("workout-today-card"), { x: 20, y: 204, width: 362, height: 332 });
   await expectRect(page.getByTestId("workout-start-button"), { x: 35, y: 419, width: 332, height: 48 });
@@ -222,7 +222,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
 
   await page.getByTestId("client-nav-progress").click();
   await expect(page.getByTestId("profile-progress-title")).toHaveText("Прогресс");
-  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "24px");
   await expectRect(page.getByTestId("profile-progress-header"), { x: 0, y: 0, width: 402, height: 82 });
   await expect(page.getByTestId("profile-measurement-panel")).toBeVisible();
   await expect(page.getByRole("tablist", { name: "Период графика веса" }).getByRole("tab")).toHaveCount(3);

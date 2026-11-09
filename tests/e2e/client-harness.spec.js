@@ -95,7 +95,7 @@ test("client primary chrome keeps shared alignment and draft progress inside its
     "client-harness-main",
     '[data-testid="profile-main-title"]'
   );
-  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("profile-main-title")).toHaveCSS("font-size", "24px");
 
   const workouts = await collectPrimaryLayoutMetric(
     page,
@@ -103,28 +103,28 @@ test("client primary chrome keeps shared alignment and draft progress inside its
     "client-harness-workouts",
     '[data-testid="workout-list-title"]'
   );
-  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("workout-list-title")).toHaveCSS("font-size", "24px");
   const nutrition = await collectPrimaryLayoutMetric(
     page,
     "client-nav-nutrition",
     "client-harness-nutrition",
     '[data-nutrition-header-part="title"]'
   );
-  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "32px");
+  await expect(page.locator('[data-nutrition-header-part="title"]')).toHaveCSS("font-size", "24px");
   const progress = await collectPrimaryLayoutMetric(
     page,
     "client-nav-progress",
     "client-harness-progress",
     '[data-testid="profile-progress-title"]'
   );
-  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("profile-progress-title")).toHaveCSS("font-size", "24px");
   const cabinet = await collectPrimaryLayoutMetric(
     page,
     "client-nav-cabinet",
     "client-harness-cabinet",
     '[data-testid="profile-cabinet-title"]'
   );
-  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "32px");
+  await expect(page.getByTestId("profile-cabinet-title")).toHaveCSS("font-size", "24px");
 
   for (const metric of [workouts, nutrition, progress, cabinet]) {
     // Stable primary screens keep page-specific top insets within the shared 36px rhythm.

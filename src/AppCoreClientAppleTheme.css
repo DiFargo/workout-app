@@ -173,7 +173,7 @@ html:root[data-app-theme="warm-light"] [data-client-page-header="true"] button {
 
 html:root[data-app-theme="warm-light"] [data-client-page-header-primary="true"] h1 {
   font-family: var(--font-family-sans) !important;
-  font-size: 32px !important;
+  font-size: var(--client-primary-title-size, 32px) !important;
   font-weight: var(--client-title-weight, 750) !important;
   letter-spacing: var(--client-title-tracking, -1.35px) !important;
   line-height: 1.14 !important;

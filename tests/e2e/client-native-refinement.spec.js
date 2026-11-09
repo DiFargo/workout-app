@@ -19,7 +19,7 @@ for (const width of [320, 375, 421, 768]) {
       await page.getByTestId(`client-nav-${tab}`).click();
       const heading = page.getByRole("heading", { name: title, exact: true }).first();
       await expect(heading).toBeVisible();
-      await expect(heading).toHaveCSS("font-size", "32px");
+      await expect(heading).toHaveCSS("font-size", "24px");
       await expect(page.locator('[data-rhythm-mark]')).toHaveCount(0);
       const nav = page.getByTestId("client-bottom-nav");
       await expect(nav).toBeVisible();
