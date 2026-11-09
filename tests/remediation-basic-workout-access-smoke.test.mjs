@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { parseBasicAccessSmokeArgs, runBasicWorkoutAccessSmoke, recoverBasicWorkoutAccessCleanup, safeBasicAccessSmokeError, validateBasicSmokeMediaUrl } from "../scripts/smoke-basic-workout-access-release.mjs";
+import { runAdminBasicAccessGrantRegression } from "../scripts/smoke-admin-basic-access-grant-release.mjs";
 
 const project = "tren-85720", bucket = `${project}.firebasestorage.app`;
 const version = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8")).version;
@@ -113,6 +114,22 @@ test("complete orchestrator validates rules, denied AI, exact media ranges and r
   assert.equal(h.calls.filter(call => call.url.pathname === "/api/ai-basic-workout-plan").length, 1);
   assert.equal(h.calls.some(call => call.method !== "GET" && /\/history|subscription|telegram|iam/.test(call.url.pathname)), false);
   const rendered = JSON.stringify(h.report()); for (const secret of ["DO-NOT-PRINT", "owned_client", "owned_admin", "@example.invalid", "X-Goog-", "storage.googleapis.com"]) assert.equal(rendered.includes(secret), false, secret);
+});
+
+test("grant regression uses actual handler/helper only on its owned profile and cleans exactly two identities", async () => {
+  const h = fixture(), { report } = await runAdminBasicAccessGrantRegression(options(), h.dependencies);
+  assert.equal(report.failed, false); assert.equal(report.cleanupVerified, true); assert.equal(report.cases.length, 5);
+  assert.deepEqual(h.state(), { accounts: 0, documents: 0 }); assert.equal(h.intent().cleanupRequired, false);
+  assert.equal(h.calls.filter(call => call.url.pathname.endsWith("accounts:signUp")).length, 2);
+  assert.equal(h.calls.some(call => /\/api\/|\/workouts|\/history/.test(call.url.pathname)), false);
+  const writes = h.calls.filter(call => call.method === "PATCH" && !call.operator);
+  assert.equal(writes.length, 3);
+  for (const call of writes) {
+    assert.deepEqual(Object.keys(call.body.fields), ["basicWorkoutAccess", "updatedAt"]);
+    assert.ok(call.url.searchParams.get("currentDocument.updateTime"));
+    assert.equal(call.url.pathname.endsWith("/users/owned_client"), true);
+  }
+  assert.equal(JSON.stringify(report).includes("DO-NOT-PRINT"), false);
 });
 test("bounded media failure still independently cleans Auth, own tree and rates", async () => {
   const h = fixture({ rangeFailure: true }), { report } = await runBasicWorkoutAccessSmoke(options(), h.dependencies);

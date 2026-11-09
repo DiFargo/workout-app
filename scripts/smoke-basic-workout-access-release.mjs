@@ -105,22 +105,29 @@ export async function runBasicWorkoutAccessSmoke(input, dependencies = {}) {
       "Нет Telegram, subscription/ledger, IAM, глобальных изменений или платных AI-вызовов: AI запрашивается только до выдачи доступа и должен вернуть 403.",
       "Медиа — только существующие leg-curl MP4/WebP через штатный endpoint; endpoint может применить обычную metadata policy. Каждый HTTP Range ограничен 64 байтами.",
       "Очистка подтверждается на момент проверки; поздние внешние события не исключены."] };
+  if (dependencies.runOwnedGrantRegression) report.limits = [
+    "Ровно два собственных случайных аккаунта и только их профили; grant/revoke через реальный handler и bounded REST helper.",
+    "Admin key proof — подписанный Firebase Auth claims fixture для проверки Rules, не проверка физического USB/NFC-ключа.",
+    "Нет workouts/history/media/AI/Telegram/IAM и реальных пользовательских изменений. UI подтверждения отдельно покрыт локальным браузерным тестом.",
+    "Очистка подтверждается на момент проверки; поздние внешние события не исключены."
+  ];
   const intent = { project: PROJECT, version, runId, marker, cleanupRequired: true, identities: [] };
   let operator, apiKey, step = "initialize", cleaning = false, requests = 0, cleanupRequests = 0, cleanupRecords = 0, domainRequests = 0;
   const deadline = Date.now() + 8 * 60 * 1000;
   const persist = async () => { intent.identities = identities.map(({ role, email, uid, absenceVerified, attempted, ownershipVerified }) => ({ role, email, uid, absenceVerified, attempted, ownershipVerified })); await artifact.save(report, intent); };
-  const request = async (url, { method = "GET", body, bearer, expected = 200, allowMissing = false, raw = false, maximum = 2 * 1024 * 1024, headers = {} } = {}) => {
+  const request = async (url, { method = "GET", body, bearer, expected = 200, allowMissing = false, raw = false, maximum = 2 * 1024 * 1024, headers = {}, signal, asResponse = false } = {}) => {
     const target = new URL(url); check(target.protocol === "https:" && !target.username && !target.password && !target.port && !target.hash, "unsafe-request-origin");
     check([`${PROJECT}.web.app`, "firestore.googleapis.com", "identitytoolkit.googleapis.com"].includes(target.hostname) ||
       (raw && ["storage.googleapis.com", `${BUCKET}.storage.googleapis.com`].includes(target.hostname) && headers.Range === "bytes=0-63" && maximum === 64), "unsafe-request-origin");
     if (cleaning) { cleanupRequests++; check(++domainRequests <= 600, "cleanup-request-budget"); }
     else check(++requests <= 100 && Date.now() < deadline, "main-request-budget");
-    const response = await (dependencies.fetchImpl || fetch)(url, { method, redirect: "error", cache: "no-store", signal: AbortSignal.timeout(20000),
+    const response = await (dependencies.fetchImpl || fetch)(url, { method, redirect: "error", cache: "no-store", signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(20000)]) : AbortSignal.timeout(20000),
       headers: { ...headers, ...(body ? { "Content-Type": "application/json" } : {}), ...(bearer ? { Authorization: `Bearer ${bearer}` } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
     if (allowMissing && response.status === 404) { await response.body?.cancel(); return null; }
-    if (response.status !== expected) { await response.body?.cancel(); fail(`unexpected-http-${response.status}`); }
+    if (!(Array.isArray(expected) ? expected : [expected]).includes(response.status)) { await response.body?.cancel(); fail(`unexpected-http-${response.status}`); }
     if (method === "DELETE") { await response.body?.cancel(); return null; }
     const data = await bytes(response, maximum);
+    if (asResponse) return new Response(data, { status: response.status, headers: { "Content-Type": "application/json" } });
     if (raw) return { bytes: data, headers: response.headers };
     try { return JSON.parse(data.toString("utf8")); } catch { fail("invalid-json-response"); }
   };
@@ -179,6 +186,26 @@ export async function runBasicWorkoutAccessSmoke(input, dependencies = {}) {
           { adminClaimVersion: runId, adminSecurityKeyRequired: true, adminSecurityKeyVersion: `key_${runId}` }) });
     }
     await pass("Созданы ровно два собственных случайных аккаунта");
+    if (dependencies.runOwnedGrantRegression) {
+      step = "actual-admin-grant-handler";
+      await dependencies.runOwnedGrantRegression({
+        clientId: client.uid, administratorId: administrator.uid,
+        proveAdmin: async proof => { await setAdminClaims(proof); },
+        readClient: () => getDoc(`users/${client.uid}`),
+        requestAsAdmin: async (url, init = {}) => {
+          const target = new URL(url);
+          check(target.origin === "https://firestore.googleapis.com" && target.pathname === new URL(docUrl(`users/${client.uid}`)).pathname &&
+            ["GET", "PATCH"].includes(init.method || "GET"), "grant-regression-non-owned-target");
+          if (init.method === "PATCH") {
+            const body = JSON.parse(init.body || "{}");
+            check(Object.keys(body.fields || {}).sort().join(",") === "basicWorkoutAccess,updatedAt" &&
+              typeof body.fields.basicWorkoutAccess.booleanValue === "boolean" && target.searchParams.has("currentDocument.updateTime"), "grant-regression-unsafe-write");
+          }
+          return request(target, { method: init.method, body: init.body ? JSON.parse(init.body) : undefined,
+            headers: init.headers, signal: init.signal, bearer: administrator.idToken, expected: [200, 401, 403, 409, 412], maximum: 65536, asResponse: true });
+        }, pass
+      });
+    } else {
     const root = `users/${client.uid}`, legacyPath = `${root}/workouts/legacy_basic`;
     await createDoc(client, legacyPath, { source: "basic", basicPlanId: `legacy_${runId}`, name: "Synthetic existing basic day",
       assignedBy: `synthetic_${runId}`, assignedProgramUpdatedAt: `basic:legacy_${runId}`, status: "planned",
@@ -219,6 +246,7 @@ export async function runBasicWorkoutAccessSmoke(input, dependencies = {}) {
       if (kind === "poster") check(result.bytes.toString("ascii", 0, 4) === "RIFF" && result.bytes.toString("ascii", 8, 12) === "WEBP", "poster-not-webp");
     }
     await pass("Защищённые leg-curl WebP и MP4 доступны: по 64 байта, без полной загрузки");
+    }
   } catch (error) { report.failed = true; report.failedStep = step; report.failure = safeBasicAccessSmokeError(error); }
   finally {
     cleaning = true;
