@@ -20,6 +20,7 @@ export default function WorkoutExercisePicker({ open = false, items = [], onClos
   return createPortal(
     <div
       className={styles.overlay}
+      data-css-module-scope="workout-exercise-picker"
       data-modal-backdrop="true"
       data-testid="workout-exercise-picker-backdrop"
       onClick={onClose}
