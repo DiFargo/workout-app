@@ -1,7 +1,7 @@
 .status{position:relative;flex:0 0 44px;width:44px;height:44px;margin-left:auto;color:var(--client-secondary,#636366)}
 .indicator{position:relative;display:grid;place-items:center;box-sizing:border-box;width:44px;height:44px;margin:0;padding:10px;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer;touch-action:manipulation}
 .indicator svg{display:block;width:22px;height:22px;stroke-width:1.8}
-.indicator .checkMark{position:absolute;right:8px;bottom:10px;width:10px;height:10px;stroke-width:3;border-radius:50%;background:var(--apple-canvas,#f2f2f7)}
+.indicator .checkMark{position:absolute;right:8px;bottom:10px;width:10px;height:10px;stroke-width:3;border-radius:50%;background:var(--nutrition-save-badge-background,var(--apple-canvas,#f2f2f7))}
 .indicator:active,.indicator[aria-expanded="true"]{background:var(--client-surface-muted,#efeff4)}
 .indicator:active .checkMark,.indicator[aria-expanded="true"] .checkMark{background:var(--client-surface-muted,#efeff4)}
 .stateCloud{color:#386fa8}

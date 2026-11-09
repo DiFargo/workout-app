@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ListChecks, MoonStar, RotateCcw, X } from "lucide-react";
-import { ArrowRight, CalendarDays, ChevronRight, Dumbbell, Info, Trophy } from "../../../shared/ui/ClientReferenceIcon.jsx";
+import { ArrowRight, CalendarDays, ChevronRight, Dumbbell, Trophy } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
 import weeklyCalendarStyles from "../../../shared/ui/WeeklyCalendar.module.css";
@@ -185,7 +185,6 @@ export default function WorkoutRenderOverview({
           <div className={styles.programBottom} data-testid={programType === "basic" ? "basic-workout-management" : undefined}><button type="button" data-testid="workout-program-button" onClick={onProgram}>Открыть программу<ChevronRight aria-hidden="true" /></button>{programType === "basic" ? <button type="button" data-testid="basic-manage-plan" onClick={onCreateBasicWorkout}><CalendarDays aria-hidden="true" />Изменить</button> : null}</div>
         </section>
         <button type="button" className={styles.historyRow} data-testid="workout-records-button" onClick={onHistory}><span className={styles.historyIcon}><Trophy aria-hidden="true" /></span><span><strong>История и рекорды</strong><small>Ваши достижения за всё время</small></span><ChevronRight aria-hidden="true" /></button>
-        <p className={styles.managementHint}><Info aria-hidden="true" />Вы выбираете дни. Порядок тренировок в программе сохраняется.</p>
       </main>
       {renderBottomBar ? renderBottomBar("workouts") : <ClientMainBottomBar active="workouts" isTrainerMode={isTrainerMode} {...navigation} />}
       <ActionDialog mode={dialogMode} workout={workout} workoutDate={workoutDate} onClose={() => setDialogMode("")} onConfirm={() => { setDialogMode(""); onOpen?.(); }} onReschedule={onReschedule} />

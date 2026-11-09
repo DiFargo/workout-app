@@ -718,8 +718,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .programWorkout.programWorkoutExpanded {
-  border-color: rgba(47, 125, 104, 0.42);
-  background: #fafbf9;
+  border-color: var(--client-accent, rgba(47, 125, 104, 0.42));
+  background: var(--client-surface, #fafbf9);
 }
 
 :global(:root[data-app-theme="warm-light"]) .exerciseList li {

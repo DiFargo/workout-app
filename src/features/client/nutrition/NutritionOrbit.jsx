@@ -157,11 +157,11 @@ export default function NutritionOrbit({
     const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
     const isSelectedToday = !dateKey || dateKey === todayKey;
     return <>
-      <div className={styles.dateToolbar}>
-        {!isSelectedToday && <span className={styles.selectedDate} data-testid="nutrition-selected-date">{formatSelectedDate(dateKey, dateTitle)}</span>}
-        {saveStatus}
-      </div>
+      {!isSelectedToday && <div className={styles.dateToolbar}>
+        <span className={styles.selectedDate} data-testid="nutrition-selected-date">{formatSelectedDate(dateKey, dateTitle)}</span>
+      </div>}
       <section className={styles.renderEnergy} data-testid="nutrition-orbit">
+        {saveStatus}
         <div className={styles.renderRing} style={{ "--nutrition-progress": `${calorieProgressRounded * 3.6}deg` }}><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="48" /><circle cx="55" cy="55" r="48" strokeDasharray={`${Math.min(100, Math.max(0, calorieProgressRounded)) * 3.01593} 301.593`} /></svg><span><strong>{getNumericText(calories.amount)}</strong><small>из {targetCalories} ккал</small></span></div>
         <div className={styles.renderCopy}>
           <div className={styles.renderCopyHead} data-testid="nutrition-energy-heading-row">

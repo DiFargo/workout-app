@@ -36,7 +36,6 @@
 :global(html[data-client-appearance]) .historyRow strong { font-size:17px; font-weight:500; }
 :global(html[data-client-appearance]) .historyRow small { font-size:13px; }
 :global(html[data-client-appearance]) .historyIcon { width:32px; height:32px; color:var(--apple-orange); background:var(--apple-orange-tint); }
-:global(html[data-client-appearance]) .managementHint { font-size:12px; }
 .syncNotice { display:grid; gap:6px; margin-top:12px; padding:12px; border-radius:12px; background:var(--apple-surface); font-size:12px; line-height:1.45; }
 .syncNotice span { color:var(--apple-secondary); }
 .syncNotice button { min-height:44px; border:0; border-radius:10px; background:var(--apple-surface-muted); color:var(--apple-blue); font:inherit; }
@@ -88,8 +87,6 @@
 .historyRow strong { font-size:14px; font-weight:600; }
 .historyRow small { color:var(--apple-secondary); font-size:11px; }
 .historyRow > svg { width:16px; height:16px; color:#a5a9ad; }
-.managementHint { display:flex; align-items:flex-start; gap:7px; margin:13px 3px 0; color:var(--apple-secondary); font-size:12px; line-height:1.5; }
-.managementHint svg { width:15px; height:15px; margin-top:1px; flex-shrink:0; }
 .modalOverlay { position:fixed; inset:0; z-index:3000; display:flex; justify-content:center; align-items:flex-end; padding:0; background:rgba(23,33,44,.24); }
 .modal { width:100%; max-width:540px; max-height:90dvh; overflow-y:auto; position:relative; padding:24px 20px calc(28px + env(safe-area-inset-bottom,0px)); border-radius:25px 25px 0 0; background:var(--apple-canvas); box-shadow:0 -12px 45px #17212c15; }
 .modalClose { position:absolute; top:12px; right:14px; width:44px; height:44px; display:grid; place-items:center; border:0; border-radius:50%; color:var(--apple-text); background:var(--apple-surface-muted); }
