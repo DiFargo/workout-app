@@ -30,6 +30,11 @@
   --client-nav-text:#617c91; --client-nav-current:#16647d;
   --ios-canvas-background:radial-gradient(ellipse at 4% 35%,rgba(167,199,231,.32),transparent 55%),radial-gradient(ellipse at 98% 57%,rgba(174,222,210,.30),transparent 50%),linear-gradient(158deg,#f2f7fa,#eaf3f7 64%,#edf5f9);
   --client-header-background:transparent;
+  --client-round-surface:linear-gradient(145deg,rgba(255,255,255,.95),rgba(239,249,255,.66));
+  --client-round-border:rgba(255,255,255,.96); --client-round-ink:#32536b;
+  --client-round-shadow:inset 0 1px 2px #fff,inset 0 -1px 1px rgba(148,186,207,.12),0 5px 11px rgba(61,111,138,.1);
+  --client-tile-ink:#2f7888; --client-tile-shadow:inset 0 1px 1px rgba(255,255,255,.9);
+  --client-gold-surface:linear-gradient(135deg,#fff6df,#f4f0e8);
   --client-sheet-background:linear-gradient(145deg,#f6fafc,#eaf4f7 65%,#e7f3ee);
 }
 :global(html:root[data-client-appearance="dark"]).scope {
@@ -53,6 +58,11 @@
   --client-nav-text:#a2b3c2; --client-nav-current:#c2f0e5;
   --ios-canvas-background:radial-gradient(ellipse at -8% 32%,rgba(41,67,80,.17),transparent 54%),radial-gradient(ellipse at 110% 59%,rgba(31,71,63,.12),transparent 50%),#08080b;
   --client-header-background:transparent; --client-sheet-background:#202a33;
+  --client-round-surface:linear-gradient(145deg,rgba(54,70,82,.73),rgba(26,36,46,.82));
+  --client-round-border:rgba(196,225,238,.16); --client-round-ink:#c2dee9;
+  --client-round-shadow:inset 0 1px rgba(231,248,255,.1),0 3px 8px #0003;
+  --client-tile-ink:#a3d9e3; --client-tile-shadow:inset 0 1px rgba(210,236,245,.055);
+  --client-gold-surface:linear-gradient(135deg,#3a3323,#302a22);
 }
 :global(html[data-client-appearance]).scope :global(body) { font-family:var(--font-family-sans); line-height:normal; font-synthesis:none; -webkit-font-smoothing:antialiased; font-variant-numeric:tabular-nums; }
 :global(html:root[data-client-appearance]).scope {

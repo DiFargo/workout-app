@@ -594,6 +594,7 @@ export default function ProfileDashboardRoute(ctx) {
         showTrainerNotifications={!canUseTrainerFeatures()}
         trainerNotificationCount={trainerNotificationCount}
         mainTitle="Сегодня"
+        onOpenCalendar={openProfileWorkoutJournalCalendar}
         onOpenTrainerNotifications={() => {
           if (clientUid) void loadClientTrainerTasks?.(clientUid);
           setProfileTrainerNotificationsOpen(true);
@@ -603,6 +604,7 @@ export default function ProfileDashboardRoute(ctx) {
       {!isMainDashboard && visibleProfileTab === "cabinet" && (
         <ProfileCabinetTitleRow
           onRefresh={refreshPage}
+          clientAppearance={!hasTrainerFeatures}
         />
       )}
 
@@ -653,6 +655,7 @@ export default function ProfileDashboardRoute(ctx) {
             dateLabel={dashboardDateLabel}
             workoutTitle={homeWorkoutAction.title || nextWorkoutTitle}
             workoutDate={homeWorkoutAction.dateText || nextWorkoutDate || nextTrainingText}
+            workoutPosition={homeWorkoutAction.positionText}
             workoutState={homeWorkoutAction.state}
             isWorkoutToday={homeWorkoutAction.isToday}
             workoutScheduleStatus={homeWorkoutAction.scheduleStatus}
@@ -708,6 +711,7 @@ export default function ProfileDashboardRoute(ctx) {
           onStart={openProfileBodyControlMeasurements}
           onOpenPhotos={openProfileBodyControlPhotos}
           onAddWeight={openQuickWeightModal}
+          onOpenExerciseProgress={() => openProfileWorkoutJournalHistory()}
         />
       </ProfileDashboardContent>
 
@@ -795,7 +799,7 @@ export default function ProfileDashboardRoute(ctx) {
       />
 
       <ProfileWorkoutJournalModal
-        open={(profileProgressModalOpen || profileWorkoutHistoryModalOpen) && !isMainDashboard && visibleProfileTab === "cabinet"}
+        open={(profileProgressModalOpen || profileWorkoutHistoryModalOpen) && !isMainDashboard && ["cabinet", "measurements"].includes(visibleProfileTab)}
         activeTab={profileWorkoutHistoryModalOpen ? "history" : "calendar"}
         modalBodyRef={profileSettingsModalBodyRef}
         onClose={closeProfileWorkoutJournal}

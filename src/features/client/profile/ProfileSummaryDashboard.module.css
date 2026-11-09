@@ -78,7 +78,9 @@
 :global(html[data-client-appearance]) .welcome { padding-bottom:22px; }
 :global(html[data-client-appearance]) .welcome p { margin:0; font-size:13px; line-height:normal; }
 :global(html[data-client-appearance]) .welcome h2 { margin:6px 0 0; font-weight:600; letter-spacing:-.45px; line-height:normal; }
-.workoutMeta svg { width:14px; height:14px; }
+.workoutMeta > span { display:inline-flex; align-items:center; gap:5px; }
+.workoutMeta svg { width:15px; height:15px; }
+.coachTrailing { display:flex; align-items:center; gap:5px; color:var(--apple-secondary); }
 .workoutPrimary { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; min-height:52px; padding:1px 6px; margin-top:20px; border:0; border-radius:26px; background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); font:inherit; font-size:15px; font-weight:600; letter-spacing:-.15px; box-shadow:inset 0 1px 1px #ffffff66,inset 0 -1px 1px #1349481f,0 6px 13px -5px #28777459; cursor:pointer; }
 .workoutPrimary svg { width:19px; height:19px; }
 .workoutPrimary:active { filter:brightness(.94); }

@@ -11,6 +11,8 @@
 :global(html[data-client-appearance]) .sectionHead { margin:24px 0 10px; padding:0; }
 :global(html[data-client-appearance]) .sectionHead h2 { font-size:21px; font-weight:600; line-height:normal; letter-spacing:-.45px; }
 :global(html[data-client-appearance]) .sectionHead button { font-size:13px; }
+:global(html[data-client-appearance]) .nextWorkoutHeading { min-height:44px; margin:25px 0 11px; }
+:global(html[data-client-appearance]) .nextWorkoutHeading button { margin-block:0; }
 :global(html[data-client-appearance]) .workoutCard { padding:20px; border-radius:26px; background:var(--client-hero); box-shadow:var(--client-hero-shadow); }
 :global(html[data-client-appearance]) .workoutLabel { margin-bottom:20px; }
 :global(html[data-client-appearance]) .workoutLabel > span { font-size:10px; font-weight:500; }

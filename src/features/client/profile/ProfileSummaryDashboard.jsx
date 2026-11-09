@@ -1,4 +1,5 @@
-import { ArrowRight, Bell, Camera, CheckCircle2, ChevronRight, Dumbbell, Ruler, Scale, MessageCircle } from "lucide-react";
+import { CheckCircle2, Scale } from "lucide-react";
+import { ArrowRight, Bell, Camera, ChevronRight, Dumbbell, Ruler, MessageCircle } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import styles from "./ProfileSummaryDashboard.module.css";
 import { buildProfileDashboardTasks } from "./profileDashboardTasks.js";
 import { getDashboardWeightPresentation } from "./profileDashboardPresentation.js";
@@ -46,6 +47,7 @@ export default function ProfileSummaryDashboard({
   dateLabel,
   workoutTitle,
   workoutDate,
+  workoutPosition,
   workoutState = "ready",
   workoutLoadState = "ready",
   onRetryWorkoutLoad,
@@ -141,10 +143,10 @@ export default function ProfileSummaryDashboard({
         <h2 data-testid="profile-summary-greeting">{summaryGreeting}</h2>
       </section>
       {hasWorkoutHero ? <section className={styles.workoutHero} aria-label="Тренировка по плану">
-        <div className={styles.heroTop}><span><Dumbbell aria-hidden="true" />{isWorkoutToday ? "Сегодня по плану" : workoutState === "draft" ? "Тренировка начата" : "Твой план"}</span><small>{workoutDate}</small></div>
+        <div className={styles.heroTop}><span><Dumbbell aria-hidden="true" />{isWorkoutToday ? "Сегодня по плану" : workoutState === "draft" ? "Тренировка начата" : "Твой план"}</span><small>{workoutPosition || workoutDate}</small></div>
         <h2>{workoutTitle}</h2>
         <p className={styles.workoutFocus}>{isBasicPlan ? "Базовая тренировка" : "Индивидуальная программа"}</p>
-        <div className={styles.workoutMeta}><Dumbbell aria-hidden="true" />{formatRussianCount(Math.max(0, Number(exerciseCount) || 0), ["упражнение", "упражнения", "упражнений"])}</div>
+        <div className={styles.workoutMeta}><span><Dumbbell aria-hidden="true" />{formatRussianCount(Math.max(0, Number(exerciseCount) || 0), ["упражнение", "упражнения", "упражнений"])}</span></div>
         <button type="button" className={styles.workoutPrimary} data-testid="profile-summary-primary" data-task-id="workout" onClick={onOpenWorkout}>{workoutTask?.actionLabel || workoutActionLabel || "Открыть тренировку"}<ArrowRight aria-hidden="true" /></button>
       </section> : null}
       <section className={styles.reminders} data-testid="profile-summary-task-card" aria-labelledby="profileSummaryTaskHeading">
@@ -214,8 +216,8 @@ export default function ProfileSummaryDashboard({
       <div className={styles.sectionHead}><h3>{isBasicPlan ? "Сообщения и напоминания" : "На связи"}</h3></div>
       <button type="button" className={styles.coach} data-testid="profile-summary-notifications-button" onClick={onOpenTrainer}>
         <span className={styles.avatar} aria-hidden="true">{isBasicPlan ? <Bell size={20} /> : <MessageCircle size={20} />}</span>
-        <span className={styles.coachCopy}><strong>{isBasicPlan ? "Уведомления" : "Ваш тренер"}</strong><small data-testid="profile-summary-trainer-status">{trainerTasksReady ? trainerNotificationLabel || "Новых сообщений нет" : dataLoadState.tasks?.status === "error" ? "Не удалось загрузить сообщения" : "Загружаем сообщения…"}</small></span>
-        {trainerTasksReady && notificationCount > 0 && <span className={styles.notificationBadge} data-testid="profile-summary-trainer-badge" aria-label={`${notificationCount} новых уведомлений`} />}
+        <span className={styles.coachCopy}><strong>{isBasicPlan ? "Уведомления" : "Твой тренер"}</strong><small data-testid="profile-summary-trainer-status">{trainerTasksReady ? trainerNotificationLabel || "Новых сообщений нет" : dataLoadState.tasks?.status === "error" ? "Не удалось загрузить сообщения" : "Загружаем сообщения…"}</small></span>
+        <span className={styles.coachTrailing}>{trainerTasksReady && notificationCount > 0 && <span className={styles.notificationBadge} data-testid="profile-summary-trainer-badge" aria-label={`${notificationCount} новых уведомлений`} />}<ChevronRight size={16} /></span>
         {trainerTasksReady && messagePreview && <span className={styles.messagePreview}>{messagePreview}</span>}
       </button>
     </div>

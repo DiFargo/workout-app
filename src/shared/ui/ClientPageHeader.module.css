@@ -341,5 +341,6 @@
 
 :global(html[data-client-appearance]) .root.primary:not(.embedded) { padding-top:8px; padding-bottom:12px; background:var(--client-header-background); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
 :global(html[data-client-appearance]) .root.primary:not(.embedded) .bar { height:50px; min-height:50px; }
-:global(html[data-client-appearance]) .root.primary .title { font-size:32px; font-weight:700; letter-spacing:-.8px; }
-:global(html[data-client-appearance]) .root.primary .actions button { border:1px solid var(--client-glass-border); background:var(--client-glass); box-shadow:var(--client-glass-shadow); color:var(--apple-blue); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+:global(html[data-client-appearance]) .root.primary .title { font-size:32px; font-weight:700; letter-spacing:-.8px; line-height:1.15; }
+:global(html[data-client-appearance]) .root.primary .actions button { border:1px solid var(--client-round-border); background:var(--client-round-surface); box-shadow:var(--client-round-shadow); color:var(--client-round-ink); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+:global(html[data-client-appearance]) .root.primary .actions button svg { width:22px; height:22px; stroke-width:1.7; }

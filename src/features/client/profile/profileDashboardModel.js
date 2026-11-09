@@ -396,6 +396,7 @@ export function buildProfileDashboardModel(ctx) {
                   : "upcoming",
             eyebrow: nextWorkoutSlot?.isMissed ? "ТРЕНИРОВКА ПЕРЕНЕСЕНА" : "СЛЕДУЮЩАЯ ТРЕНИРОВКА",
             title: nextWorkoutTitle,
+            positionText: `${Math.max(0, profileCalendarWorkouts.indexOf(nextWorkoutSource)) + 1} из ${profileCalendarWorkouts.length}`,
             dateText: nextWorkoutDate,
             exerciseCount: nextWorkoutExerciseCount,
             actionLabel: "Открыть тренировку"

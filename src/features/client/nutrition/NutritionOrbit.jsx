@@ -1,4 +1,5 @@
-import { CalendarDays, Camera, ChevronDown, Flame, Mic, Plus, RefreshCw } from "lucide-react";
+import { ChevronDown, Flame, RefreshCw } from "lucide-react";
+import { CalendarDays, Camera, Mic, Plus } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import { useLayoutEffect, useRef, useState } from "react";
 import styles from "./NutritionOrbit.module.css";
 import NutritionVoiceModal from "./NutritionVoiceModal";
@@ -167,7 +168,7 @@ export default function NutritionOrbit({
         {saveStatus}
       </div>
       <section className={styles.renderEnergy} data-testid="nutrition-orbit">
-        <div className={styles.renderRing} style={{ "--nutrition-progress": `${calorieProgressRounded * 3.6}deg` }}><span><strong>{getNumericText(calories.amount)}</strong><small>из {targetCalories} ккал</small></span></div>
+        <div className={styles.renderRing} style={{ "--nutrition-progress": `${calorieProgressRounded * 3.6}deg` }}><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="48" /><circle cx="55" cy="55" r="48" strokeDasharray={`${Math.min(100, Math.max(0, calorieProgressRounded)) * 3.01593} 301.593`} /></svg><span><strong>{getNumericText(calories.amount)}</strong><small>из {targetCalories} ккал</small></span></div>
         <div className={styles.renderCopy}>
           <div className={styles.renderCopyHead} data-testid="nutrition-energy-heading-row">
             <p data-testid="nutrition-progress-status" aria-label={progressStatus}>{caloriesAmount > Number(targetCalories) && Number(targetCalories) > 0 ? "Сверх дневной цели" : caloriesAmount > 0 ? (isSelectedToday ? "Осталось на сегодня" : "Остаток за выбранный день") : "Дневник пока пуст"}</p>

@@ -1,4 +1,5 @@
-import { ChevronRight, Plus, Trash2, Utensils, X } from "lucide-react";
+import { Trash2, Utensils, X } from "lucide-react";
+import { ChevronRight, Plus } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import styles from "./NutritionDiary.module.css";
 import NutritionUndoDeleteToast from "./NutritionUndoDeleteToast";
 

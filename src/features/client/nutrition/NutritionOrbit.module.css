@@ -440,6 +440,7 @@
 .renderRing > span { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; border-radius:50%; background:var(--ownset-soft-gradient); }
 .renderRing strong { font-size:21px; font-weight:700; letter-spacing:-.5px; font-variant-numeric:tabular-nums; }
 .renderRing small { font-size:10px; color:var(--apple-secondary); }
+.renderRing > svg { display:none; }
 .renderCopy { min-width:0; }
 .renderCopyHead p { margin:0; color:var(--apple-secondary); font-size:12px; line-height:1.45; }
 .renderCopyHead h2 { margin:4px 0 7px; color:var(--apple-text); font-size:24px; font-weight:680; letter-spacing:-.6px;  line-height:1.15;}
@@ -472,12 +473,15 @@
 @media(max-width:360px) { .dateToolbar { margin-inline:15px; } }
 
 :global(html[data-client-appearance]) .dateToolbar { margin:0 20px 17px; }
-:global(html[data-client-appearance]) .dateButton { min-height:44px; padding:10px 13px; font-size:15px; font-weight:400; border:1px solid var(--client-glass-border); border-radius:24px; background:var(--client-glass); box-shadow:var(--client-glass-shadow); color:var(--apple-blue); }
-:global(html[data-client-appearance]) .renderEnergy { --energy-ring-size:110px; margin:0 20px; padding:20px; gap:0 18px; border-radius:22px; box-shadow:var(--client-card-shadow); }
-:global(html[data-client-appearance]) .renderRing { padding:7px; background:conic-gradient(var(--apple-macro-progress) var(--nutrition-progress),var(--apple-rhythm-track) 0); }
-:global(html[data-client-appearance]) .renderRing > span { background:var(--apple-surface); }
+:global(html[data-client-appearance]) .dateButton { min-height:44px; padding:10px 13px; font-size:15px; font-weight:400; border:1px solid var(--client-round-border); border-radius:24px; background:var(--client-round-surface); box-shadow:var(--client-round-shadow); color:var(--apple-blue); }
+:global(html[data-client-appearance]) .renderEnergy { --energy-ring-size:110px; min-height:243.333px; box-sizing:border-box; margin:0 20px; padding:20px; gap:0 18px; border-radius:22px; box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .renderRing { padding:0; position:relative; background:transparent; }
+:global(html[data-client-appearance]) .renderRing > svg { display:block; position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+:global(html[data-client-appearance]) .renderRing circle { fill:none; stroke:var(--apple-rhythm-track); stroke-width:7; stroke-linecap:round; }
+:global(html[data-client-appearance]) .renderRing circle + circle { stroke:var(--apple-macro-progress); }
+:global(html[data-client-appearance]) .renderRing > span { position:relative; background:transparent; }
 :global(html[data-client-appearance]) .renderRing strong { font-size:25px; }
-:global(html[data-client-appearance]) .renderCopyHead p { font-size:11px; }
+:global(html[data-client-appearance]) .renderCopyHead p { font-size:11px; text-transform:uppercase; }
 :global(html[data-client-appearance]) .renderCopyHead h2 { margin:7px 0 0; font-size:24px; font-weight:600; line-height:normal; letter-spacing:-.7px; }
 :global(html[data-client-appearance]) .renderMacros { margin-top:20px; padding-top:18px; gap:17px; }
 :global(html[data-client-appearance]) .renderMacros > div > span { font-size:12px; margin:0; }
@@ -489,7 +493,7 @@
 :global(html[data-client-appearance]) .renderMacros > div:nth-child(3) i { background:linear-gradient(90deg,#c4b2e5,#9f85c8); }
 :global(html[data-client-appearance]) .renderHeading { margin:26px 20px 10px; min-height:25px; }
 :global(html[data-client-appearance]) .renderHeading h2 { font-size:21px; font-weight:600; line-height:normal; letter-spacing:-.45px; }
-:global(html[data-client-appearance]) .renderQuick { padding:8px 0; gap:0; border-radius:22px; overflow:hidden; background:var(--apple-surface); box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .renderQuick { padding:8px 0; gap:0; border-radius:18px; overflow:hidden; background:var(--apple-surface); box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .renderQuick button { min-height:66px; border-radius:0; gap:7px; background:transparent; color:var(--apple-blue); font-size:13px; font-weight:500; }
 :global(html[data-client-appearance]) .renderQuick button > span,:global(html[data-client-appearance]) .renderQuick svg { width:24px; height:24px; }
 :global(html[data-client-appearance]) .renderQuick button + button { border-left:1px solid var(--apple-separator); }

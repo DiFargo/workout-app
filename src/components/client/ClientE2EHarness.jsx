@@ -1051,7 +1051,7 @@ export default function ClientE2EHarness() {
           />
         )}
         {activeTab === "cabinet" ? (
-          <ProfileCabinetTitleRow onRefresh={() => {}} />
+          <ProfileCabinetTitleRow onRefresh={() => {}} clientAppearance />
         ) : activeTab !== "main" ? (
           <ProfileHarnessTitle>{title}</ProfileHarnessTitle>
         ) : null}
@@ -2400,6 +2400,7 @@ export default function ClientE2EHarness() {
           activeTab="progress"
           renderBottomBar={renderBottomBar}
           showTrainerNotifications={false}
+          onOpenCalendar={() => { setCabinetWorkoutJournalTab("calendar"); setCabinetWorkoutJournalOpen(true); setPage("cabinet"); }}
           trainerNotificationCount={0}
           onOpenTrainerNotifications={() => {}}
         />
@@ -2420,6 +2421,7 @@ export default function ClientE2EHarness() {
               return { items: harnessParams?.get("clientAchievementsState") === "empty" ? [] : harnessAchievementHistory, isCurrent: () => true };
             }}
             onAddWeight={() => setHarnessQuickWeightOpen(true)}
+            onOpenExerciseProgress={() => setPage("workoutHistory")}
             onOpenPhotos={() => { setCabinetPhotosOpen(true); setPage("cabinet"); }}
           />
         </ProfileDashboardContent>

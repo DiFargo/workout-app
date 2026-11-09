@@ -10,6 +10,7 @@
 .options button + button { border-top:1px solid var(--apple-separator); }
 .options svg { width:21px; height:21px; color:var(--apple-blue); }
 .done { width:100%; min-height:52px; border:0; border-radius:26px; margin-top:24px; background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); font:inherit; font-size:17px; font-weight:600; }
+.refresh { width:100%; min-height:44px; margin-top:12px; border:0; border-radius:16px; background:transparent; color:var(--apple-blue); font:inherit; font-size:15px; }
 .sheet button { cursor:pointer; }
 .sheet button:focus-visible { outline:3px solid var(--apple-blue); outline-offset:-3px; }
 :global(html[data-client-appearance="dark"]) .overlay { background:rgba(0,3,7,.64); }

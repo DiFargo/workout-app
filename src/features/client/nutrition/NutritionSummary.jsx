@@ -1,4 +1,4 @@
-import { ChartNoAxesColumnIncreasing, ChevronRight } from "lucide-react";
+import { ChartNoAxesColumnIncreasing, ChevronRight } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import styles from "./NutritionSummary.module.css";
 
 export default function NutritionSummary({

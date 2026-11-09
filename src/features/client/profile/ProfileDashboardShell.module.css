@@ -70,7 +70,7 @@
 }
 
 .measurementsContent {
-  padding: 2px 20px 0;
+  padding: 0 20px;
   padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   scrollbar-width: none;
 }
@@ -90,7 +90,7 @@
   background: transparent;
   font-family: var(--font-family-compact-ui);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   line-height: 16px;
   letter-spacing: -0.01em;

@@ -38,6 +38,7 @@
 :global(html[data-client-appearance]) .root .profileCard { padding:20px; border-radius:22px; gap:14px; background:var(--client-profile-surface); box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .accountRow { gap:14px; min-height:58px; }
 :global(html[data-client-appearance]) .avatar { width:58px; height:58px; background:linear-gradient(135deg,#8bd0bc,#4c9d91 65%,#367e83); color:#fff; font-weight:500; }
+:global(html[data-client-appearance="dark"]) .avatar { background:linear-gradient(135deg,#345c58,#274744 62%,#273f4c); color:#c2ecdf; }
 :global(html[data-client-appearance]) .profileCopy strong { font-size:21px; font-weight:600; line-height:normal; letter-spacing:-.5px; }
 :global(html[data-client-appearance]) .profileCopy small { font-size:13px; margin-top:4px; line-height:normal; }
 :global(html[data-client-appearance]) .edit { width:44px; min-width:44px; margin-right:-14px; background:transparent; border-radius:0; color:var(--apple-secondary); }
@@ -45,8 +46,8 @@
 :global(html[data-client-appearance]) .section h2 { font-size:13px; font-weight:400; margin:26px 16px 9px; letter-spacing:.2px; line-height:normal; }
 :global(html[data-client-appearance]) .group { border-radius:22px; box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .row { min-height:64px; padding:12px 16px; gap:12px; }
-:global(html[data-client-appearance]) .icon { width:32px; height:32px; border-radius:10px; background:var(--ownset-soft-gradient); color:var(--apple-blue); }
-:global(html[data-client-appearance]) .icon svg { width:20px; height:20px; }
+:global(html[data-client-appearance]) .icon { width:30px; height:30px; border-radius:8px; background:var(--ownset-soft-gradient); color:var(--client-tile-ink); box-shadow:var(--client-tile-shadow); }
+:global(html[data-client-appearance]) .icon svg { width:18px; height:18px; }
 :global(html[data-client-appearance]) .text strong { font-size:17px; font-weight:400; letter-spacing:-.25px; line-height:1.25; }
 :global(html[data-client-appearance]) .text small { font-size:13px; line-height:1.4; }
 :global(html[data-client-appearance]) .status { font-size:12px; }

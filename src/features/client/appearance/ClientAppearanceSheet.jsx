@@ -4,7 +4,7 @@ import { setClientAppearance, useClientAppearancePreference } from "./clientAppe
 import styles from "./ClientAppearanceSheet.module.css";
 
 const OPTIONS = [["light", "Светлая"], ["dark", "Тёмная"], ["system", "Системная"]];
-export default function ClientAppearanceSheet({ onClose }) {
+export default function ClientAppearanceSheet({ onClose, onRefresh }) {
   const preference = useClientAppearancePreference();
   const sheetRef = useRef(null);
   useEffect(() => {
@@ -27,6 +27,7 @@ export default function ClientAppearanceSheet({ onClose }) {
       <header><h2 id="clientAppearanceTitle">Оформление</h2><button type="button" aria-label="Закрыть оформление" onClick={onClose}><X aria-hidden="true" /></button></header>
       <p>Выбери удобный вид. Системная тема следует оформлению Telegram или устройства.</p>
       <div className={styles.options}>{OPTIONS.map(([value, label]) => <button type="button" key={value} aria-pressed={preference === value} onClick={() => setClientAppearance(value)}><span>{label}</span>{preference === value ? <Check aria-hidden="true" /> : null}</button>)}</div>
+      {onRefresh && <button type="button" className={styles.refresh} onClick={() => { onClose(); onRefresh(); }}>Обновить данные</button>}
       <button type="button" className={styles.done} onClick={onClose}>Готово</button>
     </section>
   </div>;

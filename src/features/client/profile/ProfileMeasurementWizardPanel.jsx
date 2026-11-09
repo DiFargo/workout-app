@@ -1,4 +1,5 @@
-import { Camera, ChevronRight, Ruler, Trophy, X } from "lucide-react";
+import { X } from "lucide-react";
+import { Camera, ChevronRight, Ruler, Trophy, ChartNoAxesColumnIncreasing } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import { useState } from "react";
 import styles from "./ProfileMeasurementWizardPanel.module.css";
 import { measurementTimestamp as getTimestamp, progressPeriodRange, getPeriodMeasurements, buildWeightChart } from "./profileProgressChart.js";
@@ -52,6 +53,7 @@ export default function ProfileMeasurementWizardPanel({
   onStart,
   onOpenPhotos,
   onAddWeight,
+  onOpenExerciseProgress,
   onLoadAchievements,
   now = new Date()
 }) {
@@ -118,7 +120,7 @@ export default function ProfileMeasurementWizardPanel({
             </g>;
           })}
         </svg>
-        <div className={styles.chartDates}><span>{formatMeasurementDate(firstPoint.measurement)}</span><span>{formatMeasurementDate(lastPoint.measurement)}</span></div>
+        <div className={styles.chartDates}><span>{new Date(firstPoint.timestamp).toLocaleDateString("ru-RU", { day:"numeric", month:"long" })}</span><span>{new Date(lastPoint.timestamp).toLocaleDateString("ru-RU", { day:"numeric", month:"long" })}</span></div>
       </> : <p className={styles.chartEmpty}>{weightComparison.value === null ? "Добавьте первый вес, чтобы увидеть реальную динамику." : `За выбранный период свежих замеров веса нет. ${weightNote}.`}</p>}
       <button type="button" className={styles.chartOpen} aria-label="История веса и добавление записи" aria-haspopup="dialog" onClick={() => setWeightDetailsOpen(true)} />
     </section>
@@ -145,6 +147,6 @@ export default function ProfileMeasurementWizardPanel({
         <span className={`${styles.controlIcon} ${styles.photoIcon}`}><Camera aria-hidden="true" /></span><span><strong>Фото прогресса</strong><small>{photoNote}</small></span><ChevronRight aria-hidden="true" />
       </button>
     </section>
-    <p className={styles.note}>Вес и замеры помогают наблюдать динамику. Отдельное значение — только часть картины.</p>
+    {onOpenExerciseProgress && <><div className={styles.sectionHead}><h3>Результаты</h3></div><section className={styles.controlGroup}><button type="button" className={styles.controlRow} data-testid="profile-exercise-progress-open" onClick={onOpenExerciseProgress}><span className={styles.controlIcon}><ChartNoAxesColumnIncreasing /></span><span><strong>Прогресс упражнений</strong><small>Вес, повторы и история выполнения</small></span><ChevronRight /></button></section></>}
   </div>;
 }

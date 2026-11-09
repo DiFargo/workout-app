@@ -1,7 +1,8 @@
 
-import { CalendarDays, ChartNoAxesColumnIncreasing, ClipboardList, Dumbbell, Home, UserRound, Utensils } from "lucide-react";
+import { CalendarDays, ClipboardList, Dumbbell, Home } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 import styles from "./BottomBar.module.css";
+import ClientReferenceIcon from "./ClientReferenceIcon.jsx";
 
 const CLIENT_TABS = ["main", "workouts", "nutrition", "progress", "cabinet"];
 let previousClientTab = "main";
@@ -42,11 +43,26 @@ export function ClientMainBottomBar({
     if (isTrainerMode || !lensRef.current) return;
     const from = Math.max(0, CLIENT_TABS.indexOf(previousClientTab));
     previousClientTab = activeTab;
-    if (from === tabIndex || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lens = lensRef.current;
-    const animation = lens.animate([{ transform: `translateX(${from * 100}%)` }, { transform: `translateX(${tabIndex * 100}%)` }],
-      { duration: 240, easing: "cubic-bezier(.2,.8,.2,1)" });
-    return () => animation.cancel();
+    const nav = lens.parentElement;
+    let animation;
+    const position = (animate = false) => {
+      const buttons = nav.querySelectorAll(":scope > button");
+      const button = buttons[tabIndex];
+      if (!button) return;
+      const x = button.offsetLeft - lens.offsetLeft;
+      lens.style.width = `${button.offsetWidth}px`;
+      lens.style.transform = `translateX(${x}px)`;
+      if (animate && from !== tabIndex && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const start = buttons[from].offsetLeft - lens.offsetLeft;
+        animation = lens.animate([{ transform: `translateX(${start}px)` }, { transform: `translateX(${x}px)` }],
+          { duration: 240, easing: "cubic-bezier(.2,.8,.2,1)" });
+      }
+    };
+    position(true);
+    const observer = new ResizeObserver(() => position());
+    observer.observe(nav);
+    return () => { animation?.cancel(); observer.disconnect(); };
   }, [activeTab, isTrainerMode, tabIndex]);
   const preloadMain = runDeferredTouchPreload(onPreloadMain);
   const preloadTraining = runDeferredTouchPreload(onPreloadTraining);
@@ -93,7 +109,7 @@ export function ClientMainBottomBar({
         onFocus={onPreloadMain}
         onClick={onGoMain}
       >
-        <span aria-hidden="true"><Home /></span>
+        <span aria-hidden="true"><ClientReferenceIcon name="home" /></span>
         <strong>Сегодня</strong>
       </button>
       <button
@@ -105,7 +121,7 @@ export function ClientMainBottomBar({
         onFocus={onPreloadTraining}
         onClick={onOpenTraining}
       >
-        <span aria-hidden="true"><Dumbbell /></span>
+        <span aria-hidden="true"><ClientReferenceIcon name="dumbbell" /></span>
         <strong>Тренировки</strong>
       </button>
       <button
@@ -117,7 +133,7 @@ export function ClientMainBottomBar({
         onFocus={onPreloadNutrition}
         onClick={onOpenNutrition}
       >
-        <span aria-hidden="true"><Utensils /></span>
+        <span aria-hidden="true"><ClientReferenceIcon name="food" /></span>
         <strong>Питание</strong>
       </button>
       <button
@@ -127,7 +143,7 @@ export function ClientMainBottomBar({
         aria-current={activeTab === "progress" ? "page" : undefined}
         onClick={onOpenProgress}
       >
-        <span aria-hidden="true"><ChartNoAxesColumnIncreasing /></span>
+        <span aria-hidden="true"><ClientReferenceIcon name="chart" /></span>
         <strong>Прогресс</strong>
       </button>
       <button
@@ -139,7 +155,7 @@ export function ClientMainBottomBar({
         onFocus={onPreloadCabinet}
         onClick={onOpenCabinet}
       >
-        <span aria-hidden="true"><UserRound /></span>
+        <span aria-hidden="true"><ClientReferenceIcon name="user" /></span>
         <strong>Кабинет</strong>
       </button>
       </nav>

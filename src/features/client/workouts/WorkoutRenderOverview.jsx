@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, CalendarDays, ChartNoAxesColumnIncreasing, ChevronRight, Dumbbell, Info, MoonStar, RotateCcw, Trophy, X } from "lucide-react";
+import { MoonStar, RotateCcw, X } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronRight, Dumbbell, Info, Trophy } from "../../../shared/ui/ClientReferenceIcon.jsx";
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import { ClientMainBottomBar } from "../../../shared/ui/BottomBar";
 import weeklyCalendarStyles from "../../../shared/ui/WeeklyCalendar.module.css";
@@ -154,7 +155,7 @@ export default function WorkoutRenderOverview({
           {pendingSyncCount > 0 && syncRetryState === "pending" && <span>Ожидаем подтверждения облачной записи. Если уведомление остаётся, проверьте интернет и повторите отправку.</span>}
           {pendingSyncCount > 0 && syncRetryState === "error" && <span>Не удалось отправить результаты. Они остаются на устройстве. Проверьте интернет и повторите отправку.</span>}
         </aside>}
-        <div className={styles.sectionHead}><h2>{upcoming ? "Следующая тренировка" : "Сегодня"}</h2><button type="button" data-testid="workout-plan-button" onClick={onPlan}>Расписание</button></div>
+        <div className={`${styles.sectionHead} ${styles.nextWorkoutHeading}`}><h2>{upcoming ? "Следующая тренировка" : "Сегодня"}</h2><button type="button" data-testid="workout-plan-button" onClick={onPlan}>Расписание</button></div>
         <section className={`${styles.workoutCard} ${styles[`state_${todayState}`] || ""}`} data-testid="workout-today-card" data-state={todayState}>
           <div data-testid="workout-list-card">
           <div className={styles.workoutLabel}><span>{programType === "basic" ? "Базовая программа" : "Индивидуальная программа"}</span><small>{todayState === "draft" ? "В процессе" : todayState === "missed" ? "Перенос" : formatWorkoutDateLabel(workoutDate, "Без даты")}</small></div>
@@ -180,7 +181,7 @@ export default function WorkoutRenderOverview({
           <div className={styles.programTrack} role="progressbar" aria-label="Прогресс программы" aria-valuenow={completedCount} aria-valuemin={0} aria-valuemax={Math.max(total, completedCount, 1)}><span style={{width: `${total ? Math.min(100, completedCount / total * 100) : 0}%`}} /></div>
           <div className={styles.programBottom} data-testid={programType === "basic" ? "basic-workout-management" : undefined}><button type="button" data-testid="workout-program-button" onClick={onProgram}>Открыть программу<ChevronRight aria-hidden="true" /></button>{programType === "basic" ? <button type="button" data-testid="basic-manage-plan" onClick={onCreateBasicWorkout}><CalendarDays aria-hidden="true" />Изменить</button> : null}</div>
         </section>
-        <button type="button" className={styles.historyRow} data-testid="workout-records-button" onClick={onHistory}><span className={styles.historyIcon}><ChartNoAxesColumnIncreasing aria-hidden="true" /></span><span><strong>История и рекорды</strong><small>Ваши достижения за всё время</small></span><ChevronRight aria-hidden="true" /></button>
+        <button type="button" className={styles.historyRow} data-testid="workout-records-button" onClick={onHistory}><span className={styles.historyIcon}><Trophy aria-hidden="true" /></span><span><strong>История и рекорды</strong><small>Ваши достижения за всё время</small></span><ChevronRight aria-hidden="true" /></button>
         <p className={styles.managementHint}><Info aria-hidden="true" />Вы выбираете дни. Порядок тренировок в программе сохраняется.</p>
       </main>
       {renderBottomBar ? renderBottomBar("workouts") : <ClientMainBottomBar active="workouts" isTrainerMode={isTrainerMode} {...navigation} />}
