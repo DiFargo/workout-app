@@ -157,7 +157,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .closeButton { width: 44px; height: 44px; border-radius: 50%; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-text, #1c282e); line-height: 44px; }
-:global(:root[data-app-theme="warm-light"]) .icon { color: #b36e72; }
+:global(:root[data-app-theme="warm-light"]) .icon { color: var(--client-danger, #b36e72); }
 :global(:root[data-app-theme="warm-light"]) .title { color: var(--apple-text, #1c282e); font-weight: 700; }
 :global(:root[data-app-theme="warm-light"]) .description { color: var(--apple-secondary, #617078); font-weight: 450; }
 :global(:root[data-app-theme="warm-light"]) .actionButton { min-height: 50px; border: 0; border-radius: 16px; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-text, #1c282e); font-weight: 600; }

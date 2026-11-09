@@ -403,7 +403,7 @@
 :global(:root[data-app-theme="warm-light"]) .doneButton.doneButton { margin-top: 20px; min-height: 52px; border-radius: 99px; font-size: 17px; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .techniqueContent.techniqueContent,
 :global(:root[data-app-theme="warm-light"]) .progressContent.progressContent { background: var(--client-surface, white); border-radius: 20px; padding: 19px 17px; }
-:global(:root[data-app-theme="warm-light"]) .techniqueContent.techniqueContent p { max-height: min(55dvh, 420px); overflow-y: auto; font-size: 15px; line-height: 1.6; font-weight: 400; color: #34424a; white-space: pre-line; }
+:global(:root[data-app-theme="warm-light"]) .techniqueContent.techniqueContent p { max-height: min(55dvh, 420px); overflow-y: auto; font-size: 15px; line-height: 1.6; font-weight: 400; color: var(--client-text, #34424a); white-space: pre-line; }
 :global(:root[data-app-theme="warm-light"]) .swapHint.swapHint { font-size: 15px; line-height: 1.45; font-weight: 400; }
 :global(:root[data-app-theme="warm-light"]) .alternativeList.alternativeList { gap: 0; background: var(--client-surface, white); border-radius: 20px; overflow: hidden; }
 :global(:root[data-app-theme="warm-light"]) .alternativeButton.alternativeButton { min-height: 82px; padding: 14px 16px; border-radius: 0; background: var(--client-surface, white); }

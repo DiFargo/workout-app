@@ -135,7 +135,7 @@
 .status {
   width: 100%;
   margin: -3px 0 0;
-  color: #b45c5c;
+  color: var(--client-danger, #b45c5c);
   font-size: 12px;
   font-weight: 650;
   line-height: 1.35;

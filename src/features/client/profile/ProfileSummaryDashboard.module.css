@@ -8,7 +8,7 @@
 .heroTop > span:first-child svg { flex-shrink:0; width:16px; height:16px; }
 .taskCount { min-height:28px; padding:5px 10px; display:inline-flex; align-items:center; border:1px solid rgba(60,60,67,.08); border-radius:999px; background:rgba(255,255,255,.78); color:var(--apple-blue-pressed); font-size:11px; line-height:16px; font-weight:650; white-space:nowrap; }
 .hero h2 { margin:0; font-size:21px; line-height:1.2; letter-spacing:-.55px; font-weight:700; }
-.hero > p { margin:4px 0 0; color:#636366; font-size:12px; line-height:1.45; }
+.hero > p { margin:4px 0 0; color:var(--apple-secondary); font-size:12px; line-height:1.45; }
 .hero h2, .hero > p { overflow-wrap:anywhere; }
 .taskList { display:grid; gap:7px; margin-top:12px; }
 .taskRow { width:100%; min-height:58px; padding:8px 9px; display:grid; grid-template-columns:36px minmax(0,1fr) 28px; align-items:center; gap:9px; border:1px solid rgba(60,60,67,.06); border-radius:15px; background:var(--apple-surface); color:var(--apple-text); text-align:left; font:inherit; cursor:pointer; transition:background-color 140ms ease, border-color 140ms ease, transform 140ms var(--apple-ease-out); }
@@ -21,9 +21,9 @@
 .taskCopy strong { font-size:14px; line-height:1.35; font-weight:680; overflow-wrap:anywhere; }
 .taskCopy small { color:var(--apple-secondary); font-size:12px; line-height:1.4; overflow-wrap:anywhere; }
 .taskArrow { width:28px; height:28px; display:grid; place-items:center; color:var(--apple-blue); }
-.primaryTask { background:#fff; border-color:rgba(60,111,170,.15); }
-.primaryTask .taskArrow { border-radius:50%; background:var(--apple-blue); color:#fff; }
-.emptyTasks { min-height:70px; margin-top:11px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:15px; background:rgba(255,255,255,.64); color:var(--apple-success); font-size:13px; font-weight:650; }
+.primaryTask { background:var(--apple-surface); border-color:rgba(60,111,170,.15); }
+.primaryTask .taskArrow { border-radius:50%; background:var(--apple-blue); color:var(--client-action-ink,#fff); }
+.emptyTasks { min-height:70px; margin-top:11px; display:flex; align-items:center; justify-content:center; gap:8px; border-radius:15px; background:var(--apple-surface); color:var(--apple-success); font-size:13px; font-weight:650; }
 .emptyTasks span { color:var(--apple-text); }
 .sectionHead { display: flex; align-items: center; min-height:24px; margin:18px 0 9px; padding: 0 2px; }
 .sectionHead h3 { margin: 0; color: var(--apple-text); font-size:18px; line-height: 1.25; letter-spacing: -.4px; font-weight: 680; }
@@ -68,6 +68,9 @@
 
 .workoutHero { padding:20px; border-radius:26px; background:var(--client-hero,var(--ownset-soft-gradient)); box-shadow:var(--client-hero-shadow); color:var(--apple-text); }
 .workoutHero { position:relative; }
+.planCard:not(.workoutHero) { padding:20px; border-radius:26px; background:var(--client-hero,var(--ownset-soft-gradient)); box-shadow:var(--client-hero-shadow); }
+.workoutHeroMain { position:relative; }
+.workoutHeroMain .workoutHeroAction { inset:-20px; width:calc(100% + 40px); height:calc(100% + 40px); border-radius:26px; }
 .workoutHeroAction { position:absolute; inset:0; width:100%; height:100%; border:0; border-radius:inherit; background:transparent; cursor:pointer; z-index:1; touch-action:manipulation; }
 .workoutHeroAction:active { background:rgba(100,150,150,.06); }
 .workoutHeroAction:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
@@ -90,6 +93,9 @@
 .workoutPrimary:active { filter:brightness(.94); }
 .workoutPrimary:focus-visible { outline:3px solid var(--apple-blue); outline-offset:3px; }
 .reminders > .heroTop,.reminders > p { display:none; }
+.planCard.reminders > .heroTop { display:flex; }
+.planCard.reminders > p { display:block; margin:8px 0; color:var(--apple-secondary); font-size:13px; line-height:1.45; }
+.planCard.reminders > h2 { margin:12px 0 8px; }
 .reminders > h2 { margin:26px 0 10px; min-height:25px; font-size:21px; font-weight:600; letter-spacing:-.45px; line-height:normal; }
 :global(html[data-client-appearance]) .sectionHead { margin:26px 0 10px; padding:0; }
 :global(html[data-client-appearance]) .sectionHead h3 { font-size:21px; font-weight:600; letter-spacing:-.45px; line-height:normal; }
@@ -103,6 +109,8 @@
 :global(html[data-client-appearance]) .taskList { gap:0; margin:0; border-radius:22px; overflow:hidden; box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .taskRow { min-height:72px; border:0; border-radius:0; padding:14px 16px; grid-template-columns:32px minmax(0,1fr) 16px; gap:12px; }
 :global(html[data-client-appearance]) .taskRow + .taskRow { border-top:1px solid var(--apple-separator); }
+:global(html[data-client-appearance]) .heroTasks { position:relative; z-index:2; margin-top:20px; padding-top:6px; border-top:1px solid var(--apple-separator); border-radius:0; box-shadow:none; overflow:visible; }
+:global(html[data-client-appearance]) .heroTasks .taskRow { padding:12px 0; border-radius:0; background:transparent; }
 :global(html[data-client-appearance]) .taskIcon { width:32px; height:32px; border-radius:10px; background:var(--ownset-soft-gradient); }
 :global(html[data-client-appearance]) .taskCopy strong { font-size:17px; font-weight:400; line-height:1.25; letter-spacing:-.25px; }
 :global(html[data-client-appearance]) .taskCopy { gap:4px; }

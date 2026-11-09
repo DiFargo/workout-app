@@ -1,6 +1,41 @@
 import { expect, test } from "./app-test.js";
 import { failOnRuntimeErrors } from "./runtime-errors.js";
 
+async function selectDarkAppearance(page) {
+  await page.evaluate(() => {
+    localStorage.setItem("zmena-client-appearance-v1", "dark");
+    window.dispatchEvent(new CustomEvent("zmena-client-appearance-change", { detail: "dark" }));
+  });
+  await expect(page.locator("html")).toHaveAttribute("data-client-appearance", "dark");
+}
+
+async function readSurfaceContrast(root, selector) {
+  return root.evaluate((node, textSelector) => {
+    const parse = value => {
+      const numbers = value.match(/[\d.]+/g).map(Number);
+      return [...numbers.slice(0, 3), numbers[3] ?? 1];
+    };
+    const background = element => {
+      if (!element) return [0, 0, 0, 1];
+      const own = parse(getComputedStyle(element).backgroundColor);
+      const under = own[3] < 1 ? background(element.parentElement) : own;
+      return own.slice(0, 3).map((channel, index) => channel * own[3] + under[index] * (1 - own[3]));
+    };
+    const luminance = rgb => rgb.slice(0, 3).map(channel => channel / 255)
+      .map(channel => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4)
+      .reduce((total, channel, index) => total + channel * [.2126, .7152, .0722][index], 0);
+    const values = [...node.querySelectorAll(textSelector)].map(element => {
+      const style = getComputedStyle(element);
+      const ink = parse(style.webkitTextFillColor || style.color);
+      const paper = background(element);
+      const inkLum = luminance(ink), paperLum = luminance(paper);
+      return { label: element.getAttribute("aria-label") || element.textContent || element.type,
+        ratio: (Math.max(inkLum, paperLum) + .05) / (Math.min(inkLum, paperLum) + .05), paperLum };
+    });
+    return { surface: luminance(background(node)), values };
+  }, selector);
+}
+
 test("пять клиентских вкладок сохраняют непрозрачную шапку, адаптивность и читаемую тёмную анкету", async ({ page }, testInfo) => {
   test.setTimeout(90_000);
   await page.setViewportSize({ width: 402, height: 874 });
@@ -80,36 +115,11 @@ test("пять клиентских вкладок сохраняют непро
   await page.goto("/?clientHarness=1&clientHarnessPage=profileSheets&sheet=profile");
   // addInitScript runs on every navigation: select dark explicitly before
   // measuring this independently mounted sheet.
-  await page.evaluate(() => localStorage.setItem("zmena-client-appearance-v1", "dark"));
-  await page.evaluate(() => window.dispatchEvent(new CustomEvent("zmena-client-appearance-change", { detail: "dark" })));
-  await expect(page.locator("html")).toHaveAttribute("data-client-appearance", "dark");
+  await selectDarkAppearance(page);
   const questionnaire = page.getByTestId("profile-settings-dialog");
   await expect(questionnaire.getByRole("heading", { name: "Анкета", exact: true })).toBeVisible();
   const metrics = page.getByTestId("profile-body-metrics-section");
-  const contrast = await metrics.evaluate(node => {
-    const parse = value => {
-      const numbers = value.match(/[\d.]+/g).map(Number);
-      return [...numbers.slice(0, 3), numbers[3] ?? 1];
-    };
-    const background = element => {
-      if (!element) return [0, 0, 0, 1];
-      const own = parse(getComputedStyle(element).backgroundColor);
-      const under = own[3] < 1 ? background(element.parentElement) : own;
-      return own.slice(0, 3).map((channel, index) => channel * own[3] + under[index] * (1 - own[3]));
-    };
-    const luminance = rgb => rgb.slice(0, 3).map(channel => channel / 255)
-      .map(channel => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4)
-      .reduce((total, channel, index) => total + channel * [.2126, .7152, .0722][index], 0);
-    const values = [...node.querySelectorAll("input, select, [class*='fieldLabel']")].map(element => {
-      const style = getComputedStyle(element);
-      const ink = parse(style.webkitTextFillColor || style.color);
-      const paper = background(element);
-      const inkLum = luminance(ink), paperLum = luminance(paper);
-      return { label: element.getAttribute("aria-label") || element.textContent || element.type,
-        ratio: (Math.max(inkLum, paperLum) + .05) / (Math.min(inkLum, paperLum) + .05), paperLum };
-    });
-    return { surface: luminance(background(node)), values };
-  });
+  const contrast = await readSurfaceContrast(metrics, "input, select, [class*='fieldLabel']");
   expect(contrast.surface, "у тёмной анкеты нет белой подложки").toBeLessThan(.2);
   expect(contrast.values.length).toBeGreaterThanOrEqual(8);
   for (const field of contrast.values) {
@@ -117,5 +127,68 @@ test("пять клиентских вкладок сохраняют непро
     expect(field.ratio, `${field.label}: текст читаем на своей подложке`).toBeGreaterThanOrEqual(4.5);
   }
   await page.screenshot({ path: testInfo.outputPath("dark-questionnaire.png") });
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=workoutRunStage&clientWorkoutRunModal=technique");
+  await selectDarkAppearance(page);
+  const technique = page.getByTestId("workout-exercise-technique-modal").getByRole("dialog");
+  await expect(technique.locator("p")).toBeVisible();
+  const techniqueContrast = await readSurfaceContrast(technique, "p");
+  expect(techniqueContrast.values).toHaveLength(1);
+  expect(techniqueContrast.values[0].paperLum, "техника: тёмная подложка").toBeLessThan(.2);
+  expect(techniqueContrast.values[0].ratio, "техника: контраст пояснения ≥ 4.5").toBeGreaterThanOrEqual(4.5);
+  await page.screenshot({ path: testInfo.outputPath("dark-technique.png") });
+
+  // Align time with the fixed photo/measurement fixture so there are genuinely
+  // no overdue tasks; do not hide real task elements to manufacture this state.
+  await page.clock.setFixedTime(new Date("2026-06-22T12:00:00+03:00"));
+  await page.goto("/?clientHarness=1&clientBodyMeasurementTask=fresh");
+  await selectDarkAppearance(page);
+  const planCard = page.getByTestId("profile-summary-task-card");
+  await expect(planCard).toHaveCount(1);
+  await expect(planCard.getByTestId("profile-summary-primary")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Не забудь", exact: true })).toHaveCount(0);
+  await expect(page.getByTestId("profile-summary-task-empty")).toHaveCount(0);
+  await page.goto("/?clientHarness=1&clientBodyMeasurementTask=first&clientWeightCheckInDue=1");
+  await selectDarkAppearance(page);
+  const reminder = page.getByTestId("profile-summary-task-measurements");
+  await expect(page.getByTestId("profile-summary-task-card").getByTestId("profile-summary-task-measurements")).toBeEnabled();
+  await reminder.click();
+  await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=basicWorkoutToday");
+  await selectDarkAppearance(page);
+  const today = page.getByTestId("basic-workout-today-page");
+  await today.getByRole("button", { name: "Грудь. Не выбрано.", exact: true }).click();
+  await today.getByRole("button", { name: "Далее: время и условия", exact: true }).click();
+  const todayContrast = await readSurfaceContrast(today, "[class*='chipRow'] button, [class*='settingGroup'] > span, [class*='locationRow'] > span, [class*='generationLimit']");
+  expect(todayContrast.values.length).toBeGreaterThanOrEqual(8);
+  for (const item of todayContrast.values) expect(item.ratio, `базовая тренировка: ${item.label}`).toBeGreaterThanOrEqual(4.5);
+
+  await page.evaluate(() => localStorage.setItem("basic-workout-long-plan-access:client-harness", JSON.stringify({ activated: true })));
+  await page.goto("/?clientHarness=1&clientHarnessPage=basicQuiz");
+  await selectDarkAppearance(page);
+  const quiz = page.getByTestId("basic-quiz-card");
+  await expect(quiz).toBeVisible();
+  const quizContrast = await readSurfaceContrast(quiz, "[class*='questionBody'] > p, [class*='optionButton'] small, [class*='optionButton'] strong");
+  expect(quizContrast.values.length).toBeGreaterThan(0);
+  for (const item of quizContrast.values) expect(item.ratio, `базовая анкета: ${item.label}`).toBeGreaterThanOrEqual(4.5);
+
+  await page.goto("/?clientHarness=1&clientHarnessPage=measurementWizard");
+  await selectDarkAppearance(page);
+  const wizard = page.getByTestId("measurement-wizard-intro");
+  const tipsContrast = await readSurfaceContrast(wizard, "[class*='tips'] span");
+  expect(tipsContrast.values.length).toBeGreaterThanOrEqual(3);
+  for (const item of tipsContrast.values) expect(item.ratio, `замеры: ${item.label}`).toBeGreaterThanOrEqual(4.5);
+
+  await page.goto("/?clientHarness=1");
+  await selectDarkAppearance(page);
+  await page.getByTestId("client-nav-nutrition").click();
+  await page.getByTestId("nutrition-summary").getByRole("button").click();
+  const details = page.getByTestId("nutrition-plan-details");
+  await expect(details).toBeVisible();
+  const scoreContrast = await readSurfaceContrast(details, "[data-nutrition-plan-part='score-block'] span, [class*='badge']");
+  expect(scoreContrast.values.length).toBeGreaterThanOrEqual(2);
+  for (const item of scoreContrast.values) expect(item.ratio, `анализ питания: ${item.label}`).toBeGreaterThanOrEqual(4.5);
+  await page.screenshot({ path: testInfo.outputPath("dark-plan-details.png") });
   assertNoErrors();
 });

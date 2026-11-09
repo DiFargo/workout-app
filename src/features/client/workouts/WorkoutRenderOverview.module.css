@@ -64,7 +64,7 @@
 .progress span::after { content:""; display:block; width:var(--exercise-progress,0%); height:100%; border-radius:inherit; background:var(--apple-blue); }
 .actions { display:grid; gap:10px; margin-top:12px; }
 .start, .secondary, .modalPrimary { display:flex; justify-content:center; align-items:center; gap:9px; min-height:48px; padding:10px 12px; border:0; border-radius:12px; font:inherit; font-size:15px; font-weight:620; cursor:pointer; }
-.start, .modalPrimary { background:var(--ownset-action-gradient); color:#fff; }
+.start, .modalPrimary { background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); }
 .start svg { width:18px; height:18px; }
 .secondary { min-height:44px; background:var(--apple-surface-muted); color:var(--apple-blue); font-size:14px; }
 .start:active, .modalPrimary:active { background:var(--ownset-action-gradient); transform:scale(.97); }

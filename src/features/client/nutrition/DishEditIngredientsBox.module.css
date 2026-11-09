@@ -311,8 +311,8 @@
   height: 44px;
   min-height: 44px;
   border: 0;
-  background: #fff1f2;
-  color: #b36e72;
+  background: var(--client-danger-soft, #fff1f2);
+  color: var(--client-danger, #b36e72);
 }
 
 :global(:root[data-app-theme="warm-light"]) .row {

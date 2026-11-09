@@ -1237,8 +1237,8 @@
 
 .errorMessage {
   padding: 10px 12px;
-  color: #a14f5b !important;
-  background: #fff2f3;
+  color: var(--client-danger, #a14f5b) !important;
+  background: var(--client-danger-soft, #fff2f3);
   border-radius: 13px;
   font-size: 13px !important;
   font-weight: 600 !important;
@@ -1247,7 +1247,7 @@
 .placeholderNotice {
   margin: 0;
   padding: 9px 12px;
-  color: #68636f !important;
+  color: var(--client-secondary, #68636f) !important;
   background: var(--apple-surface-muted, #edf1f3);
   border-radius: 13px;
   font-size: 12px !important;
@@ -1262,7 +1262,7 @@
   display: grid;
   place-items: center;
   color: var(--apple-blue-pressed, #315f91);
-  background: #e8f3ed;
+  background: var(--client-accent-soft, #e8f3ed);
   border-radius: 15px;
 }
 
@@ -1335,11 +1335,11 @@
 
 .safetyNote {
   color: var(--apple-blue-pressed, #315f91) !important;
-  background: #e8f3ed;
+  background: var(--client-accent-soft, #e8f3ed);
 }
 
 .progressionNote {
-  color: #68636f !important;
+  color: var(--client-secondary, #68636f) !important;
   background: var(--apple-surface-muted, #edf1f3);
 }
 
@@ -1480,7 +1480,7 @@
   place-items: center;
   margin-bottom: 2px;
   color: var(--apple-blue-pressed, #315f91);
-  background: #e8f3ed;
+  background: var(--client-accent-soft, #e8f3ed);
   border-radius: 22px;
   animation: generationPulse 1.4s ease-in-out infinite;
 }
@@ -1491,13 +1491,13 @@
 }
 
 .generationIcon.generationReadyIcon {
-  color: var(--client-text, #ffffff);
-  background: #708d79;
+  color: var(--client-success, #ffffff);
+  background: var(--client-success-soft, #708d79);
   animation: none;
 }
 
 .generationReadyLabel {
-  color: #708d79;
+  color: var(--client-success, #708d79);
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -1521,7 +1521,7 @@
   gap: 0;
   padding: 7px 6px;
   color: var(--apple-blue-pressed, #315f91);
-  background: #e8f3ed;
+  background: var(--client-accent-soft, #e8f3ed);
   border-radius: 15px;
 }
 
@@ -1589,7 +1589,7 @@
   grid-template-columns: 23px minmax(0, 1fr) auto;
   align-items: center;
   gap: 9px;
-  color: #9a95a1;
+  color: var(--client-secondary, #9a95a1);
   font-size: 12px;
   font-weight: 650;
 }
@@ -1624,12 +1624,12 @@
 }
 
 .generationSteps li.generationStepComplete {
-  color: #5c7665;
+  color: var(--client-success, #5c7665);
 }
 
 .generationSteps li.generationStepComplete i {
-  color: var(--client-text, #ffffff);
-  background: #708d79;
+  color: var(--client-success, #ffffff);
+  background: var(--client-success-soft, #708d79);
 }
 
 .generationSteps li.generationStepActive {
@@ -1638,7 +1638,7 @@
 
 .generationSteps li.generationStepActive i {
   color: var(--apple-blue-pressed, #315f91);
-  background: #e8f3ed;
+  background: var(--client-accent-soft, #e8f3ed);
 }
 
 .generationSteps li.generationStepActive i span {
@@ -1714,7 +1714,7 @@
   display: grid;
   place-items: center;
   color: var(--apple-blue-pressed, #315f91);
-  background: #e8f3ed;
+  background: var(--client-accent-soft, #e8f3ed);
   border-radius: 12px;
 }
 
@@ -1756,7 +1756,7 @@
 }
 
 .accessField > span {
-  color: #5d5864;
+  color: var(--client-secondary, #5d5864);
   font-size: 14px;
   font-weight: 700;
 }
@@ -1779,7 +1779,7 @@
 }
 
 .accessField input::placeholder {
-  color: #b8b2c0;
+  color: var(--client-secondary, #b8b2c0);
   letter-spacing: 0.18em;
 }
 
@@ -1804,7 +1804,7 @@
 }
 
 .accessError {
-  color: #a24150;
+  color: var(--client-danger, #a24150);
   font-weight: 650;
 }
 

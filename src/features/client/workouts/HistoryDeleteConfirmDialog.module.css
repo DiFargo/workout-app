@@ -125,7 +125,7 @@
   padding: max(12px, env(safe-area-inset-top, 0px)) 16px max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
   align-items: flex-end;
   color: var(--apple-text, #1c282e);
-  background: rgba(27, 35, 31, 0.24);
+  background: var(--client-overlay, rgba(27, 35, 31, 0.24));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -145,8 +145,8 @@
   width: 52px;
   height: 52px;
   margin-bottom: 12px;
-  color: #b36e72;
-  background: #f7e9ea;
+  color: var(--client-danger, #b36e72);
+  background: var(--client-danger-soft, #f7e9ea);
   border-radius: 18px;
   font-size: 25px;
 }
@@ -188,8 +188,8 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .actions.actions .danger {
-  color: var(--client-text, #ffffff);
-  background: #b36e72;
+  color: var(--client-danger, #ffffff);
+  background: var(--client-danger-soft, #b36e72);
   border: 0;
 }
 

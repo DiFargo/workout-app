@@ -142,29 +142,30 @@ export default function ProfileSummaryDashboard({
         <p>{summaryDateLabel}</p>
         <h2 data-testid="profile-summary-greeting">{summaryGreeting}</h2>
       </section>
-      {hasWorkoutHero ? <section className={styles.workoutHero} aria-label="Тренировка по плану">
+      <section className={`${styles.planCard} ${hasWorkoutHero ? styles.workoutHero : styles.reminders}`} data-testid="profile-summary-task-card" aria-label="План на сегодня">
+      {hasWorkoutHero ? <div className={styles.workoutHeroMain}>
         <button type="button" className={styles.workoutHeroAction} data-testid="profile-summary-primary" data-task-id="workout" aria-label={`${workoutTask?.actionLabel || workoutActionLabel || "Открыть тренировку"}: ${workoutTitle}`} onClick={onOpenWorkout} />
         <div className={styles.heroTop}><span><Dumbbell aria-hidden="true" />{isWorkoutToday ? "Сегодня по плану" : workoutState === "draft" ? "Тренировка начата" : "Твой план"}</span><small>{workoutPosition || workoutDate}</small></div>
         <h2>{workoutTitle}</h2>
         <p className={styles.workoutFocus}>{isBasicPlan ? "Базовая тренировка" : "Индивидуальная программа"}</p>
         <div className={styles.workoutMeta}><span><Dumbbell aria-hidden="true" />{formatRussianCount(Math.max(0, Number(exerciseCount) || 0), ["упражнение", "упражнения", "упражнений"])}</span></div>
         <span className={styles.workoutPrimary} aria-hidden="true">{workoutTask?.actionLabel || workoutActionLabel || "Открыть тренировку"}<ArrowRight aria-hidden="true" /></span>
-      </section> : null}
-      <section className={styles.reminders} data-testid="profile-summary-task-card" aria-labelledby="profileSummaryTaskHeading">
+      </div> : <>
         <div className={styles.heroTop}>
           <span><Dumbbell aria-hidden="true" />План на сегодня</span>
           <span className={styles.taskCount} role="status" aria-live="polite" aria-atomic="true" data-testid="profile-summary-task-count">
             {taskDataUnknown && !dashboardTasks.length ? dataLoadFailed ? "Не все данные" : "Уточняем задачи" : formatRussianCount(dashboardTasks.length, ["задача", "задачи", "задач"])}
           </span>
         </div>
-        <h2 id="profileSummaryTaskHeading" data-testid="profile-summary-task-title">Не забудь</h2>
+        <h2 id="profileSummaryTaskHeading" data-testid="profile-summary-task-title">Что важно сегодня?</h2>
         <p>{!workoutReady ? "Задачи по тренировкам появятся после загрузки плана." : dashboardTasks.length
           ? "Только то, что актуально для вашего плана и прогресса."
           : taskDataUnknown ? dataLoadFailed ? "Не удалось проверить все задачи. Повторите загрузку." : "Проверяем актуальные задачи. Это займёт немного времени."
             : "На сегодня нет актуальных задач."}</p>
         {!workoutReady && <div className={styles.workoutLoadState} role="status" data-testid="profile-summary-workout-loading"><strong>{workoutLoadState === "error" ? "Не удалось загрузить план" : "Загружаем план тренировок…"}</strong>{workoutLoadState === "error" && onRetryWorkoutLoad && <button type="button" onClick={onRetryWorkoutLoad}>Повторить загрузку</button>}</div>}
+      </>}
         {reminderTasks.length ? (
-          <div className={styles.taskList}>
+          <div className={`${styles.taskList} ${hasWorkoutHero ? styles.heroTasks : ""}`}>
             {reminderTasks.map((task, index) => {
               const TaskIcon = DASHBOARD_TASK_ICONS[task.kind];
               const isPrimaryWorkout = task.kind === "workout" && index === 0;
@@ -195,7 +196,7 @@ export default function ProfileSummaryDashboard({
               );
             })}
           </div>
-        ) : workoutReady && !taskDataUnknown ? (
+        ) : !hasWorkoutHero && workoutReady && !taskDataUnknown ? (
           <div className={styles.emptyTasks} data-testid="profile-summary-task-empty">
             <CheckCircle2 aria-hidden="true" size={20} />
             <span>Нет актуальных задач</span>

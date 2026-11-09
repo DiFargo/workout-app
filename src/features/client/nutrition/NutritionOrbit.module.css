@@ -31,8 +31,8 @@
   align-items: center;
   gap: 5px;
   border-radius: 13px;
-  background: #fff4e3;
-  color: #ae8768;
+  background: var(--client-warning-soft, #fff4e3);
+  color: var(--client-warning, #ae8768);
   font-size: 10px;
   font-weight: 700;
 }
@@ -52,7 +52,7 @@
   border: 0;
   border-radius: 22px;
   background: transparent;
-  color: #696277;
+  color: var(--client-secondary, #696277);
   font: inherit;
   font-size: 10px;
   font-weight: 700;
@@ -68,7 +68,7 @@
   padding: 2px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid #d5e2d8;
+  border: 1px solid var(--client-separator, #d5e2d8);
   border-radius: 10px;
   background: var(--apple-surface-muted, #edf1f3);
   transition: background-color 160ms ease, border-color 160ms ease;
@@ -78,13 +78,13 @@
   height: 12px;
   display: block;
   border-radius: 50%;
-  background: #94a099;
+  background: var(--client-secondary, #94a099);
   transition: transform 160ms ease, background-color 160ms ease;
 }
 .voiceToggleActive { color: var(--apple-blue-pressed, #315f91); }
 .voiceToggleActive .voiceToggleTrack { border-color: var(--apple-action, #396ba6); background: var(--ownset-action-gradient); }
 .voiceToggleActive .voiceToggleTrack span { background: var(--client-surface, #fff); transform: translateX(11px); }
-.voiceToggle:active { background: #edf5f0; }
+.voiceToggle:active { background: var(--client-surface-muted, #edf5f0); }
 .voiceToggle:focus-visible { outline: 2px solid rgba(47, 125, 104, 0.58); outline-offset: 1px; }
 .visuallyHidden { width: 1px; height: 1px; position: absolute; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
 
@@ -99,7 +99,7 @@
 .voiceStage .calories { display: none; }
 .scene { width: 160px; height: 160px; display: block; transform: translateY(2px) rotate(-90deg); }
 .track, .progress { fill: none; stroke-width: 14; }
-.track { stroke: #e7eee8; }
+.track { stroke: var(--apple-rhythm-track, #e7eee8); }
 .progress { stroke: var(--apple-action, #396ba6); stroke-linecap: round; }
 [data-nutrition-orbit-halo="outer"] { transform-box: fill-box; transform-origin: center; animation: haloBreath 3.2s ease-in-out infinite; }
 .calories {
@@ -188,29 +188,29 @@
 .voiceStage .voiceButton svg { width: 40px; height: 40px; stroke-width: 2.35; }
 .voiceStage .voiceButton [data-nutrition-orbit-text="title"] {
   max-width: 94px;
-  color: var(--client-text, #fff);
+  color: var(--client-action-ink, #fff);
   font-size: 15px;
   font-weight: 800;
   line-height: 17px;
   text-align: center;
 }
 .voiceStage .voiceButtonFailed {
-  border-color: #dce5de;
-  background: linear-gradient(145deg, #f4f7f4 0%, #e6eee8 100%);
+  border-color: var(--client-separator, #dce5de);
+  background: var(--client-surface-muted, linear-gradient(145deg, #f4f7f4 0%, #e6eee8 100%));
   box-shadow:
     0 10px 20px rgba(27, 35, 31, 0.1),
     inset 0 1px 1px rgba(255, 255, 255, 0.9);
-  color: #706978;
+  color: var(--client-secondary, #706978);
 }
 .voiceStage .voiceButtonFailed::before {
-  border-color: rgba(255, 255, 255, 0.78);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.64), transparent 54%);
+  border-color: var(--client-separator, rgba(255, 255, 255, 0.78));
+  background: var(--client-surface-muted, linear-gradient(160deg, rgba(255, 255, 255, 0.64), transparent 54%));
 }
 .voiceStage .voiceButtonFailed::after {
   border-color: rgba(123, 118, 130, 0.16);
   box-shadow: 0 0 0 3px rgba(123, 118, 130, 0.05), 0 8px 18px rgba(27, 35, 31, 0.08);
 }
-.voiceStage .voiceButtonFailed [data-nutrition-orbit-text="title"] { color: #625c68; }
+.voiceStage .voiceButtonFailed [data-nutrition-orbit-text="title"] { color: var(--client-secondary, #625c68); }
 .voiceStage .voiceButtonFailed svg { color: var(--apple-secondary, #617078); }
 .voiceStage .voiceButton:focus-visible {
   outline: 3px solid rgba(47, 125, 104, 0.34);
@@ -239,7 +239,7 @@
   position: absolute;
   top: 148px;
   left: 50%;
-  color: #66706a;
+  color: var(--client-secondary, #66706a);
   font-size: 10px;
   font-weight: 700;
   line-height: 13px;
@@ -277,7 +277,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 9px;
-  background: #eaf3ee;
+  background: var(--client-accent-soft, #eaf3ee);
   color: var(--apple-blue-pressed, #315f91);
   box-shadow: 0 3px 8px rgba(102, 78, 158, 0.09);
 }
@@ -288,7 +288,7 @@
   margin-top: 7px;
   overflow: hidden;
   border-radius: 4px;
-  background: #e5eee8;
+  background: var(--apple-rhythm-track, #e5eee8);
 }
 .voiceCaloriesBar > span {
   height: 100%;
@@ -318,7 +318,7 @@
   content: none;
   position: absolute;
   inset: 0;
-  border: 1px solid #d5e2d8;
+  border: 1px solid var(--client-separator, #d5e2d8);
   border-left-color: rgba(216, 204, 233, 0.3);
   border-radius: 0;
   background:
@@ -385,13 +385,15 @@
 }
 .voiceQuickActionCompactLabel { display: none; }
 .voiceQuickAction:active {
-  background: #e8f3ed;
+  background: var(--client-surface-muted, #e8f3ed);
   box-shadow: inset 0 2px 7px rgba(108, 81, 160, 0.11);
   transform: scale(0.97);
 }
 .voiceQuickAction:focus-visible { outline: 2px solid rgba(47, 125, 104, 0.5); outline-offset: 2px; }
 .photoSearchInput { display: none; }
-.voiceButtonRecording { background: #b36e72; box-shadow: 0 3px 8px rgba(179, 110, 114, 0.22); }
+.voiceButtonRecording,
+.voiceStage .voiceButtonRecording { background: var(--client-danger-soft, #b36e72); color: var(--client-danger, #fff); box-shadow: 0 3px 8px rgba(179, 110, 114, 0.22); }
+.voiceStage .voiceButtonRecording [data-nutrition-orbit-text="title"] { color: var(--client-danger, #fff); }
 .voiceButton:disabled { cursor: wait; opacity: 0.9; }
 .voiceSpinner { animation: voiceSpin 850ms linear infinite; }
 
@@ -407,9 +409,9 @@
 .macros > div > span { font-size: 10px; font-weight: 700; line-height: 14px; }
 .macros strong { color: var(--apple-text, #1c282e); font-size: 12px; font-weight: 700; line-height: 18px; white-space: nowrap; }
 .macros strong span { color: inherit; font: inherit; }
-.protein > span { color: #b36e72; }
-.fat > span { color: #ae8768; }
-.carbs > span { color: #6f879c; }
+.protein > span { color: var(--client-secondary, #b36e72); }
+.fat > span { color: var(--client-secondary, #ae8768); }
+.carbs > span { color: var(--client-secondary, #6f879c); }
 
 @keyframes haloBreath { 50% { transform: scale(1.05); } }
 @keyframes voiceSpin { to { transform: rotate(360deg); } }

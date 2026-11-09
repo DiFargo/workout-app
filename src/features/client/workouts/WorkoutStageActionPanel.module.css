@@ -32,7 +32,7 @@
   border: 0;
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--client-surface, rgba(255, 255, 255, 0.98));
   box-shadow: none;
   transform: translateX(-50%);
 }
@@ -207,7 +207,7 @@
     padding: 7px;
     border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.96);
+    background: var(--client-surface, rgba(255, 255, 255, 0.96));
     box-shadow: 0 18px 48px rgba(27, 35, 31, 0.18);
     backdrop-filter: blur(18px);
   }
@@ -251,13 +251,13 @@
     border-color: var(--apple-separator, rgba(57, 82, 91,.12));
     background: var(--client-surface, #ffffff);
     box-shadow: 0 12px 24px rgba(27, 35, 31, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    color: #2d3342;
-    -webkit-text-fill-color: #2d3342;
+    color: var(--client-text, #2d3342);
+    -webkit-text-fill-color: var(--client-text, #2d3342);
   }
 
   :global(:root[data-app-theme="warm-light"]) .exercisePrevButton {
     border-color: var(--apple-separator, rgba(57, 82, 91,.12));
-    background: #f3f7f8;
+    background: var(--client-surface-muted, #f3f7f8);
     box-shadow: none;
     color: var(--apple-secondary, #617078);
     -webkit-text-fill-color: var(--apple-secondary, #617078);
@@ -291,7 +291,7 @@
   border: 0;
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--client-surface, rgba(255, 255, 255, 0.98));
   box-shadow: none;
   backdrop-filter: blur(20px);
   transform: translateX(-50%);
@@ -388,7 +388,7 @@
 :global(:root[data-app-theme="warm-light"]) .panel.panel .navigationRow.navigationRow {
   box-sizing: border-box;
   width: 100%; height: auto; min-height: 0; max-height: none; padding: 5px; gap: 5px; display: flex; flex-wrap: wrap;
-  font-size: .9375rem; background: var(--client-surface, white); border: 1px solid white; border-radius: 32px; box-shadow: 0 3px 14px #1c282e08;
+  font-size: .9375rem; background: var(--client-surface, white); border: 1px solid var(--client-separator, white); border-radius: 32px; box-shadow: 0 3px 14px #1c282e08;
 }
 :global(:root[data-app-theme="warm-light"]) .panel.panel .button.button {
   display: flex; align-items: center; justify-content: center; gap: 5px; flex: 1 0 auto; width: max-content; min-width: 0; max-width: 100%; height: auto; min-height: max(52px, 3.25rem); max-height: none;

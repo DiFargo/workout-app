@@ -68,7 +68,7 @@
   grid-template-columns: 32px minmax(0, 1fr);
   gap: 10px;
   color: var(--apple-text, #1c282e);
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--client-surface, rgba(255, 255, 255, 0.98));
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 18px;
   box-shadow: 0 10px 30px rgba(27, 35, 31, 0.14);
@@ -83,7 +83,7 @@
   height: 32px;
   min-width: 32px;
   min-height: 32px;
-  color: #b36e72;
-  background: #f7e9ea;
+  color: var(--client-danger, #b36e72);
+  background: var(--client-danger-soft, #f7e9ea);
   font-size: 16px;
 }

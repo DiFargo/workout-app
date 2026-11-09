@@ -79,7 +79,7 @@
 .adminClientMeasurementsHead span {
   display: block;
   margin-bottom: 5px;
-  color: rgba(181,230,85,.86);
+  color: var(--client-accent, rgba(181,230,85,.86));
   font-size: 11px;
   font-weight: 950;
   letter-spacing: .14em;
@@ -95,7 +95,7 @@
 
 .adminClientMeasurementsHead p {
   margin: 7px 0 0;
-  color: rgba(255,255,255,.46);
+  color: var(--client-secondary, rgba(255,255,255,.46));
   font-size: 13px;
   font-weight: 800;
   line-height: 1.35;
@@ -108,9 +108,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(145,173,78,.14);
-  border: 1px solid rgba(145,173,78,.20);
-  color: #dfff8e;
+  background: var(--client-accent-soft, rgba(145,173,78,.14));
+  border: 1px solid var(--client-separator, rgba(145,173,78,.20));
+  color: var(--client-accent, #dfff8e);
   font-size: 20px;
   font-weight: 950;
 }
@@ -125,8 +125,8 @@
   min-height: 82px;
   padding: 12px;
   border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.065);
-  background: rgba(7,10,7,.35);
+  border: 1px solid var(--client-separator, rgba(255,255,255,.065));
+  background: var(--client-surface, rgba(7,10,7,.35));
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto 1fr;
@@ -136,7 +136,7 @@
 
 .adminClientMeasurementItem span {
   grid-column: 1 / 3;
-  color: rgba(255,255,255,.48);
+  color: var(--client-secondary, rgba(255,255,255,.48));
   font-size: 12px;
   font-weight: 950;
   line-height: 1.1;
@@ -151,7 +151,7 @@
 
 .adminClientMeasurementItem strong small {
   margin-left: 4px;
-  color: rgba(181,230,85,.82);
+  color: var(--client-secondary, rgba(181,230,85,.82));
   font-size: 12px;
   font-weight: 950;
 }
@@ -160,8 +160,8 @@
   min-width: 44px;
   padding: 6px 8px;
   border-radius: 999px;
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.44);
+  background: var(--client-surface-muted, rgba(255,255,255,.045));
+  color: var(--client-secondary, rgba(255,255,255,.44));
   font-style: normal;
   font-size: 12px;
   font-weight: 950;
@@ -169,21 +169,21 @@
 }
 
 .adminClientMeasurementItem em.up {
-  background: rgba(95,143,78,.16);
-  color: #72a686;
+  background: var(--client-success-soft, rgba(95,143,78,.16));
+  color: var(--client-success, #72a686);
 }
 
 .adminClientMeasurementItem em.down {
-  background: rgba(212,90,90,.14);
-  color: #ff9b9b;
+  background: var(--client-danger-soft, rgba(212,90,90,.14));
+  color: var(--client-danger, #ff9b9b);
 }
 
 .adminClientMeasurementsEmpty {
   min-height: 130px;
   padding: 18px;
   border-radius: 24px;
-  border: 1px dashed rgba(145,173,78,.18);
-  background: rgba(0,0,0,.18);
+  border: 1px dashed var(--client-separator, rgba(145,173,78,.18));
+  background: var(--client-surface-muted, rgba(0,0,0,.18));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -197,7 +197,7 @@
 .adminClientMeasurementsEmpty p {
   max-width: 360px;
   margin: 0;
-  color: rgba(255,255,255,.48);
+  color: var(--client-secondary, rgba(255,255,255,.48));
   font-size: 13px;
   font-weight: 800;
   line-height: 1.35;

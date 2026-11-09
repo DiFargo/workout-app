@@ -659,9 +659,9 @@
 :global(:root[data-app-theme="warm-light"]) .macroPercentItem { color: var(--apple-secondary, #617078); -webkit-text-fill-color: var(--apple-secondary, #617078); font-weight: 500; }
 :global(:root[data-app-theme="warm-light"]) .macroDot { background: var(--ownset-action-gradient); box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .badge { border: 0; border-radius: 14px; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-action, #396ba6); -webkit-text-fill-color: var(--apple-action, #396ba6); box-shadow: none; font-weight: 550; }
-:global(:root[data-app-theme="warm-light"]) .good { background: #e8efea; color: #708d79; -webkit-text-fill-color: #708d79; }
-:global(:root[data-app-theme="warm-light"]) .warning { background: #f2ece7; color: #ae8768; -webkit-text-fill-color: #ae8768; }
-:global(:root[data-app-theme="warm-light"]) .info { background: var(--apple-surface-muted, #edf1f3); color: #6f879c; -webkit-text-fill-color: #6f879c; }
+:global(:root[data-app-theme="warm-light"]) .good { background: var(--client-success-soft, #e8efea); color: var(--client-success, #708d79); -webkit-text-fill-color: var(--client-success, #708d79); }
+:global(:root[data-app-theme="warm-light"]) .warning { background: var(--client-warning-soft, #f2ece7); color: var(--client-warning, #ae8768); -webkit-text-fill-color: var(--client-warning, #ae8768); }
+:global(:root[data-app-theme="warm-light"]) .info { background: var(--apple-surface-muted, #edf1f3); color: var(--client-secondary, #6f879c); -webkit-text-fill-color: var(--client-secondary, #6f879c); }
 
 /* Current opaque iOS nutrition-plan sheet. */
 :global(:root) .root.modern {
@@ -1104,16 +1104,16 @@
   gap: 6px;
   border: 1px solid #e6dff2;
   border-radius: 20px;
-  background: #f0ebf8;
+  background: var(--client-surface-muted, #f0ebf8);
 }
 
 :global(:root) .modern .scoreLabel {
-  color: #6f6878;
+  color: var(--client-secondary, #6f6878);
   font-size: 10px;
   font-weight: 600;
   line-height: 14px;
   text-transform: none;
-  -webkit-text-fill-color: #6f6878;
+  -webkit-text-fill-color: var(--client-secondary, #6f6878);
 }
 
 :global(:root) .modern .scoreValue {
@@ -1125,9 +1125,9 @@
 }
 
 :global(:root) .modern .scoreValue small {
-  color: #6f6878;
+  color: var(--client-secondary, #6f6878);
   font-size: 11px;
-  -webkit-text-fill-color: #6f6878;
+  -webkit-text-fill-color: var(--client-secondary, #6f6878);
 }
 
 :global(:root) .modern .scoreCaption {
@@ -1254,15 +1254,15 @@
 }
 
 :global(:root) .modern .badge.good {
-  background: #e8efea;
-  color: #587461;
-  -webkit-text-fill-color: #587461;
+  background: var(--client-success-soft, #e8efea);
+  color: var(--client-success, #587461);
+  -webkit-text-fill-color: var(--client-success, #587461);
 }
 
 :global(:root) .modern .badge.warning {
-  background: #f2ece7;
-  color: #8b664c;
-  -webkit-text-fill-color: #8b664c;
+  background: var(--client-warning-soft, #f2ece7);
+  color: var(--client-warning, #8b664c);
+  -webkit-text-fill-color: var(--client-warning, #8b664c);
 }
 
 @media (max-width: 370px), (max-height: 720px) {

@@ -812,7 +812,7 @@
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 13px;
   background: var(--apple-canvas, #f5f7f8);
-  color: #625d69;
+  color: var(--client-secondary, #625d69);
   font-size: 10px;
   font-weight: 600;
   line-height: 14px;
@@ -951,7 +951,7 @@
   padding: 6px 10px;
   border-radius: 999px;
   background: var(--apple-surface-muted, #edf1f3);
-  color: #625d69;
+  color: var(--client-secondary, #625d69);
   font-size: 11px;
   font-weight: 600;
 }
@@ -999,7 +999,7 @@
 }
 
 :global(:root) .page .note span {
-  color: #625d69;
+  color: var(--client-secondary, #625d69);
   font-size: 11px;
   font-weight: 600;
 }
