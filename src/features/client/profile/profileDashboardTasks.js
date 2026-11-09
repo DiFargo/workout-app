@@ -132,13 +132,17 @@ export function buildProfileDashboardTasks({
       note: safeWorkoutDate || "План уже есть — выберите, как его открыть.",
       actionLabel: workoutActionLabel || "Выбрать режим"
     });
+  } else if (workoutState === "draft") {
+    tasks.push({ id: "workout", kind: "workout", title: "Продолжите тренировку",
+      note: `${safeWorkoutTitle} · ${exerciseText}`,
+      actionLabel: workoutActionLabel || "Продолжить тренировку" });
   } else if (workoutState === "ready" && workoutScheduleStatus === "today") {
     tasks.push({
       id: "workout",
       kind: "workout",
       title: "Сегодня тренировка",
       note: `${safeWorkoutTitle} · ${exerciseText}`,
-      actionLabel: workoutActionLabel || "Открыть тренировку"
+      actionLabel: workoutActionLabel || "Начать тренировку"
     });
   } else if (workoutState === "ready" && workoutScheduleStatus === "missed") {
     tasks.push({

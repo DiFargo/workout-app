@@ -1,7 +1,9 @@
 .confirmOverlay {
   position: fixed;
   inset: 0;
-  z-index: 21000;
+  /* Trainer portals live at 110000, including when their scoped token is not
+     inherited under body. Confirmation must be above the surface it blocks. */
+  z-index: calc(var(--trainer-modal-layer, 110000) + 100);
   display: grid;
   place-items: center;
   padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
@@ -12,9 +14,9 @@
 .confirmDialog {
   width: min(92vw, 430px);
   padding: 22px;
-  border: 1px solid #efebf3;
+  border: 1px solid var(--client-separator, #efebf3);
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--client-sheet-background, rgba(255, 255, 255, 0.98));
   box-shadow:
     0 24px 70px rgba(40, 38, 46, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -22,7 +24,7 @@
 }
 
 .confirmTitle {
-  color: #28262e;
+  color: var(--client-text, #28262e);
   font-size: 22px;
   font-weight: 900;
   line-height: 1.12;
@@ -31,7 +33,7 @@
 
 .confirmText {
   margin-top: 10px;
-  color: #7b7682;
+  color: var(--client-secondary, #7b7682);
   font-size: 15px;
   font-weight: 700;
   line-height: 1.42;
@@ -55,15 +57,15 @@
 }
 
 .confirmButtonGhost {
-  color: #7b7682;
-  border: 1px solid #efebf3;
-  background: #f7f6f8;
+  color: var(--client-text, #7b7682);
+  border: 1px solid var(--client-separator, #efebf3);
+  background: var(--client-surface-muted, #f7f6f8);
 }
 
 .confirmButtonPrimary {
-  color: #fff;
-  background: #8f7ac8;
-  box-shadow: 0 14px 28px rgba(143, 122, 200, 0.26);
+  color: var(--client-action-ink, #fff);
+  background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%));
+  box-shadow: 0 8px 18px rgba(46, 104, 106, 0.16);
 }
 
 .danger {

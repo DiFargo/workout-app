@@ -6,7 +6,7 @@ import { getProfileBodyMeasurementCheckInState, getProfileProgressPhotoCheckInSt
 import { getProfileOverviewMeasurements } from "../../../utils/profileOverviewMeasurements.js";
 import { getClientWorkoutCompletionHistory } from "../../../utils/clientWorkoutEvidence.js";
 import { isBodyMeasurementRecord } from "../../../utils/bodyMeasurementRecords.js";
-import { getDashboardEmptyWorkoutAction } from "./profileDashboardPresentation.js";
+import { getDashboardEmptyWorkoutAction, getDashboardResumeWorkoutId, getDashboardWorkoutPresentation } from "./profileDashboardPresentation.js";
 import { getProfileCalendarDraft, mergeProfileCalendarDraft } from "./profileCalendarDraft.js";
 import { resolveTrainerAssignmentWorkoutOrder } from "../../../utils/trainerAssignmentWorkoutOrder.js";
 import { runTransaction } from "firebase/firestore";
@@ -178,6 +178,7 @@ export function buildProfileDashboardModel(ctx) {
     profileWorkoutCalendarEditing,
     profileWorkoutCalendarMonth,
     profileWorkoutCalendarSaving,
+    profileWorkoutDrafts = [],
     profileWorkoutHistoryProgramScope,
     safeWriteUserJsonStorage,
     setProfileWorkoutCalendarData,
@@ -354,7 +355,9 @@ export function buildProfileDashboardModel(ctx) {
         .filter((slot) => slot?.isCompleted)
         .map((slot) => slot?.completedDate || slot?.plannedDate || "")
     );
-    const nextWorkoutSlot = profileWorkoutSlots.find((slot) => !slot.isCompleted) || profileWorkoutSlots[0] || null;
+    const resumeWorkoutId = getDashboardResumeWorkoutId(profileCalendarWorkouts, profileWorkoutSlots, profileWorkoutDrafts, selectedModePlan?.assignedProgramUpdatedAt);
+    const nextWorkoutSlot = profileWorkoutSlots.find(slot => resumeWorkoutId != null && String(slot.workoutId) === String(resumeWorkoutId) && !slot.isCompleted)
+      || profileWorkoutSlots.find((slot) => !slot.isCompleted) || profileWorkoutSlots[0] || null;
     const nextWorkoutSource = profileCalendarWorkouts.find((workout) => (
       String(workout?.id || "") === String(nextWorkoutSlot?.workoutId || "")
     )) || profileCalendarWorkouts[nextWorkoutSlot?.index ?? 0] || null;
@@ -369,6 +372,9 @@ export function buildProfileDashboardModel(ctx) {
     const hasWorkoutPlan = profileCalendarWorkouts.length > 0;
     const hasPlanInAnotherMode = !hasWorkoutPlan && Array.isArray(plan?.workouts) && plan.workouts.length > 0;
     const hasPendingWorkout = profileWorkoutSlots.some((slot) => !slot.isCompleted);
+    const todayWorkoutDateKey = formatProfileWorkoutDateKey(new Date());
+    const homeWorkoutScheduleStatus = nextWorkoutSlot?.isMissed ? "missed"
+      : !nextWorkoutDateKey ? "unscheduled" : nextWorkoutDateKey === todayWorkoutDateKey ? "today" : "upcoming";
     const homeWorkoutAction = !hasWorkoutPlan
       ? {
           eyebrow: "ТРЕНИРОВКИ",
@@ -377,29 +383,21 @@ export function buildProfileDashboardModel(ctx) {
         }
       : !hasPendingWorkout
         ? {
-            state: "complete",
+            ...getDashboardWorkoutPresentation({ complete: true }),
             eyebrow: "ТРЕНИРОВКИ",
             title: "План выполнен",
             dateText: "Все тренировки текущего плана завершены",
-            exerciseCount: 0,
-            actionLabel: "Открыть тренировки"
+            exerciseCount: 0
           }
         : {
-            state: "ready",
-            isToday: Boolean(nextWorkoutDateKey && nextWorkoutDateKey === formatProfileWorkoutDateKey(new Date())),
-            scheduleStatus: nextWorkoutSlot?.isMissed
-              ? "missed"
-              : !nextWorkoutDateKey
-                ? "unscheduled"
-                : nextWorkoutDateKey === formatProfileWorkoutDateKey(new Date())
-                  ? "today"
-                  : "upcoming",
+            ...getDashboardWorkoutPresentation({ scheduleStatus: homeWorkoutScheduleStatus, hasDraft: resumeWorkoutId != null, mode: selectedWorkoutMode }),
+            isToday: Boolean(nextWorkoutDateKey && nextWorkoutDateKey === todayWorkoutDateKey),
+            scheduleStatus: homeWorkoutScheduleStatus,
             eyebrow: nextWorkoutSlot?.isMissed ? "ТРЕНИРОВКА ПЕРЕНЕСЕНА" : "СЛЕДУЮЩАЯ ТРЕНИРОВКА",
             title: nextWorkoutTitle,
             positionText: `${Math.max(0, profileCalendarWorkouts.indexOf(nextWorkoutSource)) + 1} из ${profileCalendarWorkouts.length}`,
             dateText: nextWorkoutDate,
-            exerciseCount: nextWorkoutExerciseCount,
-            actionLabel: "Открыть тренировку"
+            exerciseCount: nextWorkoutExerciseCount
           };
     const profileWorkoutCalendarEntries = buildWorkoutScheduleCalendarEntries(profileWorkoutSlots);
     const profileWorkoutEntriesByDate = profileWorkoutCalendarEntries.reduce((result, entry) => {

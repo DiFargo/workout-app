@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getDashboardEmptyWorkoutAction, getDashboardWeightPresentation, isDashboardNutritionDayKnown, runDashboardWorkoutAction } from "../src/features/client/profile/profileDashboardPresentation.js";
+import { getDashboardEmptyWorkoutAction, getDashboardResumeWorkoutId, getDashboardWorkoutPresentation, getDashboardWeightPresentation, isDashboardNutritionDayKnown, runDashboardWorkoutAction } from "../src/features/client/profile/profileDashboardPresentation.js";
 import { buildProfileDashboardTasks } from "../src/features/client/profile/profileDashboardTasks.js";
 
 test("empty workout instructions distinguish trainer assignment, basic setup and deliberate mode choice", () => {
@@ -23,8 +23,34 @@ test("mode-choice task opens mode picker, other workout actions retain the exist
   const calls = [];
   const actions = { openModePicker: () => calls.push("picker"), openTraining: () => calls.push("training") };
   runDashboardWorkoutAction("choose", actions);
-  for (const state of ["create", "awaiting-trainer", "ready", "complete"]) runDashboardWorkoutAction(state, actions);
-  assert.deepEqual(calls, ["picker", "training", "training", "training", "training"]);
+  for (const state of ["create", "awaiting-trainer", "ready", "draft", "complete"]) runDashboardWorkoutAction(state, actions);
+  assert.deepEqual(calls, ["picker", "training", "training", "training", "training", "training"]);
+});
+
+test("dashboard workout actions match the overview's date and completion states", () => {
+  assert.deepEqual(getDashboardWorkoutPresentation({ scheduleStatus: "upcoming" }), { state: "ready", actionLabel: "Начать раньше" });
+  assert.equal(getDashboardWorkoutPresentation({ scheduleStatus: "today" }).actionLabel, "Начать тренировку");
+  assert.equal(getDashboardWorkoutPresentation({ scheduleStatus: "missed" }).actionLabel, "Начать сейчас");
+  assert.equal(getDashboardWorkoutPresentation({ scheduleStatus: "missed", mode: "basic" }).actionLabel, "Начать тренировку");
+  assert.equal(getDashboardWorkoutPresentation({ scheduleStatus: "unscheduled" }).actionLabel, "Выбрать тренировку");
+  for (const scheduleStatus of ["today", "upcoming", "missed", "unscheduled"]) {
+    assert.deepEqual(getDashboardWorkoutPresentation({ scheduleStatus, hasDraft: true }), { state: "draft", actionLabel: "Продолжить тренировку" });
+  }
+  assert.deepEqual(getDashboardWorkoutPresentation({ complete: true, hasDraft: true }), { state: "complete", actionLabel: "Посмотреть результаты" });
+});
+
+test("dashboard continuation uses only a resumable draft of an unfinished current-assignment workout", () => {
+  const workouts = [{ id: "completed" }, { id: "next" }, { id: "started", assignedProgramUpdatedAt: "current" }];
+  const slots = workouts.map((workout, index) => ({ workoutId: workout.id, isCompleted: index === 0 }));
+  const draft = { workoutId: "started", assignmentVersion: "current", plan: { workouts: [workouts[2]] } };
+  assert.equal(getDashboardResumeWorkoutId(workouts, slots, [draft], "current"), "started");
+  assert.equal(getDashboardResumeWorkoutId(workouts, slots, [{ ...draft, assignmentVersion: "old" }], "current"), null);
+  assert.equal(getDashboardResumeWorkoutId(workouts, slots, [{ ...draft, plan: null }], "current"), null);
+  assert.equal(getDashboardResumeWorkoutId(workouts, slots, [{ ...draft, workoutId: "completed" }], "current"), null);
+  assert.equal(getDashboardResumeWorkoutId(workouts, slots, [{ ...draft, workoutId: "another-plan" }], "current"), null);
+  const [task] = buildProfileDashboardTasks({ workoutState: "draft", workoutTitle: "Тренировка 6", workoutScheduleStatus: "upcoming" });
+  assert.equal(task.actionLabel, "Продолжить тренировку");
+  assert.match(task.note, /Тренировка 6/);
 });
 
 test("weight loading, missing value, first record and actual equality remain distinct", () => {

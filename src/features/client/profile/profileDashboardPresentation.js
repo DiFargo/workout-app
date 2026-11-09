@@ -1,3 +1,21 @@
+import { canResumeWorkoutDraft } from "../../../utils/workoutDraftState.js";
+
+export function getDashboardResumeWorkoutId(workouts = [], slots = [], drafts = [], assignmentVersion = "") {
+  const pendingIds = new Set(slots.filter(slot => slot && !slot.isCompleted).map(slot => String(slot.workoutId)));
+  return workouts.find(workout => pendingIds.has(String(workout?.id)) && drafts.some(draft => (
+    canResumeWorkoutDraft(draft, workout, assignmentVersion)
+  )))?.id ?? null;
+}
+
+export function getDashboardWorkoutPresentation({ scheduleStatus, hasDraft = false, complete = false, mode = "individual" } = {}) {
+  if (complete) return { state: "complete", actionLabel: "Посмотреть результаты" };
+  if (hasDraft) return { state: "draft", actionLabel: "Продолжить тренировку" };
+  const actionLabel = scheduleStatus === "upcoming" ? "Начать раньше"
+    : scheduleStatus === "today" || (scheduleStatus === "missed" && mode === "basic") ? "Начать тренировку"
+      : scheduleStatus === "missed" ? "Начать сейчас" : "Выбрать тренировку";
+  return { state: "ready", actionLabel };
+}
+
 export function getDashboardEmptyWorkoutAction(mode, hasPlanInAnotherMode = false) {
   if (hasPlanInAnotherMode) return {
     state: "choose", title: "Выберите режим тренировок",
@@ -13,6 +31,7 @@ export function getDashboardEmptyWorkoutAction(mode, hasPlanInAnotherMode = fals
 }
 
 export function runDashboardWorkoutAction(state, { openModePicker, openTraining }) {
+  // Keep the existing preview, draft restoration and early-start confirmation.
   return state === "choose" ? openModePicker() : openTraining();
 }
 

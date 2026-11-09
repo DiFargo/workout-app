@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  buildProfileDashboardModel,
   getProfileDashboardScheduleDates,
   getProfileMeasurementTrendPeriodLabel,
   getTimeOfDayGreeting,
@@ -12,7 +13,44 @@ import {
   buildProfileDashboardTasks,
   getProfileProgressPhotoCheckInState
 } from "../src/features/client/profile/profileDashboardTasks.js";
-import { buildPlannedWorkoutSlots } from "../src/utils/workoutSchedule.js";
+import { buildPlannedWorkoutSlots, buildWorkoutScheduleCalendarEntries, toWorkoutDateKey } from "../src/utils/workoutSchedule.js";
+
+test("production home model keeps future, today's and resumed workout actions contextual", () => {
+  const today = toWorkoutDateKey(new Date());
+  const future = new Date(`${today}T12:00:00`);
+  future.setDate(future.getDate() + 2);
+  const futureKey = toWorkoutDateKey(future);
+  const workout = { id: "workout-6", name: "Тренировка 6", scheduledDate: futureKey, exercises: [{ id: "exercise", sets: [{}] }] };
+  const ctx = {
+    APP_PAGES: { MAIN: "main" }, page: "main", plan: { workouts: [workout], assignedProgramUpdatedAt: "current" },
+    auth: { currentUser: { uid: "test-client" } }, user: {}, profileAccount: {}, telegramProfile: {},
+    workoutModePreference: { mode: "individual" }, history: [], clientProgressPhotos: [], clientTrainerTasks: [],
+    profileMeasurements: [], profileProgressPhotoCompareIds: [], profileProgressPhotoFiles: {},
+    profileWorkoutCalendarData: {}, profileWorkoutCalendarMonth: today.slice(0, 7), profileWorkoutCalendarDraftDates: [],
+    nutrition: { days: {}, goals: {} }, nutritionHistoryReady: false, nutritionCalendarDays: [], nutritionDateKey: today,
+    AI_NUTRITION_WEEK_DAYS: [], sortWorkoutDays: items => items,
+    buildPlannedWorkoutSlots, buildWorkoutScheduleCalendarEntries,
+    formatProfileWorkoutDateKey: toWorkoutDateKey, getTimestampValue: value => Date.parse(value) || 0,
+    getProgramHistoryItems: items => items, getActiveTrainerTasksCount: () => 0,
+    getAiNutritionTrainingDays: () => [], getClientNutritionDisplayPlan: () => null,
+    getAiNutritionCurrentWeek: () => 1, getAiNutritionGoalLabel: () => "Поддержание", getAiNutritionDayMacros: () => ({}),
+    nutritionKeyToDate: value => new Date(`${value}T12:00:00`), makeEmptyNutritionDay: () => ({ foods: [] }),
+    getNutritionDayTotals: () => ({}), formatProfileWorkoutDate: () => "", getProfileNextTrainingText: () => ""
+  };
+  assert.equal(buildProfileDashboardModel(ctx).homeWorkoutAction.actionLabel, "Начать раньше");
+  const todayCtx = { ...ctx, plan: { ...ctx.plan, workouts: [{ ...workout, scheduledDate: today }] } };
+  assert.equal(buildProfileDashboardModel(todayCtx).homeWorkoutAction.actionLabel, "Начать тренировку");
+  const draft = { workoutId: workout.id, assignmentVersion: "current", plan: { workouts: [workout] } };
+  const resumed = buildProfileDashboardModel({ ...ctx, profileWorkoutDrafts: [draft] }).homeWorkoutAction;
+  assert.equal(resumed.state, "draft");
+  assert.equal(resumed.title, "Тренировка 6");
+  assert.equal(resumed.actionLabel, "Продолжить тренировку");
+  assert.equal(buildProfileDashboardModel({ ...ctx, profileWorkoutDrafts: [{ ...draft, assignmentVersion: "old" }] }).homeWorkoutAction.actionLabel, "Начать раньше");
+  const completed = buildProfileDashboardModel({ ...ctx, profileWorkoutDrafts: [draft],
+    plan: { ...ctx.plan, workouts: [{ ...workout, status: "completed", completedAt: today }] } }).homeWorkoutAction;
+  assert.equal(completed.state, "complete");
+  assert.equal(completed.actionLabel, "Посмотреть результаты");
+});
 
 test("missed workout message uses the missed date, not its suggested future move", () => {
   const dates = ["2026-08-26", "2026-08-29", "2026-09-02", "2026-09-05", "2026-09-09", "2026-09-12", "2026-09-16", "2026-09-19"];

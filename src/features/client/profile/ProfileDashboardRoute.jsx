@@ -39,6 +39,9 @@ import { createClientReminderHandlers } from "./profileNotificationHandlers";
 import { getAccountRecoveryEmail } from "./profileAccountEmail.js";
 import { loadProfileAchievementsHistory } from "./profileAchievementsHistory.js";
 import { isDashboardNutritionDayKnown, runDashboardWorkoutAction } from "./profileDashboardPresentation.js";
+import { safeReadJsonStorage } from "../../../utils/storageSafety.js";
+import { getNewestWorkoutDraft, getWorkoutDraftKey } from "../../../utils/workoutDraftStorage.js";
+import { listWorkoutDraftFallbacks } from "../../../utils/workoutDraftFallbackStorage.js";
 
 function getSafeFeedbackAttachmentName(file) {
   const rawName = file?.name || "attachment";
@@ -55,6 +58,7 @@ export default function ProfileDashboardRoute(ctx) {
   const [profilePasswordModalOpen, setProfilePasswordModalOpen] = useState(false);
   const [quickWeightModalOpen, setQuickWeightModalOpen] = useState(false);
   const [workoutModePickerOpen, setWorkoutModePickerOpen] = useState(false);
+  const [dashboardFallbackDrafts, setDashboardFallbackDrafts] = useState({ uid: "", drafts: [] });
   const dashboardWorkoutModeRefreshRef = useRef("");
   const nestedSettingsReturnRef = useRef("");
   const {
@@ -266,6 +270,28 @@ export default function ProfileDashboardRoute(ctx) {
     })
   });
   const hasTrainerFeatures = canUseTrainerFeatures();
+  const dashboardUid = auth.currentUser?.uid || user?.uid || "";
+  const profileWorkoutDrafts = (Array.isArray(plan?.workouts) ? plan.workouts : []).map(workout => {
+    if (!dashboardUid || !workout?.id) return null;
+    const local = safeReadJsonStorage(getWorkoutDraftKey(dashboardUid, workout.id), null);
+    const localDraft = local?.workoutId === workout.id && (!local.uid || local.uid === dashboardUid) ? local : null;
+    const fallback = dashboardFallbackDrafts.uid === dashboardUid
+      ? dashboardFallbackDrafts.drafts.find(draft => draft.workoutId === workout.id) : null;
+    return getNewestWorkoutDraft(localDraft, fallback);
+  }).filter(Boolean);
+
+  useEffect(() => {
+    if (page !== APP_PAGES.MAIN || hasTrainerFeatures || !dashboardUid) return undefined;
+    let active = true;
+    const refresh = () => {
+      void listWorkoutDraftFallbacks(dashboardUid).then(drafts => {
+        if (active) setDashboardFallbackDrafts({ uid: dashboardUid, drafts });
+      });
+    };
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => { active = false; window.removeEventListener("focus", refresh); };
+  }, [APP_PAGES.MAIN, dashboardUid, hasTrainerFeatures, page, plan]);
 
   useEffect(() => {
     loadClientTrainerTasksRef.current = loadClientTrainerTasks;
@@ -376,6 +402,7 @@ export default function ProfileDashboardRoute(ctx) {
     profileWorkoutCalendarEditing,
     profileWorkoutCalendarMonth,
     profileWorkoutCalendarSaving,
+    profileWorkoutDrafts,
     profileWorkoutHistoryProgramScope,
     profileWorkoutScheduledDates,
     safeWriteUserJsonStorage,

@@ -51,8 +51,8 @@ export default function TrainerClientActionsSheet({ clientName, archived = false
       const result = await onAction(action);
       if (result === true && SUCCESS[action]) setFeedback({ text: SUCCESS[action], action, error: false });
       // false/undefined may mean that the user cancelled a confirmation.
-    } catch {
-      setFeedback({ text: "Не удалось выполнить действие. Повторите попытку.", action, error: true });
+    } catch (error) {
+      setFeedback({ text: error.basicWorkoutAccessMessage || "Не удалось выполнить действие. Повторите попытку.", action, error: true });
     } finally {
       busyRef.current = false;
       setBusyAction("");

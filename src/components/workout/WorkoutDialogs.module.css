@@ -527,8 +527,8 @@
   }
 }
 
-/* Calm iOS workout dialogs. These overrides are limited to the light client
-   theme so the existing dark experience remains available. */
+/* The iOS client shell keeps data-app-theme="warm-light" in both appearance
+   modes. Use its semantic colors rather than treating this selector as light. */
 :global(:root[data-app-theme="warm-light"]) .draftOverlay.draftOverlay,
 :global(:root[data-app-theme="warm-light"]) .postOverlay.postOverlay {
   padding: max(12px, env(safe-area-inset-top, 0px)) 16px max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
@@ -544,7 +544,7 @@
   width: min(370px, 100%);
   padding: 20px 16px 16px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 18px 52px rgba(32, 35, 38, 0.18);
@@ -595,7 +595,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .restoreButton.restoreButton {
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
 }
 
@@ -617,7 +617,7 @@
   width: min(100%, 384px);
   padding: 16px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 26px;
   box-shadow: 0 18px 48px rgba(27, 35, 31, 0.18);
@@ -695,15 +695,15 @@
 
 :global(:root[data-app-theme="warm-light"]) .exitCardExit .exitActions.exitActions > button:first-child,
 :global(:root[data-app-theme="warm-light"]) .exitCardIncomplete .exitActions.exitActions > button:last-child {
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
   border-color: var(--apple-action, #396ba6);
   box-shadow: 0 8px 18px rgba(47, 125, 104, 0.24);
 }
 
 :global(:root[data-app-theme="warm-light"]) .exitCardExit .exitActions.exitActions > button:last-child {
-  color: var(--apple-secondary, #617078);
-  background: #ffffff;
+  color: var(--client-text, #1c282e);
+  background: var(--client-surface-muted, #edf1f3);
 }
 
 :global(:root[data-app-theme="warm-light"]) .exitActions.exitActions > button:active,
@@ -734,7 +734,7 @@
   min-height: 106px;
   padding: 11px 6px;
   color: var(--apple-text, #1c282e);
-  background: #f7f8f8;
+  background: var(--client-surface-muted, #f7f8f8);
   border: 1px solid transparent;
   border-radius: 18px;
 }
@@ -811,7 +811,7 @@
   gap: 10px;
   overflow: hidden auto;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 24px;
   box-shadow: 0 3px 10px rgba(27, 35, 31, 0.08);
@@ -863,7 +863,7 @@
   align-items: center;
   gap: 10px;
   color: var(--apple-text, #1c282e);
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 17px;
   box-shadow: none;
@@ -872,7 +872,7 @@
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption.active {
   color: var(--apple-text, #1c282e);
   background: var(--apple-surface-muted, #edf1f3);
-  border-color: #a9d2c3;
+  border-color: var(--client-accent, #a9d2c3);
   box-shadow: 0 0 0 3px rgba(47, 125, 104, 0.08);
 }
 
@@ -922,7 +922,7 @@
   display: grid;
   grid-template-columns: 96px minmax(0, 1fr);
   gap: 10px;
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--client-surface, rgba(255, 255, 255, 0.98));
   border: 0;
   border-top: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 0;
@@ -949,7 +949,7 @@
 }
 
 :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions > button:last-child {
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
 }
 
@@ -1033,9 +1033,9 @@
     min-height: 28px;
     padding: 0 13px;
     align-items: center;
-    background: var(--background-post-workout-badge-mobile);
-    color: var(--color-post-workout-badge-mobile);
-    -webkit-text-fill-color: var(--color-post-workout-badge-mobile);
+    background: var(--client-surface-muted, var(--background-post-workout-badge-mobile));
+    color: var(--client-secondary, var(--color-post-workout-badge-mobile));
+    -webkit-text-fill-color: currentColor;
     font-size: 12px;
   }
 
@@ -1084,7 +1084,7 @@
     margin-top: 9px;
     overflow: hidden;
     color: var(--color-post-workout-option);
-    -webkit-text-fill-color: var(--color-post-workout-option);
+    -webkit-text-fill-color: currentColor;
     font-size: 13px;
     line-height: 1.05;
     white-space: nowrap;
@@ -1095,7 +1095,7 @@
     max-width: 100%;
     margin-top: 6px;
     overflow: hidden;
-    color: #7b8397;
+    color: var(--client-secondary, #7b8397);
     font-size: 10px;
     font-weight: 900;
     line-height: 1.15;
@@ -1185,7 +1185,7 @@
     background: var(--background-workout-readiness-mobile-back);
     box-shadow: none;
     color: var(--color-workout-readiness-mobile-back);
-    -webkit-text-fill-color: var(--color-workout-readiness-mobile-back);
+    -webkit-text-fill-color: currentColor;
   }
 
   :global(:root[data-app-theme="warm-light"]) .readinessActions > button:last-child {
@@ -1193,7 +1193,7 @@
     background: var(--background-workout-readiness-primary);
     box-shadow: var(--shadow-workout-readiness-mobile-primary);
     color: var(--color-workout-readiness-primary);
-    -webkit-text-fill-color: var(--color-workout-readiness-primary);
+    -webkit-text-fill-color: currentColor;
   }
 
   :global(:root[data-app-theme="warm-light"]) .readinessActions > button:disabled {
@@ -1219,7 +1219,7 @@
   place-items: center;
   border: 1px solid var(--apple-separator, rgba(57, 82, 91,.12));
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--client-surface, #ffffff);
   color: var(--apple-blue-pressed, #315f91);
 }
 
@@ -1345,7 +1345,7 @@
 :global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage {
   width: min(100%, 480px); max-width: 480px; height: auto; min-height: 0;
   max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-  margin: 0; padding: 0; border-radius: 24px; background: #fff;
+  margin: 0; padding: 0; border-radius: 24px; background: var(--client-sheet-background, #fff);
   box-shadow: 0 16px 48px rgba(28,28,30,.18); align-items: stretch;
 }
 :global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader {
@@ -1362,8 +1362,8 @@
 :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions {
   position: static; inset: auto; transform: none; flex: 0 0 auto;
   width: 100%; max-width: none; height: auto; min-height: 0; max-height: none;
-  margin: 0; padding: 12px 20px 20px; border: 0; border-top: 1px solid rgba(57, 82, 91,.12);
-  border-radius: 0; background: #fff; box-shadow: none;
+  margin: 0; padding: 12px 20px 20px; border: 0; border-top: 1px solid var(--client-separator, rgba(57, 82, 91,.12));
+  border-radius: 0; background: var(--client-sheet-background, #fff); box-shadow: none;
   grid-template-columns: minmax(80px, 1fr) minmax(0, 2fr);
 }
 :global(:root[data-app-theme="warm-light"]) .draftActions.draftActions { grid-template-columns: 1fr; }
@@ -1381,7 +1381,7 @@
 :global(:root[data-app-theme="warm-light"]) .exitCard.exitCard,
 :global(:root[data-app-theme="warm-light"]) .draftCard.draftCard {
   position: relative; width: min(100%,520px); max-width: 520px; height: auto; min-height: 0; max-height: calc(100dvh - 20px - env(safe-area-inset-top));
-  margin: 0; padding: 34px 24px max(24px,env(safe-area-inset-bottom)); border: 0; border-radius: 34px 34px 0 0; background: #f5f7f8;
+  margin: 0; padding: 34px 24px max(24px,env(safe-area-inset-bottom)); border: 0; border-radius: 34px 34px 0 0; background: var(--client-sheet-background, #f5f7f8);
   box-shadow: 0 20px 60px #0002; overflow-y: auto; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
 }
 .readinessStage::before,.postCard::before,.exitCard::before,.draftCard::before { content: ""; position: absolute; top: 10px; left: calc(50% - 16px); width: 32px; height: 4px; border-radius: 9px; background: #d1d1d8; }
@@ -1390,12 +1390,12 @@
 :global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader > small { font-size: 13px; font-weight: 400; margin-top: 6px; }
 :global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage { display: block; }
 :global(:root[data-app-theme="warm-light"]) .readinessCard.readinessCard { padding: 0; background: transparent; overflow: visible; }
-:global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro { padding: 16px; border-radius: 20px; background: white; }
+:global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro { padding: 16px; border-radius: 20px; background: var(--client-surface, white); }
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro strong { font-size: 17px; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro p { font-size: 14px; font-weight: 400; line-height: 1.45; }
 :global(:root[data-app-theme="warm-light"]) .readinessGrid.readinessGrid { margin-top: 16px; gap: 10px; }
-:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption { min-height: 82px; padding: 16px; gap: 14px; background: white; border: 1px solid transparent; border-radius: 20px; box-shadow: none; }
-:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption.active { background: #e8f1f2; border-color: #396ba6; }
+:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption { min-height: 82px; padding: 16px; gap: 14px; background: var(--client-surface, white); border: 1px solid transparent; border-radius: 20px; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption.active { background: var(--client-accent-soft, #e8f1f2); border-color: var(--client-accent, #396ba6); }
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption strong { font-size: 17px; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption small { font-size: 13px; font-weight: 400; line-height: 1.4; }
 :global(:root[data-app-theme="warm-light"]) .readinessConfirmation.readinessConfirmation { margin-top: 14px; padding: 0 4px; background: transparent; font-size: 13px; font-weight: 400; line-height: 1.45; }
@@ -1412,16 +1412,16 @@
   justify-content: stretch;
 }
 :global(:root[data-app-theme="warm-light"]) .draftActions.draftActions .restoreButton {
-  color: #ffffff;
+  color: var(--client-action-ink, #ffffff);
   background: var(--ownset-action-gradient);
 }
 :global(:root[data-app-theme="warm-light"]) .postGrid.postGrid { gap: 10px; }
-:global(:root[data-app-theme="warm-light"]) .postOption.postOption { min-height: 144px; background: white; border: 0; border-radius: 20px; box-shadow: none; }
+:global(:root[data-app-theme="warm-light"]) .postOption.postOption { min-height: 144px; background: var(--client-surface, white); border: 0; border-radius: 20px; box-shadow: none; }
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption strong { font-size: 15px; font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption small { display: block; font-size: 12px; font-weight: 400; line-height: 1.35; white-space: normal; overflow: visible; text-overflow: clip; -webkit-line-clamp: unset; }
 .postOptionIcon.postOptionIcon { width: 48px; height: 48px; font-size: 32px; background: transparent; }
 .readinessOptionIcon.readinessOptionIcon { width: 44px; height: 44px; font-size: 29px; background: transparent; }
-.postCloseButton.postCloseButton,.exitCloseButton.exitCloseButton { color: #617078; background: #e5e5ea; border: 0; border-radius: 50%; box-shadow: none; }
+.postCloseButton.postCloseButton,.exitCloseButton.exitCloseButton { color: var(--client-accent, #617078); background: var(--client-surface-muted, #e5e5ea); border: 0; border-radius: 50%; box-shadow: none; }
 @media(max-width:350px) { :global(:root[data-app-theme="warm-light"]) .postCard.postCard,:global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage { padding-inline: 16px; } }
 @media (max-width: 350px) {
   :global(:root[data-app-theme="warm-light"]) .postGrid.postGrid { grid-template-columns: 1fr; }

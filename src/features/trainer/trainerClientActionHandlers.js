@@ -2,6 +2,8 @@ import { collection, doc, getDocs, setDoc, writeBatch, query, orderBy, documentI
 
 import { createClientResourceId } from "../../domain/clientInsights.js";
 import { isNutritionDayStorageEnabled } from "../../utils/nutritionDayStorageConfig.js";
+import { updateAdminBasicWorkoutAccess } from "../../utils/adminBasicWorkoutAccess.js";
+import { captureAuthSession } from "../../utils/authSession.js";
 import {
   buildTrainerClientExportRows,
   trainerExportRowsToCsv,
@@ -210,6 +212,7 @@ export async function handleTrainerClientActionWithDeps({
   canUseTrainerFeatures,
   canManageClientProgram,
   showAppConfirm,
+  saveBasicWorkoutAccess = updateAdminBasicWorkoutAccess,
   getAdminNutritionDaysList,
   saveTrainerClientNotificationSettings,
   deleteClientFromAdminPanel,
@@ -236,6 +239,8 @@ export async function handleTrainerClientActionWithDeps({
     return false;
   }
 
+  const basicAccessSession = action === "grant_basic_access" || action === "revoke_basic_access"
+    ? captureAuthSession(auth) : null;
   try {
     if (action === "grant_basic_access" || action === "revoke_basic_access") {
       if (!canUseAdminFeatures() || (client.role && client.role !== "client")) {
@@ -243,12 +248,13 @@ export async function handleTrainerClientActionWithDeps({
         return false;
       }
       const allowed = action === "grant_basic_access";
-      const confirmed = await showAppConfirm(allowed
-        ? "Разрешить клиенту базовые тренировки «Сейчас» и «На месяц»? Индивидуальная программа не изменится."
-        : "Отключить базовые тренировки? История и индивидуальная программа сохранятся.");
+      const confirmed = await showAppConfirm({ title: allowed ? "Открыть базовые тренировки?" : "Отключить базовые тренировки?",
+        text: allowed ? "Клиент сможет выбирать «Сейчас» и «На месяц». Индивидуальная программа не изменится." : "История и индивидуальная программа сохранятся.",
+        confirmText: allowed ? "Открыть доступ" : "Отключить доступ" });
       if (!confirmed) return false;
-      const patch = { basicWorkoutAccess: allowed, updatedAt: new Date().toISOString() };
-      await setDoc(doc(db, "users", client.id), patch, { merge: true });
+      if (!basicAccessSession.isCurrent()) return false;
+      const patch = await saveBasicWorkoutAccess({ auth, db, clientId: client.id, allowed });
+      if (!basicAccessSession.isCurrent()) return false;
       setUsersList(items => items.map(item => item.id === client.id ? { ...item, ...patch } : item));
       setAdminSelectedClient(item => item?.id === client.id ? { ...item, ...patch } : item);
       setAdminClientStatus(allowed ? "Доступ к базовым тренировкам открыт." : "Доступ к базовым тренировкам отключён. История сохранена.");
@@ -529,6 +535,11 @@ export async function handleTrainerClientActionWithDeps({
     }
   } catch (error) {
     console.error("Trainer client action failed:", error);
+    if (action === "grant_basic_access" || action === "revoke_basic_access") {
+      if (!basicAccessSession.isCurrent()) return false;
+      setAdminClientStatus(error.basicWorkoutAccessMessage || "Не удалось подтвердить изменение доступа. Обновите карточку клиента.");
+      throw error;
+    }
     setAdminClientStatus("Не получилось выполнить действие клиента.");
     return false;
   }
