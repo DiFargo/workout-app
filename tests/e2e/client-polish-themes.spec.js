@@ -9,6 +9,59 @@ async function selectDarkAppearance(page) {
   await expect(page.locator("html")).toHaveAttribute("data-client-appearance", "dark");
 }
 
+test("главная без программы прокручивается в уменьшенной области Telegram", async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 402, height: 874 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.clock.setFixedTime(new Date("2026-06-22T12:00:00Z"));
+  await page.addInitScript(() => {
+    window.Telegram = { WebApp: {
+      viewportStableHeight: 620,
+      viewportHeight: 620,
+      safeAreaInset: { bottom: 34 },
+      contentSafeAreaInset: {},
+      colorScheme: "light",
+      onEvent() {}, offEvent() {}, expand() {}, ready() {},
+      setHeaderColor() {}, setBackgroundColor() {}, setBottomBarColor() {}
+    } };
+  });
+  const assertNoErrors = failOnRuntimeErrors(page);
+  await page.goto("/?clientHarness=1&clientDashboardWorkoutState=empty&clientWorkoutState=empty&clientCoachNotificationState=empty&clientNotificationState=empty");
+  const shell = page.getByTestId("client-harness-main");
+  const coach = page.getByTestId("profile-summary-notifications-button");
+  await expect(coach).toBeVisible();
+  await expect(page.getByTestId("profile-summary-task-card")).toContainText("Ожидаем программу тренера");
+  await expect(page.getByTestId("profile-summary-task-count")).toHaveText("1 задача");
+
+  for (const theme of ["light", "dark"]) {
+    if (theme === "dark") await selectDarkAppearance(page);
+    await expect(page.locator("html")).toHaveAttribute("data-platform", "telegram");
+    await expect(shell).toHaveCSS("height", "620px");
+    await expect(shell).toHaveCSS("overflow-y", "auto");
+    const header = page.getByTestId("profile-main-header");
+    const before = await header.boundingBox();
+    await shell.evaluate(node => { node.scrollTop = node.scrollHeight; });
+    const layout = await shell.evaluate(node => {
+      const coach = node.querySelector('[data-testid="profile-summary-notifications-button"]');
+      const bounds = node.getBoundingClientRect();
+      return { top: node.scrollTop, bottom: bounds.bottom, coachBottom: coach.getBoundingClientRect().bottom };
+    });
+    expect(layout.top, `${theme}: короткая главная имеет доступную прокрутку`).toBeGreaterThan(0);
+    expect(layout.coachBottom, `${theme}: карточка тренера выше зоны нижнего меню`).toBeLessThanOrEqual(layout.bottom - 104);
+    expect((await header.boundingBox()).y, `${theme}: шапка не смещается`).toBeCloseTo(before.y, 0);
+    await page.screenshot({ path: testInfo.outputPath(`${theme}-unassigned-telegram.png`) });
+  }
+
+  // A stable Telegram size must not force overflow beyond a shorter current
+  // viewport (for example while the native sheet is being resized).
+  await page.setViewportSize({ width: 402, height: 560 });
+  await expect(shell).toHaveCSS("height", "560px");
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.getByTestId("client-harness-cabinet")).toHaveCSS("height", "560px");
+  await page.getByTestId("client-nav-main").click();
+  await expect(coach).toBeVisible();
+  assertNoErrors();
+});
+
 async function readSurfaceContrast(root, selector) {
   return root.evaluate((node, textSelector) => {
     const parse = value => {

@@ -558,13 +558,19 @@ test("client workout visual audit covers empty assigned plan state", async ({ pa
   await expect(page.getByTestId("client-nav-workouts")).toBeVisible({ timeout: 40_000 });
   await page.getByTestId("client-nav-workouts").click();
   await expect(page.getByTestId("client-harness-workouts")).toBeVisible();
-  await expect(page.getByTestId("workout-list-empty-state")).toBeVisible();
+  const emptyState = page.getByTestId("workout-list-empty-state");
+  await expect(emptyState).toBeVisible();
+  await expect(emptyState.getByRole("heading", { name: "Плана от тренера пока нет", exact: true })).toBeVisible();
+  await expect(emptyState).not.toContainText("Базовые тренировки");
+  await expect(emptyState.getByRole("button")).toHaveCount(0);
   await expectTapTargets(page, [
-    '[data-testid="workout-list-empty-state"] button',
     '[data-testid="client-bottom-nav"] button'
   ]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-workout-empty-state.png");
+
+  await page.getByTestId("client-nav-cabinet").click();
+  await expect(page.getByTestId("client-harness-cabinet")).toBeVisible();
 
   assertNoRuntimeErrors();
 });

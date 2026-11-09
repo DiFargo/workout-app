@@ -539,12 +539,12 @@ export default function WorkoutListPage({
             <h2>{isIndividualWorkoutMode ? "Плана от тренера пока нет" : "Тренировка ещё не назначена"}</h2>
             <p>
               {isIndividualWorkoutMode
-                ? "Тренер ещё не назначил программу. Когда она появится, вы увидите её здесь. Базовые тренировки можно выбрать в кабинете."
+                ? "Тренер ещё не назначил программу. Когда она появится, вы увидите её здесь."
                 : "Как только тренировка появится в вашем профиле, она отобразится здесь."}
             </p>
-            <button type="button" onClick={isIndividualWorkoutMode ? onOpenCabinet : onGoMain}>
-              {isIndividualWorkoutMode ? "Открыть кабинет" : "Вернуться в меню"}
-            </button>
+            {!isIndividualWorkoutMode && <button type="button" onClick={onGoMain}>
+              Вернуться в меню
+            </button>}
           </div>
         ) : isCurrentPlanCompleted ? (
           <section className={styles.completionState} data-testid="workout-plan-completed-state">
