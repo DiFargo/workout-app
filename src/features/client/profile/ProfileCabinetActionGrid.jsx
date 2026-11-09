@@ -36,7 +36,7 @@ export default function ProfileCabinetActionGrid({ showClientOnlyActions, avatar
       <ActionRow kind="feedback" icon={MessageCircle} referenceIcon="message" title="Обратная связь" note="Сообщить об ошибке или предложить идею" onClick={onOpenFeedback} />
       {showClientOnlyActions && <ActionRow kind="privacy" icon={Info} referenceIcon="info" title="Данные и конфиденциальность" onClick={() => window.open("/privacy.html", "_blank", "noopener,noreferrer")} />}
     </div></section>}
-    {onLogout ? <button type="button" className={styles.logout} data-testid="profile-cabinet-logout" onClick={onLogout}>Выйти из аккаунта</button> : null}
+    {!showClientOnlyActions && onLogout ? <button type="button" className={styles.logout} data-testid="profile-cabinet-logout" onClick={onLogout}>Выйти из аккаунта</button> : null}
     {appearanceOpen && <ClientAppearanceSheet onClose={() => setAppearanceOpen(false)} />}
     {profileActionsOpen && <div className={styles.profileOverlay} data-modal-backdrop="true" onClick={() => setProfileActionsOpen(false)}><section className={styles.profileSheet} role="dialog" aria-modal="true" aria-label="Личные данные и цели" data-modal-surface="true" onClick={event => event.stopPropagation()}>
       <h2>Личные данные и цели</h2>

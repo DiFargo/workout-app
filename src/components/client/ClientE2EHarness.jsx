@@ -1051,7 +1051,7 @@ export default function ClientE2EHarness() {
           />
         )}
         {activeTab === "cabinet" ? (
-          <ProfileCabinetTitleRow onRefresh={() => {}} clientAppearance />
+          <ProfileCabinetTitleRow onRefresh={() => {}} onLogout={() => {}} clientAppearance />
         ) : activeTab !== "main" ? (
           <ProfileHarnessTitle>{title}</ProfileHarnessTitle>
         ) : null}

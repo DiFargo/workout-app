@@ -18,3 +18,4 @@
 }
 .refresh svg { width: 22px; height: 22px; stroke-width: 2.1; }
 .refresh:active { background: var(--apple-surface-muted, #edf1f3); transform: rotate(20deg) scale(0.96); }
+.logout:active { transform: scale(0.96); }

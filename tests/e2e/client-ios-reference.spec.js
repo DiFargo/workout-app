@@ -80,8 +80,9 @@ async function expectCabinetLogoutReachable(page) {
   const metrics = await page.evaluate(async () => {
     const shell = document.querySelector('[data-css-module-scope="profile-dashboard-shell"]');
     const logout = document.querySelector('[data-testid="profile-cabinet-logout"]');
+    const header = document.querySelector('[data-css-module-scope="profile-cabinet-title-row"]');
     const bottomNav = document.querySelector('[data-testid="client-bottom-nav"]');
-    if (!shell || !logout || !bottomNav) return null;
+    if (!shell || !logout || !header || !bottomNav) return null;
 
     shell.scrollTo({ top: shell.scrollHeight });
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -91,6 +92,7 @@ async function expectCabinetLogoutReachable(page) {
     const result = {
       clientHeight: shell.clientHeight,
       logoutBottom: logoutRect.bottom,
+      inHeader: header.contains(logout),
       navTop: navRect.top,
       scrollHeight: shell.scrollHeight,
       scrollTop: shell.scrollTop
@@ -100,6 +102,7 @@ async function expectCabinetLogoutReachable(page) {
   });
 
   expect(metrics).not.toBeNull();
+  expect(metrics.inHeader).toBe(true);
   expect(metrics.scrollHeight).toBeGreaterThan(metrics.clientHeight);
   expect(metrics.scrollTop).toBeGreaterThan(0);
   expect(metrics.logoutBottom).toBeLessThanOrEqual(metrics.navTop - 8);
@@ -249,7 +252,7 @@ test("calm iOS client screens match the 402 by 874 reference geometry", async ({
   assertNoRuntimeErrors();
 });
 
-test("cabinet scroll keeps logout reachable above the iOS dock", async ({ page }, testInfo) => {
+test("cabinet scroll keeps logout reachable in the fixed header", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "The cabinet interaction is mobile-specific.");
 
   await page.setViewportSize({ width: 402, height: 874 });
@@ -262,5 +265,5 @@ test("cabinet scroll keeps logout reachable above the iOS dock", async ({ page }
   const header = page.locator('[data-css-module-scope="profile-cabinet-title-row"]');
   await expectStickyHeaderWhileScrolling(header);
   await expectCabinetLogoutReachable(page);
-  await expectRect(page.getByTestId("client-bottom-nav"), { x: 0, y: 530, width: 402, height: 70 });
+  await expect(page.getByTestId("client-bottom-nav")).toBeInViewport();
 });

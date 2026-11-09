@@ -50,7 +50,7 @@ test("пять клиентских вкладок сохраняют непро
 
   for (const [theme, label] of [["light", "Светлая"], ["dark", "Тёмная"]]) {
     await page.getByTestId("client-nav-cabinet").click();
-    await page.getByRole("button", { name: "Оформление приложения", exact: true }).click();
+    await page.getByTestId("profile-cabinet-action-appearance").click();
     const appearance = page.getByRole("dialog", { name: "Оформление", exact: true });
     await expect(appearance.locator("[aria-pressed]")).toHaveCount(2);
     await expect(appearance.getByRole("button", { name: "Системная", exact: true })).toHaveCount(0);

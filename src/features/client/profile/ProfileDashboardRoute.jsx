@@ -625,6 +625,7 @@ export default function ProfileDashboardRoute(ctx) {
       {!isMainDashboard && visibleProfileTab === "cabinet" && (
         <ProfileCabinetTitleRow
           onRefresh={refreshPage}
+          onLogout={logout}
           clientAppearance={!hasTrainerFeatures}
         />
       )}
