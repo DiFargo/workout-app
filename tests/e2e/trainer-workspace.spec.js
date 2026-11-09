@@ -1065,6 +1065,99 @@ test("trainer archives and restores assignments without deleting client programs
   assertNoRuntimeErrors();
 });
 
+test("trainer can save without a program while preserving assignments and workout history", async ({ page }, testInfo) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  await page.goto("/?trainerHarness=1&programAssignments=1&basicHistory=1&withoutProgramAudit=1", { waitUntil: "domcontentloaded", timeout: 40_000 });
+  await clickTrainerNav(page, "clients");
+  await openHarnessClient(page);
+  await openExerciseSection(page, "План тренировок");
+  const readSnapshot = async () => JSON.parse(await page.getByTestId("without-program-snapshot").textContent());
+  const original = await readSnapshot();
+  const assignmentDisclosure = page.locator(".trainerClientAssignmentDisclosure");
+  await assignmentDisclosure.locator("summary").click();
+  const programSelect = page.getByLabel("Назначить программу клиенту");
+  await expect(programSelect.locator("option:not([disabled])").first()).toHaveText("Без программы");
+
+  await programSelect.selectOption("__without_program__");
+  await assignmentDisclosure.getByRole("button", { name: "Сохранить", exact: true }).click();
+  const confirmDialog = page.getByRole("dialog", { name: "Без программы?", exact: true });
+  await expect(confirmDialog).toContainText("история и абонемент сохранятся");
+  await expectNoHorizontalOverflow(page);
+  expect(await confirmDialog.getByRole("button", { name: "Сохранить", exact: true }).evaluate(button => getComputedStyle(button).backgroundImage)).toContain("linear-gradient");
+  await mkdir("output/without-program-3.0.949", { recursive: true });
+  await confirmDialog.screenshot({ path: `output/without-program-3.0.949/confirm-${testInfo.project.name}.png` });
+  await confirmDialog.getByRole("button", { name: "Отмена", exact: true }).click();
+  await expect(confirmDialog).toBeHidden();
+  expect(await readSnapshot()).toEqual(original);
+  await expect(programSelect).toHaveValue("__without_program__");
+
+  // Choosing an ordinary template still opens the existing adjustment flow.
+  await programSelect.selectOption("program_support");
+  await assignmentDisclosure.getByRole("button", { name: "Назначить", exact: true }).click();
+  const adjustmentModal = page.getByRole("dialog", { name: "Корректировка под клиента", exact: true });
+  await expect(adjustmentModal).toBeVisible();
+  await adjustmentModal.getByRole("button", { name: "Закрыть окно корректировки", exact: true }).click();
+  expect(await readSnapshot()).toEqual(original);
+
+  await programSelect.selectOption("__without_program__");
+  await assignmentDisclosure.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await confirmDialog.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(confirmDialog).toBeHidden();
+  await expect(page.getByRole("heading", { name: "Нет активной программы", exact: true })).toBeVisible();
+  await expect(assignmentDisclosure.getByRole("button", { name: "Сохранить", exact: true })).toBeDisabled();
+
+  const saved = await readSnapshot();
+  expect(saved.client).toMatchObject({ assignedProgramId: "", assignedProgramName: "", assignedWorkoutCount: 0 });
+  expect(saved.history).toEqual(original.history);
+  expect(saved.client.subscription).toEqual(original.client.subscription);
+  const originalWorkouts = [...original.workouts, ...original.archivedWorkouts];
+  const savedWorkouts = [...saved.workouts, ...saved.archivedWorkouts];
+  expect(savedWorkouts.map(workout => workout.id).sort()).toEqual(originalWorkouts.map(workout => workout.id).sort());
+  for (const workout of originalWorkouts) {
+    const savedWorkout = savedWorkouts.find(item => item.id === workout.id);
+    if (workout.source === "basic") expect(savedWorkout).toEqual(workout);
+    else {
+      expect(savedWorkout).toMatchObject(workout);
+      expect(savedWorkout.assignedProgramLifecycleStatus).toBe("archived");
+    }
+  }
+
+  const assignmentHistory = await openProgramAssignmentHistory(page);
+  await expect(assignmentHistory.getByRole("heading", { name: "Нет текущей программы", exact: true })).toBeVisible();
+  await assignmentHistory.getByRole("tab", { name: /^Архив/ }).click();
+  for (const name of ["tren+", "Поддержка", "Предыдущая программа"]) {
+    await expect(assignmentHistory.locator("article").filter({ hasText: name })).toBeVisible();
+  }
+  await closeClientUtilitySheet(page, "История программ");
+  const workoutHistory = await openWorkoutInsights(page);
+  await expect(workoutHistory.locator("article")).toHaveCount(original.history.length);
+  assertNoRuntimeErrors();
+});
+
+test("trainer can retry saving without a program after a failed save without losing data", async ({ page }) => {
+  const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  await page.goto("/?trainerHarness=1&programAssignments=1&withoutProgramAudit=1&withoutProgramFailure=1", { waitUntil: "domcontentloaded", timeout: 40_000 });
+  await clickTrainerNav(page, "clients");
+  await openHarnessClient(page);
+  await openExerciseSection(page, "План тренировок");
+  const snapshot = page.getByTestId("without-program-snapshot");
+  const original = JSON.parse(await snapshot.textContent());
+  const assignmentDisclosure = page.locator(".trainerClientAssignmentDisclosure");
+  await assignmentDisclosure.locator("summary").click();
+  await page.getByLabel("Назначить программу клиенту").selectOption("__without_program__");
+  await assignmentDisclosure.getByRole("button", { name: "Сохранить", exact: true }).click();
+  const confirmDialog = page.getByRole("dialog", { name: "Без программы?", exact: true });
+  await confirmDialog.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(confirmDialog.getByRole("alert")).toContainText("Не удалось сохранить вариант «Без программы»");
+  expect(JSON.parse(await snapshot.textContent())).toEqual(original);
+  await expect(page.getByRole("heading", { name: "Нет активной программы", exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Назначить программу клиенту")).toHaveValue("__without_program__");
+  await confirmDialog.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(confirmDialog).toBeHidden();
+  await expect(page.getByRole("heading", { name: "Нет активной программы", exact: true })).toBeVisible();
+  assertNoRuntimeErrors();
+});
+
 test("trainer calendar is isolated to the current assignment", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1&programAssignments=1");
@@ -1100,18 +1193,20 @@ test("trainer schedules a newly assigned program in a modal and it stays future 
   const scheduleModal = page.getByRole("dialog", { name: "Поддержка — Germes", exact: true });
   await expect(scheduleModal).toBeVisible();
   await expect(scheduleModal).toContainText("РАСПИСАНИЕ ПРОГРАММЫ");
-  await expect(scheduleModal).toContainText("0/3");
-  await scheduleModal.locator('button[title="2026-08-17"]').click();
-  await scheduleModal.locator('button[title="2026-08-19"]').click();
-  await scheduleModal.locator('button[title="2026-08-21"]').click();
-  await expect(scheduleModal).toContainText("3/3");
-  await scheduleModal.getByRole("button", { name: "Сохранить даты", exact: true }).click();
+  const saveDates = scheduleModal.getByRole("button", { name: "Сохранить даты", exact: true });
+  await expect(saveDates).toBeDisabled();
+  await scheduleModal.getByLabel("Начиная с", { exact: true }).fill("2026-08-17");
+  for (const day of ["Пн", "Ср", "Пт"]) await scheduleModal.getByRole("checkbox", { name: day, exact: true }).check();
+  await expect(scheduleModal.getByLabel("Новая дата — Тренировка 1", { exact: true })).toHaveValue("2026-08-17");
+  await expect(scheduleModal.getByLabel("Новая дата — Тренировка 2", { exact: true })).toHaveValue("2026-08-19");
+  await expect(scheduleModal.getByLabel("Новая дата — Тренировка 3", { exact: true })).toHaveValue("2026-08-21");
+  await expect(saveDates).toBeEnabled();
+  await saveDates.click();
   await expect(scheduleModal).toBeHidden();
 
   const assignmentHistory = await openProgramAssignmentHistory(page);
   const futureProgram = assignmentHistory.locator("article").filter({ hasText: "Поддержка" }).last();
-  await expect(futureProgram).toContainText("Будущая");
-  await expect(futureProgram).toContainText("ещё не начата");
+  await expect(futureProgram).toContainText("Ещё не начата · выполнено 0 из 3");
   assertNoRuntimeErrors();
 });
 

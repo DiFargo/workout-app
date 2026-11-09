@@ -575,6 +575,7 @@ function TrainerConfirmDialog({
   title,
   text,
   confirmLabel = "Удалить",
+  confirmTone = "danger",
   status = "",
   isBusy = false,
   onConfirm,
@@ -607,7 +608,7 @@ function TrainerConfirmDialog({
         {status ? <p className="trainerConfirmStatus" role="alert">{status}</p> : null}
         <footer data-trainer-modal-footer="true">
           <button type="button" onClick={onCancel} disabled={isBusy}>Отмена</button>
-          <button className="danger" type="button" onClick={onConfirm} disabled={isBusy}>
+          <button className={confirmTone} type="button" onClick={onConfirm} disabled={isBusy}>
             {isBusy ? "Сохранение…" : confirmLabel}
           </button>
         </footer>
@@ -2558,6 +2559,7 @@ function ClientWorkoutPlan({
   const assignedName = primaryProgramAssignment?.name || client?.assignedProgramName || (workouts.length ? "Индивидуальная программа" : "Программа не назначена");
   const assignableTemplates = programTemplates.filter(canAssignTrainerProgram);
   const selectedTemplate = assignableTemplates.find((program) => program.id === selectedProgramId);
+  const withoutProgramSelected = selectedProgramId === "__without_program__";
   const reviewHistory = isTrainerV2Path(window.location.pathname) ? scheduleHistory : history;
   const reviewWorkouts = isTrainerV2Path(window.location.pathname) ? scheduleWorkouts : workouts;
   const latestWorkoutHistory = [...reviewHistory]
@@ -2751,7 +2753,7 @@ function ClientWorkoutPlan({
   async function confirmProgramAssignmentAction() {
     if (!programAssignmentConfirm || programAssignmentSaving) return;
     const { assignment, action } = programAssignmentConfirm;
-    const handler = action === "archive"
+    const handler = action === "archive" || action === "unassign"
       ? onArchiveProgramAssignment
       : action === "restore"
         ? onRestoreProgramAssignment
@@ -2766,10 +2768,13 @@ function ClientWorkoutPlan({
     setProgramAssignmentSaving(true);
     setProgramAssignmentStatus("");
     try {
-      const result = await handler(action === "delete" ? { ...assignment, deleteEmptyArchive: true } : assignment);
+      const result = await handler(action === "delete" ? { ...assignment, deleteEmptyArchive: true }
+        : action === "unassign" ? { ...assignment, withoutProgram: true } : assignment);
       if (result === false) {
         setProgramAssignmentStatus(
-          action === "archive"
+          action === "unassign"
+            ? "Не удалось сохранить вариант «Без программы». Обновите карточку и повторите попытку."
+            : action === "archive"
             ? "Не удалось архивировать программу. Проверьте доступ к клиенту и попробуйте ещё раз."
             : action === "delete"
               ? "Программа не удалена. Обновите историю и повторите проверку."
@@ -2778,7 +2783,8 @@ function ClientWorkoutPlan({
         return;
       }
       setProgramAssignmentConfirm(null);
-      setProgramAssignmentStatus(action === "delete" ? "Пустая программа удалена. Остальные программы и история сохранены."
+      setProgramAssignmentStatus(action === "unassign" ? "Сохранено: без программы. Назначения в архиве, результаты сохранены."
+        : action === "delete" ? "Пустая программа удалена. Остальные программы и история сохранены."
         : action === "archive" ? "Программа убрана в архив. Результаты сохранены."
           : "Программа возвращена из архива. Отметки выполнения сохранены — проверьте даты занятий.");
     } catch (error) {
@@ -2848,21 +2854,26 @@ function ClientWorkoutPlan({
       ) : null}
           <TrainerClientDisclosure title={assignedProgramAssignment ? "Назначить другую программу" : "Выбрать программу для клиента"} className="trainerClientAssignmentDisclosure">
           <div className={trainerClientWorkoutPlanStyles.assignment}>
-              <span>Назначить программу</span>
+              <span>Программа клиента</span>
             <div className={trainerClientWorkoutPlanStyles.assignmentRow}>
               <div className={trainerClientWorkoutPlanStyles.selectField}>
-                <select aria-label="Назначить программу клиенту" value={selectedTemplate?.id || ""} onChange={(event) => onSelectProgram(event.target.value)}>
-                  <option value="">Выберите программу</option>
+                <select aria-label="Назначить программу клиенту" value={withoutProgramSelected ? "__without_program__" : selectedTemplate?.id || ""} disabled={programAssignmentSaving} onChange={(event) => { setProgramAssignmentStatus(""); onSelectProgram(event.target.value); }}>
+                  <option value="" disabled>Выберите программу</option>
+                  <option value="__without_program__">Без программы</option>
                   {assignableTemplates
                     .map((program) => <option value={program.id} key={program.id}>{program.name || "Без названия"}</option>)}
                 </select>
                 <ChevronDown size={16} aria-hidden="true" />
               </div>
-              <button className={trainerClientWorkoutPlanStyles.assignButton} type="button" disabled={!selectedTemplate || !client} onClick={() => setAssignmentReviewOpen(true)}>
-                <Check size={16} />Назначить
+              <button className={trainerClientWorkoutPlanStyles.assignButton} type="button" disabled={(!selectedTemplate && !withoutProgramSelected) || !client || programAssignmentSaving || (withoutProgramSelected && !assignedProgramAssignment)} onClick={() => withoutProgramSelected ? requestProgramAssignmentAction(assignedProgramAssignment, "unassign") : setAssignmentReviewOpen(true)}>
+                <Check size={16} />{programAssignmentSaving ? "Сохраняем…" : withoutProgramSelected ? "Сохранить" : "Назначить"}
               </button>
             </div>
             {!assignableTemplates.length ? <small className={trainerClientWorkoutPlanStyles.hint}>Нет готовых программ. Откройте раздел «Программы» и подготовьте программу к назначению.</small> : null}
+            {withoutProgramSelected ? <small className={trainerClientWorkoutPlanStyles.hint}>{assignedProgramAssignment
+              ? "Клиент останется без активной программы. Назначения будут перенесены в архив, выполненные тренировки и результаты сохранятся."
+              : "У клиента уже нет активной программы."}</small> : null}
+            {programAssignmentStatus && !programHistoryOpen ? <p className={trainerClientWorkoutPlanStyles.status} role="status">{programAssignmentStatus}</p> : null}
             {selectedTemplate && selectedProgramId !== client?.assignedProgramId
               ? <small className={trainerClientWorkoutPlanStyles.hint}>Будет назначена программа «{selectedTemplate.name || "Без названия"}».</small>
               : null}
@@ -2997,12 +3008,17 @@ function ClientWorkoutPlan({
 
       {programAssignmentConfirm ? createPortal(
         <TrainerConfirmDialog
-          title={programAssignmentConfirm.action === "archive"
+          confirmTone={programAssignmentConfirm.action === "unassign" ? "primary" : "danger"}
+          title={programAssignmentConfirm.action === "unassign"
+            ? "Без программы?"
+            : programAssignmentConfirm.action === "archive"
             ? "Убрать программу в архив?"
             : programAssignmentConfirm.action === "restore"
               ? "Вернуть программу из архива?"
               : "Удалить пустую программу?"}
-          text={programAssignmentConfirm.action === "archive"
+          text={programAssignmentConfirm.action === "unassign"
+            ? "Назначения и их даты переместятся в архив. Выполненные тренировки, подходы, история и абонемент сохранятся. Вернуть программу можно из архива."
+            : programAssignmentConfirm.action === "archive"
             ? `«${programAssignmentConfirm.assignment.name}». Программа и её даты исчезнут из активного плана. Выполненные тренировки останутся в истории. ${programAssignmentConfirm.assignment.key === primaryProgramAssignment?.key
               ? trainerProgramTimeline.some((item) => item.key !== programAssignmentConfirm.assignment.key && ["current", "future"].includes(item.status))
                 ? "Клиент продолжит следующую незавершённую программу из своего плана."
@@ -3013,7 +3029,9 @@ function ClientWorkoutPlan({
               : `«${programAssignmentConfirm.assignment.name}». Вернётся та же программа с прежними отметками выполнения — это не новое прохождение. Её сохранённые даты тоже вернутся: проверьте расписание. ${primaryProgramAssignment && primaryProgramAssignment.key !== programAssignmentConfirm.assignment.key ? "Текущая программа клиента останется текущей." : "Завершённая программа останется в истории, незавершённую можно будет продолжить."}`}
           confirmLabel={programAssignmentSaving
             ? "Сохраняю…"
-            : (programAssignmentConfirm.action === "archive"
+            : (programAssignmentConfirm.action === "unassign"
+              ? "Сохранить"
+              : programAssignmentConfirm.action === "archive"
               ? "Убрать в архив"
               : programAssignmentConfirm.action === "delete" ? "Удалить программу" : "Вернуть программу")}
           status={programAssignmentStatus}

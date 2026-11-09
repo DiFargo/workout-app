@@ -3922,6 +3922,12 @@
   color: #c55360;
 }
 
+:global(.trainerConfirmDialog [data-trainer-modal-footer] button.primary) {
+  border-color: transparent;
+  background: var(--ownset-action-gradient);
+  color: #fff;
+}
+
 @media (max-width: 500px) {
   :global(.trainerConfirmBackdrop) {
     align-items: end;

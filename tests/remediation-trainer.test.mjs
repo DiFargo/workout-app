@@ -5,7 +5,7 @@ import { buildTrainerClientProgramTimeline } from "../src/utils/trainerClientPro
 import { canDeleteEmptyProgramHistoryAssignment } from "../src/utils/trainerProgramHistoryPresentation.js";
 
 const noop = () => {};
-let store, writes, apiCalls, apiOk, failHistory, csvBlob, failWrite;
+let store, writes, apiCalls, apiOk, failHistory, csvBlob, failWrite, beforeTransaction;
 const clone = value => structuredClone(value);
 const snapshot = (path) => ({ id: path.split("/").at(-1), exists: () => store.has(path), data: () => clone(store.get(path)) });
 const put = (path, patch, options) => {
@@ -33,6 +33,7 @@ const firestore = {
   setDoc: async (...args) => put(...args), addDoc: async (path, data) => { put(`${path}/new`, data); return { id: "new" }; },
   writeBatch: () => { const pending = []; return { set: (...args) => pending.push(args), delete: path => pending.push([path]), commit: async () => pending.forEach(args => args.length === 1 ? (writes.push([args[0], "delete"]), store.delete(args[0])) : put(...args)) }; },
   runTransaction: async (_db, callback) => {
+    if (beforeTransaction) { const applyChange = beforeTransaction; beforeTransaction = null; applyChange(); }
     const pending = [];
     const value = await callback({ get: async path => snapshot(path), set: (...args) => pending.push(args) });
     pending.forEach(args => put(...args));
@@ -59,7 +60,7 @@ const stamp = "2026-01-01T00:00:00.000Z";
 const date = "2099-01-02";
 const workout = () => ({ id: "day", name: "Day", status: "planned", scheduledDate: date, exercises: [{ id: "e", sets: [{ reps: 8, weight: 10 }] }], assignedProgramId: "program", assignedProgramName: "Program", assignedProgramAddedAt: stamp, assignedProgramUpdatedAt: stamp, assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active" });
 const client = () => ({ id: "client", assignedProgramId: "program", assignedProgramAddedAt: stamp, assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active", workoutCalendar: { reminderEnabled: true, scheduledDates: [date], monthlyTrainingDates: [date], plannedWorkouts: [{ workoutId: "day", date, status: "moved", movedToDate: "2099-01-03", customMetadata: "keep", assignedProgramAddedAt: stamp }] } });
-beforeEach(() => { store = new Map(); writes = []; apiCalls = 0; apiOk = true; failHistory = false; failWrite = ""; });
+beforeEach(() => { store = new Map(); writes = []; apiCalls = 0; apiOk = true; failHistory = false; failWrite = ""; beforeTransaction = null; });
 const seed = (profile = client(), day = workout()) => { store.set("users/client", clone(profile)); store.set(`users/client/workouts/${day.id}`, clone(day)); };
 const common = profile => ({ db: {}, auth, adminSelectedClient: profile, usersList: [profile], selectedUserId: profile.id, canManageClientProgram: () => true, setAdminClientStatus: noop, setAdminSelectedClient: noop, setUsersList: noop, setPlan: noop, setAdminCalendarDraft: noop, recordTrainerEvent: noop });
 
@@ -199,6 +200,140 @@ test("TR02 a client switch during archive commit cannot publish old client data 
   assert.ok(writes.length > 0);
   assert.equal(localUpdates, 0);
   assert.equal(statusUpdates, 0);
+});
+
+test("TR02 explicit withoutProgram archives trainer copies without deleting results or reactivating an old queue", async () => {
+  const profile = { ...client(), assignedProgramName: "Program", assignedWorkoutCount: 4,
+    subscription: { total: 8, used: 1, frozen: false } };
+  const completed = { ...workout(), status: "completed", completed: true, completedAt: "2026-01-02T12:00:00.000Z" };
+  seed(profile, completed);
+  const currentDays = [completed, ...[2, 3, 4].map(index => ({ ...workout(), id: `current-${index}`, scheduledDate: `2099-01-0${index}` }))];
+  const old = { ...workout(), id: "old-orphan", assignedProgramId: "old-program", assignedProgramName: "Old",
+    assignedProgramAddedAt: "2025-01-01T00:00:00.000Z", scheduledDate: "2099-02-01" };
+  const queued = { ...workout(), id: "queued", assignedProgramId: "queued-program", assignedProgramName: "Next",
+    assignedProgramAddedAt: "2027-01-01T00:00:00.000Z", scheduledDate: "2099-03-01" };
+  const archived = { ...workout(), id: "already-archived", assignedProgramId: "archive-program", assignedProgramAddedAt: "2024-01-01",
+    assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "trainer_archived", scheduledDate: "2099-04-01" };
+  const basic = { ...workout(), id: "basic-day", source: "basic", assignedProgramId: "basic_program", scheduledDate: "2099-05-01" };
+  for (const day of [...currentDays.slice(1), old, queued, archived, basic]) store.set(`users/client/workouts/${day.id}`, clone(day));
+  const trainerCopies = [...currentDays, old, queued];
+  const scopedEntries = trainerCopies.map(day => ({ workoutId: day.id, date: day.scheduledDate,
+    assignedProgramAddedAt: day.assignedProgramAddedAt, status: day.status, customMetadata: `keep-${day.id}` }));
+  const preservedEntries = [
+    { workoutId: archived.id, date: archived.scheduledDate, status: "completed" },
+    { workoutId: basic.id, date: basic.scheduledDate, status: "planned" },
+    { workoutId: "foreign", date: queued.scheduledDate, status: "planned", customMetadata: "foreign" }
+  ];
+  store.get("users/client").workoutCalendar = { ...profile.workoutCalendar,
+    plannedWorkouts: [...scopedEntries, ...preservedEntries],
+    scheduledDates: [...new Set([...scopedEntries, ...preservedEntries].map(entry => entry.date)), "2099-06-01"],
+    monthlyTrainingDates: [...new Set([...scopedEntries, ...preservedEntries].map(entry => entry.date)), "2099-06-01", "2099-07-01"] };
+  const historyEntry = { workoutId: completed.id, assignedProgramId: "program", assignedProgramAddedAt: stamp,
+    date: completed.completedAt, durationMinutes: 42, exercises: clone(completed.exercises) };
+  store.set("users/client/history/session-1", clone(historyEntry));
+  let localPlan = { workouts: [...clone(trainerCopies), clone(basic)], archivedWorkouts: [clone(archived)] };
+  let selected = clone(store.get("users/client"));
+  const handlers = createTrainerProgramTemplateHandlers({ ...common(selected),
+    setPlan: update => { localPlan = update(localPlan); },
+    setAdminSelectedClient: update => { selected = update(selected); } });
+
+  assert.equal(await handlers.archiveClientProgramAssignment(profile.id, {
+    key: `time:${stamp}`, programId: "program", name: "Program", assignedAt: stamp, withoutProgram: true
+  }), true);
+  const saved = store.get("users/client");
+  for (const item of [saved, selected]) {
+    assert.equal(item.assignedProgramId, "");
+    assert.equal(item.assignedProgramName, "");
+    assert.equal(item.assignedProgramAddedAt, "");
+    assert.equal(item.assignedWorkoutCount, 0);
+    assert.equal(item.assignedProgramLifecycleStatus, "archived");
+    assert.equal(item.assignedProgramVisibility, "client_archived");
+    assert.deepEqual(item.subscription, profile.subscription);
+  }
+  assert.ok(writes.every(([, patch]) => patch !== "delete"));
+  assert.deepEqual(store.get("users/client/history/session-1"), historyEntry);
+  assert.ok(writes.every(([path]) => !path.includes("/history/")));
+  for (const before of trainerCopies) {
+    const after = store.get(`users/client/workouts/${before.id}`);
+    assert.equal(after.assignedProgramLifecycleStatus, "archived");
+    assert.equal(after.assignedProgramVisibility, "trainer_archived");
+    assert.ok(after.assignedProgramArchivedAt);
+    for (const key of Object.keys(before).filter(key => !["assignedProgramLifecycleStatus", "assignedProgramVisibility"].includes(key)))
+      assert.deepEqual(after[key], before[key], `${before.id}: preserved ${key}`);
+  }
+  assert.deepEqual(store.get(`users/client/workouts/${archived.id}`), archived);
+  assert.deepEqual(store.get(`users/client/workouts/${basic.id}`), basic);
+  assert.deepEqual(saved.workoutCalendar.plannedWorkouts, preservedEntries);
+  assert.deepEqual(saved.workoutCalendar.scheduledDates, [queued.scheduledDate, archived.scheduledDate, basic.scheduledDate, "2099-06-01", "2099-07-01"]);
+  assert.deepEqual(saved.workoutCalendar.monthlyTrainingDates, saved.workoutCalendar.scheduledDates);
+  assert.equal(saved.workoutCalendar.reminderEnabled, true);
+  assert.deepEqual(localPlan.workouts, [basic]);
+  assert.deepEqual(localPlan.archivedWorkouts.find(day => day.id === archived.id), archived);
+  assert.deepEqual(localPlan.archivedWorkouts.map(day => day.id).sort(), [...trainerCopies.map(day => day.id), archived.id].sort());
+});
+
+test("TR02 explicit withoutProgram rejects a stale active assignment before any write", async () => {
+  const profile = client(); seed(profile);
+  store.set("users/client/workouts/new-day", { ...workout(), id: "new-day", assignedProgramId: "new-program", assignedProgramAddedAt: "2027-01-01" });
+  Object.assign(store.get("users/client"), { assignedProgramId: "new-program", assignedProgramAddedAt: "2027-01-01" });
+  let localUpdates = 0;
+  const handlers = createTrainerProgramTemplateHandlers({ ...common(profile), setPlan: () => { localUpdates++; } });
+  assert.equal(await handlers.archiveClientProgramAssignment(profile.id, { key: `time:${stamp}`, programId: "program", assignedAt: stamp, withoutProgram: true }), false);
+  assert.deepEqual(writes, []);
+  assert.equal(localUpdates, 0);
+  assert.equal(store.get("users/client").assignedProgramId, "new-program");
+  assert.deepEqual(store.get("users/client/workouts/day"), workout());
+});
+
+test("TR02 explicit withoutProgram cannot change an unrelated client", async () => {
+  const profile = client(); seed(profile);
+  const handlers = createTrainerProgramTemplateHandlers({ ...common(profile), canManageClientProgram: () => false });
+  assert.equal(await handlers.archiveClientProgramAssignment(profile.id, { key: `time:${stamp}`, withoutProgram: true }), false);
+  assert.deepEqual(writes, []);
+  assert.deepEqual(store.get("users/client"), profile);
+});
+
+test("TR02 explicit withoutProgram stops after a login or selected-client change", async () => {
+  const profile = client(); seed(profile);
+  let localUpdates = 0;
+  try {
+    let checks = 0;
+    const switchedClient = createTrainerProgramTemplateHandlers({ ...common(profile),
+      isClientSelectionCurrent: () => ++checks === 1,
+      setPlan: () => { localUpdates++; } });
+    assert.equal(await switchedClient.archiveClientProgramAssignment(profile.id, { key: `time:${stamp}`, withoutProgram: true }), false);
+    assert.deepEqual(writes, []);
+    const switchedLogin = createTrainerProgramTemplateHandlers({ ...common(profile), setPlan: () => { localUpdates++; } });
+    const pending = switchedLogin.archiveClientProgramAssignment(profile.id, { key: `time:${stamp}`, withoutProgram: true });
+    auth.currentUser = { uid: "other-trainer" };
+    assert.equal(await pending, false);
+    assert.deepEqual(writes, []);
+    assert.equal(localUpdates, 0);
+  } finally { auth.currentUser = { uid: "trainer" }; }
+});
+
+for (const conflict of ["assignment", "calendar", "workout"]) test(`TR02 explicit withoutProgram rejects a concurrent ${conflict} change at transaction read`, async () => {
+  const profile = client(); seed(profile);
+  let localUpdates = 0;
+  beforeTransaction = () => {
+    if (conflict === "assignment") Object.assign(store.get("users/client"), {
+      assignedProgramId: "new-program", assignedProgramAddedAt: "2027-01-01", assignedProgramUpdatedAt: "2027-01-01"
+    });
+    if (conflict === "calendar") store.get("users/client").workoutCalendar.scheduledDates.push("2099-12-31");
+    if (conflict === "workout") Object.assign(store.get("users/client/workouts/day"), {
+      status: "completed", completed: true, completedAt: "2099-01-02T12:00:00.000Z"
+    });
+  };
+  const handlers = createTrainerProgramTemplateHandlers({ ...common(profile), setPlan: () => { localUpdates++; } });
+  assert.equal(await handlers.archiveClientProgramAssignment(profile.id, {
+    key: `time:${stamp}`, programId: "program", assignedAt: stamp, withoutProgram: true
+  }), false);
+  assert.deepEqual(writes, []);
+  assert.equal(localUpdates, 0);
+  assert.equal(store.get("users/client/workouts/day").assignedProgramLifecycleStatus, "active");
+  if (conflict === "assignment") assert.equal(store.get("users/client").assignedProgramId, "new-program");
+  if (conflict === "calendar") assert.ok(store.get("users/client").workoutCalendar.scheduledDates.includes("2099-12-31"));
+  if (conflict === "workout") assert.equal(store.get("users/client/workouts/day").completed, true);
 });
 
 for (const change of [{ status: "completed", completedAt: stamp }, { status: "moved", movedToDate: "2099-01-04" }]) test(`TR03 concurrent ${change.status} conflicts without writes`, async () => {

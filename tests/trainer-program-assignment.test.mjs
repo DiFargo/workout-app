@@ -74,7 +74,7 @@ test("archive, delete and legacy reset target one durable assignment only", asyn
 
   assert.match(source, /function getClientProfileProgramAssignment\(client = \{\}\)/);
   assert.match(source, /getClientProgramAssignmentSnapshot\(workoutsSnapshot\.docs, assignmentKey, assignment\)/);
-  assert.match(source, /updateProgramAssignmentLocally\(clientId, assignmentKey, "archive", clientPatch, now, \{\s*assignment\s*\}\)/s);
+  assert.match(source, /updateProgramAssignmentLocally\(clientId, assignmentKey, "archive", clientPatch, now, \{\s*assignment,\s*matchedWorkoutIds: matchedWorkouts\.map\(workout => workout\.id\)\s*\}\)/s);
   assert.match(source, /updateProgramAssignmentLocally\(clientId, assignmentKey, "delete", clientPatch, "", \{\s*assignment\s*\}\)/s);
   assert.match(source, /const assignment = getClientProfileProgramAssignment\(clientData\);/);
   assert.doesNotMatch(source, /await clearClientAssignedWorkouts\(clientId\)/);

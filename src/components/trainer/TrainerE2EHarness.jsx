@@ -8,6 +8,7 @@ import { normalizeTrainerSubscriptionNotificationSettings } from "../../utils/tr
 import { exerciseCardLegacyKey } from "../../../functions/exerciseCards.js";
 import { resolveAgendaScheduleInput } from "../../utils/trainerScheduleAgenda.js";
 import { renewClientSubscription } from "../../utils/clientSubscription.js";
+import { isTrainerClientBasicWorkout } from "../../utils/trainerClientProgramAssignments.js";
 import TrainerAdminCreateClientModal from "../../features/trainer/TrainerAdminCreateClientModal.jsx";
 
 const duplicateAuditMovements = [
@@ -52,6 +53,8 @@ function TrainerE2EHarness({ ProgramManagerView }) {
   const orderRecoveryAudit = new URLSearchParams(window.location.search).has("orderRecoveryAudit");
   const draftSaveAttempts = useRef(0);
   const assignmentAttempts = useRef(0);
+  const withoutProgramAudit = new URLSearchParams(window.location.search).has("withoutProgramAudit");
+  const withoutProgramAttempts = useRef(0);
   const setupProgressAttempts = useRef(0);
   const notificationSaveAttempts = useRef(0);
   const scheduleSaveAttempts = useRef(0);
@@ -97,6 +100,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     assignedProgramUpdatedAt: "2026-06-10T10:00:00.000Z",
     assignedWorkoutCount: 4,
     firstSetupCompleted: true,
+    ...(withoutProgramAudit ? { subscription: { purchasedSessions: 8, usedSessions: 1 } } : {}),
     ...(new URLSearchParams(window.location.search).has("scheduleReady") ? { subscription: { startDate: "2026-08-01", endDate: "2026-08-31", purchasedSessions: 3, usedSessions: 0 } } : {}),
     trainerSetupChecklist: {
       completedSteps: {
@@ -438,6 +442,45 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     { id: "recomp", name: "Рекомпозиция", calories: 2300, protein: 180, fat: 70, carbs: 235 }
   ];
 
+  async function saveHarnessWithoutProgram() {
+    withoutProgramAttempts.current += 1;
+    if (new URLSearchParams(window.location.search).has("withoutProgramFailure") && withoutProgramAttempts.current === 1) {
+      await new Promise(resolve => window.setTimeout(resolve, 150));
+      return false;
+    }
+    const trainerCopies = [...workouts, ...archivedWorkouts].filter(workout =>
+      !isTrainerClientBasicWorkout(workout) && workout.assignedProgramLifecycleStatus !== "archived");
+    const workoutIds = new Set(trainerCopies.map(workout => workout.id));
+    const archivedAt = new Date().toISOString();
+    const archiveWorkout = workout => workoutIds.has(workout.id)
+      ? { ...workout, assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "trainer_archived", assignedProgramArchivedAt: archivedAt }
+      : workout;
+    setWorkouts(current => current.filter(workout => !workoutIds.has(workout.id)));
+    setArchivedWorkouts(current => [...new Map([...current, ...workouts.filter(workout => workoutIds.has(workout.id))]
+      .map(workout => [workout.id, archiveWorkout(workout)])).values()]);
+    setSelectedClient(current => {
+      const calendar = current.workoutCalendar || {};
+      const entries = calendar.plannedWorkouts || [];
+      const remainingEntries = entries.filter(entry => !workoutIds.has(entry.workoutId));
+      const removedDates = new Set(entries.filter(entry => workoutIds.has(entry.workoutId)).map(entry => entry.date));
+      const remainingDates = new Set(remainingEntries.map(entry => entry.date));
+      const keepDate = date => !removedDates.has(date) || remainingDates.has(date);
+      return {
+        ...current,
+        assignedProgramId: "", assignedProgramName: "", assignedProgramAddedAt: "",
+        assignedProgramAt: archivedAt, assignedProgramUpdatedAt: archivedAt,
+        assignedWorkoutCount: 0, assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "client_archived",
+        workoutCalendar: {
+          ...calendar,
+          plannedWorkouts: remainingEntries,
+          scheduledDates: (calendar.scheduledDates || []).filter(keepDate),
+          monthlyTrainingDates: (calendar.monthlyTrainingDates || []).filter(keepDate)
+        }
+      };
+    });
+    return true;
+  }
+
   function addHarnessExercise(workoutId, patch = {}) {
     const exercise = {
       id: `e2e_exercise_${Date.now()}`,
@@ -677,6 +720,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     {inviteFlow ? <output id="trainer-e2e-meta" hidden data-invite-create-attempts={inviteAttemptCount} /> : null}
     {cardAudit ? <output hidden data-testid="card-prescription-snapshot">{JSON.stringify(cardTemplate)}</output> : null}
     {duplicateAudit ? <output hidden data-testid="card-library-snapshot">{JSON.stringify(exerciseCards)}</output> : null}
+    {withoutProgramAudit ? <output hidden data-testid="without-program-snapshot">{JSON.stringify({ client: selectedClient, workouts, archivedWorkouts, history })}</output> : null}
     <TrainerWorkspace
       appVersion={APP_VERSION}
       mode={mode}
@@ -888,6 +932,7 @@ function TrainerE2EHarness({ ProgramManagerView }) {
         };
       }}
       onArchiveProgramAssignment={(assignment) => {
+        if (assignment.withoutProgram) return saveHarnessWithoutProgram();
         setWorkouts((current) => current.map((workout) => workout.assignedProgramAddedAt === assignment.assignedAt && workout.assignedProgramId === assignment.programId
           ? { ...workout, assignedProgramLifecycleStatus: "archived", assignedProgramVisibility: "trainer_archived" } : workout));
         setArchivedWorkouts((current) => current.map((workout) => workout.assignedProgramAddedAt === assignment.assignedAt && workout.assignedProgramId === assignment.programId

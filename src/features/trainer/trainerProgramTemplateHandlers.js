@@ -4,6 +4,7 @@ import {
   getDoc,
   getDocs,
   query,
+  runTransaction,
   setDoc,
   where,
   writeBatch
@@ -24,6 +25,7 @@ import {
 } from "../../utils/trainerProgramAssignment.js";
 import {
   buildTrainerClientProgramTimeline,
+  getTrainerClientProgramAssignmentKey,
   getNextTrainerClientActiveProgramAssignment,
   isTrainerClientBasicWorkout,
   isTrainerClientProgramAssignmentMatch
@@ -674,6 +676,7 @@ export function createTrainerProgramTemplateHandlers({
 
   async function archiveClientProgramAssignment(clientId = selectedUserId, assignment = {}) {
     const assignmentKey = String(assignment?.key || "").trim();
+    const withoutProgram = assignment?.withoutProgram === true;
     if (!clientId || !assignmentKey) {
       setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_NOT_FOUND);
       return false;
@@ -692,7 +695,21 @@ export function createTrainerProgramTemplateHandlers({
         getDoc(doc(db, "users", clientId))
       ]);
       if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
-      const matchedWorkouts = getClientProgramAssignmentSnapshot(workoutsSnapshot.docs, assignmentKey, assignment);
+      const clientProfile = clientSnapshot.exists() ? clientSnapshot.data() : {};
+      const historyEntries = getSnapshotEntries(historySnapshot);
+      const activeAssignment = withoutProgram ? getNextTrainerClientActiveProgramAssignment(
+        getSnapshotEntries(workoutsSnapshot), historyEntries, clientProfile
+      ) : null;
+      if (withoutProgram && activeAssignment?.key !== assignmentKey) {
+        setAdminClientStatus("Назначение изменилось. Обновите карточку клиента и повторите сохранение.");
+        return false;
+      }
+      // Explicitly choosing no program must not reactivate an older copy or a
+      // queued assignment. Keep every trainer copy in the archive, never delete it.
+      const matchedWorkouts = withoutProgram
+        ? workoutsSnapshot.docs.map(workoutDoc => ({ id: workoutDoc.id, data: workoutDoc.data() }))
+          .filter(workout => !isTrainerClientBasicWorkout(workout.data) && !isArchivedClientProgramWorkout(workout.data))
+        : getClientProgramAssignmentSnapshot(workoutsSnapshot.docs, assignmentKey, assignment);
       if (!matchedWorkouts.length) {
         setAdminClientStatus(STATUS_PROGRAM_ASSIGNMENT_NOT_FOUND);
         return false;
@@ -702,15 +719,19 @@ export function createTrainerProgramTemplateHandlers({
       const now = new Date().toISOString();
       const matchingIds = new Set(matchedWorkouts.map((workout) => workout.id));
       const remainingWorkouts = workoutsSnapshot.docs.filter((workoutDoc) => !matchingIds.has(workoutDoc.id));
-      const clientProfile = clientSnapshot.exists() ? clientSnapshot.data() : {};
       const calendar = clientProfile.workoutCalendar || {};
+      const matchedAssignmentTimes = new Set(matchedWorkouts.map(workout => getAssignmentTimestamp(workout.data)).filter(Boolean));
       const isScopedEntry = entry => matchingIds.has(entry.workoutId) || (!entry.workoutId &&
-        String(entry.assignedProgramAddedAt || entry.programAssignmentId || "") === String(assignment.assignedAt || "") && Boolean(assignment.assignedAt));
+        (withoutProgram ? matchedAssignmentTimes.has(String(entry.assignedProgramAddedAt || entry.programAssignmentId || ""))
+          : String(entry.assignedProgramAddedAt || entry.programAssignmentId || "") === String(assignment.assignedAt || "") && Boolean(assignment.assignedAt)));
       const archivedEntries = (calendar.plannedWorkouts || []).filter(isScopedEntry);
       const remainingEntries = (calendar.plannedWorkouts || []).filter(entry => !isScopedEntry(entry));
       const scopedDates = new Set([...archivedEntries.map(entry => entry.date), ...matchedWorkouts.map(workout => workout.data.scheduledDate || workout.data.plannedDate)].filter(Boolean));
+      const existingDates = withoutProgram
+        ? [...(calendar.scheduledDates || []), ...(calendar.monthlyTrainingDates || [])]
+        : calendar.scheduledDates || calendar.monthlyTrainingDates || [];
       const remainingDates = [...new Set([
-        ...(calendar.scheduledDates || calendar.monthlyTrainingDates || []).filter(date => !scopedDates.has(date)),
+        ...existingDates.filter(date => !scopedDates.has(date)),
         ...remainingEntries.map(entry => entry.date).filter(Boolean)
       ])].sort();
       const profileAssignment = getClientProfileProgramAssignment(clientProfile);
@@ -721,38 +742,68 @@ export function createTrainerProgramTemplateHandlers({
         profileAssignment.key !== assignmentKey &&
         String(clientProfile.assignedProgramLifecycleStatus || "").trim().toLowerCase() !== "archived" &&
         !["trainer_archived", "client_archived"].includes(String(clientProfile.assignedProgramVisibility || "").trim().toLowerCase());
-      const clientPatch = hasAnotherActiveAssignment ? {} : getNextActiveClientProgramPatch(
+      const clientPatch = withoutProgram ? getNextActiveClientProgramPatch([], now) : hasAnotherActiveAssignment ? {} : getNextActiveClientProgramPatch(
         remainingWorkouts,
         now,
         getSnapshotEntries(historySnapshot)
       );
-      const batch = writeBatch(db);
       clientPatch.workoutCalendar = {
         ...calendar,
+        ...(withoutProgram ? { assignedProgramId: "", assignedProgramName: "", assignedProgramUpdatedAt: now } : {}),
         plannedWorkouts: remainingEntries,
         scheduledDates: remainingDates,
         monthlyTrainingDates: remainingDates,
         updatedAt: now
       };
 
-      matchedWorkouts.forEach((workout, index) => {
-        batch.set(doc(db, "users", clientId, "workouts", workout.id), {
-          assignedProgramLifecycleStatus: "archived",
-          assignedProgramVisibility: "trainer_archived",
-          assignedProgramArchivedAt: now,
-          ...(index === 0 ? { assignedProgramArchivedCalendarEntries: archivedEntries.length
-            ? archivedEntries : workout.data.assignedProgramArchivedCalendarEntries || [] } : {})
-        }, { merge: true });
-      });
-      batch.set(doc(db, "users", clientId), clientPatch, { merge: true });
-      await batch.commit();
+      const writeArchive = writer => {
+        const backedUpKeys = new Set();
+        matchedWorkouts.forEach((workout, index) => {
+          const key = getTrainerClientProgramAssignmentKey(workout.data);
+          const backup = withoutProgram ? !backedUpKeys.has(key) : index === 0;
+          backedUpKeys.add(key);
+          const entries = withoutProgram ? archivedEntries.filter(entry => entry.workoutId
+            ? matchedWorkouts.some(item => item.id === entry.workoutId && getTrainerClientProgramAssignmentKey(item.data) === key)
+            : String(entry.assignedProgramAddedAt || entry.programAssignmentId || "") === getAssignmentTimestamp(workout.data)) : archivedEntries;
+          writer.set(doc(db, "users", clientId, "workouts", workout.id), {
+            assignedProgramLifecycleStatus: "archived",
+            assignedProgramVisibility: "trainer_archived",
+            assignedProgramArchivedAt: now,
+            ...(backup ? { assignedProgramArchivedCalendarEntries: entries.length
+              ? entries : workout.data.assignedProgramArchivedCalendarEntries || [] } : {})
+          }, { merge: true });
+        });
+        writer.set(doc(db, "users", clientId), clientPatch, { merge: true });
+      };
+      if (withoutProgram) {
+        await runTransaction(db, async transaction => {
+          const [freshClient, ...freshWorkouts] = await Promise.all([
+            transaction.get(doc(db, "users", clientId)),
+            ...matchedWorkouts.map(workout => transaction.get(doc(db, "users", clientId, "workouts", workout.id)))
+          ]);
+          const freshProfile = freshClient.exists() ? freshClient.data() : {};
+          const revisionKeys = ["assignedProgramId", "assignedProgramAddedAt", "assignedProgramAt", "assignedProgramUpdatedAt", "assignedProgramLifecycleStatus", "assignedProgramVisibility", "workoutCalendar"];
+          if (!session.isCurrent() || !isClientSelectionCurrent(clientId) || !canManageClientProgram({ id: clientId, ...freshProfile }) ||
+              revisionKeys.some(key => JSON.stringify(freshProfile[key]) !== JSON.stringify(clientProfile[key])) ||
+              freshWorkouts.some((snapshot, index) => !snapshot.exists() ||
+                JSON.stringify(snapshot.data()) !== JSON.stringify(matchedWorkouts[index].data))) {
+            throw Object.assign(new Error("Назначение изменилось. Обновите карточку клиента и повторите сохранение."), { code: "program/conflict" });
+          }
+          writeArchive(transaction);
+        });
+      } else {
+        const batch = writeBatch(db);
+        writeArchive(batch);
+        await batch.commit();
+      }
       if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
 
       updateProgramAssignmentLocally(clientId, assignmentKey, "archive", clientPatch, now, {
         assignment,
         matchedWorkoutIds: matchedWorkouts.map(workout => workout.id)
       });
-      setAdminClientStatus(hasAnotherActiveAssignment
+      setAdminClientStatus(withoutProgram ? "Сохранено: без программы. Назначения перенесены в архив, результаты сохранены."
+        : hasAnotherActiveAssignment
         ? "Старая программа архивирована. Текущая программа клиента не изменена."
         : STATUS_PROGRAM_ASSIGNMENT_ARCHIVED);
       await recordTrainerEvent(clientId, "program", STATUS_PROGRAM_ASSIGNMENT_ARCHIVED, assignment?.name || "");
@@ -760,7 +811,7 @@ export function createTrainerProgramTemplateHandlers({
     } catch (error) {
       console.error("Client program archive failed:", error);
       if (!session.isCurrent() || !isClientSelectionCurrent(clientId)) return false;
-      setAdminClientStatus(error?.code === "workout-assignment-batch-limit"
+      setAdminClientStatus(["workout-assignment-batch-limit", "program/conflict"].includes(error?.code)
         ? error.message
         : getTrainerActionErrorStatus(error, STATUS_PROGRAM_ASSIGNMENT_ACTION_FAILED));
       return false;
