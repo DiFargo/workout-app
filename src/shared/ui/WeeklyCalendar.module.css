@@ -9,7 +9,8 @@
 .root[data-week-calendar] [data-week-calendar-dot] { width:3px; height:3px; border-radius:50%; position:absolute; bottom:4px; background:var(--ownset-action-gradient); }
 .root[data-week-calendar] [data-has-food="true"]::after { content:""; width:3px; height:3px; border-radius:50%; background:var(--ownset-action-gradient); position:absolute; bottom:4px; }
 @media(max-width:360px) { .root[data-week-calendar="nutrition"] { width:calc(100% - 30px); margin-inline:15px; } }
-:global(html[data-client-appearance]) .root[data-week-calendar] { border-radius:18px; min-height:76px; padding:10px 8px; box-shadow:var(--client-card-shadow); }
-:global(html[data-client-appearance]) .root[data-week-calendar] [data-week-calendar-label] { font-size:10px; }
-:global(html[data-client-appearance]) .root[data-week-calendar] [data-week-calendar-number] { font-size:14px; width:30px; height:30px; line-height:30px; }
+:global(html[data-client-appearance]) .root[data-week-calendar] { border-radius:18px; min-height:83px; padding:10px 6px; box-shadow:var(--client-card-shadow); }
+:global(html[data-client-appearance]) .root[data-week-calendar] > [data-week-calendar-day] { min-height:63px; padding:5px 0; gap:5px; }
+:global(html[data-client-appearance]) .root[data-week-calendar] [data-week-calendar-label] { font-size:12px; }
+:global(html[data-client-appearance]) .root[data-week-calendar] [data-week-calendar-number] { font-size:16px; font-weight:500; width:34px; height:34px; line-height:34px; }
 :global(html[data-client-appearance="dark"]) .root[data-week-calendar] [data-active="true"] [data-week-calendar-number] { color:var(--client-action-ink); }

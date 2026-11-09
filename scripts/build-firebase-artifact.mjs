@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "vite";
+import { assertClientAppearanceArtifact } from "./assert-client-appearance-artifact.mjs";
 
 const productionProjectId = "tren-85720";
 const outputDirectory = resolve("dist");
@@ -66,6 +67,8 @@ await new Promise((resolvePromise, reject) => {
 const firebaseProjectId = environment === "production"
   ? productionProjectId
   : String(childEnvironment.VITE_FIREBASE_PROJECT_ID || "").trim();
+
+await assertClientAppearanceArtifact(outputDirectory);
 
 if (!firebaseProjectId) {
   throw new Error("A staging artifact requires VITE_FIREBASE_PROJECT_ID.");

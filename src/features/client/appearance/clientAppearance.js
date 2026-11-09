@@ -1,5 +1,5 @@
 import { useLayoutEffect, useSyncExternalStore } from "react";
-import "./ClientAppearance.module.css";
+import styles from "./ClientAppearance.module.css";
 
 const STORAGE_KEY = "zmena-client-appearance-v1";
 const CHANGE_EVENT = "zmena-client-appearance-change";
@@ -34,6 +34,7 @@ export function useClientAppearance(active = true) {
   useLayoutEffect(() => {
     if (!active) return undefined;
     const root = document.documentElement;
+    root.classList.add(styles.scope);
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const telegram = window.Telegram?.WebApp;
     const liveTelegram = Boolean(telegram?.initData || (telegram?.platform && telegram.platform !== "unknown"));
@@ -58,6 +59,7 @@ export function useClientAppearance(active = true) {
     if (liveTelegram) telegram.onEvent?.("themeChanged", apply);
     return () => {
       delete root.dataset.clientAppearance;
+      root.classList.remove(styles.scope);
       window.removeEventListener(CHANGE_EVENT, apply);
       window.removeEventListener("storage", apply);
       media.removeEventListener("change", apply);

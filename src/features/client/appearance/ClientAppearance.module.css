@@ -1,7 +1,11 @@
 /* Color/material contract from zmena-telegram-ios-night-glass.html.
    Geometry remains in the owning component's CSS Module. Never active for staff. */
-:global(html:root[data-client-appearance]) {
+:global(html:root[data-client-appearance]).scope {
   color-scheme: light;
+  font-synthesis:none;
+  --font-family-sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --font-family-compact-ui:var(--font-family-sans);
+  --font-family-display:var(--font-family-sans);
   --client-canvas-image:var(--ios-canvas-background); --client-chrome-filter:blur(24px) saturate(135%); --client-title-weight:700; --client-title-tracking:-.8px; --client-dock-underlay:var(--apple-canvas);
   --apple-canvas:#edf4f7; --apple-surface:rgba(255,255,255,.94); --apple-surface-muted:#e2eff2;
   --apple-text:#182e3e; --apple-secondary:#536b7b; --apple-blue:#2f6f73; --apple-blue-pressed:#255c60;
@@ -25,10 +29,10 @@
   --client-lens-shadow:inset 0 1px 2px #fff,inset 0 -1px 1px rgba(118,173,187,.15),0 2px 7px rgba(50,110,131,.08);
   --client-nav-text:#617c91; --client-nav-current:#16647d;
   --ios-canvas-background:radial-gradient(ellipse at 4% 35%,rgba(167,199,231,.32),transparent 55%),radial-gradient(ellipse at 98% 57%,rgba(174,222,210,.30),transparent 50%),linear-gradient(158deg,#f2f7fa,#eaf3f7 64%,#edf5f9);
-  --client-header-background:rgba(242,247,250,.94);
+  --client-header-background:transparent;
   --client-sheet-background:linear-gradient(145deg,#f6fafc,#eaf4f7 65%,#e7f3ee);
 }
-:global(html:root[data-client-appearance="dark"]) {
+:global(html:root[data-client-appearance="dark"]).scope {
   color-scheme:dark;
   --apple-canvas:#08080b; --apple-surface:#171c23; --apple-surface-muted:#232b34;
   --apple-text:#eff5f8; --apple-secondary:#a5b5c2; --apple-blue:#a8d9e7; --apple-blue-pressed:#c2f0e5;
@@ -48,9 +52,10 @@
   --client-lens-shadow:inset 0 1px rgba(222,255,250,.10),0 2px 5px #0002;
   --client-nav-text:#a2b3c2; --client-nav-current:#c2f0e5;
   --ios-canvas-background:radial-gradient(ellipse at -8% 32%,rgba(41,67,80,.17),transparent 54%),radial-gradient(ellipse at 110% 59%,rgba(31,71,63,.12),transparent 50%),#08080b;
-  --client-header-background:rgba(8,8,11,.94); --client-sheet-background:#202a33;
+  --client-header-background:transparent; --client-sheet-background:#202a33;
 }
-:global(html:root[data-client-appearance]) {
+:global(html[data-client-appearance]).scope :global(body) { font-family:var(--font-family-sans); line-height:normal; font-synthesis:none; -webkit-font-smoothing:antialiased; font-variant-numeric:tabular-nums; }
+:global(html:root[data-client-appearance]).scope {
   --bg:var(--apple-canvas); --card:var(--apple-surface); --card-2:var(--apple-surface-muted); --text:var(--apple-text); --muted:var(--apple-secondary); --line:var(--apple-separator); --accent:var(--apple-blue);
   --color-background:var(--apple-canvas); --color-surface:var(--apple-surface); --color-surface-raised:var(--apple-surface); --color-surface-muted:var(--apple-surface-muted); --color-text:var(--apple-text); --color-text-primary:var(--apple-text); --color-heading:var(--apple-text); --color-text-muted:var(--apple-secondary); --color-border:var(--apple-separator); --color-accent:var(--apple-blue); --color-accent-strong:var(--apple-blue-pressed);
   --ios-canvas:var(--apple-canvas); --ios-surface:var(--apple-surface); --ios-surface-muted:var(--apple-surface-muted); --ios-text:var(--apple-text); --ios-muted:var(--apple-secondary); --ios-line:var(--apple-separator); --ios-accent:var(--apple-blue); --ios-accent-text:var(--apple-blue); --ios-accent-soft:var(--apple-blue-tint); --ios-success:var(--apple-green); --ios-danger:var(--apple-red);

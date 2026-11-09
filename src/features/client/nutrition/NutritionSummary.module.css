@@ -12,6 +12,6 @@
 @media(max-width:360px) { .root { width:calc(100% - 30px); margin-inline:15px; } }
 :global(html[data-client-appearance]) .root { margin-top:16px; }
 :global(html[data-client-appearance]) .card { min-height:72px; border-radius:22px; padding:14px 16px; box-shadow:var(--client-card-shadow); }
-:global(html[data-client-appearance]) .titleStrong { font-size:17px; font-weight:500; }
+:global(html[data-client-appearance]) .titleStrong { font-size:17px; font-weight:400; line-height:1.25; letter-spacing:-.25px; }
 :global(html[data-client-appearance]) .description { font-size:13px; }
 :global(html[data-client-appearance]) .icon { width:32px; height:32px; color:var(--apple-blue); background:var(--ownset-soft-gradient); }

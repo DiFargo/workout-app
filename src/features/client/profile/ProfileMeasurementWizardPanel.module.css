@@ -50,8 +50,8 @@
 .chartValues summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--apple-blue); }
 .chartValues ul { margin: 0; padding-left: 20px; }
 
-:global(html[data-client-appearance]) .periods { min-height:38px; margin-bottom:16px; border-radius:12px; padding:3px; }
-:global(html[data-client-appearance]) .periods button { min-height:38px; font-size:12px; border:0; border-radius:9px; }
+:global(html[data-client-appearance]) .periods { min-height:38px; margin-bottom:17px; border-radius:12px; padding:3px; }
+:global(html[data-client-appearance]) .periods button { min-height:38px; font-size:13px; border:0; border-radius:9px; }
 :global(html[data-client-appearance="dark"]) .periods button[aria-selected="true"] { background:#3b4b59; }
 :global(html[data-client-appearance]) .chartCard { padding:20px; border-radius:22px; box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .periodRange { font-size:11px; }
@@ -60,25 +60,25 @@
 :global(html[data-client-appearance]) .line { stroke:var(--apple-macro-progress); stroke-width:2.5; }
 :global(html[data-client-appearance]) .chartTop > div:first-child strong { font-size:30px; }
 :global(html[data-client-appearance]) .chartTop span { font-size:12px; }
-:global(html[data-client-appearance]) .sectionHead { margin:24px 0 10px; padding:0; }
-:global(html[data-client-appearance]) .sectionHead h3 { font-size:20px; font-weight:650; }
+:global(html[data-client-appearance]) .sectionHead { min-height:25px; margin:26px 0 10px; padding:0; }
+:global(html[data-client-appearance]) .sectionHead h3 { font-size:21px; font-weight:600; line-height:normal; letter-spacing:-.45px; }
 :global(html[data-client-appearance]) .achievement { min-height:96px; border-radius:22px; padding:20px; box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .achievement strong { font-size:20px; font-weight:650; }
 :global(html[data-client-appearance]) .achievement small { font-size:13px; }
 :global(html[data-client-appearance]) .controlGroup { border-radius:22px; box-shadow:var(--client-card-shadow); }
 :global(html[data-client-appearance]) .controlRow { min-height:72px; padding:14px 16px; gap:12px; }
-:global(html[data-client-appearance]) .controlRow strong { font-size:17px; font-weight:500; }
+:global(html[data-client-appearance]) .controlRow strong { font-size:17px; font-weight:400; letter-spacing:-.25px; }
 :global(html[data-client-appearance]) .controlRow small { font-size:13px; }
 :global(html[data-client-appearance]) .controlIcon { width:32px; height:32px; background:var(--ownset-soft-gradient); color:var(--apple-blue); }
 .chartCard { position:relative; }
 .chartOpen { position:absolute; inset:0; width:100%; height:100%; min-height:44px; border:0; border-radius:inherit; background:transparent; cursor:pointer; }
 :global(html[data-client-appearance]) .chartCard { min-height:253px; }
-:global(html[data-client-appearance]) .chartTop > div:first-child strong { font-size:32px; }
+:global(html[data-client-appearance]) .chartTop > div:first-child strong { font-size:32px; font-weight:600; }
 :global(html[data-client-appearance]) .chart { margin-top:22px; height:132px; }
-:global(html[data-client-appearance]) .achievement { display:grid; grid-template-columns:52px minmax(0,1fr); gap:16px; }
-:global(html[data-client-appearance]) .achievement > span:first-child { width:52px; height:52px; border-radius:17px; }
+:global(html[data-client-appearance]) .achievement { display:grid; grid-template-columns:56px minmax(0,1fr); gap:0 14px; }
+:global(html[data-client-appearance]) .achievement > span:first-child { width:56px; height:56px; border-radius:17px; }
 :global(html[data-client-appearance]) .achievement strong { font-size:32px; }
-:global(html[data-client-appearance]) .achievement .achievementFooter { grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; width:100%; height:auto; min-height:30px; padding-top:12px; border-top:1px solid var(--apple-separator); border-radius:0; background:transparent; color:var(--apple-blue); font-size:14px; }
+:global(html[data-client-appearance]) .achievement .achievementFooter { grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; width:100%; height:auto; min-height:60px; margin-top:16px; padding-top:16px; border-top:1px solid var(--apple-separator); border-radius:0; background:transparent; color:var(--apple-blue); font-size:14px; }
 .detailsOverlay { position:fixed; inset:0; z-index:1800; display:flex; align-items:flex-end; justify-content:center; background:rgba(28,59,76,.28); }
 .detailsSheet { width:min(600px,100%); max-height:85dvh; overflow:auto; padding:24px 20px calc(20px + env(safe-area-inset-bottom,0px)); border-radius:28px 28px 0 0; background:var(--client-sheet-background,var(--apple-canvas)); color:var(--apple-text); }
 .detailsSheet header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
