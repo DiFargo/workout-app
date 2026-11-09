@@ -12,6 +12,7 @@ import {
 import { requestTrainerExerciseCards } from "../../utils/trainerExerciseCards.js";
 import { requestEmptyProgramAssignmentDeletion } from "../../utils/trainerProgramAssignmentDelete.js";
 import { captureAuthSession } from "../../utils/authSession.js";
+import { programDraftSnapshot } from "../../utils/trainerProgramDraft.js";
 import { runSessionResource } from "../../utils/sessionResource.js";
 import { mapTemplateExerciseCards } from "../../../functions/exerciseCards.js";
 
@@ -698,7 +699,7 @@ export function createTrainerProgramTemplateHandlers({
       const clientProfile = clientSnapshot.exists() ? clientSnapshot.data() : {};
       const historyEntries = getSnapshotEntries(historySnapshot);
       const activeAssignment = withoutProgram ? getNextTrainerClientActiveProgramAssignment(
-        getSnapshotEntries(workoutsSnapshot), historyEntries, clientProfile
+        getSnapshotEntries(workoutsSnapshot).filter(workout => !isTrainerClientBasicWorkout(workout)), historyEntries, clientProfile
       ) : null;
       if (withoutProgram && activeAssignment?.key !== assignmentKey) {
         setAdminClientStatus("Назначение изменилось. Обновите карточку клиента и повторите сохранение.");
@@ -784,9 +785,9 @@ export function createTrainerProgramTemplateHandlers({
           const freshProfile = freshClient.exists() ? freshClient.data() : {};
           const revisionKeys = ["assignedProgramId", "assignedProgramAddedAt", "assignedProgramAt", "assignedProgramUpdatedAt", "assignedProgramLifecycleStatus", "assignedProgramVisibility", "workoutCalendar"];
           if (!session.isCurrent() || !isClientSelectionCurrent(clientId) || !canManageClientProgram({ id: clientId, ...freshProfile }) ||
-              revisionKeys.some(key => JSON.stringify(freshProfile[key]) !== JSON.stringify(clientProfile[key])) ||
+              revisionKeys.some(key => programDraftSnapshot(freshProfile[key]) !== programDraftSnapshot(clientProfile[key])) ||
               freshWorkouts.some((snapshot, index) => !snapshot.exists() ||
-                JSON.stringify(snapshot.data()) !== JSON.stringify(matchedWorkouts[index].data))) {
+                programDraftSnapshot(snapshot.data()) !== programDraftSnapshot(matchedWorkouts[index].data))) {
             throw Object.assign(new Error("Назначение изменилось. Обновите карточку клиента и повторите сохранение."), { code: "program/conflict" });
           }
           writeArchive(transaction);

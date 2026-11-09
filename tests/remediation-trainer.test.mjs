@@ -293,6 +293,20 @@ test("TR02 explicit withoutProgram cannot change an unrelated client", async () 
   assert.deepEqual(store.get("users/client"), profile);
 });
 
+test("TR02 explicit withoutProgram accepts unchanged Firestore objects with reordered keys", async () => {
+  const profile = client(); seed(profile);
+  const reordered = value => Array.isArray(value) ? value.map(reordered)
+    : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).reverse().map(([key, item]) => [key, reordered(item)])) : value;
+  beforeTransaction = () => {
+    store.set("users/client", reordered(store.get("users/client")));
+    store.set("users/client/workouts/day", reordered(store.get("users/client/workouts/day")));
+  };
+  assert.equal(await createTrainerProgramTemplateHandlers(common(profile)).archiveClientProgramAssignment(profile.id, {
+    key: `time:${stamp}`, assignedAt: stamp, withoutProgram: true
+  }), true);
+  assert.equal(store.get("users/client").assignedProgramId, "");
+});
+
 test("TR02 explicit withoutProgram stops after a login or selected-client change", async () => {
   const profile = client(); seed(profile);
   let localUpdates = 0;
