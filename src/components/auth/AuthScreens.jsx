@@ -25,17 +25,11 @@ export function AppSplash() {
   return (
     <main className={styles.appSplash} role="status" aria-label="Загрузка приложения" aria-busy="true">
       <div className={styles.splashInner}>
-        <img className={styles.splashMark} src={APP_MARK_URL} width="96" height="96" alt="" fetchPriority="high" />
+        <img className={styles.splashMark} src={APP_MARK_URL} width="160" height="160" alt="" fetchPriority="high" />
         <div className={styles.splashLogo}>{APP_NAME}</div>
-        <div className={styles.splashText}>Загрузка приложения</div>
-        <div className={styles.splashCaption}>Готовим ваши тренировки и прогресс</div>
-        <div className={styles.splashProgress}>
+        <div className={styles.splashText}>Загружаем…</div>
+        <div className={styles.splashProgress} aria-hidden="true">
           <span />
-        </div>
-        <div className={styles.splashDots} aria-hidden="true">
-          <i />
-          <i />
-          <i />
         </div>
         {showRecovery && (
           <div className={styles.splashRecovery} role="status" aria-live="polite">

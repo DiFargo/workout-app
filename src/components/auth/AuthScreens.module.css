@@ -807,18 +807,6 @@
   color: #4c4656;
 }
 
-/* Unified client entry: an open loading state and a compact, single-purpose
-   authentication sheet. */
-.splashCaption {
-  max-width: 250px;
-  margin-top: 6px;
-  color: #9a94a1;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.35;
-  text-align: center;
-}
-
 .loginEyebrow {
   display: inline-block;
   margin-bottom: 5px;
@@ -829,13 +817,32 @@
   text-transform: uppercase;
 }
 
-:global(:root[data-app-theme="warm-light"]) .appSplash {
-  padding: max(24px, env(safe-area-inset-top, 0px)) 24px max(24px, env(safe-area-inset-bottom, 0px));
+/* Keep this composition identical to the pre-React #startup in index.html. */
+:global(html:root[data-startup-appearance]) .appSplash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  min-block-size: 0;
+  margin: 0;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 24px calc(max(24px, env(safe-area-inset-bottom, 0px)) + min(6dvh, 48px));
+  text-align: center;
 }
 
-:global(:root[data-app-theme="warm-light"]) .splashInner {
+:global(html:root[data-startup-appearance]) .splashInner {
+  box-sizing: border-box;
   width: min(100%, 320px);
   min-height: 0;
+  min-block-size: 0;
+  margin-block: auto;
+  flex-shrink: 0;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -843,17 +850,26 @@
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .splashMark {
-  width: 96px;
-  height: 96px;
+:global(html:root[data-startup-appearance]) .splashMark {
+  width: clamp(104px, 28dvh, 160px);
+  height: clamp(104px, 28dvh, 160px);
   margin-bottom: 20px;
-  border-radius: 22px;
-  background: var(--ownset-soft-gradient);
 }
 
-:global(:root[data-app-theme="warm-light"]) .splashLogo {
-  font-size: 44px;
-  letter-spacing: -0.035em;
+:global(html:root[data-startup-appearance]) .splashLogo {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+:global(html:root[data-startup-appearance]) .splashText {
+  max-width: 100%;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0;
 }
 
 /* Keep the approved artwork's background and corner geometry intact. */
@@ -870,10 +886,10 @@
   box-shadow: none;
 }
 
-:global(:root[data-app-theme="warm-light"]) .splashProgress {
-  width: 220px;
-  height: 5px;
-  margin-top: 28px;
+:global(html:root[data-startup-appearance]) .splashProgress {
+  width: 104px;
+  height: 3px;
+  margin-top: 20px;
 }
 
 :global(:root[data-app-theme="warm-light"]) .splashDots {
@@ -891,7 +907,7 @@
   color: var(--client-text, var(--startup-text, #1c282e));
 }
 
-:global(html:root[data-startup-appearance]) :is(.splashText, .splashCaption, .splashRecovery p) {
+:global(html:root[data-startup-appearance]) :is(.splashText, .splashRecovery p) {
   color: var(--client-secondary, var(--startup-secondary, #617078));
 }
 

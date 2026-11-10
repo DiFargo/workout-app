@@ -41,21 +41,21 @@
       html[data-startup-appearance="dark"]:has(#startup){color-scheme:dark}
       html{-webkit-tap-highlight-color:transparent}
       /* Match AuthScreens.module.css AppSplash before React and its CSS load. */
-      #startup{box-sizing:border-box;width:min(100%,402px);min-height:100dvh;margin:0 auto;display:grid;place-items:center;overflow:hidden;padding:max(24px,env(safe-area-inset-top,0px)) 24px max(24px,env(safe-area-inset-bottom,0px));color:var(--startup-text);background:var(--startup-canvas);font:16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;text-align:center}
-      #startup-inner{box-sizing:border-box;position:relative;display:flex;width:min(100%,320px);flex-direction:column;align-items:center;justify-content:center}
-      #startup img{display:block;width:96px;height:96px;flex-shrink:0;margin-bottom:20px;object-fit:contain}
-      #startup h1{margin:0;color:var(--startup-text);font-size:44px;font-weight:900;line-height:.95;letter-spacing:-.035em}
-      #startup-message{margin:14px 0 0;color:var(--startup-secondary);font-size:15px;font-weight:800;letter-spacing:.02em}
-      #startup-caption{max-width:250px;margin:6px 0 0;color:var(--startup-secondary);font-size:12px;font-weight:600;line-height:1.35;text-align:center}
-      #startup-progress{width:220px;height:5px;margin-top:28px;overflow:hidden;border-radius:999px;background:var(--startup-track)}
+      #startup{box-sizing:border-box;position:fixed;inset:0;width:100%;height:100dvh;min-height:0;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding:max(24px,env(safe-area-inset-top,0px)) 24px calc(max(24px,env(safe-area-inset-bottom,0px)) + min(6dvh,48px));color:var(--startup-text);background:var(--startup-canvas);font:16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;text-align:center}
+      #startup-inner{box-sizing:border-box;position:relative;display:flex;flex-shrink:0;width:min(100%,320px);margin-block:auto;flex-direction:column;align-items:center;justify-content:center}
+      #startup img{display:block;width:clamp(104px,28dvh,160px);height:clamp(104px,28dvh,160px);flex-shrink:0;margin-bottom:20px;object-fit:contain}
+      #startup h1{margin:0;color:var(--startup-text);font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-.025em}
+      #startup-message{max-width:100%;margin:12px 0 0;color:var(--startup-secondary);font-size:14px;font-weight:500;line-height:1.5;letter-spacing:0}
+      #startup-progress{width:104px;height:3px;margin-top:20px;overflow:hidden;border-radius:999px;background:var(--startup-track)}
       #startup-progress span{display:block;width:42%;height:100%;border-radius:inherit;background:var(--startup-action-gradient);animation:startup-loading 1.2s ease-in-out infinite}
       @keyframes startup-loading{0%{transform:translateX(-115%)}55%{transform:translateX(95%)}100%{transform:translateX(245%)}}
       @media(prefers-reduced-motion:reduce){#startup-progress span{animation:none}}
       #startup button{min-height:48px;padding:12px 24px;border:0;border-radius:14px;background:var(--startup-action-gradient);color:var(--startup-action-ink);font:inherit;cursor:pointer}
+      #startup-retry:not([hidden]){margin-top:16px}
     </style>
   </head>
   <body>
-    <div id="root"><main id="startup" role="status" aria-label="Загрузка приложения" aria-busy="true"><div id="startup-inner"><img src="/brand/gymduck-mark-256.png" width="96" height="96" alt="" fetchpriority="high" /><h1>GymDuck</h1><p id="startup-message">Загрузка приложения</p><p id="startup-caption">Готовим ваши тренировки и прогресс</p><div id="startup-progress" aria-hidden="true"><span></span></div><button id="startup-retry" hidden type="button">Повторить загрузку</button><noscript>Для работы приложения включите JavaScript в браузере.</noscript></div></main></div>
+    <div id="root"><main id="startup" role="status" aria-label="Загрузка приложения" aria-busy="true"><div id="startup-inner"><img src="/brand/gymduck-mark-256.png" width="160" height="160" alt="" fetchpriority="high" /><h1>GymDuck</h1><p id="startup-message">Загружаем…</p><div id="startup-progress" aria-hidden="true"><span></span></div><button id="startup-retry" hidden type="button">Повторить загрузку</button><noscript>Для работы приложения включите JavaScript в браузере.</noscript></div></main></div>
     <script>
       (() => {
         const retry = document.getElementById('startup-retry');
