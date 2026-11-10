@@ -10,6 +10,7 @@ export function renderInviteFixture(kind = "activation", overrides = {}) {
   const end = source.indexOf("\n}", start) + 2;
   if (start < 0 || end < start) throw new Error("Invitation template not found");
   const render = runInNewContext(`(${source.slice(start, end)})`, {
+    URL,
     INVITE_PAGE_STYLES,
     formatInviteAccountLabel,
     getWorkoutAppUrl: () => "https://example.test/",

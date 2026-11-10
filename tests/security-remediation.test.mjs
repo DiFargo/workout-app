@@ -7,13 +7,23 @@ import test, { after } from "node:test";
 // transport/trigger registration and Telegram network I/O are substituted.
 // No extracted handler strings, source regex assertions or real accounts.
 let fixture;
+// Some production factories capture SDK services during module import, before
+// each test creates its isolated fixture. Resolve service methods only on use.
+const fixtureService = (key) => new Proxy({}, {
+  get(_target, property) {
+    const service = fixture[key];
+    const value = service[property];
+    return typeof value === "function" ? value.bind(service) : value;
+  }
+});
+const db = fixtureService("db"), auth = fixtureService("auth");
 class HttpsError extends Error {
   constructor(code, message) { super(message); this.code = code; }
 }
-const firestore = Object.assign(() => fixture.db, { FieldValue: {
+const firestore = Object.assign(() => db, { FieldValue: {
   serverTimestamp: () => "2026-10-08T10:00:00.000Z", delete: () => ({ deleteField: true })
 } });
-const admin = { initializeApp() {}, firestore, auth: () => fixture.auth,
+const admin = { initializeApp() {}, firestore, auth: () => auth,
   storage: () => ({ bucket: (name) => { fixture.bucketNames.push(name); return fixture.bucket; } }),
   app: () => ({ options: { projectId: "demo-security-remediation" } }) };
 const token = `security-runtime-${crypto.randomUUID()}`;
@@ -311,7 +321,7 @@ test("Telegram help and settings commands reply privately with a clear app entry
   for (const [text, heading] of [
     ["/help@zmena_teleg_bot", "Как начать"],
     ["настройки", "Настройки напоминаний"],
-    ["/app", "Приложение ZMENA"]
+    ["/app", "Приложение GymDuck"]
   ]) {
     assert.equal((await telegram({ ...privateMessage(), text })).status, 200);
     assert.match(sentPayloads.at(-1).text, new RegExp(heading));

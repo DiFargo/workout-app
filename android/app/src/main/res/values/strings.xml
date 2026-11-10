@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Zmena</string>
-    <string name="title_activity_main">Zmena</string>
+    <string name="app_name">GymDuck</string>
+    <string name="title_activity_main">GymDuck</string>
     <string name="package_name">com.workoutapp.app</string>
     <string name="custom_url_scheme">com.workoutapp.app</string>
 </resources>

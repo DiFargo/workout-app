@@ -17,6 +17,7 @@ import {
 import { auth } from "../../firebase";
 import { fetchAuthorizedWithTimeout } from "../../utils/apiClient";
 import { captureAuthSession } from "../../utils/authSession.js";
+import { APP_MARK_URL, APP_NAME } from "../../constants/appConfig.js";
 import { useModalBackNavigation } from "../../shared/hooks/useModalBackNavigation.js";
 import styles from "./AdminWorkspace.module.css";
 import { AdminSecurityKeyContext } from "./AdminSecurityKeyContext.js";
@@ -353,9 +354,9 @@ export default function AdminWorkspace({
     <div ref={workspaceRef} className={`${styles.workspace}${contentLayout === "client" ? ` ${styles.clientWorkspace}` : ""} ${className}`.trim()} data-testid={testId}>
       <aside className={styles.sidebar} aria-label="Навигация администратора">
         <div className={styles.brand}>
-          <img className={styles.brandMark} src="/brand/ownset.svg?v=gradient-1" width="38" height="38" alt="" />
+          <img className={styles.brandMark} src={APP_MARK_URL} width="38" height="38" alt="" />
           <span>
-            <strong>Zmena</strong>
+            <strong>{APP_NAME}</strong>
             <small>{title === "Админка" ? "Кабинет администратора" : title}</small>
           </span>
         </div>

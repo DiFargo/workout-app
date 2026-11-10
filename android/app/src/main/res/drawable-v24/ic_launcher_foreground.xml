@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="444" android:viewportHeight="444"><group android:pivotX="222" android:pivotY="222" android:scaleX="0.64" android:scaleY="0.64"><group android:translateX="-137" android:translateY="-95"><path android:fillColor="#FFFFFF" android:pathData="m207 343-20 15q-11 8-3 22l47 64q8 12 19 6l22-14z"/>
-<path android:fillColor="#FFFFFF" android:pathData="M241 293q11-6 19 6l75 111q9 13-4 22l-23 15q-12 8-19-3l-78-115q-10-15 3-23z"/>
-<path android:fillColor="#FFFFFF" android:pathData="m390 188 17-12q14-8 24 6l78 118q9 13-4 22l-19 13q-11 7-20-5l-83-117q-8-14 7-25z"/>
-<path android:fillColor="#FFFFFF" android:pathData="m443 179 6-3q18-8 29 8l51 72q8 14-3 24l-12 7z"/>
-<path android:fillColor="#FFFFFF" android:pathData="m294 316 9-6q5-3 9 2l16 15q3 3 7-1l64-63q4-4 8 1l15 20q3 4-1 8l-86 77q-8 7-14-2l-29-42q-3-5 2-9z"/></group></group></vector>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@mipmap/ic_launcher_foreground"
+    android:gravity="fill"
+    android:filter="true" />

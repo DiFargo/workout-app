@@ -12,7 +12,7 @@ test("chosen email method opens a compact focused form and preserves the draft",
   const assertNoErrors = failOnRuntimeErrors(page);
   await page.setViewportSize({ width: 402, height: 874 });
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Войти в Zmena", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Войти в GymDuck", exact: true })).toBeVisible();
   const methods = page.getByRole("group", { name: "Способ входа" });
   await methods.getByRole("button", { name: "Telegram", exact: true }).click();
   await methods.getByRole("button", { name: "Email или логин", exact: true }).click();

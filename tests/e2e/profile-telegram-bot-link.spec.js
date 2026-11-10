@@ -56,7 +56,7 @@ async function assertFits(page) {
 test("bot link is explicit, single-flight and replaces the legacy widget", async ({ page }, testInfo) => {
   if (testInfo.project.name.includes("mobile")) await page.setViewportSize({ width: 402, height: 874 });
   await openTelegram(page);
-  await expect(page.getByText("ZMENA в Telegram", { exact: true })).toBeVisible();
+  await expect(page.getByText("GymDuck в Telegram", { exact: true })).toBeVisible();
   await expect(page.locator("iframe, script[src*='telegram-widget']")).toHaveCount(0);
   await expect(page.getByTestId("profile-telegram-open-bot")).toHaveCount(0);
   await page.getByTestId("profile-telegram-start").evaluate(node => { node.click(); node.click(); });

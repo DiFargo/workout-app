@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, Eye, EyeOff, Send } from "lucide-react";
+import { APP_MARK_URL, APP_NAME } from "../../constants/appConfig.js";
 import styles from "./AuthScreens.module.css";
 import compactStyles from "./CompactAuth.module.css";
 
@@ -24,8 +25,8 @@ export function AppSplash() {
   return (
     <main className={styles.appSplash} role="status" aria-label="Загрузка приложения" aria-busy="true">
       <div className={styles.splashInner}>
-        <img className={styles.splashMark} src="/brand/ownset.svg?v=gradient-1" width="68" height="68" alt="" />
-        <div className={styles.splashLogo}>Zmena</div>
+        <img className={styles.splashMark} src={APP_MARK_URL} width="96" height="96" alt="" fetchPriority="high" />
+        <div className={styles.splashLogo}>{APP_NAME}</div>
         <div className={styles.splashText}>Загрузка приложения</div>
         <div className={styles.splashCaption}>Готовим ваши тренировки и прогресс</div>
         <div className={styles.splashProgress}>
@@ -125,9 +126,9 @@ export function LoginPage({
 
   return (
     <main className={`${styles.loginPage} ${styles.compactLoginPage}`}>
-      <div className={styles.compactBrand} aria-label="Zmena">
-        <img src="/brand/ownset.svg?v=gradient-1" width="38" height="38" alt="" />
-        <span>Zmena</span>
+      <div className={styles.compactBrand} aria-label={APP_NAME}>
+        <img src={APP_MARK_URL} width="38" height="38" alt="" />
+        <span>{APP_NAME}</span>
       </div>
 
       <section ref={formCardRef} className={`${styles.loginCard} ${styles.compactLoginCard}`} aria-labelledby="auth-title" aria-busy={isBusy}>
@@ -136,7 +137,7 @@ export function LoginPage({
             <ChevronLeft size={18} aria-hidden="true" /> Назад
           </button>
         )}
-        <h1 id="auth-title">{method === "signup" ? "Создать аккаунт" : method === "recovery" ? "Восстановить пароль" : hasTelegramInvite ? "Приглашение от тренера" : "Войти в Zmena"}</h1>
+        <h1 id="auth-title">{method === "signup" ? "Создать аккаунт" : method === "recovery" ? "Восстановить пароль" : hasTelegramInvite ? "Приглашение от тренера" : `Войти в ${APP_NAME}`}</h1>
 
         {isLoginMethod && <div className={styles.methodSwitch} role="group" aria-label="Способ входа">
           <button type="button" aria-pressed={method === "telegram"} disabled={isBusy} onClick={() => chooseMethod("telegram")}>Telegram</button>
@@ -151,7 +152,7 @@ export function LoginPage({
           <p className={styles.compactNote}>{isTelegramMiniApp
             ? hasTelegramInvite ? "Подтверди приглашение своим Telegram-аккаунтом." : "Быстрый вход без пароля."
             : hasTelegramInvite ? "Это приглашение нужно подтвердить в Telegram. Открой чат с ботом и нажми Start."
-              : "Сейчас приложение открыто в браузере. Перейди в Telegram и открой Zmena кнопкой приложения в чате с ботом."}</p>
+              : `Сейчас приложение открыто в браузере. Перейди в Telegram и открой ${APP_NAME} кнопкой приложения в чате с ботом.`}</p>
           {isTelegramMiniApp ? <button className={styles.loginTelegramBtn} type="button" disabled={isBusy} onClick={handleTelegramMiniAppAuth}>
             <Send size={19} aria-hidden="true" />
             {loginSubmitting ? "Проверяю Telegram…" : hasTelegramInvite ? "Принять приглашение" : "Продолжить через Telegram"}

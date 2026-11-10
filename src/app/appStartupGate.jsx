@@ -2,6 +2,7 @@ import FirstSetupOnboarding from "../features/auth/FirstSetupOnboarding";
 import { AppSplash, LoginPage } from "../components/auth/AuthScreens";
 import { ChartNoAxesColumn, Copy, Dumbbell, LockKeyhole, LogOut, RefreshCw, Send, Utensils } from "lucide-react";
 import styles from "./AppStartupGate.module.css";
+import { APP_MARK_URL, APP_NAME } from "../constants/appConfig.js";
 
 function RoleAccessVerificationScreen({ logout }) {
   return (
@@ -38,8 +39,8 @@ function PendingTrainerAccessScreen({ logout, user, profileAccount, handleTelegr
   return (
     <main className={styles.pendingAccessGate}>
       <section className={styles.pendingAccessCard} aria-labelledby="pending-access-title" aria-busy={busy}>
-        <img src="/brand/ownset.svg?v=gradient-1" width="56" height="56" alt="" />
-        <span className={styles.pendingAccessEyebrow}>АККАУНТ ZMENA</span>
+        <img src={APP_MARK_URL} width="56" height="56" alt="" />
+        <span className={styles.pendingAccessEyebrow}>АККАУНТ {APP_NAME.toUpperCase()}</span>
         <h1 id="pending-access-title">{inviteToken ? "Принять приглашение тренера" : "Ждём назначения тренера"}</h1>
         <p className={styles.pendingAccessDescription}>
           {inviteToken ? hasTelegramContext
@@ -63,7 +64,7 @@ function PendingTrainerAccessScreen({ logout, user, profileAccount, handleTelegr
           {copyStatus && <p role="status" aria-live="polite">{copyStatus}</p>}
           {!inviteToken ? <>
             <p>Уже получили приглашение? {hasTelegramContext ? "Нажмите «Проверить приглашение» или откройте ссылку из сообщения тренера." : <>Откройте ссылку из сообщения тренера. <a href={botUrl}>Перейти к боту в Telegram</a></>}</p>
-            <p>Нет тренера или приглашения? Назначение не происходит автоматически. Уточните возможность участия у человека, от которого вы узнали о Zmena, и передайте ему свой логин или ID. Повторная регистрация не откроет доступ.</p>
+            <p>Нет тренера или приглашения? Назначение не происходит автоматически. Уточните возможность участия у человека, от которого вы узнали о {APP_NAME}, и передайте ему свой логин или ID. Повторная регистрация не откроет доступ.</p>
           </> : null}
         </div>
         {!inviteToken ? <div className={styles.pendingAccessFeatures} aria-label="Разделы пока закрыты">

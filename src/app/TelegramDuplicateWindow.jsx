@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import styles from "./TelegramDuplicateWindow.module.css";
+import { APP_MARK_URL, APP_NAME } from "../constants/appConfig.js";
 
 export default function TelegramDuplicateWindow({ hasInvitation = false }) {
   const heading = useRef(null);
@@ -10,10 +11,10 @@ export default function TelegramDuplicateWindow({ hasInvitation = false }) {
   return (
     <main className={styles.screen}>
       <section className={styles.card} aria-labelledby="telegram-duplicate-title">
-        <img src="/brand/ownset.svg?v=gradient-1" width="56" height="56" alt="" />
+        <img src={APP_MARK_URL} width="56" height="56" alt="" />
         <h1 id="telegram-duplicate-title" ref={heading} tabIndex={-1}>Приложение уже открыто</h1>
         <p>{hasInvitation
-          ? "Чтобы принять приглашение, закройте другое окно ZMENA и нажмите «Продолжить здесь». Приглашение сохранено в этом окне."
+          ? `Чтобы принять приглашение, закройте другое окно ${APP_NAME} и нажмите «Продолжить здесь». Приглашение сохранено в этом окне.`
           : "Продолжите в открытом окне Telegram. Вторую копию приложения запускать не нужно."}</p>
         <div className={styles.actions}>
           <button type="button" onClick={hasInvitation ? () => window.location.reload() : closeWindow}>{hasInvitation ? "Продолжить здесь" : "Закрыть это окно"}</button>

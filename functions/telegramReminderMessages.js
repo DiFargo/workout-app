@@ -72,11 +72,11 @@ export function buildTelegramWelcomeMessage(firstName = "") {
   const name = String(firstName || "").trim();
   return [
     `<b>${name ? `Привет, ${escapeTelegramHtml(name)}!` : "Привет!"}</b>`,
-    "Я — ZMENA, помощник по тренировкам и прогрессу.",
+    "Я — GymDuck, помощник по тренировкам и прогрессу.",
     "",
     "Здесь будут напоминания о тренировках, фото прогресса, весе и замерах.",
     "",
-    "Открой ZMENA кнопкой «Открыть приложение» слева от поля сообщения.",
+    "Открой GymDuck кнопкой «Открыть приложение» слева от поля сообщения.",
     "Если Telegram ещё не подключён: Профиль → Telegram.",
     "Напиши «настройки», чтобы узнать, где управлять напоминаниями."
   ].join("\n");
@@ -107,7 +107,7 @@ export function buildTelegramSettingsMessage() {
 
 export function buildTelegramAppMessage() {
   return [
-    "<b>Приложение ZMENA</b>",
+    "<b>Приложение GymDuck</b>",
     "",
     "Чтобы открыть свой план и настройки, нажми «Открыть приложение» слева от поля сообщения."
   ].join("\n");
@@ -134,7 +134,7 @@ export function buildTelegramLinkConfirmationMessage() {
   return [
     "<b>Telegram подключён</b>",
     "",
-    "Теперь ZMENA сможет присылать сюда личные напоминания.",
+    "Теперь GymDuck сможет присылать сюда личные напоминания.",
     "Выбери, что и когда напоминать: приложение → Профиль → Уведомления."
   ].join("\n");
 }
@@ -151,7 +151,7 @@ export function buildTelegramLinkErrorMessage() {
 export function buildTelegramInviteAcceptanceMessage(firstName = "") {
   const name = String(firstName || "").trim();
   return [
-    `<b>${name ? `Привет, ${escapeTelegramHtml(name)}! Тренер приглашает тебя в ZMENA.` : "Тренер приглашает тебя в ZMENA."}</b>`,
+    `<b>${name ? `Привет, ${escapeTelegramHtml(name)}! Тренер приглашает тебя в GymDuck.` : "Тренер приглашает тебя в GymDuck."}</b>`,
     "",
     "Нажми кнопку ниже, затем в приложении выбери «Продолжить через Telegram».",
     "Аккаунт автоматически подключится к пригласившему тебя тренеру."
@@ -172,7 +172,7 @@ export function buildTelegramInviteErrorMessage(code, targetUsername = "") {
     "telegram-invite-not-started": "Сначала открой ссылку приглашения в Telegram и нажми Start."
   }[code] || "Не удалось проверить приглашение. Попроси тренера отправить новую ссылку.";
 
-  return [`<b>Приглашение ZMENA</b>`, "", message].join("\n");
+  return [`<b>Приглашение GymDuck</b>`, "", message].join("\n");
 }
 
 export function buildTelegramAppKeyboard(url, label = "Открыть приложение") {

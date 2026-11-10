@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../firebase.js";
+import { APP_NAME } from "../../../constants/appConfig.js";
 
 function getUserLabel(user) {
   const firstName = String(user?.displayName || "").trim().split(/\s+/)[0];
@@ -19,7 +20,7 @@ export default function WorkoutVideoProtectionMark({ className }) {
 
   return (
     <span className={className} aria-hidden="true" data-testid="workout-video-watermark">
-      ZMENA · {userLabel}
+      {APP_NAME} · {userLabel}
     </span>
   );
 }

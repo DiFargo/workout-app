@@ -23,7 +23,7 @@ test("selected off-centre crop is inline only; fullscreen keeps the same complet
   await expect(fullscreenVideo).toHaveAttribute("src", await video.getAttribute("src"));
   await expect(fullscreenVideo).toHaveAttribute("controlslist", "nodownload noremoteplayback");
   await expect(fullscreenVideo).toHaveAttribute("disablepictureinpicture", "");
-  await expect(overlay.getByTestId("workout-video-watermark")).toContainText(/^ZMENA · /);
+  await expect(overlay.getByTestId("workout-video-watermark")).toContainText(/^GymDuck · /);
   await expect(overlay.locator("video")).toHaveCSS("object-fit", "contain");
   await expect(overlay.locator("video")).toHaveCSS("transform", "none");
   await page.screenshot({ path: info.outputPath("off-centre-crop-fullscreen-original.png") });
@@ -114,7 +114,7 @@ test("subtle play, pause and fullscreen controls remain functional and keyboard 
   await expect(video).toHaveAttribute("disablepictureinpicture", "");
   await expect(video).toHaveAttribute("disableremoteplayback", "");
   await expect(video).toHaveAttribute("draggable", "false");
-  await expect(frame.getByTestId("workout-video-watermark")).toContainText(/^ZMENA · /);
+  await expect(frame.getByTestId("workout-video-watermark")).toContainText(/^GymDuck · /);
   expect(await video.evaluate(el => {
     const event = new MouseEvent("contextmenu", { bubbles: true, cancelable: true });
     el.dispatchEvent(event);
@@ -149,7 +149,7 @@ test("subtle play, pause and fullscreen controls remain functional and keyboard 
   const fullscreenVideo = overlay.locator("video");
   await expect(fullscreenVideo).toHaveAttribute("controlslist", "nodownload noremoteplayback");
   await expect(fullscreenVideo).toHaveAttribute("disablepictureinpicture", "");
-  await expect(overlay.getByTestId("workout-video-watermark")).toContainText(/^ZMENA · /);
+  await expect(overlay.getByTestId("workout-video-watermark")).toContainText(/^GymDuck · /);
   await expect.poll(() => video.evaluate(el => el.paused)).toBe(true);
   await overlay.getByRole("button", { name: "Закрыть видео" }).click();
   await expect(overlay).toHaveCount(0);

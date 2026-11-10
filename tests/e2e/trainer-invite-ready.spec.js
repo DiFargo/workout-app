@@ -9,7 +9,7 @@ const fallbackUrl = "https://example.invalid/fixture-invite";
 
 function invitationMessage({ existingAccount = false } = {}) {
   return [
-    "Привет! Приглашаю тебя в приложение Zmena.",
+    "Привет! Приглашаю тебя в приложение GymDuck.",
     `1. Открой ссылку и нажми Start в Telegram: ${botStartUrl}`,
     "2. В ответном сообщении нажми «Принять приглашение».",
     "3. В открывшемся приложении выбери «Telegram» и нажми «Принять приглашение» — аккаунт подключится к тренеру.",

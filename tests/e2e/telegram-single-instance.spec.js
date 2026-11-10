@@ -61,7 +61,7 @@ async function isolateExternalServices(context) {
 }
 
 async function expectLogin(page) {
-  await expect(page.getByRole("heading", { name: "Войти в Zmena", exact: true })).toBeVisible({ timeout: 40_000 });
+  await expect(page.getByRole("heading", { name: "Войти в GymDuck", exact: true })).toBeVisible({ timeout: 40_000 });
   await expect(page.getByRole("heading", { name: "Приложение уже открыто", exact: true })).toHaveCount(0);
 }
 
@@ -103,7 +103,7 @@ test("same Telegram user gets a safe duplicate window, then can take ownership a
     const closeCalls = await duplicate.evaluate(() => window.__singleInstanceSdkCalls.close);
     await duplicate.getByRole("button", { name: "Закрыть это окно", exact: true }).click();
     await expect.poll(() => duplicate.evaluate(() => window.__singleInstanceSdkCalls.close)).toBeGreaterThan(closeCalls);
-    await expect(page.getByRole("heading", { name: "Войти в Zmena", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Войти в GymDuck", exact: true })).toBeVisible();
     await expect(page.getByLabel("Email или логин", { exact: true })).toHaveValue("fixture-unsent-draft");
     expect(await page.evaluate(() => window.__singleInstanceSdkCalls.close)).toBe(0);
     owner.assertNoRuntimeErrors();

@@ -238,7 +238,7 @@ export function createAdminSecurityKeysHandler({ admin, getAdminIdentityContext,
     const descriptors = state.keys.map(key => ({ id: key.data.credentialId, transports: key.data.transports }));
     const options = purpose === "registration"
       ? await webauthn.generateRegistrationOptions({
-        rpName: "Zmena", rpID, userID: new Uint8Array(createHash("sha256").update(context.uid).digest()),
+        rpName: "GymDuck", rpID, userID: new Uint8Array(createHash("sha256").update(context.uid).digest()),
         userName: String(state.data.email || context.uid).slice(0, 128),
         userDisplayName: String(state.data.name || state.data.displayName || context.uid).slice(0, 80),
         timeout: CHALLENGE_TTL_MS, attestationType: "none", excludeCredentials: descriptors,

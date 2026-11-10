@@ -2,19 +2,20 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/brand/ownset.svg?v=gradient-1" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/icons/gymduck-64.png" />
+    <link rel="preload" as="image" href="/brand/gymduck-mark-256.png" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Zmena</title>
-    <link rel="manifest" href="/manifest.json?v=zmena-1" />
+    <title>GymDuck</title>
+    <link rel="manifest" href="/manifest.json?v=gymduck-1" />
     <meta name="theme-color" content="#F5F7F8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Zmena" />
-    <meta name="application-name" content="Zmena" />
-    <link rel="apple-touch-icon" href="/icons/ownset-180.png?v=gradient-1" />
+    <meta name="apple-mobile-web-app-title" content="GymDuck" />
+    <meta name="application-name" content="GymDuck" />
+    <link rel="apple-touch-icon" href="/icons/gymduck-180.png" />
     <script id="startup-appearance">
       // Resolve the saved client choice before either loading screen can paint.
       (() => {
@@ -42,7 +43,7 @@
       /* Match AuthScreens.module.css AppSplash before React and its CSS load. */
       #startup{box-sizing:border-box;width:min(100%,402px);min-height:100dvh;margin:0 auto;display:grid;place-items:center;overflow:hidden;padding:max(24px,env(safe-area-inset-top,0px)) 24px max(24px,env(safe-area-inset-bottom,0px));color:var(--startup-text);background:var(--startup-canvas);font:16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;text-align:center}
       #startup-inner{box-sizing:border-box;position:relative;display:flex;width:min(100%,320px);flex-direction:column;align-items:center;justify-content:center}
-      #startup img{display:block;width:68px;height:68px;flex-shrink:0;margin-bottom:20px;object-fit:contain}
+      #startup img{display:block;width:96px;height:96px;flex-shrink:0;margin-bottom:20px;object-fit:contain}
       #startup h1{margin:0;color:var(--startup-text);font-size:44px;font-weight:900;line-height:.95;letter-spacing:-.035em}
       #startup-message{margin:14px 0 0;color:var(--startup-secondary);font-size:15px;font-weight:800;letter-spacing:.02em}
       #startup-caption{max-width:250px;margin:6px 0 0;color:var(--startup-secondary);font-size:12px;font-weight:600;line-height:1.35;text-align:center}
@@ -54,7 +55,7 @@
     </style>
   </head>
   <body>
-    <div id="root"><main id="startup" role="status" aria-label="Загрузка приложения" aria-busy="true"><div id="startup-inner"><img src="/brand/ownset.svg?v=gradient-1" width="68" height="68" alt="" /><h1>Zmena</h1><p id="startup-message">Загрузка приложения</p><p id="startup-caption">Готовим ваши тренировки и прогресс</p><div id="startup-progress" aria-hidden="true"><span></span></div><button id="startup-retry" hidden type="button">Повторить загрузку</button><noscript>Для работы приложения включите JavaScript в браузере.</noscript></div></main></div>
+    <div id="root"><main id="startup" role="status" aria-label="Загрузка приложения" aria-busy="true"><div id="startup-inner"><img src="/brand/gymduck-mark-256.png" width="96" height="96" alt="" fetchpriority="high" /><h1>GymDuck</h1><p id="startup-message">Загрузка приложения</p><p id="startup-caption">Готовим ваши тренировки и прогресс</p><div id="startup-progress" aria-hidden="true"><span></span></div><button id="startup-retry" hidden type="button">Повторить загрузку</button><noscript>Для работы приложения включите JavaScript в браузере.</noscript></div></main></div>
     <script>
       (() => {
         const retry = document.getElementById('startup-retry');

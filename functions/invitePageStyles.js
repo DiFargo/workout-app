@@ -4,7 +4,7 @@ export const INVITE_PAGE_STYLES = `
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;background:var(--canvas);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom))}
 .card{width:min(100%,430px);padding:28px 24px;border-radius:28px;background:var(--surface)}
-.mark{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;background:var(--tint);color:var(--accent);font-size:24px;font-weight:700}
+.brand{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700}.mark{display:block;width:64px;height:64px;object-fit:contain}
 .eyebrow{margin:24px 0 10px;color:var(--secondary);font-size:12px;font-weight:600;letter-spacing:.04em}
 h1{margin:0;font-size:30px;line-height:1.12;letter-spacing:-.035em;font-weight:700}
 p{margin:14px 0 0;color:var(--secondary);line-height:1.5}

@@ -1,3 +1,5 @@
+import { APP_NAME } from "../../constants/appConfig.js";
+
 export function normalizeTrainerTelegramUsername(value) {
   const raw = String(value || "").trim();
   if (!raw) return "";
@@ -15,7 +17,7 @@ export function buildTrainerTelegramChatUrl(username, message) {
 export function buildTrainerInviteMessage({ login = "", inviteUrl = "", botStartUrl = "" } = {}) {
   if (botStartUrl) {
     return [
-      "Привет! Приглашаю тебя в приложение Zmena.",
+      `Привет! Приглашаю тебя в приложение ${APP_NAME}.`,
       `1. Открой ссылку и нажми Start в Telegram: ${botStartUrl}`,
       "2. В ответном сообщении нажми «Принять приглашение».",
       "3. В открывшемся приложении выбери «Telegram» и нажми «Принять приглашение» — аккаунт подключится к тренеру.",
@@ -25,7 +27,7 @@ export function buildTrainerInviteMessage({ login = "", inviteUrl = "", botStart
   }
 
   const lines = [
-    "Привет! Я приглашаю тебя в приложение Zmena.",
+    `Привет! Я приглашаю тебя в приложение ${APP_NAME}.`,
     inviteUrl ? `1. Открой ссылку и создай пароль: ${inviteUrl}` : "1. Открой ссылку активации от тренера и создай пароль.",
     login ? `2. Твой логин: ${login}` : "2. Для входа используй логин, который прислал тренер.",
     "После создания пароля выбери «Email или логин» и введи логин и пароль."

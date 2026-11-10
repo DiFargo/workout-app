@@ -4,6 +4,7 @@ import { useModalBackNavigation } from "../../../shared/hooks/useModalBackNaviga
 import ClientPageHeader from "../../../shared/ui/ClientPageHeader";
 import ProfileModalCloseButton from "./ProfileModalCloseButton";
 import styles from "./ProfileTelegramModal.module.css";
+import { APP_NAME } from "../../../constants/appConfig.js";
 
 export default function ProfileTelegramModal(props) {
   return props.open ? <ProfileTelegramSheet {...props} /> : null;
@@ -107,7 +108,7 @@ function ProfileTelegramSheet({
             <div className={styles.preview}>
               <div className={styles.previewIcon}><Send size={22} strokeWidth={2} aria-hidden="true" /></div>
               <div>
-                <strong>ZMENA в Telegram</strong>
+                <strong>{APP_NAME} в Telegram</strong>
                 <span>{replacing ? "Прежний Telegram остаётся подключённым до подтверждения нового. Можно отменить замену без отключения." : "Подключи бота к этому аккаунту, чтобы входить через Telegram и получать уведомления."}</span>
               </div>
             </div>

@@ -1,3 +1,7 @@
+// Public branding only. Keep account, cache and Firebase identifiers stable.
+export const APP_NAME = "GymDuck";
+export const APP_MARK_URL = "/brand/gymduck-mark-256.png";
+
 export function formatAppVersion(version) {
   const normalizedVersion = String(version || "test").trim();
   const semverParts = normalizedVersion.match(/^(\d+)\.(\d+)\.(\d+)$/);

@@ -17,6 +17,8 @@ test("both standalone invite states render the display login and retain the sign
     assert.match(html, /Логин: Nargo/);
     assert.match(html, /https:\/\/example\.test\//);
     assert.match(html, /Перейти ко входу/);
+    assert.match(html, /<title>GymDuck/);
+    assert.match(html, /https:\/\/example\.test\/brand\/gymduck-mark-256\.png/);
   }
 });
 

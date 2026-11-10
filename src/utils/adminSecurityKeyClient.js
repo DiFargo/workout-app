@@ -1,11 +1,12 @@
 import { captureAuthSession } from "./authSession.js";
+import { APP_NAME } from "../constants/appConfig.js";
 
 export function securityKeyErrorMessage(error) {
   if (["NotAllowedError", "AbortError"].includes(error?.name) || error?.code === "ERROR_CEREMONY_ABORTED") {
     return "Подтверждение отменено. Подключите ключ и попробуйте ещё раз.";
   }
   if (error?.name === "InvalidStateError") return "Этот ключ уже добавлен. Используйте другой ключ для резервного входа.";
-  if (error?.name === "SecurityError") return "Откройте Zmena в обычном браузере по адресу tren-85720.web.app и повторите.";
+  if (error?.name === "SecurityError") return `Откройте ${APP_NAME} в обычном браузере по адресу tren-85720.web.app и повторите.`;
   return error?.userMessage || "Не удалось подтвердить ключ. Проверьте подключение и повторите попытку.";
 }
 

@@ -89,7 +89,7 @@ const APP_CHECK_ENFORCED = defineBoolean("APP_CHECK_ENFORCED", {
 });
 const WORKOUT_APP_URL_PARAM = defineString("WORKOUT_APP_URL", {
   default: "",
-  label: "Public Workout app URL"
+  label: "Public GymDuck app URL"
 });
 const WORKOUT_WEB_API_KEY_PARAM = defineString("WORKOUT_WEB_API_KEY", {
   default: "",
@@ -611,7 +611,7 @@ function escapeHtml(value) {
 
 function renderInviteLinkNoticePageTemplate({ email, login, title, message, statusLabel }) {
   const accountEmail = escapeHtml(formatInviteAccountLabel({ login, email }));
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Workout - доступ к приложению</title><style>${INVITE_PAGE_STYLES}</style></head><body class="notice"><main class="card"><div class="mark">W</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>${title}</h1><p>${message} <span class="email">${accountEmail}</span>.</p><div class="status">${statusLabel}</div><a class="login-link" href="${WORKOUT_APP_URL}">Перейти ко входу</a></main></body></html>`;
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GymDuck — доступ к приложению</title><style>${INVITE_PAGE_STYLES}</style></head><body class="notice"><main class="card"><div class="brand"><img class="mark" src="${escapeHtml(new URL("/brand/gymduck-mark-256.png", getWorkoutAppUrl()).toString())}" alt="" width="64" height="64"><strong>GymDuck</strong></div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>${title}</h1><p>${message} <span class="email">${accountEmail}</span>.</p><div class="status">${statusLabel}</div><a class="login-link" href="${WORKOUT_APP_URL}">Перейти ко входу</a></main></body></html>`;
 }
 
 function renderInviteLinkNoticePage(input) {
@@ -650,7 +650,7 @@ function renderInviteActivationPageTemplate({ actionCode, email, login }) {
   const code = JSON.stringify(String(actionCode || ""));
   const accountEmail = JSON.stringify(formatInviteAccountLabel({ login, email }));
   const appUrl = JSON.stringify(getWorkoutAppUrl());
-  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Zmena — создание пароля</title><style>${INVITE_PAGE_STYLES}</style></head><body><main class="card"><div class="mark">Z</div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>Создай пароль</h1><p>Логин для входа: <span class="email" id="email"></span>. Создай пароль. После сохранения нажми «Перейти ко входу» и введи логин и новый пароль.</p><form id="form"><label>Новый пароль<input id="password" type="password" minlength="6" required autocomplete="new-password" placeholder="Минимум 6 символов"></label><label>Повтори пароль<input id="repeat" type="password" minlength="6" required autocomplete="new-password" placeholder="Повтори пароль"></label><button id="submit" type="submit">Сохранить пароль</button></form><div id="status" class="status" role="status" aria-live="polite"></div><a id="login-link" class="login-link" href=${appUrl}>Перейти ко входу</a><p class="hint">Ссылка действует ограниченное время и может быть использована один раз.</p></main><script>const code=${code},email=${accountEmail},apiKey="AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";document.getElementById("email").textContent=email;const form=document.getElementById("form"),status=document.getElementById("status"),button=document.getElementById("submit"),loginLink=document.getElementById("login-link");function show(message,error=false){status.textContent=message;status.className="status show"+(error?" error":"")}form.addEventListener("submit",async e=>{e.preventDefault();const password=document.getElementById("password").value,repeat=document.getElementById("repeat").value;if(password!==repeat)return show("Пароли не совпадают.",true);button.disabled=true;button.textContent="Сохраняю...";try{const r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({oobCode:code,newPassword:password})});if(!r.ok)throw new Error();show("Пароль создан. Нажми «Перейти ко входу» и войди с указанным логином и новым паролем.");form.hidden=true;loginLink.classList.add("show")}catch{show("Ссылка недействительна или срок её действия истёк. Попроси тренера создать новое приглашение.",true);button.disabled=false;button.textContent="Сохранить пароль"}});</script></body></html>`;
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GymDuck — создание пароля</title><style>${INVITE_PAGE_STYLES}</style></head><body><main class="card"><div class="brand"><img class="mark" src="${escapeHtml(new URL("/brand/gymduck-mark-256.png", getWorkoutAppUrl()).toString())}" alt="" width="64" height="64"><strong>GymDuck</strong></div><div class="eyebrow">ДОСТУП К ПРИЛОЖЕНИЮ</div><h1>Создай пароль</h1><p>Логин для входа: <span class="email" id="email"></span>. Создай пароль. После сохранения нажми «Перейти ко входу» и введи логин и новый пароль.</p><form id="form"><label>Новый пароль<input id="password" type="password" minlength="6" required autocomplete="new-password" placeholder="Минимум 6 символов"></label><label>Повтори пароль<input id="repeat" type="password" minlength="6" required autocomplete="new-password" placeholder="Повтори пароль"></label><button id="submit" type="submit">Сохранить пароль</button></form><div id="status" class="status" role="status" aria-live="polite"></div><a id="login-link" class="login-link" href=${appUrl}>Перейти ко входу</a><p class="hint">Ссылка действует ограниченное время и может быть использована один раз.</p></main><script>const code=${code},email=${accountEmail},apiKey="AIzaSyBq50IlvE_e4H08hTzSkkV3FIsRMDuzowg";document.getElementById("email").textContent=email;const form=document.getElementById("form"),status=document.getElementById("status"),button=document.getElementById("submit"),loginLink=document.getElementById("login-link");function show(message,error=false){status.textContent=message;status.className="status show"+(error?" error":"")}form.addEventListener("submit",async e=>{e.preventDefault();const password=document.getElementById("password").value,repeat=document.getElementById("repeat").value;if(password!==repeat)return show("Пароли не совпадают.",true);button.disabled=true;button.textContent="Сохраняю...";try{const r=await fetch("https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({oobCode:code,newPassword:password})});if(!r.ok)throw new Error();show("Пароль создан. Нажми «Перейти ко входу» и войди с указанным логином и новым паролем.");form.hidden=true;loginLink.classList.add("show")}catch{show("Ссылка недействительна или срок её действия истёк. Попроси тренера создать новое приглашение.",true);button.disabled=false;button.textContent="Сохранить пароль"}});</script></body></html>`;
 }
 
 function renderInviteActivationPage(input) {
@@ -1808,7 +1808,7 @@ export const openClientInvite = onRequest(
           login: link.login,
           title: "Пароль уже создан",
           message: "Эта ссылка уже была использована для аккаунта",
-          statusLabel: "Войди в Workout по логину и паролю."
+          statusLabel: "Войди в GymDuck по логину и паролю."
         }));
       }
       if (link.expiresAt && Date.parse(link.expiresAt) < Date.now()) {
@@ -1836,7 +1836,7 @@ export const openClientInvite = onRequest(
           login: link.login,
           title: "Пароль уже создан",
           message: "Эта ссылка уже была использована для аккаунта",
-          statusLabel: "Войди в Workout по логину и паролю."
+          statusLabel: "Войди в GymDuck по логину и паролю."
         }));
       }
       return res.status(200).type("html").send(renderInviteActivationPage({ actionCode, email: link.email, login: link.login }));

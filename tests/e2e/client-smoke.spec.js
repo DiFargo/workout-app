@@ -6,7 +6,7 @@ test.setTimeout(60_000);
 test.beforeEach(async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: "Войти в Zmena" })).toBeVisible({ timeout: 40_000 });
+  await expect(page.getByRole("heading", { name: "Войти в GymDuck" })).toBeVisible({ timeout: 40_000 });
   await expect(page.getByRole("group", { name: "Способ входа" }).getByRole("button", { name: "Email или логин", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("button", { name: "Войти через Google", exact: true })).toHaveCount(0);
   await page.getByText("Помощь со входом", { exact: true }).click();

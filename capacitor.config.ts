@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'com.workoutapp.app',
-  appName: 'Zmena',
+  appName: 'GymDuck',
   webDir: 'dist',
   server: {
     androidScheme: 'https'
