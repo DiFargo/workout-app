@@ -226,8 +226,8 @@
 
 .roleAccessGateCard button.primary {
   border-color: transparent;
-  background: var(--ownset-action-gradient, var(--startup-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)));
-  color: var(--client-action-ink, var(--startup-action-ink, #fff));
+  background: var(--startup-action-gradient, var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)));
+  color: var(--startup-action-ink, var(--client-action-ink, #fff));
 }
 
 .roleAccessGateCard .roleAccessStatus { margin-top: 14px; font-size: 14px; }

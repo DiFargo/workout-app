@@ -281,13 +281,13 @@ export async function loadRemoteUserBootstrapState({
     }
 
     if (isCurrentRun && !isCurrentRun()) return null;
-    if (!roleDoc.exists()) {
-      throw new Error("role_profile_missing");
-    }
     // getDoc may return its SDK cache after a network failure. Keep the existing
     // explicit-offline continuity path, never expand it to a broken VPN route.
-    if (roleDoc.metadata?.fromCache === true && !readOfflineClientProfile(user.uid)) {
+    if ((roleDoc.metadata?.fromCache === true || roleDoc.metadata?.hasPendingWrites === true) && !readOfflineClientProfile(user.uid)) {
       throw Object.assign(new Error("unavailable"), { code: "unavailable" });
+    }
+    if (!roleDoc.exists()) {
+      throw new Error("role_profile_missing");
     }
     const roleData = roleDoc.exists() ? roleDoc.data() : {};
     const storedRole = String(roleData.role || "").trim().toLocaleLowerCase("ru");

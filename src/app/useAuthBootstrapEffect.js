@@ -160,7 +160,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
         const willRetry = retryDelay !== undefined;
         setRoleVerificationIssue?.({ kind, retrying: false, attempt: attempts, willRetry });
         setFirstSetupProfileHydrated(true);
-        setAppThemeCloudReady(true);
+        setAppThemeCloudReady(false);
         setIsAdminClaim(false);
         setCurrentUserRole("unresolved");
         setAppLoading(false);

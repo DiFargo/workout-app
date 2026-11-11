@@ -89,9 +89,14 @@ export function useAppRuntimeEffects({
       (snapshot) => {
         if (!active || !session.isCurrent()) return;
         const data = snapshot.data() || {};
-        const remoteTheme = normalizeAppTheme(data.appTheme);
-        setAppTheme((currentTheme) => active && session.isCurrent() && remoteTheme !== currentTheme ? remoteTheme : currentTheme);
-        setAppThemeCloudReady(true);
+        // A cache miss or a local partial write is not a confirmed profile.
+        // Enabling theme sync here would create another partial users document
+        // while bootstrap is still waiting for its server-owned role.
+        if (snapshot.exists() && !snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites) {
+          const remoteTheme = normalizeAppTheme(data.appTheme);
+          setAppTheme((currentTheme) => active && session.isCurrent() && remoteTheme !== currentTheme ? remoteTheme : currentTheme);
+          setAppThemeCloudReady(true);
+        }
         if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites) {
           rememberOfflineClientProfile(user.uid, data, true);
           const accessRevision = JSON.stringify([data.role, data.accountAccessStatus, data.trainerAssignmentState,

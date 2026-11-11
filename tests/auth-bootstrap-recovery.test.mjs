@@ -328,6 +328,21 @@ test("an online cached role is never accepted as fresh server authority", async 
   assert.equal(h.updates.some(update => update.name === "setCurrentUserRole" && update.value === "client"), false);
 });
 
+test("a cache miss or pending partial profile is a retryable connection state, not a missing role", async () => {
+  for (const partial of [
+    { exists: () => false, data: () => undefined, metadata: { fromCache: true, hasPendingWrites: false } },
+    { exists: () => true, data: () => ({ appTheme: "warm-light" }), metadata: { fromCache: false, hasPendingWrites: true } }
+  ]) {
+    const h = harness();
+    await h.signIn(`partial-profile-${partial.metadata.fromCache}`, [partial, snapshot()]);
+    assert.equal(h.state.setRoleVerificationIssue.kind, "connection");
+    assert.equal(h.state.setAppThemeCloudReady, false);
+    await advanceTo(now + 1000);
+    assert.equal(h.state.setCurrentUserRole, "client");
+    dispose();dispose = undefined;
+  }
+});
+
 test("a signed-out session cancels scheduled role retries and cannot be restored by connectivity events", async () => {
   const h = harness();
   await h.signIn("client", [() => { throw codedError("unavailable"); }]);
