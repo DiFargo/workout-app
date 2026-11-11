@@ -4,16 +4,26 @@ import { ChartNoAxesColumn, Copy, Dumbbell, LockKeyhole, LogOut, RefreshCw, Send
 import styles from "./AppStartupGate.module.css";
 import { APP_MARK_URL, APP_NAME } from "../constants/appConfig.js";
 
-function RoleAccessVerificationScreen({ logout }) {
+function RoleAccessVerificationScreen({ logout, issue, onRetry }) {
+  const retrying = issue?.retrying === true;
+  const content = {
+    connection: [retrying ? "Проверяем соединение" : "Сервер пока не отвечает", "Не удалось проверить доступ из-за задержки соединения. Проверьте интернет. Если используете VPN, попробуйте другой сервер."],
+    session: ["Нужно войти заново", "Сессия входа больше не действительна. Войдите в прежний аккаунт — повторная регистрация не нужна."],
+    access: ["Не удалось подтвердить доступ", "Сервер не подтвердил права аккаунта. Повторите проверку. Если ошибка останется, обратитесь к администратору."],
+    profile: ["Не удалось загрузить профиль", "Профиль аккаунта пока недоступен. Повторите проверку. Если ошибка останется, обратитесь к администратору."]
+  }[issue?.kind] || ["Не удалось подтвердить доступ", "Данные клиента не открыты. Повторите проверку или войдите в прежний аккаунт заново."];
   return (
-    <main className={styles.roleAccessGate} role="alert" aria-live="assertive">
-      <section className={styles.roleAccessGateCard}>
+    <main className={styles.roleAccessGate}>
+      <section className={styles.roleAccessGateCard} aria-labelledby="role-verification-title">
         <span>ПРОВЕРКА ДОСТУПА</span>
-        <h1>Не удалось подтвердить роль аккаунта</h1>
-        <p>Данные клиента не открыты. Повторите проверку или войдите в аккаунт заново.</p>
+        <h1 id="role-verification-title">{content[0]}</h1>
+        <p>{content[1]}</p>
+        <p className={styles.roleAccessStatus} role="status" aria-live="polite" aria-atomic="true">
+          {retrying ? `Повторная проверка · попытка ${issue.attempt} из 3` : issue?.willRetry ? "Сейчас повторим проверку автоматически." : "Личные данные остаются закрыты до подтверждения доступа."}
+        </p>
         <div>
-          <button type="button" className={styles.primary} onClick={() => window.location.reload()}>Повторить</button>
-          <button type="button" onClick={logout}>Выйти</button>
+          <button type="button" className={styles.primary} disabled={retrying || typeof onRetry !== "function"} onClick={onRetry}>{retrying ? "Проверяем…" : "Повторить"}</button>
+          <button type="button" onClick={logout}>{issue?.kind === "session" ? "Войти заново" : "Выйти"}</button>
         </div>
       </section>
     </main>
@@ -99,6 +109,8 @@ export function AppStartupGate({
   user,
   profileAccount,
   roleAccessGateState,
+  roleVerificationIssue,
+  onRetryRoleVerification,
   firstSetupStillResolving,
   showFirstSetupOnboarding,
   firstSetupRequiredNow,
@@ -130,6 +142,12 @@ export function AppStartupGate({
   handleTelegramMiniAppAuth,
   logout
 }) {
+  // Keep recovery controls visible while an in-place retry resets hydration.
+  // This still blocks every application screen until authority is verified.
+  if (roleAccessGateState === "unresolved" && roleVerificationIssue) {
+    return <RoleAccessVerificationScreen logout={logout} issue={roleVerificationIssue} onRetry={onRetryRoleVerification} />;
+  }
+
   if (appLoading || firstSetupStillResolving) {
     return <AppSplash />;
   }
@@ -139,7 +157,7 @@ export function AppStartupGate({
   }
 
   if (roleAccessGateState === "unresolved") {
-    return <RoleAccessVerificationScreen logout={logout} />;
+    return <RoleAccessVerificationScreen logout={logout} issue={roleVerificationIssue} onRetry={onRetryRoleVerification} />;
   }
 
   if (isLoggedIn && currentUserRole === "pending-client") {

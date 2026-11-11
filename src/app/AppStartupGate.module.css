@@ -163,26 +163,29 @@
    server-side role has been verified. */
 .roleAccessGate {
   box-sizing: border-box;
-  min-height: 100dvh;
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
   display: grid;
   place-items: center;
-  padding: 24px;
-  background: #f1f3ee;
-  color: #1b231f;
+  padding: max(24px, env(safe-area-inset-top), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px)) 20px max(24px, env(safe-area-inset-bottom), var(--telegram-safe-area-bottom, 0px));
+  background: var(--client-canvas, var(--startup-canvas, #f2f2f7));
+  color: var(--client-text, var(--startup-text, #1c1c1e));
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
 }
 
 .roleAccessGateCard {
   box-sizing: border-box;
   width: min(100%, 420px);
   padding: 28px;
-  border: 1px solid #e0e6e0;
+  border: 1px solid var(--client-separator, var(--apple-separator, rgba(60, 60, 67, .12)));
   border-radius: 28px;
-  background: #fff;
-  box-shadow: 0 24px 58px rgba(27, 35, 31, 0.12);
+  background: var(--client-surface, var(--apple-surface, #fff));
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .1);
 }
 
 .roleAccessGateCard > span {
-  color: #2f7d68;
+  color: var(--client-accent, #3c6faa);
   font-size: 12px;
   font-weight: 850;
   letter-spacing: 0.08em;
@@ -196,8 +199,8 @@
 
 .roleAccessGateCard p {
   margin: 0;
-  color: #67716b;
-  font-size: 15px;
+  color: var(--client-secondary, var(--startup-secondary, #636366));
+  font-size: 16px;
   line-height: 1.45;
 }
 
@@ -210,19 +213,44 @@
 
 .roleAccessGateCard button {
   min-height: 48px;
-  border: 1px solid #e0e6e0;
+  padding: 10px;
+  border: 1px solid var(--client-separator, var(--apple-separator, rgba(60, 60, 67, .12)));
   border-radius: 15px;
-  background: #fff;
-  color: #2f7d68;
+  background: var(--client-surface-muted, var(--apple-surface-muted, #efeff4));
+  color: var(--client-text, #1c1c1e);
   font: inherit;
   font-weight: 760;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .roleAccessGateCard button.primary {
-  border-color: #2f7d68;
-  background: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%));
-  color: #fff;
+  border-color: transparent;
+  background: var(--ownset-action-gradient, var(--startup-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%)));
+  color: var(--client-action-ink, var(--startup-action-ink, #fff));
+}
+
+.roleAccessGateCard .roleAccessStatus { margin-top: 14px; font-size: 14px; }
+.roleAccessGateCard button:disabled { opacity: .65; cursor: default; }
+.roleAccessGateCard button:focus-visible { outline: 3px solid var(--client-accent, #3c6faa); outline-offset: 3px; }
+.roleAccessGateCard button:not(:disabled):active { filter: brightness(.92); }
+
+:global(html[data-startup-appearance="dark"]) .roleAccessGateCard,
+:global(html[data-client-appearance="dark"]) .roleAccessGateCard {
+  background: #171c22;
+  border-color: #303b43;
+}
+:global(html[data-startup-appearance="dark"]) .roleAccessGateCard p,
+:global(html[data-client-appearance="dark"]) .roleAccessGateCard p { color: #a7b7c5; }
+:global(html[data-startup-appearance="dark"]) .roleAccessGateCard > span,
+:global(html[data-client-appearance="dark"]) .roleAccessGateCard > span { color: #a2d1dc; }
+:global(html[data-startup-appearance="dark"]) .roleAccessGateCard button:not(.primary),
+:global(html[data-client-appearance="dark"]) .roleAccessGateCard button:not(.primary) { background: #27343d; color: #eef4f7; border-color: #3a4953; }
+
+@media (max-width: 340px) {
+  .roleAccessGate { padding-inline: 14px; }
+  .roleAccessGateCard { padding: 22px; }
+  .roleAccessGateCard > div { grid-template-columns: 1fr; }
 }
 
 /* Profile body metrics and first setup core surfaces. */

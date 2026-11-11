@@ -53,7 +53,31 @@ for (const role of ["trainer", "admin"]) {
 
 test("an unresolved role still shows the verification gate before any stale client flag", () => {
   const html = render("unresolved");
-  assert.match(html, /Не удалось подтвердить роль аккаунта/);
+  assert.match(html, /Не удалось подтвердить доступ/);
+  assert.doesNotMatch(html, /Добро пожаловать!/);
+});
+
+test("a transport failure explains recovery without claiming the account has lost its role", () => {
+  const html = render("unresolved", {
+    roleVerificationIssue: { kind: "connection", attempt: 1, willRetry: true },
+    onRetryRoleVerification() {}
+  });
+  assert.match(html, /Сервер пока не отвечает/);
+  assert.match(html, /VPN/);
+  assert.match(html, /role="status"/);
+  assert.doesNotMatch(html, /Не удалось подтвердить роль аккаунта|Добро пожаловать!/);
+});
+
+test("an in-flight recovery prevents another retry but keeps logout available", () => {
+  const html = render("unresolved", {
+    roleVerificationIssue: { kind: "connection", retrying: true, attempt: 2 },
+    firstSetupStillResolving: true,
+    onRetryRoleVerification() {}
+  });
+  assert.match(html, /Проверяем соединение/);
+  assert.match(html, /<button[^>]*disabled=""[^>]*>Проверяем…<\/button>/);
+  assert.match(html, /<button[^>]*>Выйти<\/button>/);
+  assert.doesNotMatch(html, /Загрузка приложения/);
   assert.doesNotMatch(html, /Добро пожаловать!/);
 });
 

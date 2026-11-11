@@ -8,7 +8,6 @@ test("auth bootstrap releases the app before optional Telegram hydration", async
   const source = await readFile(sourceUrl("src/app/useAuthBootstrapEffect.js"), "utf8");
 
   assert.match(source, /import \{ useEffect \} from "react"/);
-  assert.match(source, /const BOOTSTRAP_FALLBACK_TIMEOUT_MS = 9000/);
   assert.match(source, /void hydrateRemoteTelegramProfile\(\{/);
   assert.doesNotMatch(source, /await hydrateRemoteTelegramProfile\(\{/);
 });

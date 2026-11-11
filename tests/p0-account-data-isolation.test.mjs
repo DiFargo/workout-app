@@ -84,17 +84,15 @@ test("nutrition analysis has no shared FatSecret baseline dependency", async () 
   assert.match(source, /Стартовые цели текущего пользователя/);
 });
 
-test("auth bootstrap clears client data and rejects stale account responses", async () => {
-  const [bootstrapSource, effectSource] = await Promise.all([
-    readFile(new URL("../src/app/appBootstrapHelpers.js", import.meta.url), "utf8"),
-    readFile(new URL("../src/app/useAuthBootstrapEffect.js", import.meta.url), "utf8")
-  ]);
+test("auth bootstrap clears client data before loading another account", async () => {
+  const bootstrapSource = await readFile(new URL("../src/app/appBootstrapHelpers.js", import.meta.url), "utf8");
 
   assert.match(bootstrapSource, /setHistory\(\[\]\);/);
   assert.match(bootstrapSource, /setPlan\(\{ workouts: \[\] \}\);/);
   assert.match(bootstrapSource, /setProfileMeasurements\(\[\]\);/);
   assert.match(bootstrapSource, /setClientProgressPhotos\(\[\]\);/);
-  assert.match(effectSource, /isCurrentRun: \(\) => !disposed && runId === bootstrapRunId/);
+  // Late-response isolation is exercised against the real hook in
+  // auth-bootstrap-recovery.test.mjs, not through the spelling of its guard.
 });
 
 test("email change records success and requires an explicit re-login instead of silently forcing sign-out", async () => {

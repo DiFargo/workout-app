@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { after, afterEach, beforeEach, test } from "node:test";
 import { installRuntimeImports } from "./helpers/runtime-imports.mjs";
+import { ROLE_VERIFICATION_TIMEOUT_MS } from "../src/utils/authRoleVerification.js";
 
 let effect;
 let authCallback;
@@ -124,40 +125,40 @@ function harness() {
   return { state, roles, workouts, signIn, verify };
 }
 
-test("a verified client opens its shell before workouts finish and survives the 9s role fallback", async () => {
+test("a verified client opens its shell before workouts finish and survives the role deadline", async () => {
   const h = harness();
   const { request } = await h.signIn("A");
   await advanceTo(7000);
   await h.verify("A");
   assert.equal(h.state.setCurrentUserRole, "client");
-  await advanceTo(9000);
+  await advanceTo(ROLE_VERIFICATION_TIMEOUT_MS);
   assert.equal(h.state.setCurrentUserRole, "client");
   assert.equal(h.state.setAppLoading, false, "verified shell is not blocked by a slow workout request");
   assert.equal(h.state.setInitialWorkoutLoadState, "loading", "the workout section remains explicitly pending");
-  await advanceTo(12000);
+  await advanceTo(ROLE_VERIFICATION_TIMEOUT_MS + 3000);
   await request;
   assert.equal(h.state.setAppLoading, false);
   assert.equal(h.state.setCurrentUserRole, "client");
   assert.deepEqual(h.roles, [{ at: 0, role: "resolving" }, { at: 7000, role: "client" }]);
 });
 
-test("an unverified role still fails closed at 9s and stays blocked after an invalid profile arrives", async () => {
+test("an unverified role fails closed at its deadline and stays blocked after an invalid profile arrives", async () => {
   const h = harness();
   const { request } = await h.signIn("A");
-  await advanceTo(9000);
+  await advanceTo(ROLE_VERIFICATION_TIMEOUT_MS);
   assert.equal(h.state.setCurrentUserRole, "unresolved");
   assert.equal(h.state.setAppLoading, false);
   assert.equal(h.state.setIsAdminClaim, false);
   await h.verify("A", "unknown");
   await request;
-  await advanceTo(9000);
+  await advanceTo(ROLE_VERIFICATION_TIMEOUT_MS);
   assert.equal(h.state.setCurrentUserRole, "unresolved");
 });
 
 test("a queued timeout and late role response from account A cannot change account B", async () => {
   const h = harness();
   const { request: oldRequest } = await h.signIn("A");
-  const oldTimeout = allTimers.find(timer => timer.at === 9000);
+  const oldTimeout = allTimers.find(timer => timer.at === ROLE_VERIFICATION_TIMEOUT_MS);
   await advanceTo(1000);
   const { request } = await h.signIn("B");
   await h.verify("B", "trainer");
@@ -182,7 +183,7 @@ test("finishing old workouts cannot cancel the new account's role timeout", asyn
   h.workouts.get("A").resolve();
   await oldRequest;
   assert.equal(h.state.setCurrentUserRole, "resolving");
-  await advanceTo(17000);
+  await advanceTo(8000 + ROLE_VERIFICATION_TIMEOUT_MS);
   assert.equal(h.state.setCurrentUserRole, "unresolved");
   assert.equal(h.state.setAppLoading, false);
   await h.verify("B", "unknown");

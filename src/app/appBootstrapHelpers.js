@@ -158,7 +158,8 @@ export function resetAuthSessionOperations(context) {
   context.setProfileProgressPhotoPreviews?.({ front: "", side: "", back: "" });
 }
 
-export async function resolveAdminClaim({ user, setIsAdminClaim, isCurrentRun, readTokenResult = getIdTokenResult }) {
+export async function resolveAdminClaim({ user, setIsAdminClaim, isCurrentRun, readTokenResult = getIdTokenResult, throwOnError = false }) {
+  if (isCurrentRun && !isCurrentRun()) return null;
   setIsAdminClaim(false);
   // An explicitly offline, previously verified client never acquires admin
   // privileges from cached claims, and need not wait for a network token refresh.
@@ -171,13 +172,14 @@ export async function resolveAdminClaim({ user, setIsAdminClaim, isCurrentRun, r
     console.error("Admin claim check error", error);
     if (isCurrentRun && !isCurrentRun()) return null;
     setIsAdminClaim(false);
+    if (throwOnError) throw error;
     return null;
   }
 }
 
 export function readBootstrapProfileResult(user, db) {
-  // Start the independent profile read while the token is refreshed. Capture
-  // rejection immediately; legacy repair still runs in the normal guarded path.
+  // Capture profile-read rejection immediately; legacy repair still runs in
+  // the normal guarded path. Admin claims are refreshed only when needed.
   const offlineProfile = readOfflineClientProfile(user.uid);
   if (offlineProfile) return Promise.resolve({ snapshot: { exists: () => true, data: () => offlineProfile,
     metadata: { fromCache: true, hasPendingWrites: false } } });
@@ -190,6 +192,8 @@ export async function loadRemoteUserBootstrapState({
   user,
   db,
   adminClaims,
+  resolveAdminClaims,
+  onRoleVerificationError,
   profileRequest,
   setIsAdminClaim,
   APP_PAGES,
@@ -223,6 +227,14 @@ export async function loadRemoteUserBootstrapState({
   setWorkoutModeRemember,
   isCurrentRun
 }) {
+  let claimsRequest;
+  const readClaims = () => {
+    if (!claimsRequest) claimsRequest = Promise.resolve().then(() => {
+      if (isCurrentRun && !isCurrentRun()) return null;
+      return resolveAdminClaims ? resolveAdminClaims() : adminClaims;
+    });
+    return claimsRequest;
+  };
   try {
     const userRef = doc(db, "users", user.uid);
     let roleDoc;
@@ -239,7 +251,10 @@ export async function loadRemoteUserBootstrapState({
       } else {
       // Profiles created before role-based access can contain client data but
       // have no role. The security rule allows only this owner-only repair.
-      if (error?.code !== "permission-denied" || adminClaims?.admin === true) throw error;
+      if (error?.code !== "permission-denied") throw error;
+      const claims = await readClaims();
+      if (isCurrentRun && !isCurrentRun()) return null;
+      if (claims?.admin === true) throw error;
       if (isCurrentRun && !isCurrentRun()) return null;
 
       try {
@@ -269,15 +284,23 @@ export async function loadRemoteUserBootstrapState({
     if (!roleDoc.exists()) {
       throw new Error("role_profile_missing");
     }
+    // getDoc may return its SDK cache after a network failure. Keep the existing
+    // explicit-offline continuity path, never expand it to a broken VPN route.
+    if (roleDoc.metadata?.fromCache === true && !readOfflineClientProfile(user.uid)) {
+      throw Object.assign(new Error("unavailable"), { code: "unavailable" });
+    }
     const roleData = roleDoc.exists() ? roleDoc.data() : {};
-    rememberOfflineClientProfile(user.uid, roleData,
-      roleDoc.metadata?.fromCache === false && roleDoc.metadata?.hasPendingWrites !== true);
-    const isAdmin = hasCurrentAdminAccess({ claims: adminClaims, profile: roleData });
-    setIsAdminClaim(isAdmin);
     const storedRole = String(roleData.role || "").trim().toLocaleLowerCase("ru");
+    const claims = storedRole === "admin" ? await readClaims() : {};
+    if (isCurrentRun && !isCurrentRun()) return null;
+    const isAdmin = hasCurrentAdminAccess({ claims, profile: roleData });
+    if (storedRole === "admin" && !isAdmin) throw new Error("role_claims_invalid");
     if (!isAdmin && !["client", "trainer", "admin"].includes(storedRole)) {
       throw new Error("role_profile_invalid");
     }
+    rememberOfflineClientProfile(user.uid, roleData,
+      roleDoc.metadata?.fromCache === false && roleDoc.metadata?.hasPendingWrites !== true);
+    setIsAdminClaim(isAdmin);
     const remoteProfile = roleData.aiNutritionProfile || roleData.profile || null;
     const remotePlan = roleData.aiNutritionPlan || null;
     const remoteProfileCompleted = hasRequiredAiNutritionProfileFields(remoteProfile);
@@ -400,6 +423,7 @@ export async function loadRemoteUserBootstrapState({
     // role document has not arrived or cannot be verified. A trainer must
     // see neither client data nor client navigation in this state.
     setCurrentUserRole("unresolved");
+    onRoleVerificationError?.(error);
     return null;
   } finally {
     if (!isCurrentRun || isCurrentRun()) setFirstSetupProfileHydrated(true);

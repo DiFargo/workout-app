@@ -308,6 +308,8 @@ function AppRuntime() {
   const [user, setUser] = useState(null);
   const [isAdminClaim, setIsAdminClaim] = useState(false);
   const [currentUserRole, setCurrentUserRole] = useState("resolving");
+  const [roleVerificationIssue, setRoleVerificationIssue] = useState(null);
+  const roleVerificationRetryRef = useRef(null);
   const [appLoading, setAppLoading] = useState(true);
   const [initialWorkoutLoadState, setInitialWorkoutLoadState] = useState("idle");
   const workoutRetryRef = useRef(null);
@@ -1029,6 +1031,8 @@ function AppRuntime() {
   };
   const resetNutritionPhotoAiState = createNutritionPhotoAiResetHandler(nutritionPhotoAiResetContext);
   useAuthBootstrapEffect(() => ({ workoutRetryRef,
+    roleVerificationRetryRef,
+    setRoleVerificationIssue,
     AI_NUTRITION_PLAN_STORAGE_KEY,
     AI_NUTRITION_PROFILE_STORAGE_KEY,
     APP_PAGES,
@@ -2466,6 +2470,8 @@ function AppRuntime() {
     profileAccount,
     currentUserRole,
     roleAccessGateState: getRoleAccessGateState({ isLoggedIn, currentUserRole }),
+    roleVerificationIssue,
+    onRetryRoleVerification: () => roleVerificationRetryRef.current?.(),
     firstSetupStillResolving,
     showFirstSetupOnboarding,
     firstSetupRequiredNow,

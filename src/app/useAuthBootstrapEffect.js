@@ -3,6 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { advanceAuthSession } from "../utils/authSession";
 import { recordStartupStage } from "../utils/performanceChecks.js";
 import { cancelAuthProfilePreparation, waitForAuthProfilePreparation } from "../features/auth/authProfilePreparation.js";
+import { classifyRoleVerificationError, ROLE_VERIFICATION_RETRY_DELAYS_MS, ROLE_VERIFICATION_TIMEOUT_MS } from "../utils/authRoleVerification.js";
 
 import {
   applySignedOutBootstrapState,
@@ -15,8 +16,6 @@ import {
   resetAuthSessionOperations,
   resetAuthBootstrapState
 } from "./appBootstrapHelpers";
-
-const BOOTSTRAP_FALLBACK_TIMEOUT_MS = 9000;
 
 export function useAuthBootstrapEffect(getBootstrapContext) {
   useEffect(() => {
@@ -65,6 +64,8 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       setClientProgressPhotos,
       setClientTrainerTasks,
       setCurrentUserRole,
+      setRoleVerificationIssue,
+      roleVerificationRetryRef,
       setFirstSetupCompletedInCloud,
       setFirstSetupCompletedInSession,
       setFirstSetupProfileHydrated,
@@ -103,12 +104,33 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
     let disposed = false;
     let bootstrapRunId = 0;
     let bootstrapFallbackTimerId = null;
+    let retryTimerId = null;
+    let authSessionId = 0;
+    let activeUser = null;
+    let attempts = 0;
+    let verificationPending = false;
+    let roleVerified = false;
+    let lastFailure = null;
 
     function clearBootstrapTimers() {
       if (bootstrapFallbackTimerId) {
         window.clearTimeout(bootstrapFallbackTimerId);
         bootstrapFallbackTimerId = null;
       }
+    }
+
+    function clearRetryTimer() {
+      if (retryTimerId) window.clearTimeout(retryTimerId);
+      retryTimerId = null;
+    }
+
+    function retryRoleVerification({ manual = false } = {}) {
+      if (disposed || !activeUser || roleVerified || verificationPending || auth.currentUser !== activeUser) return false;
+      if (!manual && (lastFailure?.kind !== "connection" || attempts > ROLE_VERIFICATION_RETRY_DELAYS_MS.length)) return false;
+      if (manual) attempts = 0;
+      clearRetryTimer();
+      void runBootstrap(activeUser, { retry: true, sessionId: authSessionId });
+      return true;
     }
 
     function finishBootstrapLoading({ runId }) {
@@ -119,26 +141,46 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
       recordStartupStage("role-gate-released");
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (u) => {
-      if (!u) cancelAuthProfilePreparation(auth);
-      advanceAuthSession(auth, u);
-      resetAuthSessionOperations(bootstrapContext);
+    async function runBootstrap(u, { retry = false, sessionId } = {}) {
       const runId = bootstrapRunId + 1;
       bootstrapRunId = runId;
       clearBootstrapTimers();
+      let expired = false;
+      let verificationError;
+      const isSameRun = () => !disposed && runId === bootstrapRunId && sessionId === authSessionId &&
+        (u ? auth.currentUser === u : !auth.currentUser);
+      const isCurrentRun = () => isSameRun() && !expired;
+      const failVerification = error => {
+        if (!isSameRun()) return;
+        clearBootstrapTimers();
+        verificationPending = false;
+        const kind = classifyRoleVerificationError(error);
+        lastFailure = { kind };
+        const retryDelay = kind === "connection" ? ROLE_VERIFICATION_RETRY_DELAYS_MS[attempts - 1] : undefined;
+        const willRetry = retryDelay !== undefined;
+        setRoleVerificationIssue?.({ kind, retrying: false, attempt: attempts, willRetry });
+        setFirstSetupProfileHydrated(true);
+        setAppThemeCloudReady(true);
+        setIsAdminClaim(false);
+        setCurrentUserRole("unresolved");
+        setAppLoading(false);
+        if (willRetry) retryTimerId = window.setTimeout(() => {
+          retryTimerId = null;
+          if (isSameRun()) retryRoleVerification();
+        }, retryDelay);
+      };
+      verificationPending = Boolean(u);
+      if (u) attempts += 1;
       startPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
       setInitialWorkoutLoadState?.("idle");
-      setAppLoading(true);
+      setAppLoading(!retry);
+      if (retry) setRoleVerificationIssue?.({ kind: lastFailure?.kind || "connection", retrying: true, attempt: attempts, willRetry: false });
 
-      bootstrapFallbackTimerId = window.setTimeout(() => {
-        if (!disposed && runId === bootstrapRunId) {
-          console.warn("Auth bootstrap timeout: role could not be verified");
-          setFirstSetupProfileHydrated(true);
-          setAppThemeCloudReady(true);
-          setCurrentUserRole("unresolved");
-          setAppLoading(false);
-        }
-      }, BOOTSTRAP_FALLBACK_TIMEOUT_MS);
+      if (u) bootstrapFallbackTimerId = window.setTimeout(() => {
+        if (!isCurrentRun()) return;
+        expired = true; // Late responses must not grant access after this attempt expired.
+        failVerification({ code: "role_verification_timeout" });
+      }, ROLE_VERIFICATION_TIMEOUT_MS);
 
       try {
         resetAuthBootstrapState({
@@ -177,6 +219,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           setIsLoggedIn,
           setCurrentUserRole
         });
+        if (retry) setCurrentUserRole("unresolved");
 
         hydrateCachedUserState({
           user: u,
@@ -209,26 +252,23 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           setWorkoutModeRemember,
           setProfileWorkoutCalendarEditing,
           setProfileWorkoutCalendarStatus,
-          isCurrentRun: () => !disposed && runId === bootstrapRunId
+          isCurrentRun
         });
 
         if (u) {
           await waitForAuthProfilePreparation(auth);
-          if (disposed || runId !== bootstrapRunId) return;
+          if (!isCurrentRun()) return;
           startPerformanceCheck("Auth · verified identity and profile");
           const profileRequest = readBootstrapProfileResult(u, db);
-          const adminClaims = await resolveAdminClaim({
-            user: u,
-            setIsAdminClaim,
-            isCurrentRun: () => !disposed && runId === bootstrapRunId
-          });
           recordStartupStage("identity-verified");
-          if (disposed || runId !== bootstrapRunId) return;
 
           const resolvedRole = await loadRemoteUserBootstrapState({
             user: u,
             db,
-            adminClaims,
+            // Only administrator profiles need forced current admin claims.
+            // Ordinary client/trainer bootstrap must not wait for an unrelated refresh.
+            resolveAdminClaims: () => resolveAdminClaim({ user: u, setIsAdminClaim, isCurrentRun, throwOnError: true }),
+            onRoleVerificationError: error => { verificationError = error; },
             profileRequest,
             setIsAdminClaim,
             APP_PAGES,
@@ -260,12 +300,22 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
             setProfileWorkoutScheduledDates,
             setWorkoutModePreference,
             setWorkoutModeRemember,
-            isCurrentRun: () => !disposed && runId === bootstrapRunId
+            isCurrentRun
           });
           endPerformanceCheck("Auth · verified identity and profile");
           recordStartupStage("profile-verified", { role: resolvedRole || "unresolved" });
 
-          if (disposed || runId !== bootstrapRunId || !resolvedRole) return;
+          if (!isCurrentRun()) return;
+          if (!resolvedRole || resolvedRole === "unresolved") {
+            failVerification(verificationError || { code: "role_claims_invalid" });
+            return;
+          }
+
+          verificationPending = false;
+          roleVerified = true;
+          lastFailure = null;
+          clearRetryTimer();
+          setRoleVerificationIssue?.(null);
 
           // The fallback protects role verification. A slow workout load must
           // not revoke a role already verified from the current profile.
@@ -290,7 +340,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
                 setInitialWorkoutLoadState?.(state);
                 if (state === "ready") recordStartupStage("critical-workouts-ready");
               },
-              isCurrentRun: () => !disposed && runId === bootstrapRunId
+              isCurrentRun
             });
           } else {
             setPlan({ workouts: [] });
@@ -309,7 +359,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
           // Telegram is a secondary profile enhancement. It must not keep the
           // application splash screen open after the workout and profile core
           // are ready.
-          if (disposed || runId !== bootstrapRunId) return;
+          if (!isCurrentRun()) return;
           void hydrateRemoteTelegramProfile({
             user: u,
             db,
@@ -323,7 +373,7 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
               if (result.error) throw result.error;
               return result.snapshot;
             },
-            isCurrentRun: () => !disposed && runId === bootstrapRunId
+            isCurrentRun
           });
         } else {
           applySignedOutBootstrapState({
@@ -340,17 +390,49 @@ export function useAuthBootstrapEffect(getBootstrapContext) {
         }
       } catch (error) {
         console.error("Auth bootstrap error", error);
-        setFirstSetupProfileHydrated(true);
-        setAppThemeCloudReady(true);
+        if (!isCurrentRun()) return;
+        if (u && !roleVerified) failVerification(error);
+        else {
+          setFirstSetupProfileHydrated(true);
+          setAppThemeCloudReady(true);
+        }
       } finally {
         endPerformanceCheck("Auth + initial app data", { signedIn: Boolean(u) });
-        finishBootstrapLoading({ runId });
+        if (isCurrentRun()) finishBootstrapLoading({ runId });
       }
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, u => {
+      if (!u) cancelAuthProfilePreparation(auth);
+      // Retrying a role check is not an authentication transition.
+      advanceAuthSession(auth, u);
+      resetAuthSessionOperations(bootstrapContext);
+      authSessionId += 1;
+      activeUser = u;
+      attempts = 0;
+      roleVerified = false;
+      verificationPending = false;
+      lastFailure = null;
+      clearRetryTimer();
+      setRoleVerificationIssue?.(null);
+      return runBootstrap(u, { sessionId: authSessionId });
     });
+
+    const retry = () => retryRoleVerification({ manual: true });
+    if (roleVerificationRetryRef && typeof roleVerificationRetryRef === "object") roleVerificationRetryRef.current = retry;
+    const onNetworkReturn = () => { retryRoleVerification(); };
+    const documentTarget = typeof document === "undefined" ? null : document;
+    const onVisible = () => { if (documentTarget?.visibilityState === "visible") retryRoleVerification(); };
+    window.addEventListener?.("online", onNetworkReturn);
+    documentTarget?.addEventListener("visibilitychange", onVisible);
 
     return () => {
       disposed = true;
       clearBootstrapTimers();
+      clearRetryTimer();
+      window.removeEventListener?.("online", onNetworkReturn);
+      documentTarget?.removeEventListener("visibilitychange", onVisible);
+      if (roleVerificationRetryRef?.current === retry) roleVerificationRetryRef.current = null;
       unsubscribe();
     };
     // Auth owns this subscription lifecycle. Re-subscribing when the context factory

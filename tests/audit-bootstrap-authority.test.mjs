@@ -171,7 +171,7 @@ for (const [name, claims, profile, expected] of [
   test(`bootstrap authority: ${name}`, async () => {
     profileRead = async () => snapshot(profile);
     const h = harness(claims);
-    assert.equal(await loadRemoteUserBootstrapState(h.options), expected);
+    assert.equal(await loadRemoteUserBootstrapState(h.options), expected === "unresolved" ? null : expected);
     assert.equal(h.state.setCurrentUserRole, expected);
     assert.equal(h.state.setIsAdminClaim, expected === "admin");
   });
@@ -184,7 +184,7 @@ test("failed claim resolution leaves an administrator unresolved instead of gran
   assert.equal(claims, null);
   profileRead = async () => snapshot({ role: "admin" });
   h.options.adminClaims = claims;
-  assert.equal(await loadRemoteUserBootstrapState(h.options), "unresolved");
+  assert.equal(await loadRemoteUserBootstrapState(h.options), null);
   assert.equal(h.state.setIsAdminClaim, false);
   assert.equal(h.state.setCurrentUserRole, "unresolved");
 });
