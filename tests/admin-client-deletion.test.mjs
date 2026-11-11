@@ -147,7 +147,7 @@ test("new trainer workspace exposes deletion only through the admin capability",
   assert.match(workspace, /<TrainerClientActionsSheet[\s\S]*?canDeleteClient=\{canDeleteClient\}/);
   assert.match(actionsSheet, /canDeleteClient \? row\("delete", Trash2, "Удалить клиента"/);
   assert.match(workspace, /canDeleteClients && !\["admin", "trainer"\]\.includes/);
-  assert.match(workspace, /if \(!clientQuestionnaireCompleted\)[\s\S]*?canDeleteClient \?[\s\S]*?trainerNextPendingClientDelete[\s\S]*?runClientAction\("delete"\)/);
+  assert.match(workspace, /if \(!clientQuestionnaireCompleted && canViewPendingClient !== true\)[\s\S]*?canDeleteClient \?[\s\S]*?trainerNextPendingClientDelete[\s\S]*?runClientAction\("delete"\)/);
   assert.match(adminWorkspaceCss, /\.header \{[^}]*border-radius: 20px;[^}]*background: #fff/);
   assert.match(bridge, /if \(action === "delete"\)[\s\S]*?deleteClientEverywhereFromAdminPanel/);
   assert.match(functions, /assertAdminContext\(context\)[\s\S]*?Only client accounts can be deleted here/);

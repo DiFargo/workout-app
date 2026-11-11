@@ -4872,6 +4872,7 @@ function TrainerClientDetail({
   messages = [],
   onClientAction,
   canDeleteClient = false,
+  canViewPendingClient = false,
   onResolveExerciseProgress
 }) {
   const name = client.name || client.email || "Клиент";
@@ -5200,7 +5201,7 @@ function TrainerClientDetail({
     return saved;
   }
 
-  if (!clientQuestionnaireCompleted) {
+  if (!clientQuestionnaireCompleted && canViewPendingClient !== true) {
     return (
       <div className={`trainerNextPage trainerNextClientPage ${mobileStyles.clientPageFix}`}>
         <div className={`trainerNextClientBackRow ${mobileStyles.clientToolbarFix}`}>
@@ -5306,6 +5307,7 @@ function TrainerClientDetail({
         <div>
           <div className="trainerNextClientName">
             <h1>{name}</h1>
+            {!clientQuestionnaireCompleted ? <span className="trainerNextClientQuestionnaireStatus">Анкета ожидается</span> : null}
             {!isTrainerV2Path(window.location.pathname) ? <div className="trainerNextClientStatusRow">
               <button
                 className={`trainerNextClientSubscriptionStatus is-${clientSubscriptionBadge.id}`}
@@ -5318,7 +5320,7 @@ function TrainerClientDetail({
             </div> : null}
           </div>
           <p>{profileMetaText}</p>
-          <strong>Цель: {client.goalDescription || profile?.goalLabel || "Персональный результат"}</strong>
+          <strong>Цель: {client.goalDescription || (clientQuestionnaireCompleted ? profile?.goalLabel || "Персональный результат" : "Пока не указана")}</strong>
         </div>
         {!isTrainerV2Path(window.location.pathname) ? (<div className={`trainerNextClientHeaderActions${setupChecklist.status !== "completed" ? " trainerNextClientHeaderActionsWithSetup" : ""}`} aria-label="Действия с клиентом">
           {setupChecklist.status !== "completed" ? (
@@ -8033,6 +8035,7 @@ export default function TrainerWorkspace({
   onCreateTask,
   onClientAction,
   canDeleteClients = false,
+  canViewPendingClient = false,
   onArchiveProgramAssignment,
   onRestoreProgramAssignment,
   onDeleteProgramAssignment,
@@ -8156,6 +8159,7 @@ export default function TrainerWorkspace({
         onCreateTask={onCreateTask}
         onClientAction={onClientAction}
         canDeleteClient={canDeleteClients && !["admin", "trainer"].includes(selectedClient.role || "client")}
+        canViewPendingClient={canViewPendingClient}
         onResolveExerciseProgress={onResolveExerciseProgress}
         onSaveWorkouts={onSaveWorkouts}
         onLoadMoreHistory={onLoadMoreHistory}

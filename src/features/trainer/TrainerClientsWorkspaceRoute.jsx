@@ -210,6 +210,7 @@ export default function TrainerClientsWorkspaceRoute({
       onCreateTask={() => setAdminTaskComposerOpen(true)}
       onClientAction={handleTrainerClientAction}
       canDeleteClients={canUseAdminFeatures()}
+      canViewPendingClient={canUseAdminFeatures() === true}
       canAdminManageProgramAssignments={canUseAdminFeatures()}
       onResolveExerciseProgress={(payload) => handleTrainerClientAction("resolve_exercise_progress", selectedClient, payload)}
       workouts={sortWorkoutDays(plan.workouts || [])}
