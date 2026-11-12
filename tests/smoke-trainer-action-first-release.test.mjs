@@ -5,6 +5,7 @@ import {
   isAllowedTrainerSmokeApi,
   isAllowedTrainerSmokePreparation,
   isAllowedTrainerSmokeFirestoreEndpoint,
+  isAllowedTrainerSmokeDraftDiscardDialog,
   isOwnedTrainerActionSmokePath,
   isOwnedTrainerSmokeWrite,
   parseTrainerActionFirstSmokeArgs,
@@ -22,6 +23,16 @@ const production = "tren-85720";
 const flags = (project = staging) => ["--run", `--project=${project}`, `--expected-version=${version}`,
   "--allow-admin-catalog-read", ...(project === production ? ["--allow-production"] : [])];
 const cleanupPath = (project = staging, id = runId) => `artifacts/remediation-${version}/trainer-action-first-${project}-${id}.intent.jsonl`;
+
+test("подтверждение smoke разрешает только точную отмену локального черновика, не произвольные browser dialogs", () => {
+  assert.equal(isAllowedTrainerSmokeDraftDiscardDialog("confirm", "Закрыть без сохранения ответа?"), true);
+  for (const type of ["alert", "prompt", "beforeunload", "", null]) {
+    assert.equal(isAllowedTrainerSmokeDraftDiscardDialog(type, "Закрыть без сохранения ответа?"), false);
+  }
+  for (const message of ["Удалить клиента?", "Закрыть без сохранения ответа? ", "Закрыть без сохранения ответа", "", null]) {
+    assert.equal(isAllowedTrainerSmokeDraftDiscardDialog("confirm", message), false);
+  }
+});
 
 test("smoke требует явные проект, версию, запуск и отдельное согласие на чтение admin-каталога", () => {
   for (const project of [staging, production]) {

@@ -18,6 +18,8 @@ const hash = value => createHash("sha256").update(value).digest("hex");
 const ownKeys = (value, allowed) => value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).every(key => allowed.includes(key));
 const field = (document, key) => document?.fields?.[key]?.stringValue;
 export const safeTrainerActionSmokeError = error => ({ code: typeof error?.smokeCode === "string" && /^[a-z0-9-]{1,100}$/.test(error.smokeCode) ? error.smokeCode : "operation-failed" });
+export const isAllowedTrainerSmokeDraftDiscardDialog = (type, message) =>
+  type === "confirm" && message === "Закрыть без сохранения ответа?";
 
 export function parseTrainerActionFirstSmokeArgs(args, env = process.env) {
   const result = {}, seen = new Set();
@@ -180,11 +182,13 @@ export async function runTrainerActionFirstSmoke(options, dependencies = {}) {
   const report = { schemaVersion: 1, project, version: VERSION, runId, startedAt: new Date().toISOString(), cases: [], cleanup: [],
     adminCatalogReadAuthorized: true, persistsRealUserData: false, limits: [
       "Админский каталог и сводки читаются только штатным UI в памяти; пользовательские карточки, переписка и реальные фото не открываются.",
-      "Только навигация и открытие/закрытие редактора собственной синтетической программы; без старта тренировки, сохранения программы, отправки и медиа.",
+      "Навигация, поиск еды/календарь/пустые замеры, редактор собственной программы и напоминания открываются без сохранения. Черновик сообщения собственному клиенту только вводится и отменяется; отправки, старта тренировки и медиа нет.",
       "Штатный вход обновляет только собственные name/updatedAt; открытие собственной карточки может записать только synthetic trainerClients mirror. Эти документы очищаются.",
       "Штатное чтение питания может подготовить только собственный синтетический дневник; commits/clear и подготовка чужих дневников запрещены.",
       "Нет скриншотов, traces, storageState, IAM/App Check обходов и изменений политики ключей администратора.",
       "Новый временный admin проверяет штатную незарегистрированную политику ключей, не существующий физический ключ.",
+      "Администратор открывает только обзор и каталог пользователей. Общая библиотека и обращения не открываются: они могут загружать реальные материалы и тексты вне согласованной области.",
+      "Реальный Telegram WebView, доставка Telegram и USB/NFC-ключ этим браузерным smoke не проверяются.",
       "Платформенные audit logs и агрегированные метрики Firebase не удаляются; локальный intent хранит только синтетические идентификаторы для восстановления очистки.",
       "Очистка проверяет только собственные Auth UID, users subtrees и точные rate keys; поздние внешние события не исключены." ] };
   let token, apiKey, browser, step = recovered ? "cleanup-only" : "initialize", cleaning = false, requests = 0, cleanupRequests = 0, domainRequests = 0, cleanupRecords = 0;
@@ -386,6 +390,31 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
         await button.and(page.locator('[aria-current="page"]')).waitFor({ state: "visible" });
         if (tab === "workouts") await page.getByText("Synthetic action-first workout", { exact: true }).first().waitFor({ state: "visible" });
         await checkUi(`Клиент: вкладка ${tab}`);
+        if (tab === "nutrition") {
+          await page.getByTestId("nutrition-orbit-add").click();
+          const search = page.getByTestId("food-search-screen");
+          await search.waitFor({ state: "visible" });
+          await page.getByTestId("food-search-input").locator("input").waitFor({ state: "visible" });
+          await checkUi("Клиент: поиск еды открыт без выбора или добавления продукта");
+          await page.locator('[data-food-search-header-action="close"]').click();
+          await search.waitFor({ state: "hidden" });
+          await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
+          const calendar = page.getByTestId("nutrition-calendar-modal");
+          await calendar.waitFor({ state: "visible" });
+          check(await calendar.locator("[data-nutrition-calendar-day]").count() === 42, "nutrition-month-grid-incomplete");
+          await checkUi("Клиент: календарь питания содержит полную сетку месяца");
+          await page.getByTestId("nutrition-calendar-close").click();
+          await calendar.waitFor({ state: "hidden" });
+        }
+        if (tab === "progress") {
+          await page.getByTestId("profile-measurement-start").click();
+          const measurements = page.getByTestId("profile-measurements-dialog");
+          await measurements.waitFor({ state: "visible" });
+          await page.getByTestId("profile-measurements-empty").waitFor({ state: "visible" });
+          await checkUi("Клиент: пустые замеры собственного тестового профиля открыты без записи");
+          await page.getByTestId("profile-measurements-close").click();
+          await measurements.waitFor({ state: "hidden" });
+        }
       }
     } else if (identity.role === "trainer") {
       await page.getByTestId("trainer-priority-panel").waitFor({ state: "visible" });
@@ -407,6 +436,45 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
       const editor = page.getByRole("dialog", { name: "Редактор программы клиента", exact: true }); await editor.waitFor({ state: "visible" });
       await editor.getByRole("button", { name: "Закрыть редактор", exact: true }).click(); await editor.waitFor({ state: "hidden" });
       await checkUi("Тренер: редактор собственной программы открыт и закрыт без изменений");
+      await tabs.getByRole("button", { name: "Сводка", exact: true }).click();
+      await page.getByRole("button", { name: /^Сообщения Переписка с клиентом$/ }).click();
+      const messages = page.getByRole("dialog", { name: "Сообщения", exact: true });
+      await messages.waitFor({ state: "visible" });
+      await messages.getByRole("button", { name: "Написать клиенту", exact: true }).click();
+      await messages.waitFor({ state: "hidden" });
+      const compose = page.locator('[role="dialog"][aria-labelledby="trainer-feedback-reply-title"]');
+      await compose.getByRole("heading", { name: client.displayName, exact: true }).waitFor({ state: "visible" });
+      await compose.getByRole("textbox").fill("Synthetic release smoke draft — do not send.");
+      check(await compose.getByRole("button", { name: "Отправить в приложение", exact: true }).isEnabled(), "own-message-draft-not-editable");
+      let discarded = false;
+      const confirmDiscard = async dialog => {
+        if (isAllowedTrainerSmokeDraftDiscardDialog(dialog.type(), dialog.message())) {
+          discarded = true;
+          await dialog.accept();
+        } else {
+          violation = true;
+          await dialog.dismiss();
+        }
+      };
+      page.once("dialog", confirmDiscard);
+      try {
+        await compose.getByRole("button", { name: "Закрыть", exact: true }).click();
+        check(discarded, "owned-draft-discard-confirmation-missing");
+        await compose.waitFor({ state: "hidden" });
+      } finally { page.off("dialog", confirmDiscard); }
+      await checkUi("Тренер: локальный черновик сообщения собственному клиенту отменён без отправки");
+      await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
+      const actions = page.getByRole("dialog", { name: "Управление клиентом", exact: true });
+      await actions.getByRole("button", { name: /^Напоминания/ }).click();
+      await actions.waitFor({ state: "hidden" });
+      const reminders = page.getByRole("dialog", { name: "Уведомления", exact: true });
+      await reminders.waitFor({ state: "visible" });
+      check(await reminders.getByRole("checkbox").count() >= 3, "own-reminder-controls-missing");
+      check(await reminders.getByTestId("trainer-notification-save-status").getAttribute("data-save-state") === "idle", "own-reminder-settings-changed");
+      check(await reminders.getByRole("button", { name: "Отправить тестовое уведомление", exact: true }).isDisabled(), "synthetic-telegram-unexpectedly-connected");
+      await checkUi("Тренер: настройки напоминаний собственного клиента доступны без изменения и тестовой отправки");
+      await reminders.getByRole("button", { name: "Закрыть: Уведомления", exact: true }).click();
+      await reminders.waitFor({ state: "hidden" });
     } else {
       await page.getByTestId("admin-panel-hub").waitFor({ state: "visible" });
       await page.getByTestId("admin-overview-sections").waitFor({ state: "visible" });
@@ -415,6 +483,15 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
         check(await nav.getByRole("button", { name, exact: true }).count() === 1, "admin-nav-metadata-missing");
       check(await nav.getByRole("button", { name: "Обзор", exact: true }).getAttribute("aria-current") === "page", "admin-hub-not-current");
       await checkUi("Администратор: matching-claim hub и метаданные навигации без открытия реальных пользователей");
+      // Other overview cards demand-load trainer materials or feedback texts, outside this read scope.
+      await page.getByTestId("admin-overview-sections").getByRole("button", { name: /^Пользователи и роли/ }).click();
+      const directory = page.getByTestId("admin-users-workspace");
+      await directory.locator('[aria-label="Список пользователей"][aria-busy="false"]').waitFor({ state: "visible" });
+      check(await directory.getByRole("alert").count() === 0, "admin-directory-load-error");
+      await checkUi("Администратор: карточка каталога открыта только для согласованного чтения, без открытия пользователей");
+      await page.getByRole("navigation", { name: "Разделы админки", exact: true }).getByRole("button", { name: "Обзор", exact: true }).click();
+      await page.getByTestId("admin-panel-hub").waitFor({ state: "visible" });
+      await checkUi("Администратор: возврат из каталога в обзор");
     }
   } finally { await context.close(); }
 }
