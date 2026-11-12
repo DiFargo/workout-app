@@ -11,6 +11,7 @@ let barcodeIo = async () => null;
 const auth = { currentUser: { uid: "A" } };
 const cleanup = installRuntimeImports({
   react: {
+    useState: initial => currentRunner.state(initial),
     useRef: initial => currentRunner.ref(initial),
     useEffect: (effect, deps) => currentRunner.effect(effect, deps)
   },
@@ -76,6 +77,12 @@ class HookRunner {
     this.pending.forEach(run => run()); currentRunner = null;
   }
   ref(initial) { const i = this.index++; return this.slots[i] ||= { current: initial }; }
+  state(initial) {
+    const i = this.index++;
+    const state = this.slots[i] ||= { value: typeof initial === "function" ? initial() : initial };
+    state.set ||= update => { state.value = typeof update === "function" ? update(state.value) : update; };
+    return [state.value, state.set];
+  }
   effect(fn, deps) {
     const i = this.index++, previous = this.slots[i];
     if (previous && deps?.every((dep, n) => Object.is(dep, previous.deps[n]))) return;

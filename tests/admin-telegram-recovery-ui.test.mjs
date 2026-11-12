@@ -17,7 +17,7 @@ const bundle = await rolldown({
       : id.startsWith("\0boundary:") ? 'export const auth={currentUser:null}; export const fetchAuthorizedWithTimeout=()=>{throw new Error("Unexpected real I/O")};' : null
   }]
 });
-const generated = await bundle.generate({ format: "cjs", exports: "named" });
+const generated = await bundle.generate({ format: "cjs", exports: "named", codeSplitting: false });
 await bundle.close();
 const module = { exports: {} };
 new Function("require", "module", "exports", generated.output[0].code)(createRequire(import.meta.url), module, module.exports);

@@ -1,7 +1,7 @@
 import { runtimeDiagnosticMessage } from "./runtimeDiagnostics.js";
 
 export async function sendRuntimeDiagnostic(diagnostic, ownerUid) {
-  const [{ auth, db }, { doc, setDoc }] = await Promise.all([import("../firebase.js"), import("firebase/firestore")]);
+  const [{ auth, db }, { doc, setDoc }] = await Promise.all([import("../firebase.js"), import("firebase/firestore").then(({ doc, setDoc }) => ({ doc, setDoc }))]);
   if (!ownerUid || auth.currentUser?.uid !== ownerUid) throw new Error("Войдите в тот же аккаунт, чтобы отправить отчёт.");
   const { captureAuthSession } = await import("./authSession.js");
   const session = captureAuthSession(auth);

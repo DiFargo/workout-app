@@ -28,7 +28,7 @@ const bundle = await rolldown({
           finishStats:[],incompleteExerciseNames:[],workoutClientComment:'',isSaving:false,isWorkoutSaved:false};
         let overview={workout:{name:'День 1',exercises:[]},renderBottomBar:()=>null,pendingSyncCount:2,localOnlyPlan:true};
         window.workoutUi={openCalls:0,planCalls:0,saveCalls:0,retryCalls:0,retries:[],rescheduleCalls:[],reschedules:[],unhandled:[]};
-        window.workoutUi.summary=()=>flushSync(()=>root.render(<Summary workoutTitle="Тренировка 6"
+        window.workoutUi.summary=()=>flushSync(()=>root.render(<Summary workoutTitle="Тренировка 6" isWorkoutToday
           exerciseCount={7} workoutActionLabel="Открыть тренировку" onOpenWorkout={()=>window.workoutUi.openCalls++}/>));
         window.addEventListener('unhandledrejection',event=>{
           window.workoutUi.unhandled.push(String(event.reason));event.preventDefault();
@@ -73,7 +73,9 @@ test("карточка главной — одна доступная кнопк
   try {
     const page = await openProbe(browser);
     await page.evaluate(() => window.workoutUi.summary());
-    const heroAction = page.getByRole("button", { name: "Открыть тренировку: Тренировка 6", exact: true });
+    const heroAction = page.getByRole("button", { name: "Сегодня тренировка. Тренировка 6 · 7 упражнений Открыть тренировку", exact: true });
+    assert.equal(await heroAction.getAttribute("data-testid"), "profile-summary-primary");
+    assert.equal(await heroAction.getAttribute("data-task-id"), "workout");
     await heroAction.click();
     await heroAction.focus();
     await page.keyboard.press("Enter");

@@ -1,17 +1,36 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import {createSearch,identity,portionNutrition,validGtin,normalize,nutritionProblems} from '../scripts/lib/belarusPersonalCatalog.mjs';
-const rows=JSON.parse(fs.readFileSync(new URL('../output/belarus-products-10000/products.json',import.meta.url)));
+import {unpackPersonalCatalogRow} from '../src/utils/personalCatalogRows.js';
+const read=file=>JSON.parse(fs.readFileSync(new URL(`../${file}`,import.meta.url)));
+const provenance=read('public/nutrition-catalog/personal/manufacturer-sources.json');
+// The committed archive retains the original baseline before manufacturer additions.
+// Local output/ exports are not available in a clean checkout and are not runtime inputs.
+const baseline=read('public/nutrition-catalog/personal/products.json').slice(0,provenance.baseline.count);
+const rows=baseline.map(unpackPersonalCatalogRow);
+const offSources=new Map(read('public/nutrition-catalog/sku/foods.full.json').map(row=>[row.id,row]));
 const search=createSearch(rows);
-test('10,000 distinct card identities; all retained members preserve their source and nutrition',()=>{
+test('10,000 committed baseline identities preserve nutrition, source links and source market evidence',()=>{
+  assert.equal(provenance.baseline.count,10000);
+  assert.equal(createHash('sha256').update(JSON.stringify(baseline)).digest('hex'),provenance.baseline.rowsSha256);
   assert.equal(rows.length,10000);assert.equal(new Set(rows.map(r=>r.id)).size,10000);
   assert.equal(new Set(rows.map(identity)).size,10000);
-  for(const r of rows){assert.ok(r.sources.length);assert.ok(r.members.length);assert.deepEqual(nutritionProblems(r.nutrition),[]);
-    assert.equal(r.availabilityInBelarus,r.market==='BY'?'listed_in_source':'unknown');
-    if(r.sourceType==='gemini')assert.equal(r.nutrition.basis,'unknown');
+  for(const r of rows){assert.ok(r.name.trim());assert.deepEqual(nutritionProblems(r.nutrition),[]);
+    assert.ok(['openfoodfacts','gemini'].includes(r.sourceType));
+    assert.ok(['BY','RU','unknown'].includes(r.market));
+    if(r.sourceType==='gemini'){
+      assert.equal(r.nutrition.basis,'unknown');assert.equal(r.market,'unknown');assert.equal(r.sourceUrl,null);
+    }
     for(const c of r.barcodes)assert.ok(validGtin(c));
-    if(r.sourceType==='openfoodfacts')assert.ok(r.sources.some(s=>/^https:\/\/world.openfoodfacts.org\/product\/\d+$/.test(s.url)));
+    if(r.sourceType==='openfoodfacts'){
+      const original=offSources.get(r.id);assert.ok(original,`Missing committed source for ${r.id}`);
+      assert.match(r.sourceUrl,/^https:\/\/world.openfoodfacts.org\/product\/\d+$/);
+      assert.equal(r.sourceUrl,original.source.url);assert.ok(r.barcodes.includes(original.barcode));
+      assert.deepEqual(r.nutrition,{basis:'100g',kcal:original.calories,protein:original.protein,fat:original.fat,carbs:original.carbs});
+      assert.equal(r.market,original.source.marketScope==='belarus'?'BY':original.source.marketScope==='russia'?'RU':'unknown');
+    }
   }
 });
 test('unknown portions and conflicting values cannot be silently multiplied',()=>{

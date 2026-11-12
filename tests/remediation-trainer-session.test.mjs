@@ -10,11 +10,13 @@ const collectionSnapshot = (docs = []) => ({ docs, size: docs.length, forEach: c
 const documentSnapshot = (id = "client", data = {}) => ({ id, exists: () => true, data: () => data });
 let readDocs, readDoc;
 const cleanup = installRuntimeImports({
+  "/src/firebase.js": { auth: { currentUser: null }, db: {} },
   "firebase/firestore": {
     collection: (_db, ...parts) => ({ path: parts.join("/") }), doc: (_db, ...parts) => ({ path: parts.join("/") }),
     query: (ref, ...constraints) => ({ ...ref, constraints }), where: (...args) => ({ where: args }),
     orderBy: noop, limit: size => ({ limit: size }), startAfter: cursor => ({ cursor }),
-    getDocs: (...args) => readDocs(...args), getDoc: (...args) => readDoc(...args), setDoc: noop, writeBatch: noop
+    getDocs: (...args) => readDocs(...args), getDoc: (...args) => readDoc(...args), setDoc: noop, writeBatch: noop,
+    runTransaction: () => assert.fail("session loader fixture must not start a write transaction")
   },
   "/src/utils/clientExerciseMedia.js": { loadClientExerciseMedia: async () => [], withClientExerciseMedia: workout => workout },
   "/src/utils/trainerExerciseCards.js": { requestTrainerExerciseCards: async () => ({ cards: [] }) }

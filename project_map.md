@@ -9,7 +9,7 @@
 | Bootstrap | React root, service worker, error boundary | `src/main.jsx`, `src/App.jsx`, `src/app/AppBootstrap.jsx` |
 | Авторизация | Вход Telegram Mini App первым способом; отдельный Cloud Functions codebase без AI-секретов | `src/components/auth/AuthScreens.jsx`, `src/features/auth/authHandlers.js`, `functions-telegram-auth/` |
 | Telegram-приглашение после нижней кнопки | `functions/index.js` → `startTelegramClientInvite`; `functions-telegram-auth/telegramPendingInvite.js`, `index.js`; `src/app/appStartupGate.jsx` | Серверный `telegramPendingClientInvites/{telegramId}` хранит последнее начатое приглашение; вход повторно проверяет его в транзакции. Экран ожидающего клиента позволяет принять/проверить приглашение без повторной регистрации. Чужие live UID не объединяются. |
-| Координация | глобальное состояние, сборка route context | `src/AppCore.jsx` |
+| Координация | глобальное состояние, сборка route context, чистые фабрики начальных черновиков | `src/AppCore.jsx`, `src/app/appInitialDrafts.js` |
 | Физический ключ администратора | `AdminSecurityKeyBoundary.jsx`, `AdminSecurityKeyContext.js`, `adminSecurityKeyClient.js`; сервер `functions/adminSecurityKeys.js`, `adminSecurityKeyAccess.js` | Личная активация после входа, затем WebAuthn proof до 8 часов с привязкой к роли; API/Firestore/Storage защищены. Инструкция: `docs/admin-security-keys.md`. |
 | Производные данные тренировки | memo истории/плана отдельно от отображения секунд | `src/app/useWorkoutPageDerivedState.js`, `src/utils/workoutPageDerivedState.js` |
 | Навигация | список страниц, доступ, back navigation, lazy routes | `src/app/appPages.js`, `src/app/appNavigation.js`, `src/app/appRouteRenderer.jsx`, `src/app/AppRouter.jsx` |

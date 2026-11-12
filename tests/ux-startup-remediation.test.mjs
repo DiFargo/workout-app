@@ -74,9 +74,24 @@ test("claims still require a forced current token after the startup optimization
 
 test("late claims never grant the next session an administrator role", async () => {
   const states = [];
-  const claims = await resolveAdminClaim({ user: {}, setIsAdminClaim: state => states.push(state),
-    isCurrentRun: () => false, readTokenResult: async () => ({ claims: { admin: true } }) });
-  assert.equal(claims, null); assert.deepEqual(states, [false]);
+  let current = true, resolveToken;
+  const pendingClaims = resolveAdminClaim({ user: { uid: "old-session" }, setIsAdminClaim: state => states.push(state),
+    isCurrentRun: () => current, readTokenResult: () => new Promise(resolve => { resolveToken = resolve; }) });
+  assert.deepEqual(states, [false]);
+  current = false;
+  resolveToken({ claims: { admin: true } });
+  assert.equal(await pendingClaims, null);
+  assert.deepEqual(states, [false], "Late old-session claims must not write into the new session");
+});
+
+test("an already replaced session neither reads claims nor changes the current role", async () => {
+  const states = [];
+  let reads = 0;
+  const claims = await resolveAdminClaim({ user: { uid: "old-session" }, setIsAdminClaim: state => states.push(state),
+    isCurrentRun: () => false, readTokenResult: async () => { reads++; return { claims: { admin: true } }; } });
+  assert.equal(claims, null);
+  assert.equal(reads, 0);
+  assert.deepEqual(states, []);
 });
 
 test("startup diagnostics are bounded and do not persist identity or content", () => {

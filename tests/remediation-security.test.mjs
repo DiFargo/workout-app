@@ -32,10 +32,11 @@ test("Firestore fixture preserves nested leaves with merge and replaces explicit
   assert.equal(f.docs.get(ref.path).unrelated, "retained");
 });
 
-test("SEC01: basic AI rejects pending, missing and suspended profiles before paid provider work", async t => {
+test("SEC01: basic AI rejects pending, missing, suspended and ungranted profiles before paid provider work", async t => {
   quiet(t);
-  for (const state of ["pending", "missing", "suspended"]) {
+  for (const state of ["pending", "missing", "suspended", "ungranted"]) {
     const f = createFixture();
+    if (state !== "ungranted") f.docs.get("users/client").basicWorkoutAccess = true;
     if (state === "pending") Object.assign(f.docs.get("users/client"), {
       accountRegistrationType: "open", accountAccessStatus: "awaiting_trainer"
     });
@@ -50,7 +51,7 @@ test("SEC01: basic AI rejects pending, missing and suspended profiles before pai
     assert.equal(providerCalls, 0, state);
   }
   createFixture({ "users/client": { role: "client", accountRegistrationType: "open",
-    accountAccessStatus: "active", trainerId: "trainer", assignedTrainerId: "trainer" } });
+    accountAccessStatus: "active", trainerId: "trainer", assignedTrainerId: "trainer", basicWorkoutAccess: true } });
   let allowedProviderCalls = 0;
   t.mock.method(globalThis, "fetch", async url => {
     assert.equal(String(url), "https://api.openai.com/v1/responses");

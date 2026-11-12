@@ -265,6 +265,7 @@ import { useFirebaseSyncStatus } from "./shared/hooks/useFirebaseSyncStatus";
 import { useBodyScrollLock } from "./shared/hooks/useBodyScrollLock";
 import { useAppRuntimeEffects } from "./app/useAppRuntimeEffects";
 import { useAuthBootstrapEffect } from "./app/useAuthBootstrapEffect";
+import { createInitialBasicWorkoutQuiz, createInitialProfileMeasurementDraft, createInitialTrainerCalendarDraft } from "./app/appInitialDrafts.js";
 
 const loadNutritionRoute = () => import("./features/client/nutrition/NutritionRoute");
 
@@ -364,16 +365,7 @@ function AppRuntime() {
   const [workoutModePreference, setWorkoutModePreference] = useState(getDefaultWorkoutModePreference);
   const [workoutModeRemember, setWorkoutModeRemember] = useState(false);
   const [workoutHistoryModalOpen, setWorkoutHistoryModalOpen] = useState(false);
-  const [basicWorkoutQuiz, setBasicWorkoutQuiz] = useState({
-    goal: "general_fitness",
-    level: "beginner",
-    location: "gym",
-    days: "3",
-    duration: "45",
-    restrictions: "none",
-    restrictionDetails: "",
-    twoDayStructure: "recovery_split"
-  });
+  const [basicWorkoutQuiz, setBasicWorkoutQuiz] = useState(createInitialBasicWorkoutQuiz);
 
   const [page, setPageState] = useState(APP_PAGES.MAIN);
   const setPage = useCallback((nextPage) => {
@@ -543,16 +535,7 @@ function AppRuntime() {
   const [adminUsersSearch, setAdminUsersSearch] = useState("");
   const [adminTelegramMessage, setAdminTelegramMessage] = useState("");
   const [adminTelegramSending, setAdminTelegramSending] = useState(false);
-  const [adminCalendarDraft, setAdminCalendarDraft] = useState({
-    enabled: true,
-    reminderEnabled: true,
-    reminderOffsetsHours: [24],
-    reminderTime: "19:00",
-    workoutTime: "13:00",
-    hourReminderEnabled: false,
-    trainingDays: [],
-    daySettings: {}
-  });
+  const [adminCalendarDraft, setAdminCalendarDraft] = useState(createInitialTrainerCalendarDraft);
   const [adminCalendarSaving, setAdminCalendarSaving] = useState(false);
   const [adminCalendarTesting, setAdminCalendarTesting] = useState(false);
   const [adminDeletingWorkoutId, setAdminDeletingWorkoutId] = useState("");
@@ -686,21 +669,7 @@ function AppRuntime() {
     setProfileProgressPhotoCompareIds
   });
   const [profileMeasurementWizardStep, setProfileMeasurementWizardStep] = useState(0);
-  const [profileMeasurementDraft, setProfileMeasurementDraft] = useState({
-    weight: "",
-    neck: "",
-    shoulders: "",
-    chest: "",
-    biceps: "",
-    forearm: "",
-    wrist: "",
-    belly: "",
-    pelvis: "",
-    thigh: "",
-    calf: "",
-    ankle: "",
-    note: ""
-  });
+  const [profileMeasurementDraft, setProfileMeasurementDraft] = useState(createInitialProfileMeasurementDraft);
 
   const [telegramProfile, setTelegramProfile] = useState(createEmptyTelegramProfile);
   const [telegramDraft, setTelegramDraft] = useState(createEmptyTelegramProfile);

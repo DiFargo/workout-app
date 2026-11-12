@@ -4,11 +4,14 @@ import vm from "node:vm";
 import { installRuntimeImports } from "./helpers/runtime-imports.mjs";
 
 const unexpectedFirestore = () => assert.fail("Loaded-range PDF fixture must not perform Firestore I/O");
-const cleanup = installRuntimeImports({ "firebase/firestore": {
-  collection: unexpectedFirestore, doc: unexpectedFirestore, getDocs: unexpectedFirestore, setDoc: unexpectedFirestore,
-  writeBatch: unexpectedFirestore, query: unexpectedFirestore, orderBy: unexpectedFirestore,
-  documentId: unexpectedFirestore, startAfter: unexpectedFirestore, limit: unexpectedFirestore
-} });
+const cleanup = installRuntimeImports({
+  "/src/firebase.js": { auth: { currentUser: null }, db: {} },
+  "firebase/firestore": {
+    collection: unexpectedFirestore, doc: unexpectedFirestore, getDocs: unexpectedFirestore, setDoc: unexpectedFirestore,
+    writeBatch: unexpectedFirestore, query: unexpectedFirestore, orderBy: unexpectedFirestore,
+    documentId: unexpectedFirestore, startAfter: unexpectedFirestore, limit: unexpectedFirestore
+  }
+});
 after(cleanup);
 const { downloadTrainerClientExportWithDeps, handleTrainerClientActionWithDeps } = await import("../src/features/trainer/trainerClientActionHandlers.js");
 const { buildTrainerClientPrintDocument } = await import("../src/utils/trainerClientExport.js");

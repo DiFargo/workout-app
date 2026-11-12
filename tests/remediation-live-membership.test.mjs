@@ -1,11 +1,26 @@
 import assert from "node:assert/strict";
-import { test, after } from "node:test";
+import { test, after, beforeEach } from "node:test";
 import { installRuntimeImports } from "./helpers/runtime-imports.mjs";
 import { advanceAuthSession } from "../src/utils/authSession.js";
 
 let effects = [], subscriptions = [];
+const originalStorage = globalThis.localStorage;
+beforeEach(() => {
+  const stored = new Map();
+  globalThis.localStorage = {
+    getItem: key => stored.get(key) ?? null,
+    setItem: (key, value) => stored.set(key, String(value)),
+    removeItem: key => stored.delete(key)
+  };
+});
+after(() => {
+  if (originalStorage === undefined) delete globalThis.localStorage;
+  else globalThis.localStorage = originalStorage;
+});
 const cleanup = installRuntimeImports({
   react: { useEffect: (effect, dependencies) => effects.push({ effect, dependencies }), useEffectEvent: callback => callback },
+  // Appearance is a DOM-only boundary; membership/session effects stay real.
+  "/clientAppearance.js": { useClientAppearance() {} },
   "/firebase.js": { auth: { currentUser: null }, db: {} },
   "firebase/firestore": {
     doc: (_, ...parts) => parts.join("/"), setDoc: async () => assert.fail("unrelated persistence effect must not execute"),

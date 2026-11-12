@@ -19,7 +19,8 @@ const cleanup = installRuntimeImports({
     collection: (_db, ...parts) => ({ path: parts.join("/") }), doc: (_db, ...parts) => ({ path: parts.join("/") }),
     query: (ref, ...constraints) => ({ ...ref, constraints }), where: (...args) => ({ where: args }),
     orderBy: noop, limit: value => ({ limit: value }), startAfter: noop,
-    getDoc: ref => readDoc(ref), getDocs: ref => readDocs(ref), setDoc: noop, writeBatch: noop
+    getDoc: ref => readDoc(ref), getDocs: ref => readDocs(ref), setDoc: noop, writeBatch: noop,
+    runTransaction: () => assert.fail("loading fixture must not start a write transaction")
   },
   "/src/utils/clientExerciseMedia.js": { loadClientExerciseMedia: async () => [], withClientExerciseMedia: workout => workout },
   "/src/utils/trainerExerciseCards.js": { requestTrainerExerciseCards: args => readCards(args) },

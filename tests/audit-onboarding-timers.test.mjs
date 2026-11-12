@@ -7,6 +7,8 @@ import { hasRequiredAiNutritionProfileFields } from "../src/utils/profileDefault
 let effects = [];
 const cleanupImports = installRuntimeImports({
   react: { useEffect: (callback, dependencies) => effects.push({ callback, dependencies }), useEffectEvent: callback => callback },
+  // Appearance is a DOM-only boundary, unrelated to onboarding scheduling.
+  "/clientAppearance.js": { useClientAppearance() {} },
   "/firebase.js": { auth: { currentUser: null }, db: {} },
   "firebase/firestore": { doc: (_, ...parts) => parts.join("/"), onSnapshot: () => () => {}, setDoc: async () => {} }
 });

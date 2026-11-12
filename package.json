@@ -13,7 +13,7 @@
     "build:production": "node scripts/build-firebase-artifact.mjs --environment=production",
     "import:exercise-catalog": "node scripts/import-free-exercise-catalog.mjs",
     "build:basic-workout-ai-catalogue": "node scripts/build-basic-workout-ai-catalogue.mjs",
-    "test": "node --test tests/*.test.mjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.mjs",
     "test:rules": "node scripts/run-firestore-rules.mjs",
     "test:e2e": "node ./node_modules/@playwright/test/cli.js test",
     "verify": "node scripts/verify.mjs --profile=release",
@@ -58,6 +58,12 @@
     "vite": "^8.3.3"
   },
   "overrides": {
+    "eslint": {
+      "minimatch": "11.0.8"
+    },
+    "@eslint/config-array": {
+      "minimatch": "11.0.8"
+    },
     "@grpc/grpc-js": "1.14.5",
     "protobufjs": "7.6.5",
     "xcode": {

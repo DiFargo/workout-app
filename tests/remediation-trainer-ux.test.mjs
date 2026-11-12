@@ -100,8 +100,14 @@ test("Т03 a viewed unresolved signal remains in the actual journal action secti
   const path = new URL("../src/components/trainer/TrainerDailyJournal.jsx", import.meta.url).pathname.replace(/^\//, "");
   const { Journal } = await compileUi(`export {default as Journal} from ${JSON.stringify(path)};`, { localStorage: { getItem: () => JSON.stringify([reviewed]) } });
   const html = renderToStaticMarkup(React.createElement(Journal, { actionCenter: { priorityItems: [item] }, trainerUid: "trainer", renderAvatar: () => null }));
-  assert.match(html, /Нужно проверить/);
-  assert.match(html, /Пропущена тренировка/);
+  const actions = html.match(/<section\b[^>]*aria-label="Действия, которые нужно выполнить сейчас"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  const timeline = html.match(/<section\b[^>]*aria-label="Журнал дня"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  assert.ok(actions, "viewed unresolved signals must remain in the action section");
+  assert.match(actions, /<h2>Пропущена тренировка<\/h2>/);
+  assert.match(actions, /aria-label="Проверить: Клиент\. Пропущена тренировка"/);
+  assert.ok(timeline, "reviewed signals must also remain in the day journal");
+  assert.match(timeline, /Пропущена тренировка/);
+  assert.match(timeline, /Просмотрено/);
 });
 
 test("Т04 historical schedule is immutable while future draft choices remain reversible", () => {

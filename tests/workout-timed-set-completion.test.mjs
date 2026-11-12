@@ -10,6 +10,7 @@ let runtime;
 const equalDeps = (left, right) => left && right && left.length === right.length && left.every((value, index) => Object.is(value, right[index]));
 const slot = () => runtime.cursor++;
 const react = {
+  useId() { return react.useRef(`test-id-${runtime.cursor}`).current; },
   useState(initial) {
     const index = slot();
     if (!runtime.slots[index]) runtime.slots[index] = { value: typeof initial === "function" ? initial() : initial };

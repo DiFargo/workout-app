@@ -140,7 +140,9 @@ test("staging marker uses the same mode-local Firebase configuration as Vite", a
     "<script type=\"module\" src=\"/main.js\"></script>",
     "utf8"
   );
-  await writeFile(join(directory, "main.js"), "console.log('fixture');\n", "utf8");
+  const appearanceCssPath = fileURLToPath(new URL("../src/features/client/appearance/ClientAppearance.module.css", import.meta.url)).replaceAll("\\", "/");
+  await writeFile(join(directory, "main.js"),
+    `import appearanceStyles from ${JSON.stringify(appearanceCssPath)};\ndocument.documentElement.classList.add(appearanceStyles.scope);\n`, "utf8");
   await writeFile(
     join(directory, ".env.staging.local"),
     "VITE_FIREBASE_PROJECT_ID=fixture-staging\n",

@@ -125,7 +125,7 @@ test("trainer daily journal stays isolated and lazy-loaded", async () => {
   ]);
 
   assert.match(workspace, /lazy\(\(\) => import\(["']\.\/TrainerDailyJournal["']\)\)/);
-  assert.match(workspace, /<Suspense fallback=\{null\}>/);
+  assert.match(workspace, /<Suspense fallback=\{<section\b[^>]*role="status"[^>]*>Загружаем события клиентов…<\/section>\}>\s*<TrainerDailyJournal\b/);
   assert.match(journal, /TrainerDailyJournal\.module\.css/);
   assert.match(journal, /buildTrainerDailyJournal/);
 });

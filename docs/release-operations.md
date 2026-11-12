@@ -37,6 +37,12 @@ It stops on the first failed check and returns a non-zero exit code. It covers:
 `npm run verify:core` runs the same gate without the full Playwright E2E suite;
 the React DOM unit regression still requires Chromium. It is useful during
 implementation, not as a production sign-off.
+
+The unit runner executes test files sequentially. Several files build browser
+fixtures, while the trainer-summary regression measures a fixed four-second
+completion budget. Running all files concurrently makes that timing depend on
+unrelated compiler/browser CPU load. All tests still run, with the same timing
+and safety assertions; the limit is not relaxed.
 `npm run verify` is deliberately lighter: production build, artifact budgets
 (100 KiB static entry, 640 KiB deduplicated mandatory boot, 170 KiB Firebase core,
 all gzip), and `git diff --check`. It does not include lint, unit, Rules,

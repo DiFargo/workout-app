@@ -68,13 +68,16 @@ test("production CSS Modules retain actual pending/role gates and style their re
     assert.equal(await page.getByRole("button", { name: "Проверяем приглашение…", exact: true }).isDisabled(), true);
     assert.equal(await page.getByRole("alert").innerText(), "Приглашение удалено");
     assert.equal(await page.getByText("Попросите новую ссылку", { exact: true }).isVisible(), true);
-    await page.evaluate(() => window.renderGate({ currentUserRole: "unresolved", roleAccessGateState: "unresolved" }));
-    await page.getByRole("heading", { name: "Не удалось подтвердить роль аккаунта" }).waitFor();
+    await page.evaluate(() => window.renderGate({ currentUserRole: "unresolved", roleAccessGateState: "unresolved",
+      roleVerificationIssue: { kind: "access" }, onRetryRoleVerification: () => { window.roleRetries = (window.roleRetries || 0) + 1; } }));
+    await page.getByRole("heading", { name: "Не удалось подтвердить доступ", exact: true }).waitFor();
     const unresolved = await page.locator("main").evaluate(node => ({
       display: getComputedStyle(node).display, radius: getComputedStyle(node.querySelector("section")).borderRadius,
       buttonHeight: getComputedStyle(node.querySelector("button")).minHeight,
       primary: getComputedStyle(node.querySelector("button")).backgroundImage
     }));
     assert.deepEqual(unresolved, { display: "grid", radius: "28px", buttonHeight: "48px", primary: actionGradient });
+    await page.getByRole("button", { name: "Повторить", exact: true }).click();
+    assert.equal(await page.evaluate(() => window.roleRetries), 1);
   } finally { await browser.close(); }
 });
