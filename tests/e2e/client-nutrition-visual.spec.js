@@ -89,61 +89,23 @@ async function expectAboveBottomBar(page, floatingSelector) {
   expect(metrics.floating.bottom).toBeLessThanOrEqual(metrics.bottomBar.y + 1);
 }
 
-async function expectNutritionWeekStripReadable(page) {
-  const metrics = await page.evaluate(() => {
-    const week = document.querySelector('[data-nutrition-header-part="week"]')?.getBoundingClientRect();
-    const days = [...document.querySelectorAll("[data-nutrition-header-day]")].map((day) => {
-      const dayRect = day.getBoundingClientRect();
-      const labelRect = day.querySelector("small")?.getBoundingClientRect();
-      const markerRect = day.querySelector("span:last-child")?.getBoundingClientRect();
-
-      return {
-        dayLeft: Math.round(dayRect.left),
-        dayRight: Math.round(dayRect.right),
-        dayTop: Math.round(dayRect.top),
-        dayBottom: Math.round(dayRect.bottom),
-        dayWidth: Math.round(dayRect.width),
-        labelCenterX: Math.round((labelRect?.left || 0) + (labelRect?.width || 0) / 2),
-        labelBottom: Math.round(labelRect?.bottom || 0),
-        labelText: day.querySelector("small")?.textContent?.trim() || "",
-        markerCenterX: Math.round((markerRect?.left || 0) + (markerRect?.width || 0) / 2),
-        markerTop: Math.round(markerRect?.top || 0),
-        markerWidth: Math.round(markerRect?.width || 0),
-        markerHeight: Math.round(markerRect?.height || 0),
-        ariaLabel: day.getAttribute("aria-label") || "",
-        ariaPressed: day.getAttribute("aria-pressed") || "",
-        ariaCurrent: day.getAttribute("aria-current") || "",
-        isToday: day.getAttribute("data-today") === "true"
-      };
-    });
-
-    return {
-      weekLeft: Math.round(week?.left || 0),
-      weekRight: Math.round(week?.right || 0),
-      weekWidth: Math.round(week?.width || 0),
-      weekTop: Math.round(week?.top || 0),
-      weekBottom: Math.round(week?.bottom || 0),
-      days
-    };
-  });
-
-  expect(metrics.days).toHaveLength(7);
-  expect(metrics.days.map((day) => day.labelText)).toEqual(["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]);
-  expect(metrics.days.every((day) => day.labelText.length >= 2)).toBe(true);
-  expect(metrics.days.every((day) => day.ariaLabel.startsWith("Выбрать "))).toBe(true);
-  expect(metrics.days.some((day) => day.ariaPressed === "true")).toBe(true);
-  expect(metrics.days.filter((day) => day.ariaCurrent === "date")).toHaveLength(metrics.days.filter((day) => day.isToday).length);
-  for (const day of metrics.days) {
-    expect(day.dayLeft).toBeGreaterThanOrEqual(metrics.weekLeft);
-    expect(day.dayRight).toBeLessThanOrEqual(metrics.weekRight);
-    expect(day.dayTop).toBeGreaterThanOrEqual(metrics.weekTop);
-    expect(day.dayBottom).toBeLessThanOrEqual(metrics.weekBottom);
-    expect(day.dayWidth).toBeLessThanOrEqual(Math.ceil(metrics.weekWidth / 7));
-    expect(day.markerTop - day.labelBottom).toBeGreaterThanOrEqual(2);
-    expect(Math.abs(day.markerCenterX - day.labelCenterX)).toBeLessThanOrEqual(1);
-    expect(day.markerWidth).toBeLessThanOrEqual(34);
-    expect(day.markerHeight).toBeLessThanOrEqual(34);
-  }
+async function expectNutritionDateControlsReadable(page) {
+  // The approved compact client header replaced the visible legacy week strip.
+  await expect(page.locator('[data-nutrition-header-part="week"]')).toBeHidden();
+  const calendar = page.getByRole("button", { name: "Календарь питания", exact: true });
+  await expect(calendar).toBeVisible();
+  const action = await calendar.boundingBox();
+  expect(action.width).toBeGreaterThanOrEqual(44);
+  expect(action.height).toBeGreaterThanOrEqual(44);
+  await expect(page.getByTestId("nutrition-selected-date")).toContainText("22 июня");
+  await calendar.click();
+  const modal = page.getByTestId("nutrition-calendar-modal");
+  await expect(modal).toBeVisible();
+  await expect(modal.locator("[data-nutrition-calendar-day]")).toHaveCount(42);
+  await expect(modal.locator('[data-nutrition-calendar-day][aria-pressed="true"]')).toHaveCount(1);
+  await expect(modal.locator('[data-nutrition-calendar-day="2026-06-22"]')).toHaveAttribute("aria-pressed", "true");
+  await page.getByTestId("nutrition-calendar-close").click();
+  await expect(modal).toBeHidden();
 }
 
 test("CSS V2 nutrition header stays scoped and responsive across the viewport matrix", async ({ page }, testInfo) => {
@@ -167,32 +129,25 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
     const title = header.locator('[data-nutrition-header-part="title"]');
     const week = page.locator('[data-nutrition-header-part="week"]');
     const days = page.locator("[data-nutrition-header-day]");
-    const labels = page.locator('[data-nutrition-header-part="day-label"]');
-    const dots = page.locator('[data-nutrition-header-part="day-dot"]');
 
     await expect(header).toBeVisible();
     await expect(header).toHaveAttribute("data-css-module-scope", "nutrition-header");
     await expect(header).toHaveAttribute("data-client-page-header", "true");
     await expect(header).toHaveCSS("position", "fixed");
-    await expect(title).toHaveCSS("font-size", "32px");
+    await expect(title).toHaveCSS("font-size", "24px");
     await expect(header.locator("[data-nutrition-header-action]")).toHaveCount(0);
-    await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
-    await expect(week).toHaveCSS("height", "67px");
+    await expect(page.getByRole("button", { name: "Календарь питания", exact: true })).toBeVisible();
+    await expect(week).toBeHidden();
     await expect(days).toHaveCount(7);
-    await expect(days.first()).toHaveCSS("height", "54px");
-    await expect(labels.first()).toHaveCSS("font-size", "10px");
-    await expect(dots.first()).toBeHidden();
     await expect(week.locator('[data-selected="true"][aria-pressed="true"]')).toHaveCount(1);
     await expect(page.locator(".nutritionHeroV4, .nutritionHeroTitleV4, .nutritionHeaderIconButton, .nutritionWeekV4, .nutritionDayV4, .nutritionStreakV4")).toHaveCount(0);
 
     const geometry = await page.evaluate(() => {
       const headerNode = document.querySelector('[data-testid="nutrition-header"]');
       const headerBarNode = headerNode.querySelector('[data-nutrition-header-part="title-row"]');
-      const weekNode = document.querySelector('[data-nutrition-header-part="week"]');
       const headerRect = headerNode.getBoundingClientRect();
       const headerBarRect = headerBarNode.getBoundingClientRect();
-      const weekRect = weekNode.getBoundingClientRect();
-      const dayRects = [...weekNode.querySelectorAll("[data-nutrition-header-day]")].map((day) => day.getBoundingClientRect());
+      const calendarRect = headerNode.querySelector('button[aria-label="Календарь питания"]').getBoundingClientRect();
       return {
         left: headerRect.left,
         right: headerRect.right,
@@ -201,19 +156,18 @@ test("CSS V2 nutrition header stays scoped and responsive across the viewport ma
             + headerBarNode.querySelector("h1").getBoundingClientRect().height / 2)
           - (headerBarRect.top + headerBarRect.height / 2)
         ) <= 1,
-        weekBelowHeader: weekRect.top >= headerRect.bottom,
-        dayInsideWeek: dayRects.every((rect) => rect.left >= weekRect.left && rect.right <= weekRect.right)
+        calendarInsideHeader: calendarRect.left >= headerRect.left && calendarRect.right <= headerRect.right &&
+          calendarRect.top >= headerRect.top && calendarRect.bottom <= headerRect.bottom
       };
     });
     expect(geometry.left).toBeGreaterThanOrEqual(0);
     expect(geometry.right).toBeLessThanOrEqual(entry.width);
     expect(geometry.titleVerticallyCentered).toBe(true);
-    expect(geometry.weekBelowHeader).toBe(true);
-    expect(geometry.dayInsideWeek).toBe(true);
-    await expectNutritionWeekStripReadable(page);
+    expect(geometry.calendarInsideHeader).toBe(true);
+    await expectNutritionDateControlsReadable(page);
     await expectNoHorizontalOverflow(page);
 
-    await page.getByTestId("nutrition-orbit-calendar").click();
+    await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
     await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
     await page.getByTestId("nutrition-calendar-close").click();
     await expect(page.getByTestId("nutrition-calendar-modal")).toBeHidden();
@@ -230,8 +184,8 @@ test("CSS V2 nutrition title stays plain while the week strip identifies dates",
   await page.getByTestId("client-nav-nutrition").click();
 
   await expect(page.getByTestId("nutrition-header").locator("h1")).toHaveText("Питание");
-  await expect(page.locator('[data-nutrition-header-day][aria-pressed="true"]')).toHaveAccessibleName(/Выбрать .*22.*июн/i);
-  await expectNutritionWeekStripReadable(page);
+  await expect(page.getByTestId("nutrition-selected-date")).toContainText("22 июня");
+  await expectNutritionDateControlsReadable(page);
   assertNoRuntimeErrors();
 });
 
@@ -309,13 +263,13 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await expect(page.getByTestId("client-harness-nutrition")).toBeVisible();
   await expect(page.locator('[data-nutrition-header-part="title"]')).toBeVisible();
   await expect(page.getByTestId("nutrition-orbit-add")).toBeVisible();
-  await expect(page.getByTestId("nutrition-orbit-calendar")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Календарь питания", exact: true })).toBeVisible();
 
-  await expectNutritionWeekStripReadable(page);
+  await expectNutritionDateControlsReadable(page);
   await expectNoHorizontalOverflow(page);
   await expectTapTargets(page, [
     '[data-testid="nutrition-orbit-add"]',
-    '[data-testid="nutrition-orbit-calendar"]',
+    '[data-testid="nutrition-header"] button[aria-label="Календарь питания"]',
     '[data-nutrition-summary-part="card"]',
     '[data-testid="client-bottom-nav"] button'
   ]);
@@ -483,7 +437,7 @@ test("client nutrition visual audit covers dense actions and modal entry points"
   await page.locator('[data-food-search-header-action="close"]').click();
   await expect(page.getByTestId("food-search-screen")).toBeHidden();
 
-  await page.getByTestId("nutrition-orbit-calendar").click();
+  await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
   await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
   await expect(page.locator("[data-nutrition-calendar-day]")).toHaveCount(42);
   await expect(page.locator("[data-nutrition-calendar-day][aria-pressed='true']")).toHaveCount(1);
@@ -580,7 +534,7 @@ test("client nutrition delete confirmation keeps its scoped modal contract", asy
   await expect(page.getByTestId("client-harness-nutrition-delete-confirm")).toBeVisible();
   await expect(page.getByTestId("nutrition-delete-confirm-modal")).toBeVisible();
   const deleteSurface = page.locator('[data-testid="nutrition-delete-confirm-modal"] [data-modal-surface="true"]');
-  await expect(deleteSurface).toHaveCSS("background-color", "rgb(245, 247, 248)");
+  await expect(deleteSurface).toHaveCSS("background-image", "linear-gradient(145deg, rgb(246, 250, 252), rgb(234, 244, 247) 65%, rgb(231, 243, 238))");
   await expect(deleteSurface).toHaveCSS("backdrop-filter", "none");
   await expectTapTargets(page, [
     '[data-testid="nutrition-delete-confirm-close"]',
@@ -1836,7 +1790,7 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and legacy-them
     await page.goto("/cssV2?clientHarness=1");
     await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
     await page.getByTestId("client-nav-nutrition").click();
-    await page.getByTestId("nutrition-orbit-calendar").click();
+    await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
 
     const modal = page.getByTestId("nutrition-calendar-modal");
     const sheet = page.getByTestId("nutrition-calendar-sheet");
@@ -1935,7 +1889,7 @@ test("CSS V2 nutrition calendar keeps scoped responsive geometry and legacy-them
   await expect(page.getByTestId("client-nav-nutrition")).toBeVisible({ timeout: 40_000 });
   await expectLegacyThemeFallback(page);
   await page.getByTestId("client-nav-nutrition").click();
-  await page.getByTestId("nutrition-orbit-calendar").click();
+  await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
 
   const legacySheet = page.getByTestId("nutrition-calendar-sheet");
   const legacySelectedDay = page.locator('[data-nutrition-calendar-day][aria-pressed="true"]');
@@ -1973,8 +1927,8 @@ test("CSS V2 nutrition energy card keeps progress, macros and food actions reada
     await expect(macros.locator(":scope > div b")).toHaveText(["76 / 172 г","36 / 62 г","83 / 317 г"]);
     await expect(macros.locator("i")).toHaveCount(3);
     const cardBox=await card.boundingBox();
-    const calendar=page.getByTestId("nutrition-orbit-calendar");
-    await expect(calendar.getByTestId("nutrition-selected-date")).toBeVisible();
+    const calendar=page.getByRole("button", { name: "Календарь питания", exact: true });
+    await expect(page.getByTestId("nutrition-selected-date")).toBeVisible();
     const calendarBox=await calendar.boundingBox();
     expect(calendarBox.y+calendarBox.height).toBeLessThanOrEqual(cardBox.y);
     await expect(page.getByTestId("nutrition-orbit-add").locator("..").getByRole("button")).toHaveCount(3);
@@ -1982,7 +1936,7 @@ test("CSS V2 nutrition energy card keeps progress, macros and food actions reada
     expect(cardBox.height).toBeCloseTo(viewport.width<=360 ? 180.8 : 184.8,1);
     expect(cardBox.x).toBeGreaterThanOrEqual(0);
     expect(cardBox.x+cardBox.width).toBeLessThanOrEqual(viewport.width);
-    await expectTapTargets(page,['[data-testid="nutrition-orbit-add"]','[data-testid="nutrition-orbit-photo-search"]','[data-testid="nutrition-orbit-audio-search"]','[data-testid="nutrition-orbit-calendar"]']);
+    await expectTapTargets(page,['[data-testid="nutrition-orbit-add"]','[data-testid="nutrition-orbit-photo-search"]','[data-testid="nutrition-orbit-audio-search"]','[data-testid="nutrition-header"] button[aria-label="Календарь питания"]']);
     await expectNoHorizontalOverflow(page);
     await page.getByTestId("nutrition-orbit-add").click();
     await expect(page.getByRole("dialog",{name:"Поиск еды"})).toBeVisible();

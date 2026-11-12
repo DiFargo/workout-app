@@ -16,7 +16,7 @@ test("compact exercise heading stays centered above the video with a single exit
     await page.setViewportSize(viewport);
     await openWorkoutHarness(page, exerciseUrl);
     const heading = page.locator('[data-css-module-scope="workout-stage-heading"]');
-    const title = heading.locator(":scope > div > span").first();
+    const title = heading.getByTestId("workout-exercise-picker-trigger").locator(":scope > span").first();
     const progress = page.getByTestId("workout-exercise-progress");
     const exit = page.getByRole("button", { name: "Выйти из тренировки" });
     await expect(heading).toBeVisible();
@@ -52,7 +52,7 @@ test("compact exercise heading stays centered above the video with a single exit
   await page.setViewportSize({ width: 320, height: 720 });
   await openWorkoutHarness(page, exerciseUrl);
   const heading = page.locator('[data-css-module-scope="workout-stage-heading"]');
-  const title = heading.locator(":scope > div > span").first();
+  const title = heading.getByTestId("workout-exercise-picker-trigger").locator(":scope > span").first();
   // Stress the existing title layout without changing workout data.
   await title.evaluate(el => {
     el.textContent = "Тяга гантели одной рукой с опорой на наклонную скамью";

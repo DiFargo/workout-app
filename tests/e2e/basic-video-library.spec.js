@@ -19,9 +19,11 @@ test("all 18 video variants are searchable as separate base library cards on iPh
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
   await search.fill("Выпады с гантелями — вариант тренера");
-  await catalog.getByRole("button", { name: "Редактировать", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Редактировать упражнение", exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Закрыть", exact: true }).click();
+  // This harness deliberately has no authenticated admin session. Search is
+  // available, but editing must remain blocked until authenticated overrides
+  // are loaded. The real editor's load/ack/cancel paths are exercised by
+  // admin-catalog-ui.test.mjs with its isolated authenticated fixture.
+  await expect(catalog.getByRole("button", { name: "Редактировать", exact: true })).toBeDisabled();
   await expect(page.getByRole("heading", { name: "Редактировать упражнение", exact: true })).toHaveCount(0);
   noErrors();
 });

@@ -106,7 +106,10 @@ test("admin panel hub visual audit covers cards and denied state", async ({ page
 
   const sectionCards = page.getByTestId("admin-overview-sections").getByRole("button");
   await openAdminHarness(page, "/?adminHarness=1", page.getByRole("heading", { name: "Обзор", exact: true }));
-  await expect(sectionCards).toHaveCount(3);
+  await expect(sectionCards).toHaveCount(4);
+  await expect(sectionCards.locator("strong")).toHaveText([
+    "Пользователи и роли", "Базовые программы", "Базовые упражнения", "Обратная связь"
+  ]);
   await expectTapTargets(page, ["[data-testid='admin-overview-sections'] button"]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "admin-panel-hub.png");

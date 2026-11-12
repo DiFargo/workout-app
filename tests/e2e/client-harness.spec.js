@@ -3,8 +3,9 @@ import { failOnRuntimeErrors } from "./runtime-errors.js";
 
 test.setTimeout(90_000);
 
-const actionGradient = "linear-gradient(115deg, rgb(70, 123, 114) 0%, rgb(62, 116, 139) 54%, rgb(53, 101, 163) 100%)";
-const modalCanvas = "rgb(245, 247, 248)";
+// Current client-only Mint / Night Glass light palette; staff keeps its own token.
+const actionGradient = "linear-gradient(112deg, rgb(47, 111, 115) 0%, rgb(51, 124, 124) 54%, rgb(57, 126, 112) 100%)";
+const modalCanvas = "linear-gradient(145deg, rgb(246, 250, 252), rgb(234, 244, 247) 65%, rgb(231, 243, 238))";
 
 async function openClientHarness(page, url) {
   // Wait for lazy harness compilation separately from the 5s behavioral checks.
@@ -241,7 +242,7 @@ test("client harness smoke: main, workouts, nutrition and cabinet stay usable", 
   await page.locator('[data-food-search-header-action="close"]').click();
   await expect(page.getByTestId("food-search-screen")).toBeHidden();
 
-  await page.getByTestId("nutrition-orbit-calendar").click();
+  await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
   await expect(page.getByTestId("nutrition-calendar-modal")).toBeVisible();
   await expect(page.locator("[data-nutrition-calendar-day]")).toHaveCount(42);
   await page.getByTestId("nutrition-calendar-close").click();
@@ -292,7 +293,7 @@ test("workout header stays focused on the destination", async ({ page }) => {
   assertNoRuntimeErrors();
 });
 
-test("workout and nutrition week calendars share geometry and typography", async ({ page }) => {
+test("workout week and nutrition month calendar keep readable dates and working selection", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   // Keep today's workout and the second scheduled workout in the same week.
   await page.clock.setFixedTime(new Date("2026-10-12T12:00:00Z"));
@@ -318,25 +319,33 @@ test("workout and nutrition week calendars share geometry and typography", async
   await expect(activeWorkoutNumber).toHaveCSS("color", "rgb(255, 255, 255)");
   await expect(page.getByTestId("workout-week-calendar").locator('[data-active="true"] [data-week-calendar-dot]')).toHaveCount(0);
   expect(await page.getByTestId("workout-week-calendar").locator("[data-week-calendar-dot]").count()).toBeGreaterThan(0);
+  expect(workoutMetrics.width).toBeGreaterThan(0);
+  expect(workoutMetrics.height).toBe(83);
+  expect(workoutMetrics.dayHeight).toBe(63);
+  expect(workoutMetrics.labelSize).toBe("12px");
+  expect(workoutMetrics.numberSize).toBe("16px");
 
   await clickClientNav(page, "client-nav-nutrition");
-  const nutritionMetrics = await page.locator('[data-nutrition-header-part="week"]').evaluate((calendar) => {
-    const day = calendar.querySelector("[data-week-calendar-day]");
-    const label = day?.querySelector("[data-week-calendar-label]");
-    const number = day?.querySelector("[data-week-calendar-number]");
-    const rect = calendar.getBoundingClientRect();
-    return {
-      width: Math.round(rect.width),
-      height: Math.round(rect.height),
-      dayHeight: Math.round(day?.getBoundingClientRect().height || 0),
-      labelSize: getComputedStyle(label).fontSize,
-      numberSize: getComputedStyle(number).fontSize
-    };
-  });
-
-  expect(nutritionMetrics).toEqual(workoutMetrics);
-  await expect(page.locator('[data-nutrition-header-day] [data-week-calendar-number]').first()).toHaveCSS("border-radius", "50%");
-  await expect(page.locator('[data-selected="true"] [data-week-calendar-number]')).toHaveCSS("background-image", actionGradient);
+  await expect(page.locator('[data-nutrition-header-part="week"]')).toBeHidden();
+  const calendarAction = page.getByRole("button", { name: "Календарь питания", exact: true });
+  await expect(calendarAction).toBeVisible();
+  const actionBox = await calendarAction.boundingBox();
+  expect(actionBox.width).toBeGreaterThanOrEqual(44);
+  expect(actionBox.height).toBeGreaterThanOrEqual(44);
+  await expect(page.getByTestId("nutrition-selected-date")).toContainText("22 июня");
+  await calendarAction.click();
+  const calendar = page.getByTestId("nutrition-calendar-modal");
+  await expect(calendar).toBeVisible();
+  await expect(calendar.locator("[data-nutrition-calendar-day]")).toHaveCount(42);
+  await expect(calendar.locator('[data-nutrition-calendar-day="2026-06-22"]')).toHaveAttribute("aria-pressed", "true");
+  await calendar.locator('[data-nutrition-calendar-day="2026-06-23"]').click();
+  await expect(calendar.locator('[data-nutrition-calendar-day="2026-06-23"]')).toHaveAttribute("aria-pressed", "true");
+  await page.getByTestId("nutrition-calendar-close").click();
+  await expect(calendar).toBeHidden();
+  await expect(page.getByTestId("nutrition-selected-date")).toContainText("23 июня");
+  await calendarAction.click();
+  await expect(calendar.locator('[data-nutrition-calendar-day="2026-06-23"]')).toHaveAttribute("aria-pressed", "true");
+  await page.getByTestId("nutrition-calendar-close").click();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
@@ -361,14 +370,52 @@ test("trainer card distinguishes messages, tasks and combined notifications", as
   }
 });
 
+test("nutrition calendar separates date taps, horizontal month swipes and vertical scroll gestures", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openClientHarness(page, "/?clientHarness=1");
+  await clickClientNav(page, "client-nav-nutrition");
+  await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
+  const calendar = page.getByTestId("nutrition-calendar-modal");
+  await calendar.locator('[data-nutrition-calendar-day="2026-06-23"]').click();
+  await expect(calendar.locator('[data-nutrition-calendar-day="2026-06-23"]')).toHaveAttribute("aria-pressed", "true");
+  const region = page.getByTestId("nutrition-calendar-swipe-region");
+  const month = page.getByTestId("nutrition-calendar-header").locator("strong");
+  const initialMonth = await month.textContent();
+  await expect(region).toHaveCSS("touch-action", "pan-y");
+  const box = await region.boundingBox();
+  const y = box.y + box.height / 2;
+  await page.mouse.move(box.x + box.width * .8, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * .2, y, { steps: 8 });
+  await page.mouse.up();
+  await expect(month).not.toHaveText(initialMonth);
+  await page.locator('[data-nutrition-calendar-action="previous-month"]').click();
+  await expect(month).toHaveText(initialMonth);
+  const vertical = await region.evaluate(node => {
+    const event = (type, x, y) => new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 71,
+      pointerType: "touch", clientX: x, clientY: y });
+    node.dispatchEvent(event("pointerdown", 180, 300));
+    const move = event("pointermove", 182, 390);
+    node.dispatchEvent(move);
+    node.dispatchEvent(event("pointercancel", 182, 390));
+    return { prevented: move.defaultPrevented, offset: node.style.getPropertyValue("--nutrition-calendar-swipe-offset") };
+  });
+  expect(vertical.prevented).toBe(false);
+  expect(vertical.offset).toBe("0px");
+  await expect(month).toHaveText(initialMonth);
+  await calendar.locator('[data-nutrition-calendar-day="2026-06-24"]').click();
+  await expect(calendar.locator('[data-nutrition-calendar-day="2026-06-24"]')).toHaveAttribute("aria-pressed", "true");
+  await expectNoHorizontalOverflow(page);
+});
+
 test("dashboard tasks show only actions relevant to the workout day", async ({ page }) => {
   const cases = [
     ["today", "Сегодня тренировка", "Ноги и ягодицы", true],
     ["recovery", "", "", false],
-    ["missed", "Перенесите тренировку", "31 августа", true],
+    ["missed", "Вернитесь к тренировке", "31 августа", true],
     ["unscheduled", "Продолжите тренировочный план", "не запланировано", true],
     ["complete", "", "", false],
-    ["empty", "Создайте первый план", "стартовую программу", true],
+    ["empty", "Ожидаем программу тренера", "Индивидуальная программа ещё не назначена", true],
   ];
 
   for (const [state, title, note, hasWorkoutTask] of cases) {
@@ -394,7 +441,8 @@ test("nutrition streak stays below the energy heading without overflow", async (
   await expect(page.getByRole("heading", { name: "Добавить еду", exact: true })).toBeVisible();
   await expect(page.getByTestId("nutrition-orbit-add")).toHaveText("Продукт");
   await expect(page.getByTestId("nutrition-orbit-add")).toHaveAccessibleName("Добавить еду: продукт");
-  await expect(page.getByTestId("nutrition-orbit-add").locator("svg")).toHaveClass(/lucide-plus/);
+  await expect(page.getByTestId("nutrition-orbit-add").locator("svg")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.getByTestId("nutrition-orbit-add").locator("svg path")).toHaveAttribute("d", "M12 4v16M4 12h16");
 
   const layout = await page.getByTestId("nutrition-energy-heading-row").evaluate((row) => {
     const title = row.querySelector('[data-testid="nutrition-progress-status"]');
@@ -488,7 +536,7 @@ test("workout overview uses schedule data and opens plan and history", async ({ 
   await page.getByTestId("workout-plan-button").click();
   await expect(page.getByTestId("workout-plan-dialog")).toBeVisible();
   await expect(page.getByTestId("workout-plan-dialog")).toHaveAttribute("data-modal-surface", "true");
-  await expect(page.getByTestId("workout-plan-dialog")).toHaveCSS("background-color", modalCanvas);
+  await expect(page.getByTestId("workout-plan-dialog")).toHaveCSS("background-image", modalCanvas);
   await expect(page.getByTestId("workout-plan-dialog")).toHaveCSS("backdrop-filter", "none");
   await expect(page.getByTestId("workout-plan-dialog")).toContainText("Тестовая программа");
   await expect(page.getByTestId("workout-plan-dialog-close")).toBeVisible();
@@ -502,7 +550,7 @@ test("workout overview uses schedule data and opens plan and history", async ({ 
   await page.getByTestId("workout-program-button").click();
   await expect(page.getByTestId("workout-program-dialog")).toBeVisible();
   await expect(page.getByTestId("workout-program-dialog")).toHaveAttribute("data-modal-surface", "true");
-  await expect(page.getByTestId("workout-program-dialog")).toHaveCSS("background-color", modalCanvas);
+  await expect(page.getByTestId("workout-program-dialog")).toHaveCSS("background-image", modalCanvas);
   await expect(page.getByTestId("workout-program-dialog")).toContainText("Тестовая программа");
   await expect(page.getByTestId("workout-program-exercise-list")).toBeVisible();
   await page.getByTestId("workout-program-dialog-close").click();
@@ -602,11 +650,15 @@ test("primary client tabs keep a shared adaptive width and an on-screen dock", a
         const rect = node.getBoundingClientRect();
         return {
           top: Math.round(rect.top),
-          bottom: Math.round(rect.bottom)
+          bottom: Math.round(rect.bottom),
+          height: Math.round(rect.height)
         };
       });
       expect(dockRect.top).toBeGreaterThanOrEqual(shellRect.y);
-      expect(dockRect.bottom).toBeLessThanOrEqual(shellRect.y + shellRect.height);
+      // Night Glass uses a floating viewport dock, not the page canvas's 12px inset.
+      expect(dockRect.bottom).toBeLessThanOrEqual(viewport.height);
+      expect(viewport.height - dockRect.bottom).toBe(8);
+      expect(dockRect.height).toBe(70);
     }
 
     const [baseline, ...otherShells] = shellRects;
@@ -643,13 +695,13 @@ test("progress uses real measurement deltas and opens body control modal", async
   await expect(page.getByTestId("profile-progress-weight-card")).toContainText("88,8");
   // May 22 is outside the last 30 days; the wider range retains both saved values.
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["88,8"]);
-  await page.getByRole("tab", { name: "6 месяцев", exact: true }).click();
+  await page.getByRole("tab", { name: "3 месяца", exact: true }).click();
   await expect(page.getByRole("img", { name: "Динамика веса: от 90,1 до 88,8 килограмма" })).toBeVisible();
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["90,1", "88,8"]);
-  await expect(page.getByTestId("profile-progress-achievement")).toContainText("12 тренировок завершено");
+  await expect(page.getByTestId("profile-progress-achievement")).toHaveAccessibleName("12 тренировок завершено за всё время Все достижения");
   await expect(page.getByTestId("profile-progress-periods").getByRole("tab")).toHaveCount(3);
-  await page.getByTestId("profile-progress-periods").getByRole("tab", { name: "Год", exact: true }).click();
-  await expect(page.getByTestId("profile-progress-periods").getByRole("tab", { name: "Год", exact: true })).toHaveAttribute("aria-selected", "true");
+  await page.getByTestId("profile-progress-periods").getByRole("tab", { name: "Всё время", exact: true }).click();
+  await expect(page.getByTestId("profile-progress-periods").getByRole("tab", { name: "Всё время", exact: true })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByTestId("profile-measurement-start")).toContainText("Замеры тела");
   await page.getByTestId("profile-measurement-start").click();
   await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();

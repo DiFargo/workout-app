@@ -81,10 +81,10 @@ test("summary task card keeps the workout action relevant and touchable", async 
   for (const [state, workoutTitle] of [
     ["today", "Сегодня тренировка"],
     ["recovery", ""],
-    ["missed", "Перенесите тренировку"],
+    ["missed", "Вернитесь к тренировке"],
     ["unscheduled", "Продолжите тренировочный план"],
     ["complete", ""],
-    ["empty", "Создайте первый план"]
+    ["empty", "Ожидаем программу тренера"]
   ]) {
     await openHarness(page, `&clientDashboardWorkoutState=${state}`);
     const taskCard = page.getByTestId("profile-summary-task-card");
@@ -123,12 +123,14 @@ test("progress periods, weight validation and body controls remain functional", 
   const assertNoErrors = failOnRuntimeErrors(page);
   await openHarness(page);
   await page.getByTestId("client-nav-progress").click();
-  for (const period of ["Месяц", "6 месяцев", "Год"]) {
+  for (const period of ["Месяц", "3 месяца", "Всё время"]) {
     await page.getByRole("tab", { name: period, exact: true }).click();
     await expect(page.getByRole("tab", { name: period, exact: true })).toHaveAttribute("aria-selected", "true");
   }
   await expect(page.getByTestId("profile-progress-weight-delta")).toContainText("−1,3 кг");
-  await expect(page.getByTestId("profile-progress-achievement")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(page.getByTestId("profile-progress-achievement")).toHaveCSS("background-color", "rgba(255, 255, 255, 0.94)");
+  await page.getByRole("button", { name: "История веса и добавление записи", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "История веса", exact: true })).toBeVisible();
   await page.getByTestId("profile-progress-add-weight").click();
   const input = page.getByTestId("profile-quick-weight-input");
   await input.fill("10");
@@ -136,7 +138,7 @@ test("progress periods, weight validation and body controls remain functional", 
   await expect(page.getByTestId("profile-quick-weight-status")).toContainText("от 25 до 350");
   await input.fill("82,5");
   await page.getByTestId("profile-quick-weight-submit").click();
-  await expect(page.getByTestId("profile-quick-weight-submit")).toHaveText("Вес сохранён");
+  await expect(page.getByTestId("save-success-notice")).toContainText("Вес сохранён");
   await expect(page.getByTestId("profile-quick-weight-dialog")).toBeHidden();
   await page.getByTestId("profile-measurement-start").click();
   await expect(page.getByTestId("profile-measurements-dialog")).toBeVisible();
@@ -157,7 +159,7 @@ test("food shortcuts add a portion and retain calendar and analysis entry points
   await page.locator('[data-food-product-action="add"]').click();
   await expect(page.getByTestId("food-product-page")).toBeHidden();
   await page.locator('[data-food-search-header-action="close"]').click();
-  await page.getByTestId("nutrition-orbit-calendar").click();
+  await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
   await expect(page.locator("[data-nutrition-calendar-day]")).toHaveCount(42);
   await page.getByTestId("nutrition-calendar-close").click();
   await page.locator('[data-nutrition-summary-part="card"]').click();

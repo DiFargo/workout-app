@@ -51,12 +51,6 @@ export default function NutritionCalendarModal({
     suppressDayClickRef.current = false;
     setSwipeOffset(0);
     setIsSwiping(false);
-
-    try {
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-    } catch {
-      // Synthetic pointer events may not create a capturable active pointer.
-    }
   };
 
   const handleSwipePointerMove = (event) => {
@@ -68,6 +62,14 @@ export default function NutritionCalendarModal({
 
     if (!gesture.direction && Math.max(Math.abs(deltaX), Math.abs(deltaY)) >= SWIPE_DIRECTION_LOCK_PX) {
       gesture.direction = Math.abs(deltaX) > Math.abs(deltaY) ? "horizontal" : "vertical";
+      // A tap belongs to its date button; capture only a confirmed month swipe.
+      if (gesture.direction === "horizontal") {
+        try {
+          event.currentTarget.setPointerCapture?.(event.pointerId);
+        } catch {
+          // Synthetic pointer events may not create a capturable active pointer.
+        }
+      }
     }
 
     if (gesture.direction !== "horizontal") return;

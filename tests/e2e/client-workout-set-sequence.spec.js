@@ -19,7 +19,7 @@ test('set confirmation is sequential, neutral until completed, and editing stays
   await expect(confirm(0)).toBeEnabled();
   await expect(confirm(1)).toBeDisabled();
   await expect(confirm(2)).toBeDisabled();
-  expect(await confirm(0).evaluate(node => getComputedStyle(node, '::before').backgroundColor)).toBe('rgb(237, 241, 243)');
+  expect(await confirm(0).evaluate(node => getComputedStyle(node, '::before').backgroundColor)).toBe('rgba(255, 255, 255, 0.94)');
   await expect(confirm(0)).toHaveCSS('width', '48px');
   await rows.nth(2).locator('strong').first().click();
   await expect(confirm(2)).toHaveAttribute('aria-pressed', 'false');
@@ -80,14 +80,14 @@ test('single-set review and editing stay independent from the dynamic action and
   const completedStatus = (index) => rows.getByRole('button', { name: `Подход ${index} выполнен, действия`, exact: true });
   const frame = page.getByTestId('workout-exercise-video-frame');
   const video = frame.locator('video');
-  const restControl = page.getByTestId('workout-rest-timer-start');
+  const restControl = page.getByTestId('workout-rest-timer').getByRole('button');
   const expandedRest = page.getByTestId('workout-rest-timer-expanded');
   await expect(rows).toHaveCount(1);
   await expect(selected(2)).toBeVisible();
   await expect(selected(2)).toHaveAccessibleDescription('Выполнено 1 из 3');
-  await expect(primary).toHaveAccessibleName('Подход выполнен');
+  await expect(primary).toHaveAccessibleName('Завершить подход');
   await expect(primary).toBeEnabled();
-  await expect(page.getByRole('status').filter({ hasText: 'Выполнено 1 из 3' })).toBeVisible();
+  await expect(page.getByRole('status', { name: 'Подход 2: нужно выполнить', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Предыдущий подход', exact: true })).toHaveCount(0);
   await video.evaluate(node => { window.__workoutSetVideo = node; });
   let previousSize;
@@ -111,7 +111,11 @@ test('single-set review and editing stay independent from the dynamic action and
   };
 
   await restControl.click();
-  await expect(restControl).toHaveAttribute('aria-label', 'Продолжить таймер отдыха');
+  await expect(expandedRest).toBeVisible();
+  await expandedRest.getByRole('button', { name: 'Остановить таймер отдыха', exact: true }).click();
+  await expect(expandedRest.getByRole('button', { name: 'Продолжить таймер отдыха', exact: true })).toBeVisible();
+  await page.getByTestId('workout-rest-timer-minimize').click();
+  await expect(restControl).toHaveAttribute('aria-description', /На паузе/);
 
   // A forward swipe must not bypass the pending approach or mark it completed.
   const start = await rows.locator('strong').first().boundingBox();
@@ -120,7 +124,7 @@ test('single-set review and editing stay independent from the dynamic action and
   await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2 - 82, { steps: 8 });
   await page.mouse.up();
   await expect(selected(2)).toBeVisible();
-  await expect(primary).toHaveAccessibleName('Подход выполнен');
+  await expect(primary).toHaveAccessibleName('Завершить подход');
   await expect(completedStatus(2)).toHaveCount(0);
   await expect(expandedRest).toBeHidden();
   await expect.poll(() => video.evaluate(node => node === window.__workoutSetVideo)).toBe(true);
@@ -167,7 +171,7 @@ test('single-set review and editing stay independent from the dynamic action and
   await primary.click();
   await expect(expandedRest).toBeVisible();
   await page.getByTestId('workout-rest-timer-minimize').click();
-  await expect(primary).toHaveAccessibleName('Следующий подход');
+  await expect(primary).toHaveAccessibleName('Перейти к подходу 3 из 3');
   await expect(selected(2)).toBeVisible();
   await expect(expandedRest).toBeHidden();
   await page.getByRole('button', { name: 'Открыть таймер отдыха', exact: true }).click();
@@ -176,21 +180,23 @@ test('single-set review and editing stay independent from the dynamic action and
   await expect(selected(2)).toBeVisible();
   await expect(completedStatus(2)).toBeVisible();
   await restControl.click();
+  await expandedRest.getByRole('button', { name: 'Остановить таймер отдыха', exact: true }).click();
+  await page.getByTestId('workout-rest-timer-minimize').click();
   await completedStatus(2).click();
   await rows.getByRole('button', { name: 'Снять отметку выполнения подхода 2', exact: true }).click();
   await expect(expandedRest).toBeHidden();
   await expect(restControl).toHaveAttribute('aria-label', 'Запустить таймер отдыха');
-  await expect(primary).toHaveAccessibleName('Подход выполнен');
+  await expect(primary).toHaveAccessibleName('Завершить подход');
   // Completion and advance are intentionally separate, deliberate actions.
   await page.waitForTimeout(420);
   await primary.click();
   await expect(expandedRest).toBeVisible();
   await page.getByTestId('workout-rest-timer-minimize').click();
-  await expect(primary).toHaveAccessibleName('Следующий подход');
+  await expect(primary).toHaveAccessibleName('Перейти к подходу 3 из 3');
   await page.waitForTimeout(420);
   await primary.click();
   await expect(selected(3)).toBeVisible();
-  await expect(primary).toHaveAccessibleName('Подход выполнен');
+  await expect(primary).toHaveAccessibleName('Завершить подход');
   await expect(completedStatus(3)).toHaveCount(0);
   await expect(rows).toHaveCount(1);
   await expect(rows).toContainText('65 кг');

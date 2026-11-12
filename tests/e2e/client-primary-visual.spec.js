@@ -65,7 +65,7 @@ async function expectCrispProfileModal(page, overlayTestId, dialogTestId, closeT
 
   await expect(overlay).toHaveCSS("backdrop-filter", "blur(4px)");
   await expect(dialog).toHaveAttribute("data-modal-surface", "true");
-  await expect(dialog).toHaveCSS("background-color", "rgb(245, 247, 248)");
+  await expect(dialog).toHaveCSS("background-image", "linear-gradient(145deg, rgb(246, 250, 252), rgb(234, 244, 247) 65%, rgb(231, 243, 238))");
   await expect(dialog).toHaveCSS("backdrop-filter", "none");
   await expect(dialog).toHaveCSS("filter", "none");
   await expect(close).toHaveAttribute("data-profile-modal-close", "true");
@@ -127,7 +127,7 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
     await expect(page.getByTestId("profile-dashboard-version")).toHaveCount(0);
   } else {
     await expect(title).toHaveText("Кабинет");
-    await expect(page.getByTestId("profile-cabinet-refresh")).toBeVisible();
+    await expect(page.getByTestId("profile-cabinet-logout")).toBeVisible();
     await expect(page.getByTestId("profile-main-summary-grid")).toHaveCount(0);
     await expect(page.getByTestId("profile-dashboard-version")).toHaveText(/^v\.?3\.0\.\d+$/);
     await expect(page.getByTestId("profile-dashboard-version")).toHaveCSS("position", "static");
@@ -136,7 +136,7 @@ async function expectPrimaryChrome(page, pageTestId, mode) {
   await expect(page.getByTestId("client-bottom-nav")).toBeVisible();
   await expectTapTargets(page, mode === "main"
     ? ['[data-testid="client-bottom-nav"] button', '[data-testid="profile-main-notifications"]']
-    : ['[data-testid="client-bottom-nav"] button', '[data-testid="profile-cabinet-refresh"]']);
+    : ['[data-testid="client-bottom-nav"] button', '[data-testid="profile-cabinet-logout"]']);
   await expectNoHorizontalOverflow(page);
 }
 
@@ -203,9 +203,9 @@ test("progress weight chart keeps every data state inside its adaptive card", as
     await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
     const card = page.getByTestId("profile-progress-weight-card");
     await expect(card).toBeVisible();
-    await expect(card.getByText("Последний вес", { exact: true })).toBeVisible();
+    await expect(card.getByText("Динамика веса", { exact: true })).toBeVisible();
     await expect(card.getByTestId("profile-progress-weight-point-label")).toHaveCount(state === "empty" ? 0 : 1);
-    if (state === "trend") await page.getByRole("tab", { name: "6 месяцев", exact: true }).click();
+    if (state === "trend") await page.getByRole("tab", { name: "3 месяца", exact: true }).click();
     await expect(card.getByTestId("profile-progress-weight-point-label")).toHaveCount(state === "trend" ? 2 : state === "single" ? 1 : 0);
     if (state === "empty") {
       await expect(card.getByText("Добавьте первый вес, чтобы увидеть реальную динамику.")).toBeVisible();
@@ -230,7 +230,7 @@ test("progress weight chart keeps every data state inside its adaptive card", as
   await gotoClient(page, "/?clientHarness=1&clientHarnessTheme=warm-light&clientMeasurementSnapshotState=trend");
   await page.getByTestId("client-nav-progress").click();
   const staleCard = page.getByTestId("profile-progress-weight-card");
-  await expect(staleCard.getByTestId("profile-progress-period-range")).toContainText("Последние 30 дней");
+  await expect(staleCard).toHaveAttribute("aria-label", /^Последние 30 дней/);
   await expect(staleCard).toContainText("За выбранный период свежих замеров веса нет.");
   await expect(staleCard).toContainText("Последний вес: 22.06.2026");
   await expect(staleCard.getByRole("img")).toHaveCount(0);
@@ -466,15 +466,13 @@ test("client main bottom bar stays scoped and adaptive across supported and lega
         };
       });
 
-      expect(mainMetrics.position).toBe("static");
+      expect(mainMetrics.position).toBe("relative");
       expect(mainMetrics.dockPosition).toBe("fixed");
-      expect(mainMetrics.width).toBe(mainMetrics.pageRight - mainMetrics.pageX);
+      expect(mainMetrics.width).toBe(width < 700 ? Math.min(width - 24, 576) : mainMetrics.pageRight - mainMetrics.pageX);
       expect(mainMetrics.height).toBe(70);
-      expect(mainMetrics.buttonHeight).toBe(49);
-      if (width <= 900) {
-        expect(mainMetrics.x).toBe(mainMetrics.pageX);
-        expect(mainMetrics.right).toBe(mainMetrics.pageRight);
-      }
+      expect(mainMetrics.buttonHeight).toBe(58);
+      expect(Math.abs(mainMetrics.x - (width - mainMetrics.width) / 2)).toBeLessThanOrEqual(1);
+      expect(mainMetrics.right).toBeLessThanOrEqual(width - 12);
 
       await page.getByTestId("client-nav-cabinet").click();
       await expect(page.getByTestId("client-nav-cabinet")).toHaveAttribute("aria-current", "page");
@@ -505,7 +503,7 @@ test("progress photos body control uses the compact opaque sheet", async ({ page
   const dialog = page.getByTestId("profile-progress-photos-dialog");
   const tabs = page.getByTestId("profile-progress-photos-section-tabs");
   await expect(dialog).toBeVisible();
-  await expect(dialog).toHaveCSS("background-color", "rgb(245, 247, 248)");
+  await expect(dialog).toHaveCSS("background-image", "linear-gradient(145deg, rgb(246, 250, 252), rgb(234, 244, 247) 65%, rgb(231, 243, 238))");
   await expect(page.getByTestId("profile-progress-photos-header").getByRole("heading")).toHaveText("Фото прогресса");
   await expect(tabs.getByRole("tab").first()).toHaveText("Фото");
   await expect(tabs.getByRole("tab").first()).toHaveCSS("background-image", "none");
@@ -874,9 +872,9 @@ test("client cabinet opens separate account connections and notification setting
   await expectNoHorizontalOverflow(page);
   await clickClientCabinetNav(page);
 
-  const refreshButton = page.getByTestId("profile-cabinet-refresh");
-  await expect(refreshButton).toHaveAttribute("aria-label", "Обновить данные");
-  await expect(refreshButton.locator("svg")).toHaveClass(/lucide-refresh-cw/);
+  const logoutButton = page.getByTestId("profile-cabinet-logout");
+  await expect(logoutButton).toHaveAttribute("aria-label", "Выйти из аккаунта");
+  await expect(logoutButton.locator("svg")).toHaveClass(/lucide-log-out/);
 
   await page.getByTestId("profile-cabinet-action-account").click();
   await expect(page.getByTestId("profile-settings-dialog")).toHaveAttribute("data-profile-settings-section", "connections");
@@ -917,7 +915,7 @@ test("client measurement summary and fullscreen wizard stay adaptive", async ({ 
   await expect(page.getByTestId("profile-progress-weight-card")).toBeVisible();
   await expect(page.getByTestId("profile-progress-weight-delta")).toContainText("−1,3 кг");
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveCount(1);
-  await page.getByRole("tab", { name: "6 месяцев", exact: true }).click();
+  await page.getByRole("tab", { name: "3 месяца", exact: true }).click();
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveCount(2);
   await expect(page.getByTestId("profile-progress-weight-point-label")).toHaveText(["90,1", "88,8"]);
   await expect(page.getByTestId("profile-progress-achievement")).toContainText("Первая тренировка впереди");
@@ -1080,7 +1078,7 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
     marginBottom: "32px",
     fontSize: "15px",
     lineHeight: "15.75px",
-    color: "rgb(28, 40, 46)",
+    color: "rgb(24, 46, 62)",
     textAlign: "center",
     textTransform: "uppercase"
   });
@@ -1088,7 +1086,7 @@ test("client profile settings title stays scoped and adaptive", async ({ page },
 
   await gotoClient(page, "/?clientHarness=1&clientHarnessPage=profileSettingsTab&clientHarnessTheme=dark-green");
   await expect(page.locator("html")).toHaveAttribute("data-app-theme", "warm-light");
-  await expect(page.getByTestId("profile-settings-tab-title")).toHaveCSS("color", "rgb(28, 40, 46)");
+  await expect(page.getByTestId("profile-settings-tab-title")).toHaveCSS("color", "rgb(24, 46, 62)");
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "client-profile-settings-tab-theme-fallback.png");
 
@@ -1191,7 +1189,7 @@ test("client first setup keeps the app shell on every onboarding step", async ({
     expect(layout.cardTop).toBeGreaterThanOrEqual(0);
     expect(layout.cardBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
     expect(layout.navigationBottom).toBeLessThanOrEqual(layout.viewportHeight + 1);
-    expect(layout.cardBackground).toBe("rgb(245, 247, 248)");
+    expect(layout.cardBackground).toBe("rgb(237, 244, 247)");
     expect(layout.cardDisplay).toBe("flex");
 
     if (step === 9) {

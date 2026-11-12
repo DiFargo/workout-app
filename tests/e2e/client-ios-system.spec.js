@@ -45,6 +45,7 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
 
   await page.setViewportSize({ width: 402, height: 874 });
+  await page.addInitScript(() => localStorage.setItem("zmena-client-appearance-v1", "light"));
 
   for (const [surfaceName, url] of warmLightSurfaces) {
     await test.step(surfaceName, async () => {
@@ -65,7 +66,7 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
       ));
       expect(hasVisibleHarnessContent).toBe(true);
       await expect(page.locator("body")).toBeAttached();
-      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(245, 247, 248)");
+      await expect(page.locator("body")).toHaveCSS("background-color", "rgb(237, 244, 247)");
 
       const audit = await page.evaluate((blockedFragments) => {
         const html = document.documentElement;
@@ -110,7 +111,7 @@ test("all client warm-light flows use one calm iOS visual system", async ({ page
         };
       }, legacyAccentFragments);
 
-      expect(audit.background).toBe("rgb(245, 247, 248)");
+      expect(audit.background).toBe("rgb(237, 244, 247)");
       expect(audit.fontFamily.toLowerCase()).toContain("apple-system");
       expect(audit.horizontalOverflow).toBeLessThanOrEqual(1);
       expect(audit.offenders).toEqual([]);

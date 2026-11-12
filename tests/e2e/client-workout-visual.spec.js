@@ -209,7 +209,7 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
       exerciseProgress: rectOf(exerciseProgress),
       exerciseProgressText: rectOf(exerciseProgressText),
       stageHeading: rectOf(stageHeading),
-      restStart: rectOf(document.querySelector('[data-testid="workout-rest-timer-start"]')),
+      restControl: rectOf(document.querySelector('[data-testid="workout-rest-timer"] > button')),
       deckClientHeight: deck?.clientHeight || 0,
       deckScrollHeight: deck?.scrollHeight || 0,
       deckOverflowX: deck ? getComputedStyle(deck).overflowX : "",
@@ -236,8 +236,8 @@ async function expectWorkoutRunStageSpacing(page, expectedStage) {
     expect(metrics.card.bottom, layoutSummary).toBeLessThanOrEqual(metrics.deck.bottom + 1);
   }
   if (expectedStage === "exercise") {
-    expect(metrics.restStart, layoutSummary).not.toBeNull();
-    expect(metrics.restStart.height, layoutSummary).toBeGreaterThanOrEqual(24);
+    expect(metrics.restControl, layoutSummary).not.toBeNull();
+    expect(metrics.restControl.height, layoutSummary).toBeGreaterThanOrEqual(24);
     if (metrics.theme === "warm-light") {
       expect(metrics.exerciseProgress, layoutSummary).not.toBeNull();
       expect(metrics.exerciseProgressText, layoutSummary).not.toBeNull();
@@ -348,7 +348,10 @@ async function expectWorkoutPlanSpacing(page, { empty = false } = {}) {
   expect(metrics.panel, layoutSummary).not.toBeNull();
   expect(metrics.nav, layoutSummary).not.toBeNull();
   expect(metrics.navPosition, layoutSummary).toBe("fixed");
-  expect(metrics.panel.height, layoutSummary).toBe(metrics.nav.height);
+  // The approved floating dock reserves the 8px home-gesture gutter below its nav.
+  expect(metrics.nav.height, layoutSummary).toBe(70);
+  expect(metrics.panel.bottom - metrics.nav.bottom, layoutSummary).toBe(8);
+  expect(metrics.panel.height, layoutSummary).toBe(metrics.nav.height + 8);
   expect(metrics.nav.left, layoutSummary).toBeGreaterThanOrEqual(metrics.panel.left);
   expect(metrics.nav.right, layoutSummary).toBeLessThanOrEqual(metrics.panel.right);
   expect(Math.abs((metrics.panel.left + metrics.panel.width / 2) - (metrics.nav.left + metrics.nav.width / 2)), layoutSummary).toBeLessThanOrEqual(1);
@@ -474,8 +477,9 @@ async function expectBasicQuizSpacing(page) {
     };
 
     const card = document.querySelector('[data-testid="basic-quiz-card"]');
-    const slider = card?.querySelector('[role="slider"], input[type="range"]');
-    const options = [...(slider?.parentElement?.parentElement?.querySelectorAll("button") || [])];
+    const optionGroup = card?.querySelector('[role="group"]');
+    const options = [...(optionGroup?.querySelectorAll('button[aria-pressed]') || [])];
+    const format = document.querySelector('[data-testid="basic-workout-plan-switcher"]');
     const nextButton = [...(card?.querySelectorAll("button") || [])].at(-1);
     const navNode = document.querySelector('[data-testid="client-bottom-nav"]');
 
@@ -483,9 +487,13 @@ async function expectBasicQuizSpacing(page) {
       viewportWidth: window.innerWidth,
       page: rectOf(document.querySelector('[data-testid="basic-quiz-page"]')),
       header: rectOf(document.querySelector('[data-testid="basic-quiz-header"]')),
-      todayLink: rectOf([...card?.querySelectorAll("button") || []].find(button => button.textContent.includes("На сегодня"))),
+      format: rectOf(format),
+      todayAction: rectOf(format?.querySelector("button")),
+      currentFormat: format?.querySelector('[aria-current="page"]')?.textContent.trim(),
       card: rectOf(card),
-      slider: rectOf(slider),
+      optionGroup: rectOf(optionGroup),
+      options: options.map(rectOf),
+      sliderCount: card?.querySelectorAll('[role="slider"], input[type="range"]').length || 0,
       questionBody: rectOf(card?.querySelector('[data-testid="basic-quiz-question-body"]')),
       nextButton: rectOf(nextButton),
       nav: rectOf(navNode),
@@ -498,17 +506,21 @@ async function expectBasicQuizSpacing(page) {
   const layoutSummary = JSON.stringify(metrics);
   expect(metrics.page, layoutSummary).not.toBeNull();
   expect(metrics.header, layoutSummary).not.toBeNull();
-  expect(metrics.todayLink, layoutSummary).not.toBeNull();
+  expect(metrics.format, layoutSummary).not.toBeNull();
+  expect(metrics.todayAction, layoutSummary).not.toBeNull();
   expect(metrics.card, layoutSummary).not.toBeNull();
-  expect(metrics.slider, layoutSummary).not.toBeNull();
+  expect(metrics.optionGroup, layoutSummary).not.toBeNull();
+  expect(metrics.sliderCount, layoutSummary).toBe(0);
+  expect(metrics.currentFormat, layoutSummary).toBe("На месяц");
   expect(metrics.nextButton, layoutSummary).not.toBeNull();
   expect(metrics.nav, layoutSummary).not.toBeNull();
   expect(metrics.page.left, layoutSummary).toBeGreaterThanOrEqual(0);
   expect(metrics.page.right, layoutSummary).toBeLessThanOrEqual(metrics.viewportWidth + 1);
   expect(metrics.header.bottom, layoutSummary).toBeLessThanOrEqual(metrics.card.top);
-  expect(metrics.slider.left, layoutSummary).toBeGreaterThanOrEqual(metrics.card.left);
-  expect(metrics.slider.right, layoutSummary).toBeLessThanOrEqual(metrics.card.right);
-  expect(metrics.todayLink.height, layoutSummary).toBeGreaterThanOrEqual(44);
+  expect(metrics.optionGroup.left, layoutSummary).toBeGreaterThanOrEqual(metrics.card.left);
+  expect(metrics.optionGroup.right, layoutSummary).toBeLessThanOrEqual(metrics.card.right);
+  expect(metrics.options.every(option => option.left >= metrics.card.left && option.right <= metrics.card.right), layoutSummary).toBe(true);
+  expect(metrics.todayAction.height, layoutSummary).toBeGreaterThanOrEqual(44);
   expect(metrics.questionBody.bottom, layoutSummary).toBeLessThanOrEqual(metrics.nextButton.top);
   expect(metrics.optionCount, layoutSummary).toBe(4);
   expect(metrics.selectedOptionCount, layoutSummary).toBe(1);
@@ -897,7 +909,14 @@ test("CSS V2 basic workout quiz stays scoped, adaptive and functional", async ({
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/cssV2?clientHarness=1&clientHarnessPage=basicQuiz&clientHarnessTheme=warm-light");
+  const format = page.getByRole("navigation", { name: "Формат базовой тренировки", exact: true });
+  await format.getByRole("button", { name: "Сейчас", exact: true }).click();
+  await expect(page.getByTestId("basic-workout-today-page")).toBeVisible();
+  await expect(format.getByRole("button", { name: "Сейчас", exact: true })).toHaveAttribute("aria-current", "page");
+  await format.getByRole("button", { name: "На месяц", exact: true }).click();
   const quizCard = page.getByTestId("basic-quiz-card");
+  await expect(quizCard).toBeVisible();
+  await expect(format.getByRole("button", { name: "На месяц", exact: true })).toHaveAttribute("aria-current", "page");
   const goalChoice = quizCard.getByRole("button", { name: "Снижение веса", exact: true });
   await goalChoice.click();
   await expect(goalChoice).toHaveAttribute("aria-pressed", "true");
@@ -1322,29 +1341,34 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
   const restTimerStart = page.getByTestId("workout-rest-timer-start");
   await expect(restTimerStart).toHaveAttribute("aria-label", "Запустить таймер отдыха");
   await restTimerStart.click();
-  await expect(restTimerStart).toHaveAttribute("aria-label", "Остановить таймер отдыха");
-  await restTimerStart.click();
-  await expect(restTimerStart).toHaveAttribute("aria-label", "Продолжить таймер отдыха");
-  await restTimerStart.click();
-  await expect(restTimerStart).toHaveAttribute("aria-label", "Остановить таймер отдыха");
+  const expandedRestTimer = page.getByTestId("workout-rest-timer-expanded");
+  await expect(expandedRestTimer).toBeVisible();
+  await expandedRestTimer.getByRole("button", { name: "Остановить таймер отдыха", exact: true }).click();
+  await expect(expandedRestTimer.getByRole("button", { name: "Продолжить таймер отдыха", exact: true })).toBeVisible();
+  await expandedRestTimer.getByRole("button", { name: "Продолжить таймер отдыха", exact: true }).click();
+  await expect(expandedRestTimer.getByRole("button", { name: "Остановить таймер отдыха", exact: true })).toBeVisible();
+  await page.getByTestId("workout-rest-timer-minimize").click();
+  await expect(expandedRestTimer).toBeHidden();
 
   const exerciseSetRows = page.getByTestId("workout-exercise-set-row");
   await expect(exerciseSetRows).toHaveCount(1);
+  await expect(page.getByTestId("workout-primary-action")).toHaveAccessibleName("Завершить подход");
   await page.getByTestId("workout-primary-action").click();
-  const expandedRestTimer = page.getByTestId("workout-rest-timer-expanded");
   await expect(expandedRestTimer).toBeVisible();
   await expect(page.getByTestId("workout-rest-timer-minimize")).toBeVisible();
   await page.getByTestId("workout-rest-timer-minimize").click();
   await expect(expandedRestTimer).toBeHidden();
 
   await page.waitForTimeout(450);
+  await expect(page.getByTestId("workout-primary-action")).toHaveAccessibleName("Перейти к подходу 3 из 3");
   await page.getByTestId("workout-primary-action").click();
   await page.waitForTimeout(450);
+  await expect(page.getByTestId("workout-primary-action")).toHaveAccessibleName("Завершить подход");
   await page.getByTestId("workout-primary-action").click();
   await expect(expandedRestTimer).toBeVisible();
   const nextExerciseAction = page.getByTestId("workout-rest-timer-completion-action");
-  await expect(nextExerciseAction).toHaveAccessibleName("Следующее упражнение");
-  await expect(nextExerciseAction).toHaveAccessibleDescription("С пропуском отдыха");
+  await expect(nextExerciseAction).toHaveAccessibleName("К следующему упражнению");
+  await expect(nextExerciseAction).toHaveAccessibleDescription("Пропустить остаток отдыха");
   await expect(nextExerciseAction).toHaveAttribute("data-emphasis", "primary");
   await expect(expandedRestTimer.getByLabel("Остановить таймер отдыха")).toHaveAttribute("data-emphasis", "secondary");
   await page.waitForTimeout(450);
@@ -1358,11 +1382,11 @@ test("CSS V2 workout run stages stay scoped and adaptive through the full flow",
   await expect(noteModal).toBeHidden();
 
   const primaryAction = page.getByTestId("workout-primary-action");
-  for (const label of ["Подход выполнен", "Следующий подход", "Подход выполнен", "Завершить тренировку"]) {
+  for (const label of ["Завершить подход", "Перейти к подходу 2 из 2", "Завершить подход", "Завершить тренировку"]) {
     await expect(primaryAction).toHaveAccessibleName(label);
     await page.waitForTimeout(450);
     await primaryAction.click();
-    if (label === "Подход выполнен") {
+    if (label === "Завершить подход") {
       await expect(expandedRestTimer).toBeVisible();
       await page.getByTestId("workout-rest-timer-minimize").click();
     }

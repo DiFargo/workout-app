@@ -84,7 +84,7 @@ test("client AI coach visual audit covers insights and nutrition plan states", a
       expect(visualContract.width).toBe(width < 700 ? width : 1040);
       expect(visualContract.left).toBeGreaterThanOrEqual(0);
       expect(visualContract.right).toBeLessThanOrEqual(width);
-      expect(visualContract.headingColor).toBe("rgb(28, 40, 46)");
+      expect(visualContract.headingColor).toBe("rgb(24, 46, 62)");
       expect(visualContract.backWidth).toBe(44);
       expect(visualContract.backHeight).toBe(44);
     }

@@ -45,8 +45,8 @@ test("basic plan keeps a neutral, working notification card and inbox", async ({
 
 test("individual plan retains trainer copy and notifications", async ({ page }) => {
   await openNotifications(page, "clientWorkoutProgramMode=individual&clientCoachNotificationState=message");
-  await expect(page.getByRole("heading", { name: "Тренер рядом" })).toBeVisible();
-  await expect(page.getByTestId("profile-summary-notifications-button")).toContainText("Ваш тренер");
+  await expect(page.getByRole("heading", { name: "На связи", exact: true })).toBeVisible();
+  await expect(page.getByTestId("profile-summary-notifications-button")).toContainText("Твой тренер");
   await expect(page.getByTestId("profile-summary-trainer-status")).toHaveText("1 сообщение от тренера");
   await page.getByTestId("profile-summary-notifications-button").click();
   await expect(page.getByTestId("profile-trainer-notifications-dialog")).toContainText("Сообщение от тренера");

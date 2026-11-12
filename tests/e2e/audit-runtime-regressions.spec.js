@@ -33,6 +33,9 @@ test("countdown continues after extending, pausing and returning from the backgr
 });
 
 test("history controls and meal descriptions fit their actual columns", async ({ page }, testInfo) => {
+  // Six lazy-route navigations plus screenshots share this viewport matrix.
+  // Individual UI readiness assertions keep their normal bounded timeouts.
+  test.setTimeout(60_000);
   const checkErrors = failOnRuntimeErrors(page);
   for (const width of [320, 393, 1366]) {
     await page.setViewportSize({ width, height: 800 });

@@ -25,6 +25,10 @@ for (const device of cases) {
       await expect(page.getByTestId(`client-nav-${tab}`)).toHaveAttribute("aria-current", "page");
       const layout = await nav.evaluate((element) => {
         const rect = element.getBoundingClientRect();
+        // The floating navigation keeps its compact height; the outer dock
+        // reserves the home-indicator inset below the whole navigation.
+        const dock = element.closest("[data-client-bottom-dock='true']");
+        const dockRect = dock.getBoundingClientRect();
         const buttons = Array.from(element.querySelectorAll("button"), (button) => {
           const bounds = button.getBoundingClientRect();
           return { height: bounds.height, bottom: bounds.bottom };
@@ -32,19 +36,23 @@ for (const device of cases) {
         return {
           height: rect.height,
           bottom: rect.bottom,
-          paddingBottom: Number.parseFloat(getComputedStyle(element).paddingBottom),
+          dockHeight: dockRect.height,
+          dockBottom: dockRect.bottom,
+          dockPaddingBottom: Number.parseFloat(getComputedStyle(dock).paddingBottom),
           viewportHeight: innerHeight,
           overflow: document.documentElement.scrollWidth - innerWidth,
           buttons
         };
       });
-      expect(layout.height).toBeLessThanOrEqual(Math.max(70, 56 + device.bottom));
-      expect(layout.paddingBottom).toBe(Math.max(12, device.bottom));
+      expect(layout.height).toBeLessThanOrEqual(70);
+      expect(layout.dockHeight).toBeLessThanOrEqual(70 + Math.max(8, device.bottom));
+      expect(layout.dockPaddingBottom).toBe(Math.max(8, device.bottom));
       expect(layout.overflow).toBeLessThanOrEqual(1);
-      expect(layout.bottom).toBeLessThanOrEqual(layout.viewportHeight);
+      expect(layout.dockBottom).toBeLessThanOrEqual(layout.viewportHeight);
+      expect(layout.bottom).toBeLessThanOrEqual(layout.viewportHeight - device.bottom);
       for (const button of layout.buttons) {
         expect(button.height).toBeGreaterThanOrEqual(44);
-        expect(button.bottom).toBeLessThanOrEqual(layout.bottom - device.bottom);
+        expect(button.bottom).toBeLessThanOrEqual(layout.bottom);
       }
       if (tab === "workouts") await page.screenshot({ path: testInfo.outputPath("workouts-safe-area.png") });
     }
