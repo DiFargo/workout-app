@@ -369,6 +369,7 @@ test("the actual app persistence effect keeps the complete offline primary but c
       useEffectEvent: callback => callback
     },
     "/firebase.js": { auth: { currentUser: null }, db: {} },
+    "/clientAppearance.js": { useClientAppearance: () => {} },
     "firebase/firestore": {
       doc: () => assert.fail("unrelated Firebase effect must not run"),
       setDoc: () => assert.fail("unrelated Firebase effect must not run"),
