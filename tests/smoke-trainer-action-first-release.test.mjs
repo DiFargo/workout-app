@@ -11,6 +11,7 @@ import {
   parseTrainerActionFirstSmokeArgs,
   runTrainerActionFirstSmoke,
   safeTrainerActionSmokeError,
+  trainerSmokeUiCheckpointError,
   validateTrainerActionSmokeIntent
 } from "../scripts/smoke-trainer-action-first-release.mjs";
 import { getDefaultLoginAlias } from "../src/utils/clientUx.js";
@@ -23,6 +24,18 @@ const production = "tren-85720";
 const flags = (project = staging) => ["--run", `--project=${project}`, `--expected-version=${version}`,
   "--allow-admin-catalog-read", ...(project === production ? ["--allow-production"] : [])];
 const cleanupPath = (project = staging, id = runId) => `artifacts/remediation-${version}/trainer-action-first-${project}-${id}.intent.jsonl`;
+
+test("UI checkpoint сохраняет фиксированный этап без текста ошибки, DOM и персональных данных", () => {
+  const source = Object.assign(new Error("Timeout: private@example.invalid, secret-token, page HTML"), { stack: "private stack" });
+  const error = trainerSmokeUiCheckpointError(source, "ui-auth-method-failed");
+  assert.deepEqual(safeTrainerActionSmokeError(error), { code: "ui-auth-method-failed" });
+  assert.equal(error.message, "ui-auth-method-failed");
+  assert.equal(error.cause, undefined);
+  assert.doesNotMatch(JSON.stringify(error), /private|secret|HTML/);
+  assert.deepEqual(safeTrainerActionSmokeError(trainerSmokeUiCheckpointError(source, "private@example.invalid")), { code: "ui-checkpoint-invalid" });
+  const scopeError = Object.assign(new Error("not persisted"), { smokeCode: "ui-write-outside-owned-login-or-mirror" });
+  assert.deepEqual(safeTrainerActionSmokeError(trainerSmokeUiCheckpointError(scopeError, "ui-client-nutrition-failed")), { code: scopeError.smokeCode });
+});
 
 test("подтверждение smoke разрешает только точную отмену локального черновика, не произвольные browser dialogs", () => {
   assert.equal(isAllowedTrainerSmokeDraftDiscardDialog("confirm", "Закрыть без сохранения ответа?"), true);

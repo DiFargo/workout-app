@@ -20,6 +20,21 @@ const field = (document, key) => document?.fields?.[key]?.stringValue;
 export const safeTrainerActionSmokeError = error => ({ code: typeof error?.smokeCode === "string" && /^[a-z0-9-]{1,100}$/.test(error.smokeCode) ? error.smokeCode : "operation-failed" });
 export const isAllowedTrainerSmokeDraftDiscardDialog = (type, message) =>
   type === "confirm" && message === "Закрыть без сохранения ответа?";
+const UI_CHECKPOINT_CODES = new Set([
+  "ui-auth-open-failed", "ui-auth-method-failed", "ui-auth-form-failed", "ui-auth-fill-failed", "ui-auth-submit-failed",
+  "ui-client-shell-failed", "ui-client-workouts-failed", "ui-client-nutrition-failed", "ui-client-progress-failed", "ui-client-cabinet-failed", "ui-client-main-failed",
+  "ui-client-food-search-failed", "ui-client-food-search-close-failed", "ui-client-calendar-failed", "ui-client-calendar-close-failed",
+  "ui-client-measurements-failed", "ui-client-measurements-close-failed",
+  "ui-trainer-shell-failed", "ui-trainer-dashboard-failed", "ui-trainer-clients-failed", "ui-trainer-workouts-failed", "ui-trainer-library-failed", "ui-trainer-more-failed",
+  "ui-trainer-own-client-failed", "ui-trainer-own-summary-failed", "ui-trainer-own-workouts-failed", "ui-trainer-own-nutrition-failed", "ui-trainer-own-measurements-failed",
+  "ui-trainer-own-editor-failed", "ui-trainer-own-messages-failed", "ui-trainer-own-message-draft-failed", "ui-trainer-own-message-discard-failed", "ui-trainer-own-reminders-failed",
+  "ui-admin-shell-failed", "ui-admin-directory-failed", "ui-admin-return-failed"
+]);
+export function trainerSmokeUiCheckpointError(error, checkpoint) {
+  const original = safeTrainerActionSmokeError(error).code;
+  const code = original !== "operation-failed" ? original : UI_CHECKPOINT_CODES.has(checkpoint) ? checkpoint : "ui-checkpoint-invalid";
+  return Object.assign(new Error(code), { smokeCode: code });
+}
 
 export function parseTrainerActionFirstSmokeArgs(args, env = process.env) {
   const result = {}, seen = new Set();
@@ -328,7 +343,7 @@ export async function runTrainerActionFirstSmoke(options, dependencies = {}) {
 async function runOwnedUi({ browser, identity, client, project, base, deadline, pass }) {
   const context = await browser.newContext({ viewport: { width: 402, height: 874 }, serviceWorkers: "block" });
   context.setDefaultTimeout(40000); context.setDefaultNavigationTimeout(45000);
-  let runtimeErrors = 0, violation = false, requestCount = 0;
+  let runtimeErrors = 0, violation = false, requestCount = 0, checkpoint = "ui-auth-open-failed";
   const owned = createTrainerActionSmokePlan(identity.uid.split("_")[1]).identities.map(item => item.uid);
   try {
     await context.route("**/*", async route => {
@@ -380,68 +395,95 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
     const page = await context.newPage(); page.on("pageerror", () => { runtimeErrors++; });
     const checkUi = async label => { check(runtimeErrors === 0 && !violation, "ui-runtime-or-scope-error"); check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "mobile-overflow"); await pass(label); };
     await page.goto(`${base}/?action-first-smoke=1`, { waitUntil: "domcontentloaded" });
-    const method = page.getByRole("button", { name: "Email или логин", exact: true }); if (await method.isVisible()) await method.click();
+    checkpoint = "ui-auth-method-failed";
+    const method = page.getByRole("button", { name: "Email или логин", exact: true });
     const form = page.locator("form").filter({ has: page.getByLabel("Email или логин", { exact: true }) });
+    // DOMContentLoaded precedes React's auth screen: do not branch on an immediate isVisible().
+    await method.or(form).first().waitFor({ state: "visible" });
+    if (await method.isVisible()) await method.click();
+    checkpoint = "ui-auth-form-failed";
+    await form.waitFor({ state: "visible" });
+    checkpoint = "ui-auth-fill-failed";
     await form.getByLabel("Email или логин", { exact: true }).fill(identity.email); await form.getByLabel("Пароль", { exact: true }).fill(identity.password);
+    checkpoint = "ui-auth-submit-failed";
     await form.getByRole("button", { name: "Войти", exact: true }).click();
     if (identity.role === "client") {
+      checkpoint = "ui-client-shell-failed";
+      await page.getByTestId("client-nav-workouts").waitFor({ state: "visible" });
+      const tabCheckpoints = { workouts: "ui-client-workouts-failed", nutrition: "ui-client-nutrition-failed", progress: "ui-client-progress-failed", cabinet: "ui-client-cabinet-failed", main: "ui-client-main-failed" };
       for (const tab of ["workouts", "nutrition", "progress", "cabinet", "main"]) {
+        checkpoint = tabCheckpoints[tab];
         const button = page.getByTestId(`client-nav-${tab}`); await button.waitFor({ state: "visible" }); await button.click();
         await button.and(page.locator('[aria-current="page"]')).waitFor({ state: "visible" });
         if (tab === "workouts") await page.getByText("Synthetic action-first workout", { exact: true }).first().waitFor({ state: "visible" });
         await checkUi(`Клиент: вкладка ${tab}`);
         if (tab === "nutrition") {
+          checkpoint = "ui-client-food-search-failed";
           await page.getByTestId("nutrition-orbit-add").click();
           const search = page.getByTestId("food-search-screen");
           await search.waitFor({ state: "visible" });
           await page.getByTestId("food-search-input").locator("input").waitFor({ state: "visible" });
           await checkUi("Клиент: поиск еды открыт без выбора или добавления продукта");
+          checkpoint = "ui-client-food-search-close-failed";
           await page.locator('[data-food-search-header-action="close"]').click();
           await search.waitFor({ state: "hidden" });
+          checkpoint = "ui-client-calendar-failed";
           await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
           const calendar = page.getByTestId("nutrition-calendar-modal");
           await calendar.waitFor({ state: "visible" });
           check(await calendar.locator("[data-nutrition-calendar-day]").count() === 42, "nutrition-month-grid-incomplete");
           await checkUi("Клиент: календарь питания содержит полную сетку месяца");
+          checkpoint = "ui-client-calendar-close-failed";
           await page.getByTestId("nutrition-calendar-close").click();
           await calendar.waitFor({ state: "hidden" });
         }
         if (tab === "progress") {
+          checkpoint = "ui-client-measurements-failed";
           await page.getByTestId("profile-measurement-start").click();
           const measurements = page.getByTestId("profile-measurements-dialog");
           await measurements.waitFor({ state: "visible" });
           await page.getByTestId("profile-measurements-empty").waitFor({ state: "visible" });
           await checkUi("Клиент: пустые замеры собственного тестового профиля открыты без записи");
+          checkpoint = "ui-client-measurements-close-failed";
           await page.getByTestId("profile-measurements-close").click();
           await measurements.waitFor({ state: "hidden" });
         }
       }
     } else if (identity.role === "trainer") {
+      checkpoint = "ui-trainer-shell-failed";
       await page.getByTestId("trainer-priority-panel").waitFor({ state: "visible" });
+      const tabCheckpoints = { dashboard: "ui-trainer-dashboard-failed", clients: "ui-trainer-clients-failed", workouts: "ui-trainer-workouts-failed", library: "ui-trainer-library-failed", more: "ui-trainer-more-failed" };
       for (const tab of ["dashboard", "clients", "workouts", "library", "more"]) {
+        checkpoint = tabCheckpoints[tab];
         const button = page.locator(`[data-testid="trainer-nav-${tab}"]:visible,[data-testid="trainer-desktop-nav-${tab}"]:visible`);
         await button.click(); await button.and(page.locator('[aria-current="page"]')).waitFor({ state: "visible" }); await checkUi(`Тренер: вкладка ${tab}`);
       }
+      checkpoint = "ui-trainer-own-client-failed";
       await page.locator('[data-testid="trainer-nav-clients"]:visible,[data-testid="trainer-desktop-nav-clients"]:visible').click();
       await page.locator(".trainerClientFilterDisclosure > summary").click();
       await page.getByRole("group", { name: "Дополнительные фильтры клиентов", exact: true }).getByRole("button", { name: "Тестовые", exact: true }).click();
       await page.locator(".trainerNextClientTable > button").filter({ hasText: client.displayName }).click();
       const tabs = page.getByRole("navigation", { name: "Разделы клиента", exact: true });
+      const ownTabCheckpoints = { "Сводка": "ui-trainer-own-summary-failed", "Тренировки": "ui-trainer-own-workouts-failed", "Питание": "ui-trainer-own-nutrition-failed", "Фото и замеры": "ui-trainer-own-measurements-failed" };
       for (const tab of ["Сводка", "Тренировки", "Питание", "Фото и замеры"]) {
+        checkpoint = ownTabCheckpoints[tab];
         const button = tabs.getByRole("button", { name: tab, exact: true }); await button.click();
         await button.and(page.locator('[aria-current="page"]')).waitFor({ state: "visible" }); await checkUi(`Тренер: собственный клиент, ${tab}`);
       }
+      checkpoint = "ui-trainer-own-editor-failed";
       await tabs.getByRole("button", { name: "Тренировки", exact: true }).click();
       await page.locator(".trainerClientProgramCurrentEditButton").click();
       const editor = page.getByRole("dialog", { name: "Редактор программы клиента", exact: true }); await editor.waitFor({ state: "visible" });
       await editor.getByRole("button", { name: "Закрыть редактор", exact: true }).click(); await editor.waitFor({ state: "hidden" });
       await checkUi("Тренер: редактор собственной программы открыт и закрыт без изменений");
+      checkpoint = "ui-trainer-own-messages-failed";
       await tabs.getByRole("button", { name: "Сводка", exact: true }).click();
       await page.getByRole("button", { name: /^Сообщения Переписка с клиентом$/ }).click();
       const messages = page.getByRole("dialog", { name: "Сообщения", exact: true });
       await messages.waitFor({ state: "visible" });
       await messages.getByRole("button", { name: "Написать клиенту", exact: true }).click();
       await messages.waitFor({ state: "hidden" });
+      checkpoint = "ui-trainer-own-message-draft-failed";
       const compose = page.locator('[role="dialog"][aria-labelledby="trainer-feedback-reply-title"]');
       await compose.getByRole("heading", { name: client.displayName, exact: true }).waitFor({ state: "visible" });
       await compose.getByRole("textbox").fill("Synthetic release smoke draft — do not send.");
@@ -458,11 +500,13 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
       };
       page.once("dialog", confirmDiscard);
       try {
+        checkpoint = "ui-trainer-own-message-discard-failed";
         await compose.getByRole("button", { name: "Закрыть", exact: true }).click();
         check(discarded, "owned-draft-discard-confirmation-missing");
         await compose.waitFor({ state: "hidden" });
       } finally { page.off("dialog", confirmDiscard); }
       await checkUi("Тренер: локальный черновик сообщения собственному клиенту отменён без отправки");
+      checkpoint = "ui-trainer-own-reminders-failed";
       await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
       const actions = page.getByRole("dialog", { name: "Управление клиентом", exact: true });
       await actions.getByRole("button", { name: /^Напоминания/ }).click();
@@ -476,6 +520,7 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
       await reminders.getByRole("button", { name: "Закрыть: Уведомления", exact: true }).click();
       await reminders.waitFor({ state: "hidden" });
     } else {
+      checkpoint = "ui-admin-shell-failed";
       await page.getByTestId("admin-panel-hub").waitFor({ state: "visible" });
       await page.getByTestId("admin-overview-sections").waitFor({ state: "visible" });
       const nav = page.getByRole("navigation", { name: "Разделы админки", exact: true });
@@ -484,15 +529,18 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
       check(await nav.getByRole("button", { name: "Обзор", exact: true }).getAttribute("aria-current") === "page", "admin-hub-not-current");
       await checkUi("Администратор: matching-claim hub и метаданные навигации без открытия реальных пользователей");
       // Other overview cards demand-load trainer materials or feedback texts, outside this read scope.
+      checkpoint = "ui-admin-directory-failed";
       await page.getByTestId("admin-overview-sections").getByRole("button", { name: /^Пользователи и роли/ }).click();
       const directory = page.getByTestId("admin-users-workspace");
       await directory.locator('[aria-label="Список пользователей"][aria-busy="false"]').waitFor({ state: "visible" });
       check(await directory.getByRole("alert").count() === 0, "admin-directory-load-error");
       await checkUi("Администратор: карточка каталога открыта только для согласованного чтения, без открытия пользователей");
+      checkpoint = "ui-admin-return-failed";
       await page.getByRole("navigation", { name: "Разделы админки", exact: true }).getByRole("button", { name: "Обзор", exact: true }).click();
       await page.getByTestId("admin-panel-hub").waitFor({ state: "visible" });
       await checkUi("Администратор: возврат из каталога в обзор");
     }
+  } catch (error) { throw trainerSmokeUiCheckpointError(error, checkpoint);
   } finally { await context.close(); }
 }
 
