@@ -5,6 +5,9 @@ import { mkdir, open, readFile, realpath } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { isDeepStrictEqual } from "node:util";
+import { defaultNutritionState } from "../src/data/nutritionDefaults.js";
+import { mergeNutritionStates } from "../functions/nutritionMergeModel.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = "3.0.955";
@@ -17,7 +20,11 @@ const check = (value, code) => { if (!value) fail(code); };
 const hash = value => createHash("sha256").update(value).digest("hex");
 const ownKeys = (value, allowed) => value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).every(key => allowed.includes(key));
 const field = (document, key) => document?.fields?.[key]?.stringValue;
-export const safeTrainerActionSmokeError = error => ({ code: typeof error?.smokeCode === "string" && /^[a-z0-9-]{1,100}$/.test(error.smokeCode) ? error.smokeCode : "operation-failed" });
+export const safeTrainerActionSmokeError = error => ({
+  code: typeof error?.smokeCode === "string" && /^[a-z0-9-]{1,100}$/.test(error.smokeCode) ? error.smokeCode : "operation-failed",
+  ...(UI_CHECKPOINT_CODES.has(error?.uiCheckpoint) ? { uiCheckpoint: error.uiCheckpoint } : {}),
+  ...(UI_GATE_CODES.has(error?.uiGate) ? { uiGate: error.uiGate } : {})
+});
 export const isAllowedTrainerSmokeDraftDiscardDialog = (type, message) =>
   type === "confirm" && message === "Закрыть без сохранения ответа?";
 const UI_CHECKPOINT_CODES = new Set([
@@ -30,6 +37,17 @@ const UI_CHECKPOINT_CODES = new Set([
   "ui-trainer-own-editor-failed", "ui-trainer-own-messages-failed", "ui-trainer-own-message-draft-failed", "ui-trainer-own-message-discard-failed", "ui-trainer-own-reminders-failed",
   "ui-admin-shell-failed", "ui-admin-directory-failed", "ui-admin-return-failed"
 ]);
+const UI_GATE_CODES = new Set(["auth-login", "auth-login-error", "role-verification", "awaiting-trainer", "onboarding", "app-splash", "runtime-error", "client-shell", "trainer-shell", "admin-shell", "unknown"]);
+const UI_NETWORK_GUARD_CODES = new Set([
+  "ui-request-budget-exceeded", "ui-origin-forbidden", "ui-api-method-forbidden", "ui-api-body-invalid", "ui-api-outside-read-scope",
+  "ui-auth-mutation-forbidden", "ui-foreign-auth-forbidden", "ui-firestore-endpoint-forbidden", "ui-write-outside-owned-login-or-mirror",
+  "ui-non-owned-user-subtree", "ui-private-messages-or-photos-forbidden", "unverifiable-ui-write",
+  "ui-nutrition-commit-forbidden", "ui-nutrition-read-shape-forbidden", "ui-nutrition-prepare-scope-forbidden"
+]);
+export function firstTrainerSmokeGuardCode(previous, error) {
+  if (UI_NETWORK_GUARD_CODES.has(previous) || previous === "ui-network-guard-failed") return previous;
+  return UI_NETWORK_GUARD_CODES.has(error?.smokeCode) ? error.smokeCode : "ui-network-guard-failed";
+}
 export function trainerSmokeUiCheckpointError(error, checkpoint) {
   const original = safeTrainerActionSmokeError(error).code;
   const code = original !== "operation-failed" ? original : UI_CHECKPOINT_CODES.has(checkpoint) ? checkpoint : "ui-checkpoint-invalid";
@@ -66,8 +84,14 @@ export function isOwnedTrainerActionSmokePath(uid, path) {
 export function createTrainerActionSmokePlan(runId) {
   check(/^[a-f0-9]{24}$/.test(runId), "invalid-run-id");
   return { marker: `action-first:${runId}`, identities: ROLES.map(role => ({ role, uid: `actionfirst_${runId}_${role}`,
-    email: `action-first-${runId}-${role}@example.invalid`, displayName: `Synthetic action-first ${role} ${runId}` })) };
+    email: `action-first-${runId}-${role}@example.invalid`, displayName: `Smoke ${role} ${runId.slice(0, 6)}` })) };
 }
+export function createTrainerSmokeNutritionSeed() {
+  // A missing diary has no remote favorites. React's existing defaults would then
+  // look like a local edit and trigger an automatic commit during read-only UI checks.
+  return mergeNutritionStates({}, structuredClone(defaultNutritionState));
+}
+export const areTrainerSmokeWorkoutFieldsEqual = (left, right) => isDeepStrictEqual(left, right);
 export function validateTrainerActionSmokeIntent(intent, options) {
   check(ownKeys(intent, ["schemaVersion", "project", "version", "runId", "marker", "cleanupRequired", "identities"]) && intent.schemaVersion === 1 &&
     intent.project === options.project && intent.version === VERSION && typeof intent.cleanupRequired === "boolean", "invalid-cleanup-intent");
@@ -107,13 +131,36 @@ export function isAllowedTrainerSmokeFirestoreEndpoint(method, input, project) {
     return method === "POST" && ["batchGet", "runQuery"].some(rpc => path === `/v1/${database}/documents:${rpc}`);
   } catch { return false; }
 }
+export function isAllowedTrainerSmokeWriteTermination(method, input, raw, project) {
+  if (method !== "POST" || raw !== "" || !isAllowedTrainerSmokeFirestoreEndpoint(method, input, project)) return false;
+  try {
+    const url = new URL(input), params = url.searchParams;
+    if (url.pathname !== "/google.firestore.v1.Firestore/Write/channel" || url.hash) return false;
+    // WebChannel cc() closes a stream via sendBeacon(url + TYPE=terminate, "").
+    // Only its control parameters are accepted; no req/data/headers/write payload can hide in the URL.
+    const allowed = ["database", "VER", "SID", "RID", "TYPE", "zx", "gsessionid"];
+    if ([...params.keys()].some(key => !allowed.includes(key) || params.getAll(key).length !== 1)) return false;
+    return params.get("TYPE") === "terminate" && params.get("VER") === "8" && /^\d{1,16}$/.test(params.get("RID") || "") &&
+      /^[a-z0-9]{1,64}$/.test(params.get("zx") || "") &&
+      ["SID", ...(params.has("gsessionid") ? ["gsessionid"] : [])].every(key => {
+        const value = params.get(key);
+        return typeof value === "string" && value.length > 0 && value.length <= 4096 && !/[\u0000-\u0020\u007f]/.test(value);
+      });
+  } catch { return false; }
+}
 export function isOwnedTrainerSmokeWrite(write, identity, client, project) {
   const match = /^actionfirst_([a-f0-9]{24})_(client|trainer|admin)$/.exec(identity?.uid || "");
   if (!PROJECTS.includes(project) || !match || identity.role !== match[2] || client?.uid !== `actionfirst_${match[1]}_client`) return false;
   if (!ownKeys(write, ["update", "updateMask", "currentDocument"]) || !write.update?.fields || !Array.isArray(write.updateMask?.fieldPaths) || !write.updateMask.fieldPaths.length) return false;
   const prefix = `projects/${project}/databases/(default)/documents/users/`;
-  if (write.update.name === `${prefix}${identity.uid}`) return write.updateMask.fieldPaths.every(key => ["updatedAt", "name"].includes(key)) &&
-    Object.keys(write.update.fields).every(key => ["updatedAt", "name"].includes(key));
+  if (write.update.name === `${prefix}${identity.uid}`) {
+    const keys = Object.keys(write.update.fields), mask = write.updateMask.fieldPaths;
+    const loginWrite = mask.every(key => ["updatedAt", "name"].includes(key)) && keys.every(key => ["updatedAt", "name"].includes(key));
+    // useAppRuntimeEffects synchronizes only this existing theme on the signed-in owner's profile.
+    const themeWrite = keys.length === 2 && mask.length === 2 && ["appTheme", "appThemeUpdatedAt"].every(key => keys.includes(key) && mask.includes(key)) &&
+      field(write.update, "appTheme") === "warm-light" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(field(write.update, "appThemeUpdatedAt") || "");
+    return loginWrite || themeWrite;
+  }
   // Opening this synthetic client's card performs this existing automatic mirror write.
   const mirrorFields = ["clientId", "uid", "id", "email", "name", "role", "trainerId", "assignedTrainerId", "coachId", "trainerEmail", "assignedTrainerEmail", "coachEmail", "createdBy", "createdByEmail", "createdByUid",
     "profile", "aiNutritionProfile", "aiNutritionPlan", "nutritionPlan", "nutritionGoals", "nutritionState", "assignedProgramId", "assignedProgramName", "assignedProgramUpdatedAt", "assignedWorkoutCount", "workoutCalendar",
@@ -198,8 +245,9 @@ export async function runTrainerActionFirstSmoke(options, dependencies = {}) {
     adminCatalogReadAuthorized: true, persistsRealUserData: false, limits: [
       "Админский каталог и сводки читаются только штатным UI в памяти; пользовательские карточки, переписка и реальные фото не открываются.",
       "Навигация, поиск еды/календарь/пустые замеры, редактор собственной программы и напоминания открываются без сохранения. Черновик сообщения собственному клиенту только вводится и отменяется; отправки, старта тренировки и медиа нет.",
-      "Штатный вход обновляет только собственные name/updatedAt; открытие собственной карточки может записать только synthetic trainerClients mirror. Эти документы очищаются.",
+      "Штатный вход обновляет только собственные name/updatedAt и существующую пару appTheme/appThemeUpdatedAt; открытие собственной карточки может записать только synthetic trainerClients mirror. Эти документы очищаются.",
       "Штатное чтение питания может подготовить только собственный синтетический дневник; commits/clear и подготовка чужих дневников запрещены.",
+      "До UI create-only создаётся пустой собственный дневник из штатных defaults; это устраняет автосинхронизацию отличающихся начальных favorites, не разрешая browser commits.",
       "Нет скриншотов, traces, storageState, IAM/App Check обходов и изменений политики ключей администратора.",
       "Новый временный admin проверяет штатную незарегистрированную политику ключей, не существующий физический ключ.",
       "Администратор открывает только обзор и каталог пользователей. Общая библиотека и обращения не открываются: они могут загружать реальные материалы и тексты вне согласованной области.",
@@ -297,6 +345,7 @@ export async function runTrainerActionFirstSmoke(options, dependencies = {}) {
         assignedProgramId: `smoke_${runId}`, assignedProgramName: "Synthetic action-first program", assignedProgramAddedAt: assignedAt, assignedProgramUpdatedAt: assignedAt,
         assignedProgramLifecycleStatus: "active", assignedProgramVisibility: "client_active", assignedProgramAssignedByUid: trainer.uid,
         exercises: [{ id: "smoke_exercise", name: "Synthetic action-first exercise", sets: 2, reps: "10", weight: "0", rest: 30 }], _smokeOnly: plan.marker });
+      await createDoc(client, `users/${client.uid}/nutrition/state`, createTrainerSmokeNutritionSeed());
       const before = (await getDoc(`users/${client.uid}/workouts/smoke_day`)).fields;
       const { chromium } = dependencies.chromium ? { chromium: dependencies.chromium } : await import("playwright");
       browser = await chromium.launch({ headless: true });
@@ -305,7 +354,7 @@ export async function runTrainerActionFirstSmoke(options, dependencies = {}) {
         await runOwnedUi({ browser, identity, client, project, base, deadline, pass });
       }
       await browser.close(); browser = null;
-      check(JSON.stringify((await getDoc(`users/${client.uid}/workouts/smoke_day`)).fields) === JSON.stringify(before), "workout-mutated-during-navigation");
+      check(areTrainerSmokeWorkoutFieldsEqual((await getDoc(`users/${client.uid}/workouts/smoke_day`)).fields, before), "workout-mutated-during-navigation");
       const history = await request(`${docUrl(`users/${client.uid}/history`)}?pageSize=1&mask.fieldPaths=_smokeOnly`);
       check(!(history.documents || []).length, "workout-history-created"); await pass("Синтетическая тренировка не изменилась, история не создана");
     }
@@ -343,7 +392,7 @@ export async function runTrainerActionFirstSmoke(options, dependencies = {}) {
 async function runOwnedUi({ browser, identity, client, project, base, deadline, pass }) {
   const context = await browser.newContext({ viewport: { width: 402, height: 874 }, serviceWorkers: "block" });
   context.setDefaultTimeout(40000); context.setDefaultNavigationTimeout(45000);
-  let runtimeErrors = 0, violation = false, requestCount = 0, checkpoint = "ui-auth-open-failed";
+  let runtimeErrors = 0, violation = false, requestCount = 0, checkpoint = "ui-auth-open-failed", firstGuardFailure = "", page;
   const owned = createTrainerActionSmokePlan(identity.uid.split("_")[1]).identities.map(item => item.uid);
   try {
     await context.route("**/*", async route => {
@@ -359,7 +408,11 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
           const summaryRead = identity.role === "admin" && url.pathname === "/api/nutrition/storage" &&
             typeof body.uid === "string" && /^[A-Za-z0-9_-]{1,128}$/.test(body.uid) && isAllowedTrainerSmokeApi(url.pathname, body, body.uid);
           const ownPreparation = isAllowedTrainerSmokePreparation(url.pathname, body, identity);
-          check(isAllowedTrainerSmokeApi(url.pathname, body, client.uid) || summaryRead || ownPreparation, "ui-api-outside-read-scope");
+          const allowed = isAllowedTrainerSmokeApi(url.pathname, body, client.uid) || summaryRead || ownPreparation;
+          const rejectedCode = url.pathname === "/api/nutrition/storage" && ["commit", "read", "prepare"].includes(body?.action)
+            ? { commit: "ui-nutrition-commit-forbidden", read: "ui-nutrition-read-shape-forbidden", prepare: "ui-nutrition-prepare-scope-forbidden" }[body.action]
+            : "ui-api-outside-read-scope";
+          check(allowed, rejectedCode);
         }
         if (url.hostname === "identitytoolkit.googleapis.com") {
           check(["/v1/accounts:signInWithPassword", "/v1/accounts:lookup"].includes(url.pathname), "ui-auth-mutation-forbidden");
@@ -387,12 +440,13 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
           check(!foreign.length || (identity.role === "admin" && foreign.every(parts => parts.length === 1 || summaryCollections.includes(parts[1]))), "ui-non-owned-user-subtree");
           check(!collections.some(name => /^(telegramMessages|messages|progressPhotos|clientProgressPhotos|photos|feedback)$/i.test(name)) ||
             (references.length > 0 && !foreign.length), "ui-private-messages-or-photos-forbidden");
-          if (/\/Write\/|:commit$/.test(url.pathname) && request.method() === "POST") check(payloads.length > 0, "unverifiable-ui-write");
+          if (/\/Write\/|:commit$/.test(url.pathname) && request.method() === "POST")
+            check(payloads.length > 0 || isAllowedTrainerSmokeWriteTermination(request.method(), url.href, raw, project), "unverifiable-ui-write");
         }
         await route.continue();
-      } catch { violation = true; await route.abort().catch(() => {}); }
+      } catch (error) { violation = true; firstGuardFailure = firstTrainerSmokeGuardCode(firstGuardFailure, error); await route.abort().catch(() => {}); }
     });
-    const page = await context.newPage(); page.on("pageerror", () => { runtimeErrors++; });
+    page = await context.newPage(); page.on("pageerror", () => { runtimeErrors++; });
     const checkUi = async label => { check(runtimeErrors === 0 && !violation, "ui-runtime-or-scope-error"); check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "mobile-overflow"); await pass(label); };
     await page.goto(`${base}/?action-first-smoke=1`, { waitUntil: "domcontentloaded" });
     checkpoint = "ui-auth-method-failed";
@@ -431,6 +485,7 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
           await page.getByRole("button", { name: "Календарь питания", exact: true }).click();
           const calendar = page.getByTestId("nutrition-calendar-modal");
           await calendar.waitFor({ state: "visible" });
+          await calendar.getByTestId("nutrition-calendar-grid").and(page.locator('[aria-busy="false"]')).waitFor({ state: "visible" });
           check(await calendar.locator("[data-nutrition-calendar-day]").count() === 42, "nutrition-month-grid-incomplete");
           await checkUi("Клиент: календарь питания содержит полную сетку месяца");
           checkpoint = "ui-client-calendar-close-failed";
@@ -463,12 +518,12 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
       await page.locator(".trainerClientFilterDisclosure > summary").click();
       await page.getByRole("group", { name: "Дополнительные фильтры клиентов", exact: true }).getByRole("button", { name: "Тестовые", exact: true }).click();
       await page.locator(".trainerNextClientTable > button").filter({ hasText: client.displayName }).click();
-      const tabs = page.getByRole("navigation", { name: "Разделы клиента", exact: true });
+      const tabs = page.locator(".trainerNextClientTabs:visible,.trainerNextClientMobileNav:visible").first();
       const ownTabCheckpoints = { "Сводка": "ui-trainer-own-summary-failed", "Тренировки": "ui-trainer-own-workouts-failed", "Питание": "ui-trainer-own-nutrition-failed", "Фото и замеры": "ui-trainer-own-measurements-failed" };
       for (const tab of ["Сводка", "Тренировки", "Питание", "Фото и замеры"]) {
         checkpoint = ownTabCheckpoints[tab];
         const button = tabs.getByRole("button", { name: tab, exact: true }); await button.click();
-        await button.and(page.locator('[aria-current="page"]')).waitFor({ state: "visible" }); await checkUi(`Тренер: собственный клиент, ${tab}`);
+        await button.and(page.locator('[aria-current="page"],[aria-pressed="true"]')).waitFor({ state: "visible" }); await checkUi(`Тренер: собственный клиент, ${tab}`);
       }
       checkpoint = "ui-trainer-own-editor-failed";
       await tabs.getByRole("button", { name: "Тренировки", exact: true }).click();
@@ -540,8 +595,32 @@ async function runOwnedUi({ browser, identity, client, project, base, deadline, 
       await page.getByTestId("admin-panel-hub").waitFor({ state: "visible" });
       await checkUi("Администратор: возврат из каталога в обзор");
     }
-  } catch (error) { throw trainerSmokeUiCheckpointError(error, checkpoint);
+  } catch (error) {
+    const failure = trainerSmokeUiCheckpointError(error, checkpoint);
+    if (firstGuardFailure) failure.smokeCode = firstGuardFailure;
+    failure.uiCheckpoint = checkpoint;
+    failure.uiGate = await identifyTrainerSmokeUiGate(page).catch(() => "unknown");
+    throw failure;
   } finally { await context.close(); }
+}
+
+async function identifyTrainerSmokeUiGate(page) {
+  if (!page || page.isClosed()) return "unknown";
+  // Only fixed selector-presence enums leave memory, never text, HTML, URLs or screenshots.
+  const gates = [
+    ["runtime-error", page.getByRole("heading", { name: "Экран не загрузился", exact: true })],
+    ["role-verification", page.locator("#role-verification-title")],
+    ["awaiting-trainer", page.locator("#pending-access-title")],
+    ["onboarding", page.getByTestId("first-setup-onboarding")],
+    ["app-splash", page.getByRole("status", { name: "Загрузка приложения", exact: true })],
+    ["auth-login-error", page.locator('[aria-labelledby="auth-title"]').getByRole("alert")],
+    ["auth-login", page.locator("#auth-title")],
+    ["client-shell", page.getByTestId("client-nav-workouts")],
+    ["trainer-shell", page.getByTestId("trainer-priority-panel")],
+    ["admin-shell", page.getByTestId("admin-panel-hub")]
+  ];
+  for (const [code, locator] of gates) if (await locator.first().isVisible()) return code;
+  return "unknown";
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {

@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  areTrainerSmokeWorkoutFieldsEqual,
   createTrainerActionSmokePlan,
+  createTrainerSmokeNutritionSeed,
+  firstTrainerSmokeGuardCode,
   isAllowedTrainerSmokeApi,
   isAllowedTrainerSmokePreparation,
   isAllowedTrainerSmokeFirestoreEndpoint,
+  isAllowedTrainerSmokeWriteTermination,
   isAllowedTrainerSmokeDraftDiscardDialog,
   isOwnedTrainerActionSmokePath,
   isOwnedTrainerSmokeWrite,
@@ -16,6 +20,9 @@ import {
 } from "../scripts/smoke-trainer-action-first-release.mjs";
 import { getDefaultLoginAlias } from "../src/utils/clientUx.js";
 import { getTrainerClientMirrorPayload } from "../src/utils/trainerClientMirror.js";
+import { limitUserDisplayName, MAX_USER_DISPLAY_NAME_LENGTH } from "../src/utils/userDisplayName.js";
+import { defaultNutritionState } from "../src/data/nutritionDefaults.js";
+import { mergeNutritionStates } from "../functions/nutritionMergeModel.js";
 
 const version = "3.0.955";
 const runId = "0123456789abcdef01234567";
@@ -24,6 +31,38 @@ const production = "tren-85720";
 const flags = (project = staging) => ["--run", `--project=${project}`, `--expected-version=${version}`,
   "--allow-admin-catalog-read", ...(project === production ? ["--allow-production"] : [])];
 const cleanupPath = (project = staging, id = runId) => `artifacts/remediation-${version}/trainer-action-first-${project}-${id}.intent.jsonl`;
+
+test("контроль неизменности Firestore допускает только порядок ключей, но не изменение полей или порядка подходов", () => {
+  const before = { name: { stringValue: "Synthetic workout" }, exercises: { arrayValue: { values: [
+    { mapValue: { fields: { weight: { integerValue: "10" }, reps: { integerValue: "12" } } } },
+    { mapValue: { fields: { weight: { integerValue: "20" }, reps: { integerValue: "8" } } } }
+  ] } } };
+  const reordered = { exercises: structuredClone(before.exercises), name: structuredClone(before.name) };
+  const first = reordered.exercises.arrayValue.values[0].mapValue;
+  first.fields = { reps: first.fields.reps, weight: first.fields.weight };
+  assert.equal(areTrainerSmokeWorkoutFieldsEqual(before, reordered), true);
+  for (const mutate of [value => { value.name.stringValue = "Changed"; },
+    value => { value.extra = { booleanValue: true }; }, value => { delete value.name; },
+    value => { value.exercises.arrayValue.values.reverse(); },
+    value => { value.exercises.arrayValue.values[0].mapValue.fields.weight.integerValue = "11"; }]) {
+    const changed = structuredClone(before); mutate(changed);
+    assert.equal(areTrainerSmokeWorkoutFieldsEqual(before, changed), false);
+  }
+});
+
+test("пустой synthetic дневник совпадает со штатной гидратацией и не создаёт локальную правку favorites", () => {
+  const seed = createTrainerSmokeNutritionSeed();
+  assert.deepEqual(seed.days, {});
+  assert.deepEqual(seed.myFoods, {});
+  assert.deepEqual(seed.favorites, defaultNutritionState.favorites);
+  assert.deepEqual(seed.goals, defaultNutritionState.goals);
+  const remote = mergeNutritionStates({}, seed);
+  assert.deepEqual(mergeNutritionStates(defaultNutritionState, remote), remote);
+  assert.notDeepEqual(mergeNutritionStates(defaultNutritionState, mergeNutritionStates({}, {})), mergeNutritionStates({}, {}), "Отсутствующий дневник воспроизводит исходную разницу favorites");
+  seed.favorites.push("local-only");
+  assert.equal(defaultNutritionState.favorites.includes("local-only"), false);
+  assert.equal(createTrainerSmokeNutritionSeed().favorites.includes("local-only"), false);
+});
 
 test("UI checkpoint сохраняет фиксированный этап без текста ошибки, DOM и персональных данных", () => {
   const source = Object.assign(new Error("Timeout: private@example.invalid, secret-token, page HTML"), { stack: "private stack" });
@@ -35,6 +74,17 @@ test("UI checkpoint сохраняет фиксированный этап бе�
   assert.deepEqual(safeTrainerActionSmokeError(trainerSmokeUiCheckpointError(source, "private@example.invalid")), { code: "ui-checkpoint-invalid" });
   const scopeError = Object.assign(new Error("not persisted"), { smokeCode: "ui-write-outside-owned-login-or-mirror" });
   assert.deepEqual(safeTrainerActionSmokeError(trainerSmokeUiCheckpointError(scopeError, "ui-client-nutrition-failed")), { code: scopeError.smokeCode });
+});
+
+test("первая сетевая блокировка и UI gate сохраняются только как известные коды", () => {
+  const first = firstTrainerSmokeGuardCode("", { smokeCode: "ui-auth-mutation-forbidden", message: "private URL?token=secret" });
+  assert.equal(first, "ui-auth-mutation-forbidden");
+  assert.equal(firstTrainerSmokeGuardCode(first, { smokeCode: "ui-origin-forbidden" }), first);
+  assert.equal(firstTrainerSmokeGuardCode("", { smokeCode: "private-user-id", message: "private" }), "ui-network-guard-failed");
+  assert.deepEqual(safeTrainerActionSmokeError({ smokeCode: first, uiCheckpoint: "ui-client-shell-failed", uiGate: "auth-login-error", message: "private" }), {
+    code: first, uiCheckpoint: "ui-client-shell-failed", uiGate: "auth-login-error"
+  });
+  assert.deepEqual(safeTrainerActionSmokeError({ smokeCode: first, uiCheckpoint: "private-user-id", uiGate: "<html>secret</html>" }), { code: first });
 });
 
 test("подтверждение smoke разрешает только точную отмену локального черновика, не произвольные browser dialogs", () => {
@@ -99,13 +149,15 @@ test("план содержит ровно три уникальные synthetic
   assert.equal(plan.marker, `action-first:${runId}`);
   assert.deepEqual(plan.identities, ["client", "trainer", "admin"].map(role => ({
     role, uid: `actionfirst_${runId}_${role}`, email: `action-first-${runId}-${role}@example.invalid`,
-    displayName: `Synthetic action-first ${role} ${runId}`
+    displayName: `Smoke ${role} ${runId.slice(0, 6)}`
   })));
   for (const field of ["uid", "email"]) assert.equal(new Set(plan.identities.map(identity => identity[field])).size, 3);
   assert.deepEqual(createTrainerActionSmokePlan(runId), plan);
   for (const identity of plan.identities) {
     assert.ok(identity.email.split("@")[0].length > 32);
     assert.equal(getDefaultLoginAlias(identity.email), "", "Вход не должен создавать глобальный loginAlias");
+    assert.ok(identity.displayName.length <= MAX_USER_DISPLAY_NAME_LENGTH);
+    assert.equal(limitUserDisplayName(identity.displayName), identity.displayName, "Штатный вход не должен менять synthetic имя и ломать адресный выбор/mirror guard");
   }
   assert.doesNotMatch(JSON.stringify(plan), /password|idToken|refreshToken|accessToken|privateKey/);
   for (const id of ["", "bad", "0123456789abcdef0123456", `${runId}0`, runId.toUpperCase(), "../0123456789abcdef0123", null, 12]) {
@@ -221,6 +273,41 @@ test("Firestore transport guard запрещает REST-записи и подм
   assert.equal(isAllowedTrainerSmokeFirestoreEndpoint("GET", channel, "other-project"), false);
 });
 
+test("пустой Write termination разрешён только как точный sendBeacon control packet, не как запись", () => {
+  for (const project of [staging, production]) {
+    const database = `projects/${project}/databases/(default)`;
+    const url = new URL("https://firestore.googleapis.com/google.firestore.v1.Firestore/Write/channel");
+    url.search = new URLSearchParams({ database, VER: "8", SID: "synthetic-session", RID: "123", TYPE: "terminate", zx: "abc123" });
+    assert.equal(isAllowedTrainerSmokeWriteTermination("POST", url.href, "", project), true);
+    url.searchParams.set("gsessionid", "synthetic-http-session");
+    assert.equal(isAllowedTrainerSmokeWriteTermination("POST", url.href, "", project), true);
+    for (const raw of [null, undefined, " ", "{}", "count=0", "count=1&req0___data__=%7B%7D", JSON.stringify({ writes: [] })])
+      assert.equal(isAllowedTrainerSmokeWriteTermination("POST", url.href, raw, project), false);
+    for (const method of ["GET", "PATCH", "DELETE", "OPTIONS"]) assert.equal(isAllowedTrainerSmokeWriteTermination(method, url.href, "", project), false);
+    for (const [key, value] of [["TYPE", "xmlhttp"], ["TYPE", "init"], ["VER", "9"], ["RID", "rpc"], ["RID", "-1"], ["SID", ""], ["zx", ""]]) {
+      const changed = new URL(url); changed.searchParams.set(key, value);
+      assert.equal(isAllowedTrainerSmokeWriteTermination("POST", changed.href, "", project), false, key);
+    }
+    for (const key of ["TYPE", "database", "SID", "VER", "RID", "zx"]) {
+      const changed = new URL(url); changed.searchParams.append(key, changed.searchParams.get(key));
+      assert.equal(isAllowedTrainerSmokeWriteTermination("POST", changed.href, "", project), false, `duplicate ${key}`);
+      changed.searchParams.delete(key);
+      assert.equal(isAllowedTrainerSmokeWriteTermination("POST", changed.href, "", project), false, `missing ${key}`);
+    }
+    for (const key of ["$req", "req0___data__", "data", "writes", "headers", "count", "AID", "CVER", "arbitrary"]) {
+      const changed = new URL(url); changed.searchParams.set(key, JSON.stringify({ writes: [] }));
+      assert.equal(isAllowedTrainerSmokeWriteTermination("POST", changed.href, "", project), false, key);
+    }
+    const foreignDatabase = new URL(url); foreignDatabase.searchParams.set("database", "projects/foreign/databases/(default)");
+    for (const input of [url.href.replace("/Write/", "/Listen/"), url.href.replace("https:", "http:"),
+      url.href.replace("firestore.googleapis.com", "foreign.invalid"), url.href.replace("https://", "https://user:pass@"),
+      `${url.href}#data`, foreignDatabase.href,
+      `https://firestore.googleapis.com/v1/${database}/documents:commit`])
+      assert.equal(isAllowedTrainerSmokeWriteTermination("POST", input, "", project), false);
+    assert.equal(isAllowedTrainerSmokeWriteTermination("POST", url.href, "", "foreign-project"), false);
+  }
+});
+
 const wireFields = value => Object.fromEntries(Object.entries(value).map(([key, item]) => [key, item === null ? { nullValue: null }
   : Array.isArray(item) ? { arrayValue: { values: [] } } : typeof item === "object" ? { mapValue: { fields: wireFields(item) } }
     : typeof item === "boolean" ? { booleanValue: item } : typeof item === "number" ? { integerValue: String(item) } : { stringValue: item }]));
@@ -247,6 +334,24 @@ test("write guard разрешает реальный helper mirror только
   assert.equal(isOwnedTrainerSmokeWrite(rootWrite, client, client, staging), true);
   rootWrite.updateMask.fieldPaths.push("role");
   assert.equal(isOwnedTrainerSmokeWrite(rootWrite, client, client, staging), false);
+});
+
+test("штатная синхронизация темы разрешает только точные два поля собственного synthetic профиля", () => {
+  const [client, trainer] = createTrainerActionSmokePlan(runId).identities;
+  const write = { update: { name: `projects/${staging}/databases/(default)/documents/users/${client.uid}`,
+    fields: wireFields({ appTheme: "warm-light", appThemeUpdatedAt: "2026-11-12T00:00:00.000Z" }) },
+    updateMask: { fieldPaths: ["appTheme", "appThemeUpdatedAt"] } };
+  assert.equal(isOwnedTrainerSmokeWrite(write, client, client, staging), true);
+  assert.equal(isOwnedTrainerSmokeWrite(write, trainer, client, staging), false);
+  for (const mutate of [value => { value.update.name = value.update.name.replace(client.uid, "real-user"); },
+    value => { value.update.fields.appTheme.stringValue = "arbitrary"; },
+    value => { value.update.fields.appThemeUpdatedAt.stringValue = "private text"; },
+    value => { value.update.fields.role = { stringValue: "admin" }; value.updateMask.fieldPaths.push("role"); },
+    value => { value.updateMask.fieldPaths = ["appTheme"]; },
+    value => { value.update.fields.extra = { stringValue: "forbidden" }; }]) {
+    const changed = structuredClone(write); mutate(changed);
+    assert.equal(isOwnedTrainerSmokeWrite(changed, client, client, staging), false);
+  }
 });
 
 test("потерянный ответ Auth create очищает аккаунт по заранее сохранённому intent без browser или облака", async () => {
