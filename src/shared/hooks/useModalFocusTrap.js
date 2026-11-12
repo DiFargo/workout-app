@@ -91,6 +91,7 @@ export function useModalFocusTrap() {
 
       window.requestAnimationFrame(() => {
         if (activeDialog !== dialog || !dialog.isConnected) return;
+        if (dialog.contains(document.activeElement)) return;
         const focusTarget = requestedFocus instanceof HTMLElement
           ? requestedFocus
           : closeButton instanceof HTMLElement ? closeButton : getFocusable()[0] || dialog;

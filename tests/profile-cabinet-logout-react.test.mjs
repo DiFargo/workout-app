@@ -124,6 +124,46 @@ test("Клиентский выход: явное подтверждение в�
   });
 });
 
+test("Отложенный autofocus подтверждения не перехватывает фокус после Tab", { timeout: 30000 }, async () => {
+  await fixture(async page => {
+    await page.evaluate(() => {
+      const requestFrame = window.requestAnimationFrame.bind(window);
+      const cancelFrame = window.cancelAnimationFrame.bind(window);
+      const frames = new Map();
+      let nextId = 0;
+      window.requestAnimationFrame = callback => { const id = --nextId; frames.set(id, callback); return id; };
+      window.cancelAnimationFrame = id => { if (!frames.delete(id)) cancelFrame(id); };
+      window.cabinetScene.autofocus = {
+        pending: () => frames.size,
+        flush() {
+          window.requestAnimationFrame = requestFrame;
+          window.cancelAnimationFrame = cancelFrame;
+          const callbacks = [...frames.values()]; frames.clear();
+          callbacks.forEach(callback => callback(performance.now()));
+          return callbacks.length;
+        }
+      };
+    });
+    await openConfirmation(page);
+    await expect.poll(() => page.evaluate(() => window.cabinetScene.autofocus.pending())).toBe(1);
+    const confirm = confirmation(page).getByRole("button", { name: "Выйти", exact: true });
+    const cancel = confirmation(page).getByRole("button", { name: "Остаться", exact: true });
+    await page.keyboard.press("Tab");
+    await expect(confirm).toBeFocused();
+    assert.equal(await page.evaluate(() => window.cabinetScene.autofocus.flush()), 1);
+    await expect(confirm).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(cancel).toBeFocused();
+    await page.keyboard.press("Shift+Tab");
+    await expect(confirm).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(confirmation(page)).toHaveCount(0);
+    await expect(exit(page)).toBeEnabled();
+    await expect(exit(page)).toBeFocused();
+    assert.equal((await state(page)).logoutCalls, 0);
+  });
+});
+
 test("Кабинет staff: обновление в шапке и прежний нижний выход не заменяются клиентским подтверждением", { timeout: 30000 }, async () => {
   await fixture(async page => {
     await expect(header(page).getByTestId("profile-cabinet-logout")).toHaveCount(0);
