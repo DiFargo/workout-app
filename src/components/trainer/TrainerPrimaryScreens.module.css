@@ -2,12 +2,12 @@
 .scope { min-width: 0; }
 .journalLoading { display: flex; align-items: center; min-height: 112px; padding: 16px; border: 1px solid var(--apple-separator, rgba(60,60,67,.12)); border-radius: 16px; color: var(--apple-secondary, #636366); background: var(--apple-surface, #fff); font-size: 14px; }
 :global(html[data-trainer-variant="v2"] body #root) .scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab)) {
-  --tn-text: #1c1c1e;
-  --tn-muted: #636366;
-  --tn-surface-soft: #efeff4;
-  --tn-line: rgba(60,60,67,.12);
-  --trainer-v2-ink: #1c1c1e;
-  --trainer-v2-muted: #636366;
+  --tn-text: var(--trainer-theme-text, #1c1c1e);
+  --tn-muted: var(--trainer-theme-muted, #636366);
+  --tn-surface-soft: var(--trainer-theme-soft, #efeff4);
+  --tn-line: var(--trainer-theme-border, rgba(60,60,67,.12));
+  --trainer-v2-ink: var(--trainer-theme-text, #1c1c1e);
+  --trainer-v2-muted: var(--trainer-theme-muted, #636366);
   color: var(--tn-text);
   background: var(--apple-page, #f2f2f7) !important;
 }

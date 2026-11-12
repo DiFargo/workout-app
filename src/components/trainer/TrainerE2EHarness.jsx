@@ -157,10 +157,13 @@ function TrainerE2EHarness({ ProgramManagerView }) {
     } : {})
   });
   const layoutPreview = new URLSearchParams(window.location.search).get("layoutPreview") === "1";
-  const clients = primaryScreensAudit ? [selectedClient,
+  // Selecting a fixture client must not replace the catalogue's first record.
+  // Keep identities stable while still reflecting edits to the selected fixture.
+  const [primaryFixtureClients] = useState(() => [selectedClient,
     { ...selectedClient, id: "primary_new", name: "Новый клиент", assignedProgramId: "", assignedProgramName: "", assignedWorkoutCount: 0, trainerSetupChecklist: {} },
     { ...selectedClient, id: "primary_long", name: "Александра Константинопольская" }
-  ] : layoutPreview ? [selectedClient, ...[
+  ]);
+  const clients = primaryScreensAudit ? primaryFixtureClients.map(client => client.id === selectedClient.id ? selectedClient : client) : layoutPreview ? [selectedClient, ...[
     "Анна Константинопольская", "Михаил", "Александра Иванова", "Дмитрий", "Екатерина"
   ].map((name, index) => ({ ...selectedClient, id: `layout_client_${index}`, name }))] : [selectedClient];
   const history = [

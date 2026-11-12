@@ -28,10 +28,11 @@ export default function TrainerClientUtilitySheet({ title, eyebrow, children, he
         data-modal-surface="true"
         data-trainer-modal-surface="true"
         data-trainer-modal-frame="true"
+        data-trainer-appearance-sheet={variant === "appearance" ? "true" : undefined}
         aria-label={title}
         onMouseDown={(event) => event.stopPropagation()}
         onKeyDown={(event) => {
-          if (variant === "workoutHistory" && event.key === "Escape") {
+          if (["workoutHistory", "appearance"].includes(variant) && event.key === "Escape") {
             event.preventDefault();
             event.stopPropagation();
             requestClose();

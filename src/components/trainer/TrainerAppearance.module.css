@@ -1,0 +1,183 @@
+/* Approved trainer action-first surface. Active only in standalone TrainerShell. */
+.document[data-trainer-appearance] {
+  --trainer-theme-page: #edf4f7;
+  --trainer-theme-surface: #fff;
+  --trainer-theme-soft: #eaf0f3;
+  --trainer-theme-text: #19303e;
+  --trainer-theme-muted: #506b7b;
+  --trainer-theme-border: rgba(38, 66, 81, .13);
+  --trainer-theme-accent: #2b707d;
+  --trainer-theme-hero: linear-gradient(130deg, #e4f1f0, #e5eef8);
+  --trainer-theme-glass: rgba(250, 253, 255, .88);
+  --trainer-theme-lens: linear-gradient(135deg, rgba(255,255,255,.86), rgba(226,237,242,.7));
+  --trainer-theme-shadow: 0 8px 25px rgba(29, 60, 77, .07);
+  --trainer-on-action: #fff;
+  --trainer-success: #237a42;
+  --trainer-success-soft: #e9f5ed;
+  --trainer-danger: #b4232c;
+  --trainer-danger-soft: #fff0f1;
+  --trainer-theme-action: linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%);
+  background: var(--trainer-theme-page);
+  color-scheme: light;
+}
+.document[data-trainer-appearance="dark"] {
+  --trainer-theme-page: #080b0e;
+  --trainer-theme-surface: #161e24;
+  --trainer-theme-soft: #23323b;
+  --trainer-theme-text: #edf4f7;
+  --trainer-theme-muted: #acbeca;
+  --trainer-theme-border: rgba(181, 210, 226, .17);
+  --trainer-theme-accent: #a7d6df;
+  --trainer-theme-hero: linear-gradient(130deg, #172a30, #223d45 62%, #213e38);
+  --trainer-theme-glass: rgba(30, 45, 55, .91);
+  --trainer-theme-lens: linear-gradient(135deg, rgba(164,218,225,.24), rgba(135,173,196,.14));
+  --trainer-theme-shadow: 0 12px 28px rgba(0,0,0,.18);
+  --trainer-on-action: #163742;
+  --trainer-success: #9cdbb7;
+  --trainer-success-soft: #1a342a;
+  --trainer-danger: #ffafb5;
+  --trainer-danger-soft: #422329;
+  --trainer-theme-action: linear-gradient(115deg, #9dd7c9, #a5c9e4);
+  color-scheme: dark;
+}
+.document body { background: var(--trainer-theme-page) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope {
+  --trainer-text: var(--trainer-theme-text);
+  --trainer-muted: var(--trainer-theme-muted);
+  --trainer-border: var(--trainer-theme-border);
+  --trainer-surface: var(--trainer-theme-surface);
+  --trainer-surface-soft: var(--trainer-theme-soft);
+  --trainer-accent: var(--trainer-theme-accent);
+  --apple-page: var(--trainer-theme-page);
+  --apple-surface: var(--trainer-theme-surface);
+  --apple-muted: var(--trainer-theme-soft);
+  --apple-text: var(--trainer-theme-text);
+  --apple-secondary: var(--trainer-theme-muted);
+  --apple-separator: var(--trainer-theme-border);
+  --apple-accent: var(--trainer-theme-accent);
+  --tn-page: var(--trainer-theme-page);
+  --tn-surface: var(--trainer-theme-surface);
+  --tn-surface-soft: var(--trainer-theme-soft);
+  --tn-text: var(--trainer-theme-text);
+  --tn-muted: var(--trainer-theme-muted);
+  --tn-line: var(--trainer-theme-border);
+  --tn-purple: var(--trainer-theme-accent);
+  --tn-purple-strong: var(--trainer-theme-accent);
+  --tn-purple-soft: var(--trainer-theme-soft);
+  --tn-shadow: var(--trainer-theme-shadow);
+  --trainer-v2-ink: var(--trainer-theme-text);
+  --trainer-v2-muted: var(--trainer-theme-muted);
+  --trainer-v2-line: var(--trainer-theme-border);
+  --trainer-v2-surface: var(--trainer-theme-soft);
+  --trainer-v2-accent: var(--trainer-theme-accent);
+  color: var(--tn-text);
+  background: var(--tn-page) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMain) { padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); background: var(--tn-page) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab)) {
+  background: transparent !important;
+  color: var(--tn-text);
+}
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextDesktopPageHead) { min-height: 0; padding: 0 0 18px; border: 0; background: transparent !important; box-shadow: none; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextDesktopPageHead h1) { margin: 0 0 6px; font-size: 28px; line-height: 1.2; letter-spacing: -.8px; color: var(--tn-text); }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextDesktopPageHead p) { color: var(--tn-muted); font-size: 14px; }
+.eyebrow { display: block; margin-bottom: 12px; font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--tn-muted); }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextPage:is(.trainerNextDashboard,.trainerNextClientsPage,.trainerNextLibraryPage,.trainerNextCabinetPage,.trainerNextProgramsTab) :is(h2,h3)) { color: var(--tn-text) !important; }
+.today { margin: 0 0 18px !important; color: var(--tn-muted); font-size: 13px; text-transform: capitalize; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextAvatar) { background: var(--tn-surface-soft) !important; color: var(--tn-purple) !important; border-color: var(--tn-line); }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextStatus) { background: var(--tn-surface-soft) !important; color: var(--tn-purple) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextStatus.active) { background: var(--trainer-success-soft) !important; color: var(--trainer-success) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextPrimary),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryAdd),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextClientSearchAdd) { background: var(--trainer-theme-action) !important; color: var(--trainer-on-action) !important; border: 0; box-shadow: none; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextSearch),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryFilters select) { background: var(--tn-surface) !important; border-color: var(--tn-line) !important; color: var(--tn-text) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextSearch input) { color: var(--tn-text) !important; background: transparent !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextSearch input::placeholder) { color: var(--tn-muted); }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextClientsStandalone) { padding: 0 !important; background: transparent !important; border: 0 !important; box-shadow: none; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextClientTable > button) { padding: 18px; border: 1px solid var(--tn-line); border-radius: 22px; background: var(--tn-surface) !important; color: var(--tn-text) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextClientTable > button strong),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextClientTable > button b) { color: var(--tn-text) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextClientTable > button small) { color: var(--tn-muted) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerMessageFilters button),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerClientFilterDisclosure > summary) { background: var(--tn-surface-soft) !important; color: var(--tn-muted) !important; border: 1px solid transparent !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerMessageFilters button[aria-pressed="true"]) { color: var(--tn-purple) !important; background: var(--tn-surface) !important; border-color: var(--tn-line) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryPage article[role="button"]) { border-radius: 22px !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryPage .trainerNextPanelTitle h2) { font-size: 20px !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryPage .trainerNextPanelTitle p) { font-size: 14px !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryPage select) { color: var(--tn-text) !important; background: var(--tn-surface) !important; border-color: var(--tn-line) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryPage button[aria-pressed]) { color: var(--tn-purple) !important; background: var(--tn-surface-soft) !important; border-color: var(--tn-line) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextLibraryPage label > span) { color: var(--tn-muted) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetHero),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetStats),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetWorkspaceLinks) { color: var(--tn-text) !important; background: var(--tn-surface) !important; border: 1px solid var(--tn-line) !important; border-radius: 24px !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetHero h2),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetStats strong),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetWorkspaceLinks strong) { color: var(--tn-text) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetHero p),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetHero span),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetStats span),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetWorkspaceLinks small) { color: var(--tn-muted) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetStats article) { background: transparent !important; color: var(--tn-text) !important; border-color: var(--tn-line) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope:has(:global(.trainerNextCabinetPage)) :global(.trainerNextMobileVersion) { display: none !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetWorkspaceLinks) { display: grid; grid-template-columns: 1fr; overflow: hidden; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetWorkspaceLinks > button) { min-height: 76px; padding: 16px; background: transparent !important; color: var(--tn-text) !important; border: 0; border-bottom: 1px solid var(--tn-line); }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetWorkspaceLinks > button:last-child) { border-bottom: 0; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerCabinetWorkspaceIcon) { color: var(--tn-purple) !important; background: var(--tn-surface-soft) !important; }
+/* One glass dock and one moving lens; routes/callbacks are unchanged. */
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav)) {
+  box-sizing: border-box; isolation: isolate; display: grid; grid-template-columns: repeat(5,minmax(0,1fr)) !important; gap: 0 !important;
+  width: min(560px,calc(100% - 24px)) !important; height: 76px !important; min-height: 76px !important; padding: 5px !important;
+  border: 1px solid var(--tn-line) !important; border-radius: 42px !important; background: var(--trainer-theme-glass) !important;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.28), var(--trainer-theme-shadow) !important;
+  backdrop-filter: blur(20px) saturate(1.25) !important; -webkit-backdrop-filter: blur(20px) saturate(1.25) !important;
+  bottom: max(12px,env(safe-area-inset-bottom,0px)) !important; left: 50% !important; right: auto !important; transform: translateX(-50%) !important;
+}
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileNav) { display: none; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button) { position: relative; z-index: 1; display: grid; place-items: center; align-content: center; width: auto; min-width: 0; min-height: 64px; margin: 0; padding: 6px 1px; gap: 5px; font-size: 11px; font-weight: 600; line-height: 1.1; border: 0 !important; border-radius: 34px; color: var(--tn-muted) !important; background: transparent !important; box-shadow: none !important; transform: none; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button[aria-current="page"]) { color: var(--tn-purple) !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button.active::before) { display: none !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) .trainerNextNavIcon svg) { width: 23px; height: 23px; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDockVersion,.trainerNextMobileVersion)) { display: none !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope:not(:has(:global(.trainerNextClientPage)))::after {
+  content: "" !important; display: block !important; position: fixed; z-index: 89; bottom: 0; left: 0; right: 0;
+  width: 100%; max-width: none; height: calc(50px + env(safe-area-inset-bottom,0px));
+  background: var(--tn-page); box-shadow: none; border-radius: 0; transform: none; pointer-events: none;
+}
+.navLens { position: absolute; z-index: 0; top: 5px; bottom: 5px; left: 5px; width: calc((100% - 10px)/5); border: 1px solid var(--tn-line); border-radius: 36px; background: var(--trainer-theme-lens); box-shadow: inset 0 1px 1px rgba(255,255,255,.3), 0 2px 5px rgba(20,50,70,.06); transition: transform 240ms cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+.scope :global(button:focus-visible), .themeChoices button:focus-visible { outline: 2px solid var(--trainer-theme-accent); outline-offset: 3px; }
+.scope :global(button:active) { opacity: .8; }
+.themeChoices { color: var(--trainer-theme-text); }
+.themeChoices p { font-size: 14px; line-height: 1.5; color: var(--trainer-theme-muted); }
+.themeChoices button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; margin-block: 8px; padding: 14px; border: 1px solid var(--trainer-theme-border); border-radius: 18px; background: var(--trainer-theme-surface); color: var(--trainer-theme-text); cursor: pointer; }
+.themeChoices button span { flex: 1; text-align: left; }
+.themeChoices button[aria-checked="true"] { background: var(--trainer-theme-soft); border-color: var(--trainer-theme-accent); }
+.themeChoices > button:last-child { justify-content: center; margin-top: 20px; background: var(--trainer-theme-action); color: var(--trainer-on-action); font-weight: 700; }
+:global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"]) { color: var(--trainer-theme-text) !important; background: var(--trainer-theme-surface) !important; }
+:global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"] [data-trainer-modal-footer]) { display: none; }
+:global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"] [data-trainer-modal-header]),
+:global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"] [data-trainer-modal-content]) { background: var(--trainer-theme-surface) !important; color: var(--trainer-theme-text) !important; }
+:global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"] h2) { color: var(--trainer-theme-text) !important; }
+/* Existing detailed editors keep their established light palette in this five-screen update. */
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope:has(:global(.trainerNextClientPage)),
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope:has(:global(.trainerUtilityPage)),
+:global(html[data-trainer-appearance] [aria-modal="true"]:not([data-trainer-appearance-sheet="true"])) {
+  --tn-page: #f5f7f8; --tn-surface: #fff; --tn-surface-soft: #edf1f3; --tn-text: #1c282e; --tn-muted: #617078;
+  --tn-line: rgba(57,82,91,.12); --tn-purple: #376b91; --tn-purple-strong: #396ba6;
+  --trainer-v2-ink: #1c282e; --trainer-v2-muted: #617078; --trainer-v2-line: rgba(57,82,91,.12); --trainer-v2-surface: #edf1f3; --trainer-v2-accent: #376b91;
+  --apple-text: #1c282e; --apple-secondary: #617078; --apple-surface: #fff; --apple-muted: #edf1f3;
+  --trainer-text: #1c282e; --trainer-muted: #617078; --trainer-surface: #fff; --trainer-surface-soft: #edf1f3;
+  --trainer-border: rgba(57,82,91,.12); --trainer-accent: #376b91; --trainer-on-action: #fff;
+  color-scheme: light;
+}
+@media (max-width: 699px) {
+  :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextDesktopDock) { display: none; }
+  :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileNav) { display: grid; }
+  :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileHeader) { display: flex; align-items: center; justify-content: space-between; min-height: 64px; padding: calc(12px + env(safe-area-inset-top,0px)) 20px 14px !important; background: var(--tn-page) !important; color: var(--tn-text); border-bottom: 0; }
+  :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileTitle) { color: var(--tn-text) !important; font-size: 28px !important; line-height: 1.2; letter-spacing: -.8px; }
+  :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileHeader > button),
+  :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileHeaderActions button) { background: var(--trainer-theme-glass) !important; color: var(--tn-purple) !important; border-color: var(--tn-line) !important; }
+  :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextClientTable > button) { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .navLens { transition: none; } }

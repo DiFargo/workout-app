@@ -106,14 +106,15 @@ test("daily journal filters sort entries by their action state", () => {
   assert.equal(filterTrainerDailyJournalItems(items, "all", reviewedIds).length, 4);
 });
 
-test("immediate action cards open from the entire card and support keyboard activation", async () => {
+test("priority and queued actions use native buttons and preserve their real client destinations", async () => {
   const source = await readFile("src/components/trainer/TrainerDailyJournal.jsx", "utf8");
 
-  assert.match(source, /className=\{styles\.immediateActionCard\}/);
-  assert.match(source, /role="button"/);
-  assert.match(source, /tabIndex=\{0\}/);
-  assert.match(source, /onClick=\{\(\) => openImmediateAction\(action\)\}/);
-  assert.match(source, /event\.key !== "Enter" && event\.key !== " "/);
+  assert.match(source, /<button type="button" data-testid="trainer-priority-action"[\s\S]*?onClick=\{\(\) => openImmediateAction\(firstAction\)\}/);
+  assert.match(source, /<button key=\{action\.id\} type="button" className=\{styles\.queueRow\} onClick=\{\(\) => openImmediateAction\(action\)\}/);
+  assert.match(source, /actionsNow\.slice\(2\)\.map\(queueRow\)/);
+  assert.match(source, /function openClient\(target\) \{\s*onOpenClient\?\.\(target\.client, target\.target \|\| "overview"\)/);
+  assert.match(source, /function openImmediateAction\(action\) \{[\s\S]*?if \(!action\.isStanding\) acknowledge\(action\.id\);\s*openClient\(action\)/);
+  assert.doesNotMatch(source, /actionsNow\.filter\([^\n]*reviewedIds/);
 });
 
 test("journal entries remain clickable after an action was reviewed", async () => {

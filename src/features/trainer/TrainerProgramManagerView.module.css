@@ -435,3 +435,12 @@
 :global(html[data-trainer-variant="v2"] body) .editorModalBody.editorModalBodyProgram {background:#f2f2f7!important}
 :global(html[data-trainer-variant="v2"] body) .editorModalFooter .editorModalSave {flex:0 1 240px!important}
 @media(max-width:760px) { :global(html[data-trainer-variant="v2"] body) .editorModalFooter .editorModalSave {width:100%!important;flex:1!important} }
+
+/* Standalone trainer appearance must not be shadowed by legacy local tokens. */
+:global(html[data-trainer-appearance] body #root) .root {
+  --trainer-surface: var(--trainer-theme-surface, #fff);
+  --trainer-text: var(--trainer-theme-text, #1c1c1e);
+  --trainer-muted: var(--trainer-theme-muted, #636366);
+  --trainer-border: var(--trainer-theme-border, rgba(60,60,67,.12));
+  --trainer-accent: var(--trainer-theme-accent, #3c6faa);
+}

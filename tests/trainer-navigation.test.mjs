@@ -476,14 +476,15 @@ test("client card keeps Messages and notifications in the header instead of dupl
   assert.doesNotMatch(clientTabs, /\{ id: "notifications", label: "Уведомления" \}/);
   assert.doesNotMatch(clientTabs, /label: "Заметки"/);
   assert.match(workspace, /\["messages", "notes"\]\.includes\(currentTab\)/);
-  assert.match(messagesView, /embedded \? "Новые сообщения" : "Сообщения"/);
+  assert.match(messagesView, /<h2 id="trainer-client-messages-title">Комментарии клиента<\/h2>/);
   assert.match(messagesView, /aria-label="Фильтры сообщений клиента"/);
-  assert.match(messagesView, /Ждут ответа/);
-  assert.match(messagesView, /Обработаны/);
+  assert.match(messagesView, /id: "pending", label: "Требуют внимания", count: pendingCount/);
+  assert.match(messagesView, /id: "processed", label: "Обработанные", count: processedCount/);
   assert.match(messagesView, /data-selected=\{selected \? "true" : undefined\}/);
   assert.match(styles, /\.filters button\[aria-pressed="true"\]/);
-  assert.match(styles, /background: var\(--ownset-action-gradient\)/);
-  assert.match(styles, /\.replyPrimary\s*\{[\s\S]*?background: var\(--ownset-action-gradient\)/);
+  assert.match(styles, /--message-action: var\(--ownset-action-gradient, linear-gradient\(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%\)\)/);
+  assert.match(styles, /\.filters button\[aria-pressed="true"\]\s*\{[^}]*background: var\(--message-action\)/);
+  assert.match(styles, /\.replyPrimary\s*\{[^}]*background: var\(--message-action\)/);
   assert.match(messagesView, /onReplyToMessage\(item\)/);
   assert.match(messagesView, /Обработать все/);
   assert.doesNotMatch(messagesView, /Задания клиенту|tasksPanel/);
@@ -525,15 +526,17 @@ test("client card keeps Messages and notifications in the header instead of dupl
   assert.doesNotMatch(workspace, /<ClientWorkSummary[^>]*\/>\s*\n\s*<nav className="trainerNextClientTabs">/);
 });
 
-test("client bell refreshes trainer notifications when returning to the main page", async () => {
+test("client bell refreshes trainer notifications through staged loading with a safe fallback", async () => {
   const appCore = await readFile(new URL("../src/AppCore.jsx", import.meta.url), "utf8");
   const profileRoute = await readFile(new URL("../src/features/client/profile/ProfileDashboardRoute.jsx", import.meta.url), "utf8");
 
   assert.match(appCore, /loadClientTrainerTasks,\s*\n\s*loadHistory,/);
   assert.match(profileRoute, /import \{ useEffect, useRef, useState \} from "react"/);
-  assert.match(profileRoute, /void loadClientTrainerTasksRef\.current\?\.\(clientUid\)/);
-  assert.match(profileRoute, /\[clientUid, hasTrainerFeatures, isMainDashboard\]/);
-  assert.match(profileRoute, /onOpenTrainerNotifications=\{\(\) => \{[\s\S]*?loadClientTrainerTasks\?\.\(clientUid\)[\s\S]*?setProfileTrainerNotificationsOpen\(true\)/);
+  const openNotifications = profileRoute.match(/function openTrainerNotifications\(\) \{([\s\S]*?)\n  \}/)?.[1] || "";
+  assert.match(openNotifications, /if \(isMainDashboard && clientDataLoad\?\.retry\) clientDataLoad\.retry\(\["tasks"\]\)/);
+  assert.match(openNotifications, /else if \(clientUid\) void loadClientTrainerTasks\?\.\(clientUid, \{ throwOnError: true \}\)\?\.catch/);
+  assert.match(openNotifications, /setProfileTrainerNotificationsOpen\(true\)/);
+  assert.match(profileRoute, /onOpenTrainer=\{openTrainerNotifications\}/);
 });
 
 test("client overview keeps assignments in one task entry point and removes the duplicate summary card", async () => {

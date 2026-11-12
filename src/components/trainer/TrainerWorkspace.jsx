@@ -32,7 +32,7 @@ import { getLatestTrainerWeightMeasurement, getTrainerPhotoCompareSelection, get
 import TrainerClientFamiliarNutritionAnalytics from "./TrainerClientFamiliarNutritionAnalytics.jsx";
 import { AppleSchedule, AppleRecent, AppleGroup, AppleRow } from "./TrainerAppleClientParts";
 import TrainerWorkoutList from "./TrainerWorkoutList";
-import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { isTrainerV2Path } from "../../app/cssVariant";
 import TrainerClientDisclosure, { TrainerClientColumn } from "./TrainerClientDisclosure";
@@ -51,6 +51,9 @@ import exerciseProgressStyles from "./TrainerWorkspaceExerciseProgress.module.cs
 import nutritionDiaryStyles from "./TrainerWorkspaceNutritionDiary.module.css";
 import dashboardStyles from "./TrainerWorkspaceDashboard.module.css";
 import primaryScreensStyles from "./TrainerPrimaryScreens.module.css";
+import trainerAppearanceStyles from "./TrainerAppearance.module.css";
+import { useTrainerAppearance, useTrainerAppearancePreference } from "./useTrainerAppearance.js";
+import TrainerAppearanceSettings from "./TrainerAppearanceSettings.jsx";
 import TrainerLibraryExercisePreview from "./TrainerLibraryExercisePreview.jsx";
 import TrainerLibraryLoadNotice from "./TrainerLibraryLoadNotice.jsx";
 import { getTrainerLibraryViewState } from "../../utils/trainerLibraryLoadState.js";
@@ -163,6 +166,7 @@ import {
   LogOut,
   Mail,
   MessageSquare,
+  Palette,
   Pencil,
   Plus,
   RefreshCw,
@@ -185,7 +189,7 @@ import {
 const TrainerDailyJournal = lazy(() => import("./TrainerDailyJournal"));
 
 const NAV_ITEMS = [
-  { id: "dashboard", label: "Главная", mobileLabel: "Главная", icon: Home },
+  { id: "dashboard", label: "Обзор", mobileLabel: "Обзор", icon: Home },
   { id: "clients", label: "Клиенты", icon: Users },
   { id: "nutrition", label: "Питание", icon: Utensils },
   { id: "workouts", label: "Программы", icon: ClipboardList },
@@ -197,7 +201,7 @@ export function TrainerProgramConstructorStyleScope({ children }) {
   return <>{children(trainerProgramConstructorStyles)}</>;
 }
 const DESKTOP_NAV_ITEMS = [
-  { id: "dashboard", label: "Главная", icon: Home },
+  { id: "dashboard", label: "Обзор", icon: Home },
   { id: "clients", label: "Клиенты", icon: Users },
   { id: "workouts", label: "Программы", icon: ClipboardList },
   { id: "library", label: "Упражнения", icon: Dumbbell },
@@ -682,6 +686,25 @@ function getClientStatusAction(item = {}) {
 function TrainerNavigation({ activeSection, onNavigate, appVersion }) {
   const desktopItems = DESKTOP_NAV_ITEMS;
   const mobileItems = NAV_ITEMS.filter((item) => ["dashboard", "clients", "workouts", "library", "more"].includes(item.id));
+  const activeIndex = Math.max(0, mobileItems.findIndex((item) => item.id === activeSection || (item.id === "more" && CABINET_SECTION_IDS.has(activeSection))));
+  const mobileNavRef = useRef(null);
+  const desktopNavRef = useRef(null);
+  useLayoutEffect(() => {
+    const observers = [mobileNavRef.current, desktopNavRef.current].filter(Boolean).map((nav) => {
+      const lens = nav.querySelector("[data-trainer-nav-lens]");
+      function position() {
+        const button = nav.querySelectorAll(":scope > button")[activeIndex];
+        if (!button || !lens) return;
+        lens.style.width = `${button.offsetWidth}px`;
+        lens.style.transform = `translateX(${button.offsetLeft - lens.offsetLeft}px)`;
+      }
+      position();
+      const observer = new ResizeObserver(position);
+      observer.observe(nav);
+      return observer;
+    });
+    return () => observers.forEach((observer) => observer.disconnect());
+  }, [activeIndex]);
 
   const renderButton = (item, mobile = false) => {
     const Icon = item.icon;
@@ -696,7 +719,7 @@ function TrainerNavigation({ activeSection, onNavigate, appVersion }) {
         onClick={() => onNavigate(item.id)}
         aria-current={active ? "page" : undefined}
       >
-        <span className="trainerNextNavIcon">
+        <span className="trainerNextNavIcon" aria-hidden="true">
           <Icon size={mobile ? 21 : 18} strokeWidth={1.8} />
           {item.badge ? <i>{item.badge}</i> : null}
         </span>
@@ -707,7 +730,8 @@ function TrainerNavigation({ activeSection, onNavigate, appVersion }) {
 
   return (
     <>
-      <nav className="trainerNextDesktopDock" aria-label="Основное меню тренера">
+      <nav ref={desktopNavRef} className="trainerNextDesktopDock" aria-label="Основное меню тренера">
+        <span className={trainerAppearanceStyles.navLens} data-trainer-nav-lens aria-hidden="true" />
         {appVersion ? (
           <span
             className="trainerNextDesktopDockVersion"
@@ -719,7 +743,8 @@ function TrainerNavigation({ activeSection, onNavigate, appVersion }) {
         {desktopItems.map((item) => renderButton(item))}
       </nav>
 
-      <nav className="trainerNextMobileNav" aria-label="Разделы тренера">
+      <nav ref={mobileNavRef} className="trainerNextMobileNav" aria-label="Разделы тренера">
+        <span className={trainerAppearanceStyles.navLens} data-trainer-nav-lens aria-hidden="true" />
         {mobileItems.map((item) => renderButton(item, true))}
       </nav>
       {appVersion ? (
@@ -756,8 +781,9 @@ function TrainerModalScrollLock() {
 }
 
 export function TrainerShell({ activeSection, onNavigate, trainerName, trainerAvatar, appVersion, children }) {
+  const appearance = useTrainerAppearance();
   return (
-    <div className={`trainerNextRoot ${workspaceStyles.workspaceRoot} ${cabinetStyles.scope} ${adaptiveStyles.root} ${responsiveStyles.scope} ${modalSystemStyles.scope} ${clientProfileSectionStyles.scope} ${programEditorStyles.scope} ${nutritionDiaryStyles.scope} ${clientWorkoutPlanStyles.scope} ${clientViewsStyles.scope} ${nutritionAnalyticsStyles.scope} ${clientNutritionStyles.scope} ${exerciseProgressStyles.scope} ${dashboardStyles.scope} ${primaryScreensStyles.scope}`}>
+    <div data-trainer-theme={appearance} className={`trainerNextRoot ${workspaceStyles.workspaceRoot} ${cabinetStyles.scope} ${adaptiveStyles.root} ${responsiveStyles.scope} ${modalSystemStyles.scope} ${clientProfileSectionStyles.scope} ${programEditorStyles.scope} ${nutritionDiaryStyles.scope} ${clientWorkoutPlanStyles.scope} ${clientViewsStyles.scope} ${nutritionAnalyticsStyles.scope} ${clientNutritionStyles.scope} ${exerciseProgressStyles.scope} ${dashboardStyles.scope} ${primaryScreensStyles.scope} ${trainerAppearanceStyles.scope}`}>
       <TrainerModalScrollLock />
       <TrainerNavigation
         activeSection={activeSection}
@@ -916,19 +942,19 @@ function getTrainerMessageAction(client = {}, summary = {}, fallbackReason = "")
   };
 }
 
-function TrainerDashboard({ actionCenter, trainerName, trainerUid, onOpenClient }) {
+function TrainerDashboard({ actionCenter, trainerName, trainerUid, onOpenClient, clients, onOpenClients, onNavigate }) {
 
   return (
     <div className="trainerNextPage trainerNextDashboard">
       <header className="trainerNextMobileHeader">
-        <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
         <h1 className="trainerNextMobileTitle">Обзор</h1>
         <span className="trainerNextMobileHeaderSpacer" aria-hidden="true" />
       </header>
 
       <div className="trainerNextDesktopPageHead">
-        <div><h1>Обзор</h1><p>Задачи и последние события клиентов</p></div>
+        <div><span className={trainerAppearanceStyles.eyebrow}>Кабинет тренера</span><h1>Обзор</h1></div>
       </div>
+      <p className={trainerAppearanceStyles.today}>{new Date().toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" })}</p>
 
       <Suspense fallback={<section className={primaryScreensStyles.journalLoading} role="status">Загружаем события клиентов…</section>}>
         <TrainerDailyJournal
@@ -937,6 +963,9 @@ function TrainerDashboard({ actionCenter, trainerName, trainerUid, onOpenClient 
           onOpenClient={onOpenClient}
           renderAvatar={(client, size) => <TrainerAvatar client={client} size={size} />}
           trainerName={trainerName}
+          clients={clients}
+          onOpenClients={onOpenClients}
+          onOpenPrograms={() => onNavigate?.("workouts")}
         />
       </Suspense>
 
@@ -7250,6 +7279,7 @@ function TrainerCabinetUtilitySheet({
 }
 
 function TrainerCabinetPage({
+  showAppearance = true,
   trainerUid,
   onOpenClient,
   trainerName,
@@ -7270,6 +7300,7 @@ function TrainerCabinetPage({
   const activeCount = counts.active ?? null;
   const attentionCount = counts.attention ?? null;
   const [openSheet, setOpenSheet] = useState("");
+  const appearance = useTrainerAppearancePreference();
 
   function navigateFromSheet(nextSection) {
     setOpenSheet("");
@@ -7314,6 +7345,11 @@ function TrainerCabinetPage({
 
           <h2 className={primaryScreensStyles.sectionTitle}>Рабочие настройки</h2>
           <section className="trainerCabinetWorkspaceLinks" aria-label="Рабочие разделы кабинета">
+            {showAppearance ? <button type="button" onClick={() => setOpenSheet("appearance")}>
+              <span className="trainerCabinetWorkspaceIcon"><Palette size={19} aria-hidden="true" /></span>
+              <div className="trainerCabinetWorkspaceCopy"><strong>Оформление</strong><small>{appearance === "dark" ? "Тёмная тема" : "Светлая тема"}</small></div>
+              <ChevronRight size={18} aria-hidden="true" />
+            </button> : null}
             <button type="button" onClick={() => onNavigate?.("library")}>
               <span className="trainerCabinetWorkspaceIcon"><Dumbbell size={19} /></span>
               <div className="trainerCabinetWorkspaceCopy"><strong>Библиотека упражнений</strong><small>Карточки, видео и техника выполнения</small></div>
@@ -7340,10 +7376,11 @@ function TrainerCabinetPage({
         </div>
       </div>
 
+      {showAppearance && openSheet === "appearance" ? <TrainerAppearanceSettings onClose={() => setOpenSheet("")} /> : null}
       <TrainerCabinetUtilitySheet
         trainerUid={trainerUid}
         onOpenClient={(client, tab) => { setOpenSheet(""); onOpenClient?.(client, tab); }}
-        section={openSheet}
+        section={openSheet === "appearance" ? "" : openSheet}
         clients={clients}
         clientSummaries={clientSummaries}
         trainerSubscriptionNotificationSettings={trainerSubscriptionNotificationSettings}
@@ -8083,6 +8120,7 @@ export default function TrainerWorkspace({
         onOpenClient={onOpenClient}
         onOpenClients={() => onNavigate("clients")}
         onCreateClient={onCreateClient}
+        onNavigate={onNavigate}
       />
     );
   } else if (mode === "clients") {
@@ -8222,6 +8260,7 @@ export default function TrainerWorkspace({
     content = (
       <TrainerCabinetPage
         key={trainerUid || "anonymous"}
+        showAppearance={!embedded}
         trainerUid={trainerUid}
         onOpenClient={onOpenClient}
         trainerName={trainerName}

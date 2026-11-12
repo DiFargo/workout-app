@@ -1049,3 +1049,226 @@
 .catalogMeta .testFilter { margin-bottom: 0; font-size: 13px; }
 .addButton:disabled { opacity: .5; cursor: wait; }
 :global(html[data-trainer-variant="v2"] body:has(.trainerNextRoot)) .cardSelect .selectedMark { margin-left: auto; }
+
+/* Approved action-first trainer appearance. Embedded admin and legacy views
+   deliberately keep their existing presentation when this attribute is absent. */
+:global(html[data-trainer-appearance] body #root) .root {
+  color: var(--trainer-text, #1c1c1e);
+  padding: 0 0 20px;
+}
+:global(html[data-trainer-appearance] body #root) .root .section {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+:global(html[data-trainer-appearance] body #root) .root .templatePurpose {
+  margin-bottom: 18px;
+  padding: 15px 17px;
+  border-color: var(--trainer-border, rgba(60,60,67,.12));
+  border-radius: 18px;
+  background: var(--trainer-surface, #fff);
+  font-size: 14px;
+  line-height: 1.5;
+}
+:global(html[data-trainer-appearance] body #root) .root .templatePurpose h2 {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+:global(html[data-trainer-appearance] body #root) .root .toolbar {
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+:global(html[data-trainer-appearance] body #root) .root .searchField {
+  min-height: 48px;
+  border: 1px solid var(--trainer-border, rgba(60,60,67,.12));
+  border-radius: 15px;
+  background: var(--trainer-surface, #fff);
+  color: var(--trainer-muted, #636366);
+}
+:global(html[data-trainer-appearance] body #root) .root .searchField input {
+  color: var(--trainer-text, #1c1c1e);
+  font-size: 16px;
+  font-weight: 400;
+}
+:global(html[data-trainer-appearance] body #root) .root .searchField input::placeholder {
+  color: var(--trainer-muted, #636366);
+}
+:global(html[data-trainer-appearance] body #root) .root .addButton,
+:global(html[data-trainer-appearance] body #root) .root .selectedActions .prepareAction,
+:global(html[data-trainer-appearance] body #root) .root .aiImportActions button[type="submit"] {
+  min-height: 48px;
+  border-color: transparent;
+  border-radius: 15px;
+  background: var(--trainer-theme-action, var(--ownset-action-gradient));
+  color: var(--trainer-on-action, #fff);
+  box-shadow: none;
+}
+:global(html[data-trainer-appearance] body #root) .root .grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+:global(html[data-trainer-appearance] body #root) .root .card {
+  min-height: 0;
+  height: auto;
+  border: 1px solid var(--trainer-border, rgba(60,60,67,.12));
+  border-radius: var(--trainer-card-radius, 23px);
+  background: var(--trainer-surface, #fff);
+  color: var(--trainer-text, #1c1c1e);
+  box-shadow: none;
+  transform: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+:global(html[data-trainer-appearance] body #root) .root .card.selected {
+  border-color: var(--trainer-accent, #3c6faa);
+  background: var(--trainer-surface, #fff);
+  box-shadow: 0 0 0 1px var(--trainer-accent, #3c6faa);
+}
+:global(html[data-trainer-appearance] body #root) .root .cardSelect {
+  padding: 17px;
+  gap: 14px;
+}
+:global(html[data-trainer-appearance] body #root) .root .cardTitle {
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 11px;
+}
+:global(html[data-trainer-appearance] body #root) .root .cardTitle > i {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--trainer-surface-soft, #efeff4);
+  color: var(--trainer-accent, #3c6faa);
+}
+:global(html[data-trainer-appearance] body #root) .root .cardTitle > i svg {
+  width: 22px;
+  height: 22px;
+}
+:global(html[data-trainer-appearance] body #root) .root .cardTitle strong {
+  display: block;
+  overflow: visible;
+  color: var(--trainer-text, #1c1c1e);
+  font-size: 17px;
+  line-height: 1.3;
+  letter-spacing: -.2px;
+  overflow-wrap: anywhere;
+}
+:global(html[data-trainer-appearance] body #root) .root .cardTitle p,
+:global(html[data-trainer-appearance] body #root) .root .catalogMeta,
+:global(html[data-trainer-appearance] body #root) .root .testFilter {
+  color: var(--trainer-muted, #636366);
+}
+:global(html[data-trainer-appearance] body #root) .root .cardStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin: 0;
+  padding: 0;
+}
+:global(html[data-trainer-appearance] body #root) .root .cardStats span {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--trainer-muted, #636366);
+}
+:global(html[data-trainer-appearance] body #root) .root .cardStats :is(b,small,svg) {
+  color: inherit;
+  font-size: 13px;
+}
+:global(html[data-trainer-appearance] body #root) .root .cardStats b { font-weight: 650; }
+:global(html[data-trainer-appearance] body #root) .root .cardSelect footer {
+  padding-top: 11px;
+  border-top: 1px solid var(--trainer-border, rgba(60,60,67,.12));
+  background: transparent;
+}
+:global(html[data-trainer-appearance] body #root) .root .formatBadge {
+  color: var(--trainer-muted, #636366);
+  background: var(--trainer-surface-soft, #efeff4);
+  font-size: 11px;
+}
+:global(html[data-trainer-appearance] body #root) .root .statusBadge {
+  color: var(--trainer-success, #237a42);
+  background: var(--trainer-success-soft, #edf8f0);
+  border-color: transparent;
+  font-size: 11px;
+}
+:global(html[data-trainer-appearance] body #root) .root .clientAvatar {
+  border-color: var(--trainer-surface, #fff);
+  color: var(--trainer-accent, #3c6faa);
+  background: var(--trainer-surface-soft, #efeff4);
+}
+:global(html[data-trainer-appearance] body #root) .root .selectedMark {
+  border-color: var(--trainer-surface, #fff);
+  color: var(--trainer-on-action, #fff);
+  background: var(--trainer-theme-action, var(--ownset-action-gradient));
+}
+:global(html[data-trainer-appearance] body #root) .root .selectedActions {
+  padding: 12px 17px 17px;
+  border-color: var(--trainer-border, rgba(60,60,67,.12));
+  background: var(--trainer-surface, #fff);
+}
+:global(html[data-trainer-appearance] body #root) .root .selectedActions :is(.editAction,.copyAction) {
+  color: var(--trainer-accent, #3c6faa);
+  background: var(--trainer-surface-soft, #efeff4);
+  border-color: transparent;
+}
+:global(html[data-trainer-appearance] body #root) .root .selectedActions .deleteAction {
+  color: var(--trainer-danger, #b4232c);
+  background: var(--trainer-danger-soft, #fff2f3);
+  border-color: transparent;
+}
+:global(html[data-trainer-appearance] body #root) .root .empty {
+  min-height: 132px;
+  border-color: var(--trainer-border, rgba(60,60,67,.12));
+  background: var(--trainer-surface, #fff);
+  color: var(--trainer-text, #1c1c1e);
+}
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet {
+  border-radius: 25px;
+  background: var(--trainer-surface, #fff);
+}
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet > header > button,
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet > div:not(.aiImportActions) > button,
+:global(html[data-trainer-appearance] body #root) .root .aiImportFile,
+:global(html[data-trainer-appearance] body #root) .root .aiImportActions button:not([type="submit"]) {
+  color: var(--trainer-text, #1c1c1e);
+  background: var(--trainer-surface-soft, #efeff4);
+  border-color: var(--trainer-border, rgba(60,60,67,.12));
+}
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet > div:not(.aiImportActions) > button > svg,
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet > header span {
+  color: var(--trainer-accent, #3c6faa);
+}
+:global(html[data-trainer-appearance] body #root) .root .aiImportText {
+  color: var(--trainer-muted, #636366);
+  font-size: 13px;
+}
+:global(html[data-trainer-appearance] body #root) .root .aiImportText textarea {
+  color: var(--trainer-text, #1c1c1e);
+  background: var(--trainer-surface-soft, #efeff4);
+  font-size: 16px;
+}
+:global(html[data-trainer-appearance] body #root) .root :is(.choiceDivider,.aiImportHint,.choiceSheet small,.empty span) {
+  color: var(--trainer-muted, #636366);
+  font-size: 13px;
+}
+:global(html[data-trainer-appearance] body #root) .root :is(button,input,textarea):focus-visible {
+  outline: 2px solid var(--trainer-accent, #3c6faa);
+  outline-offset: 3px;
+}
+:global(html[data-trainer-appearance] body #root) .root button:active:not(:disabled) { opacity: .78; }
+@media (min-width: 760px) {
+  :global(html[data-trainer-appearance] body #root) .root .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 430px) {
+  :global(html[data-trainer-appearance] body #root) .root .toolbar { grid-template-columns: minmax(0,1fr); }
+  :global(html[data-trainer-appearance] body #root) .root .addButton { justify-self: stretch; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :global(html[data-trainer-appearance] body #root) .root .card { transition: none; }
+}
