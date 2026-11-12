@@ -19,7 +19,7 @@ for (const mode of ["basic", "trainer"]) {
     // The workout renders only the selected set; completion lives in the dock.
     await expect(rows).toHaveCount(1, { timeout: 40_000 });
     const primary = page.getByTestId("workout-primary-action");
-    await expect(primary).toHaveAccessibleName("Подход выполнен");
+    await expect(primary).toHaveAccessibleName("Завершить подход");
     await primary.click();
     await page.getByTestId("workout-rest-timer-minimize").click();
     const snapshot = await rows.allTextContents();
@@ -69,7 +69,7 @@ for (const mode of ["basic", "trainer"]) {
     await expect(page.locator('[data-css-module-scope="workout-stage-heading"]').getByText(name, { exact: true })).toBeVisible();
     await expect(rows).toHaveCount(1);
     await expect(rows.first()).not.toHaveClass(/completed/);
-    await expect(primary).toHaveAccessibleName("Подход выполнен");
+    await expect(primary).toHaveAccessibleName("Завершить подход");
     await expect(picker).toHaveAccessibleName("Все подходы, выбран подход 1 из 3");
     await picker.click();
     await expect(page.getByRole("button", { name: /^Перейти к подходу/ })).toHaveCount(3);

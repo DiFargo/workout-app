@@ -51,24 +51,43 @@ for (const width of [393,768,1366]) {
       const root=await page.locator('#root .trainerNextRoot').first().boundingBox();
       expect(header.x).toBeGreaterThanOrEqual(root.x);
       expect(header.x + header.width).toBeLessThanOrEqual(root.x + root.width + 1);
-      expect(header.width).toBeLessThanOrEqual(1004);
+      const contentWidth = await page.locator('.trainerNextClientPage').evaluate(el => {
+        const css = getComputedStyle(el);
+        return el.getBoundingClientRect().width - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight);
+      });
+      expect(header.width).toBeCloseTo(contentWidth, 0);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
       await page.screenshot({path:`artifacts/trainer-complete-${width}-${name}.png`,animations:'disabled'});
     }
     const summaryTabs=page.locator('.trainerNextClientTabs');
     await (await summaryTabs.isVisible()?summaryTabs:page.locator('.trainerNextClientMobileNav')).getByRole('button',{name:'Сводка',exact:true}).click();
     // Open read-only utility sheets; no messages are sent and no client data is saved.
-    for (const [button,title] of [['Задания клиенту','Задания клиенту'],['Сообщения Переписка с клиентом','Сообщения'],['Открыть абонемент клиента','Календарь тренировок']]) {
-      await page.getByRole('button',{name:button === 'Задания клиенту' ? /^Задания клиенту/ : button,exact:button !== 'Задания клиенту'}).click();
+    for (const [button,title] of [['Задания клиенту','Задания клиенту'],['Сообщения Переписка с клиентом','Сообщения'],['Расписание и абонемент','Календарь тренировок']]) {
+      if (title === 'Календарь тренировок') {
+        await page.getByRole('button',{name:'Действия с клиентом',exact:true}).click();
+        const actions=page.getByRole('dialog',{name:'Управление клиентом',exact:true});
+        await actions.getByRole('button',{name:/^Расписание и абонемент/}).click();
+        await expect(actions).toBeHidden();
+      } else {
+        await page.getByRole('button',{name:button === 'Задания клиенту' ? /^Задания клиенту/ : button,exact:button !== 'Задания клиенту'}).click();
+      }
       const dialog=page.getByRole('dialog',{name:title,exact:true});
       await expect(dialog).toBeVisible();
       await assertPalette(page);
       if (title === 'Календарь тренировок') {
-        const marks = dialog.locator('.trainerNotificationLegend i');
-        expect(await marks.allTextContents()).toEqual(['―','○','✓','↗','!','↪','✓']);
+        await dialog.getByRole('tab',{name:'Абонемент',exact:true}).click();
+        const legend = dialog.getByLabel('Обозначения календаря',{exact:true});
+        await expect(legend).toContainText('Выполнено');
+        await expect(legend).toContainText('Запланировано');
+        await expect(legend).toContainText('Пропуск / перенос');
+        await expect(legend).toContainText('Период занятий');
+        const marks = legend.locator('i');
+        await expect(marks).toHaveCount(4);
         for (const mark of await marks.all()) {
-          expect(await mark.evaluate(el => getComputedStyle(el).textIndent)).toBe('0px');
-          expect(await mark.evaluate(el => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(14);
+          const markBox=await mark.boundingBox();
+          expect(markBox.width).toBeGreaterThanOrEqual(6);
+          expect(markBox.height).toBeGreaterThanOrEqual(6);
+          await expect(mark).toHaveAttribute('aria-hidden','true');
         }
       }
       const box=await dialog.boundingBox();
@@ -89,7 +108,6 @@ for (const width of [393,768,1366]) {
         await dialog.locator('.trainerNextModalClose').click();
       }
       await navigate('workouts');
-      await page.locator('.trainerNextPageTabs').getByRole('button',{name:'Программы',exact:true}).click();
       await assertPalette(page);
       await page.getByRole('button',{name:'Редактировать',exact:true}).click();
       await expect(page.locator('[data-trainer-constructor]')).toBeVisible();
@@ -98,6 +116,8 @@ for (const width of [393,768,1366]) {
       await day.selectOption({label:'День 2 · Тренировка 2'});
       await expect(page.getByRole('main',{name:'День 2 из 3',exact:true})).toBeVisible();
       await day.selectOption({label:'День 1 · Тренировка 1'});
+      const exercise=page.getByRole('button',{name:/^Жим ногами (Ноги и ягодицы|Настройка нагрузки)$/,exact:true});
+      if(await exercise.getAttribute('aria-expanded')!=='true') await exercise.click();
       await expect(page.getByLabel('Вес: Жим ногами',{exact:true})).toBeVisible();
       await assertPalette(page);
     }

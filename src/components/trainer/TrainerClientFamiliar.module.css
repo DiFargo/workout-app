@@ -17,7 +17,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
 }
 
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientBackRow) { min-height:44px!important; margin:0 0 8px!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientBackRow) { width:100%!important; min-height:44px!important; margin:0 0 8px!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientBackRow button) { min-height:44px!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientHeader) { display:grid!important; grid-template-columns:48px minmax(0,1fr)!important; gap:12px!important; min-height:0!important; margin:0 0 14px!important; padding:16px 18px!important; border:1px solid var(--familiar-line)!important; border-radius:18px!important; background:var(--familiar-card)!important; box-shadow:none!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientHeader .trainerNextAvatar) { width:48px!important; height:48px!important; min-width:48px!important; }

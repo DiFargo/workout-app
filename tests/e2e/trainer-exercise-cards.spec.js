@@ -22,8 +22,7 @@ async function setup(page, query = '') {
       await route.fulfill({ json: result });
     } catch (error) { await route.fulfill({ status: error.status || 500, json: { error: error.message } }); }
   });
-  await page.locator('[data-testid="trainer-nav-workouts"]:visible,[data-testid="trainer-desktop-nav-workouts"]:visible').click();
-  await page.locator('.trainerNextPageTabs button').nth(1).click();
+  await page.locator('[data-testid="trainer-nav-library"]:visible,[data-testid="trainer-desktop-nav-library"]:visible').click();
   return { db, template, snapshot, assertNoErrors, library: page.locator('.trainerNextLibrary'), editor: page.getByRole('dialog', { name: 'Редактирование упражнения', exact: true }) };
 }
 

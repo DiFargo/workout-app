@@ -5,15 +5,14 @@ test("library keeps filmed variants, groups known movements and saves a manual g
   const assertNoErrors = failOnRuntimeErrors(page);
   await page.route("**/e2e-media/*.mp4", (route) => route.fulfill({ status: 200, contentType: "video/mp4", body: "" }));
   await page.goto("/v2?trainerHarness=1&libraryAudit=1");
-  await page.locator('[data-testid="trainer-nav-workouts"]:visible,[data-testid="trainer-desktop-nav-workouts"]:visible').click();
-  await page.locator(".trainerNextPageTabs button").nth(1).click();
+  await page.locator('[data-testid="trainer-nav-library"]:visible,[data-testid="trainer-desktop-nav-library"]:visible').click();
   const library = page.locator(".trainerNextLibrary");
   await expect(library.locator("article")).toHaveCount(12);
   await expect(library.getByRole("button", { name: "Редактировать упражнение Жим гантелей лёжа", exact: true })).toContainText(/с видео/i);
   await expect(library.getByRole("button", { name: "Редактировать упражнение Жим лёжа с гантелями", exact: true })).toHaveCount(0);
-  await library.getByPlaceholder("Найти упражнение...").fill("Жим лёжа с гантелями");
+  await library.getByRole("searchbox", { name: "Поиск упражнений", exact: true }).fill("Жим лёжа с гантелями");
   await expect(library.locator("article")).toHaveCount(1);
-  await library.getByPlaceholder("Найти упражнение...").fill("");
+  await library.getByRole("searchbox", { name: "Поиск упражнений", exact: true }).fill("");
   const group = library.getByLabel("Группа мышц", { exact: true });
   await group.selectOption("shoulders");
   await expect(library.locator("article")).toHaveCount(3);

@@ -39,7 +39,7 @@ test("nutrition sheets share a moderate scrim and block background wheel and tou
   await page.setViewportSize({ width: 375, height: 667 });
   await openNutrition(page);
   const cases = [
-    { trigger: () => page.getByTestId("nutrition-orbit-calendar"), dialog: "nutrition-calendar-sheet", close: "nutrition-calendar-close" },
+    { trigger: () => page.getByRole("button", { name: "Календарь питания", exact: true }), dialog: "nutrition-calendar-sheet", close: "nutrition-calendar-close" },
     { trigger: () => page.locator('[data-nutrition-summary-part="card"]'), dialog: "nutrition-plan-details", close: "nutrition-plan-close" },
     { trigger: () => page.getByRole("button", { name: "Открыть приём пищи: Завтрак", exact: true }), dialog: "nutrition-meal-modal", close: "nutrition-meal-close" },
     { trigger: () => page.getByTestId("nutrition-diary-toggle"), dialog: "nutrition-diary-modal", close: "nutrition-diary-close" },
@@ -164,7 +164,11 @@ test("release navigation keeps trainer client dialogs and tabs usable", async ({
   await page.getByTestId("trainer-nav-clients").click();
   await page.locator(".trainerNextClientTable > button").first().click();
   await expect(page.getByRole("heading", { name: "Germes", exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Открыть абонемент клиента", exact: true }).click();
+  await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
+  const actions = page.getByRole("dialog", { name: "Управление клиентом", exact: true });
+  await expect(actions).toBeVisible();
+  await actions.getByRole("button", { name: /^Расписание и абонемент/ }).click();
+  await expect(actions).toBeHidden();
   const dialog = page.getByRole("dialog", { name: "Календарь тренировок", exact: true });
   await expect(dialog).toBeVisible();
   await assertBackgroundLocked(page, dialog);
@@ -173,8 +177,9 @@ test("release navigation keeps trainer client dialogs and tabs usable", async ({
   await dialog.getByRole("button", { name: "Закрыть: Календарь тренировок", exact: true }).click();
   await expect(dialog).toBeHidden();
   await expect.poll(() => page.evaluate(() => document.body.style.position)).not.toBe("fixed");
-  await page.locator(".trainerNextClientMobileNav").getByRole("button", { name: "Тренировки", exact: true }).click();
-  await page.locator(".trainerNextClientMobileNav").getByRole("button", { name: "Питание", exact: true }).click();
+  await page.locator(".trainerNextClientTabs").getByRole("button", { name: "Тренировки", exact: true }).click();
+  await page.locator(".trainerNextClientTabs").getByRole("button", { name: "Питание", exact: true }).click();
+  await expect(page.locator(".trainerNextClientTabs").getByRole("button", { name: "Питание", exact: true })).toHaveAttribute("aria-pressed", "true");
   const nutritionEditor = page.getByRole("dialog", { name: "Изменить план", exact: true });
   await expect(nutritionEditor).toHaveCount(0);
   await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
@@ -191,12 +196,16 @@ test("release navigation keeps admin sections and denied access intact", async (
   const assertNoErrors = failOnRuntimeErrors(page);
   await page.goto("/?adminHarness=1");
   await expect(page.getByTestId("admin-panel-hub")).toBeVisible({ timeout: 40_000 });
+  await page.getByText("Система и Telegram", { exact: true }).click();
   await expect(page.getByRole("heading", { name: "Telegram-бот", exact: true })).toBeVisible();
   await expect(page.getByText("Серверное подключение не проверено.", { exact: false })).toBeVisible();
   await page.getByText("Обслуживание бота", { exact: true }).click();
   await expect(page.getByRole("button", { name: "Переподключить webhook", exact: true })).toBeVisible();
   const sections = page.getByRole("region", { name: "Разделы админки" });
-  await expect(sections.getByRole("button")).toHaveCount(3);
+  await expect(sections.getByRole("button")).toHaveCount(4);
+  await expect(sections.locator("strong")).toHaveText([
+    "Пользователи и роли", "Базовые программы", "Базовые упражнения", "Обратная связь"
+  ]);
   await sections.getByRole("button", { name: /Пользователи и роли/ }).click();
   await expect(page.getByTestId("admin-harness-action")).toHaveText("page:adminUsers");
   await sections.getByRole("button", { name: /Базовые программы/ }).click();

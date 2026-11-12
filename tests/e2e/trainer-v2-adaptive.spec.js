@@ -4,38 +4,71 @@ import { failOnRuntimeErrors } from './runtime-errors.js';
 test.setTimeout(90000);
 async function nav(page, section) {
   const mobile = page.getByTestId(`trainer-nav-${section}`);
-  await (await mobile.isVisible() ? mobile : page.getByTestId(`trainer-desktop-nav-${section}`)).click();
+  const control = await mobile.isVisible() ? mobile : page.getByTestId(`trainer-desktop-nav-${section}`);
+  await control.click();
+  await expect(control).toHaveAttribute('aria-current', 'page');
 }
 async function geometry(page) {
   return page.evaluate(() => {
     const root = document.querySelector('.trainerNextRoot');
     const bar = [...root.querySelectorAll('.trainerNextMobileNav,.trainerNextDesktopDock')].find(el => el.getBoundingClientRect().height);
-    const r=root.getBoundingClientRect(), b=bar.getBoundingClientRect();
-    return {rootX:r.x,rootWidth:r.width,navX:b.x,navY:b.y,navWidth:b.width,navHeight:b.height,overflow:document.documentElement.scrollWidth-innerWidth};
+    const main = root.querySelector('.trainerNextMain');
+    const r=root.getBoundingClientRect(), b=bar.getBoundingClientRect(), m=main.getBoundingClientRect(), c=main.firstElementChild.getBoundingClientRect();
+    return {
+      rootX:r.x,rootY:r.y,rootWidth:r.width,rootBottom:r.bottom,
+      mainX:m.x,mainWidth:m.width,contentLeft:c.left,contentRight:c.right,
+      navX:b.x,navY:b.y,navWidth:b.width,navHeight:b.height,navBottom:b.bottom,
+      destinations:[...bar.querySelectorAll(':scope > button')].map(button=>button.dataset.section),
+      targets:[...bar.querySelectorAll(':scope > button')].map(button=>button.getBoundingClientRect().toJSON()),
+      overflow:document.documentElement.scrollWidth-innerWidth
+    };
   });
 }
 for (const [width,height] of [[320,740],[375,844],[430,932],[600,900],[768,1024],[1024,900],[1366,900],[844,390]]) {
-  test(`client geometry and trainer content fit ${width}x${height}`, async ({ page }, testInfo) => {
+  test(`floating trainer dock and full-width content fit ${width}x${height}`, async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop-chromium','Each explicit viewport runs once.');
     await page.setViewportSize({width,height});
     await page.emulateMedia({reducedMotion:'reduce'});
     const errors=failOnRuntimeErrors(page);
-    await page.goto('/?clientHarness=1&clientHarnessTheme=warm-light');
-    await expect(page.getByTestId('client-bottom-nav')).toBeVisible({timeout:40000});
-    const clientBar=await page.getByTestId('client-bottom-nav').boundingBox();
     await page.clock.setFixedTime(new Date('2026-06-17T12:00:00Z'));
     await page.goto('/v2?trainerHarness=1&layoutPreview=1');
     await expect(page.locator('.trainerNextRoot')).toBeVisible({timeout:40000});
     const baseline=await geometry(page);
-    expect(baseline.navWidth).toBeCloseTo(clientBar.width,0);
-    if(height>500) expect(baseline.navHeight).toBeCloseTo(clientBar.height,0);
-    for(const section of ['dashboard','clients','more','workouts']) {
+    // TrainerAppearance owns the floating dock; it no longer copies the
+    // client's full-width 70px bar. These fixtures have zero safe-area insets.
+    expect(baseline.navWidth).toBeCloseTo(Math.min(560,width-24),0);
+    expect(baseline.navHeight).toBe(76);
+    expect(height-baseline.navBottom).toBeCloseTo(12,0);
+    for(const section of ['dashboard','clients','more','workouts','library']) {
       await nav(page,section);
-      if(section==='workouts') await page.locator('.trainerNextPageTabs').getByRole('button',{name:'Программы',exact:true}).click();
+      const content = section==='dashboard' ? page.locator('.trainerNextDashboard')
+        : section==='clients' ? page.locator('.trainerNextClientsPage')
+        : section==='more' ? page.locator('.trainerNextCabinetPage')
+        : section==='workouts' ? page.getByRole('searchbox',{name:'Найти программу',exact:true})
+        : page.getByRole('searchbox',{name:'Поиск упражнений',exact:true});
+      await expect(content).toBeVisible();
       const g=await geometry(page);
       expect(g.overflow).toBeLessThanOrEqual(1);
-      expect(g.rootWidth).toBeCloseTo(g.navWidth,0);
-      expect(g.navX).toBeCloseTo(g.rootX,0);
+      expect(g.rootX).toBeGreaterThanOrEqual(0);
+      expect(g.rootX+g.rootWidth).toBeLessThanOrEqual(width);
+      expect(g.mainX).toBeCloseTo(g.rootX,0);
+      expect(g.mainWidth).toBeCloseTo(g.rootWidth,0);
+      expect(g.contentLeft).toBeGreaterThanOrEqual(g.rootX);
+      expect(g.contentRight).toBeLessThanOrEqual(g.rootX+g.rootWidth);
+      expect(g.navX).toBeGreaterThan(g.rootX);
+      expect(g.navX+g.navWidth).toBeLessThan(g.rootX+g.rootWidth);
+      expect(g.navY).toBeGreaterThanOrEqual(g.rootY);
+      expect(g.navBottom).toBeLessThanOrEqual(g.rootBottom);
+      expect(g.navX+g.navWidth/2).toBeCloseTo(width/2,0);
+      expect(g.destinations).toEqual(['dashboard','clients','workouts','library','more']);
+      for(const target of g.targets) {
+        expect(target.width).toBeGreaterThanOrEqual(44);
+        expect(target.height).toBeGreaterThanOrEqual(44);
+        expect(target.left).toBeGreaterThanOrEqual(g.navX);
+        expect(target.right).toBeLessThanOrEqual(g.navX+g.navWidth);
+        expect(target.top).toBeGreaterThanOrEqual(g.navY);
+        expect(target.bottom).toBeLessThanOrEqual(g.navBottom);
+      }
       for(const key of ['navWidth','navHeight','navY','navX']) expect(g[key]).toBeCloseTo(baseline[key],0);
       if(section==='clients') {
         const cards=page.locator('.trainerNextClientTable > button');
@@ -58,7 +91,8 @@ for (const [width,height] of [[320,740],[375,844],[430,932],[600,900],[768,1024]
         const search=page.getByRole('searchbox',{name:'Найти программу'});
         await expect(search).toBeVisible();
         expect((await search.boundingBox()).width).toBeGreaterThanOrEqual(120);
-        const cards=page.getByRole('button',{name:/Готовая тренировочная программа из библиотеки/});
+        const cards=page.getByTestId('trainer-program-overview-card').locator(':scope > button');
+        await expect(cards).toHaveCount(2);
         expect((await cards.first().boundingBox()).height).toBeLessThan(260);
       }
       await page.locator('.trainerNextMain').evaluate(el=>{el.scrollTop=0;});

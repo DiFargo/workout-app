@@ -15,14 +15,14 @@ test("V2 is the reload-safe default at both trainer entry URLs", async ({ page }
   const root = page.locator(".trainerNextRoot");
   await expect(root).toBeVisible({timeout:40000});
   await expect(page.locator("html")).toHaveAttribute("data-trainer-variant", "v2");
-  await expect(root).toHaveCSS("background-color", "rgb(245, 247, 248)");
-  expect(await root.evaluate(el => getComputedStyle(el).getPropertyValue("--tn-purple-strong").trim())).toBe("#396ba6");
+  await expect(root).toHaveCSS("background-color", "rgb(237, 244, 247)");
+  expect(await root.evaluate(el => getComputedStyle(el).getPropertyValue("--tn-purple-strong").trim())).toBe("#2b707d");
   const original = await root.evaluate(el => ({ background: getComputedStyle(el).backgroundColor, accent: getComputedStyle(el).getPropertyValue("--tn-purple-strong") }));
   await page.goto("/v2?trainerHarness=1");
   await expect(root).toBeVisible({timeout:40000});
   await expect(page.locator("html")).toHaveAttribute("data-trainer-variant", "v2");
-  await expect(root).toHaveCSS("background-color", "rgb(245, 247, 248)");
-  expect(await root.evaluate(el => getComputedStyle(el).getPropertyValue("--tn-purple-strong").trim())).toBe("#396ba6");
+  await expect(root).toHaveCSS("background-color", "rgb(237, 244, 247)");
+  expect(await root.evaluate(el => getComputedStyle(el).getPropertyValue("--tn-purple-strong").trim())).toBe("#2b707d");
   await page.reload();
   await expect(root).toBeVisible({timeout:40000});
   await expect(page.locator("html")).toHaveAttribute("data-trainer-variant", "v2");
@@ -69,7 +69,6 @@ for (const path of ["/", "/v2"]) {
     await navigate(page, "more");
     await expect(page.locator(".trainerNextCabinetPage")).toBeVisible();
     await navigate(page, "workouts");
-    await page.locator(".trainerNextPageTabs").getByRole("button", {name:"Программы",exact:true}).click();
     await expect(page.getByRole("searchbox", {name:"Найти программу"})).toBeVisible();
     await page.getByRole("button", {name:"Редактировать",exact:true}).click();
     await expect(page.locator("[data-trainer-constructor]")).toBeVisible();
@@ -77,9 +76,10 @@ for (const path of ["/", "/v2"]) {
     const useDaySelect = await day.isVisible();
     if (!useDaySelect) await expect(page.getByRole("button", {name:"Тренировка 1 2 упр.",exact:true})).toBeVisible();
     await expect(page.getByRole("main", {name:"День 1 из 3",exact:true})).toBeVisible();
-    await expect(page.getByLabel("Вес: Жим ногами", {exact:true})).toBeVisible();
-    const exerciseName = page.getByRole("button", {name:"Жим ногами Ноги и ягодицы",exact:true});
+    const exerciseName = page.getByRole("button", {name:/^Жим ногами (Ноги и ягодицы|Настройка нагрузки)$/,exact:true});
     expect((await exerciseName.boundingBox()).width).toBeGreaterThanOrEqual(100);
+    if (await exerciseName.getAttribute("aria-expanded") !== "true") await exerciseName.click();
+    await expect(page.getByLabel("Вес: Жим ногами", {exact:true})).toBeVisible();
     // The isolated harness supplies no-op persistence callbacks; verify controls and navigation.
     await expect(page.getByLabel("Вес: Жим ногами", {exact:true})).toBeEditable();
     await expect(page.getByLabel("Вес: Жим ногами", {exact:true})).toHaveValue("90");
@@ -88,6 +88,7 @@ for (const path of ["/", "/v2"]) {
     await expect(page.getByRole("main", {name:"День 2 из 3",exact:true})).toBeVisible();
     if (useDaySelect) await day.selectOption({label:"День 1 · Тренировка 1"});
     else await page.getByRole("button", {name:"Тренировка 1 2 упр.",exact:true}).click();
+    if (await exerciseName.getAttribute("aria-expanded") !== "true") await exerciseName.click();
     await expect(page.getByLabel("Вес: Жим ногами", {exact:true})).toHaveValue("90");
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width + 1);
     await page.screenshot({path:`artifacts/trainer-constructor-${path === "/v2" ? "v2" : "default"}-${test.info().project.name}.png`});

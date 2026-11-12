@@ -26,9 +26,18 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 393, height: 852 }
     await page.getByTestId("workout-run-stage").evaluate(el => { el.scrollTop = el.scrollHeight; });
     const edit = row.getByRole("button", { name: "Изменить подход 2" });
     const complete = page.getByTestId("workout-primary-action");
-    await expect(complete).toHaveAccessibleName("Подход выполнен");
+    await expect(complete).toHaveAccessibleName("Завершить подход");
     const a = await edit.boundingBox(), b = await complete.boundingBox();
-    expect(a.width).toBe(48); expect(a.height).toBe(48);
+    const rowBox = await row.boundingBox();
+    const insets = await row.evaluate(node => {
+      const style = getComputedStyle(node);
+      return { left: parseFloat(style.paddingLeft), right: parseFloat(style.paddingRight) };
+    });
+    // The whole plan card is now the edit target, not only its pencil icon.
+    expect(a.width).toBeCloseTo(rowBox.width - insets.left - insets.right, 0);
+    expect(a.height).toBeGreaterThanOrEqual(66);
+    expect(a.x).toBeGreaterThanOrEqual(rowBox.x);
+    expect(a.x + a.width).toBeLessThanOrEqual(rowBox.x + rowBox.width + 1);
     expect(b.width).toBeGreaterThanOrEqual(48); expect(b.height).toBeGreaterThanOrEqual(48);
     expect(a.y + a.height).toBeLessThan(b.y);
     await capture(page, testInfo, "sets");
@@ -45,7 +54,7 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 393, height: 852 }
     await expect(row).toHaveClass(/completed/);
     const completedButton = row.getByRole("button", { name: "Подход 2 выполнен, действия", exact: true });
     await expect(completedButton).toBeVisible();
-    await expect(complete).toHaveAccessibleName("Следующий подход");
+    await expect(complete).toHaveAccessibleName("Перейти к подходу 3 из 3");
     await page.getByRole("button", { name: "Открыть таймер отдыха", exact: true }).click();
     await expect(timer).toBeVisible();
     // Bootstrap timers must run until the lazy application has mounted.
@@ -156,7 +165,7 @@ test("basic workout replacement keeps the real set plan", async ({ page }, testI
   await firstComplete.click();
   await rows.first().getByRole("button", { name: "Снять отметку выполнения подхода 1", exact: true }).click();
   await expect(firstComplete).toHaveCount(0);
-  await expect(page.getByTestId("workout-primary-action")).toHaveAccessibleName("Подход выполнен");
+  await expect(page.getByTestId("workout-primary-action")).toHaveAccessibleName("Завершить подход");
   await page.getByRole("button", { name: "Другие действия с упражнением", exact: true }).click();
   await page.getByRole("menuitem", { name: "Заменить упражнение", exact: true }).click();
   await expect(sheet).toBeVisible();

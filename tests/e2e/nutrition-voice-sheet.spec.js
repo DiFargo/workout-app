@@ -112,7 +112,8 @@ test("voice sheet has clear recording controls across phone sizes", async ({ pag
     const record = page.getByTestId("nutrition-voice-record");
     await expect(sheet).toBeVisible();
     await expect(record).toHaveText("Завершить запись");
-    await expect(record).toHaveCSS("background-image", "linear-gradient(115deg, rgb(70, 123, 114) 0%, rgb(62, 116, 139) 54%, rgb(53, 101, 163) 100%)");
+    // Approved client-only Mint / Night Glass light action token.
+    await expect(record).toHaveCSS("background-image", "linear-gradient(112deg, rgb(47, 111, 115) 0%, rgb(51, 124, 124) 54%, rgb(57, 126, 112) 100%)");
     await expect(record).toHaveCSS("color", "rgb(255, 255, 255)");
     await expect(page.getByTestId("nutrition-voice-meter")).toContainText("Запись идёт");
     await record.scrollIntoViewIfNeeded();

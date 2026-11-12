@@ -8,8 +8,7 @@ const newVideo = '/e2e-media/replacement.mp4';
 async function openLibrary(page, query = '') {
   await page.route('**/e2e-media/*.mp4', route => route.fulfill({ status: 200, contentType: 'video/mp4', body: '' }));
   await page.goto(`/v2?trainerHarness=1&libraryAudit=1${query}`);
-  await page.locator('[data-testid="trainer-nav-workouts"]:visible,[data-testid="trainer-desktop-nav-workouts"]:visible').click();
-  await page.locator('.trainerNextPageTabs button').nth(1).click();
+  await page.locator('[data-testid="trainer-nav-library"]:visible,[data-testid="trainer-desktop-nav-library"]:visible').click();
   const card = page.locator('.trainerNextLibrary').getByRole('button', { name: 'Редактировать упражнение Отведение рук с гантелями', exact: true });
   await card.click();
   return { card, editor: page.getByRole('dialog', { name: 'Редактирование упражнения', exact: true }) };
@@ -25,7 +24,8 @@ test('video replacement waits for Save, cancel retains the original and loading 
   const { card, editor } = await openLibrary(page);
   await expect(editor.locator('video')).toHaveAttribute('src', oldVideo);
   await editor.locator('input[type="file"]').setInputFiles(file);
-  await expect(editor.getByRole('button', { name: 'Загружаем видео...' })).toBeDisabled();
+  await expect(editor.locator('[data-trainer-modal-footer="true"]').getByRole('button', { name: 'Загружаем видео…', exact: true })).toBeDisabled();
+  await expect(editor.locator('input[type="file"]')).toBeDisabled();
   await expect(editor.getByRole('button', { name: 'Закрыть редактор упражнения' })).toBeDisabled();
   await expect.poll(() => Boolean(finishUpload)).toBe(true);
   finishUpload();

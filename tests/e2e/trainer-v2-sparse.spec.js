@@ -38,14 +38,19 @@ for (const width of [320, 393, 768, 1024, 1366]) {
       if(name==='Тренировки') {
         await expect(page.getByText('Нет активной программы',{exact:true})).toBeVisible();
         await page.locator('[class*=scheduleEditRow]').getByRole('button', { name: 'Редактировать', exact: true }).click();
-        const footer=page.locator('.trainerWorkoutScheduleFooter');
-        await footer.scrollIntoViewIfNeeded();
-        const collision=await page.locator('.trainerWorkoutScheduleSection').evaluate(el=>{
-          const text=el.querySelector('.trainerWorkoutScheduleContent').getBoundingClientRect();
-          const controls=el.querySelector('.trainerWorkoutScheduleControls').getBoundingClientRect();
-          return controls.top < text.bottom - 1;
-        });
-        expect(collision).toBe(false);
+        const agenda=page.getByTestId('trainer-subscription-calendar');
+        await expect(agenda.getByText('Сначала назначьте клиенту программу тренировок.',{exact:true})).toBeVisible();
+        await expect(agenda.getByRole('button',{name:'Настроить дни',exact:true})).toBeDisabled();
+        await expect(agenda.locator('input[type="date"]')).toHaveCount(0);
+        await agenda.getByRole('tab',{name:'Абонемент',exact:true}).click();
+        const configure=agenda.getByRole('button',{name:'Настроить абонемент',exact:true});
+        await configure.scrollIntoViewIfNeeded();
+        await configure.click({trial:true});
+        const buttonBox=await configure.boundingBox();
+        expect(buttonBox.height).toBeGreaterThanOrEqual(44);
+        expect(buttonBox.x).toBeGreaterThanOrEqual(0);
+        expect(buttonBox.x+buttonBox.width).toBeLessThanOrEqual(width+1);
+        await expect(agenda.getByRole('region',{name:'Календарь занятий',exact:true})).toBeVisible();
         await page.getByRole('button', {name: 'Закрыть: Расписание и абонемент', exact: true}).click();
       }
       if(name==='Питание') {

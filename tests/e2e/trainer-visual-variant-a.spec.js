@@ -15,9 +15,17 @@ async function openClient(page, extra = "") {
 }
 
 async function tab(page, name) {
-  const control = page.locator(".trainerNextClientMobileNav").getByRole("button", { name, exact: true });
+  const control = page.locator(".trainerNextClientTabs").getByRole("button", { name, exact: true });
   await control.click();
-  await expect(control).toHaveAttribute("aria-current", "page");
+  await expect(control).toHaveAttribute("aria-pressed", "true");
+}
+
+async function openExerciseSettings(page, editor) {
+  await editor.getByRole("button", { name: /^Действия:/ }).first().click();
+  const actions = page.getByRole("dialog", { name: "Действия с упражнением", exact: true });
+  await expect(actions).toBeVisible();
+  await actions.getByRole("button", { name: "По подходам и параметры", exact: true }).click();
+  await expect(actions).toBeHidden();
 }
 
 test("invite header gives its complete title and explanation room beside close", async ({ page }) => {
@@ -59,7 +67,7 @@ test("exercise history stays within one modal and Back preserves progress list",
   noErrors();
 });
 
-test("three-set settings keep Delete in view on 320x720 and remain scrollable with many sets", async ({ page }) => {
+test("exercise settings keep Delete reachable and the return action fixed on 320x720 with many sets", async ({ page }) => {
   const noErrors = failOnRuntimeErrors(page);
   await page.setViewportSize({ width: 320, height: 720 });
   await openClient(page);
@@ -67,21 +75,41 @@ test("three-set settings keep Delete in view on 320x720 and remain scrollable wi
   await page.locator(".trainerClientProgramEditButton").click();
   const editor = page.getByRole("dialog", { name: "Редактор программы клиента", exact: true });
   await editor.getByRole("combobox", { name: "День программы", exact: true }).selectOption({ index: 2 });
-  await editor.getByRole("button", { name: "Редактировать упражнение", exact: true }).first().click();
+  await openExerciseSettings(page, editor);
   const sheet = page.getByRole("dialog", { name: "Настройки упражнения", exact: true });
-  const rows = sheet.locator(".trainerNextSetRow");
-  while (await rows.count() < 3) await sheet.locator(".trainerNextAddSet").click();
-  const fit = await sheet.evaluate(node => {
-    const body = node.querySelector(":scope > div"), b = body.getBoundingClientRect(), d = body.querySelector(".clientSheetDelete").getBoundingClientRect();
-    return { height: body.clientHeight, scroll: body.scrollHeight, bodyBottom: b.bottom, deleteBottom: d.bottom };
-  });
-  expect(fit.scroll, JSON.stringify(fit)).toBeLessThanOrEqual(fit.height + 1);
-  expect(fit.deleteBottom, JSON.stringify(fit)).toBeLessThanOrEqual(fit.bodyBottom + 1);
-  await expect(sheet.getByRole("button", { name: "Готово", exact: true })).toBeVisible();
-  while (await rows.count() < 10) await sheet.locator(".trainerNextAddSet").click();
-  expect(await sheet.locator(":scope > div").evaluate(node => node.scrollHeight > node.clientHeight)).toBe(true);
-  await sheet.getByRole("button", { name: "Удалить из тренировки", exact: true }).scrollIntoViewIfNeeded();
-  await expect(sheet.getByRole("button", { name: "Удалить из тренировки", exact: true })).toBeInViewport();
+  const rows = sheet.getByRole("textbox", { name: /^Повторы, подход \d+$/ });
+  const addSet = sheet.getByRole("button", { name: "Добавить подход", exact: true });
+  const deleteExercise = sheet.getByRole("button", { name: "Удалить из тренировки", exact: true });
+  const returnToProgram = sheet.getByRole("button", { name: "К программе", exact: true });
+  const body = sheet.locator(":scope > div");
+  while (await rows.count() < 3) await addSet.click();
+  await expect(rows).toHaveCount(3);
+  const threeSetScrollHeight = await body.evaluate(node => node.scrollHeight);
+  // The current grouped sheet scrolls its body; the return action is not part
+  // of that scroll area, and destructive actions must remain reachable.
+  await deleteExercise.scrollIntoViewIfNeeded();
+  await expect(deleteExercise).toBeInViewport();
+  await expect(returnToProgram).toBeInViewport();
+  for (const action of [addSet, deleteExercise, returnToProgram]) {
+    expect((await action.boundingBox()).height).toBeGreaterThanOrEqual(44);
+  }
+  while (await rows.count() < 10) await addSet.click();
+  await expect(rows).toHaveCount(10);
+  const expanded = await body.evaluate(node => ({ height: node.clientHeight, scroll: node.scrollHeight }));
+  expect(expanded.scroll).toBeGreaterThan(expanded.height);
+  expect(expanded.scroll).toBeGreaterThan(threeSetScrollHeight);
+  await deleteExercise.scrollIntoViewIfNeeded();
+  await expect(deleteExercise).toBeInViewport();
+  await expect(returnToProgram).toBeInViewport();
+  expect(await sheet.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await sheet.getByRole("button", { name: "Удалить подход 10", exact: true }).click();
+  await expect(rows).toHaveCount(9);
+  await returnToProgram.click();
+  await expect(sheet).toBeHidden();
+  await expect(editor).toBeVisible();
+  await openExerciseSettings(page, editor);
+  await expect(rows).toHaveCount(9);
   noErrors();
 });
 
@@ -126,8 +154,7 @@ test("notification autosave feedback and real retry stay visible while scrolling
 test("library keeps complete long exercise names and all mobile filters stay selectable", async ({ page }) => {
   const noErrors = failOnRuntimeErrors(page);
   await page.goto("/v2?trainerHarness=1&libraryAudit=1");
-  await page.getByTestId("trainer-nav-workouts").click();
-  await page.locator(".trainerNextPageTabs button").nth(1).click();
+  await page.getByTestId("trainer-nav-library").click();
   const longName = page.locator(".trainerNextLibrary article strong").filter({ hasText: /рук с гантелями на наклонной скамье/ }).first();
   await expect(longName).toBeVisible();
   const text = await longName.evaluate(node => ({ whiteSpace: getComputedStyle(node).whiteSpace, width: node.clientWidth, scroll: node.scrollWidth }));
@@ -136,7 +163,7 @@ test("library keeps complete long exercise names and all mobile filters stay sel
   await page.getByTestId("trainer-nav-clients").click();
   const filters = page.locator(".trainerClientFilters");
   await expect(filters.locator(":scope > button:visible")).toHaveCount(2);
-  for (const name of ["Без программы", "Неактивные", "Архив", "Тестовые"]) {
+  for (const name of ["Без программы", "Без тренировок 14+ дней", "Архив", "Тестовые"]) {
     await filters.locator("summary").click();
     await filters.getByRole("button", { name, exact: true }).filter({ visible: true }).click();
     await expect(filters.locator("summary")).toContainText(name);
@@ -154,7 +181,7 @@ test("desktop retains six directly reachable client filters including a separate
   await page.getByTestId("trainer-desktop-nav-clients").click();
   const filters = page.locator(".trainerClientFilters > button:visible");
   await expect(filters).toHaveCount(6);
-  await expect(filters).toHaveText(["Все", "Внимание", "Без программы", "Неактивные", "Архив", "Тестовые"]);
+  await expect(filters).toHaveText(["Все", "Внимание", "Без программы", "Без тренировок 14+ дней", "Архив", "Тестовые"]);
   const archive = filters.filter({ hasText: /^Архив$/ });
   await archive.click();
   await expect(archive).toHaveAttribute("aria-pressed", "true");

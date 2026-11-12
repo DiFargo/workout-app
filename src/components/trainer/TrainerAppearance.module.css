@@ -42,6 +42,7 @@
 }
 .document body { background: var(--trainer-theme-page) !important; }
 :global(html[data-trainer-appearance] body #root) .scope.scope.scope {
+  --v2-nav-height: calc(64px + max(12px, env(safe-area-inset-bottom, 0px)));
   --trainer-text: var(--trainer-theme-text);
   --trainer-muted: var(--trainer-theme-muted);
   --trainer-border: var(--trainer-theme-border);

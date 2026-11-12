@@ -15,8 +15,34 @@ for (const width of [320, 393, 1366, 1920]) {
     await page.getByRole('button', { name: 'Закрыть настройку', exact: true }).click();
     await page.getByRole('button', { name: 'Закрыть мастер', exact: true }).click();
     const overview = await page.locator('.trainerNextClientOverview').boundingBox();
-    const dynamics = await page.getByTestId('trainer-client-progress-dashboard').boundingBox();
-    expect(Math.abs(dynamics.width - overview.width)).toBeLessThanOrEqual(1);
+    const dynamics = page.getByTestId('trainer-client-progress-dashboard');
+    await expect(dynamics).toBeVisible();
+    const layout = await dynamics.evaluate(node => {
+      const columns = node.parentElement;
+      const css = getComputedStyle(columns);
+      return {
+        columns: css.gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length,
+        gap: Number.parseFloat(css.columnGap),
+        bounds: columns.getBoundingClientRect().toJSON(),
+        dynamics: node.getBoundingClientRect().toJSON(),
+        aside: columns.lastElementChild.getBoundingClientRect().toJSON()
+      };
+    });
+    // Familiar sections use a 1.3fr / 1fr overview from 1000px; the
+    // dynamics card fills its column, not the whole two-column overview.
+    const wide = width >= 1000;
+    expect(layout.columns).toBe(wide ? 2 : 1);
+    expect(layout.gap).toBe(wide ? 20 : 18);
+    expect(layout.bounds.width).toBeCloseTo(overview.width, 0);
+    expect(layout.dynamics.width).toBeCloseTo(wide ? (layout.bounds.width - 20) * 1.3 / 2.3 : layout.bounds.width, 0);
+    for (const bounds of [layout.bounds, layout.dynamics, layout.aside]) {
+      expect(bounds.left).toBeGreaterThanOrEqual(overview.x);
+      expect(bounds.right).toBeLessThanOrEqual(overview.x + overview.width + 1);
+    }
+    if (wide) expect(layout.dynamics.right + 20).toBeCloseTo(layout.aside.left, 0);
+    else expect(layout.aside.top).toBeGreaterThanOrEqual(layout.dynamics.bottom + 18 - 1);
+    expect(overview.x).toBeGreaterThanOrEqual(0);
+    expect(overview.x + overview.width).toBeLessThanOrEqual(width);
     await page.screenshot({ path: `artifacts/fix-750-summary-${width}.png` });
     await page.locator('.trainerNextClientTabs:visible,.trainerNextClientMobileNav:visible').getByRole('button', { name: 'Тренировки', exact: true }).click();
     const empty = page.locator('[class*="emptyProgram"]');
@@ -25,7 +51,9 @@ for (const width of [320, 393, 1366, 1920]) {
     await page.locator('.trainerClientAssignmentDisclosure > summary').click();
     const select = page.getByRole('combobox', { name: 'Назначить программу клиенту', exact: true });
     await expect(select).toHaveValue('');
-    await expect(select.locator('option')).toHaveCount(2);
+    await expect(select.locator('option')).toHaveCount(3);
+    expect(await select.locator('option').evaluateAll(options => options.map(option => option.value))).toEqual(['', '__without_program__', 'program_ready']);
+    await expect(select.locator('option')).toHaveText(['Выберите программу', 'Без программы', 'Готовая программа']);
     await expect(page.getByRole('button', { name: 'Назначить', exact: true })).toBeDisabled();
     await page.screenshot({ path: `artifacts/fix-750-empty-${width}.png` });
     await select.selectOption('program_ready');

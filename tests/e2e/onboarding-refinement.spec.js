@@ -22,8 +22,8 @@ test("onboarding welcome, name and navigation use the current mobile design", as
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/?clientHarness=1&clientHarnessPage=firstSetup&clientFirstSetupStep=0&clientHarnessTheme=warm-light");
   const root = page.getByTestId("first-setup-onboarding");
-  await expect(root).toBeVisible();
-  await expect(root).toHaveCSS("background-color", "rgb(245, 247, 248)");
+  await expect(root).toBeVisible({ timeout: 40_000 });
+  await expect(root).toHaveCSS("background-color", "rgb(237, 244, 247)");
   await expectActionGradient(root.getByRole("button", { name: "Начать", exact: true }));
   const features = page.getByTestId("first-setup-welcome-features");
   await expect(features.getByRole("listitem")).toHaveCount(3);

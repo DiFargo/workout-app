@@ -25,7 +25,9 @@ async function closeSheet(dialog) {
 
 async function inspectHighlight(page, dialog, testInfo, name) {
   const calendar = dialog.getByTestId("trainer-subscription-calendar");
-  await calendar.getByRole("button", { name: "Календарь", exact: true }).click();
+  await calendar.getByRole("tab", { name: "Абонемент", exact: true }).click();
+  await expect(calendar.getByRole("region", { name: "Календарь занятий", exact: true })).toBeVisible();
+  await calendar.getByRole("button", { name: "Сегодня", exact: true }).click();
   const plainRangeDay = calendar.locator('button[data-date="2026-06-16"]');
   await expect(plainRangeDay).toHaveAttribute("data-subscription-range", "true");
   await expect(calendar.locator('button[data-date="2026-06-15"]')).toHaveAttribute("data-range-start", "true");

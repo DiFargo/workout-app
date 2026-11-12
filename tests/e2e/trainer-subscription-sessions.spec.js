@@ -114,7 +114,20 @@ for (const surface of ["overview", "workouts"]) {
       const schedule = dialog.locator(".trainerWorkoutSchedulePlanner");
       await schedule.getByRole("tab", { name: "Расписание", exact: true }).click();
       await schedule.getByRole("button", { name: "Настроить дни", exact: true }).click();
-      await schedule.getByRole("button", { name: "Сохранить даты", exact: true }).click();
+      const dateEditor = dialog.getByRole("region", { name: "Настройка дней тренировок", exact: true });
+      const finalDate = dateEditor.getByLabel("Новая дата — Тренировка 3", { exact: true });
+      await expect(finalDate).toHaveValue("2026-07-20");
+      // Saving an unchanged schedule is intentionally disabled. Exercise a real
+      // date write through the pinned sheet footer before checking the counters.
+      const saveDates = dialog.getByRole("button", { name: "Сохранить даты", exact: true });
+      await expect(saveDates).toBeDisabled();
+      await finalDate.fill("2026-07-22");
+      await expect(saveDates).toBeEnabled();
+      await saveDates.click();
+      await expect(dateEditor).toBeHidden();
+      await schedule.getByRole("button", { name: "Настроить дни", exact: true }).click();
+      await expect(finalDate).toHaveValue("2026-07-22");
+      await dialog.getByRole("button", { name: "Отмена", exact: true }).click();
       const afterScheduleSave = await startCounterEditing(dialog);
       // The programme has three dates; that is not the sold-session count.
       await expect(afterScheduleSave.getByLabel("Продано занятий", { exact: true })).toHaveValue("12");

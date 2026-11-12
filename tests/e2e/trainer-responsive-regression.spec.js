@@ -208,25 +208,27 @@ test("trainer workspace remains usable across the approved viewport matrix", asy
       if (viewport.width >= 721 && viewport.width < 980) {
         const programGrid = page.getByTestId("trainer-program-overview-grid");
         const firstProgramCard = page.getByTestId("trainer-program-overview-card").first();
-        // The harness uses the compact workout fixture, while the production
-        // program library renders this grid. Validate it whenever present.
-        if (await programGrid.count()) {
-          await expect(programGrid).toBeVisible();
-          await expect(firstProgramCard).toBeVisible();
-          const programLayout = await page.evaluate(() => {
-            const grid = document.querySelector("[data-testid='trainer-program-overview-grid']");
-            const card = document.querySelector("[data-testid='trainer-program-overview-card']");
-            const gridRect = grid?.getBoundingClientRect();
-            const cardRect = card?.getBoundingClientRect();
-            return {
-              columns: (window.getComputedStyle(grid).gridTemplateColumns || "").trim().split(/\s+/).filter(Boolean).length,
-              gridWidth: gridRect?.width || 0,
-              cardWidth: cardRect?.width || 0
-            };
-          });
-          expect(programLayout.columns, JSON.stringify(programLayout)).toBe(1);
-          expect(programLayout.cardWidth, JSON.stringify(programLayout)).toBeCloseTo(programLayout.gridWidth, 0);
-        }
+        await expect(programGrid).toBeVisible();
+        await expect(firstProgramCard).toBeVisible();
+        const programLayout = await page.evaluate(() => {
+          const grid = document.querySelector("[data-testid='trainer-program-overview-grid']");
+          const card = document.querySelector("[data-testid='trainer-program-overview-card']");
+          const css = window.getComputedStyle(grid);
+          return {
+            columns: css.gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length,
+            gap: Number.parseFloat(css.columnGap),
+            gridWidth: grid.getBoundingClientRect().width,
+            cardWidth: card.getBoundingClientRect().width
+          };
+        });
+        // The approved action-first catalogue switches to two equal columns
+        // at 760px, independently of the older 980px shell breakpoint.
+        const columns = viewport.width >= 760 ? 2 : 1;
+        expect(programLayout.columns, JSON.stringify(programLayout)).toBe(columns);
+        expect(programLayout.gap, JSON.stringify(programLayout)).toBe(12);
+        expect(programLayout.cardWidth, JSON.stringify(programLayout)).toBeCloseTo(
+          (programLayout.gridWidth - programLayout.gap * (columns - 1)) / columns, 0
+        );
       }
       await expectNoHorizontalOverflow(page);
     });

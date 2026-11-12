@@ -286,7 +286,7 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
 
   await openClientTab(page, "Питание");
   await expect(page.locator(".trainerNutritionAnalytics")).toBeVisible();
-  await page.getByRole("button", { name: "Дневник", exact: true }).click();
+  await page.getByRole("button", { name: "Открыть дневник", exact: true }).click();
   const diaryModal = page.getByRole("dialog", { name: "Дневник питания" });
   await expect(diaryModal).toBeVisible();
   await expect(diaryModal.locator("button[aria-pressed='true']")).toHaveCount(1);
@@ -319,7 +319,7 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
   const messageReplies = messagesPanel.getByRole("button", { name: "Ответить", exact: true });
   await expect(messagesPanel.getByRole("heading", { name: /^(Новые )?Сообщения$/ })).toBeVisible();
   await expect(messageFilters.getByRole("button")).toHaveCount(3);
-  await expect(messageFilters.getByRole("button", { name: /^Ждут ответа/ })).toHaveAttribute("aria-pressed", "true");
+  await expect(messageFilters.getByRole("button", { name: "Требуют внимания 2", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(messageReplies).toHaveCount(2);
   await expect(page.locator(".trainerNextNoteCard")).toHaveCount(0);
   await expect(page.getByText("Тестовая заметка", { exact: true })).toHaveCount(0);
@@ -347,63 +347,94 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
   await expect(messageReplyDialog).toBeHidden();
   await closeClientUtilitySheet(page, "Сообщения");
 
-  await openTrainerPrograms(page);
-  await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
-  await expect(page.locator(".trainerNextPageTabs button").nth(1)).toHaveAttribute("aria-pressed", /^(true|false)$/);
-  await expect(page.locator(".trainerNextWorkoutDaySelect[aria-pressed='true']")).toHaveCount(1);
-  const archiveToggle = page.locator(".trainerNextArchivedProgramToggle");
-  await expect(archiveToggle).toBeVisible();
-  const archiveBox = await archiveToggle.boundingBox();
-  const daysBox = await page.locator(".trainerNextWorkoutDays").boundingBox();
-  expect(archiveBox.x).toBeGreaterThanOrEqual(daysBox.x);
-  expect(archiveBox.x + archiveBox.width).toBeLessThanOrEqual(daysBox.x + daysBox.width + 1);
-  await archiveToggle.click();
-  await expect(archiveToggle).toHaveAttribute("aria-expanded", "true");
-  await expect(page.locator(".trainerNextArchivedWorkoutList > div")).toHaveCount(2);
-  await archiveToggle.click();
-  await expect(archiveToggle).toHaveAttribute("aria-expanded", "false");
-  await page.locator(".trainerNextWorkoutDays").screenshot({ path: testInfo.outputPath("program-days-after.png") });
+  await openClientTab(page, "Тренировки");
+  await page.getByRole("button", { name: /^История программ Назначенные программы и изменения$/ }).click();
+  const programHistory = page.getByRole("dialog", { name: "История программ", exact: true });
+  const current = programHistory.getByRole("region", { name: "Текущая программа клиента", exact: true });
+  await current.getByRole("button", { name: "Посмотреть программу", exact: true }).click();
+  const currentWorkouts = current.getByRole("list", { name: "Тренировки программы: tren+", exact: true }).locator(":scope > li");
+  await expect(currentWorkouts).toHaveCount(3);
+  await expect(current.getByText("Только просмотр", { exact: true })).toBeVisible();
+  await currentWorkouts.first().locator("summary").click();
+  await expect(currentWorkouts.first().locator("ol > li")).toHaveCount(2);
+  await expect(currentWorkouts.first()).toContainText("Жим ногами");
+  await expect(currentWorkouts.first()).toContainText("12 повт.");
+  await expect(currentWorkouts.first()).toContainText("90 кг");
+  const archiveTab = programHistory.getByRole("tab", { name: /^Архив/ });
+  const archiveBox = await archiveTab.boundingBox();
+  const historyBox = await programHistory.boundingBox();
+  expect(archiveBox.x).toBeGreaterThanOrEqual(historyBox.x);
+  expect(archiveBox.x + archiveBox.width).toBeLessThanOrEqual(historyBox.x + historyBox.width + 1);
+  await archiveTab.click();
+  await expect(archiveTab).toHaveAttribute("aria-selected", "true");
+  await expect(programHistory.getByRole("heading", { name: "Архив пока пуст", exact: true })).toBeVisible();
+  await programHistory.getByRole("tab", { name: /^Программы/ }).click();
+  const previous = programHistory.getByRole("region", { name: "Другие назначения программ", exact: true }).locator("article").filter({ hasText: "Предыдущая программа" });
+  const previousToggle = previous.locator("button[aria-expanded]");
+  await previousToggle.click();
+  await expect(previousToggle).toHaveAttribute("aria-expanded", "true");
+  const previousWorkouts = previous.getByRole("list", { name: "Тренировки программы: Предыдущая программа", exact: true }).locator(":scope > li");
+  await expect(previousWorkouts).toHaveCount(2);
+  await expect(previous.getByText("Только просмотр", { exact: true })).toBeVisible();
+  await previousWorkouts.first().locator("summary").click();
+  await expect(previousWorkouts.first()).toContainText("Разгибание ног");
+  await expect(previousWorkouts.first()).toContainText("12 повт.");
+  await expect(previousWorkouts.first()).toContainText("35 кг");
+  await previousToggle.click();
+  await expect(previousToggle).toHaveAttribute("aria-expanded", "false");
+  await closeClientUtilitySheet(page, "История программ");
+
+  await page.locator(".trainerClientProgramEditButton").click();
+  const clientEditor = page.getByRole("dialog", { name: "Редактор программы клиента", exact: true });
+  await expect(clientEditor.locator(".trainerNextWorkoutDayItem")).toHaveCount(3);
+  const clientDay = clientEditor.getByRole("combobox", { name: "День программы", exact: true });
+  if (await clientDay.isVisible()) await clientDay.selectOption({ index: 0 });
+  else await clientEditor.locator(".trainerNextWorkoutDaySelect").first().click();
+  await expect(clientEditor.locator(".trainerNextWorkoutDaySelect[aria-pressed='true']")).toHaveCount(1);
+  const completedCard = clientEditor.locator("[data-client-program-exercise-card]").first();
+  const completedToggle = completedCard.getByRole("button", { name: /^(Посмотреть|Свернуть) нагрузку:/ });
+  if (await completedToggle.getAttribute("aria-expanded") === "true") await completedToggle.click();
+  if (page.viewportSize().width <= 699) expect((await completedCard.boundingBox()).height).toBeLessThanOrEqual(240);
+  await completedToggle.click();
+  await expect(clientEditor.getByLabel("Повторы: Жим ногами", { exact: true })).toBeDisabled();
+  await clientEditor.screenshot({ path: testInfo.outputPath("program-days-after.png") });
   await expectTapTargets(page, [
-    ".trainerNextPageTabs button",
-    ".trainerNextWorkoutDayItem",
-    ".trainerNextExerciseName",
-    ".trainerNextHeadActions button",
-    ".trainerNextMobileHeader button"
+    ".trainerNextWorkoutDaySelect",
+    "[data-client-program-exercise-card] button",
+    ".trainerClientProgramEditorModal > header button"
   ]);
   if (await page.evaluate(() => window.matchMedia("(max-width: 699px)").matches)) {
     await expectTapTargets(page, [
       ".trainerNextWorkoutDayActions button",
-      ".trainerNextExerciseMove button",
-      ".trainerNextExerciseActions button",
-      ".trainerNextMobileHeader button"
+      "[data-client-program-exercise-card] button",
+      ".clientEditorMobileDays button"
     ], 44);
-    expect((await page.locator(".trainerNextExerciseRow").first().boundingBox()).height).toBeLessThanOrEqual(240);
-    const selectedDay = page.locator(".trainerNextWorkoutDayItem.active");
-    const selectedDayBox = await selectedDay.locator(".trainerNextWorkoutDaySelect").boundingBox();
-    const dayActionsBox = await selectedDay.locator(".trainerNextWorkoutDayActions").boundingBox();
-    expect(selectedDayBox.y + selectedDayBox.height).toBeLessThanOrEqual(dayActionsBox.y);
+    const selectedDayBox = await clientDay.boundingBox();
+    expect(selectedDayBox.height).toBeGreaterThanOrEqual(44);
+    expect(selectedDayBox.x).toBeGreaterThanOrEqual(0);
+    expect(selectedDayBox.x + selectedDayBox.width).toBeLessThanOrEqual(page.viewportSize().width);
   }
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-programs.png");
-  await page.locator(".trainerNextExerciseRow").first().screenshot({ path: testInfo.outputPath("exercise-row-after.png") });
+  await completedCard.screenshot({ path: testInfo.outputPath("exercise-row-after.png") });
 
-  await page.locator(".trainerNextExerciseName").first().click();
-  await expect(page.locator(".trainerNextExerciseEditor")).toBeVisible();
-  await expect(page.locator(".trainerNextSetEditor input").first()).toBeDisabled();
-  await page.locator(".trainerNextWorkoutDaySelect").nth(1).click();
-  await page.locator(".trainerNextExerciseName").first().click();
-  await expect(page.locator(".trainerNextExerciseEditor")).toBeVisible();
-  await expect(page.locator(".trainerNextSetEditor input").first()).toBeVisible();
-  await expect(page.locator(".trainerNextSetEditor input").first()).toBeEnabled();
-  await page.locator(".trainerNextSetEditor input").first().fill("10");
-  await expectTapTargets(page, [
-    ".trainerNextAddSet",
-    ".trainerNextVideoUpload"
-  ]);
+  if (await clientDay.isVisible()) await clientDay.selectOption({ index: 1 });
+  else await clientEditor.locator(".trainerNextWorkoutDaySelect").nth(1).click();
+  const editableReps = clientEditor.getByLabel("Повторы: Жим лёжа с гантелями", { exact: true });
+  await expect(editableReps).toBeVisible();
+  await expect(editableReps).toBeEnabled();
+  await editableReps.fill("10");
+  await expect(editableReps).toHaveValue("10");
+  await editableReps.fill("12");
+  await expect(clientEditor.locator('input[type="file"]')).toHaveCount(0);
+  await expectTapTargets(page, ["[data-client-program-exercise-card] button"]);
   await expectNoHorizontalOverflow(page);
   await attachScreenshot(page, testInfo, "trainer-program-editor.png");
+  await clientEditor.getByRole("button", { name: "Закрыть редактор", exact: true }).click();
+  await expect(clientEditor).toBeHidden();
 
-  await page.locator(".trainerNextPageTabs button").nth(1).click();
+  await page.getByRole("button", { name: "Назад к списку клиентов", exact: true }).click();
+  await clickTrainerNav(page, "library");
   await expect(page.locator(".trainerNextLibrary")).toBeVisible();
   await page.locator(".trainerNextLibrary article").first().click();
   const libraryEditor = page.getByRole("dialog", { name: "Редактирование упражнения" });
@@ -423,7 +454,7 @@ test("trainer visual audit covers dashboard, clients and programs", async ({ pag
   await libraryEditorClose.click();
   await expect(libraryEditor).toBeHidden();
 
-  await page.locator(".trainerNextPageTabs button").first().click();
+  await openTrainerPrograms(page);
   await expect(page.getByRole("searchbox", { name: "Найти программу" })).toBeVisible();
   const templatePurpose = page.getByRole("complementary", { name: "Шаблон — не план клиента" });
   await expect(templatePurpose).toBeVisible();

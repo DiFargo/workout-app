@@ -132,15 +132,15 @@ test('workout refits after resizing and exercise navigation without changing set
   expect((await video.boundingBox()).width).toBeLessThan(portraitSize);
   expect(await page.getByTestId('workout-run-stage').evaluate(el => el.scrollHeight - el.clientHeight)).toBeLessThanOrEqual(1);
   // A longer exercise title uses the same real header and triggers a height reflow.
-  await page.locator('[data-css-module-scope="workout-stage-heading"] > div > span').first().evaluate(el => {
+  await page.getByTestId('workout-exercise-picker-trigger').locator(':scope > span').first().evaluate(el => {
     el.textContent = 'Тяга гантели с опорой на скамью';
   });
   await checkLayout(page, 'exercise');
   const primary = page.getByTestId('workout-primary-action');
-  for (const label of ['Подход выполнен', 'Следующий подход', 'Подход выполнен', 'Следующее упражнение']) {
+  for (const label of ['Завершить подход', 'Перейти к подходу 3 из 3', 'Завершить подход', 'К следующему упражнению']) {
     await expect(primary).toHaveAccessibleName(label);
     await primary.click();
-    if (label === 'Подход выполнен') {
+    if (label === 'Завершить подход') {
       await expect(page.getByTestId('workout-rest-timer-expanded')).toBeVisible();
       await page.getByTestId('workout-rest-timer-minimize').click();
     }
@@ -244,7 +244,7 @@ test('WebKit enlarged workout text remains scrollable above the dock', async ({ 
         await expect(sets.getByRole('button', { name: 'Подход 1 выполнен, действия', exact: true })).toBeVisible();
         await page.getByRole('button', { name: 'Все подходы, выбран подход 1 из 3', exact: true }).click();
         await page.getByRole('button', { name: 'Перейти к подходу 2', exact: true }).click();
-        await expect(page.getByTestId('workout-primary-action')).toHaveAccessibleName('Подход выполнен');
+        await expect(page.getByTestId('workout-primary-action')).toHaveAccessibleName('Завершить подход');
         await expect(sets.getByRole('button', { name: 'Подход 2 выполнен, действия', exact: true })).toHaveCount(0);
       }
       await page.evaluate(() => { document.documentElement.style.fontSize = '32px'; });

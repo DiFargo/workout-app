@@ -45,14 +45,6 @@ async function clickTrainerNav(page, section) {
   await button.click();
 }
 
-async function clickIfVisible(locator) {
-  if (await locator.count() && await locator.first().isVisible()) {
-    await locator.first().click();
-    return true;
-  }
-  return false;
-}
-
 function clientTabs(page) {
   return page.locator(".trainerNextClientTabs");
 }
@@ -202,6 +194,31 @@ async function openClientCalendar(page) {
   return dialog;
 }
 
+async function openClientManagementCalendar(page) {
+  await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
+  const actions = page.getByRole("dialog", { name: "Управление клиентом", exact: true });
+  await expect(actions).toBeVisible();
+  await actions.getByRole("button", { name: /^Расписание и абонемент/ }).click();
+  await expect(actions).toBeHidden();
+  const calendar = page.getByRole("dialog", { name: "Календарь тренировок", exact: true });
+  await expect(calendar).toBeVisible();
+  return calendar;
+}
+
+async function selectClientProgramDay(editor, index) {
+  const picker = editor.getByRole("combobox", { name: "День программы", exact: true });
+  if (await picker.isVisible()) await picker.selectOption({ index });
+  else await editor.locator(".trainerNextWorkoutDaySelect").nth(index).click();
+}
+
+async function openClientExerciseSettings(page, editor) {
+  await editor.getByRole("button", { name: /^Действия:/ }).first().click();
+  const actions = page.getByRole("dialog", { name: "Действия с упражнением", exact: true });
+  await expect(actions).toBeVisible();
+  await actions.getByRole("button", { name: "По подходам и параметры", exact: true }).click();
+  await expect(actions).toBeHidden();
+}
+
 async function expectClientManagementMenu(page) {
   await page.getByRole("button", { name: "Действия с клиентом", exact: true }).click();
   const clientActions = page.getByRole("dialog", { name: "Управление клиентом", exact: true });
@@ -338,17 +355,16 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
   await openClientTab(page, "Сводка");
   await expect(page.getByRole("heading", { name: "Germes" })).toBeVisible();
   await expectClientNavigation(page);
-  const subscriptionStatus = page.locator(".trainerNextClientSubscriptionStatus");
-  const subscriptionStatusBox = await subscriptionStatus.boundingBox();
-  expect(subscriptionStatusBox).not.toBeNull();
-  // The current mobile card fills the content width (288px at a 320px viewport).
-  // Keep the containment check without pinning the previous pill's width.
-  expect(subscriptionStatusBox.x).toBeGreaterThanOrEqual(0);
-  expect(subscriptionStatusBox.x + subscriptionStatusBox.width).toBeLessThanOrEqual(page.viewportSize().width);
+  const clientActionsButton = page.getByRole("button", { name: "Действия с клиентом", exact: true });
+  const clientActionsBox = await clientActionsButton.boundingBox();
+  expect(clientActionsBox).not.toBeNull();
+  expect(clientActionsBox.x).toBeGreaterThanOrEqual(0);
+  expect(clientActionsBox.x + clientActionsBox.width).toBeLessThanOrEqual(page.viewportSize().width);
   await expect(page.getByTestId("trainer-client-progress-dashboard").locator("button[aria-pressed='true']")).toHaveCount(2);
 
-  await page.getByRole("button", { name: "Открыть абонемент клиента" }).click();
-  const subscriptionDialog = page.getByRole("dialog", { name: "Календарь тренировок" });
+  const subscriptionDialog = await openClientManagementCalendar(page);
+  await subscriptionDialog.getByRole("tab", { name: "Абонемент", exact: true }).click();
+  await subscriptionDialog.getByRole("button", { name: "Настроить абонемент", exact: true }).click();
   await expect(subscriptionDialog.getByRole("region", { name: "Параметры абонемента" })).toBeVisible();
   await expect(subscriptionDialog.getByLabel("Продано занятий")).toBeEditable();
   await subscriptionDialog.getByRole("button", { name: "Закрыть", exact: true }).click();
@@ -360,10 +376,12 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
 
   await openExerciseSection(page, "План тренировок");
   await openClientCalendar(page);
-  await expect(page.locator(".trainerWorkoutScheduleGrid")).toBeVisible();
-  await expect(page.locator('[aria-label="Типы календарных отметок"]')).toBeVisible();
+  await expect(page.getByRole("tabpanel", { name: "Расписание", exact: true }).locator("button[aria-pressed]")).toHaveCount(3);
+  await page.getByRole("tab", { name: "Абонемент", exact: true }).click();
+  await expect(page.getByRole("region", { name: "Календарь занятий", exact: true })).toBeVisible();
+  await expect(page.locator('[aria-label="Обозначения календаря"]')).toBeVisible();
   await closeClientUtilitySheet(page, "Расписание и абонемент");
-  const currentProgramCard = page.locator('[class*="currentProgram"]').filter({ hasText: "Назначенная программа" }).first();
+  const currentProgramCard = page.locator('[class*="currentProgram"]').filter({ hasText: "Персональный план клиента" }).first();
   await expect(currentProgramCard.locator(".trainerClientProgramEditButton")).toBeVisible();
   await expect(page.locator('[class*="assignment"] .trainerClientProgramEditButton')).toHaveCount(0);
   await page.locator(".trainerClientProgramEditButton").click();
@@ -401,7 +419,7 @@ test("trainer workspace smoke: dashboard, clients and client card stay usable", 
   const nutritionControl = await clientTabControl(page, "Питание");
   await expect(nutritionControl.button).toHaveAttribute(nutritionControl.activeAttribute, nutritionControl.activeValue);
   await expect(page.locator(".trainerNutritionPeriodButtons button[aria-pressed='true']")).toHaveCount(1);
-  await page.getByRole("button", { name: "Дневник", exact: true }).click();
+  await page.getByRole("button", { name: "Открыть дневник", exact: true }).click();
   const diaryModal = page.getByRole("dialog", { name: "Дневник питания" });
   await expect(diaryModal).toBeVisible();
   await expect(diaryModal.locator("button[aria-pressed='true']")).toHaveCount(1);
@@ -442,19 +460,23 @@ test("trainer client invite supports a Telegram nickname without requiring a sep
   assertNoRuntimeErrors();
 });
 
-test("training calendar makes a finished workout plan primary and subscription secondary", async ({ page }) => {
+test("training calendar keeps actual workout outcomes primary and subscription secondary", async ({ page }) => {
   test.setTimeout(90_000);
+  await page.clock.setFixedTime(new Date("2026-11-12T12:00:00.000Z"));
   await page.goto("/?trainerHarness=1&scheduleReady=1", { waitUntil: "domcontentloaded", timeout: 60_000 });
   await clickTrainerNav(page, "clients");
   await openHarnessClient(page);
-  await page.getByRole("button", { name: "Открыть абонемент клиента" }).click();
-
-  const dialog = page.getByRole("dialog", { name: "Календарь тренировок" });
-  await expect(dialog.getByRole("heading", { name: "Программа тренировок завершена" })).toBeVisible();
-  await expect(dialog).toContainText("В текущем плане больше нет предстоящих тренировок.");
-  await expect(dialog).toContainText("Период абонемента выделен автоматически");
-  await expect(dialog.locator(".trainerNotificationCalendarUnified > header > strong")).toContainText("План завершён");
-  await expect(dialog.locator(".trainerNotificationCalendarUnified > header > strong")).toContainText("абонемент закончился");
+  const dialog = await openClientManagementCalendar(page);
+  await expect(dialog.getByRole("tab", { name: "Расписание", exact: true })).toHaveAttribute("aria-selected", "true");
+  await expect(dialog).toContainText("1 из 3 выполнено · по датам");
+  const sessions = dialog.getByRole("tabpanel", { name: "Расписание", exact: true }).locator("button[aria-pressed]");
+  await expect(sessions).toHaveCount(3);
+  await expect(sessions).toContainText(["Тренировка 1", "Тренировка 2", "Тренировка 3"]);
+  await expect(sessions.first()).toContainText("Выполнена");
+  await expect(sessions.nth(1)).toContainText("Пропущена");
+  await expect(dialog.getByRole("button", { name: "Настроить дни", exact: true })).toBeDisabled();
+  await dialog.getByRole("tab", { name: "Абонемент", exact: true }).click();
+  await expect(dialog.getByRole("region", { name: "Баланс абонемента", exact: true }).getByText("Закончился", { exact: true })).toBeVisible();
 });
 
 test("trainer prepares an AI nutrition draft before confirmation", async ({ page }) => {
@@ -814,10 +836,8 @@ test("client program exercise settings show square playback and library-only vid
   await page.locator(".trainerClientProgramEditButton").click();
   const editor = page.getByRole("dialog", { name: "Редактор программы клиента", exact: true });
   await expect(editor).toBeVisible();
-  const dayPicker = editor.getByRole("combobox", { name: "День программы", exact: true });
-  if (await dayPicker.isVisible()) await dayPicker.selectOption({ index: 2 });
-  else await editor.getByRole("button", { name: /^День 3 / }).click();
-  await editor.getByRole("button", { name: "Редактировать упражнение", exact: true }).first().click();
+  await selectClientProgramDay(editor, 2);
+  await openClientExerciseSettings(page, editor);
   await expectReadOnlyProgramVideo(page.getByRole("dialog", { name: "Настройки упражнения", exact: true }), { client: true });
   await page.getByTestId("trainer-program-exercise-video").scrollIntoViewIfNeeded();
   await mkdir("output/playwright", { recursive: true });
@@ -830,12 +850,13 @@ test("shared template exercise settings show square playback and library-only vi
   await serveExerciseVideo(page);
   await page.goto("/?trainerHarness=1&programVideoAudit=1");
   await openTrainerPrograms(page);
-  await page.locator(".trainerNextPageTabs button").first().click();
+  await expect(page.getByRole("searchbox", { name: "Найти программу" })).toBeVisible();
   await page.getByRole("button", { name: /Редактировать/ }).click();
   const editor = page.getByRole("dialog", { name: "Общий шаблон", exact: true });
   await expect(editor).toBeVisible();
   const constructor = editor.locator('[data-trainer-constructor="true"]');
-  await constructor.getByRole("button", { name: "Дополнительные параметры", exact: true }).first().click();
+  await constructor.getByRole("button", { name: /^Действия:/ }).first().click();
+  await page.getByRole("dialog", { name: "Действия с упражнением", exact: true }).getByRole("button", { name: "Дополнительные параметры", exact: true }).click();
   await expectReadOnlyProgramVideo(page.getByRole("dialog", { name: "Настройки упражнения", exact: true }));
   await page.getByTestId("trainer-program-exercise-video").scrollIntoViewIfNeeded();
   await mkdir("output/playwright", { recursive: true });
@@ -855,10 +876,8 @@ test("trainer exercise settings keep three sets reachable with a persistent prog
 
   const editorDialog = page.getByRole("dialog", { name: "Редактор программы клиента", exact: true });
   await expect(editorDialog).toBeVisible();
-  const dayPicker = editorDialog.getByRole("combobox", { name: "День программы", exact: true });
-  if (await dayPicker.isVisible()) await dayPicker.selectOption({ index: 2 });
-  else await editorDialog.getByRole("button", { name: /^День 3 / }).click();
-  await editorDialog.getByRole("button", { name: "Редактировать упражнение", exact: true }).first().click();
+  await selectClientProgramDay(editorDialog, 2);
+  await openClientExerciseSettings(page, editorDialog);
   const exerciseSheet = page.getByRole("dialog", { name: "Настройки упражнения", exact: true });
   await expect(exerciseSheet).toBeVisible();
   const expandedExerciseEditor = exerciseSheet.getByRole("region", { name: "Нагрузка по подходам", exact: true });
@@ -885,10 +904,10 @@ test("trainer program editor applies confirmed exercise and day deletion", async
   await openExerciseSection(page, "План тренировок");
 
   const calendar = await openClientCalendar(page);
-  const scheduleGrid = calendar.locator(".trainerWorkoutScheduleGrid");
-  await expect(scheduleGrid).toBeVisible();
-  await expect(scheduleGrid).not.toContainText("арх.");
-  await expect(scheduleGrid.locator("button.archived")).toHaveCount(0);
+  const scheduleSessions = calendar.getByRole("tabpanel", { name: "Расписание", exact: true }).locator("button[aria-pressed]");
+  await expect(scheduleSessions).toHaveCount(3);
+  await expect(scheduleSessions.filter({ hasText: "арх." })).toHaveCount(0);
+  await expect(scheduleSessions.filter({ hasText: "Прошлая программа" })).toHaveCount(0);
   await closeClientUtilitySheet(page, "Расписание и абонемент");
 
   const insightsDialog = await openWorkoutInsights(page);
@@ -901,18 +920,22 @@ test("trainer program editor applies confirmed exercise and day deletion", async
   await expect(editorDialog).toBeVisible();
   const exerciseRows = editorDialog.locator(".trainerNextExerciseList article");
   await expect(exerciseRows).toHaveCount(1);
-  await expect(exerciseRows.first().locator(".trainerNextExerciseProgress")).toContainText("1ПМ");
-  const editExerciseButton = exerciseRows.first().getByRole("button", { name: "Редактировать упражнение", exact: true });
+  const loadToggle = exerciseRows.first().getByRole("button", { name: /^(Настроить|Свернуть) нагрузку:/ });
+  if (await loadToggle.getAttribute("aria-expanded") !== "true") await loadToggle.click();
+  await exerciseRows.first().locator("summary").filter({ hasText: "История выполнения" }).click();
+  await expect(exerciseRows.first()).toContainText("1ПМ");
+  const editExerciseButton = exerciseRows.first().getByRole("button", { name: /^Действия:/ });
   const editActionBox = await editExerciseButton.boundingBox();
   expect(editActionBox).not.toBeNull();
   expect(editActionBox.x + editActionBox.width).toBeLessThanOrEqual(page.viewportSize().width);
 
+  await editorDialog.locator("summary").filter({ hasText: "Параметры дня" }).click();
   const statusSelect = editorDialog.getByLabel("Статус тренировки");
   await statusSelect.selectOption("moved");
   await expect(statusSelect).toHaveValue("moved");
   await expect(editorDialog.getByLabel("Новая дата")).toBeVisible();
 
-  await editExerciseButton.click();
+  await openClientExerciseSettings(page, editorDialog);
   const exerciseSheet = page.getByRole("dialog", { name: "Настройки упражнения", exact: true });
   await expect(exerciseSheet).toBeVisible();
   const expandedExerciseEditor = exerciseSheet.getByRole("region", { name: "Нагрузка по подходам", exact: true });
@@ -951,7 +974,7 @@ test("trainer program editor applies confirmed exercise and day deletion", async
   await page.mouse.click(closeBox.x + closeBox.width / 2, closeBox.y + closeBox.height / 2);
   await expect(confirmDialog).toBeHidden();
   await expect(exerciseRows).toHaveCount(1);
-  await editExerciseButton.click();
+  await openClientExerciseSettings(page, editorDialog);
   await deleteExerciseButton.click();
   await expect(confirmDialog).toBeVisible();
   await confirmDialog.locator("button.danger").click();
@@ -979,7 +1002,7 @@ test("trainer editor shows an exact completed workout id as completed after an a
   await openHarnessClient(page);
   await openExerciseSection(page, "План тренировок");
   await openClientCalendar(page);
-  await expect(page.locator(".trainerWorkoutScheduleFooter")).toContainText("Выполнено: 2");
+  await expect(page.getByRole("dialog", { name: "Расписание и абонемент", exact: true })).toContainText("2 из 3 выполнено · по датам");
   await closeClientUtilitySheet(page, "Расписание и абонемент");
   await page.locator(".trainerClientProgramEditButton").click();
 
@@ -1167,8 +1190,10 @@ test("trainer calendar is isolated to the current assignment", async ({ page }) 
   await openClientCalendar(page);
 
   const schedule = page.locator(".trainerWorkoutSchedulePlanner");
-  await expect(schedule).toContainText("3/3");
-  await expect(schedule).not.toContainText("3/4");
+  await expect(schedule).toContainText("1 из 3 выполнено · по датам");
+  const sessions = schedule.getByRole("tabpanel", { name: "Расписание", exact: true }).locator("button[aria-pressed]");
+  await expect(sessions).toHaveCount(3);
+  await expect(sessions.filter({ hasText: "Будущая тренировка" })).toHaveCount(0);
   assertNoRuntimeErrors();
 });
 
@@ -1226,6 +1251,7 @@ test("trainer program editor contains only the current assignment", async ({ pag
 
 test("trainer calendar and assignment history hide client basic plans until explicitly requested", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
+  await page.clock.setFixedTime(new Date("2026-11-12T12:00:00.000Z"));
   await page.goto("/?trainerHarness=1&basicHistory=1");
   await clickTrainerNav(page, "clients");
   await openHarnessClient(page);
@@ -1233,80 +1259,93 @@ test("trainer calendar and assignment history hide client basic plans until expl
 
   const calendar = await openClientCalendar(page);
   const schedule = calendar.locator(".trainerWorkoutSchedulePlanner");
-  await expect(schedule).toContainText("3/3");
-  const calendarLegend = calendar.locator('[aria-label="Типы календарных отметок"]');
+  await expect(schedule).toContainText("1 из 3 выполнено · по датам");
+  await expect(schedule.getByRole("tabpanel", { name: "Расписание", exact: true }).locator("button[aria-pressed]")).toHaveCount(3);
+  await expect(schedule).not.toContainText("Базовая тренировка");
+  await calendar.getByRole("tab", { name: "Абонемент", exact: true }).click();
+  const calendarLegend = calendar.locator('[aria-label="Обозначения календаря"]');
   await expect(calendarLegend).toBeVisible();
-  await expect(calendarLegend).toContainText("В срок");
-  await expect(calendarLegend).toContainText("Плановая тренировка");
-  await expect(schedule.locator('button[title="2026-06-04"]')).toHaveCount(0);
+  await expect(calendarLegend).toContainText("Выполнено");
+  await expect(calendarLegend).toContainText("Запланировано");
+  await calendar.getByRole("button", { name: "Предыдущий месяц", exact: true }).click();
+  const basicDay = calendar.locator('[data-date="2026-06-04"]');
+  await expect(basicDay).toBeVisible();
+  await expect(basicDay).toHaveAttribute("aria-label", /нет занятий$/);
+  await expect(basicDay.locator("[data-event-status]")).toHaveCount(0);
   await closeClientUtilitySheet(page, "Расписание и абонемент");
 
   const assignmentHistory = await openProgramAssignmentHistory(page);
   const basicProgram = assignmentHistory.locator("article").filter({ hasText: "Базовый план клиента" });
-  const toggle = assignmentHistory.getByRole("checkbox", { name: "Показать историю базовых тренировок" });
+  const toggle = assignmentHistory.getByRole("checkbox", { name: "Показывать самостоятельные планы" });
 
   await expect(toggle).not.toBeChecked();
   await expect(basicProgram).toHaveCount(0);
   await toggle.check();
   await expect(basicProgram).toBeVisible();
-  await expect(basicProgram).toContainText("Самостоятельно");
+  await expect(basicProgram).toContainText("Самостоятельный план");
   await toggle.uncheck();
   await expect(basicProgram).toHaveCount(0);
   assertNoRuntimeErrors();
 });
 
-test("trainer programs page keeps editor, preview and library usable", async ({ page }) => {
+test("trainer program editing, read-only assignment view and libraries stay usable", async ({ page }) => {
   const assertNoRuntimeErrors = failOnRuntimeErrors(page);
   await page.goto("/?trainerHarness=1");
 
-  await openTrainerPrograms(page);
-  await expect(page.locator(".trainerNextWorkoutPage")).toBeVisible();
-  await expect(page.locator(".trainerNextMain h1")).toHaveCount(1);
-  await expect(page.locator(".trainerNextWorkoutLayout")).toBeVisible();
-  const dayPicker = page.getByRole("combobox", { name: "День программы", exact: true });
-  const compactDays = await dayPicker.isVisible();
-  if (compactDays) {
-    await expect(dayPicker.locator("option")).toHaveCount(3);
-    await expect(dayPicker).toHaveValue(await dayPicker.locator("option").first().getAttribute("value"));
-  } else {
-    await expect(page.locator(".trainerNextWorkoutDays .trainerNextWorkoutDayItem")).toHaveCount(3);
-    await expect(page.locator(".trainerNextWorkoutDaySelect[aria-pressed='true']")).toHaveCount(1);
-  }
-  await expect(page.locator(".trainerNextExerciseList article")).toHaveCount(2);
-  const firstExerciseNameButton = page.getByRole("button", { name: /^Жим ногами Без видео$/ });
+  await clickTrainerNav(page, "clients");
+  await openHarnessClient(page);
+  const history = await openProgramAssignmentHistory(page);
+  const current = history.getByRole("region", { name: "Текущая программа клиента", exact: true });
+  await current.getByRole("button", { name: "Посмотреть программу", exact: true }).click();
+  const viewedWorkouts = current.getByRole("list", { name: "Тренировки программы: tren+", exact: true }).locator(":scope > li");
+  await expect(viewedWorkouts).toHaveCount(3);
+  await expect(current.getByText("Только просмотр", { exact: true })).toBeVisible();
+  await viewedWorkouts.first().locator("summary").click();
+  await expect(viewedWorkouts.first().locator("ol > li")).toHaveCount(2);
+  await expect(viewedWorkouts.first()).toContainText("Жим ногами");
+  await expect(viewedWorkouts.first()).toContainText("12 повт.");
+  await expect(viewedWorkouts.first()).toContainText("90 кг");
+  await closeClientUtilitySheet(page, "История программ");
+
+  await openExerciseSection(page, "План тренировок");
+  await page.locator(".trainerClientProgramEditButton").click();
+  const clientEditor = page.getByRole("dialog", { name: "Редактор программы клиента", exact: true });
+  await expect(clientEditor.locator(".trainerNextWorkoutLayout")).toBeVisible();
+  await expect(clientEditor.locator(".trainerNextWorkoutDayItem")).toHaveCount(3);
+  await selectClientProgramDay(clientEditor, 0);
+  await expect(clientEditor.locator(".trainerNextWorkoutDaySelect[aria-pressed='true']")).toHaveCount(1);
+  await expect(clientEditor.locator(".trainerNextExerciseList article")).toHaveCount(2);
+  const firstExerciseNameButton = clientEditor.getByRole("button", { name: /^(Посмотреть|Свернуть) нагрузку: Жим ногами$/ });
   await expect(firstExerciseNameButton).toBeVisible();
   const nameBox = await firstExerciseNameButton.boundingBox();
   expect(nameBox.width).toBeGreaterThan(0);
   if (page.viewportSize().width >= 980) expect(nameBox.width).toBeGreaterThanOrEqual(44);
-  if (compactDays) await dayPicker.selectOption({ index: 2 });
-  else await page.locator(".trainerNextWorkoutDaySelect").nth(2).click();
+  if (await firstExerciseNameButton.getAttribute("aria-expanded") !== "true") await firstExerciseNameButton.click();
+  await expect(clientEditor.getByLabel("Повторы: Жим ногами", { exact: true })).toBeDisabled();
+  await selectClientProgramDay(clientEditor, 2);
   await page.screenshot({ path: test.info().outputPath("program-plan-after.png"), fullPage: true });
-  await page.getByRole("button", { name: /^Жим ногами Без видео$/ }).click();
-  await expect(page.locator(".trainerNextExerciseEditor")).toBeVisible();
-  await page.locator(".trainerNextSetEditor input").first().fill("10");
+  const editableReps = clientEditor.getByLabel("Повторы: Жим ногами", { exact: true });
+  await expect(editableReps).toBeEditable();
+  await editableReps.fill("10");
+  await expect(editableReps).toHaveValue("10");
+  await editableReps.fill("12");
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
+  await clientEditor.getByRole("button", { name: "Закрыть редактор", exact: true }).click();
+  await expect(clientEditor).toBeHidden();
 
-  const desktopPreviewOpened = await clickIfVisible(page.locator(".trainerNextHeadActions button").first());
-  if (!desktopPreviewOpened) {
-    await page.locator(".trainerNextMobileHeader button").first().click();
-  }
-  await expect(page.locator(".trainerNextWorkoutPreview")).toBeVisible();
-  await expect(page.locator(".trainerNextWorkoutPreview article")).toHaveCount(3);
-  await page.locator(".trainerNextModalClose").click();
-  await expect(page.locator(".trainerNextWorkoutPreview")).toBeHidden();
-
-  await page.locator(".trainerNextPageTabs button").nth(1).click();
+  await page.getByRole("button", { name: "Назад к списку клиентов", exact: true }).click();
+  await clickTrainerNav(page, "library");
   await expect(page.locator(".trainerNextLibrary")).toBeVisible();
-  await expect(page.locator(".trainerNextPageTabs button").nth(1)).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("heading", { name: "Упражнения", exact: true })).toBeVisible();
   await expect(page.locator(".trainerNextLibrary article")).toHaveCount(3);
   const firstExerciseName = await page.locator(".trainerNextLibrary article strong").first().textContent();
-  await page.locator(".trainerNextLibrary input").fill((firstExerciseName || "").slice(0, 4));
+  await page.getByRole("searchbox", { name: "Поиск упражнений", exact: true }).fill((firstExerciseName || "").slice(0, 4));
   await expect(page.locator(".trainerNextLibrary article").first()).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 
-  await page.locator(".trainerNextPageTabs button").first().click();
+  await openTrainerPrograms(page);
   await expect(page.getByRole("searchbox", { name: "Найти программу" })).toBeVisible();
   await expect(page.getByRole("button", { name: /tren\+/ })).toBeVisible();
   await page.getByRole("checkbox", { name: "Тестовые программы", exact: true }).check();
@@ -1332,7 +1371,7 @@ test("trainer programs page keeps editor, preview and library usable", async ({ 
     await constructor.getByRole("button", { name: /^Тренировка 3 1 упр\./ }).click();
   }
   await expect(constructor.getByRole("textbox", { name: "Название тренировки", exact: true })).toHaveValue("Тренировка 3");
-  await expect(constructor.getByRole("button", { name: "Добавить упражнение", exact: true })).toBeVisible();
+  await expect(constructor.getByRole("button", { name: "Добавить из библиотеки", exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   assertNoRuntimeErrors();
 });
