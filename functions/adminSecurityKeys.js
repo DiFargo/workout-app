@@ -4,6 +4,8 @@ import { ADMIN_SECURITY_KEY_SESSION_MS as PROOF_TTL_MS, hasAdminSecurityKeyProof
 
 const RP_ID = "tren-85720.web.app";
 const ORIGIN = "https://tren-85720.web.app";
+const STAGING_PROJECT_ID = "tren-85720-staging";
+const STAGING_STATUS_ORIGIN = "https://tren-85720-staging.web.app";
 const CHALLENGE_TTL_MS = 5 * 60 * 1000;
 const MAX_KEYS = 5;
 const MAX_BODY_BYTES = 64 * 1024;
@@ -133,7 +135,7 @@ function storedKey(doc) {
 
 /** Server-only WebAuthn endpoint. Identity is verified separately from key proof. */
 export function createAdminSecurityKeysHandler({ admin, getAdminIdentityContext, enforceRateLimit, verifyAppCheckRequest,
-  webauthn = defaultWebAuthn, now = Date.now, testConfig } = {}) {
+  webauthn = defaultWebAuthn, now = Date.now, testConfig, runtimeProjectId } = {}) {
   if (!admin?.firestore || !admin?.auth || typeof getAdminIdentityContext !== "function" ||
       typeof enforceRateLimit !== "function" || typeof verifyAppCheckRequest !== "function") {
     throw new TypeError("Admin security key dependencies are required");
@@ -148,6 +150,7 @@ export function createAdminSecurityKeysHandler({ admin, getAdminIdentityContext,
   }
   const db = admin.firestore();
   const auth = admin.auth();
+  const stagingStatusOnly = runtimeProjectId === STAGING_PROJECT_ID;
 
   async function readCurrent(tx, context) {
     const ref = db.collection("users").doc(context.uid);
@@ -344,7 +347,8 @@ export function createAdminSecurityKeysHandler({ admin, getAdminIdentityContext,
     res.set?.("X-Content-Type-Options", "nosniff");
     try {
       const body = validateBody(req);
-      if (req.headers?.origin && req.headers.origin !== origin) fail(403, "origin-forbidden", "Этот адрес приложения недоступен.");
+      const requestOrigin = stagingStatusOnly && body.action === "status" ? STAGING_STATUS_ORIGIN : origin;
+      if (req.headers?.origin && req.headers.origin !== requestOrigin) fail(403, "origin-forbidden", "Этот адрес приложения недоступен.");
       await verifyAppCheckRequest(req);
       const context = await getAdminIdentityContext(req);
       assertAdmin(context, context?.userData);
@@ -355,6 +359,10 @@ export function createAdminSecurityKeysHandler({ admin, getAdminIdentityContext,
       await enforceRateLimit(context.uid, `admin-security-key-${category}`, {
         limit: category === "status" ? 60 : category === "challenge" ? 12 : 20, windowMs: 60000
       });
+      // Staging may inspect its own policy, but must never create keys or mint key proof.
+      if (stagingStatusOnly && body.action !== "status") {
+        fail(403, "security-key-ceremony-unavailable", "Подтверждение физических ключей доступно только в основном приложении.");
+      }
       let result;
       if (body.action === "status") {
         result = await db.runTransaction(async tx => {

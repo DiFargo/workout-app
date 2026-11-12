@@ -101,7 +101,7 @@ function keyFixture() {
   };
 }
 
-function fixture({ required = false, authAge = 0, webauthn = realWebAuthn } = {}) {
+function fixture({ required = false, authAge = 0, webauthn = realWebAuthn, runtimeProjectId } = {}) {
   let time = START;
   const profile = { role: "admin", active: true, adminClaimVersion: "admin-v1", email: "admin@example.invalid",
     ...(required ? { adminSecurityKeyRequired: true, adminSecurityKeyVersion: "keys-v1" } : {}) };
@@ -116,7 +116,7 @@ function fixture({ required = false, authAge = 0, webauthn = realWebAuthn } = {}
     async createCustomToken(uid, claims) { state.mints.push({ uid, claims }); return `synthetic-custom-token-${state.mints.length}`; },
     async setCustomUserClaims() { assert.fail("Session proof must never be persisted as global custom claims"); }
   };
-  state.deps = { admin: { firestore: () => storage.db, auth: () => auth }, now: () => time, webauthn,
+  state.deps = { admin: { firestore: () => storage.db, auth: () => auth }, now: () => time, webauthn, runtimeProjectId,
     async verifyAppCheckRequest() { state.appChecks++; if (state.appCheckError) throw state.appCheckError; },
     async getAdminIdentityContext() {
       if (state.identityError) throw state.identityError;
@@ -180,6 +180,101 @@ test("first enrollment uses strict RP/UV options, atomically enables policy, and
   assert.ok(f.rates.some(rate => rate.action === "admin-security-key-challenge"));
   assert.ok(f.rates.some(rate => rate.action === "admin-security-key-verify"));
   assert.equal(status.headers["Cache-Control"], "no-store");
+});
+
+const STAGING_PROJECT_ID = "tren-85720-staging";
+const STAGING_ORIGIN = "https://tren-85720-staging.web.app";
+const stagingRequest = (f, body, extra = {}) => f.request(body, {
+  headers: { "content-type": "application/json", origin: STAGING_ORIGIN }, ...extra
+});
+
+test("staging status is bound to the exact server project and its own origin, never request metadata", async () => {
+  const stage = fixture({ runtimeProjectId: STAGING_PROJECT_ID });
+  const result = await stagingRequest(stage, { action: "status" });
+  assert.equal(result.status, 200);
+  assert.deepEqual(result.body, { required: false, keys: [], verifiedUntil: null });
+  assert.equal(stage.appChecks, 1);
+  assert.equal(stage.rates.length, 1);
+  assert.equal(stage.writes.length, 0);
+  assert.equal(stage.mints.length, 0);
+  assert.equal((await stage.request({ action: "status" })).body.error, "origin-forbidden");
+  for (const project of [undefined, "tren-85720", "other", `${STAGING_PROJECT_ID}-copy`,
+    ` ${STAGING_PROJECT_ID}`, STAGING_PROJECT_ID.toUpperCase()]) {
+    const f = fixture({ runtimeProjectId: project });
+    const rejected = await stagingRequest(f, { action: "status" }, {
+      headers: { "content-type": "application/json", origin: STAGING_ORIGIN,
+        host: "tren-85720-staging.web.app", "x-forwarded-host": "tren-85720-staging.web.app" }
+    });
+    assert.equal(rejected.status, 403);
+    assert.equal(rejected.body.error, "origin-forbidden");
+    assert.equal(f.appChecks, 0);
+    assert.equal(f.writes.length, 0);
+    assert.equal((await f.request({ action: "status", runtimeProjectId: STAGING_PROJECT_ID })).status, 400);
+  }
+});
+
+test("staging refuses every key ceremony without crypto, credential/challenge writes or session proof", async () => {
+  let cryptoCalls = 0;
+  const webauthn = Object.fromEntries(["generateRegistrationOptions", "generateAuthenticationOptions",
+    "verifyRegistrationResponse", "verifyAuthenticationResponse"].map(name => [name, () => { cryptoCalls++; assert.fail(name); }]));
+  const key = keyFixture();
+  for (const action of ["registration-options", "authentication-options", "registration-verify", "authentication-verify"]) {
+    for (const origin of [STAGING_ORIGIN, ORIGIN, undefined]) {
+      const f = fixture({ runtimeProjectId: STAGING_PROJECT_ID, webauthn });
+      const body = { action, ...(action.endsWith("-verify") ? {
+        challengeId: encode(randomBytes(32)), response: action.startsWith("registration")
+          ? key.registration("synthetic-challenge") : key.authentication("synthetic-challenge")
+      } : {}) };
+      const response = await f.request(body, { headers: { "content-type": "application/json", ...(origin ? { origin } : {}) } });
+      assert.equal(response.status, 403, `${action}/${origin}`);
+      assert.ok(["origin-forbidden", "security-key-ceremony-unavailable"].includes(response.body.error));
+      assert.equal(f.writes.length, 0);
+      assert.equal(f.mints.length, 0);
+      assert.equal(f.documents.size, 2);
+    }
+  }
+  assert.equal(cryptoCalls, 0);
+});
+
+test("staging status preserves required policy and never invents key proof", async () => {
+  const f = fixture({ runtimeProjectId: STAGING_PROJECT_ID, required: true });
+  assert.deepEqual((await stagingRequest(f, { action: "status" })).body,
+    { required: true, keys: [], verifiedUntil: null });
+  for (const until of [START - 1, START + 8 * 3600000 + 1, START + 0.5]) {
+    Object.assign(f.token, { adminSecurityKeyVersion: "keys-v1", adminSecurityKeyRoleVersion: "admin-v1", adminSecurityKeyUntil: until });
+    assert.equal((await stagingRequest(f, { action: "status" })).body.verifiedUntil, null);
+  }
+  Object.assign(f.token, { adminSecurityKeyVersion: "keys-v1", adminSecurityKeyRoleVersion: "admin-v1", adminSecurityKeyUntil: START + 1000 });
+  assert.equal((await stagingRequest(f, { action: "status" })).body.verifiedUntil, START + 1000);
+  f.documents.set("users/admin", { ...f.documents.get("users/admin"), adminSecurityKeyVersion: "keys-revoked" });
+  assert.equal((await stagingRequest(f, { action: "status" })).body.verifiedUntil, null);
+  assert.equal(f.writes.length, 0);
+  assert.equal(f.mints.length, 0);
+});
+
+test("staging status keeps App Check, revoked identity, role, claim, activity, policy, auth-time and rate guards", async () => {
+  const cases = [
+    f => { f.appCheckError = Object.assign(new Error("blocked"), { status: 401 }); },
+    f => { f.identityError = Object.assign(new Error("revoked"), { code: "auth/id-token-revoked" }); },
+    f => { f.token.admin = false; },
+    f => { f.token.adminClaimVersion = "stale"; },
+    f => { f.token.auth_time = 0; },
+    f => { f.token.auth_time = START / 1000 + 61; },
+    ...[{ role: "client" }, { active: false }, { archived: true }, { accessDisabled: true },
+      { membershipStatus: "revoked" }, { accountAccessStatus: "awaiting_trainer" },
+      { adminSecurityKeyRequired: "false" }, { adminSecurityKeyRequired: true }].map(patch => f => {
+      f.documents.set("users/admin", { ...f.documents.get("users/admin"), ...patch });
+    }),
+    f => { f.rateError = Object.assign(new Error("limited"), { status: 429 }); }
+  ];
+  for (const change of cases) {
+    const f = fixture({ runtimeProjectId: STAGING_PROJECT_ID });
+    change(f);
+    const response = await stagingRequest(f, { action: "status" });
+    assert.ok([401, 403, 429].includes(response.status), JSON.stringify(response));
+    assert.equal(f.writes.length, 0);
+    assert.equal(f.mints.length, 0);
+  }
 });
 
 test("bootstrap requires recent login; required policy rejects missing/stale/future/wrong-version proof", async () => {

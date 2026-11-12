@@ -1188,7 +1188,8 @@ async function assertAdmin(request) {
 
 export const adminSecurityKeys = onRequest(
   { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30 },
-  createAdminSecurityKeysHandler({ admin, getAdminIdentityContext, enforceRateLimit, verifyAppCheckRequest })
+  createAdminSecurityKeysHandler({ admin, getAdminIdentityContext, enforceRateLimit, verifyAppCheckRequest,
+    runtimeProjectId: getFunctionProjectId() })
 );
 
 export const clientExerciseMedia = onRequest(
