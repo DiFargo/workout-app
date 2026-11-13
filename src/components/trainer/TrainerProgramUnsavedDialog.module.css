@@ -10,3 +10,17 @@
 .actions button:last-child { background:var(--ownset-action-gradient); color:#fff; border:0; }
 .dialog button { cursor:pointer; }
 .dialog button:focus-visible { outline:2px solid #396ba6; outline-offset:2px; }
+
+/* Keep the template editor's close confirmation readable in standalone dark mode. */
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .dialog {
+  color:var(--trainer-theme-text); background:var(--trainer-theme-surface); color-scheme:dark;
+}
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .dialog h2 { color:var(--trainer-theme-text)!important; }
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .body p { color:var(--trainer-theme-muted); }
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .dialog header button,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .actions button {
+  color:var(--trainer-theme-text); background:var(--trainer-theme-soft); border-color:var(--trainer-theme-border);
+}
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .actions button:nth-child(2) { color:var(--trainer-danger); }
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .actions button:last-child { color:#fff; background:var(--ownset-action-gradient); }
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .dialog button:focus-visible { outline-color:var(--trainer-theme-accent); }

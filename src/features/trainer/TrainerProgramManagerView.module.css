@@ -444,3 +444,80 @@
   --trainer-border: var(--trainer-theme-border, rgba(60,60,67,.12));
   --trainer-accent: var(--trainer-theme-accent, #3c6faa);
 }
+
+/* Only the standalone trainer's template editor follows its dark appearance. */
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorModal,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsSheet {
+  --trainer-surface: var(--trainer-theme-surface);
+  --trainer-text: var(--trainer-theme-text);
+  --trainer-muted: var(--trainer-theme-muted);
+  --trainer-border: var(--trainer-theme-border);
+  --trainer-accent: var(--trainer-theme-accent);
+  --tn-page: var(--trainer-theme-page);
+  --tn-surface: var(--trainer-theme-surface);
+  --tn-surface-soft: var(--trainer-theme-soft);
+  --tn-text: var(--trainer-theme-text);
+  --tn-muted: var(--trainer-theme-muted);
+  --tn-line: var(--trainer-theme-border);
+  --tn-purple: var(--trainer-theme-accent);
+  --tn-purple-strong: var(--trainer-theme-accent);
+  --trainer-v2-ink: var(--trainer-theme-text);
+  --trainer-v2-muted: var(--trainer-theme-muted);
+  --trainer-v2-line: var(--trainer-theme-border);
+  --trainer-v2-surface: var(--trainer-theme-soft);
+  --trainer-v2-accent: var(--trainer-theme-accent);
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-page) !important;
+  border-color: var(--trainer-theme-border) !important;
+  color-scheme: dark;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorModalHeader,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorModalFooter,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsSheet > header,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsSheet > footer {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-surface) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorModalBody.editorModalBodyProgram {
+  background: var(--trainer-theme-page) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorProgramNameField input,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsSheet > header h2 {
+  color: var(--trainer-theme-text) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorProgramNameField > .editorTemplateLabel,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorModalHeader button,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsSheet > header button {
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorPurpose,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorProgramNameField input::placeholder,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsBody p,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsBody .editorTestFlag,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsSheet > footer span {
+  color: var(--trainer-theme-muted) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorTestFlag input {
+  accent-color: var(--trainer-theme-accent);
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .editorModalFooter .editorModalSave,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsSheet > footer button {
+  color: #fff !important;
+  background: var(--ownset-action-gradient) !important;
+  border-color: var(--trainer-theme-accent) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .templateSettingsBody .editorModalDelete {
+  color: var(--trainer-danger) !important;
+  background: transparent !important;
+  border-color: var(--trainer-theme-border) !important;
+}

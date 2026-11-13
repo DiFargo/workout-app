@@ -1427,3 +1427,153 @@
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .exerciseAddRow {margin-top:16px!important;gap:10px!important;flex-wrap:wrap!important}
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] .addExerciseButton {width:100%!important;justify-content:center!important;min-height:48px!important;background:#edf3fa!important;border:1px dashed #3f73b8!important;color:#3f73b8!important}
 :global(html[data-trainer-variant="v2"] body) .appleConstructor.appleConstructor[data-program-layout="cards"] {background:#f2f2f7!important}
+
+/* Template-library editing keeps its layout while using standalone trainer colours. */
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal {
+  --purple: var(--trainer-theme-accent);
+  --purple-soft: var(--trainer-theme-soft);
+  --ink: var(--trainer-theme-text);
+  --muted: var(--trainer-theme-muted);
+  --line: var(--trainer-theme-border);
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-page) !important;
+  color-scheme: dark;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.daysPanel, .exerciseCard, .exerciseRow, .exerciseHead) {
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.dayCard.selectedDay, .dayMenu, .exerciseCard, .exerciseRow, .editorTabs button.active) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-surface) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.dayCard > button span, .dayHeader input, .exerciseName strong, .dayMenu button) {
+  color: var(--trainer-theme-text) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.daysPanel h2, .appleSectionHead h3) {
+  color: var(--trainer-theme-text) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.daysPanel h2 small, .dayCard > button small, .dayCard > button strong, .dayHeader label > span, .exerciseHead, .exerciseName small, .metricLabel, .specialBlockMenu > button) {
+  color: var(--trainer-theme-muted) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.appleDayNumber, .metricInput, .appleMobileDays select) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .selectedDay .appleDayNumber {
+  color: var(--trainer-on-action) !important;
+  background: var(--trainer-theme-action) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.appleCopyDay, .appleMobileDays button, .addExerciseButton) {
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.addDayButton, .exerciseAddRow button, .exerciseActions button) {
+  color: var(--trainer-theme-accent) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .dayMenu button:last-child {
+  color: var(--trainer-danger) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.specialBlockMenu > div, .taskBlock) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-surface) !important;
+  border-top-color: var(--trainer-theme-border) !important;
+  border-right-color: var(--trainer-theme-border) !important;
+  border-bottom-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .specialBlockMenu > div {
+  border-left-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .specialBlockMenu button:hover {
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.blockFields input, .blockFields select, .blockFields textarea, .freeBlockText, .groupExerciseSlot input, .groupExerciseSlot select) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.groupExerciseEditor > button, .addBlockActions button) {
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal :is(.blockFields label > span, .taskBlock > header small) {
+  color: var(--trainer-theme-muted) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .taskBlock > header strong {
+  color: var(--trainer-theme-text) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .taskBlock > header > span {
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+}
+
+/* Native dialog remains a child of the constructor in the top layer. */
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-page) !important;
+  border-color: var(--trainer-theme-border) !important;
+  color-scheme: dark;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] > :is(header, footer) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-surface) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] :is(h2, .tabPanel label > span) {
+  color: var(--trainer-theme-text) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] :is(input, textarea, select) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] :is(input, textarea)::placeholder,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] > footer span {
+  color: var(--trainer-theme-muted) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] > header button {
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] > footer button {
+  color: #fff !important;
+  background: var(--ownset-action-gradient) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] .deleteExerciseButton {
+  color: var(--trainer-danger) !important;
+  background: var(--trainer-danger-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] :is(input, textarea, select, button):focus-visible {
+  outline-color: var(--trainer-theme-accent) !important;
+}

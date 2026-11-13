@@ -153,3 +153,42 @@
 @media (prefers-reduced-motion: reduce) {
   .card *, .sheet * { transition: none !important; }
 }
+
+/* Do not change embedded admin/client cards or the approved light palette. */
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"] [data-trainer-template-editor="true"]) .card,
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"] [data-trainer-template-editor="true"]) .sheet {
+  --exercise-card-canvas: var(--trainer-theme-page);
+  --exercise-card-surface: var(--trainer-theme-surface);
+  --exercise-card-secondary: var(--trainer-theme-soft);
+  --exercise-card-line: var(--trainer-theme-border);
+  --exercise-card-text: var(--trainer-theme-text);
+  --exercise-card-muted: var(--trainer-theme-muted);
+  --exercise-card-accent: var(--trainer-theme-accent);
+  --exercise-card-soft: var(--trainer-theme-soft);
+  --exercise-card-danger: var(--trainer-danger);
+  color-scheme: dark;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"] [data-trainer-template-editor="true"]) .card.card.open {
+  border-color: var(--trainer-theme-accent);
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"] [data-trainer-template-editor="true"]) .card.card .fields :is(input, button) {
+  color: var(--exercise-card-text) !important;
+  background: var(--exercise-card-secondary) !important;
+  border-color: var(--exercise-card-line) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"] [data-trainer-template-editor="true"]) .card.card .fields label > span {
+  color: var(--exercise-card-muted) !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"] [data-trainer-template-editor="true"]) .card.card .fields > button {
+  color: var(--exercise-card-accent) !important;
+  background: transparent !important;
+}
+
+:global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"] [data-trainer-template-editor="true"]) .sheet.sheet > footer > button {
+  color: #fff;
+  background: var(--ownset-action-gradient);
+}

@@ -487,6 +487,7 @@ function TrainerProgramManagerSession({
             data-modal-surface="true"
             data-trainer-modal-surface="true"
             data-trainer-modal-frame="true"
+            data-trainer-template-editor="true"
             aria-busy={isEditorSaveInProgress}
             onKeyDown={(event) => { if (event.key === "Escape" && !document.querySelector("dialog[open]")) { event.stopPropagation(); closeEditor(); } }}
             onMouseDown={(event) => event.stopPropagation()}
