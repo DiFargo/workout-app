@@ -40,7 +40,8 @@
   --trainer-theme-action: linear-gradient(115deg, #9dd7c9, #a5c9e4);
   color-scheme: dark;
 }
-.document body { background: var(--trainer-theme-page) !important; }
+.document body,
+.document :global(#root) { background: var(--trainer-theme-page) !important; }
 :global(html[data-trainer-appearance] body #root) .scope.scope.scope {
   --v2-nav-height: calc(64px + max(12px, env(safe-area-inset-bottom, 0px)));
   --trainer-text: var(--trainer-theme-text);
@@ -136,7 +137,9 @@
   bottom: max(12px,env(safe-area-inset-bottom,0px)) !important; left: 50% !important; right: auto !important; transform: translateX(-50%) !important;
 }
 :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileNav) { display: none; }
-:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button) { position: relative; z-index: 1; display: grid; place-items: center; align-content: center; width: auto; min-width: 0; min-height: 64px; margin: 0; padding: 6px 1px; gap: 5px; font-size: 11px; font-weight: 600; line-height: 1.1; border: 0 !important; border-radius: 34px; color: var(--tn-muted) !important; background: transparent !important; box-shadow: none !important; transform: none; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button) { position: relative; z-index: 1; display: grid; place-items: center; align-content: center; width: auto; min-width: 0; min-height: 64px; margin: 0; padding: 6px 1px; gap: 5px; font-size: 11px; font-weight: 600; line-height: 1.1; border: 0 !important; border-radius: 34px !important; color: var(--tn-muted) !important; background: transparent !important; box-shadow: none !important; transform: none; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button:focus:not(:focus-visible)) { outline: none !important; }
+:global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button:focus-visible) { outline: 2px solid var(--trainer-theme-accent) !important; outline-offset: -3px; }
 :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button[aria-current="page"]) { color: var(--tn-purple) !important; }
 :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) > button.active::before) { display: none !important; }
 :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(:is(.trainerNextDesktopDock,.trainerNextMobileNav) .trainerNextNavIcon svg) { width: 23px; height: 23px; }
