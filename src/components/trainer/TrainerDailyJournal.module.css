@@ -540,6 +540,9 @@
 .dailyJournalEmpty strong, .dailyJournalEmpty small { display: block; }
 .dailyJournalEmpty strong { color: var(--trainer-theme-text, #19303e); font-size: 14px; font-weight: 600; }
 .dailyJournalEmpty small { margin-top: 7px; font-size: 12px; line-height: 1.5; color: var(--trainer-theme-muted, #506b7b); }
-@media (min-width: 900px) { .dashboardLayout { grid-template-columns: minmax(0,1.04fr) minmax(0,1fr); gap: 24px; } }
+@media (min-width: 900px) {
+  .dashboardLayout { grid-template-columns: minmax(0,1.04fr) minmax(0,1fr); gap: 24px; }
+  .priorityPanel { align-self: stretch; }
+}
 @media (max-width: 380px) { .priorityPanel { padding: 20px; } .priorityHead { gap: 8px; } .priorityHead > span { padding: 6px 8px; font-size: 11px; } }
 @media (prefers-reduced-motion: reduce) { .primaryAction { transition: none; } }
