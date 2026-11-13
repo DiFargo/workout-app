@@ -69,7 +69,7 @@ function sortImmediateActions(first, second) {
   return String(first?.clientName || "").localeCompare(String(second?.clientName || ""), "ru");
 }
 
-function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, renderAvatar, trainerName, clients = [], onOpenClients, onOpenPrograms }) {
+function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, renderAvatar, trainerName, clients = [], onOpenClients }) {
   const [reviewedIds, setReviewedIds] = useState(() => readReviewedIds(trainerName, journal.dateKey));
   const [journalFilter, setJournalFilter] = useState("all");
   const actionsNow = useMemo(() => {
@@ -121,13 +121,10 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
   }
 
   const firstAction = actionsNow[0];
-  const setupActions = actionsNow.filter((action) => action.title === "Нужно настроить клиента");
   const needsSetup = firstAction?.title === "Нужно настроить клиента";
-  const primaryTitle = needsSetup && setupActions.length > 1
-    ? `${setupActions.length} ${plural(setupActions.length, "клиент ждёт", "клиента ждут", "клиентов ждут")} настройки`
-    : needsSetup ? "Клиент ждёт настройки" : firstAction?.title;
-  const taskClientIds = new Set(actionsNow.map((action) => action.client?.id));
-  const readyClients = clients.filter((client) => !client.archived && !client.isTest && !taskClientIds.has(client.id)).slice(0, 2);
+  const primaryTitle = needsSetup ? "Подготовь план для клиента" : firstAction?.title;
+  const activeClients = clients.filter((client) => !client.archived && !client.isTest);
+  const previewClients = activeClients.slice(0, 4);
 
   function queueRow(action) {
     return <button key={action.id} type="button" className={styles.queueRow} onClick={() => openImmediateAction(action)}
@@ -145,15 +142,15 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
             <small>{actionsNow.length} {plural(actionsNow.length, "задача", "задачи", "задач")}</small>
           </header>
           <h2>{primaryTitle}</h2>
-          <p>{needsSetup ? "Подготовь программу, даты занятий и питание." : firstAction.detail}</p>
+          <p>{needsSetup ? "Программа, расписание и питание — по шагам." : firstAction.detail}</p>
           <div className={styles.priorityClient}>
             {renderAvatar(firstAction.client, "small")}
-            <div><strong>{firstAction.clientName}</strong><small>{needsSetup ? firstAction.detail : firstAction.title}</small></div>
+            <div><strong>{firstAction.clientName}</strong><small>{needsSetup ? "Первичная настройка не завершена" : firstAction.title}</small></div>
           </div>
           <button type="button" data-testid="trainer-priority-action" className={styles.primaryAction}
             aria-label={`${firstAction.actionLabel || "Открыть"}: ${firstAction.clientName}. ${firstAction.title}`}
             onClick={() => openImmediateAction(firstAction)}>
-            {needsSetup ? "Настроить клиента" : firstAction.actionLabel || "Открыть клиента"}<ArrowRight size={19} aria-hidden="true" />
+            <span>{needsSetup ? `Настроить ${firstAction.clientName}` : firstAction.actionLabel || "Открыть клиента"}</span><ArrowRight size={19} aria-hidden="true" />
           </button>
           {actionsNow.length > 1 ? <div className={styles.nextAction}><span>Следом</span>{queueRow(actionsNow[1])}</div> : null}
           {actionsNow.length > 2 ? <details className={styles.remainingActions}><summary>Ещё задачи · {actionsNow.length - 2}</summary>{actionsNow.slice(2).map(queueRow)}</details> : null}
@@ -165,12 +162,12 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
         <button type="button" className={styles.primaryAction} onClick={onOpenClients}>Мои клиенты<ArrowRight size={19} aria-hidden="true" /></button>
       </section>}
 
-      <div className={styles.secondaryColumn}>
       <section className={styles.dailyJournalSection} aria-label="Журнал дня">
         <header className={styles.dailyJournalHead}>
           <div>
-            <h2>События за сегодня</h2>
+            <h2>События сегодня</h2>
           </div>
+          <span className={styles.sectionCount}>{timelineItems.length}</span>
         </header>
 
         {timelineItems.length ? <div className={styles.dailyJournalFilters} role="group" aria-label="Фильтр журнала дня">
@@ -185,7 +182,7 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
                 aria-label={`${filter.label}: ${count}`}
                 onClick={() => setJournalFilter(filter.id)}
               >
-                {filter.id === "all" ? "Все" : filter.id === "reviewed" ? "Просмотрено" : filter.label}<span>{count}</span>
+                {filter.id === "all" ? "Все" : filter.id === "reviewed" ? "Просмотренные" : filter.label}<span>{count}</span>
               </button>
             );
           })}
@@ -208,21 +205,18 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
                   openTimelineEvent(event);
                 }}
               >
-                <time>{event.timeLabel}</time>
-                <span className={styles.dailyJournalLine} aria-hidden="true"><i /></span>
-                {renderAvatar(event.client, "small")}
+                <span className={styles.eventIcon}><JournalIcon type={event.icon} /></span>
                 <div className={styles.dailyJournalEventContent}>
-                  <span><JournalIcon type={event.icon} />{event.clientName}</span>
+                  <div className={styles.eventMeta}><span>{event.clientName}</span><time>{event.timeLabel}</time></div>
                   <strong>{event.title}</strong>
                   <small>{event.detail}</small>
-                </div>
-                {event.requiresAction ? (
-                  reviewed ? (
+                  {event.requiresAction && reviewed ? (
                     <span className={styles.dailyJournalReviewed}><Check size={14} aria-hidden="true" />Просмотрено</span>
                   ) : (
-                    <span className={styles.dailyJournalEventAction} aria-hidden="true">{event.actionLabel || "Открыть"}</span>
-                  )
-                ) : <span className={styles.dailyJournalRecorded}>Записано</span>}
+                    <span className={styles.dailyJournalEventAction} aria-hidden="true">{event.actionLabel || "Открыть карточку"}<ArrowRight size={14} /></span>
+                  )}
+                </div>
+                <ChevronRight className={styles.eventChevron} size={18} aria-hidden="true" />
               </article>
             );
           })}
@@ -235,21 +229,25 @@ function TrainerDailyJournalContent({ immediateActions, journal, onOpenClient, r
           ) : null}
         </div>
       </section>
-      <section className={styles.quickLinks} aria-label="Клиенты и программы">
-        <header><h2>Мои клиенты</h2><button type="button" onClick={onOpenClients}>Все · {clients.filter((client) => !client.archived && !client.isTest).length}</button></header>
+      <section className={styles.quickLinks} aria-label="Мои клиенты">
+        <header><h2>Мои клиенты <span className={styles.sectionCount}>{activeClients.length}</span></h2><button type="button" onClick={onOpenClients}>Все клиенты<ArrowRight size={16} aria-hidden="true" /></button></header>
         <div>
-          {readyClients.map((client) => <button key={client.id} type="button" onClick={() => onOpenClient?.(client, "overview")}>
-            {renderAvatar(client, "small")}<span><strong>{client.name || client.displayName || "Клиент"}</strong><small>Открыть план и результаты</small></span><ChevronRight size={18} aria-hidden="true" />
-          </button>)}
-          <button type="button" onClick={onOpenPrograms}><span className={styles.quickIcon}><ClipboardList size={20} aria-hidden="true" /></span><span><strong>Шаблоны программ</strong><small>Основа для персональных планов</small></span><ChevronRight size={18} aria-hidden="true" /></button>
+          {previewClients.map((client) => {
+            const action = actionsNow.find((item) => item.client?.id === client.id);
+            const status = action?.title === "Нужно настроить клиента" ? "Нужна настройка" : action?.title;
+            return <button key={client.id} type="button" onClick={() => onOpenClient?.(client, "overview")}>
+              {renderAvatar(client, "small")}<span><strong>{client.name || client.displayName || "Клиент"}</strong><small className={status ? styles.clientAttention : undefined}>{status || "План и результаты"}</small></span><ChevronRight size={18} aria-hidden="true" />
+            </button>;
+          })}
         </div>
+        {!activeClients.length ? <p className={styles.rosterEmpty}>Здесь появятся назначенные вам клиенты.</p> : null}
+        {activeClients.length > previewClients.length ? <p className={styles.rosterNote}>Показано {previewClients.length} из {activeClients.length} · остальные — в разделе «Клиенты».</p> : null}
       </section>
-      </div>
     </div>
   );
 }
 
-export default function TrainerDailyJournal({ actionCenter, onOpenClient, renderAvatar, trainerName, trainerUid, clients, onOpenClients, onOpenPrograms }) {
+export default function TrainerDailyJournal({ actionCenter, onOpenClient, renderAvatar, trainerName, trainerUid, clients, onOpenClients }) {
   const immediateActions = useMemo(() => buildTrainerImmediateActions(actionCenter), [actionCenter]);
   const journal = useMemo(() => buildTrainerDailyJournal(actionCenter), [actionCenter]);
   const contentKey = `${trainerUid || trainerName || "trainer"}:${journal.dateKey}`;
@@ -264,7 +262,6 @@ export default function TrainerDailyJournal({ actionCenter, onOpenClient, render
       trainerName={trainerUid || trainerName}
       clients={clients}
       onOpenClients={onOpenClients}
-      onOpenPrograms={onOpenPrograms}
     />
   );
 }

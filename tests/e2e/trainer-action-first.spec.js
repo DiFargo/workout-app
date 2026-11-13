@@ -110,7 +110,7 @@ test("priority action opens its real client without resolving the task merely by
   await openHarness(page);
   const priority = page.getByTestId("trainer-priority-panel");
   await expect(priority).toContainText("Новый клиент");
-  await expect(priority).toContainText("программа");
+  await expect(priority).toContainText("Программа, расписание и питание");
   const firstAction = page.getByTestId("trainer-priority-action");
   const actionName = await firstAction.textContent();
   await expect(firstAction).toBeEnabled();
