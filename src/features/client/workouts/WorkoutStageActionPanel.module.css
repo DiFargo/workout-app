@@ -417,16 +417,21 @@
 .dynamicButton:focus-visible { outline: 3px solid var(--apple-action, #3f73b8); outline-offset: 3px; }
 
 @media (orientation: landscape) and (min-width: 568px) and (max-height: 500px) {
+  :global(:root[data-app-theme="warm-light"]) .warmupPanel.panel { padding: 4px max(12px, env(safe-area-inset-right, 0px)) max(4px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
+  :global(:root[data-app-theme="warm-light"]) .warmupPanel.panel .navigationRow.navigationRow { padding: 2px; }
+  :global(:root[data-app-theme="warm-light"]) .warmupPanel.panel .button.button { min-height: 48px; font-size: .9375rem; }
   :global(:root[data-app-theme="warm-light"]) .dynamicPanel.panel {
     position: static;
     z-index: auto;
     grid-column: 2;
     grid-row: 2;
-    align-self: end;
+    align-self: start;
     width: 100%;
     min-width: 0;
     padding: 0;
     transform: none;
+    display: grid;
+    gap: 8px;
   }
 
   :global(:root[data-app-theme="warm-light"]) .dynamicPanel.panel .dynamicButton.button {

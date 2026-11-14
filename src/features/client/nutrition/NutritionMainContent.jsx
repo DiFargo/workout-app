@@ -6,6 +6,7 @@ import NutritionOrbit from "./NutritionOrbit";
 import NutritionPlanDetails from "./NutritionPlanDetails";
 import NutritionSummary from "./NutritionSummary";
 import NutritionSyncRecovery from "./NutritionSyncRecovery.jsx";
+import styles from "./NutritionMainContent.module.css";
 
 export default function NutritionMainContent({
   visible,
@@ -31,11 +32,15 @@ export default function NutritionMainContent({
         <NutritionCalendarModal {...calendarProps} />
       )}
 
-      <NutritionOrbit {...orbitProps} saveStatus={<NutritionSyncRecovery {...syncRecoveryProps} />} />
-
-      <NutritionDiary {...diaryProps} />
-
-      <NutritionSummary {...summaryProps} />
+      <div className={styles.layout}>
+        <div className={styles.summary}>
+          <NutritionOrbit {...orbitProps} saveStatus={<NutritionSyncRecovery {...syncRecoveryProps} />} />
+        </div>
+        <div className={styles.diary}>
+          <NutritionDiary {...diaryProps} />
+          <NutritionSummary {...summaryProps} />
+        </div>
+      </div>
 
       <NutritionMealModal {...mealModalProps} />
 

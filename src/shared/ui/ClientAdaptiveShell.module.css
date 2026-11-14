@@ -137,10 +137,19 @@
    reducing the dock's visual footprint for the shared client shells. */
 @media (orientation: landscape) and (max-height: 500px) {
   :global(:root[data-app-theme="warm-light"]) .shell.shell.shell {
-    --layout-client-dock-bottom: max(6px, env(safe-area-inset-bottom, 0px));
-    --layout-client-dock-height: 64px;
-    --layout-client-dock-button-height: 52px;
+    --client-adaptive-shell-width: 100%;
+    --layout-client-dock-width: min(576px, calc(100vw - 32px));
+    --layout-client-dock-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+    --layout-client-dock-height: 54px;
+    --layout-client-dock-button-height: 44px;
     --layout-client-dock-radius: 22px;
     --layout-client-dock-button-radius: 16px;
+    width: 100%;
+    max-width: none;
+    height: var(--client-shell-height, 100dvh);
+    min-height: var(--client-shell-min-height, 100dvh);
+    max-height: var(--client-shell-max-height, 100dvh);
+    margin: 0;
+    border-radius: 0;
   }
 }

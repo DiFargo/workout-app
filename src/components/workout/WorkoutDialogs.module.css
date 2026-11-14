@@ -1421,6 +1421,39 @@
 :global(:root[data-app-theme="warm-light"]) .postOption.postOption small { display: block; font-size: 12px; font-weight: 400; line-height: 1.35; white-space: normal; overflow: visible; text-overflow: clip; -webkit-line-clamp: unset; }
 .postOptionIcon.postOptionIcon { width: 48px; height: 48px; font-size: 32px; background: transparent; }
 .readinessOptionIcon.readinessOptionIcon { width: 44px; height: 44px; font-size: 29px; background: transparent; }
+
+/* Short Telegram viewports retain scroll and full-sized interaction targets. */
+@media (orientation: landscape) and (min-width: 568px) and (max-height: 500px) {
+  :global(:root[data-app-theme="warm-light"]) .readinessOverlay.readinessOverlay,
+  :global(:root[data-app-theme="warm-light"]) .postOverlay.postOverlay,
+  :global(:root[data-app-theme="warm-light"]) .exitOverlay.exitOverlay,
+  :global(:root[data-app-theme="warm-light"]) .draftOverlay.draftOverlay {
+    padding: max(8px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); place-items: center;
+  }
+  :global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage,
+  :global(:root[data-app-theme="warm-light"]) .postCard.postCard,
+  :global(:root[data-app-theme="warm-light"]) .exitCard.exitCard,
+  :global(:root[data-app-theme="warm-light"]) .draftCard.draftCard {
+    width: min(720px, 100%); max-width: 720px;
+    max-height: calc(100dvh - max(8px, env(safe-area-inset-top, 0px)) - max(8px, env(safe-area-inset-bottom, 0px)));
+    padding: 22px 16px 12px; border-radius: 24px; overscroll-behavior: contain;
+  }
+  :global(:root[data-app-theme="warm-light"]) .readinessHeader.readinessHeader { padding-bottom: 10px; }
+  :global(:root[data-app-theme="warm-light"]) .readinessIntro.readinessIntro { padding: 10px 12px; }
+  :global(:root[data-app-theme="warm-light"]) .readinessGrid.readinessGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 10px; gap: 8px; }
+  :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption { min-height: 96px; padding: 10px; gap: 7px; }
+  :global(:root[data-app-theme="warm-light"]) .readinessOption.readinessOption strong { font-size: .9375rem; }
+  :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions { padding-top: 10px; }
+  :global(:root[data-app-theme="warm-light"]) .readinessActions.readinessActions button,
+  :global(:root[data-app-theme="warm-light"]) .exitActions.exitActions button,
+  :global(:root[data-app-theme="warm-light"]) .draftActions.draftActions button { min-height: 44px; }
+  :global(:root[data-app-theme="warm-light"]) .postOption.postOption { min-height: 112px; padding: 10px; }
+  :global(:root[data-app-theme="warm-light"]) .postCard.postCard h2 { margin-block: 8px; font-size: 1.25rem; }
+  :global(:root[data-app-theme="warm-light"]) .postCard.postCard > p { margin-block: 8px; }
+  :global(:root[data-app-theme="warm-light"]) .draftActions.draftActions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .draftHeader { margin-bottom: 8px; }
+  .draftCard p { max-width: none; margin-bottom: 12px; }
+}
 .postCloseButton.postCloseButton,.exitCloseButton.exitCloseButton { color: var(--client-accent, #617078); background: var(--client-surface-muted, #e5e5ea); border: 0; border-radius: 50%; box-shadow: none; }
 @media(max-width:350px) { :global(:root[data-app-theme="warm-light"]) .postCard.postCard,:global(:root[data-app-theme="warm-light"]) .readinessStage.readinessStage { padding-inline: 16px; } }
 @media (max-width: 350px) {

@@ -502,3 +502,38 @@
 :global(:root[data-app-theme="warm-light"]) .footer { border-color: var(--apple-separator, rgba(57, 82, 91,.12)); background: transparent; }
 :global(:root[data-app-theme="warm-light"]) .footerAction { min-height: 50px; border: 0; border-radius: 16px; background: var(--apple-surface-muted, #edf1f3); color: var(--apple-text, #1c282e); font-weight: 600; }
 :global(:root[data-app-theme="warm-light"]) .footerAction.confirmed { background: var(--ownset-action-gradient); color: var(--client-action-ink, #fff); box-shadow: 0 8px 18px rgba(47, 125, 104, 0.24); }
+
+/* Keep month controls visible beside a scrollable date grid after rotation.
+   Six rows of full-sized day buttons must not be clipped by the short sheet. */
+@media (orientation: landscape) and (min-width: 568px) and (max-height: 500px) {
+  :global(:root[data-app-theme="warm-light"]) .overlay {
+    align-items: center;
+    padding: max(8px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+  }
+  :global(:root[data-app-theme="warm-light"]) .sheet.sheet {
+    box-sizing: border-box;
+    width: min(760px, 100%);
+    max-width: 760px;
+    height: min(360px, calc(100dvh - max(8px, env(safe-area-inset-top, 0px)) - max(8px, env(safe-area-inset-bottom, 0px))));
+    max-height: calc(100dvh - max(8px, env(safe-area-inset-top, 0px)) - max(8px, env(safe-area-inset-bottom, 0px)));
+    padding: 8px;
+    display: grid;
+    grid-template-columns: minmax(164px, .65fr) minmax(0, 1.6fr);
+    grid-template-rows: auto auto minmax(50px, 1fr);
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .sheet > .grabber { display: none; }
+  .sheet > :nth-child(2) { grid-column: 1; grid-row: 1; min-width: 0; }
+  .sheet .pageHeader { width: 100%; margin: 0; }
+  :global(html[data-client-appearance]) .sheet .pageHeader > div { width: 100%; margin: 0; }
+  :global(html[data-client-appearance]) .sheet .pageHeader > div > div:first-child { left: 0; right: 48px; justify-content: flex-start; overflow: visible; }
+  :global(html[data-client-appearance]) .sheet .pageHeader h1 { font-size: 14px; line-height: 18px; white-space: normal; text-align: left; overflow: visible; }
+  :global(:root[data-app-theme="warm-light"]) .sheet > .header { grid-column: 1; grid-row: 2; min-height: 44px; margin: 0; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 4px; }
+  .sheet > .swipeRegion { grid-column: 2; grid-row: 1 / 4; min-width: 0; min-height: 0; overflow: hidden auto; overscroll-behavior: contain; scroll-padding-block: 4px; }
+  .sheet .grid { gap: 4px; }
+  .sheet .day { min-height: 44px; }
+  .sheet > .footer { grid-column: 1; grid-row: 3; align-self: end; margin: 0; }
+  :global(:root[data-app-theme="warm-light"]) .sheet .month { font-size: 15px; }
+  :global(:root[data-app-theme="warm-light"]) .sheet .eyebrow { display: none; }
+}

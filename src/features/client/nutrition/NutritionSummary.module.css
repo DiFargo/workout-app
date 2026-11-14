@@ -15,3 +15,11 @@
 :global(html[data-client-appearance]) .titleStrong { font-size:17px; font-weight:400; line-height:1.25; letter-spacing:-.25px; }
 :global(html[data-client-appearance]) .description { font-size:13px; }
 :global(html[data-client-appearance]) .icon { width:32px; height:32px; color:var(--apple-blue); background:var(--ownset-soft-gradient); }
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
+  .root { width:100%; margin:14px 0 0; }
+  :global(html[data-client-appearance]) .root { margin-top:14px; }
+  :global(html[data-client-appearance]) .card { min-height:64px; padding:12px; }
+  :global(html[data-client-appearance]) .titleStrong { font-size:16px; }
+  :global(html[data-client-appearance]) .description { font-size:12px; }
+}

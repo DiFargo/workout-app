@@ -174,3 +174,11 @@
 .withRemove .foodButton { min-width: 0; grid-template-columns: 40px minmax(0, 1fr) auto; }
 .removeButton { position: relative; z-index: 2; min-width: 44px; min-height: 44px; border: 0; background: var(--apple-surface, #fff); color: var(--apple-red, #b42318); display: grid; place-items: center; }
 .removeButton svg { width: 18px; height: 18px; }
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
+  .diaryBlock { width:100%; margin:0 0 9px; }
+  .diaryHeader { margin-block:0; }
+  .titleText { font-size:18px; }
+  .mealList { width:100%; margin:0; }
+  .mealRow { min-height:64px; }
+}

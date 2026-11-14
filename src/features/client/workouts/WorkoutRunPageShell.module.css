@@ -130,3 +130,12 @@
 :global(:root[data-app-theme="warm-light"]) .root textarea { font-family: inherit; }
 @media (max-width: 350px) { :global(:root[data-app-theme="warm-light"]) .root.root { --workout-cycle-header-height: calc(136px + env(safe-area-inset-top, 0px)); } }
 @media (prefers-reduced-motion: reduce) { .root *, .root *::before, .root *::after { animation: none !important; transition-duration: 0ms !important; scroll-behavior: auto !important; } }
+
+/* Telegram already excludes its native chrome from the content viewport. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :global(:root[data-app-theme="warm-light"]) .root.root {
+    --workout-run-content-width: 100vw;
+    --workout-run-content-half: 50vw;
+    --workout-inline-gutter: 16px;
+  }
+}

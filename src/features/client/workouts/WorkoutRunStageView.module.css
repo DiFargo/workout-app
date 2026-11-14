@@ -570,10 +570,11 @@
   .exerciseLayout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: minmax(min-content, 1fr) auto;
-    gap: 8px 20px;
-    height: 100%;
-    min-height: min-content;
+    grid-template-rows: max-content max-content;
+    gap: 10px 20px;
+    height: auto;
+    min-height: 100%;
+    align-content: start;
     align-items: start;
   }
 

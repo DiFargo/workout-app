@@ -1,0 +1,22 @@
+.layout,
+.summary,
+.diary {
+  display: contents;
+}
+
+/* Keep the diary beside its daily totals on a short, wide Telegram viewport. */
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
+  .layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 16px;
+    padding-inline: 20px;
+  }
+
+  .summary,
+  .diary {
+    display: block;
+    min-width: 0;
+  }
+}

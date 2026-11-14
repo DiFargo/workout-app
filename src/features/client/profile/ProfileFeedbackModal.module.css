@@ -34,6 +34,19 @@
 }
 
 .dialog button { font-family: inherit; }
+
+@media (orientation: landscape) and (min-width: 568px) and (max-height: 500px) {
+  .dialog.dialog { width: min(720px, 100%); max-height: calc(100dvh - 16px); padding: 10px 14px; gap: 8px; grid-template-rows: auto minmax(0, 1fr) 44px; }
+  .body { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; }
+  .body > .recipient { grid-column: 1 / -1; margin: 0; }
+  .body > .typeGrid { grid-column: 1; grid-row: 2; align-self: start; }
+  .body > .attachment { grid-column: 1; grid-row: 3; align-self: start; }
+  .body > .field { grid-column: 2; grid-row: 2 / 5; }
+  .body > .contactDetails { grid-column: 1; }
+  .body > .status { grid-column: 1 / -1; }
+  .textarea.textarea { min-height: 100px; }
+  .submit.submit { min-height: 44px; }
+}
 .header.header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
 .dialog.dialog[data-cabinet-sheet="true"] .closeButton[data-profile-modal-close="true"] {
   border: 0; color: var(--apple-secondary, #617078); background: var(--apple-surface-muted, #edf1f3); box-shadow: none;

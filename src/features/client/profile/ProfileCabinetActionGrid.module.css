@@ -56,3 +56,23 @@
 .profileSheet h2 { margin:0 0 16px; font-size:22px; }
 .profileDone { min-height:52px; width:100%; margin-top:20px; border:0; border-radius:26px; background:var(--ownset-action-gradient); color:var(--client-action-ink,#fff); font:inherit; font-weight:600; cursor:pointer; }
 @media(min-width:700px) { .profileOverlay { align-items:center; } .profileSheet { border-radius:28px; } }
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
+  .root:not(.trainer) {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:start;
+    gap:16px;
+  }
+  .root:not(.trainer) > * { min-width:0; }
+  .root:not(.trainer) > .profileCard { grid-column:1 / -1; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .profileCard { padding:14px 16px; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .accountRow { min-height:48px; gap:12px; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .avatar { width:48px; height:48px; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .profileCopy strong { font-size:20px; }
+  .root:not(.trainer) .connectionBadge { margin-top:10px; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .section h2 { margin:0 12px 8px; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .row { min-height:64px; padding:12px; gap:10px; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .text strong { font-size:16px; }
+  :global(html[data-client-appearance]) .root:not(.trainer) .text small { font-size:12px; }
+}

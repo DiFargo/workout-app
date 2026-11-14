@@ -503,3 +503,24 @@
 :global(html[data-client-appearance]) .renderQuick button > span,:global(html[data-client-appearance]) .renderQuick svg { width:24px; height:24px; }
 :global(html[data-client-appearance]) .renderQuick button + button { border-left:1px solid var(--apple-separator); }
 @media(max-width:374px) { :global(html[data-client-appearance]) .renderEnergy { --energy-ring-size:96px; gap:0 12px; padding:16px; } }
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
+  :global(html[data-client-appearance]) .dateToolbar { margin:0 0 10px; }
+  :global(html[data-client-appearance]) .renderEnergy {
+    --energy-ring-size:88px;
+    min-height:196px;
+    margin:0;
+    padding:16px;
+    gap:0 14px;
+    border-radius:20px;
+  }
+  :global(html[data-client-appearance]) .renderRing strong { font-size:23px; }
+  :global(html[data-client-appearance]) .renderCopyHead h2 { font-size:23px; }
+  :global(html[data-client-appearance]) .renderMacros { margin-top:14px; padding-top:12px; gap:8px; }
+  :global(html[data-client-appearance]) .renderMacros > div > span { font-size:11px; }
+  :global(html[data-client-appearance]) .renderMacros b { font-size:13px; }
+  :global(html[data-client-appearance]) .renderHeading { margin:16px 0 8px; }
+  :global(html[data-client-appearance]) .renderHeading h2 { font-size:18px; }
+  :global(html[data-client-appearance]) .renderQuick { margin:0; padding:4px 0; }
+  :global(html[data-client-appearance]) .renderQuick button { min-height:60px; gap:5px; }
+}

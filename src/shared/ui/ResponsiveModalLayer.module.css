@@ -189,3 +189,20 @@
     border-radius: 20px;
   }
 }
+
+/* The host already excludes Telegram's native bars from this short viewport.
+   Do not reserve the tall portrait sheet inset again after rotation. */
+@media (orientation: landscape) and (min-width: 568px) and (max-height: 500px) {
+  :global(html:root[data-client-appearance] body #root [data-testid^="profile-"][data-testid$="-overlay"]:not([data-testid="profile-avatar-crop-overlay"])) {
+    padding: max(8px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+    place-items: center;
+  }
+  :global(html:root[data-client-appearance] body #root [data-modal-surface="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])) {
+    max-height: calc(100dvh - max(8px, env(safe-area-inset-top, 0px)) - max(8px, env(safe-area-inset-bottom, 0px)));
+    border-radius: 24px;
+  }
+  :global(html:root[data-client-appearance] body #root [data-cabinet-sheet="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])) {
+    width: min(720px, 100%); max-width: 720px; padding: 12px 16px; gap: 8px;
+  }
+  :global(html:root[data-client-appearance] body #root [data-cabinet-sheet="true"][data-testid^="profile-"]:not([data-testid="profile-avatar-crop-dialog"])::before) { display: none; }
+}

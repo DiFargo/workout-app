@@ -112,3 +112,15 @@
 @media (max-width:374px) { :global(html[data-client-appearance]) .main strong,:global(html[data-client-appearance]) .nutrition strong { font-size:9px; } }
 @media (min-width:700px) { :global(html[data-client-appearance]) .dock { bottom:0; } }
 @media (prefers-reduced-transparency:reduce) { :global(html[data-client-appearance]) .main,:global(html[data-client-appearance]) .nutrition { background:var(--apple-surface); backdrop-filter:none; -webkit-backdrop-filter:none; } }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  :global(html[data-client-appearance]) .dock { padding: 0 max(12px, env(safe-area-inset-right, 0px)) max(4px, env(safe-area-inset-bottom, 0px), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
+  :global(html[data-client-appearance]) .dock::before { top: 27px; }
+  :global(html[data-client-appearance]) .main,
+  :global(html[data-client-appearance]) .nutrition { height: 54px; min-height: 54px; padding: 4px; border-radius: 28px; }
+  :global(html[data-client-appearance]) .lens { top: 4px; left: 4px; height: 44px; border-radius: 24px; }
+  :global(html[data-client-appearance]) .main > button,
+  :global(html[data-client-appearance]) .nutrition > button { min-height: 44px; padding: 4px; flex-direction: row; gap: 5px; border-radius: 24px; }
+  :global(html[data-client-appearance]) .main svg,
+  :global(html[data-client-appearance]) .nutrition svg { width: 20px; height: 20px; }
+}

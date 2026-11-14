@@ -1042,6 +1042,9 @@
 .setPicker .setStatusCompleted svg { color: inherit; }
 
 @media (orientation: landscape) and (min-width: 568px) and (max-height: 500px) {
+  :global(html[data-app-theme="warm-light"]) .primaryActionSets.singleSet .row.unifiedMetricsRow,
+  .primaryActionSets .metricsButton { min-height: 56px; }
+  .primaryActionSets .metricsButton { padding-block: 4px; }
   .primaryActionSets .setOptions,
   .primaryActionSets .completionOptions {
     top: calc(100% + 6px);

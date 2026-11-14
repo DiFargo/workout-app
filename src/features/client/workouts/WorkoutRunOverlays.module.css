@@ -789,3 +789,19 @@
 .previousExercise svg { width: 22px; height: 22px; }
 .previousExercise:active { opacity: .7; }
 .previousExercise:focus-visible { outline: 3px solid var(--apple-action, #3f73b8); outline-offset: 2px; }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  :global(:root[data-app-theme="warm-light"]) .topHeader.topHeader { height: calc(52px + env(safe-area-inset-top, 0px)); min-height: calc(52px + env(safe-area-inset-top, 0px)); }
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle:not(.stageTitleInFlow) {
+    min-height: calc(52px + env(safe-area-inset-top, 0px));
+    padding: calc(12px + env(safe-area-inset-top, 0px)) max(68px, calc(env(safe-area-inset-right, 0px) + 60px)) 10px max(68px, calc(env(safe-area-inset-left, 0px) + 60px));
+  }
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle:not(.stageTitleInFlow) .stageTitleText { font-size: 1.25rem; line-height: 1.2; text-align: center; letter-spacing: -.3px; }
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow {
+    min-height: calc(52px + env(safe-area-inset-top, 0px));
+    padding: calc(3px + env(safe-area-inset-top, 0px)) max(68px, calc(env(safe-area-inset-right, 0px) + 60px)) 3px max(68px, calc(env(safe-area-inset-left, 0px) + 60px));
+  }
+  :global(:root[data-app-theme="warm-light"]) .stageTitle.stageTitle.stageTitleInFlow .stageTitleContent { gap: 1px; }
+  :global(:root[data-app-theme="warm-light"]) .previousExercise { top: max(4px, env(safe-area-inset-top, 0px)); left: max(12px, env(safe-area-inset-left, 0px)); width: 44px; min-width: 44px; height: 44px; }
+  :global(:root[data-app-theme="warm-light"]) .closeButton.closeButton { top: max(4px, env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); width: 44px; min-width: 44px; height: 44px; min-height: 44px; }
+}
