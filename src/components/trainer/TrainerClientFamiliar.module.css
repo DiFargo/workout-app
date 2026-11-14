@@ -1,13 +1,13 @@
 /* Chosen client-card concept: «Привычные разделы». Only the v2 detail page. */
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] {
-  --familiar-canvas: #f2f2f7;
-  --familiar-card: #fff;
-  --familiar-secondary: #efeff4;
-  --familiar-line: rgba(60, 60, 67, .12);
-  --familiar-text: #1c1c1e;
-  --familiar-muted: #636366;
-  --familiar-accent: #3f73b8;
-  --familiar-soft: #edf3fa;
+  --familiar-canvas: var(--trainer-theme-page, #f2f2f7);
+  --familiar-card: var(--trainer-theme-surface, #fff);
+  --familiar-secondary: var(--trainer-theme-soft, #efeff4);
+  --familiar-line: var(--trainer-theme-border, rgba(60, 60, 67, .12));
+  --familiar-text: var(--trainer-theme-text, #1c1c1e);
+  --familiar-muted: var(--trainer-theme-muted, #636366);
+  --familiar-accent: var(--trainer-theme-accent, #3f73b8);
+  --familiar-soft: var(--trainer-theme-soft, #edf3fa);
   width: 100% !important;
   max-width: 1120px !important;
   margin: 0 auto !important;
@@ -17,7 +17,9 @@
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
 }
 
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientBackRow) { width:100%!important; min-height:44px!important; margin:0 0 8px!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientBackRow) { width:100%!important; min-height:44px!important; margin:0 0 8px!important; background:var(--familiar-canvas)!important; border-color:var(--familiar-line)!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(:is(h2,h3,h4)) { color:var(--familiar-text)!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientBackRow button) { color:var(--familiar-accent)!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientBackRow button) { min-height:44px!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientHeader) { display:grid!important; grid-template-columns:48px minmax(0,1fr)!important; gap:12px!important; min-height:0!important; margin:0 0 14px!important; padding:16px 18px!important; border:1px solid var(--familiar-line)!important; border-radius:18px!important; background:var(--familiar-card)!important; box-shadow:none!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientHeader .trainerNextAvatar) { width:48px!important; height:48px!important; min-width:48px!important; }
@@ -38,10 +40,10 @@
 
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerNextClientOverview) { display:flex!important; flex-direction:column!important; gap:14px!important; min-width:0!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"]) { display:grid!important; gap:8px!important; }
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"] > div) { display:grid!important; grid-template-columns:24px minmax(0,1fr) auto!important; gap:10px!important; align-items:center!important; min-height:60px!important; padding:12px 14px!important; border:1px solid rgba(143,83,11,.14)!important; border-radius:15px!important; background:#fff5e8!important; box-shadow:none!important; }
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"] > div > span) { width:24px!important; height:24px!important; padding:0!important; border-radius:0!important; background:transparent!important; color:#8f530b!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"] > div) { display:grid!important; grid-template-columns:24px minmax(0,1fr) auto!important; gap:10px!important; align-items:center!important; min-height:60px!important; padding:12px 14px!important; border:1px solid var(--familiar-line)!important; border-radius:15px!important; background:var(--trainer-warning-soft,#fff5e8)!important; box-shadow:none!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"] > div > span) { width:24px!important; height:24px!important; padding:0!important; border-radius:0!important; background:transparent!important; color:var(--trainer-warning,#8f530b)!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"] strong) { min-width:0!important; color:var(--familiar-text)!important; font-size:14px!important; font-weight:500!important; line-height:1.4!important; overflow-wrap:anywhere!important; }
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"] button) { min-height:44px!important; max-width:160px!important; padding:6px 0!important; border:0!important; background:transparent!important; color:#8f530b!important; font-size:13px!important; font-weight:500!important; white-space:normal!important; box-shadow:none!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(section[class*="controlNotices"] button) { min-height:44px!important; max-width:160px!important; padding:6px 0!important; border:0!important; background:transparent!important; color:var(--trainer-warning,#8f530b)!important; font-size:13px!important; font-weight:500!important; white-space:normal!important; box-shadow:none!important; }
 
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientWorkSummary) { display:grid!important; grid-template-columns:repeat(3,minmax(0,1fr))!important; gap:0!important; padding:16px 0!important; border:1px solid var(--familiar-line)!important; border-radius:18px!important; background:var(--familiar-card)!important; box-shadow:none!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientWorkSummary article) { min-width:0!important; min-height:0!important; margin:0!important; padding:0 16px!important; border:0!important; border-right:1px solid var(--familiar-line)!important; background:transparent!important; border-radius:0!important; box-shadow:none!important; transform:none!important; }
@@ -101,14 +103,14 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientMainColumn > section:first-child > header h2) { font-size:15px!important; color:var(--familiar-muted)!important; font-weight:500!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientProgramTop) { display:flex!important; flex-wrap:wrap!important; gap:12px!important; align-items:center!important; padding:0!important; background:var(--familiar-card)!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientProgramTop [class*="currentInfo"] h3) { color:var(--familiar-text)!important; font-size:20px!important; font-weight:600!important; line-height:1.35!important; letter-spacing:-.3px!important; overflow-wrap:anywhere!important; }
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientProgramTop > button) { flex:0 0 auto!important; width:auto!important; min-width:0!important; min-height:44px!important; margin-left:auto!important; padding:9px 14px!important; border:0!important; border-radius:12px!important; background:var(--ownset-action-gradient)!important; color:var(--familiar-card)!important; font-size:14px!important; font-weight:500!important; box-shadow:none!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientProgramTop > button) { flex:0 0 auto!important; width:auto!important; min-width:0!important; min-height:44px!important; margin-left:auto!important; padding:9px 14px!important; border:0!important; border-radius:12px!important; background:var(--ownset-action-gradient)!important; color:var(--trainer-on-action,#fff)!important; font-size:14px!important; font-weight:500!important; box-shadow:none!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientMainColumn [class*="programGrid"] > div[class*="currentProgram"]) { padding:0 16px 16px!important; background:var(--familiar-card)!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientWorkoutList) { padding:0 16px!important; border:0!important; border-top:1px solid var(--familiar-line)!important; border-radius:0!important; background:var(--familiar-card)!important; box-shadow:none!important; }
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientWorkoutList > summary) { min-height:60px!important; padding:12px 0!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientWorkoutList > summary) { min-height:60px!important; padding:12px 0!important; color:var(--familiar-text)!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientWorkoutList .trainerClientDisclosure > summary) { min-height:60px!important; padding:12px 0!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerWorkoutRowLabel) { display:flex!important; flex-wrap:wrap!important; align-items:center!important; gap:6px 12px!important; min-width:0!important; transform:none!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerWorkoutRowLabel > span) { min-width:0!important; font-size:14px!important; line-height:1.4!important; white-space:normal!important; overflow-wrap:anywhere!important; }
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientAssignmentDisclosure) { padding:0 16px!important; border-color:var(--familiar-line)!important; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientAssignmentDisclosure) { padding:0 16px!important; border-color:var(--familiar-line)!important; background:var(--familiar-card)!important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .page.page[data-client-layout="familiar"] :global(.trainerClientAssignmentDisclosure > summary) { min-height:52px!important; padding:12px 0!important; color:var(--familiar-accent)!important; font-size:14px!important; }
 
 /* Keep the real nutrition plan below the separately-owned analytics. */

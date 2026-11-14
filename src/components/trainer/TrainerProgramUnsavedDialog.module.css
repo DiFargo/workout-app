@@ -24,3 +24,22 @@
 :global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .actions button:nth-child(2) { color:var(--trainer-danger); }
 :global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .actions button:last-child { color:#fff; background:var(--ownset-action-gradient); }
 :global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .dialog button:focus-visible { outline-color:var(--trainer-theme-accent); }
+
+/* Match the same primary action and readable neutral controls in either theme. */
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .dialog {
+  color: var(--trainer-theme-text);
+  background: var(--trainer-theme-surface);
+  border: 1px solid var(--trainer-theme-border);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .dialog h2 { overflow-wrap:anywhere; }
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .actions button:last-child {
+  color: var(--trainer-on-action);
+  background: var(--trainer-theme-action);
+}
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .actions button:disabled { opacity:.55; cursor:wait; }
+@media (max-width:440px) {
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .dialog { padding:20px; }
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .dialog h2 { font-size:20px; }
+}

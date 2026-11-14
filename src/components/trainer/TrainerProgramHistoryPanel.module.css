@@ -1,4 +1,4 @@
-.root.root{--history-card:#fff;--history-secondary:#efeff4;--history-text:#1c1c1e;--history-muted:#636366;--history-line:rgba(60,60,67,.12);--history-accent:#3c6faa;--history-success:#237a42;--history-danger:#b23c45;--history-soft:#edf3fa;color:var(--history-text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;min-width:0}
+.root.root{--history-card:var(--trainer-theme-surface,#fff);--history-secondary:var(--trainer-theme-soft,#efeff4);--history-text:var(--trainer-theme-text,#1c1c1e);--history-muted:var(--trainer-theme-muted,#636366);--history-line:var(--trainer-theme-border,rgba(60,60,67,.12));--history-accent:var(--trainer-theme-accent,#3c6faa);--history-success:var(--trainer-success,#237a42);--history-danger:var(--trainer-danger,#b23c45);--history-soft:var(--trainer-theme-soft,#edf3fa);color:var(--history-text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;min-width:0}
 .root *{box-sizing:border-box}
 .root [hidden]{display:none!important}
 .root .tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:480px;padding:4px;margin:0 0 20px;gap:4px;border-radius:14px;background:var(--history-secondary)}
@@ -18,13 +18,13 @@
 .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:7px;font-size:12px;font-weight:600;line-height:1.4}
 .badge.neutral{background:var(--history-secondary);color:var(--history-muted)}
 .badge.active{background:var(--history-soft);color:var(--history-accent)}
-.badge.success{background:#edf7ef;color:var(--history-success)}
+.badge.success{background:var(--trainer-success-soft,#edf7ef);color:var(--history-success)}
 .progress{margin:16px 0}
 .progress>div:first-child{display:flex;justify-content:space-between;gap:8px;font-size:13px;line-height:1.4;font-variant-numeric:tabular-nums}
 .track{height:5px;margin-top:7px;overflow:hidden;background:var(--history-secondary);border-radius:5px}
 .track>span{display:block;height:100%;border-radius:inherit;background:var(--ownset-action-gradient,linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%))}
 .root .primaryButton,.root .secondaryButton,.root .deleteButton{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:11px 14px;border-radius:12px;font:inherit;font-size:14px;font-weight:600;line-height:1.4;touch-action:manipulation;cursor:pointer;box-shadow:none}
-.root .primaryButton{border:1px solid transparent;background:var(--ownset-action-gradient,linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%));color:#fff}
+.root .primaryButton{border:1px solid transparent;background:var(--trainer-theme-action,var(--ownset-action-gradient,linear-gradient(115deg,#467b72 0%,#3e748b 54%,#3565a3 100%)));color:var(--trainer-on-action,#fff)}
 .root .secondaryButton{border:1px solid transparent;background:var(--history-secondary);color:var(--history-accent)}
 .root .deleteButton{border:1px solid var(--history-line);background:var(--history-card);color:var(--history-danger)}
 .root button:active{filter:brightness(.95)}

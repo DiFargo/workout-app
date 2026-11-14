@@ -19,7 +19,7 @@
   overflow: hidden;
   border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 24px;
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
   box-shadow: 0 24px 56px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.18);
   color: var(--trainer-v2-ink, #28262e);
 }
@@ -96,7 +96,7 @@
   justify-content: flex-end;
   padding: 12px 22px 18px;
   border-top: 1px solid var(--trainer-v2-line, #efebf3);
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
 }
 
 .footer button {
@@ -104,7 +104,7 @@
   padding: 0 18px;
   border: 1px solid var(--trainer-v2-line, #dfd6e9);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
   color: var(--trainer-v2-accent, #806bb6);
   font: inherit;
   font-size: 14px;
@@ -122,7 +122,7 @@
   padding: 12px;
   border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
   color: var(--trainer-v2-ink, #28262e);
   text-align: left;
   cursor: pointer;

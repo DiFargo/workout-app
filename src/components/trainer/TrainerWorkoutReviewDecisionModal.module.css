@@ -18,7 +18,8 @@
   padding: 0;
   border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 20px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
+  color: var(--trainer-theme-text, #1c1c1e);
   box-shadow: 0 22px 64px rgb(31 36 48 / 20%);
 }
 
@@ -30,8 +31,8 @@
   place-items: center;
   border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 12px;
-  background: #fff;
-  color: #1f2430;
+  background: var(--trainer-theme-surface, #fff);
+  color: var(--trainer-theme-muted, #1f2430);
   cursor: pointer;
 }
 
@@ -50,7 +51,7 @@
 .context span {
   display: block;
   margin-bottom: 5px;
-  color: #8b8373;
+  color: var(--trainer-theme-muted, #8b8373);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: .04em;
@@ -59,7 +60,7 @@
 
 .header h2 {
   margin: 0;
-  color: #181b24;
+  color: var(--trainer-theme-text, #181b24);
   font-size: 24px;
   line-height: 1.2;
 }
@@ -67,7 +68,7 @@
 .header p,
 .context p {
   margin: 7px 0 0;
-  color: #7c7f8b;
+  color: var(--trainer-theme-muted, #7c7f8b);
   font-size: 13px;
   line-height: 1.45;
 }
@@ -89,12 +90,12 @@
   padding: 13px 14px;
   border: 1px solid var(--trainer-v2-line, #e7e5ef);
   border-radius: 12px;
-  background: var(--trainer-v2-surface, #faf9fe);
+  background: var(--trainer-theme-soft, var(--trainer-v2-surface, #faf9fe));
 }
 
 .context strong {
   display: block;
-  color: #20232d;
+  color: var(--trainer-theme-text, #20232d);
   font-size: 14px;
   line-height: 1.35;
 }
@@ -106,7 +107,7 @@
   gap: 10px;
   padding: 16px 24px 20px;
   border-top: 1px solid var(--trainer-v2-line, #efebf3);
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
 }
 
 .actions button {
@@ -141,30 +142,30 @@
 }
 
 .accept {
-  border: 1px solid #dfe2eb;
-  background: #fff;
-  color: #262a35;
+  border: 1px solid var(--trainer-theme-border, #dfe2eb);
+  background: var(--trainer-theme-surface, #fff);
+  color: var(--trainer-theme-text, #262a35);
 }
 
 .accept small {
-  color: #7d818c;
+  color: var(--trainer-theme-muted, #7d818c);
 }
 
 .edit {
   border: 1px solid var(--trainer-v2-accent, #806bb6);
-  background: var(--ownset-action-gradient);
-  color: #fff;
+  background: var(--trainer-theme-action, var(--ownset-action-gradient));
+  color: var(--trainer-on-action, #fff);
   box-shadow: 0 9px 24px var(--trainer-v2-shadow, rgb(99 48 245 / 20%));
 }
 
 .edit small {
-  color: rgb(255 255 255 / 76%);
+  color: var(--trainer-on-action, rgb(255 255 255 / 76%));
 }
 
 .status {
   grid-column: 1 / -1;
   margin: 0;
-  color: #bd4c4c;
+  color: var(--trainer-danger, #bd4c4c);
   font-size: 12px;
   font-weight: 700;
 }

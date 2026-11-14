@@ -1,10 +1,10 @@
 .sheet.sheet {
-  --sheet-canvas: var(--apple-page, #f2f2f7);
-  --sheet-card: var(--apple-surface, #fff);
-  --sheet-muted: var(--apple-secondary, #636366);
-  --sheet-text: var(--apple-text, #1c1c1e);
-  --sheet-line: var(--apple-separator, rgba(60, 60, 67, .12));
-  --sheet-accent: var(--apple-accent, #3f73b8);
+  --sheet-canvas: var(--trainer-theme-page, var(--apple-page, #f2f2f7));
+  --sheet-card: var(--trainer-theme-surface, var(--apple-surface, #fff));
+  --sheet-muted: var(--trainer-theme-muted, var(--apple-secondary, #636366));
+  --sheet-text: var(--trainer-theme-text, var(--apple-text, #1c1c1e));
+  --sheet-line: var(--trainer-theme-border, var(--apple-separator, rgba(60, 60, 67, .12)));
+  --sheet-accent: var(--trainer-theme-accent, var(--apple-accent, #3f73b8));
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,7 @@
 .sheet.sheet > header button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 50%; color: var(--sheet-muted); background: var(--apple-muted, #efeff4); cursor: pointer; }
 .sheet.sheet > footer { border-top: 1px solid var(--sheet-line); }
 .sheet.sheet > footer span { max-width: 310px; color: var(--sheet-muted); font-size: 12px; line-height: 1.45; }
-.sheet.sheet > footer button { flex-shrink: 0; min-height: 46px; padding: 11px 20px; border: 0; border-radius: 13px; background: var(--ownset-action-gradient); color: white; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.sheet.sheet > footer button { flex-shrink: 0; min-height: 46px; padding: 11px 20px; border: 0; border-radius: 13px; background: var(--trainer-theme-action, var(--ownset-action-gradient)); color: var(--trainer-on-action, white); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
 .sheet .body { display: grid; flex: 1 1 auto; align-content: start; gap: 12px; min-height: 0; padding: 16px; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: 16px; }
 .sheet .group { display: grid; min-width: 0; gap: 10px; margin: 0; padding: 16px; border: 1px solid var(--sheet-line); border-radius: 18px; background: var(--sheet-card); }
 .sheet .sectionHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
@@ -65,6 +65,12 @@
 .sheet :is(button, input, summary):focus-visible { outline: 2px solid var(--sheet-accent); outline-offset: 2px; }
 .sheet button:disabled, .sheet input:disabled { opacity: .5; cursor: not-allowed; }
 .sheet button:not(:disabled):active, .sheet summary:active { opacity: .72; }
+:global(html[data-trainer-appearance]) .sheet.sheet > header button,
+:global(html[data-trainer-appearance]) .sheet .addSet,
+:global(html[data-trainer-appearance]) .sheet .readOnly { background: var(--trainer-theme-soft); }
+:global(html[data-trainer-appearance]) .sheet .dangerZone button { color: var(--trainer-danger); }
+:global(html[data-trainer-appearance]) .sheet :is(h2,h3,strong) { color: var(--sheet-text); }
+:global(html[data-trainer-appearance]) .sheet .body { scrollbar-color: var(--trainer-theme-muted) transparent; }
 @media (max-width: 600px) {
   .sheet.sheet { position: fixed; top: var(--exercise-sheet-visible-top, 0px); bottom: auto; width: 100%; max-width: 100%; max-height: var(--exercise-sheet-visible-height, 100dvh); margin: 0; border-radius: 22px 22px 0 0; }
   .sheet.sheet > header { padding: max(12px, env(safe-area-inset-top, 0px)) 16px 12px; }

@@ -134,8 +134,8 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressToolbar button.active) {
-  color: #ffffff;
-  background: var(--ownset-action-gradient);
+  color: var(--trainer-on-action, #ffffff);
+  background: var(--trainer-theme-action, var(--ownset-action-gradient));
   box-shadow: 0 6px 14px rgb(var(--trainer-v2-shadow-rgb, 128 107 182) / 0.2);
 }
 
@@ -216,18 +216,18 @@
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseStatus.positive) {
-  color: #367952;
-  background: #eaf7ee;
+  color: var(--trainer-success, #367952);
+  background: var(--trainer-success-soft, #eaf7ee);
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseStatus.warning) {
-  color: #936a25;
-  background: #fff6e7;
+  color: var(--trainer-warning, #936a25);
+  background: var(--trainer-warning-soft, #fff6e7);
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseStatus.negative) {
-  color: #ae5960;
-  background: #fff0f1;
+  color: var(--trainer-danger, #ae5960);
+  background: var(--trainer-danger-soft, #fff0f1);
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressName > strong) {
@@ -292,9 +292,9 @@
   font-weight: 680;
 }
 
-:global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em.positive) { color: #397b55; }
-:global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em.negative) { color: #ae5960; }
-:global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em.warning) { color: #936a25; }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em.positive) { color: var(--trainer-success, #397b55); }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em.negative) { color: var(--trainer-danger, #ae5960); }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressMetrics em.warning) { color: var(--trainer-warning, #936a25); }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressResult) {
   grid-column: 1 / -1;
@@ -356,9 +356,9 @@
   line-height: 1.4;
 }
 
-:global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote.warning) { color: #936a25; }
-:global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote.negative) { color: #ae5960; }
-:global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote.positive) { color: #397b55; }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote.warning) { color: var(--trainer-warning, #936a25); }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote.negative) { color: var(--trainer-danger, #ae5960); }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressCardNote.positive) { color: var(--trainer-success, #397b55); }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressContext),
 :global(.trainerNextRoot) :global(.trainerExerciseProgressResult > div:not(.trainerExerciseProgressResultHead)) {
@@ -515,7 +515,7 @@
   overflow: hidden;
   border: 1px solid var(--trainer-v2-line, #e5dfeb);
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
   color: var(--trainer-v2-ink, #28262e);
   box-shadow: 0 28px 72px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.24);
 }
@@ -594,7 +594,7 @@
   border: 1px solid var(--trainer-v2-line, #e4ddea);
   border-radius: 12px;
   color: var(--trainer-v2-muted, #625d6a);
-  background: #ffffff;
+  background: var(--trainer-theme-soft, #ffffff);
   cursor: pointer;
 }
 
@@ -644,8 +644,8 @@
   background: var(--trainer-v2-surface, #fbfafe);
 }
 
-:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext small.warning) { color: #936a25; }
-:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext small.negative) { color: #ae5960; }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext small.warning) { color: var(--trainer-warning, #936a25); }
+:global(.trainerNextRoot) :global(.trainerExerciseProgressHistoryContext small.negative) { color: var(--trainer-danger, #ae5960); }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySessions) {
   display: grid;
@@ -658,7 +658,7 @@
   padding: 11px 12px;
   border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 14px;
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
 }
 
 :global(.trainerNextRoot) :global(.trainerExerciseProgressHistorySessions article > strong) {
@@ -817,11 +817,11 @@
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeading) {display:block!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeadingIcon) {display:none!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressHeading h3) {font-size:17px!important;}
-:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressRow) {display:grid!important;grid-template-columns:1fr!important;gap:14px!important;padding:16px!important;border:0!important;border-radius:14px!important;background:white!important;box-shadow:none!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressRow) {display:grid!important;grid-template-columns:1fr!important;gap:14px!important;padding:16px!important;border:0!important;border-radius:14px!important;background:var(--trainer-theme-surface,white)!important;box-shadow:none!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressName) {display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressExerciseIcon) {display:none!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressName strong) {font-size:18px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;}
-:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics) {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;background:#f5f7f8!important;border-radius:10px!important;}
+:global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics) {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;background:var(--trainer-theme-page, #f5f7f8)!important;border-radius:10px!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics > span) {min-width:0!important;padding:12px!important;border:0!important;border-radius:0!important;background:transparent!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics b) {font-size:14px!important;}
 :global(html[data-trainer-variant="v2"] body .trainerNextRoot .trainerExerciseProgressMetrics small) {font-size:12px!important;}

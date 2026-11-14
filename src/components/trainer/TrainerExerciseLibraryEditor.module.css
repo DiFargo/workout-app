@@ -4,8 +4,8 @@
 }
 
 .libraryFilters {display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;}
-.deletedToggle {min-height:44px;padding:8px 12px;border:1px solid rgba(57, 82, 91,.12);border-radius:10px;background:#fff;color:#396ba6;font:inherit;font-size:14px;cursor:pointer;}
-.deletedToggle[aria-pressed="true"] {background:#e8f1f2;}
+.deletedToggle {min-height:44px;padding:8px 12px;border:1px solid rgba(57, 82, 91,.12);border-radius:10px;background:var(--trainer-theme-surface, #fff);color:var(--trainer-theme-accent, #396ba6);font:inherit;font-size:14px;cursor:pointer;}
+.deletedToggle[aria-pressed="true"] {background:var(--trainer-theme-soft, #e8f1f2);}
 .error {grid-column:1/-1;margin:0;color:#b5444c;font-size:13px;line-height:1.4;}
 
 .modal {
@@ -19,7 +19,7 @@
   padding: 24px;
   border: 1px solid var(--tn-line);
   border-radius: 18px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
   box-shadow: 0 28px 90px rgb(var(--trainer-v2-shadow-rgb, 31 24 59) / 0.24);
 }
 
@@ -47,6 +47,12 @@
 
 .close:hover {
   background: var(--trainer-v2-surface, #efebf3);
+}
+
+:global(html[data-trainer-appearance] body) .modal.modal .close {
+  background: var(--trainer-theme-soft) !important;
+  color: var(--trainer-theme-accent) !important;
+  border-color: var(--trainer-theme-border) !important;
 }
 
 .close:focus-visible {
@@ -96,7 +102,7 @@
   padding: 16px;
   border: 1px solid var(--tn-line);
   border-radius: 16px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
 }
 
 .group legend,
@@ -150,7 +156,7 @@
   color: var(--tn-text);
   font: inherit;
   font-size: 13px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
 }
 
 .fields select:focus-visible,
@@ -274,7 +280,7 @@
   padding: 16px;
   border: 1px solid var(--tn-line);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
 }
 
 .setEditorHead,
@@ -317,7 +323,7 @@
   color: var(--tn-text);
   font: inherit;
   font-size: 13px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
 }
 
 .setRow input:disabled {
@@ -333,7 +339,7 @@
   border: 1px solid var(--tn-line);
   border-radius: 10px;
   color: var(--tn-muted);
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
   cursor: pointer;
 }
 
@@ -357,7 +363,7 @@
   font: inherit;
   font-size: 12px;
   font-weight: 750;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
   cursor: pointer;
 }
 
@@ -371,7 +377,7 @@
   margin-top: 16px;
   padding: 14px 0 0;
   border-top: 1px solid var(--tn-line);
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
 }
 
 .deleteButton,
@@ -404,7 +410,7 @@
 
 .saveButton {
   border: 1px solid transparent;
-  color: #fff;
+  color: var(--trainer-on-action, #fff);
   background: var(--ownset-action-gradient);
   box-shadow: 0 8px 18px rgb(var(--trainer-v2-shadow-rgb, 143 122 200) / 0.22);
 }

@@ -521,3 +521,98 @@
   background: transparent !important;
   border-color: var(--trainer-theme-border) !important;
 }
+
+/* Complete editor states share the standalone trainer palette; the admin
+   embedding has no data-trainer-theme boundary and keeps its own colours. */
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) :is(.editorModal, .templateSettingsSheet, .editorExitConfirm) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-page) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) :is(.editorModalHeader, .editorModalFooter, .templateSettingsSheet > header, .templateSettingsSheet > footer) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-surface) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) :is(.editorExitConfirm h3, .templateSettingsSheet h2) {
+  color: var(--trainer-theme-text) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) :is(.editorExitConfirm p, .editorPurpose, .templateSettingsBody p, .templateSettingsSheet > footer span) {
+  color: var(--trainer-theme-muted) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorExitConfirmEyebrow {
+  color: var(--trainer-theme-accent);
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorExitConfirmActions button {
+  min-height: 44px;
+  color: var(--trainer-theme-text);
+  background: var(--trainer-theme-surface);
+  border-color: var(--trainer-theme-border);
+  box-shadow: none;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) :is(.editorModalFooter .editorModalSave, .templateSettingsSheet > footer button, .editorExitConfirmActions button:last-child) {
+  color: var(--trainer-on-action) !important;
+  background: var(--trainer-theme-action) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorModalFooter .editorModalSaveSaved {
+  color: var(--trainer-success) !important;
+  background: var(--trainer-success-soft) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorModalFooter {
+  flex-wrap: wrap;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorModalFooter > p[role="alert"] {
+  flex: 1 0 100%;
+  margin: 0;
+  color: var(--trainer-danger);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .templateSettingsSheet[open] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .templateSettingsSheet > :is(header, footer) {
+  flex: 0 0 auto;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .templateSettingsBody {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) :is(.editorModal, .templateSettingsSheet, .editorExitConfirm) :is(button, input):focus-visible {
+  outline: 2px solid var(--trainer-theme-accent) !important;
+  outline-offset: 2px;
+}
+
+@media (max-width: 440px) {
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorModalHeader {
+    padding: 12px;
+  }
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorProgramNameField input {
+    font-size: 17px !important;
+  }
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .editorDraftRecoveryActions {
+    grid-template-columns: 1fr;
+  }
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .templateSettingsSheet > footer {
+    flex-wrap: wrap;
+  }
+}

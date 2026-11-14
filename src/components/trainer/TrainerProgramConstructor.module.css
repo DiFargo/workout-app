@@ -1564,8 +1564,8 @@
 }
 
 :global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] > footer button {
-  color: #fff !important;
-  background: var(--ownset-action-gradient) !important;
+  color: var(--trainer-on-action) !important;
+  background: var(--trainer-theme-action) !important;
 }
 
 :global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] .deleteExerciseButton {
@@ -1576,4 +1576,133 @@
 
 :global(html:root[data-trainer-appearance="dark"] body #root [data-trainer-theme="dark"]) .appleConstructor.appleConstructor.embeddedInModal .appleSheet[aria-label="Настройки дня"] :is(input, textarea, select, button):focus-visible {
   outline-color: var(--trainer-theme-accent) !important;
+}
+
+/* All constructor sub-sheets belong to the trainer appearance, not just day
+   settings. The explicit boundary leaves admin embeds unchanged. */
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor {
+  --purple: var(--trainer-theme-accent);
+  --purple-soft: var(--trainer-theme-soft);
+  --ink: var(--trainer-theme-text);
+  --muted: var(--trainer-theme-muted);
+  --line: var(--trainer-theme-border);
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-page) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor :is(.appleSheet, .confirmModal) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-page) !important;
+  border: 1px solid var(--trainer-theme-border) !important;
+  border-radius: 24px !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet > :is(header, footer) {
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-surface) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor :is(.appleSheet h2, .confirmModal h2, .appleSheet label > span, .appleOrderRow span, .appleLibraryResults strong, .appleVideoPreview strong) {
+  color: var(--trainer-theme-text) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor :is(.appleSheet small, .appleSheetBody > p, .appleSheet > footer span, .confirmModal p, .appleVideoPreview small, .setsEditor header, .setRow > b, .appleAlternatives summary) {
+  color: var(--trainer-theme-muted) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet :is(input, textarea, select) {
+  min-width: 0 !important;
+  color: var(--trainer-theme-text) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+  font-size: 16px !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet :is(input, textarea)::placeholder {
+  color: var(--trainer-theme-muted) !important;
+  opacity: 1;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor :is(.appleSheet > header button, .appleOrderRow button, .appleLibraryResults button, .confirmModal button, .videoUpload, .setsEditor footer button, .moveButtons button, .expandedEditor > button) {
+  min-height: 44px !important;
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet > footer button {
+  color: var(--trainer-on-action) !important;
+  background: var(--trainer-theme-action) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor :is(.appleSheet .deleteExerciseButton, .confirmModal button.deleteButton) {
+  color: var(--trainer-danger) !important;
+  background: var(--trainer-danger-soft) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor :is(.appleOrderRow, .appleLibraryResults > div) {
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor :is(.appleSheet, .confirmModal) :is(input, textarea, select, button):focus-visible {
+  outline: 2px solid var(--trainer-theme-accent) !important;
+  outline-offset: 2px !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet .tabPanel {
+  display: grid;
+  gap: 16px;
+  padding: 0;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet[open] {
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet > :is(header, footer) {
+  flex: 0 0 auto;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheetBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overscroll-behavior: contain;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet .tabPanel textarea {
+  min-height: 112px !important;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet .settingsGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet .settingsGrid label:first-child {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 600px) {
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet {
+    width: calc(100vw - 16px) !important;
+    max-height: calc(100dvh - max(16px, env(safe-area-inset-top))) !important;
+    margin: auto 8px max(8px, env(safe-area-inset-bottom)) !important;
+  }
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet > footer {
+    gap: 12px !important;
+  }
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor .appleSheet > footer span {
+    max-width: 65% !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html:root[data-trainer-appearance] body #root [data-trainer-theme]) .appleConstructor.appleConstructor * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
 }

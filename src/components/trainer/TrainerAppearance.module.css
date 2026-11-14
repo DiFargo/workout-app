@@ -17,6 +17,49 @@
   --trainer-danger: #b4232c;
   --trainer-danger-soft: #fff0f1;
   --trainer-theme-action: linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%);
+  --trainer-warning: #8a510b;
+  --trainer-warning-soft: #fff5e5;
+  /* Portalled trainer sheets inherit the same semantic tokens as the shell. */
+  --tn-page: var(--trainer-theme-page);
+  --tn-surface: var(--trainer-theme-surface);
+  --tn-surface-soft: var(--trainer-theme-soft);
+  --tn-text: var(--trainer-theme-text);
+  --tn-muted: var(--trainer-theme-muted);
+  --tn-line: var(--trainer-theme-border);
+  --tn-purple: var(--trainer-theme-accent);
+  --tn-purple-strong: var(--trainer-theme-accent);
+  --tn-purple-soft: var(--trainer-theme-soft);
+  --trainer-text: var(--trainer-theme-text);
+  --trainer-muted: var(--trainer-theme-muted);
+  --trainer-surface: var(--trainer-theme-surface);
+  --trainer-surface-soft: var(--trainer-theme-soft);
+  --trainer-border: var(--trainer-theme-border);
+  --trainer-accent: var(--trainer-theme-accent);
+  --trainer-v2-ink: var(--trainer-theme-text);
+  --trainer-v2-muted: var(--trainer-theme-muted);
+  --trainer-v2-line: var(--trainer-theme-border);
+  --trainer-v2-surface: var(--trainer-theme-soft);
+  --trainer-v2-accent: var(--trainer-theme-accent);
+  --apple-page: var(--trainer-theme-page);
+  --apple-canvas: var(--trainer-theme-page);
+  --apple-surface: var(--trainer-theme-surface);
+  --apple-surface-secondary: var(--trainer-theme-soft);
+  --apple-muted: var(--trainer-theme-soft);
+  --apple-text: var(--trainer-theme-text);
+  --apple-secondary: var(--trainer-theme-muted);
+  --apple-separator: var(--trainer-theme-border);
+  --apple-accent: var(--trainer-theme-accent);
+  --apple-blue: var(--trainer-theme-accent);
+  --apple-danger: var(--trainer-danger);
+  --ownset-text-primary: var(--trainer-theme-text);
+  --ownset-text-secondary: var(--trainer-theme-muted);
+  --ownset-border: var(--trainer-theme-border);
+  --ownset-accent: var(--trainer-theme-accent);
+  --ownset-surface-secondary: var(--trainer-theme-soft);
+  --ownset-surface: var(--trainer-theme-surface);
+  --ownset-soft-gradient: var(--trainer-theme-soft);
+  --ownset-action-gradient: var(--trainer-theme-action);
+  --apple-success: var(--trainer-success);
   background: var(--trainer-theme-page);
   color-scheme: light;
 }
@@ -37,6 +80,8 @@
   --trainer-success-soft: #1a342a;
   --trainer-danger: #ffafb5;
   --trainer-danger-soft: #422329;
+  --trainer-warning: #f4ce91;
+  --trainer-warning-soft: #382c1a;
   --trainer-theme-action: linear-gradient(115deg, #9dd7c9, #a5c9e4);
   color-scheme: dark;
 }
@@ -165,18 +210,6 @@
 :global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"] [data-trainer-modal-header]),
 :global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"] [data-trainer-modal-content]) { background: var(--trainer-theme-surface) !important; color: var(--trainer-theme-text) !important; }
 :global(html[data-trainer-appearance] [data-trainer-appearance-sheet="true"] h2) { color: var(--trainer-theme-text) !important; }
-/* Other detailed editors keep their established palette; template editing is theme-aware. */
-:global(html[data-trainer-appearance] body #root) .scope.scope.scope:has(:global(.trainerNextClientPage)),
-:global(html[data-trainer-appearance] body #root) .scope.scope.scope:has(:global(.trainerUtilityPage)),
-:global(html[data-trainer-appearance] [aria-modal="true"]:not([data-trainer-appearance-sheet="true"]):not([data-trainer-template-editor="true"])) {
-  --tn-page: #f5f7f8; --tn-surface: #fff; --tn-surface-soft: #edf1f3; --tn-text: #1c282e; --tn-muted: #617078;
-  --tn-line: rgba(57,82,91,.12); --tn-purple: #376b91; --tn-purple-strong: #396ba6;
-  --trainer-v2-ink: #1c282e; --trainer-v2-muted: #617078; --trainer-v2-line: rgba(57,82,91,.12); --trainer-v2-surface: #edf1f3; --trainer-v2-accent: #376b91;
-  --apple-text: #1c282e; --apple-secondary: #617078; --apple-surface: #fff; --apple-muted: #edf1f3;
-  --trainer-text: #1c282e; --trainer-muted: #617078; --trainer-surface: #fff; --trainer-surface-soft: #edf1f3;
-  --trainer-border: rgba(57,82,91,.12); --trainer-accent: #376b91; --trainer-on-action: #fff;
-  color-scheme: light;
-}
 @media (max-width: 699px) {
   :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextDesktopDock) { display: none; }
   :global(html[data-trainer-appearance] body #root) .scope.scope.scope :global(.trainerNextMobileNav) { display: grid; }

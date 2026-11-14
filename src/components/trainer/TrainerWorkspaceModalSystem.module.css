@@ -42,8 +42,48 @@
   overscroll-behavior: contain;
   border: 1px solid var(--trainer-v2-line, #efebf3) !important;
   border-radius: var(--trainer-modal-radius) !important;
-  background: #fbfafc !important;
+  background: var(--trainer-theme-surface, #fbfafc) !important;
+  color: var(--trainer-theme-text, #1c282e);
   box-shadow: 0 28px 72px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.24) !important;
+}
+
+/* Standalone trainer appearance wins over legacy V2 and client modal tokens.
+   The admin-embedded trainer keeps its existing appearance when this opt-in is absent. */
+:global(html:root[data-trainer-appearance][data-trainer-variant] body [data-trainer-modal-surface="true"]) {
+  --tn-page: var(--trainer-theme-page);
+  --tn-surface: var(--trainer-theme-surface);
+  --tn-line: var(--trainer-theme-border);
+  --tn-text: var(--trainer-theme-text);
+  --tn-muted: var(--trainer-theme-muted);
+  --tn-purple: var(--trainer-theme-accent);
+  --tn-purple-strong: var(--trainer-theme-accent);
+  --tn-purple-soft: var(--trainer-theme-soft);
+  --tn-purple-wash: var(--trainer-theme-page);
+  --trainer-v2-ink: var(--trainer-theme-text);
+  --trainer-v2-muted: var(--trainer-theme-muted);
+  --trainer-v2-line: var(--trainer-theme-border);
+  --trainer-v2-surface: var(--trainer-theme-soft);
+  --trainer-v2-accent: var(--trainer-theme-accent);
+  --apple-canvas: var(--trainer-theme-page);
+  --apple-surface: var(--trainer-theme-surface);
+  --apple-text: var(--trainer-theme-text);
+  --apple-secondary: var(--trainer-theme-muted);
+  --apple-separator: var(--trainer-theme-border);
+  --client-sheet-background: var(--trainer-theme-surface);
+  background: var(--trainer-theme-surface) !important;
+  color: var(--trainer-theme-text) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance][data-trainer-variant] body [data-trainer-modal-header="true"] > button) {
+  background: var(--trainer-theme-soft) !important;
+  color: var(--trainer-theme-accent) !important;
+  border-color: var(--trainer-theme-border) !important;
+}
+
+:global(html:root[data-trainer-appearance][data-trainer-variant] body [data-trainer-modal-footer="true"]) {
+  background: var(--trainer-theme-surface) !important;
+  border-color: var(--trainer-theme-border) !important;
 }
 
 /* A modal may opt into a stable application frame.  Its title controls and
@@ -100,7 +140,7 @@
   position: relative;
   z-index: 2;
   flex: 0 0 auto;
-  background: #fbfafc;
+  background: var(--trainer-theme-surface, #fbfafc);
 }
 
 /* Dense editors remain scrollable cards instead of becoming full-screen

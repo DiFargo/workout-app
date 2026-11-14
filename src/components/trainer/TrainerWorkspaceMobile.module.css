@@ -632,8 +632,8 @@
     margin-top: -6px;
     margin-bottom: 14px;
     padding: max(6px, env(safe-area-inset-top)) 0 10px;
-    background: rgba(247, 246, 248, 0.96);
-    box-shadow: 0 8px 16px rgba(247, 246, 248, 0.96);
+    background: var(--trainer-theme-page, rgba(247, 246, 248, 0.96));
+    box-shadow: 0 8px 16px var(--trainer-theme-page, rgba(247, 246, 248, 0.96));
     backdrop-filter: blur(12px);
   }
 }
@@ -2639,17 +2639,17 @@
     min-height: 44px;
     place-items: center;
     padding: 0;
-    border: 1px solid var(--trainer-v2-line, #efebf3);
+    border: 1px solid var(--trainer-theme-border, var(--trainer-v2-line, #efebf3));
     border-radius: 14px;
-    color: var(--trainer-v2-muted, #625d6a);
-    background: #ffffff;
+    color: var(--trainer-theme-accent, var(--trainer-v2-muted, #625d6a));
+    background: var(--trainer-theme-surface, #ffffff);
     box-shadow: 0 7px 16px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.06);
   }
 
   .clientToolbarFix > div > :global(.trainerNextPrimary) {
     border-color: var(--trainer-v2-accent, #8f7ac8);
-    color: #ffffff;
-    background: var(--ownset-action-gradient);
+    color: var(--trainer-on-action, #ffffff);
+    background: var(--trainer-theme-action, var(--ownset-action-gradient));
     box-shadow: 0 9px 18px rgb(var(--trainer-v2-shadow-rgb, 112 88 164) / 0.24);
   }
 

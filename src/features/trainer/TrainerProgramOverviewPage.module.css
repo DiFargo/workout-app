@@ -1053,6 +1053,12 @@
 /* Approved action-first trainer appearance. Embedded admin and legacy views
    deliberately keep their existing presentation when this attribute is absent. */
 :global(html[data-trainer-appearance] body #root) .root {
+  --trainer-text: var(--trainer-theme-text, #19303e);
+  --trainer-muted: var(--trainer-theme-muted, #506b7b);
+  --trainer-border: var(--trainer-theme-border, rgba(38,66,81,.13));
+  --trainer-surface: var(--trainer-theme-surface, #fff);
+  --trainer-surface-soft: var(--trainer-theme-soft, #eaf0f3);
+  --trainer-accent: var(--trainer-theme-accent, #2b707d);
   color: var(--trainer-text, #1c1c1e);
   padding: 0 0 20px;
 }
@@ -1062,8 +1068,8 @@
   background: transparent;
 }
 :global(html[data-trainer-appearance] body #root) .root .templatePurpose {
-  margin-bottom: 18px;
-  padding: 15px 17px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
   border-color: var(--trainer-border, rgba(60,60,67,.12));
   border-radius: 18px;
   background: var(--trainer-surface, #fff);
@@ -1126,8 +1132,8 @@
   box-shadow: 0 0 0 1px var(--trainer-accent, #3c6faa);
 }
 :global(html[data-trainer-appearance] body #root) .root .cardSelect {
-  padding: 17px;
-  gap: 14px;
+  padding: 16px;
+  gap: 12px;
 }
 :global(html[data-trainer-appearance] body #root) .root .cardTitle {
   grid-template-columns: 38px minmax(0, 1fr);
@@ -1164,6 +1170,11 @@
   gap: 10px 20px;
   margin: 0;
   padding: 0;
+}
+:global(html[data-trainer-appearance] body #root) .root .cardTitle p {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.45;
 }
 :global(html[data-trainer-appearance] body #root) .root .cardStats span {
   display: inline-flex;
@@ -1208,9 +1219,16 @@
   background: var(--trainer-theme-action, var(--ownset-action-gradient));
 }
 :global(html[data-trainer-appearance] body #root) .root .selectedActions {
-  padding: 12px 17px 17px;
+  padding: 12px 16px 16px;
   border-color: var(--trainer-border, rgba(60,60,67,.12));
   background: var(--trainer-surface, #fff);
+}
+:global(html[data-trainer-appearance] body #root) .root .selectedActions button {
+  min-height: 44px;
+  padding: 10px 12px;
+  white-space: normal;
+  font-size: 13px;
+  line-height: 1.35;
 }
 :global(html[data-trainer-appearance] body #root) .root .selectedActions :is(.editAction,.copyAction) {
   color: var(--trainer-accent, #3c6faa);
@@ -1229,9 +1247,14 @@
   color: var(--trainer-text, #1c1c1e);
 }
 :global(html[data-trainer-appearance] body #root) .root .choiceSheet {
+  box-sizing: border-box;
   border-radius: 25px;
   background: var(--trainer-surface, #fff);
+  border-color: var(--trainer-border);
+  color: var(--trainer-text);
 }
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet h2 { color: var(--trainer-text); font-size: 23px; line-height: 1.25; }
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet :is(.choiceHint,.aiImportHint) { color: var(--trainer-muted); font-size: 14px; line-height: 1.5; }
 :global(html[data-trainer-appearance] body #root) .root .choiceSheet > header > button,
 :global(html[data-trainer-appearance] body #root) .root .choiceSheet > div:not(.aiImportActions) > button,
 :global(html[data-trainer-appearance] body #root) .root .aiImportFile,
@@ -1248,6 +1271,9 @@
   color: var(--trainer-muted, #636366);
   font-size: 13px;
 }
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet > div:not(.aiImportActions) > button { min-height: 76px; }
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet > div:not(.aiImportActions) > button strong { font-size: 15px; line-height: 1.35; }
+:global(html[data-trainer-appearance] body #root) .root .choiceSheet > div:not(.aiImportActions) > button small { font-size: 12px; line-height: 1.45; }
 :global(html[data-trainer-appearance] body #root) .root .aiImportText textarea {
   color: var(--trainer-text, #1c1c1e);
   background: var(--trainer-surface-soft, #efeff4);
@@ -1268,6 +1294,8 @@
 @media (max-width: 430px) {
   :global(html[data-trainer-appearance] body #root) .root .toolbar { grid-template-columns: minmax(0,1fr); }
   :global(html[data-trainer-appearance] body #root) .root .addButton { justify-self: stretch; }
+  :global(html[data-trainer-appearance] body #root) .root .overlay { padding: max(12px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px)); }
+  :global(html[data-trainer-appearance] body #root) .root .choiceSheet { max-height: calc(100dvh - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)); padding: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
   :global(html[data-trainer-appearance] body #root) .root .card { transition: none; }

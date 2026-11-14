@@ -1,11 +1,11 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root {
-  --familiar-nutrition-text: #1c1c1e;
-  --familiar-nutrition-muted: #636366;
-  --familiar-nutrition-surface: #fff;
-  --familiar-nutrition-canvas: #f2f2f7;
-  --familiar-nutrition-secondary: #efeff4;
-  --familiar-nutrition-line: rgba(60, 60, 67, .12);
-  --familiar-nutrition-accent: #3f73b8;
+  --familiar-nutrition-text: var(--trainer-theme-text, #1c1c1e);
+  --familiar-nutrition-muted: var(--trainer-theme-muted, #636366);
+  --familiar-nutrition-surface: var(--trainer-theme-surface, #fff);
+  --familiar-nutrition-canvas: var(--trainer-theme-page, #f2f2f7);
+  --familiar-nutrition-secondary: var(--trainer-theme-soft, #efeff4);
+  --familiar-nutrition-line: var(--trainer-theme-border, rgba(60, 60, 67, .12));
+  --familiar-nutrition-accent: var(--trainer-theme-accent, #3f73b8);
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
@@ -27,7 +27,7 @@
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .empty h3 { margin: 0 !important; font-size: 18px !important; line-height: 1.35 !important; font-weight: 600 !important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .empty p { margin: 0 !important; max-width: 64ch; color: var(--familiar-nutrition-muted) !important; font-size: 14px !important; line-height: 1.55 !important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .empty small { color: var(--familiar-nutrition-muted) !important; font-size: 12px !important; line-height: 1.5 !important; }
-:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .diaryButton.diaryButton { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 7px; min-height: 44px !important; width: auto !important; margin: 3px 0 0 !important; padding: 10px 15px !important; border: 0 !important; border-radius: 12px !important; background: var(--ownset-action-gradient) !important; color: var(--familiar-nutrition-surface) !important; font: inherit !important; font-size: 14px !important; font-weight: 500 !important; box-shadow: none !important; cursor: pointer; }
+:global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .diaryButton.diaryButton { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 7px; min-height: 44px !important; width: auto !important; margin: 3px 0 0 !important; padding: 10px 15px !important; border: 0 !important; border-radius: 12px !important; background: var(--ownset-action-gradient) !important; color: var(--trainer-on-action,#fff) !important; font: inherit !important; font-size: 14px !important; font-weight: 500 !important; box-shadow: none !important; cursor: pointer; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .filledDiaryAction { display: flex; justify-content: flex-end; min-width: 0; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .metrics.metrics { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; width: 100% !important; min-width: 0; gap: 0 !important; padding: 16px 0 !important; border: 1px solid var(--familiar-nutrition-line) !important; border-radius: 17px !important; background: var(--familiar-nutrition-surface) !important; }
 :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .metrics.metrics article { display: flex !important; flex-direction: column !important; gap: 5px !important; min-width: 0; min-height: 0 !important; padding: 0 14px !important; border: 0 !important; border-right: 1px solid var(--familiar-nutrition-line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; order: initial !important; }
@@ -74,3 +74,4 @@
 @media (max-width: 360px) {
   :global(html[data-trainer-variant="v2"] body #root .trainerNextRoot) .root.root.root .customPeriod.customPeriod { grid-template-columns: minmax(0, 1fr) !important; }
 }
+:global(html[data-trainer-appearance] body #root .trainerNextRoot) .root.root.root .empty strong { color: var(--trainer-theme-text,#1c1c1e) !important; }

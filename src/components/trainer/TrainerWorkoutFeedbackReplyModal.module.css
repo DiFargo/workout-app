@@ -17,8 +17,8 @@
   overflow: hidden;
   border: 1px solid #e3e5ec;
   border-radius: 16px;
-  background: #fff;
-  color: #1d1f29;
+  background: var(--trainer-theme-surface, #fff);
+  color: var(--trainer-theme-text, #1d1f29);
   box-shadow: 0 28px 80px rgba(21, 24, 39, .25);
 }
 
@@ -38,7 +38,7 @@
 .header p { display: grid; gap: 2px; margin: 8px 0 0; }
 .header p strong { font-size: 12px; }
 .header p small { color: #777b89; font-size: 10px; }
-.header > button { width: 44px; min-width: 44px; height: 44px; display: grid; place-items: center; flex: 0 0 auto; padding: 0; border: 1px solid #e3e5ec; border-radius: 12px; background: #fff; color: #747886; cursor: pointer; }
+.header > button { width: 44px; min-width: 44px; height: 44px; display: grid; place-items: center; flex: 0 0 auto; padding: 0; border: 1px solid #e3e5ec; border-radius: 12px; background: var(--trainer-theme-surface, #fff); color: #747886; cursor: pointer; }
 
 .scrollContent {
   min-height: 0;
@@ -50,13 +50,13 @@
 
 .sourceCard { margin: 0 18px 14px; padding: 12px 14px; border: 1px solid var(--trainer-v2-line, #ded8f8); border-left: 3px solid var(--trainer-v2-accent, #806bb6); border-radius: 10px; background: #f7f6f8; }
 .sourceCard > span { color: var(--trainer-v2-surface, #6a42e9); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
-.sourceCard blockquote { margin: 8px 0 5px; color: #30323c; font-size: 12px; line-height: 1.5; white-space: pre-wrap; }
+.sourceCard blockquote { margin: 8px 0 5px; color: var(--trainer-theme-text, #30323c); font-size: 12px; line-height: 1.5; white-space: pre-wrap; }
 .sourceCard small { color: #777b89; font-size: 9px; }
 
 .history { margin: 0 18px 14px; }
 .history h3 { margin: 0 0 7px; font-size: 10px; }
 .history > div { display: grid; gap: 7px; }
-.history article { padding: 9px 11px; border: 1px solid #e7e8ee; border-radius: 9px; background: #fafbfc; }
+.history article { padding: 9px 11px; border: 1px solid var(--trainer-theme-border, #e7e8ee); border-radius: 9px; background: var(--trainer-theme-soft, #fafbfc); }
 .history p { margin: 0 0 4px; font-size: 11px; line-height: 1.45; white-space: pre-wrap; }
 .history small { color: #858996; font-size: 8px; }
 
@@ -64,7 +64,7 @@
 
 .replyField { display: grid; gap: 7px; margin: 0 18px; }
 .replyField > span { font-size: 11px; font-weight: 800; }
-.replyField textarea { width: 100%; min-height: 118px; resize: vertical; padding: 12px; border: 1px solid #dfe1e8; border-radius: 10px; outline: 0; background: #fff; color: #22242d; font-size: 12px; line-height: 1.5; -webkit-text-fill-color: #22242d; }
+.replyField textarea { width: 100%; min-height: 118px; resize: vertical; padding: 12px; border: 1px solid var(--trainer-theme-border, #dfe1e8); border-radius: 10px; outline: 0; background: var(--trainer-theme-surface, #fff); color: var(--trainer-theme-text, #22242d); font-size: 12px; line-height: 1.5; -webkit-text-fill-color: var(--trainer-theme-text, #22242d); }
 .replyField textarea:focus { border-color: var(--trainer-v2-accent, #7853ed); box-shadow: 0 0 0 3px rgb(var(--trainer-v2-shadow-rgb, 104 64 237) / .1); }
 .replyField > small { color: #9295a1; font-size: 8px; text-align: right; }
 
@@ -80,11 +80,11 @@
 .status.sending svg,
 .status.resolving svg { animation: spin .8s linear infinite; }
 
-.adjustButton { width: calc(100% - 36px); min-height: 39px; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 18px 0; border: 1px solid var(--trainer-v2-accent, #c8bbf7); border-radius: 9px; background: #ffffff; color: var(--trainer-v2-accent, #806bb6); font-size: 10px; font-weight: 750; cursor: pointer; }
+.adjustButton { width: calc(100% - 36px); min-height: 39px; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 18px 0; border: 1px solid var(--trainer-v2-accent, #c8bbf7); border-radius: 9px; background: var(--trainer-theme-surface, #ffffff); color: var(--trainer-v2-accent, #806bb6); font-size: 10px; font-weight: 750; cursor: pointer; }
 
-.footer { flex: 0 0 auto; display: flex; justify-content: flex-end; gap: 9px; padding: 14px 18px max(18px, env(safe-area-inset-bottom)); border-top: 1px solid var(--trainer-v2-line, #efebf3); background: #ffffff; }
-.footer button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 16px; border: 1px solid #e0e2e9; border-radius: 9px; background: #fff; color: #333640; font-size: 11px; font-weight: 750; cursor: pointer; }
-.footer .markProcessedButton { border-color: var(--trainer-v2-line, #cfc4f8); background: #f7f6f8; color: var(--trainer-v2-accent, #806bb6); }
+.footer { flex: 0 0 auto; display: flex; justify-content: flex-end; gap: 9px; padding: 14px 18px max(18px, env(safe-area-inset-bottom)); border-top: 1px solid var(--trainer-v2-line, #efebf3); background: var(--trainer-theme-surface, #ffffff); }
+.footer button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 16px; border: 1px solid var(--trainer-theme-border, #e0e2e9); border-radius: 9px; background: var(--trainer-theme-surface, #fff); color: var(--trainer-theme-text, #333640); font-size: 11px; font-weight: 750; cursor: pointer; }
+.footer .markProcessedButton { border-color: var(--trainer-v2-line, #cfc4f8); background: var(--trainer-theme-soft, #f7f6f8); color: var(--trainer-v2-accent, #806bb6); }
 .footer .markProcessedButton:disabled { opacity: .58; cursor: wait; }
 .footer .sendButton { min-width: 126px; border-color: var(--trainer-v2-accent, #6031eb); background: linear-gradient(135deg, var(--trainer-v2-surface, #7042f4), var(--trainer-v2-surface, #5424df)); color: #fff; }
 .footer .sendButton:disabled { border-color: #d7d8df; background: #e6e7eb; color: #9a9ca5; cursor: not-allowed; box-shadow: none; }
@@ -95,31 +95,31 @@
 @media (max-width: 560px) {
   .backdrop { padding: 12px; }
   .modal { max-height: calc(100dvh - 24px); border-radius: 18px; }
-  .footer { background: #fff; }
+  .footer { background: var(--trainer-theme-surface, #fff); }
   .footer button { flex: 1; }
   .footer .markProcessedButton { flex-basis: 100%; order: -1; }
 }
 
 
-:global(html[data-trainer-variant="v2"] body) .modal.modal {width:min(640px,100%)!important;max-height:calc(100dvh - 24px)!important;border-radius:22px!important;background:#f5f7f8!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;}
-:global(html[data-trainer-variant="v2"] body) .modal.modal .header {padding:18px 20px!important;background:#f5f7f8!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal {width:min(640px,100%)!important;max-height:calc(100dvh - 24px)!important;border-radius:22px!important;background:var(--trainer-theme-page, #f5f7f8)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .header {padding:18px 20px!important;background:var(--trainer-theme-page, #f5f7f8)!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .header h2 {font-size:22px!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .header span,
-:global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard > span {color:#617078!important;font-size:12px!important;font-weight:600!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard > span {color:var(--trainer-theme-muted, #617078)!important;font-size:12px!important;font-weight:600!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .header p strong {font-size:15px!important;}
-:global(html[data-trainer-variant="v2"] body) .modal.modal .header p small {font-size:12px!important;color:#617078!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .header p small {font-size:12px!important;color:var(--trainer-theme-muted, #617078)!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .scrollContent {padding:4px 0 16px!important;}
-:global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard {background:white!important;border:0!important;border-radius:12px!important;padding:14px!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard {background:var(--trainer-theme-surface, white)!important;border:0!important;border-radius:12px!important;padding:14px!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .sourceCard blockquote {font-size:15px!important;margin:6px 0 0!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .replyField > span {font-size:14px!important;font-weight:600!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal textarea {font-size:16px!important;line-height:1.5!important;min-height:140px!important;border:1px solid #d1d1d6!important;border-radius:12px!important;padding:12px!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal textarea:focus {outline:2px solid #396ba6!important;outline-offset:2px!important;box-shadow:none!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .deliveryHint,
-:global(html[data-trainer-variant="v2"] body) .modal.modal .replyField small {font-size:12px!important;color:#617078!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .replyField small {font-size:12px!important;color:var(--trainer-theme-muted, #617078)!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .footer {padding:12px 18px!important;gap:8px!important;flex-wrap:wrap!important;}
 :global(html[data-trainer-variant="v2"] body) .modal.modal .footer button,
 :global(html[data-trainer-variant="v2"] body) .modal.modal .adjustButton {min-height:44px!important;font-size:14px!important;padding:10px 12px!important;box-shadow:none!important;border-radius:10px!important;}
-:global(html[data-trainer-variant="v2"] body) .modal.modal .sendButton {background:var(--ownset-action-gradient)!important;color:white!important;}
-:global(html[data-trainer-variant="v2"] body) .modal.modal .sendButton:disabled {background:#e5e5ea!important;color:#617078!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sendButton {background:var(--ownset-action-gradient)!important;color:var(--trainer-on-action,#fff)!important;}
+:global(html[data-trainer-variant="v2"] body) .modal.modal .sendButton:disabled {background:var(--trainer-theme-soft,#e5e5ea)!important;color:var(--trainer-theme-muted, #617078)!important;opacity:.6;}
 @media(max-width:600px){:global(html[data-trainer-variant="v2"] body) .modal.modal .footer button {flex:1 1 auto!important;} :global(html[data-trainer-variant="v2"] body) .modal.modal .footer .sendButton {width:100%!important;}}
 

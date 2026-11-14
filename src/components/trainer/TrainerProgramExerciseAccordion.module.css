@@ -192,3 +192,34 @@
   color: #fff;
   background: var(--ownset-action-gradient);
 }
+
+/* Card, set rows and action sheet stay on the same palette as the editor. */
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme] [data-trainer-template-editor="true"]) :is(.card, .sheet) {
+  --exercise-card-canvas: var(--trainer-theme-page);
+  --exercise-card-surface: var(--trainer-theme-surface);
+  --exercise-card-secondary: var(--trainer-theme-soft);
+  --exercise-card-line: var(--trainer-theme-border);
+  --exercise-card-text: var(--trainer-theme-text);
+  --exercise-card-muted: var(--trainer-theme-muted);
+  --exercise-card-accent: var(--trainer-theme-accent);
+  --exercise-card-soft: var(--trainer-theme-soft);
+  --exercise-card-danger: var(--trainer-danger);
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme] [data-trainer-template-editor="true"]) .sheet.sheet > footer > button {
+  color: var(--trainer-on-action);
+  background: var(--trainer-theme-action);
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme] [data-trainer-template-editor="true"]) .card .actions {
+  gap: 4px 16px;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme] [data-trainer-template-editor="true"]) .card.card .fields :is(input, button) {
+  min-height: 44px;
+}
+
+:global(html:root[data-trainer-appearance] body #root [data-trainer-theme] [data-trainer-template-editor="true"]) .card :is(input, textarea)::placeholder {
+  color: var(--exercise-card-muted);
+  opacity: 1;
+}

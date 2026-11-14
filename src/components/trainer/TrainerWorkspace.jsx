@@ -5737,6 +5737,11 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
     onOpenClient?.(client);
   }
   const summaries = clientSummaries;
+  const filterCounts = useMemo(() => Object.fromEntries(
+    ["all", "attention", "noProgram", "inactive", "archive", "test"].map((id) => [
+      id, buildTrainerClientListItems(clients, clientSummaries, { search, filter: id }).length
+    ])
+  ), [clients, clientSummaries, search]);
   const filters = [
     ["all", "Все"],
     ["attention", "Внимание"],
@@ -5756,7 +5761,7 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
       </header>
       <div className="trainerNextClientsStandalone">
         <div className="trainerNextClientSearchRow">
-          <label className="trainerNextSearch open"><Search size={18} aria-hidden="true" /><input type="search" aria-label="Поиск клиента" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Имя или email клиента" /></label>
+          <label className="trainerNextSearch open"><Search size={18} aria-hidden="true" /><input type="search" aria-label="Поиск клиента" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Имя или email клиента" />{search ? <button type="button" aria-label="Очистить поиск клиентов" onClick={(event) => { event.currentTarget.parentElement.querySelector("input")?.focus(); setSearch(""); }}><X size={17} aria-hidden="true" /></button> : null}</label>
           <button className="trainerNextClientSearchAdd" type="button" onClick={onCreateClient} aria-label="Добавить клиента">
             <Plus size={18} />
             <span>Добавить</span>
@@ -5769,9 +5774,12 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
               key={id}
               className={`${filter === id ? "active" : ""}${index > 1 ? " trainerClientSecondaryFilter" : ""}`}
               aria-pressed={filter === id}
+              aria-label={label}
+              aria-description={`${filterCounts[id]} клиентов`}
               onClick={() => setFilter(id)}
             >
               {label}
+              <span className={primaryScreensStyles.count} aria-hidden="true">{filterCounts[id]}</span>
             </button>
           ))}
           <details className="trainerClientFilterDisclosure" onKeyDown={(event) => {
@@ -5782,7 +5790,7 @@ function TrainerClientsPage({ clients, clientSummaries, onOpenClient, onCreateCl
               {filters.slice(2).map(([id, label]) => <button key={id} type="button" aria-pressed={filter === id} className={filter === id ? "active" : ""} onClick={(event) => {
                 setFilter(id);
                 event.currentTarget.closest("details").open = false;
-              }}>{label}</button>)}
+              }}>{label}<span className={primaryScreensStyles.count} aria-hidden="true">{filterCounts[id]}</span></button>)}
             </div>
           </details>
         </div>
@@ -6991,7 +6999,7 @@ function TrainerWorkoutEditor({
           <div className="trainerNextPanelTitle">
             <div><h2>{libraryShowDeleted ? "Удалённые упражнения" : "Мои упражнения"} {libraryView.complete || library.length ? <span className={primaryScreensStyles.count}>{library.length}</span> : null}</h2><p>Видео и техника — здесь. Вес и подходы — в программе.</p></div>
             <div className="trainerNextLibraryActions">
-              <label className="trainerNextSearch open"><Search size={17} aria-hidden="true" /><input type="search" aria-label="Поиск упражнений" value={librarySearch} onChange={(event) => setLibrarySearch(event.target.value)} placeholder="Название упражнения" /></label>
+              <label className="trainerNextSearch open"><Search size={17} aria-hidden="true" /><input type="search" aria-label="Поиск упражнений" value={librarySearch} onChange={(event) => setLibrarySearch(event.target.value)} placeholder="Название упражнения" />{librarySearch ? <button type="button" aria-label="Очистить поиск упражнений" onClick={(event) => { event.currentTarget.parentElement.querySelector("input")?.focus(); setLibrarySearch(""); }}><X size={17} aria-hidden="true" /></button> : null}</label>
               <button
                 className="trainerNextLibraryAdd"
                 type="button"
@@ -7343,13 +7351,8 @@ function TrainerCabinetPage({
           </section>
           <p className={primaryScreensStyles.cabinetHint}>«Без сигналов» — у клиента нет выявленных предупреждений по доступным данным.</p>
 
-          <h2 className={primaryScreensStyles.sectionTitle}>Рабочие настройки</h2>
+          <h2 className={primaryScreensStyles.sectionTitle}>Рабочие инструменты</h2>
           <section className="trainerCabinetWorkspaceLinks" aria-label="Рабочие разделы кабинета">
-            {showAppearance ? <button type="button" onClick={() => setOpenSheet("appearance")}>
-              <span className="trainerCabinetWorkspaceIcon"><Palette size={19} aria-hidden="true" /></span>
-              <div className="trainerCabinetWorkspaceCopy"><strong>Оформление</strong><small>{appearance === "dark" ? "Тёмная тема" : "Светлая тема"}</small></div>
-              <ChevronRight size={18} aria-hidden="true" />
-            </button> : null}
             <button type="button" onClick={() => onNavigate?.("library")}>
               <span className="trainerCabinetWorkspaceIcon"><Dumbbell size={19} /></span>
               <div className="trainerCabinetWorkspaceCopy"><strong>Библиотека упражнений</strong><small>Карточки, видео и техника выполнения</small></div>
@@ -7360,6 +7363,14 @@ function TrainerCabinetPage({
               <div className="trainerCabinetWorkspaceCopy"><strong>Аналитика</strong><small>Сводка по активности и рискам клиентов</small></div>
               <ChevronRight size={18} />
             </button>
+          </section>
+          <h2 className={primaryScreensStyles.sectionTitle}>Настройки аккаунта</h2>
+          <section className="trainerCabinetWorkspaceLinks" aria-label="Настройки аккаунта">
+            {showAppearance ? <button type="button" onClick={() => setOpenSheet("appearance")}>
+              <span className="trainerCabinetWorkspaceIcon"><Palette size={19} aria-hidden="true" /></span>
+              <div className="trainerCabinetWorkspaceCopy"><strong>Оформление</strong><small>{appearance === "dark" ? "Тёмная тема" : "Светлая тема"}</small></div>
+              <ChevronRight size={18} aria-hidden="true" />
+            </button> : null}
             <button type="button" onClick={() => setOpenSheet("notifications")}>
               <span className="trainerCabinetWorkspaceIcon"><Bell size={19} /></span>
               <div className="trainerCabinetWorkspaceCopy"><strong>Уведомления</strong><small>События и настройки напоминаний</small></div>

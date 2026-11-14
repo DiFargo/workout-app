@@ -1032,7 +1032,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--trainer-theme-surface, #ffffff);
   box-shadow: 0 2px 5px rgb(var(--trainer-v2-shadow-rgb, 40 38 46) / 0.18);
   content: "";
   transition: transform 160ms ease;

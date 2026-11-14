@@ -1,4 +1,4 @@
-.root.root{--access-text:#1c1c1e;--access-muted:#636366;--access-card:#fff;--access-secondary:#efeff4;--access-line:rgba(60,60,67,.12);--access-accent:#3c6faa;--access-success:#237a42;min-width:0;color:var(--access-text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif}
+.root.root{--access-text:var(--trainer-theme-text,#1c1c1e);--access-muted:var(--trainer-theme-muted,#636366);--access-card:var(--trainer-theme-surface,#fff);--access-secondary:var(--trainer-theme-soft,#efeff4);--access-line:var(--trainer-theme-border,rgba(60,60,67,.12));--access-accent:var(--trainer-theme-accent,#3c6faa);--access-success:var(--trainer-success,#237a42);min-width:0;color:var(--access-text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif}
 .root *{box-sizing:border-box}
 .root .intro{margin:0 0 16px;font-size:14px;line-height:1.5;color:var(--access-muted)}
 .root .card{margin:0;background:var(--access-card);border:1px solid var(--access-line);border-radius:18px;overflow:hidden}

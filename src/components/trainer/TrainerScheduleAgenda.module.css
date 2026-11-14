@@ -1,15 +1,15 @@
 .root {
-  --agenda-canvas: #f2f2f7;
-  --agenda-card: #fff;
-  --agenda-secondary: #efeff4;
-  --agenda-border: rgba(60, 60, 67, .12);
-  --agenda-text: #1c1c1e;
-  --agenda-muted: #636366;
-  --agenda-primary: #3f73b8;
-  --agenda-accent: #3c6faa;
-  --agenda-selected: #edf3fb;
-  --agenda-success: #237a42;
-  --agenda-danger: #b3261e;
+  --agenda-canvas: var(--trainer-theme-page, #f2f2f7);
+  --agenda-card: var(--trainer-theme-surface, #fff);
+  --agenda-secondary: var(--trainer-theme-soft, #efeff4);
+  --agenda-border: var(--trainer-theme-border, rgba(60, 60, 67, .12));
+  --agenda-text: var(--trainer-theme-text, #1c1c1e);
+  --agenda-muted: var(--trainer-theme-muted, #636366);
+  --agenda-primary: var(--trainer-theme-accent, #3f73b8);
+  --agenda-accent: var(--trainer-theme-accent, #3c6faa);
+  --agenda-selected: var(--trainer-theme-soft, #edf3fb);
+  --agenda-success: var(--trainer-success, #237a42);
+  --agenda-danger: var(--trainer-danger, #b3261e);
   display: grid;
   gap: 16px;
   min-width: 0;
@@ -230,7 +230,7 @@
 .primaryButton {
   border-color: var(--agenda-primary);
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--trainer-on-action, #fff);
 }
 
 .secondaryButton,
@@ -365,7 +365,7 @@
 .status[data-status='pastCompleted'],
 .status[data-tone='positive'],
 .status[data-tone='success'] {
-  background: #edf6ef;
+  background: var(--trainer-success-soft, #edf6ef);
   color: var(--agenda-success);
 }
 
@@ -377,8 +377,8 @@
 
 .status[data-status='rescheduled'],
 .status[data-tone='warning'] {
-  background: #fff5e6;
-  color: #8c560c;
+  background: var(--trainer-warning-soft, #fff5e6);
+  color: var(--trainer-warning, #8c560c);
 }
 
 .details,
@@ -620,7 +620,7 @@
 .pinnedActions > .primaryButton {
   border-color: var(--agenda-primary);
   background: var(--ownset-action-gradient);
-  color: #fff;
+  color: var(--trainer-on-action, #fff);
 }
 
 .fieldGrid {
@@ -689,18 +689,18 @@
 }
 
 .error {
-  background: #fcefee;
+  background: var(--trainer-danger-soft, #fcefee);
   color: var(--agenda-danger);
 }
 
 .success {
-  background: #edf6ef;
+  background: var(--trainer-success-soft, #edf6ef);
   color: var(--agenda-success);
 }
 
 .warning {
-  background: #fff5e6;
-  color: #8c560c;
+  background: var(--trainer-warning-soft, #fff5e6);
+  color: var(--trainer-warning, #8c560c);
 }
 
 .empty,

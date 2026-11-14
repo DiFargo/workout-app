@@ -5,7 +5,7 @@
   padding: 0;
   border: 1px solid var(--trainer-v2-line, #efebf3);
   border-radius: 24px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
   box-shadow: 0 8px 22px rgb(var(--trainer-v2-shadow-rgb, 50 40 70) / 0.04);
 }
 
@@ -34,14 +34,14 @@
 
 .programHeader h2 {
   margin: 0;
-  color: #181b24;
+  color: var(--trainer-theme-text, #181b24);
   font-size: 20px;
   line-height: 1.25;
 }
 
 .programHeader p {
   margin: 3px 0 0;
-  color: #7d818d;
+  color: var(--trainer-theme-muted, #7d818d);
   font-size: 12px;
 }
 
@@ -108,7 +108,7 @@
   display: grid;
   align-content: center;
   gap: 8px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
 }
 
 .currentMain {
@@ -241,7 +241,7 @@
 .assignment > span {
   display: block;
   margin-bottom: 4px;
-  color: #8b8374;
+  color: var(--trainer-theme-muted, #8b8374);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .035em;
@@ -250,7 +250,7 @@
 
 .currentInfo h3 {
   margin: 0;
-  color: #181b24;
+  color: var(--trainer-theme-text, #181b24);
   font-size: 18px;
   line-height: 1.25;
   overflow-wrap: anywhere;
@@ -258,7 +258,7 @@
 
 .currentInfo p {
   margin: 4px 0 0;
-  color: #777b87;
+  color: var(--trainer-theme-muted, #777b87);
   font-size: 12px;
 }
 
@@ -279,19 +279,19 @@
   padding: 7px 9px;
   border: 1px solid var(--trainer-v2-line, #e8e8f0);
   border-radius: 9px;
-  background: #fff;
+  background: var(--trainer-theme-soft, #fff);
 }
 
 .stats b {
   overflow: hidden;
-  color: #252936;
+  color: var(--trainer-theme-text, #252936);
   font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .stats small {
-  color: #858995;
+  color: var(--trainer-theme-muted, #858995);
   font-size: 9px;
   line-height: 1.2;
   text-align: right;
@@ -314,11 +314,11 @@
   height: 38px;
   appearance: none;
   padding: 0 38px 0 12px;
-  border: 1px solid #dedfe7;
+  border: 1px solid var(--trainer-theme-border, #dedfe7);
   border-radius: 10px;
   outline: none;
-  background: #fffdf7;
-  color: #20232d;
+  background: var(--trainer-theme-soft, #fffdf7);
+  color: var(--trainer-theme-text, #20232d);
   font: inherit;
   font-size: 13px;
   font-weight: 650;
@@ -350,14 +350,14 @@
 
 .assignButton {
   border: 1px solid var(--trainer-v2-accent, #806bb6);
-  background: var(--ownset-action-gradient);
-  color: #fff;
+  background: var(--trainer-theme-action, var(--ownset-action-gradient));
+  color: var(--trainer-on-action, #fff);
 }
 
 .editButton {
   border: 1px solid var(--trainer-v2-accent, #806bb6);
-  background: var(--ownset-action-gradient);
-  color: #fff;
+  background: var(--trainer-theme-action, var(--ownset-action-gradient));
+  color: var(--trainer-on-action, #fff);
 }
 
 /* The assigned-program action is secondary to scheduling a new program. */
@@ -392,7 +392,7 @@
 .hint,
 .status {
   margin: -3px 2px 0;
-  color: #747986;
+  color: var(--trainer-theme-muted, #747986);
   font-size: 11px;
 }
 

@@ -1276,3 +1276,93 @@
 :global(html[data-trainer-variant="v2"] body) .sheet.sheet.agenda {
   width: min(1040px, 100%) !important;
 }
+
+/* Portalled trainer sheets inherit the same theme as their originating screen.
+   The explicit appearance scope leaves the embedded administrator UI unchanged. */
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet {
+  --trainer-v2-ink: var(--trainer-theme-text);
+  --trainer-v2-muted: var(--trainer-theme-muted);
+  --trainer-v2-accent: var(--trainer-theme-accent);
+  --trainer-v2-line: var(--trainer-theme-border);
+  --trainer-v2-surface: var(--trainer-theme-soft);
+  color: var(--trainer-theme-text);
+  border-color: var(--trainer-theme-border) !important;
+  background: var(--trainer-theme-page) !important;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content {
+  --tn-text: var(--trainer-theme-text);
+  --tn-muted: var(--trainer-theme-muted);
+  --tn-line: var(--trainer-theme-border);
+  --tn-surface: var(--trainer-theme-surface);
+  --tn-surface-soft: var(--trainer-theme-soft);
+  --tn-purple: var(--trainer-theme-accent);
+  --tn-purple-soft: var(--trainer-theme-soft);
+  --tn-green: var(--trainer-success);
+  --tn-green-soft: var(--trainer-success-soft);
+  --tn-red: var(--trainer-danger);
+  color: var(--trainer-theme-text);
+  background: var(--trainer-theme-page) !important;
+  scrollbar-color: var(--trainer-theme-muted) transparent;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet :is(.header,.footer) {
+  background: var(--trainer-theme-surface) !important;
+  border-color: var(--trainer-theme-border);
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .title { color: var(--trainer-theme-text) !important; }
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(h2,h3,h4)) { color: var(--trainer-theme-text) !important; }
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .eyebrow { color: var(--trainer-theme-muted) !important; }
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet :is(.close,.defaultClose) {
+  color: var(--trainer-theme-accent);
+  background: var(--trainer-theme-soft) !important;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(.trainerNotificationCalendarUnified,.trainerNotificationOffsets label,.trainerReminderPeriod button,.trainerNotificationCalendar > header button,.trainerNotificationSchedule > span,.trainerNotificationActions button,.trainerWorkoutScheduleMonth,.trainerNotificationCalendarGrid button,.trainerCalendarSubscriptionFields)) {
+  color: var(--trainer-theme-text);
+  background: var(--trainer-theme-surface);
+  border-color: var(--trainer-theme-border);
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(.trainerNotificationOffsets label.active,.trainerReminderPeriod button.active,.trainerNotificationCalendarGrid button.subscriptionRange,.trainerNotificationCalendarGrid button.subscriptionBoundary)) {
+  color: var(--trainer-theme-accent) !important;
+  background: var(--trainer-theme-soft) !important;
+  border-color: var(--trainer-theme-accent);
+  box-shadow: inset 0 -2px 0 var(--trainer-theme-accent) !important;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(.trainerNotificationIcon.connected,.trainerNotificationStatusCard > i.connected,.trainerNotificationCalendarUnified > header > strong.ready,.trainerNotificationCalendarUnified > header > strong.positive)) {
+  color: var(--trainer-success);
+  background: var(--trainer-success-soft);
+  border-color: var(--trainer-theme-border);
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(input:not([type="checkbox"]),select,textarea)) {
+  color: var(--trainer-theme-text);
+  background: var(--trainer-theme-surface);
+  border-color: var(--trainer-theme-border);
+  font-size: 16px;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(input,textarea)::placeholder) { color: var(--trainer-theme-muted); opacity: 1; }
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet :global(.trainerNextPrimary),
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet.messages .headerAction > button {
+  color: var(--trainer-on-action) !important;
+  background: var(--trainer-theme-action) !important;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet :is(button,input,select,textarea,summary):focus-visible { outline: 2px solid var(--trainer-theme-accent); outline-offset: 2px; }
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(.trainerNotificationActions button,.trainerReminderPeriod button,.trainerNotificationOffsets label)) { min-height: 44px; }
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(.trainerNotificationCalendarGrid button.completed) {
+  color: var(--trainer-success);
+  background: var(--trainer-success-soft);
+  border-color: currentColor;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(.trainerNotificationCalendarGrid button.completedOffDate,.trainerNotificationCalendarGrid button.plannedWorkout)) {
+  color: var(--trainer-theme-accent);
+  background: var(--trainer-theme-soft);
+  border-color: currentColor;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(:is(.trainerNotificationCalendarGrid button.missed,.trainerNotificationCalendarUnified > header > strong.negative)) {
+  color: var(--trainer-danger);
+  background: var(--trainer-danger-soft);
+  border-color: currentColor;
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance] body) .sheet.sheet .content :global(.trainerNotificationCalendarGrid button.pastWorkout) {
+  color: var(--trainer-theme-muted);
+  background: var(--trainer-theme-soft);
+  border-color: var(--trainer-theme-border);
+}
+:global(html[data-trainer-variant="v2"][data-trainer-appearance="dark"] body) .sheet.sheet .content :global(:is(.trainerNotificationCalendarGrid button.shifted,.trainerNotificationCalendarUnified > header > strong.warning)) { color: #e5bd7a; background: #392e19; border-color: #e5bd7a; }

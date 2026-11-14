@@ -44,7 +44,7 @@
   border: 1px solid var(--trainer-v2-line, #d7c6f1);
   border-radius: 10px;
   color: var(--trainer-v2-accent, #6548ab);
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
   font: inherit;
   font-size: 12px;
   font-weight: 750;
@@ -211,7 +211,7 @@
   border: 1px solid var(--trainer-v2-line, #ded3ed);
   border-radius: 16px;
   color: var(--trainer-v2-ink, #28262e);
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
   box-shadow: 0 6px 18px rgb(var(--trainer-v2-shadow-rgb, 56 39 82) / 0.04);
   font: inherit;
   text-align: left;

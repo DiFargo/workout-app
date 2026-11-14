@@ -1,9 +1,9 @@
 .panel {
   --message-text: var(--tn-text, #1c1c1e);
-  --message-muted: var(--apple-muted, #636366);
+  --message-muted: var(--trainer-theme-muted, #636366);
   --message-border: var(--apple-separator, rgba(60, 60, 67, .12));
-  --message-canvas: var(--apple-canvas, #f2f2f7);
-  --message-action: var(--ownset-action-gradient, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%));
+  --message-canvas: var(--trainer-theme-page, var(--apple-canvas, #f2f2f7));
+  --message-action: var(--trainer-theme-action, linear-gradient(115deg, #467b72 0%, #3e748b 54%, #3565a3 100%));
   min-width: 0;
   display: grid;
   gap: 16px;
@@ -49,7 +49,7 @@
 }
 .filters button > svg { display: none; }
 .filters button span { min-width: 20px; padding: 2px 5px; border-radius: 8px; color: inherit; background: rgba(60, 60, 67, .06); font-size: 11px; line-height: 1.35; font-variant-numeric: tabular-nums; }
-.filters button.active, .filters button[aria-pressed="true"] { background: var(--message-action); color: #fff; }
+.filters button.active, .filters button[aria-pressed="true"] { background: var(--message-action); color: var(--trainer-on-action, #fff); }
 .filters button[aria-pressed="true"] span { background: rgba(255, 255, 255, .16); }
 .resolveAllButton, .reply, .markProcessed, .moreButton {
   min-width: 44px;
@@ -62,7 +62,7 @@
   padding: 10px 12px;
   border: 1px solid var(--message-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--trainer-theme-surface, #fff);
   color: var(--message-text);
   font: inherit;
   font-size: 13px;
@@ -73,16 +73,16 @@
   cursor: pointer;
 }
 .resolveAllButton { justify-self: end; border: 0; background: transparent; color: var(--message-muted); }
-.resolutionStatus, .bulkConfirm { margin: 0; padding: 12px 14px; border: 1px solid var(--message-border); border-radius: 14px; background: #fff; color: var(--message-muted); font-size: 13px; line-height: 1.5; }
+.resolutionStatus, .bulkConfirm { margin: 0; padding: 12px 14px; border: 1px solid var(--message-border); border-radius: 14px; background: var(--trainer-theme-surface, #fff); color: var(--message-muted); font-size: 13px; line-height: 1.5; }
 .resolutionStatus p { margin: 0 0 8px; }
 .resolutionStatus[role="alert"] { color: var(--apple-danger, #b3261e); }
-.resolutionStatus button { min-height: 44px; border: 1px solid var(--message-border); border-radius: 10px; padding: 8px 12px; color: var(--apple-blue, #3c6faa); background: #fff; cursor: pointer; }
+.resolutionStatus button { min-height: 44px; border: 1px solid var(--message-border); border-radius: 10px; padding: 8px 12px; color: var(--apple-blue, #3c6faa); background: var(--trainer-theme-surface, #fff); cursor: pointer; }
 .bulkConfirm { display: grid; gap: 10px; }
 .bulkConfirm strong { color: var(--message-text); font-size: 14px; }
 .bulkConfirm p { margin: 0; }
 .bulkConfirm .actions { flex-wrap: wrap; justify-content: flex-end; }
 .feed { min-width: 0; display: grid; gap: 12px; }
-.card { min-width: 0; padding: 16px; border: 1px solid var(--message-border); border-radius: 18px; background: #fff; }
+.card { min-width: 0; padding: 16px; border: 1px solid var(--message-border); border-radius: 18px; background: var(--trainer-theme-surface, #fff); }
 .cardPending { border-color: var(--tn-line, var(--message-border)); }
 .cardProcessed { background: var(--tn-surface, #fff); }
 .cardBody { min-width: 0; display: grid; gap: 14px; }
@@ -103,14 +103,14 @@
 .messageDetails[open] .collapseLabel { display: block; padding: 0 0 10px; }
 .messageFooter { min-width: 0; justify-content: space-between; flex-wrap: wrap; }
 .pendingBadge, .processedBadge { min-height: 24px; display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 8px; color: var(--message-muted); background: var(--apple-surface-secondary, #efeff4); font-size: 11px; line-height: 1.4; }
-.processedBadge { color: var(--apple-success, #237a42); background: #edf5ef; }
+.processedBadge { color: var(--apple-success, #237a42); background: var(--trainer-success-soft, #edf5ef); }
 .actions { min-width: 0; justify-content: flex-end; }
-.replyPrimary { border-color: transparent; background: var(--message-action); color: #fff; }
+.replyPrimary { border-color: transparent; background: var(--message-action); color: var(--trainer-on-action, #fff); }
 .markProcessed { justify-self: start; padding: 8px 0; border: 0; border-radius: 6px; background: transparent; color: var(--message-muted); font-size: 12px; }
 .panel button:disabled { opacity: .65; cursor: wait; }
 .panel button:not(:disabled):active { filter: brightness(.94); }
 .panel button:focus-visible, .messageDetails summary:focus-visible { outline: 2px solid var(--apple-blue, #3c6faa); outline-offset: 2px; }
-.empty { min-height: 180px; display: grid; align-content: center; justify-items: center; gap: 10px; padding: 24px 16px; border: 1px solid var(--message-border); border-radius: 18px; background: #fff; color: var(--message-muted); text-align: center; }
+.empty { min-height: 180px; display: grid; align-content: center; justify-items: center; gap: 10px; padding: 24px 16px; border: 1px solid var(--message-border); border-radius: 18px; background: var(--trainer-theme-surface, #fff); color: var(--message-muted); text-align: center; }
 .empty strong { color: var(--message-text); font-size: 16px; }
 .empty p { max-width: 390px; margin: 0; font-size: 13px; line-height: 1.5; }
 .moreButton { justify-self: center; color: var(--apple-blue, #3c6faa); }
