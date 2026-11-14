@@ -347,7 +347,56 @@
 :global(html[data-client-appearance]) .root.primary .actions button svg { width:22px; height:22px; stroke-width:1.7; }
 
 @media (orientation: landscape) and (max-height: 500px) {
-  :global(html[data-client-appearance]) .root.primary:not(.embedded) { padding-top: max(4px, env(safe-area-inset-top, 0px)); padding-bottom: 2px; }
-  :global(html[data-client-appearance]) .root.primary:not(.embedded) .bar { margin-left: max(16px, env(safe-area-inset-left, 0px)); margin-right: max(16px, env(safe-area-inset-right, 0px)); width: auto; }
-  :global(html[data-client-appearance]) .root.primary .title { font-size: 1.25rem; }
+  /* The current tab is already named in the dock. Keep its heading accessible,
+     but give the short viewport back to the content and its corner action. */
+  :global(html[data-client-appearance]) .frame:has(> .root.primary:not(.embedded)) {
+    height: 0;
+    min-height: 0;
+    flex-basis: 0;
+  }
+
+  :global(html[data-client-appearance]) .root.primary:not(.embedded) {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  :global(html[data-client-appearance]) .root.primary:not(.embedded) .bar {
+    width: 48px;
+    min-height: 48px;
+    height: 48px;
+    margin: 0;
+  }
+
+  :global(html[data-client-appearance]) .root.primary:not(.embedded) .heading {
+    position: absolute;
+    inset: auto;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  :global(html[data-client-appearance]) .root.primary:not(.embedded) .actions {
+    pointer-events: auto;
+  }
+
+  :global(html[data-client-appearance]) .root.primary:not(.embedded) .actions button {
+    width: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
+  }
+
+  :global(html[data-client-appearance]) .root.primary:not(.embedded):not(:has(button)) .bar {
+    min-height: 0;
+    height: 0;
+  }
 }

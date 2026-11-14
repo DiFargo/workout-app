@@ -152,4 +152,18 @@
     margin: 0;
     border-radius: 0;
   }
+
+  /* A narrow utility rail replaces the full-width title row. Reserve its
+     width so a fixed action never sits on a calendar, card or form control. */
+  :global(html[data-client-appearance]) .shell.shell.shell:has(> :global([data-client-page-header-frame]) > :global([data-client-page-header-primary="true"][data-client-page-header-layout="screen"]) button) {
+    padding-right: calc(64px + max(env(safe-area-inset-right, 0px), var(--telegram-safe-area-right, 0px), var(--telegram-content-safe-area-right, 0px)));
+  }
+
+  :global(html[data-client-appearance]) .shell.shell.shell :global([data-client-page-header-primary="true"][data-client-page-header-layout="screen"]) {
+    width: 48px;
+    top: max(8px, env(safe-area-inset-top, 0px), var(--telegram-safe-area-top, 0px), var(--telegram-content-safe-area-top, 0px));
+    right: calc(8px + max(env(safe-area-inset-right, 0px), var(--telegram-safe-area-right, 0px), var(--telegram-content-safe-area-right, 0px)));
+    left: auto;
+    transform: none;
+  }
 }
