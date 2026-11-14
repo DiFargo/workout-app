@@ -136,8 +136,7 @@
   :global(html[data-client-appearance]) .week[data-week-calendar] :global([data-week-calendar-number]) { width:28px; height:28px; min-height:28px; line-height:28px; font-size:14px; }
   .syncNotice { grid-column:1 / -1; margin:0; }
   .sectionHead, .workoutCard, .historyRow.basicPickerRow { grid-column:1 / -1; }
-  .program { grid-column:1; }
-  .historyRow:not(.basicPickerRow) { grid-column:2; }
+  .program, .historyRow:not(.basicPickerRow) { grid-column:1 / -1; }
   :global(html[data-client-appearance]) .sectionHead,
   :global(html[data-client-appearance]) .nextWorkoutHeading { min-height:24px; margin:0; }
   :global(html[data-client-appearance]) .sectionHead h2 { font-size:18px; }
@@ -164,24 +163,31 @@
   :global(html[data-client-appearance]) .workoutCard:has(.progress) .actions,
   :global(html[data-client-appearance]) .workoutCard:has(.exerciseMeta + .advice) .actions { grid-row:1 / span 4; }
   :global(html[data-client-appearance]) .start { min-height:44px; font-size:14px; }
-  :global(html[data-client-appearance]) .program { padding:16px; border-radius:20px; }
-  :global(html[data-client-appearance]) .programHead { gap:10px; }
+  :global(html[data-client-appearance]) .program {
+    display:grid;
+    grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+    align-items:center;
+    gap:8px 20px;
+    padding:16px;
+    border-radius:20px;
+  }
+  .program > * { min-width:0; }
+  :global(html[data-client-appearance]) .programHead { grid-column:1; grid-row:1 / span 3; gap:10px; }
   :global(html[data-client-appearance]) .programHead strong { font-size:16px; overflow-wrap:anywhere; }
-  :global(html[data-client-appearance]) .programProgress { margin-top:14px; gap:4px 8px; flex-wrap:wrap; }
-  :global(html[data-client-appearance]) .programBottom { margin-top:12px; padding-top:8px; gap:4px 12px; flex-wrap:wrap; }
+  :global(html[data-client-appearance]) .programProgress { grid-column:2; grid-row:1; margin-top:0; gap:4px 8px; flex-wrap:wrap; }
+  :global(html[data-client-appearance]) .programTrack { grid-column:2; grid-row:2; margin:0; }
+  :global(html[data-client-appearance]) .programBottom { grid-column:2; grid-row:3; margin-top:0; padding-top:8px; gap:4px 12px; flex-wrap:wrap; }
   .programBottom button { min-width:0; }
   .programBottom button:first-child { flex:1 1 180px; }
   :global(html[data-client-appearance]) .historyRow { margin-top:0; min-height:64px; padding:12px; border-radius:20px; }
   :global(html[data-client-appearance]) .historyRow:not(.basicPickerRow) {
-    display:grid;
-    grid-template-columns:minmax(0,1fr) 18px;
-    align-content:space-between;
-    align-items:end;
+    display:flex;
+    align-self:start;
+    align-items:center;
+    height:auto;
     gap:12px;
-    padding:16px;
+    padding:12px 16px;
   }
-  .historyRow:not(.basicPickerRow) .historyIcon { grid-column:1 / -1; }
-  .historyRow:not(.basicPickerRow) > span:nth-child(2) { gap:6px; }
   :global(html[data-client-appearance]) .historyRow strong { font-size:16px; }
   :global(html[data-client-appearance]) .historyRow small { font-size:12px; }
 }

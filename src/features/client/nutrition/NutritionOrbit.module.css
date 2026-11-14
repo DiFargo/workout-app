@@ -459,6 +459,7 @@
 .renderMacros b small { color:var(--apple-secondary); font-size:10px; font-weight:400; }
 .macroTrack { height:3px; margin-top:6px; background:var(--apple-rhythm-track); border-radius:5px; overflow:hidden; }
 .macroTrack i { display:block; height:100%; background:var(--apple-macro-progress); border-radius:5px; }
+.renderAddFood { display:contents; }
 .renderHeading { margin:14px 22px 9px; min-height:24px; display:flex; align-items:center; }
 .renderHeading h2 { margin:0; color:var(--apple-text); font-size:18px; font-weight:680; line-height:1.25; letter-spacing:-.4px; }
 .renderQuick { margin:0 20px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
@@ -507,10 +508,10 @@
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
   :global(html[data-client-appearance]) .dateToolbar { grid-column:1 / -1; grid-row:1; min-height:0; margin:0 0 2px; }
   :global(html[data-client-appearance]) .renderEnergy {
-    --energy-ring-size:88px;
+    --energy-ring-size:72px;
     grid-column:1;
-    grid-row:var(--nutrition-summary-row, 1) / span 2;
-    min-height:156px;
+    grid-row:var(--nutrition-summary-row, 1);
+    min-height:0;
     margin:0;
     padding:0;
     position:static;
@@ -522,12 +523,13 @@
   :global(html[data-client-appearance]) .renderRing strong { font-size:23px; }
   :global(html[data-client-appearance]) .renderCopyHead h2 { font-size:23px; }
   :global(html[data-client-appearance]) .renderEnergy:has(> :global([data-save-state])) .renderCopyHead p { padding-right:0; }
-  :global(html[data-client-appearance]) .renderMacros { margin-top:12px; padding-top:12px; gap:8px; }
+  :global(html[data-client-appearance]) .renderMacros { margin-top:8px; padding-top:8px; gap:8px; }
   :global(html[data-client-appearance]) .renderMacros > div > span { font-size:11px; }
   :global(html[data-client-appearance]) .renderMacros b { font-size:13px; }
-  :global(html[data-client-appearance]) .renderHeading { grid-column:2; grid-row:var(--nutrition-summary-row, 1); align-self:end; margin:0; }
+  :global(html[data-client-appearance]) .renderAddFood { grid-column:2; grid-row:var(--nutrition-summary-row, 1); display:grid; align-content:start; gap:8px; min-width:0; }
+  :global(html[data-client-appearance]) .renderHeading { margin:0; padding-right:34px; }
   :global(html[data-client-appearance]) .renderHeading h2 { font-size:18px; }
-  :global(html[data-client-appearance]) .renderQuick { grid-column:2; grid-row:calc(var(--nutrition-summary-row, 1) + 1); align-self:start; margin:0; padding:4px 0; background:var(--apple-surface-muted); box-shadow:none; }
+  :global(html[data-client-appearance]) .renderQuick { margin:0; padding:4px 0; background:var(--apple-surface-muted); box-shadow:none; }
   :global(html[data-client-appearance]) .renderQuick button { min-height:64px; gap:5px; }
   .root { width:100%; margin:0; }
 }

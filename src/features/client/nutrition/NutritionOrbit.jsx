@@ -172,12 +172,14 @@ export default function NutritionOrbit({
         </div>
         <div className={styles.renderMacros}>{macros.map((item) => <div key={item.id}><span>{item.label}</span><b>{getNumericText(item.amount)} <small>/ {getNumericText(item.target)} г</small></b><div className={styles.macroTrack}><i style={{width: `${Math.min(100, Math.max(0, Number(item.progress) || 0))}%`}} /></div></div>)}</div>
       </section>
+      <div className={styles.renderAddFood}>
       <div className={styles.renderHeading}><h2>Добавить еду</h2></div>
       <div className={styles.renderQuick}>
         <button type="button" data-testid="nutrition-orbit-add" aria-label="Добавить еду: продукт" onClick={onAdd}><span><Plus aria-hidden="true" /></span>Продукт</button>
         <button type="button" data-testid="nutrition-orbit-photo-search" onClick={openPhotoSearch}><span><Camera aria-hidden="true" /></span>Фото AI</button>
         <button type="button" ref={voiceButtonRef} data-testid="nutrition-orbit-audio-search" onClick={handleVoiceAction}><span>{voiceSearchFailed ? <RefreshCw aria-hidden="true" /> : <Mic aria-hidden="true" />}</span>Голос</button>
         <input ref={photoSearchInputRef} className={styles.photoSearchInput} data-testid="nutrition-orbit-photo-input" type="file" accept="image/*" capture="environment" onChange={onPhotoSearch}/>
+      </div>
       </div>
       <NutritionVoiceModal open={voiceModalOpen} origin={voiceButtonOrigin} voiceState={voiceState} audioLevel={voiceAudioLevel} feedback={voiceFeedback} voiceAddedItems={voiceAddedItems} onClose={closeVoiceModal} onVoiceStart={onVoiceStart} onVoiceEnd={onVoiceEnd} onVoiceAddedItemRemove={onVoiceAddedItemRemove} onVoiceAddedItemUpdate={onVoiceAddedItemUpdate} onVoiceDone={finishVoiceResult}/>
     </>;
