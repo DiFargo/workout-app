@@ -505,22 +505,29 @@
 @media(max-width:374px) { :global(html[data-client-appearance]) .renderEnergy { --energy-ring-size:96px; gap:0 12px; padding:16px; } }
 
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
-  :global(html[data-client-appearance]) .dateToolbar { margin:0 0 10px; }
+  :global(html[data-client-appearance]) .dateToolbar { grid-column:1 / -1; grid-row:1; min-height:0; margin:0 0 2px; }
   :global(html[data-client-appearance]) .renderEnergy {
     --energy-ring-size:88px;
-    min-height:196px;
+    grid-column:1;
+    grid-row:var(--nutrition-summary-row, 1) / span 2;
+    min-height:156px;
     margin:0;
-    padding:16px;
+    padding:0;
+    position:static;
     gap:0 14px;
-    border-radius:20px;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
   }
   :global(html[data-client-appearance]) .renderRing strong { font-size:23px; }
   :global(html[data-client-appearance]) .renderCopyHead h2 { font-size:23px; }
-  :global(html[data-client-appearance]) .renderMacros { margin-top:14px; padding-top:12px; gap:8px; }
+  :global(html[data-client-appearance]) .renderEnergy:has(> :global([data-save-state])) .renderCopyHead p { padding-right:0; }
+  :global(html[data-client-appearance]) .renderMacros { margin-top:12px; padding-top:12px; gap:8px; }
   :global(html[data-client-appearance]) .renderMacros > div > span { font-size:11px; }
   :global(html[data-client-appearance]) .renderMacros b { font-size:13px; }
-  :global(html[data-client-appearance]) .renderHeading { margin:16px 0 8px; }
+  :global(html[data-client-appearance]) .renderHeading { grid-column:2; grid-row:var(--nutrition-summary-row, 1); align-self:end; margin:0; }
   :global(html[data-client-appearance]) .renderHeading h2 { font-size:18px; }
-  :global(html[data-client-appearance]) .renderQuick { margin:0; padding:4px 0; }
-  :global(html[data-client-appearance]) .renderQuick button { min-height:60px; gap:5px; }
+  :global(html[data-client-appearance]) .renderQuick { grid-column:2; grid-row:calc(var(--nutrition-summary-row, 1) + 1); align-self:start; margin:0; padding:4px 0; background:var(--apple-surface-muted); box-shadow:none; }
+  :global(html[data-client-appearance]) .renderQuick button { min-height:64px; gap:5px; }
+  .root { width:100%; margin:0; }
 }

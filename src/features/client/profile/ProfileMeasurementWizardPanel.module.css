@@ -110,18 +110,44 @@
   .panel {
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
-    align-items:start;
+    align-items:stretch;
     gap:10px 16px;
   }
   .panel > * { min-width:0; }
-  .periods { grid-column:1; grid-row:1; }
+  .periods { grid-column:1 / -1; grid-row:1; }
   :global(html[data-client-appearance]) .periods { margin-bottom:0; }
-  .chartCard { grid-column:1; grid-row:2 / 8; }
+  /* Keep the weight overview together above the two equally sized groups,
+     rather than pairing a tall chart with a short achievement card. */
+  .chartCard {
+    grid-column:1 / -1;
+    grid-row:2;
+    display:grid;
+    grid-template-columns:minmax(140px,.55fr) minmax(0,1fr);
+    align-items:center;
+    gap:0 20px;
+  }
+  .chartCard > * { min-width:0; }
   :global(html[data-client-appearance]) .chartCard { min-height:0; padding:16px; }
-  :global(html[data-client-appearance]) .chartTop { min-height:52px; }
+  :global(html[data-client-appearance]) .chartTop {
+    grid-column:1;
+    grid-row:1 / 3;
+    min-height:0;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    gap:12px;
+  }
   :global(html[data-client-appearance]) .chartTop > div:first-child strong { font-size:28px; }
-  :global(html[data-client-appearance]) .chart { height:120px; margin-top:10px; }
-  .sectionHead, .achievement, .controlGroup { grid-column:2; }
+  .weightChange { max-width:100%; align-items:flex-start; text-align:left; }
+  :global(html[data-client-appearance]) .chart { grid-column:2; grid-row:1; height:104px; margin-top:0; }
+  .chartDates { grid-column:2; grid-row:2; }
+  .chartEmpty { grid-column:2; grid-row:1 / 3; min-height:104px; margin:0; }
+  .sectionHead { grid-column:1; grid-row:3; }
+  .achievement { grid-column:1; grid-row:4; }
+  .achievement ~ .sectionHead { grid-column:2; grid-row:3; }
+  .controlGroup { grid-column:2; grid-row:4; }
+  .controlGroup ~ .sectionHead { grid-column:1 / -1; grid-row:5; }
+  .controlGroup ~ .controlGroup { grid-column:1 / -1; grid-row:6; }
   :global(html[data-client-appearance]) .sectionHead { margin:0; min-height:22px; }
   :global(html[data-client-appearance]) .sectionHead h3 { font-size:18px; }
   :global(html[data-client-appearance]) .achievement { min-height:0; padding:14px; gap:0 10px; grid-template-columns:44px minmax(0,1fr); }

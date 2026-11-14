@@ -120,9 +120,9 @@
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
   .content {
     display:grid;
-    grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
-    align-items:start;
-    gap:10px 16px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:stretch;
+    gap:12px 16px;
   }
   .content > * { min-width:0; }
   :global(html[data-client-appearance]) .week[data-week-calendar] {
@@ -134,34 +134,54 @@
   :global(html[data-client-appearance]) .week[data-week-calendar] > :global([data-week-calendar-day]) { min-height:48px; padding:0; gap:1px; }
   :global(html[data-client-appearance]) .week[data-week-calendar] :global([data-week-calendar-label]) { font-size:10px; }
   :global(html[data-client-appearance]) .week[data-week-calendar] :global([data-week-calendar-number]) { width:28px; height:28px; min-height:28px; line-height:28px; font-size:14px; }
-  .syncNotice { grid-column:1 / -1; grid-row:2; margin:0; }
-  .nextWorkoutHeading { grid-column:1; grid-row:2; }
-  .workoutCard { grid-column:1; grid-row:3 / 5; }
-  .sectionHead:not(.nextWorkoutHeading), .program, .historyRow { grid-column:2; }
-  .sectionHead:not(.nextWorkoutHeading) { grid-row:2; }
-  .program { grid-row:3; }
-  .historyRow:not(.basicPickerRow) { grid-row:4; }
-  .historyRow.basicPickerRow { grid-row:5; }
-  .content:has(> .syncNotice) .sectionHead { grid-row:3; }
-  .content:has(> .syncNotice) .workoutCard { grid-row:4 / 6; }
-  .content:has(> .syncNotice) .program { grid-row:4; }
-  .content:has(> .syncNotice) .historyRow:not(.basicPickerRow) { grid-row:5; }
-  .content:has(> .syncNotice) .historyRow.basicPickerRow { grid-row:6; }
+  .syncNotice { grid-column:1 / -1; margin:0; }
+  .sectionHead, .workoutCard, .historyRow.basicPickerRow { grid-column:1 / -1; }
+  .program { grid-column:1; }
+  .historyRow:not(.basicPickerRow) { grid-column:2; }
   :global(html[data-client-appearance]) .sectionHead,
   :global(html[data-client-appearance]) .nextWorkoutHeading { min-height:24px; margin:0; }
   :global(html[data-client-appearance]) .sectionHead h2 { font-size:18px; }
   :global(html[data-client-appearance]) .workoutCard { padding:16px; border-radius:22px; }
-  :global(html[data-client-appearance]) .workoutLabel { margin-bottom:12px; }
+  .workoutCard > :global([data-testid="workout-list-card"]) {
+    display:grid;
+    grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+    align-items:start;
+    gap:8px 20px;
+  }
+  .workoutCard > :global([data-testid="workout-list-card"]) > * { min-width:0; grid-column:1; }
+  :global(html[data-client-appearance]) .workoutLabel { margin-bottom:0; flex-wrap:wrap; }
   :global(html[data-client-appearance]) .workoutCopy strong { font-size:23px; }
-  :global(html[data-client-appearance]) .exerciseMeta { margin-top:12px; padding-top:10px; }
-  :global(html[data-client-appearance]) .actions { margin-top:14px; gap:8px; }
+  :global(html[data-client-appearance]) .exerciseMeta { margin-top:0; padding-top:8px; }
+  .workoutCard .advice, .workoutCard .progress { margin-top:0; }
+  :global(html[data-client-appearance]) .workoutCard .actions {
+    grid-column:2;
+    grid-row:1 / span 3;
+    align-self:center;
+    grid-template-columns:minmax(0,1fr);
+    margin-top:0;
+    gap:8px;
+  }
+  :global(html[data-client-appearance]) .workoutCard:has(.progress) .actions,
+  :global(html[data-client-appearance]) .workoutCard:has(.exerciseMeta + .advice) .actions { grid-row:1 / span 4; }
   :global(html[data-client-appearance]) .start { min-height:44px; font-size:14px; }
   :global(html[data-client-appearance]) .program { padding:16px; border-radius:20px; }
   :global(html[data-client-appearance]) .programHead { gap:10px; }
   :global(html[data-client-appearance]) .programHead strong { font-size:16px; overflow-wrap:anywhere; }
-  :global(html[data-client-appearance]) .programProgress { margin-top:14px; gap:8px; }
-  :global(html[data-client-appearance]) .programBottom { margin-top:12px; padding-top:8px; }
+  :global(html[data-client-appearance]) .programProgress { margin-top:14px; gap:4px 8px; flex-wrap:wrap; }
+  :global(html[data-client-appearance]) .programBottom { margin-top:12px; padding-top:8px; gap:4px 12px; flex-wrap:wrap; }
+  .programBottom button { min-width:0; }
+  .programBottom button:first-child { flex:1 1 180px; }
   :global(html[data-client-appearance]) .historyRow { margin-top:0; min-height:64px; padding:12px; border-radius:20px; }
+  :global(html[data-client-appearance]) .historyRow:not(.basicPickerRow) {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 18px;
+    align-content:space-between;
+    align-items:end;
+    gap:12px;
+    padding:16px;
+  }
+  .historyRow:not(.basicPickerRow) .historyIcon { grid-column:1 / -1; }
+  .historyRow:not(.basicPickerRow) > span:nth-child(2) { gap:6px; }
   :global(html[data-client-appearance]) .historyRow strong { font-size:16px; }
   :global(html[data-client-appearance]) .historyRow small { font-size:12px; }
 }

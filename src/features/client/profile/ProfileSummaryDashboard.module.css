@@ -106,12 +106,13 @@
 @media (max-width:360px) { .planCard { padding:14px; } .heroTop { align-items:flex-start; } .heroTop > span:first-child { flex-shrink:0; } }
 @media (prefers-reduced-motion:reduce) { .taskRow { transition:none; } }
 
-/* Landscape is a compact dashboard, not a narrow portrait screen in the middle. */
+/* Match the cabinet's hierarchy: one full-width priority card, then a pair
+   of equally sized secondary groups instead of two unrelated tall columns. */
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
   .root {
     display:grid;
-    grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
-    align-items:start;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:stretch;
     gap:10px 16px;
   }
   .root > * { min-width:0; }
@@ -122,14 +123,22 @@
   }
   :global(html[data-client-appearance]) .welcome p { font-size:12px; }
   :global(html[data-client-appearance]) .welcome h2 { margin-top:3px; font-size:18px; }
-  .planCard { grid-column:1; grid-row:2 / 6; padding:16px; border-radius:22px; }
+  .planCard { grid-column:1 / -1; padding:16px; border-radius:22px; }
   :global(html[data-platform="telegram"]) .planCard { padding:16px; }
   .planCard.reminders > .heroTop { margin-bottom:8px; }
   .planCard.reminders > h2 { margin:10px 0 8px; font-size:20px; }
+  :global(html[data-client-appearance]) .taskList { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  :global(html[data-client-appearance]) .taskList > :last-child:nth-child(odd) { grid-column:1 / -1; }
   :global(html[data-client-appearance]) .taskRow { min-height:64px; padding:12px; gap:9px; }
+  :global(html[data-client-appearance]) .taskRow + .taskRow { border-top:0; }
+  :global(html[data-client-appearance]) .taskRow:nth-child(even) { border-left:1px solid var(--apple-separator); }
+  :global(html[data-client-appearance]) .taskRow:nth-child(n + 3) { border-top:1px solid var(--apple-separator); }
   :global(html[data-client-appearance]) .taskCopy strong { font-size:16px; }
   :global(html[data-client-appearance]) .taskCopy small { font-size:12px; }
-  .sectionHead, .metrics, .coach { grid-column:2; }
+  .sectionHead:has(+ .metrics), .metrics { grid-column:1; }
+  .sectionHead:has(+ .coach), .coach { grid-column:2; }
+  .sectionHead { grid-row:3; }
+  .metrics, .coach { grid-row:4; }
   :global(html[data-client-appearance]) .sectionHead { margin:0; min-height:22px; }
   :global(html[data-client-appearance]) .sectionHead h3 { font-size:18px; }
   :global(html[data-client-appearance]) .metrics { padding:12px 0; border-radius:18px; }
@@ -138,4 +147,12 @@
   :global(html[data-client-appearance]) .coach { min-height:64px; padding:12px; border-radius:18px; gap:9px; }
   :global(html[data-client-appearance]) .coachCopy strong { font-size:16px; }
   :global(html[data-client-appearance]) .coachCopy small { font-size:12px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) and (max-width: 699px) {
+  :global(html[data-client-appearance]) .metrics { grid-template-columns:1fr; padding:0; }
+  :global(html[data-client-appearance]) .metrics button { min-height:56px; display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:2px 8px; padding:10px 12px; }
+  :global(html[data-client-appearance]) .metrics button + button { border-left:0; border-top:1px solid var(--apple-separator); }
+  :global(html[data-client-appearance]) .metrics strong { grid-column:2; grid-row:1 / 3; margin:0; }
+  :global(html[data-client-appearance]) .metrics small { grid-column:1; }
 }

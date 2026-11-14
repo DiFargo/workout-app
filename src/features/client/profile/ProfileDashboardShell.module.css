@@ -135,3 +135,15 @@
     overflow: visible;
   }
 }
+
+/* The primary header is collapsed in short landscape viewports. Let progress
+   use the same single page scroll as the cabinet, without an obsolete 84px
+   header reserve or a second, prematurely clipped content viewport. */
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
+  .root.measurements { overflow-x:hidden; overflow-y:auto; }
+  .measurementsContent {
+    height:auto;
+    overflow:visible;
+    padding-bottom:calc(78px + max(env(safe-area-inset-bottom, 0px), var(--telegram-safe-area-bottom, 0px), var(--telegram-content-safe-area-bottom, 0px)));
+  }
+}

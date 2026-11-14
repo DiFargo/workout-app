@@ -4,19 +4,45 @@
   display: contents;
 }
 
-/* Keep the diary beside its daily totals on a short, wide Telegram viewport. */
+/* One daily overview, then evenly sized meal groups: match the cabinet's
+   full-width summary rather than two unrelated columns of different heights. */
 @media (orientation: landscape) and (max-height: 500px) and (min-width: 568px) {
   .layout {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-    gap: 16px;
+    display: block;
     padding-inline: 20px;
   }
 
-  .summary,
+  .summary {
+    --nutrition-summary-row: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 8px 24px;
+    min-width: 0;
+    padding: 16px;
+    position: relative;
+    border-radius: 22px;
+    background: var(--apple-surface);
+    box-shadow: var(--client-card-shadow);
+  }
+
+  .summary:has(:global([data-testid="nutrition-selected-date"])) {
+    --nutrition-summary-row: 2;
+  }
+
+  .summary > * { min-width: 0; }
+
+  /* The manual-only legacy orbit keeps its existing standalone card. */
+  .summary:has(> :global([data-css-module-scope="nutrition-orbit"])) {
+    display: block;
+    padding: 0;
+    position: static;
+    background: transparent;
+    box-shadow: none;
+  }
+
   .diary {
     display: block;
     min-width: 0;
+    margin-top: 16px;
   }
 }
