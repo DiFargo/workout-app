@@ -307,6 +307,7 @@ export default function ProfileDashboardRoute(ctx) {
     profileProgressPhotoSetComplete,
     profileWorkoutHistoryItems,
     homeWorkoutAction,
+    workoutCompletedToday,
     nextWorkoutDate,
     nextWorkoutTitle,
     nextWorkoutExerciseCount,
@@ -679,6 +680,7 @@ export default function ProfileDashboardRoute(ctx) {
             workoutDate={homeWorkoutAction.dateText || nextWorkoutDate || nextTrainingText}
             workoutPosition={homeWorkoutAction.positionText}
             workoutState={homeWorkoutAction.state}
+            workoutCompletedToday={workoutCompletedToday}
             isWorkoutToday={homeWorkoutAction.isToday}
             workoutScheduleStatus={homeWorkoutAction.scheduleStatus}
             workoutActionLabel={homeWorkoutAction.actionLabel}

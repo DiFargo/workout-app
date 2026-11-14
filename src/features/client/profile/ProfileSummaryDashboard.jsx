@@ -49,6 +49,7 @@ export default function ProfileSummaryDashboard({
   workoutTitle,
   workoutDate,
   workoutState = "ready",
+  workoutCompletedToday = false,
   workoutLoadState = "ready",
   onRetryWorkoutLoad,
   isWorkoutToday = false,
@@ -137,6 +138,7 @@ export default function ProfileSummaryDashboard({
   const latestMessage = activeTrainerNotifications.find((notification) => notification?.notificationType === "message");
   const messagePreview = String(latestMessage?.message || latestMessage?.text || latestMessage?.description || "").trim();
   const hasUpcomingWorkout = workoutReady && workoutState === "ready" && scheduleStatus === "upcoming" && Boolean(workoutTitle);
+  const celebrateWorkout = workoutCompletedToday && workoutReady && !taskDataUnknown && dashboardTasks.length === 0;
 
   return (
     <div className={styles.root} data-testid="profile-summary-dashboard">
@@ -148,14 +150,15 @@ export default function ProfileSummaryDashboard({
         <div className={styles.heroTop}>
           <span><Dumbbell aria-hidden="true" />План на сегодня</span>
           <span className={styles.taskCount} role="status" aria-live="polite" aria-atomic="true" data-testid="profile-summary-task-count">
-            {taskDataUnknown ? taskCount ? `${formatRussianCount(taskCount, ["задача", "задачи", "задач"])} · уточняем` : dataLoadFailed ? "Не все данные" : "Уточняем задачи" : formatRussianCount(taskCount, ["задача", "задачи", "задач"])}
+            {taskDataUnknown ? taskCount ? `${formatRussianCount(taskCount, ["задача", "задачи", "задач"])} · уточняем` : dataLoadFailed ? "Не все данные" : "Уточняем задачи" : celebrateWorkout ? "Так держать!" : formatRussianCount(taskCount, ["задача", "задачи", "задач"])}
           </span>
         </div>
-        <h2 id="profileSummaryTaskHeading" data-testid="profile-summary-task-title">Что важно сегодня?</h2>
+        <h2 id="profileSummaryTaskHeading" data-testid="profile-summary-task-title">{celebrateWorkout ? "Отличная работа!" : "Что важно сегодня?"}</h2>
         <p>{dashboardTasks.length
           ? "Выберите задачу — откроется нужный раздел."
           : !workoutReady ? "Задачи по тренировкам появятся после загрузки плана."
           : taskDataUnknown ? dataLoadFailed ? "Не удалось проверить все задачи. Повторите загрузку." : "Проверяем актуальные задачи. Это займёт немного времени."
+            : celebrateWorkout ? "Ты потренировался сегодня. Теперь можно восстановиться."
             : hasUpcomingWorkout ? "Сегодня можно восстановиться. Следующая тренировка уже в плане." : "На сегодня нет актуальных задач."}</p>
         {!workoutReady && <div className={styles.workoutLoadState} role="status" data-testid="profile-summary-workout-loading"><strong>{workoutLoadState === "error" ? "Не удалось загрузить план" : "Загружаем план тренировок…"}</strong>{workoutLoadState === "error" && onRetryWorkoutLoad && <button type="button" onClick={onRetryWorkoutLoad}>Повторить загрузку</button>}</div>}
         {dashboardTasks.length ? (
@@ -193,7 +196,7 @@ export default function ProfileSummaryDashboard({
         ) : workoutReady && !taskDataUnknown ? (
           <div className={styles.emptyTasks} data-testid="profile-summary-task-empty">
             <CheckCircle2 aria-hidden="true" size={20} />
-            <span>{hasUpcomingWorkout ? "Отдых — тоже часть плана" : "Нет актуальных задач"}</span>
+            <span>{celebrateWorkout ? "Тренировка за сегодня сохранена" : hasUpcomingWorkout ? "Отдых — тоже часть плана" : "Нет актуальных задач"}</span>
           </div>
         ) : null}
         {hasUpcomingWorkout && <button type="button" className={styles.upcomingWorkout} data-testid="profile-summary-upcoming-workout" onClick={onOpenWorkout}>

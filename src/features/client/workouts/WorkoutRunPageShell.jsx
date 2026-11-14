@@ -32,6 +32,11 @@ export default function WorkoutRunPageShell({ children, noHeader = false }) {
         root.style.removeProperty("--workout-media-max-height");
         return;
       }
+      // Landscape uses independent media/control columns, not a vertical budget.
+      if (getComputedStyle(card).display === "contents") {
+        root.style.removeProperty("--workout-media-max-height");
+        return;
+      }
       const available = parseFloat(root.style.getPropertyValue("--workout-stage-usable-height"));
       const otherContent = card.getBoundingClientRect().height - media.getBoundingClientRect().height;
       // Many sets, landscape and enlarged text fall back to the existing

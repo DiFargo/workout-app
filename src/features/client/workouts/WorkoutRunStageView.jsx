@@ -507,7 +507,7 @@ export default function WorkoutRunStageView({
           workoutHistorySyncState={workoutHistorySyncState}
         />
       ) : (
-        <>
+        <div className={isWarmup ? styles.stageLayout : styles.exerciseLayout}>
           <div
             key={exercise.id}
             className={`${styles.card} ${
@@ -697,7 +697,7 @@ export default function WorkoutRunStageView({
               />
             )}
           </WorkoutStageActionPanel>
-        </>
+        </div>
       )}
       </div>
       <WorkoutExercisePicker

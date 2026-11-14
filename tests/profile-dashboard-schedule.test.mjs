@@ -7,6 +7,7 @@ import {
   getProfileMeasurementTrendPeriodLabel,
   getTimeOfDayGreeting,
   getProfileWeightCheckInState,
+  getProfileWorkoutCompletedToday,
   getProfileWorkoutStatusDateKey
 } from "../src/features/client/profile/profileDashboardModel.js";
 import {
@@ -46,10 +47,13 @@ test("production home model keeps future, today's and resumed workout actions co
   assert.equal(resumed.title, "Тренировка 6");
   assert.equal(resumed.actionLabel, "Продолжить тренировку");
   assert.equal(buildProfileDashboardModel({ ...ctx, profileWorkoutDrafts: [{ ...draft, assignmentVersion: "old" }] }).homeWorkoutAction.actionLabel, "Начать раньше");
-  const completed = buildProfileDashboardModel({ ...ctx, profileWorkoutDrafts: [draft],
-    plan: { ...ctx.plan, workouts: [{ ...workout, status: "completed", completedAt: today }] } }).homeWorkoutAction;
+  const completedModel = buildProfileDashboardModel({ ...ctx, profileWorkoutDrafts: [draft],
+    plan: { ...ctx.plan, workouts: [{ ...workout, status: "completed", completedAt: today }] } });
+  const completed = completedModel.homeWorkoutAction;
   assert.equal(completed.state, "complete");
   assert.equal(completed.actionLabel, "Посмотреть результаты");
+  assert.equal(completedModel.workoutCompletedToday, false, "Ручная отметка плана не заменяет сохранённую сессию");
+  assert.equal(buildProfileDashboardModel({ ...ctx, history: [{ id: "saved-today", finishedAt: new Date().toISOString() }] }).workoutCompletedToday, true);
 });
 
 test("missed workout message uses the missed date, not its suggested future move", () => {
@@ -64,6 +68,35 @@ test("missed workout message uses the missed date, not its suggested future move
   assert.equal(getProfileWorkoutStatusDateKey(slots[5]), "2026-09-12");
   assert.equal(getProfileWorkoutStatusDateKey({ isMissed: false, shiftedDate: "2026-09-22", plannedDate: "2026-09-10" }), "2026-09-22");
   assert.equal(getProfileWorkoutStatusDateKey(null), "");
+});
+
+test("похвала за сегодня опирается на дату подтверждённой сессии, а не на план или импорт", () => {
+  const now = new Date(2026, 10, 14, 12);
+  const today = new Date(2026, 10, 14, 10).toISOString();
+  const yesterday = new Date(2026, 10, 13, 10).toISOString();
+  const tomorrow = new Date(2026, 10, 15, 10).toISOString();
+  const completedToday = history => getProfileWorkoutCompletedToday(history, { now });
+  assert.equal(completedToday([{ id: "saved", date: today }]), true);
+  assert.equal(completedToday([{ id: "finished", date: yesterday, finishedAt: today }]), true);
+  assert.equal(completedToday([{ id: "old", date: yesterday, createdAt: today }]), false);
+  assert.equal(completedToday([{ id: "old", date: yesterday, scheduledDate: "2026-11-14" }]), false);
+  assert.equal(completedToday([{ id: "next", date: tomorrow }]), false);
+  assert.equal(completedToday([{ id: "bad", date: "2026-02-30" }]), false);
+  assert.equal(completedToday([{ id: "no-date", createdAt: today }]), false);
+  for (const status of ["draft", "planned", "started", "cancelled", "in_progress"]) {
+    assert.equal(completedToday([{ id: status, date: today, status }]), false);
+  }
+  assert.equal(completedToday([{ id: "pending", date: today, pendingSync: true }]), false);
+  assert.equal(completedToday([{ id: "not-completed", date: today, completed: false }]), false);
+  assert.equal(completedToday([]), false);
+  assert.equal(completedToday(null), false);
+});
+
+test("дата тренировки для похвалы использует местный календарный день", () => {
+  const now = new Date(2026, 10, 14, 0, 15);
+  assert.equal(getProfileWorkoutCompletedToday([{ id: "local", finishedAt: new Date(2026, 10, 14, 0, 5).toISOString() }], { now }), true);
+  assert.equal(getProfileWorkoutCompletedToday([{ id: "previous", finishedAt: new Date(2026, 10, 13, 23, 55).toISOString() }], { now }), false);
+  assert.equal(getProfileWorkoutCompletedToday([{ id: "date-only", date: "2026-11-14" }], { now }), true);
 });
 
 test("profile dashboard greeting follows the user's local time", () => {

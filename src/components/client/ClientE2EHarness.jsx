@@ -2460,6 +2460,7 @@ export default function ClientE2EHarness() {
         isBasicPlan={workoutOverviewProgramMode === "basic"}
         greetingName="Илья"
         {...dashboardWorkoutProps}
+        workoutCompletedToday={harnessParams?.get("clientWorkoutCompletedToday") === "1"}
         exerciseCount={7}
         totalWorkouts={12}
         caloriesConsumed={1840}
@@ -2483,7 +2484,8 @@ export default function ClientE2EHarness() {
               latestDateText: "16.06.2026"
             }
           : { enabled: true, isDue: false }}
-        progressPhotoCheckIn={{ ...getProfileProgressPhotoCheckInState(harnessProgressPhotos), enabled: true, ready: dashboardResourceHasValue }}
+        progressPhotoCheckIn={{ ...getProfileProgressPhotoCheckInState(harnessParams?.get("clientWorkoutCompletedToday") === "1"
+          ? [{ ...harnessProgressPhotos[0], date: new Date() }] : harnessProgressPhotos), enabled: true, ready: dashboardResourceHasValue }}
         measurementsCheckIn={bodyMeasurementTaskState ? {
           ...getProfileBodyMeasurementCheckInState(bodyMeasurementTaskState === "first" ? [] : bodyMeasurementTaskState === "fresh" ? [{ ...harnessLatestMeasurement, date: new Date() }] : progressMeasurements),
           enabled: bodyMeasurementTaskState !== "off",

@@ -5,6 +5,7 @@ import { getClientReminderSettings } from "../../../utils/clientReminderSettings
 import { getProfileBodyMeasurementCheckInState, getProfileProgressPhotoCheckInState } from "./profileDashboardTasks.js";
 import { getProfileOverviewMeasurements } from "../../../utils/profileOverviewMeasurements.js";
 import { getClientWorkoutCompletionHistory } from "../../../utils/clientWorkoutEvidence.js";
+import { getConfirmedProfileAchievementItems, getProfileAchievementHistoryTimestamp } from "./profileAchievements.js";
 import { isBodyMeasurementRecord } from "../../../utils/bodyMeasurementRecords.js";
 import { getDashboardEmptyWorkoutAction, getDashboardResumeWorkoutId, getDashboardWorkoutPresentation } from "./profileDashboardPresentation.js";
 import { getProfileCalendarDraft, mergeProfileCalendarDraft } from "./profileCalendarDraft.js";
@@ -51,6 +52,16 @@ function getCalendarDayTimestamp(value) {
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return 0;
   return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
+export function getProfileWorkoutCompletedToday(history = [], { now = new Date() } = {}) {
+  const today = getCalendarDayTimestamp(now);
+  if (!today) return false;
+  return getConfirmedProfileAchievementItems(history).some(entry => {
+    // Use the actual session date, never its schedule or import/save timestamp.
+    const timestamp = getProfileAchievementHistoryTimestamp(entry);
+    return timestamp !== null && getCalendarDayTimestamp(timestamp) === today;
+  });
 }
 
 export function getProfileWeightCheckInState(measurements = [], {
@@ -204,6 +215,7 @@ export function buildProfileDashboardModel(ctx) {
       : (profileActiveTab === "nutrition" || profileActiveTab === "progress" ? "cabinet" : profileActiveTab);
     const totalWorkouts = history.length;
     const lastWorkout = history[0];
+    const workoutCompletedToday = getProfileWorkoutCompletedToday(history);
     const activeProfile = {
       ...(aiNutritionProfile || {}),
       ...aiNutritionProfileDraft
@@ -627,6 +639,7 @@ export function buildProfileDashboardModel(ctx) {
     visibleProfileTab,
     totalWorkouts,
     lastWorkout,
+    workoutCompletedToday,
     activeProfile,
     latestProfileMeasurement,
     latestClientProgressPhoto,
