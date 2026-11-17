@@ -9,3 +9,4 @@ The current architecture notes, layer boundaries and verification commands are d
 - [docs/mvp-execution-plan-v2.md](docs/mvp-execution-plan-v2.md)
 - [docs/release-operations.md](docs/release-operations.md)
 - [docs/refactor-status.md](docs/refactor-status.md)
+- [docs/codex-team-setup.md](docs/codex-team-setup.md) — настройка второго Windows-компьютера для работы в Codex по общим правилам.
