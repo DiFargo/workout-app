@@ -10,6 +10,7 @@ The current architecture notes, layer boundaries and verification commands are d
 - [docs/release-operations.md](docs/release-operations.md)
 - [docs/refactor-status.md](docs/refactor-status.md)
 - [docs/codex-team-setup.md](docs/codex-team-setup.md) — настройка второго Windows-компьютера для работы в Codex по общим правилам.
+- [docs/admin-functional-map.md](docs/admin-functional-map.md) — карта админки: разделы, действия, ограничения и точки входа в код.
 
 ## Локальный просмотр админки
 
