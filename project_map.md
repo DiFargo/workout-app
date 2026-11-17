@@ -7,6 +7,7 @@
 | Слой | Назначение | Где искать |
 | --- | --- | --- |
 | Bootstrap | React root, service worker, error boundary | `src/main.jsx`, `src/App.jsx`, `src/app/AppBootstrap.jsx` |
+| Локальный просмотр админки | `npm run dev:admin`: настоящие маршруты админки с синтетическими данными, отдельный DEV-вход без Firebase и `.env` | `dev/admin/`, `vite.admin-preview.config.js`, `docs/codex-team-setup.md`; проверка: `npm run test:admin-preview` |
 | Авторизация | Вход Telegram Mini App первым способом; отдельный Cloud Functions codebase без AI-секретов | `src/components/auth/AuthScreens.jsx`, `src/features/auth/authHandlers.js`, `functions-telegram-auth/` |
 | Telegram-приглашение после нижней кнопки | `functions/index.js` → `startTelegramClientInvite`; `functions-telegram-auth/telegramPendingInvite.js`, `index.js`; `src/app/appStartupGate.jsx` | Серверный `telegramPendingClientInvites/{telegramId}` хранит последнее начатое приглашение; вход повторно проверяет его в транзакции. Экран ожидающего клиента позволяет принять/проверить приглашение без повторной регистрации. Чужие live UID не объединяются. |
 | Координация | глобальное состояние, сборка route context, чистые фабрики начальных черновиков | `src/AppCore.jsx`, `src/app/appInitialDrafts.js` |
